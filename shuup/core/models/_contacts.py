@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import QuerySet
-from django.utils.encoding import python_2_unicode_compatible
+from shuup.compat import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumField

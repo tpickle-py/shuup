@@ -6,7 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 from django.template import loader
 from django.utils.safestring import mark_safe
-from jinja2.utils import contextfunction
+from shuup.compat import contextfunction
 
 
 class TemplateHelpers(object):

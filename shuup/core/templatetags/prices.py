@@ -19,6 +19,7 @@ to render certain price container elements conditionally.
 import django_jinja
 import jinja2
 
+from shuup.compat import contextfunction
 from shuup.core.utils.price_display import (
     PriceDisplayFilter,
     PriceDisplayOptions,
@@ -52,7 +53,7 @@ total_price = TotalPriceDisplayFilter("total_price")
 
 
 @django_jinja.library.global_function
-@jinja2.contextfunction
+@contextfunction
 def show_prices(context):
     """
     Return true if price display options has show prices enabled.

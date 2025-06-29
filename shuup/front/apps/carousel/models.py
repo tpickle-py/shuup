@@ -8,7 +8,7 @@
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
-from django.utils.encoding import python_2_unicode_compatible
+from shuup.compat import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from easy_thumbnails.files import get_thumbnailer

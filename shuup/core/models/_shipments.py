@@ -11,7 +11,7 @@ from django.conf import settings
 from django.db import models
 from django.db.transaction import atomic
 from django.utils.crypto import get_random_string
-from django.utils.encoding import python_2_unicode_compatible
+from shuup.compat import python_2_unicode_compatible
 from django.utils.text import format_lazy
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField

@@ -7,9 +7,8 @@
 # LICENSE file in the root directory of this source tree.
 from __future__ import unicode_literals
 
-from jinja2 import contextfunction
-
 from shuup.apps.provides import get_provide_objects
+from shuup.compat import contextfunction
 from shuup.utils.django_compat import NoReverseMatch, reverse
 
 

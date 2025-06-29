@@ -10,7 +10,7 @@ from django.conf import settings
 from django.core.paginator import Paginator
 from django.middleware.csrf import get_token
 from django.utils.translation import get_language
-from jinja2.utils import contextfunction
+from shuup.compat import contextfunction
 
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
 from shuup.core.models import Category, Manufacturer, ProductMode, ShopProductVisibility

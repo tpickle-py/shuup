@@ -18,8 +18,8 @@ Contents:
 """
 
 import django_jinja.library
-import jinja2
 
+from shuup.compat import contextfilter, contextfunction
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
 from shuup.core.pricing import PriceDisplayOptions, Priceful, PriceInfo
 from shuup.core.templatetags.shuup_common import money, percent
@@ -61,7 +61,7 @@ class _ContextObject(object):
 
 class _ContextFilter(_ContextObject):
     def _register(self):
-        django_jinja.library.filter(name=self.name, fn=jinja2.contextfilter(self))
+        django_jinja.library.filter(name=self.name, fn=contextfilter(self))
 
     @property
     def cache_identifier(self):
@@ -70,7 +70,7 @@ class _ContextFilter(_ContextObject):
 
 class _ContextFunction(_ContextObject):
     def _register(self):
-        django_jinja.library.global_function(name=self.name, fn=jinja2.contextfunction(self))
+        django_jinja.library.global_function(name=self.name, fn=contextfunction(self))
 
 
 def _get_item_price_info(request, item, quantity, supplier=None):

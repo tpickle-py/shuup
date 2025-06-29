@@ -5,11 +5,13 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import jinja2
 import json
+
+import jinja2
 from django.conf import settings
 from django_jinja import library
 
+from shuup.compat import contextfunction
 from shuup.gdpr.utils import get_active_consent_pages
 
 
@@ -22,7 +24,7 @@ class GDPRNamespace(object):
     def get_documents(self, request, **kwargs):
         return get_active_consent_pages(request.shop)
 
-    @jinja2.contextfunction
+    @contextfunction
     def get_accepted_cookies(self, context, **kwargs):
         request = context["request"]
         if settings.SHUUP_GDPR_CONSENT_COOKIE_NAME in request.COOKIES:

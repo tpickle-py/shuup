@@ -14,7 +14,7 @@ from django.conf import settings
 from django.http.request import HttpRequest
 from django.middleware.csrf import get_token
 from functools import lru_cache
-from jinja2.utils import contextfunction
+from shuup.compat import contextfunction
 
 from shuup import configuration
 from shuup.admin import menu

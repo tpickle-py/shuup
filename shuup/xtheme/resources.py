@@ -7,15 +7,16 @@
 # LICENSE file in the root directory of this source tree.
 import os
 import re
+from logging import getLogger
+from typing import TYPE_CHECKING, Iterable
+
 import six
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from jinja2.utils import contextfunction
-from logging import getLogger
-from typing import TYPE_CHECKING, Iterable
 
 from shuup.apps.provides import get_provide_objects
+from shuup.compat import contextfunction
 from shuup.core import cache
 from shuup.core.fields import TaggedJSONEncoder
 from shuup.core.shop_provider import get_shop

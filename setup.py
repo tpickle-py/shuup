@@ -5,10 +5,21 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import os
-import setuptools
 import sys
 
-import shuup_setup_utils as utils
+import setuptools
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
+
+try:
+    import shuup_setup_utils as utils
+    HAS_SETUP_UTILS = True
+except ImportError:
+    HAS_SETUP_UTILS = False
+    utils = None
 
 TOPDIR = os.path.abspath(os.path.dirname(__file__))
 LONG_DESCRIPTION_FILE = os.path.join(TOPDIR, "README.rst")
@@ -37,7 +48,7 @@ VERSION_FILE = os.path.join(TOPDIR, "shuup", "_version.py")
 #      - Add ".post0.dev" suffix to VERSION variable here
 
 NAME = "shuup"
-VERSION = "3.1.0.post0.dev"
+VERSION = "3.1.1.post0.dev"
 DESCRIPTION = "E-Commerce Platform"
 AUTHOR = "Shuup Commerce Inc."
 AUTHOR_EMAIL = "shuup@shuup.com"
@@ -45,7 +56,7 @@ URL = "http://shuup.com/"
 DOWNLOAD_URL_TEMPLATE = (
     "https://github.com/shuup/shuup/releases/download/" "v{version}/shuup-{version}-py2.py3-none-any.whl"
 )
-LICENSE = "proprietary"  # https://spdx.org/licenses/
+LICENSE = "OSL-3.0"  # https://spdx.org/licenses/
 CLASSIFIERS = """
 Development Status :: 5 - Production/Stable
 Intended Audience :: Developers
@@ -71,64 +82,94 @@ EXCLUDED_PACKAGES = [
     "shuup_tests.*",
 ]
 
-utils.add_exclude_patters(
-    [
-        "build",
-        "doc",
-        "var",
-        "LC_MESSAGES",
-        "local_settings.py",
-    ]
-)
+if HAS_SETUP_UTILS:
+    utils.add_exclude_patters(
+        [
+            "build",
+            "doc",
+            "var",
+            "LC_MESSAGES",
+            "local_settings.py",
+        ]
+    )
 
-REQUIRES = [
-    "Babel==2.5.3",
-    "bleach==3.1.5",
-    "django>=1.11,<2.3",
-    "django-bootstrap3>=11,<11.1",
-    "django-countries>=6.1.2,<6.2",
-    "django-enumfields>=2.0.0,<2.1",
-    "django-filer>=1.7,<1.8",
-    "django-filter>=2.2.0,<2.3",
-    "django-jinja==2.5.0",
-    "django-mptt==0.9.1",
-    "django-parler==2.0.1",
-    "django-polymorphic==2.1.2",
-    "django-registration-redux==2.7",
-    "django-reversion==3.0.5",
-    "django-timezone-field==3.1",  # doesn't support Django 3 in this version
-    "djangorestframework==3.11",
-    "factory-boy==2.7.0",
-    "fake-factory>=0.5.0,<0.5.4",
-    "Jinja2==2.8.1",
-    "jsonfield>=1,<3",
-    "keyring>=23",
-    "keyrings.alt>=4",
-    "lxml>=4,<5",
-    "Markdown>=3,<4",
-    "openpyxl>=3.0.7,<4",
-    "python-dateutil>=2.8",
-    "shuup-mirage-field>=2.2.0,<3",
-    "toml>=0.10.0,<1",
-    "pytz>=2015.4",
-    "requests>=2.7,<3",
-    "six>=1.9,<2",
-    "unicodecsv==0.14.1",
-    "xlrd>=1",
-]
+def get_requirements():
+    """Read requirements from pyproject.toml"""
+    pyproject_path = os.path.join(TOPDIR, "pyproject.toml")
+    if os.path.exists(pyproject_path):
+        with open(pyproject_path, "rb") as f:
+            pyproject_data = tomllib.load(f)
+        
+        dependencies = pyproject_data.get("project", {}).get("dependencies", [])
+        if dependencies:
+            return dependencies
+    
+    # Fallback to hardcoded list if pyproject.toml is not available or doesn't have dependencies
+    return [
+        "babel>=2.12.0",
+        "bleach>=6.0.0",
+        "django>=3.2,<4.3",
+        "django-bootstrap3>=21.2",
+        "django-countries>=7.5.0",
+        "django-enumfields>=2.1.1",
+        "django-filer>=2.2.0",
+        "django-filter>=23.0",
+        "django-jinja>=2.11.0",
+        "django-mptt>=0.14.0",
+        "django-parler>=2.3",
+        "django-polymorphic>=3.1.0",
+        "django-registration-redux>=2.11",
+        "django-reversion>=5.0.0",
+        "django-timezone-field>=5.0",
+        "djangorestframework>=3.14.0",
+        "factory-boy>=3.2.0",
+        "Faker>=18.0.0",
+        "Jinja2>=3.1.0",
+        "jsonfield>=3.1.0",
+        "keyring>=23",
+        "keyrings.alt>=4",
+        "lxml>=4.9.0",
+        "Markdown>=3.4.0",
+        "openpyxl>=3.1.0",
+        "python-dateutil>=2.8",
+        "shuup-mirage-field>=2.2.0,<3",
+        "tomli>=2.0.0;python_version<'3.11'",
+        "pytz>=2022.1",
+        "requests>=2.28.0",
+        "six>=1.16.0",
+        "unicodecsv>=0.14.1",
+        "xlrd>=2.0.0",
+        "setuptools>=75.3.2",
+    ]
+
+REQUIRES = get_requirements()
 
 if __name__ == "__main__":
     if "upload" in sys.argv:
         raise EnvironmentError("Uploading is blacklisted")
 
-    version = utils.get_version(VERSION, TOPDIR, VERSION_FILE)
-    utils.write_version_to_file(version, VERSION_FILE)
+    if HAS_SETUP_UTILS:
+        version = utils.get_version(VERSION, TOPDIR, VERSION_FILE)
+        utils.write_version_to_file(version, VERSION_FILE)
+        long_description = utils.get_long_description(LONG_DESCRIPTION_FILE)
+        packages = utils.find_packages(exclude=EXCLUDED_PACKAGES)
+        cmdclass = utils.COMMANDS
+    else:
+        # Fallback when setup utils is not available
+        version = VERSION
+        try:
+            with open(LONG_DESCRIPTION_FILE, "r", encoding="utf-8") as f:
+                long_description = f.read()
+        except:
+            long_description = DESCRIPTION
+        packages = setuptools.find_packages(exclude=EXCLUDED_PACKAGES)
+        cmdclass = {}
 
     setuptools.setup(
         name=NAME,
         version=version,
         description=DESCRIPTION,
-        long_description=utils.get_long_description(LONG_DESCRIPTION_FILE),
+        long_description=long_description,
         url=URL,
         download_url=DOWNLOAD_URL_TEMPLATE.format(version=version),
         author=AUTHOR,
@@ -136,8 +177,8 @@ if __name__ == "__main__":
         license=LICENSE,
         classifiers=CLASSIFIERS,
         install_requires=REQUIRES,
-        python_requires=">=3.6",
-        packages=utils.find_packages(exclude=EXCLUDED_PACKAGES),
+        python_requires=">=3.8",
+        packages=packages,
         include_package_data=True,
-        cmdclass=utils.COMMANDS,
+        cmdclass=cmdclass,
     )

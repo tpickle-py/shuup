@@ -15,16 +15,16 @@ and decoding process can be customized however necessary.
 
 from __future__ import unicode_literals
 
-from enum import Enum
-
 import datetime
 import decimal
+from enum import Enum
+
 import django.utils.dateparse as dateparse
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import six
 from jsonfield.encoder import JSONEncoder
 from six import text_type
 
+from shuup.compat import six
 from shuup.utils.importing import load
 from shuup.utils.iterables import first
 

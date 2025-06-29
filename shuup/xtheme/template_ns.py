@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from jinja2.utils import contextfunction
+from shuup.compat import contextfunction
 
 from shuup.xtheme._theme import get_current_theme, get_middleware_current_theme
 from shuup.xtheme.editing import is_edit_mode

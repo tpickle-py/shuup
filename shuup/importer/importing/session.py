@@ -6,9 +6,15 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import six
-from django.db.models import FieldDoesNotExist, ForeignKey
+from django.db.models import ForeignKey
 from django.utils.translation import ugettext_lazy as _
 from parler.models import TranslatedFieldsModel
+
+# Compatibility for Django versions - FieldDoesNotExist moved in Django 4.0
+try:
+    from django.db.models import FieldDoesNotExist
+except ImportError:
+    from django.core.exceptions import FieldDoesNotExist
 
 from shuup.importer.exceptions import ImporterError
 

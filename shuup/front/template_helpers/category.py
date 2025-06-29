@@ -6,7 +6,7 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 from django.utils.translation import get_language
-from jinja2.utils import contextfunction
+from shuup.compat import contextfunction
 
 from shuup.core.models import Manufacturer
 

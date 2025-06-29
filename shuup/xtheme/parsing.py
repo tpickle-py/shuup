@@ -8,10 +8,16 @@
 from __future__ import unicode_literals
 
 import six
-import toml
 from jinja2.ext import Extension
 from jinja2.nodes import Const, EvalContext, ExprStmt, Impossible, Name, Output
-from jinja2.utils import contextfunction
+
+from shuup.compat import contextfunction
+
+# Compatibility for TOML parsing - use tomli for Python < 3.11, tomllib for >= 3.11
+try:
+    import tomllib as toml
+except ImportError:
+    import tomli as toml
 
 from shuup.xtheme.rendering import render_placeholder
 from shuup.xtheme.view_config import Layout

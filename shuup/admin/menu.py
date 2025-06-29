@@ -6,8 +6,14 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import six
-from django.utils.datastructures import OrderedDict
-from django.utils.translation import get_language, ugettext_lazy as _
+from django.utils.translation import get_language
+from django.utils.translation import ugettext_lazy as _
+
+# Compatibility for Django versions - OrderedDict moved to collections in Python 3.7+
+try:
+    from django.utils.datastructures import OrderedDict
+except ImportError:
+    from collections import OrderedDict
 
 from shuup import configuration
 from shuup.admin.base import BaseMenuEntry
