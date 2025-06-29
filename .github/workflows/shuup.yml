@@ -81,7 +81,7 @@ jobs:
         file: ./coverage.xml
         fail_ci_if_error: true
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: failure()
       with:
         name: unit_tests
@@ -144,7 +144,7 @@ jobs:
     - name: Run tests
       run: uv run pytest -v --nomigrations shuup_tests/browser/front shuup_tests/browser/admin --splinter-headless --splinter-screenshot-dir=.unit_tests/
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: failure()
       with:
         name: unit_tests
