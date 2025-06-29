@@ -13,6 +13,7 @@ class ShuupFrontAppConfig(AppConfig):
     name = "shuup.front"
     verbose_name = "Shuup Frontend"
     label = "shuup_front"
+    default_auto_field = "django.db.models.BigAutoField"
 
     provides = {
         "admin_category_form_part": [

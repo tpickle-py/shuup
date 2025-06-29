@@ -36,9 +36,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "manager_inheritance_from_future": True,
-            },
+            options={},
             bases=("campaigns.basketcondition",),
         ),
     ]

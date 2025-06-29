@@ -10,6 +10,7 @@ import shuup.apps
 class AppConfig(shuup.apps.AppConfig):
     name = "shuup.gdpr"
     label = "shuup_gdpr"
+    default_auto_field = "django.db.models.BigAutoField"
     provides = {
         "admin_module": ["shuup.gdpr.admin_module.GDPRModule"],
         "front_urls": ["shuup.gdpr.urls:urlpatterns"],

@@ -11,6 +11,7 @@ import shuup.apps
 class AppConfig(shuup.apps.AppConfig):
     name = "shuup.front.apps.carousel"
     label = "carousel"
+    default_auto_field = "django.db.models.BigAutoField"
     provides = {
         "admin_module": ["shuup.front.apps.carousel.admin_module:CarouselModule"],
         "xtheme_plugin": [

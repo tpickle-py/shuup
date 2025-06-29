@@ -38,6 +38,7 @@ class XThemeAppConfig(AppConfig):
     name = "shuup.xtheme"
     verbose_name = "Shuup Extensible Theme Engine"
     label = "shuup_xtheme"
+    default_auto_field = "django.db.models.BigAutoField"
 
     provides = {
         "front_urls_pre": [__name__ + ".urls:urlpatterns"],

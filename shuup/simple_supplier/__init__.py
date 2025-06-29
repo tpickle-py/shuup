@@ -12,6 +12,7 @@ class ShuupSimpleSupplierAppConfig(AppConfig):
     name = "shuup.simple_supplier"
     verbose_name = "Shuup Simple Supplier"
     label = "simple_supplier"
+    default_auto_field = "django.db.models.BigAutoField"
     provides = {
         "supplier_module": ["shuup.simple_supplier.module:SimpleSupplierModule"],
         "admin_product_form_part": [

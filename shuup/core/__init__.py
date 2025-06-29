@@ -16,6 +16,7 @@ class ShuupCoreAppConfig(AppConfig):
     name = "shuup.core"
     verbose_name = "Shuup Core"
     label = "shuup"  # Use "shuup" as app_label instead of "core"
+    default_auto_field = "django.db.models.BigAutoField"
     required_installed_apps = (
         "django.contrib.auth",
         "django.contrib.contenttypes",

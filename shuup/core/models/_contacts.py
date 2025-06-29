@@ -80,13 +80,13 @@ class ContactGroupPriceDisplay(models.Model):
     show_pricing = models.BooleanField(
         verbose_name=_("show as pricing option"), default=True
     )
-    show_prices_including_taxes = models.NullBooleanField(
+    show_prices_including_taxes = models.BooleanField(
         default=None,
         null=True,
         blank=True,
         verbose_name=_("show prices including taxes"),
     )
-    hide_prices = models.NullBooleanField(
+    hide_prices = models.BooleanField(
         default=None, null=True, blank=True, verbose_name=_("hide prices")
     )
 

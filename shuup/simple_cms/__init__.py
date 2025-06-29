@@ -15,6 +15,7 @@ class AppConfig(shuup.apps.AppConfig):
     name = __name__
     verbose_name = _("Content Pages")
     label = "shuup_simple_cms"
+    default_auto_field = "django.db.models.BigAutoField"
 
     provides = {
         "front_urls_post": ["shuup.simple_cms.urls:urlpatterns"],

@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 
 # Compatibility for Django versions - OrderedDict moved to collections in Python 3.7+
 try:
-    from django.utils.datastructures import OrderedDict
+    from django.utils.datastructures import OrderedDict  # type: ignore
 except ImportError:
     from collections import OrderedDict
 

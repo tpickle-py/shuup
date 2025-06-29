@@ -10,6 +10,7 @@ import shuup.apps
 
 class AppConfig(shuup.apps.AppConfig):
     name = "shuup.discounts"
+    default_auto_field = "django.db.models.BigAutoField"
     provides = {
         "admin_module": [
             "shuup.discounts.admin.modules.DiscountModule",

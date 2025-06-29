@@ -12,6 +12,7 @@ class CampaignAppConfig(AppConfig):
     name = "shuup.campaigns"
     verbose_name = "Shuup Campaigns"
     label = "campaigns"
+    default_auto_field = "django.db.models.BigAutoField"
     provides = {
         "admin_contact_group_form_part": [
             "shuup.campaigns.admin_module.form_parts:SalesRangesFormPart"

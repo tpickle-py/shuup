@@ -13,6 +13,7 @@ class ShuupNotifyAppConfig(AppConfig):
     name = "shuup.notify"
     verbose_name = "Shuup Notification Framework"
     label = "shuup_notify"
+    default_auto_field = "django.db.models.BigAutoField"
     provides = {
         "notify_condition": [
             "shuup.notify.conditions:LanguageEqual",

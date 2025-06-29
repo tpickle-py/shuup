@@ -15,6 +15,7 @@ class CustomerGroupPricingAppConfig(shuup.apps.AppConfig):
     name = __name__
     verbose_name = _("Shuup Customer Group Pricing")
     label = "shuup_customer_group_pricing"
+    default_auto_field = "django.db.models.BigAutoField"
     provides = {
         "pricing_module": [__name__ + ".module:CustomerGroupPricingModule"],
         "discount_module": [__name__ + ".module:CustomerGroupDiscountModule"],
