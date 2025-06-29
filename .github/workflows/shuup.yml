@@ -46,7 +46,7 @@ jobs:
       SHUUP_TESTS_CI: 1
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.9', '3.10', '3.11', '3.12']
     steps:
     - uses: actions/checkout@v4
     - name: Install uv
@@ -61,6 +61,8 @@ jobs:
       run: uv pip install setuptools wheel
     - name: Install gettext
       run: sudo apt-get -y install gettext
+    - name: Install system dependencies
+      run: sudo apt-get -y install libffi-dev
     - name: Install dependencies (without editable)
       run: uv pip install pytest pytest-django pytest-cov coverage codecov
     - name: Install package in editable mode
@@ -110,6 +112,14 @@ jobs:
     - name: Install gettext
       run: sudo apt-get -y install gettext
 
+    - name: Install system dependencies  
+      run: sudo apt-get -y install libffi-dev
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
     - name: Create virtual environment
       run: uv venv .venv
 
@@ -123,7 +133,7 @@ jobs:
       run: uv pip install -e .
 
     - name: Build static files
-      run: uv run python setup.py build_resources
+      run: uv run shuup-build-resources
 
     - name: Compile messages
       run: uv run python -m shuup_workbench compilemessages

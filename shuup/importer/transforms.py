@@ -22,7 +22,7 @@ from shuup.utils.excs import Problem
 if sys.version_info >= (3, 0):
     import csv
 else:
-    import unicodecsv as csv
+    import csv
 
 
 class RowYielder(object):

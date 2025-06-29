@@ -6,7 +6,7 @@
     "doc": "doc"
   },
   "scripts": {
-    "build": "python setup.py build_resources",
+    "build": "shuup-build-resources",
     "dev:test": "py.test -vvv --cov shuup --cov-report html shuup_tests"
   },
   "repository": {

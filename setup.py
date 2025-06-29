@@ -140,7 +140,6 @@ def get_requirements():
         "pytz>=2022.1",
         "requests>=2.28.0",
         "six>=1.16.0",
-        "unicodecsv>=0.14.1",
         "xlrd>=2.0.0",
         "setuptools>=75.3.2",
     ]

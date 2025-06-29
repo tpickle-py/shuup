@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import unicodecsv as csv
+import csv
 from django.db.models import Q
 from django.http import HttpResponse
 from django.utils.html import strip_tags
@@ -35,9 +35,9 @@ class BaseExportCSVMassAction(PicotableFileMassAction):
         )
         queryset = self.get_queryset(request, view_instance, ids)
 
-        response = HttpResponse(content_type="text/csv")
+        response = HttpResponse(content_type="text/csv; charset=utf-8")
         response["Content-Disposition"] = f'attachment; filename="{self.filename}"'
-        writer = csv.writer(response, delimiter=";", encoding="utf-8")
+        writer = csv.writer(response, delimiter=";")
         writer.writerow([col.title for col in view_settings.columns])
 
         for item in queryset:
