@@ -19,8 +19,12 @@ jobs:
         version: "latest"
     - name: Set up Python
       run: uv python install 3.11
-    - name: Install dev dependencies
-      run: uv sync --dev
+    - name: Install build dependencies
+      run: uv pip install --system setuptools wheel
+    - name: Install dev dependencies (without editable)
+      run: uv pip install --system black isort flake8 mypy pytest pytest-django pytest-cov coverage sphinx sphinx-rtd-theme pre-commit
+    - name: Install package in editable mode
+      run: uv pip install --system -e .
     - name: Run sanity check
       run: uv run _misc/check_sanity.py
     - name: Run license headers check
@@ -49,10 +53,14 @@ jobs:
         version: "latest"
     - name: Set up Python
       run: uv python install ${{ matrix.python-version }}
+    - name: Install build dependencies
+      run: uv pip install --system setuptools wheel
     - name: Install gettext
       run: sudo apt-get -y install gettext
-    - name: Install dependencies
-      run: uv sync --dev
+    - name: Install dependencies (without editable)
+      run: uv pip install --system pytest pytest-django pytest-cov coverage codecov
+    - name: Install package in editable mode
+      run: uv pip install --system -e .
     - name: Create logs folder
       run: mkdir .unit_tests
     - name: Run makemessages
@@ -98,11 +106,17 @@ jobs:
     - name: Install gettext
       run: sudo apt-get -y install gettext
 
+    - name: Install build dependencies
+      run: uv pip install --system setuptools wheel
+
+    - name: Install dependencies (without editable)
+      run: uv pip install --system pytest pytest-django pytest-cov coverage pytest-splinter splinter selenium weasyprint pillow beautifulsoup4 mock
+
+    - name: Install package in editable mode
+      run: uv pip install --system -e .
+
     - name: Build static files
       run: uv run python setup.py build_resources
-
-    - name: Install dependencies
-      run: uv sync --dev
 
     - name: Compile messages
       run: uv run python -m shuup_workbench compilemessages
