@@ -194,7 +194,6 @@ exclude_lines = [
 
 [tool.pylint.main]
 load-plugins = ["pylint_django"]
-django-settings-module = "shuup_workbench.settings.dev"
 
 [tool.pylint.messages_control]
 disable = [
@@ -248,7 +247,6 @@ select = [
 ignore = [
     "E501",  # line too long, handled by black
     "E203",  # whitespace before ':'
-    "W503",  # line break before binary operator
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -283,6 +281,7 @@ dev = [
     "weasyprint>=61.0",
     "pillow>=10.0.0",
     "gitignore-parser>=0.1.12",
+    "pylint-django>=2.6.1",
 ]
 
 test = [
