@@ -79,7 +79,20 @@ exclude = ["shuup_tests", "shuup_tests.*"]
 include-package-data = true
 
 [tool.black]
-exclude = "migrations/.*|.eggs|.git|.tox|.venv|_build|buck-out|build|dist"
+exclude = '''
+/(
+    migrations/.*
+    | .eggs
+    | .git
+    | .tox
+    | .venv
+    | venv
+    | _build
+    | buck-out
+    | build
+    | dist
+)/
+'''
 line_length = 120
 target-version = ["py38", "py39", "py310", "py311", "py312"]
 
@@ -93,7 +106,7 @@ combine_as_imports = true
 known_django = "django"
 known_first_party = "shuup"
 sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-skip_glob = ["*/migrations/*", "*/venv/*", "*/.venv/*"]
+skip_glob = ["*/migrations/*", "*/venv/*", "*/.venv/*", "*/node_modules/*", "*/.tox/*", "*/.git/*"]
 
 [tool.flake8]
 max-line-length = 120
@@ -107,7 +120,9 @@ exclude = [
     "dist",
     "doc",
     "*.egg",
-    "build"
+    "build",
+    "node_modules",
+    "shuup_tests"
 ]
 
 [tool.mypy]
@@ -124,6 +139,7 @@ warn_redundant_casts = true
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "shuup_workbench.test_settings"
+django_find_project = false
 addopts = [
     "--tb=short",
     "--strict-markers",
@@ -135,6 +151,7 @@ addopts = [
     "--cov-fail-under=80"
 ]
 testpaths = ["shuup_tests"]
+norecursedirs = ["bower_components", "node_modules", ".git", "venv", ".venv", ".tox", "dist", "build"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -151,13 +168,18 @@ filterwarnings = [
 
 [tool.coverage.run]
 source = ["shuup"]
+branch = true
 omit = [
     "*/migrations/*",
     "*/tests/*",
     "*/test_*.py",
     "*/.venv/*",
     "*/venv/*",
+    "*/.tox/*",
+    "*/node_modules/*",
+    "*/__pycache__/*",
     "setup.py",
+    "shuup_tests/*",
 ]
 
 [tool.coverage.report]
@@ -209,6 +231,8 @@ exclude = [
     "*.egg",
     "build",
     "__pycache__",
+    "node_modules",
+    "shuup_tests"
 ]
 
 [tool.ruff.lint]
