@@ -5,27 +5,19 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import json
-import pytest
+
 from django.test import override_settings
+
+import pytest
 from jinja2 import Environment
 from jinja2.runtime import Context
 
-from shuup.admin.menu import (
-    PRODUCTS_MENU_CATEGORY,
-    SETTINGS_MENU_CATEGORY,
-    get_menu_entry_categories,
-)
-from shuup.admin.modules.menu.views.arrange import (
-    SuperUserMenuArrangeView,
-    SuperUserMenuResetView,
-)
-from shuup.admin.template_helpers.shuup_admin import (
-    is_menu_category_active,
-    is_menu_item_active,
-)
+from shuup.admin.menu import PRODUCTS_MENU_CATEGORY, SETTINGS_MENU_CATEGORY, get_menu_entry_categories
+from shuup.admin.modules.menu.views.arrange import SuperUserMenuArrangeView, SuperUserMenuResetView
+from shuup.admin.template_helpers.shuup_admin import is_menu_category_active, is_menu_item_active
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse
 

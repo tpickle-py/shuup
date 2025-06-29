@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import six
 from django.template import loader as template_loader
@@ -14,16 +14,8 @@ from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from shuup.front.notify_events import (
-    OrderReceived,
-    PaymentCreated,
-    RefundCreated,
-    ShipmentCreated,
-    ShipmentDeleted,
-)
-from shuup.notify.script_template.factory import (
-    generic_send_email_script_template_factory,
-)
+from shuup.front.notify_events import OrderReceived, PaymentCreated, RefundCreated, ShipmentCreated, ShipmentDeleted
+from shuup.notify.script_template.factory import generic_send_email_script_template_factory
 from shuup.testing.modules.content.data import ORDER_CONFIRMATION
 
 mark_safe_lazy = lazy(mark_safe, six.text_type)

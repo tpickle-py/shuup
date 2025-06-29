@@ -5,12 +5,14 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 # test that admin actually saves catalog
-from __future__ import unicode_literals
+
 
 import datetime
+
+from django.test import override_settings
+
 import pytest
 import pytz
-from django.test import override_settings
 
 from shuup.apps.provides import override_provides
 from shuup.campaigns.admin_module.form_parts import CatalogBaseFormPart

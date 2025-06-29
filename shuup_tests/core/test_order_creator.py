@@ -5,14 +5,16 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
 
-import pytest
+
 from decimal import Decimal
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models import ProtectedError
 from django.test import override_settings
+
+import pytest
 
 from shuup import configuration
 from shuup.core.defaults.order_statuses import create_default_order_statuses

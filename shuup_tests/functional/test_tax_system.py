@@ -5,11 +5,13 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
+
+from decimal import Decimal
+
+from django.test.utils import override_settings
 
 import pytest
-from decimal import Decimal
-from django.test.utils import override_settings
 
 from shuup.apps.provides import override_provides
 from shuup.core.models import MutableAddress, OrderLineType
@@ -17,12 +19,7 @@ from shuup.core.order_creator import OrderSource, SourceLine
 from shuup.core.pricing import TaxfulPrice, TaxlessPrice
 from shuup.core.taxing import TaxModule
 from shuup.core.taxing.utils import stacked_value_added_taxes
-from shuup.testing.factories import (
-    get_default_product,
-    get_default_supplier,
-    get_shop,
-    get_tax,
-)
+from shuup.testing.factories import get_default_product, get_default_supplier, get_shop, get_tax
 
 TAX_MODULE_SPEC = [__name__ + ":IrvineCaliforniaTaxation"]
 

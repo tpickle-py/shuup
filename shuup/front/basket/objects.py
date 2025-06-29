@@ -5,17 +5,14 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from shuup import configuration
 from shuup.core.basket.objects import BaseBasket as Basket
-from shuup.front.checkout.methods import (
-    PAYMENT_METHOD_REQUIRED_CONFIG_KEY,
-    SHIPPING_METHOD_REQUIRED_CONFIG_KEY,
-)
+from shuup.front.checkout.methods import PAYMENT_METHOD_REQUIRED_CONFIG_KEY, SHIPPING_METHOD_REQUIRED_CONFIG_KEY
 
 
 class BaseBasket(Basket):

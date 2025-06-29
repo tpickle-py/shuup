@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import six
 from django.conf import settings
@@ -19,16 +19,8 @@ from django.views.generic import ListView, UpdateView
 
 from shuup.admin.modules.settings.view_settings import ViewSettings
 from shuup.admin.signals import object_created, object_saved, view_form_valid
-from shuup.admin.toolbar import (
-    NewActionButton,
-    SettingsActionButton,
-    Toolbar,
-    get_default_edit_toolbar,
-)
-from shuup.admin.utils.forms import (
-    add_form_errors_as_messages,
-    get_possible_name_fields_for_model,
-)
+from shuup.admin.toolbar import NewActionButton, SettingsActionButton, Toolbar, get_default_edit_toolbar
+from shuup.admin.utils.forms import add_form_errors_as_messages, get_possible_name_fields_for_model
 from shuup.admin.utils.picotable import Column, PicotableViewMixin
 from shuup.admin.utils.urls import NoModelUrl, get_model_front_url, get_model_url
 from shuup.core.settings_provider import ShuupSettings

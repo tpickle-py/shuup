@@ -5,12 +5,13 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import inspect
 import json
-import six
 import warnings
+
+import six
 from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import ImproperlyConfigured
@@ -24,13 +25,7 @@ from shuup.admin.module_registry import get_modules
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.utils.permissions import get_missing_permissions
 from shuup.utils import importing
-from shuup.utils.django_compat import (
-    NoReverseMatch,
-    URLPattern,
-    get_callable,
-    is_authenticated,
-    reverse,
-)
+from shuup.utils.django_compat import NoReverseMatch, URLPattern, get_callable, is_authenticated, reverse
 from shuup.utils.excs import Problem
 
 try:

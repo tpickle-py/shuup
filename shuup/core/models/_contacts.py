@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from functools import lru_cache
 
@@ -23,11 +23,7 @@ from timezone_field.fields import TimeZoneField
 
 from shuup import configuration
 from shuup.compat import python_2_unicode_compatible
-from shuup.core.fields import (
-    InternalIdentifierField,
-    LanguageField,
-    PolymorphicJSONField,
-)
+from shuup.core.fields import InternalIdentifierField, LanguageField, PolymorphicJSONField
 from shuup.core.pricing import PriceDisplayOptions
 from shuup.core.utils.users import is_user_all_seeing
 from shuup.utils.analog import define_log_model

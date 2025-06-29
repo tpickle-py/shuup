@@ -1,10 +1,12 @@
-from __future__ import unicode_literals
+
 
 import inspect
+
 from django.apps import apps
 from django.db import models
 from django.utils.encoding import force_text
 from django.utils.html import strip_tags
+
 from parler.models import TranslatedFieldsModel
 
 

@@ -5,10 +5,11 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import decimal
 import json
+
 from babel.numbers import format_currency, format_decimal
 from django.conf import settings
 from django.contrib import messages
@@ -43,12 +44,7 @@ from shuup.core.models import (
 from shuup.core.pricing import get_pricing_module
 from shuup.utils.django_compat import force_text, reverse
 from shuup.utils.http import get_client_ip
-from shuup.utils.i18n import (
-    format_money,
-    format_percent,
-    get_current_babel_locale,
-    get_locally_formatted_datetime,
-)
+from shuup.utils.i18n import format_money, format_percent, get_current_babel_locale, get_locally_formatted_datetime
 
 
 def create_order_from_state(state, **kwargs):

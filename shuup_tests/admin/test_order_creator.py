@@ -5,20 +5,18 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import decimal
 import json
-import pytest
+
 from django.test import RequestFactory
 from django.utils import translation
 from django.utils.encoding import force_text
 
-from shuup.admin.modules.orders.views.edit import (
-    OrderEditView,
-    encode_address,
-    encode_method,
-)
+import pytest
+
+from shuup.admin.modules.orders.views.edit import OrderEditView, encode_address, encode_method
 from shuup.core.models import Order, OrderLineType, ShopProductVisibility, Tax, TaxClass
 from shuup.default_tax.models import TaxRule
 from shuup.testing.factories import (

@@ -5,10 +5,11 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
+
+import sys
 
 import six
-import sys
 from django.conf import settings
 from jinja2.environment import Environment, Template
 from jinja2.utils import concat, internalcode
@@ -16,11 +17,7 @@ from jinja2.utils import concat, internalcode
 from shuup.apps.provides import get_provide_objects
 from shuup.xtheme._theme import get_middleware_current_theme
 from shuup.xtheme.editing import add_edit_resources
-from shuup.xtheme.resources import (
-    RESOURCE_CONTAINER_VAR_NAME,
-    ResourceContainer,
-    inject_resources,
-)
+from shuup.xtheme.resources import RESOURCE_CONTAINER_VAR_NAME, ResourceContainer, inject_resources
 
 
 class XthemeTemplate(Template):

@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.contrib import messages
 from django.forms.formsets import formset_factory
@@ -19,11 +19,7 @@ from shuup.core.models import ProductMode
 from shuup.utils.django_compat import reverse
 from shuup.utils.excs import Problem
 
-from .edit_parent import (
-    ProductChildrenBaseFormPart,
-    ProductParentBaseToolbar,
-    ProductParentBaseView,
-)
+from .edit_parent import ProductChildrenBaseFormPart, ProductParentBaseToolbar, ProductParentBaseView
 
 
 class ProductChildrenFormPart(ProductChildrenBaseFormPart):

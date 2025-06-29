@@ -5,10 +5,11 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import datetime
 import json
+
 import six
 from django.core.paginator import EmptyPage, Paginator
 from django.db.models import Manager, Q, QuerySet

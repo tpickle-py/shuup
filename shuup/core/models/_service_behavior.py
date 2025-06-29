@@ -5,9 +5,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-from __future__ import unicode_literals
+
 
 import decimal
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -20,11 +21,7 @@ from parler.models import TranslatableModel, TranslatedField, TranslatedFields
 from shuup.core.fields import MeasurementField, MoneyValueField
 
 from ._addresses import REGION_ISO3166
-from ._service_base import (
-    ServiceBehaviorComponent,
-    ServiceCost,
-    TranslatableServiceBehaviorComponent,
-)
+from ._service_base import ServiceBehaviorComponent, ServiceCost, TranslatableServiceBehaviorComponent
 
 
 class FixedCostBehaviorComponent(TranslatableServiceBehaviorComponent):

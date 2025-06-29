@@ -5,25 +5,17 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django import forms
 
 from shuup.notify.base import Action, Event, Variable
-from shuup.notify.enums import (
-    UNILINGUAL_TEMPLATE_LANGUAGE,
-    StepConditionOperator,
-    TemplateUse,
-)
+from shuup.notify.enums import UNILINGUAL_TEMPLATE_LANGUAGE, StepConditionOperator, TemplateUse
 from shuup.notify.models import Script
 from shuup.notify.script import Context
 from shuup.notify.template import Template
 from shuup.notify.typology import Language, Model, Text
-from shuup.testing.factories import (
-    create_random_order,
-    create_random_person,
-    get_default_product,
-)
+from shuup.testing.factories import create_random_order, create_random_person, get_default_product
 from shuup.testing.text_data import random_title
 
 TEST_STEP_DATA = [

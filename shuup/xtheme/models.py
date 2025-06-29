@@ -5,17 +5,17 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.core.validators import MinLengthValidator
 from django.db import models
-from shuup.compat import python_2_unicode_compatible
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum
 from enumfields.fields import EnumIntegerField
 from filer.fields.image import FilerFileField
 
+from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import SeparatedValuesField, TaggedJSONField
 
 

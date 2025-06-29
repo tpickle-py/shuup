@@ -5,12 +5,13 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
 
-import pytest
+
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
+
+import pytest
 
 from shuup import configuration
 from shuup.core.models import (
@@ -25,12 +26,7 @@ from shuup.core.models import (
     get_price_display_options_for_group_and_shop,
 )
 from shuup.core.pricing import PriceDisplayOptions
-from shuup.testing.factories import (
-    create_random_company,
-    get_all_seeing_key,
-    get_default_shop,
-    get_shop,
-)
+from shuup.testing.factories import create_random_company, get_all_seeing_key, get_default_shop, get_shop
 from shuup_tests.utils.fixtures import regular_user
 
 

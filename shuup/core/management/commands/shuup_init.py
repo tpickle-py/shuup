@@ -4,9 +4,10 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import json
+
 import requests
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -16,15 +17,7 @@ from six import print_
 
 from shuup import configuration
 from shuup.core.defaults.order_statuses import create_default_order_statuses
-from shuup.core.models import (
-    Currency,
-    CustomerTaxGroup,
-    ProductType,
-    SalesUnit,
-    Shop,
-    ShopStatus,
-    Supplier,
-)
+from shuup.core.models import Currency, CustomerTaxGroup, ProductType, SalesUnit, Shop, ShopStatus, Supplier
 from shuup.core.telemetry import get_installation_key, is_telemetry_enabled
 from shuup.xtheme import set_current_theme
 

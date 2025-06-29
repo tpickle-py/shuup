@@ -5,9 +5,10 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import click
 import re
 from ast import BinOp, Mod, parse
+
+import click
 from sanity_utils import XNodeVisitor, find_files
 from six import text_type
 
@@ -77,9 +78,9 @@ def fix_file(path):
             first_non_comment_line_index = line_index
             break
 
-    if "from __future__ import unicode_literals" not in source:
+    if "" not in source:
         source_lines.insert(
-            first_non_comment_line_index, "from __future__ import unicode_literals"
+            first_non_comment_line_index, ""
         )
 
     source = "\n".join(source_lines)

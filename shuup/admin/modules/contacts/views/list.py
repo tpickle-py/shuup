@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.db.models import Count, Q
 from django.utils.translation import ugettext_lazy as _
@@ -13,13 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from shuup.admin.modules.contacts.utils import request_limited
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.toolbar import NewActionButton, SettingsActionButton, Toolbar
-from shuup.admin.utils.picotable import (
-    ChoicesFilter,
-    Column,
-    RangeFilter,
-    Select2Filter,
-    TextFilter,
-)
+from shuup.admin.utils.picotable import ChoicesFilter, Column, RangeFilter, Select2Filter, TextFilter
 from shuup.admin.utils.views import PicotableListView
 from shuup.core.models import CompanyContact, Contact, ContactGroup, PersonContact, Shop
 from shuup.utils.django_compat import force_text, reverse

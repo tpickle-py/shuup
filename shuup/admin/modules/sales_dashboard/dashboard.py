@@ -6,14 +6,15 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-from __future__ import unicode_literals
+
+
+from collections import OrderedDict
+from datetime import date, time, timedelta
+from decimal import Decimal
 
 import six
 from babel.dates import format_date
-from collections import OrderedDict
-from datetime import date, time, timedelta
 from dateutil import rrule
-from decimal import Decimal
 from django.db.models import Avg, Count, Sum
 from django.utils.translation import ugettext_lazy as _
 

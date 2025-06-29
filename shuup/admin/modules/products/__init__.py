@@ -5,22 +5,20 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from collections import Counter
+from typing import Iterable
+
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.db.models.signals import m2m_changed, post_save
 from django.utils.translation import ugettext_lazy as _
-from typing import Iterable
 
 from shuup.admin.base import AdminModule, MenuEntry, SearchResult
 from shuup.admin.menu import PRODUCTS_MENU_CATEGORY
-from shuup.admin.modules.products.signal_handlers import (
-    update_categories_post_save,
-    update_categories_through,
-)
+from shuup.admin.modules.products.signal_handlers import update_categories_post_save, update_categories_through
 from shuup.admin.utils.object_selector import get_object_selector_permission_name
 from shuup.admin.utils.search import split_query
 from shuup.admin.utils.urls import (

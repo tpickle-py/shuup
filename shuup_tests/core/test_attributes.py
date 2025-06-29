@@ -5,14 +5,16 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import datetime
-import pytest
 from decimal import Decimal
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.test import override_settings
 from django.utils.translation import get_language
+
+import pytest
 
 from shuup.core.models import (
     Attribute,
@@ -23,12 +25,7 @@ from shuup.core.models import (
     ProductAttribute,
 )
 from shuup.core.models._attributes import NoSuchAttributeHere
-from shuup.testing.factories import (
-    ATTR_SPECS,
-    create_product,
-    get_default_attribute_set,
-    get_default_product,
-)
+from shuup.testing.factories import ATTR_SPECS, create_product, get_default_attribute_set, get_default_product
 
 
 def _populate_applied_attribute(aa):

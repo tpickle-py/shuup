@@ -4,11 +4,13 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
+
+from decimal import Decimal
+
+from django.db import IntegrityError
 
 import pytest
-from decimal import Decimal
-from django.db import IntegrityError
 
 from shuup.campaigns.admin_module.forms import BasketCampaignForm
 from shuup.campaigns.models.basket_conditions import (
@@ -17,27 +19,14 @@ from shuup.campaigns.models.basket_conditions import (
     CategoryProductsBasketCondition,
     ProductsInBasketCondition,
 )
-from shuup.campaigns.models.basket_effects import (
-    BasketDiscountAmount,
-    BasketDiscountPercentage,
-)
+from shuup.campaigns.models.basket_effects import BasketDiscountAmount, BasketDiscountPercentage
 from shuup.campaigns.models.basket_line_effects import DiscountFromCategoryProducts
 from shuup.campaigns.models.campaigns import BasketCampaign, Coupon, CouponUsage
 from shuup.core.defaults.order_statuses import create_default_order_statuses
-from shuup.core.models import (
-    Category,
-    OrderLineType,
-    Shop,
-    ShopProduct,
-    ShopStatus,
-    Supplier,
-)
+from shuup.core.models import Category, OrderLineType, Shop, ShopProduct, ShopStatus, Supplier
 from shuup.core.order_creator import OrderCreator
 from shuup.front.basket import get_basket
-from shuup.front.basket.commands import (
-    handle_add_campaign_code,
-    handle_remove_campaign_code,
-)
+from shuup.front.basket.commands import handle_add_campaign_code, handle_remove_campaign_code
 from shuup.testing.factories import (
     CategoryFactory,
     create_default_tax_rule,

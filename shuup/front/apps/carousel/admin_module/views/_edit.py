@@ -5,17 +5,12 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.conf import settings
 from django.db.transaction import atomic
 
-from shuup.admin.form_part import (
-    FormPart,
-    FormPartsViewMixin,
-    SaveFormPartsMixin,
-    TemplatedFormDef,
-)
+from shuup.admin.form_part import FormPart, FormPartsViewMixin, SaveFormPartsMixin, TemplatedFormDef
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.toolbar import get_default_edit_toolbar
 from shuup.admin.utils.views import CreateOrUpdateView

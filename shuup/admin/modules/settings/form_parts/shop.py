@@ -5,21 +5,19 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
+
+from decimal import Decimal
 
 import babel.core
 import six
-from decimal import Decimal
 from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from shuup import configuration
 from shuup.admin.form_part import FormPart, TemplatedFormDef
-from shuup.core.fields import (
-    FORMATTED_DECIMAL_FIELD_MAX_DIGITS,
-    FormattedDecimalFormField,
-)
+from shuup.core.fields import FORMATTED_DECIMAL_FIELD_MAX_DIGITS, FormattedDecimalFormField
 from shuup.core.models import ConfigurationItem
 from shuup.core.order_creator.constants import ORDER_MIN_TOTAL_CONFIG_KEY
 

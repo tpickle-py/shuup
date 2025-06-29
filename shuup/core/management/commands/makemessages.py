@@ -11,15 +11,16 @@ Works by monkey patching django.utils.translation.trans_real.templatize
 with our version.
 """
 
-from __future__ import unicode_literals
 
-import babel.messages.extract
+
 import datetime
 import os
+from io import BytesIO
+
+import babel.messages.extract
 from django.core.management.commands import makemessages
 from django.utils.six import StringIO
 from django.utils.translation import template as trans_real
-from io import BytesIO
 
 KEYWORDS = dict(
     babel.messages.extract.DEFAULT_KEYWORDS,

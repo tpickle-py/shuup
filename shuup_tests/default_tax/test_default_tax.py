@@ -5,12 +5,14 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
 
-import pytest
+
 import random
 from decimal import Decimal
+
 from django.test.utils import override_settings
+
+import pytest
 
 from shuup.core.models import CustomerTaxGroup, Tax, TaxClass
 from shuup.core.taxing import TaxingContext, get_tax_module

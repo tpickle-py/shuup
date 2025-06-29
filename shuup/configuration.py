@@ -24,7 +24,7 @@ in shop specific configuration override the values in global
 configuration.
 """
 
-from __future__ import unicode_literals
+
 
 from shuup.core import cache
 from shuup.core.models import ConfigurationItem, EncryptedConfigurationItem

@@ -5,7 +5,10 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
+
+from http import HTTPStatus
+from typing import Iterable, Tuple
 
 from django.apps import apps
 from django.contrib.auth import get_user_model
@@ -15,8 +18,6 @@ from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import TemplateView
-from http import HTTPStatus
-from typing import Iterable, Tuple
 
 from shuup.admin.supplier_provider import get_supplier
 from shuup.admin.utils.object_selector import get_object_selector_permission_name

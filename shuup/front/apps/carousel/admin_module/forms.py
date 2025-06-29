@@ -5,26 +5,18 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.conf import settings
 from django.forms import BaseModelFormSet, ModelForm
 from django.utils.timezone import now
 
-from shuup.admin.forms.widgets import (
-    FileDnDUploaderWidget,
-    HexColorWidget,
-    ProductChoiceWidget,
-    QuickAddCategorySelect,
-)
+from shuup.admin.forms.widgets import FileDnDUploaderWidget, HexColorWidget, ProductChoiceWidget, QuickAddCategorySelect
 from shuup.admin.shop_provider import get_shop
 from shuup.core.models import Category
 from shuup.front.apps.carousel.models import Carousel, Slide
 from shuup.simple_cms.models import Page
-from shuup.utils.multilanguage_model_form import (
-    MultiLanguageModelForm,
-    to_language_codes,
-)
+from shuup.utils.multilanguage_model_form import MultiLanguageModelForm, to_language_codes
 
 
 class CarouselForm(ModelForm):

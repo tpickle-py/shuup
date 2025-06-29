@@ -5,12 +5,14 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import json
+
+from django.utils.encoding import force_text
+
 import pytest
 from babel.dates import format_date
-from django.utils.encoding import force_text
 
 from shuup.campaigns.models.basket_effects import BasketDiscountAmount
 from shuup.campaigns.models.campaigns import BasketCampaign, Coupon

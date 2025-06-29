@@ -5,24 +5,21 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-from __future__ import unicode_literals
 
-import pytest
+
 from collections import defaultdict
 from decimal import Decimal
+
 from django.test.utils import override_settings
+
+import pytest
 
 from shuup.core.models import OrderLineType, Tax, TaxClass
 from shuup.core.order_creator import OrderSource
 from shuup.core.pricing import TaxlessPrice
 from shuup.core.taxing import TaxSummary
 from shuup.default_tax.models import TaxRule
-from shuup.testing.factories import (
-    create_product,
-    get_payment_method,
-    get_shipping_method,
-    get_shop,
-)
+from shuup.testing.factories import create_product, get_payment_method, get_shipping_method, get_shop
 from shuup.utils import babel_precision_provider
 from shuup.utils.money import Money, set_precision_provider
 from shuup.utils.numbers import bankers_round

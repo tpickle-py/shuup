@@ -5,9 +5,10 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import json
+
 import six
 from django.middleware.csrf import get_token
 from django.utils.html import conditional_escape, format_html
@@ -19,13 +20,7 @@ from shuup.admin.utils.permissions import get_missing_permissions
 from shuup.admin.utils.str_utils import camelcase_to_snakecase
 from shuup.admin.utils.urls import NoModelUrl, get_model_url
 from shuup.apps.provides import get_provide_objects
-from shuup.utils.django_compat import (
-    NoReverseMatch,
-    Resolver404,
-    force_text,
-    resolve,
-    reverse,
-)
+from shuup.utils.django_compat import NoReverseMatch, Resolver404, force_text, resolve, reverse
 
 
 class BaseToolbarButtonProvider(object):

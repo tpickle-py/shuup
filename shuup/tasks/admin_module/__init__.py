@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -13,12 +13,7 @@ from shuup.admin.base import AdminModule, MenuEntry, SearchResult
 from shuup.admin.dashboard import DashboardContentBlock
 from shuup.admin.menu import CONTACTS_MENU_CATEGORY
 from shuup.admin.shop_provider import get_shop
-from shuup.admin.utils.urls import (
-    admin_url,
-    derive_model_url,
-    get_edit_and_list_urls,
-    get_model_url,
-)
+from shuup.admin.utils.urls import admin_url, derive_model_url, get_edit_and_list_urls, get_model_url
 from shuup.core.models import get_person_contact
 from shuup.tasks.models import Task, TaskStatus, TaskType
 from shuup.utils.django_compat import force_text

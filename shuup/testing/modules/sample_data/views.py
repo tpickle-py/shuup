@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.conf import settings
 from django.contrib import messages
@@ -26,10 +26,7 @@ from shuup.testing.modules.sample_data.factories import (
     create_sample_category,
     create_sample_product,
 )
-from shuup.testing.modules.sample_data.forms import (
-    ConsolidateObjectsForm,
-    SampleObjectsWizardForm,
-)
+from shuup.testing.modules.sample_data.forms import ConsolidateObjectsForm, SampleObjectsWizardForm
 from shuup.utils.django_compat import reverse
 
 

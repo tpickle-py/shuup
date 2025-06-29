@@ -5,13 +5,14 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import decimal
-import factory.fuzzy as fuzzy
 import os
 import random
 from datetime import datetime, timedelta
+
+import factory.fuzzy as fuzzy
 from django.conf import settings
 from PIL import Image
 from six import BytesIO
@@ -28,11 +29,7 @@ from shuup.core.models import (
     ShopProduct,
     ShopProductVisibility,
 )
-from shuup.testing.factories import (
-    get_default_product_type,
-    get_default_supplier,
-    get_default_tax_class,
-)
+from shuup.testing.factories import get_default_product_type, get_default_supplier, get_default_tax_class
 from shuup.testing.modules.sample_data import SAMPLE_IMAGES_BASE_DIR
 from shuup.utils.filer import filer_image_from_data
 

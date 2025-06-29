@@ -5,15 +5,16 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.conf import settings
 from django.db import models
-from shuup.compat import python_2_unicode_compatible
-from django.utils.translation import activate, get_language, ugettext_lazy as _
+from django.utils.translation import activate, get_language
+from django.utils.translation import ugettext_lazy as _
 from parler.models import TranslatableModel, TranslatedFields
 from reversion.models import Version
 
+from shuup.compat import python_2_unicode_compatible
 from shuup.simple_cms.models import Page
 from shuup.utils.i18n import lang_lru_cache
 

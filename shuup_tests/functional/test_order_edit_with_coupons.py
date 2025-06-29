@@ -5,12 +5,14 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-from __future__ import unicode_literals
+
 
 import decimal
 import json
-import pytest
+
 from django.core import serializers
+
+import pytest
 
 from shuup.admin.modules.orders.views.edit import OrderEditView
 from shuup.campaigns.models import BasketCampaign, Coupon

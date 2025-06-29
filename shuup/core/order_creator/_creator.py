@@ -5,18 +5,16 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import warnings
 from decimal import Decimal
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from shuup.core.models import Order, OrderLine, OrderLineType, ShopProduct
-from shuup.core.order_creator.signals import (
-    order_creator_finished,
-    post_order_line_save,
-)
+from shuup.core.order_creator.signals import order_creator_finished, post_order_line_save
 from shuup.core.shortcuts import update_order_line_from_product
 from shuup.core.utils.users import real_user_or_none
 from shuup.utils.deprecation import RemovedFromShuupWarning

@@ -13,7 +13,7 @@ are encoded into special objects of the form `{tag: val}`; the encoding
 and decoding process can be customized however necessary.
 """
 
-from __future__ import unicode_literals
+
 
 import datetime
 import decimal

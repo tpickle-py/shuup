@@ -5,11 +5,10 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.conf import settings
 from django.db import models
-from shuup.compat import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from filer.fields.image import FilerImageField
@@ -17,6 +16,7 @@ from jsonfield import JSONField
 from parler.managers import TranslatableManager
 from parler.models import TranslatedFields
 
+from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import CurrencyField, InternalIdentifierField
 from shuup.core.pricing import TaxfulPrice, TaxlessPrice
 from shuup.utils.analog import define_log_model

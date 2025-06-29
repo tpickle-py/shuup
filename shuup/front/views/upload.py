@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django import forms
 from django.conf import settings
@@ -14,12 +14,7 @@ from django.http.response import HttpResponseForbidden, JsonResponse
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.core.shop_provider import get_shop
-from shuup.utils.filer import (
-    ensure_media_file,
-    filer_file_to_json_dict,
-    filer_image_from_upload,
-    get_or_create_folder,
-)
+from shuup.utils.filer import ensure_media_file, filer_file_to_json_dict, filer_image_from_upload, get_or_create_folder
 
 
 def file_size_validator(value):

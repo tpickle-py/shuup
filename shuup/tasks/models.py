@@ -5,17 +5,17 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.db import models
 from django.db.models import Q
-from shuup.compat import python_2_unicode_compatible
 from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from parler.models import TranslatableModel, TranslatedFields
 
+from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField
 from shuup.utils.analog import LogEntryKind, define_log_model
 from shuup.utils.django_compat import force_text

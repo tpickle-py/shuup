@@ -5,26 +5,19 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import json
+
 import six
-from django.forms import (
-    HiddenInput,
-    Textarea,
-    TextInput,
-    TimeInput as DjangoTimeInput,
-    Widget,
-)
+from django.forms import HiddenInput, Textarea, TextInput, Widget
+from django.forms import TimeInput as DjangoTimeInput
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from filer.models import File
 
-from shuup.admin.forms.quick_select import (
-    QuickAddRelatedObjectMultiSelect,
-    QuickAddRelatedObjectSelect,
-)
+from shuup.admin.forms.quick_select import QuickAddRelatedObjectMultiSelect, QuickAddRelatedObjectSelect
 from shuup.admin.utils.forms import flatatt_filter
 from shuup.admin.utils.urls import NoModelUrl, get_model_url
 from shuup.core.models import Contact, PersonContact, Product, ProductMode, ShopProduct

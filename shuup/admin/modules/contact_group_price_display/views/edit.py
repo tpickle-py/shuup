@@ -5,11 +5,9 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
 
-from shuup.admin.modules.contact_group_price_display.views.forms import (
-    ContactGroupPriceDisplayForm,
-)
+
+from shuup.admin.modules.contact_group_price_display.views.forms import ContactGroupPriceDisplayForm
 from shuup.admin.utils.views import CreateOrUpdateView
 from shuup.core.models import ContactGroupPriceDisplay
 from shuup.utils.django_compat import reverse_lazy

@@ -5,15 +5,12 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.conf import settings
 
 from shuup.admin.form_part import FormPart, TemplatedFormDef
-from shuup.admin.modules.suppliers.forms import (
-    SupplierBaseForm,
-    SupplierContactAddressForm,
-)
+from shuup.admin.modules.suppliers.forms import SupplierBaseForm, SupplierContactAddressForm
 
 
 class SupplierBaseFormPart(FormPart):

@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.conf import settings
 from django.db.models import Q
@@ -14,13 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.supplier_provider import get_supplier
-from shuup.admin.utils.picotable import (
-    ChoicesFilter,
-    Column,
-    Picotable,
-    RangeFilter,
-    TextFilter,
-)
+from shuup.admin.utils.picotable import ChoicesFilter, Column, Picotable, RangeFilter, TextFilter
 from shuup.admin.utils.views import PicotableListView
 from shuup.core.models import ProductMode, Shop, ShopProduct
 from shuup.core.specs.product_kind import DefaultProductKindSpec, get_product_kind_specs

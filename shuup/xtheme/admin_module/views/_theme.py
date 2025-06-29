@@ -4,7 +4,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django import forms
 from django.contrib import messages
@@ -22,11 +22,7 @@ from shuup.admin.views.wizard import TemplatedWizardFormDef, WizardPane
 from shuup.core import cache
 from shuup.utils.django_compat import reverse
 from shuup.utils.importing import cached_load
-from shuup.xtheme._theme import (
-    get_theme_by_identifier,
-    get_theme_cache_key,
-    set_current_theme,
-)
+from shuup.xtheme._theme import get_theme_by_identifier, get_theme_cache_key, set_current_theme
 from shuup.xtheme.forms import AdminThemeForm, FontForm
 from shuup.xtheme.models import AdminThemeSettings, Font, ThemeSettings
 

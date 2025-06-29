@@ -5,12 +5,13 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from shuup.compat import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+
+from shuup.compat import python_2_unicode_compatible
 
 
 @python_2_unicode_compatible

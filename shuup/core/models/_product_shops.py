@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
 
 import six
 from django.core.exceptions import ValidationError
@@ -19,12 +19,7 @@ from parler.models import TranslatableModel, TranslatedFields
 
 from shuup.core.excs import ProductNotOrderableProblem, ProductNotVisibleProblem
 from shuup.core.fields import MoneyValueField, QuantityField, UnsavedForeignKey
-from shuup.core.signals import (
-    get_orderability_errors,
-    get_visibility_errors,
-    post_clean,
-    pre_clean,
-)
+from shuup.core.signals import get_orderability_errors, get_visibility_errors, post_clean, pre_clean
 from shuup.core.utils import context_cache
 from shuup.utils.analog import define_log_model
 from shuup.utils.importing import cached_load

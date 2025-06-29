@@ -82,7 +82,7 @@ rules for naming their settings.
    :file:`your_app/settings.py`.
 """
 
-from __future__ import unicode_literals
+
 
 import importlib
 

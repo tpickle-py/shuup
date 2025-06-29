@@ -5,23 +5,22 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import unicode_literals
+
+
+from collections import defaultdict
 
 import bleach
-from collections import defaultdict
 from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.forms import BaseModelFormSet
 from django.forms.formsets import DEFAULT_MAX_NUM, DEFAULT_MIN_NUM
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext
+from django.utils.translation import ugettext_lazy as _
 from filer.models import Image
 
-from shuup.admin.forms.fields import (
-    ObjectSelect2ModelField,
-    ObjectSelect2ModelMultipleField,
-)
+from shuup.admin.forms.fields import ObjectSelect2ModelField, ObjectSelect2ModelMultipleField
 from shuup.admin.forms.quick_select import NoModel
 from shuup.admin.forms.widgets import (
     FileDnDUploaderWidget,
@@ -54,10 +53,7 @@ from shuup.core.models import (
     Supplier,
 )
 from shuup.utils.i18n import get_language_name
-from shuup.utils.multilanguage_model_form import (
-    MultiLanguageModelForm,
-    to_language_codes,
-)
+from shuup.utils.multilanguage_model_form import MultiLanguageModelForm, to_language_codes
 
 
 class ProductBaseForm(MultiLanguageModelForm):
