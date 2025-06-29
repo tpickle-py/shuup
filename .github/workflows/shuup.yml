@@ -19,12 +19,14 @@ jobs:
         version: "latest"
     - name: Set up Python
       run: uv python install 3.11
+    - name: Create virtual environment
+      run: uv venv .venv
     - name: Install build dependencies
-      run: uv pip install --system setuptools wheel
+      run: uv pip install setuptools wheel
     - name: Install dev dependencies (without editable)
-      run: uv pip install --system black isort flake8 mypy pytest pytest-django pytest-cov coverage sphinx sphinx-rtd-theme pre-commit
+      run: uv pip install black isort flake8 mypy pytest pytest-django pytest-cov coverage sphinx sphinx-rtd-theme pre-commit
     - name: Install package in editable mode
-      run: uv pip install --system -e .
+      run: uv pip install -e .
     - name: Run sanity check
       run: uv run _misc/check_sanity.py
     - name: Run license headers check
@@ -53,14 +55,16 @@ jobs:
         version: "latest"
     - name: Set up Python
       run: uv python install ${{ matrix.python-version }}
+    - name: Create virtual environment
+      run: uv venv .venv
     - name: Install build dependencies
-      run: uv pip install --system setuptools wheel
+      run: uv pip install setuptools wheel
     - name: Install gettext
       run: sudo apt-get -y install gettext
     - name: Install dependencies (without editable)
-      run: uv pip install --system pytest pytest-django pytest-cov coverage codecov
+      run: uv pip install pytest pytest-django pytest-cov coverage codecov
     - name: Install package in editable mode
-      run: uv pip install --system -e .
+      run: uv pip install -e .
     - name: Create logs folder
       run: mkdir .unit_tests
     - name: Run makemessages
@@ -106,14 +110,17 @@ jobs:
     - name: Install gettext
       run: sudo apt-get -y install gettext
 
+    - name: Create virtual environment
+      run: uv venv .venv
+
     - name: Install build dependencies
-      run: uv pip install --system setuptools wheel
+      run: uv pip install setuptools wheel
 
     - name: Install dependencies (without editable)
-      run: uv pip install --system pytest pytest-django pytest-cov coverage pytest-splinter splinter selenium weasyprint pillow beautifulsoup4 mock
+      run: uv pip install pytest pytest-django pytest-cov coverage pytest-splinter splinter selenium weasyprint pillow beautifulsoup4 mock
 
     - name: Install package in editable mode
-      run: uv pip install --system -e .
+      run: uv pip install -e .
 
     - name: Build static files
       run: uv run python setup.py build_resources
