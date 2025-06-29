@@ -10,7 +10,10 @@ from django.forms import formset_factory
 from django.utils.encoding import force_text
 
 from shuup.admin.modules.contact_groups.views import ContactGroupEditView
-from shuup.admin.modules.contact_groups.views.forms import ContactGroupMembersForm, ContactGroupMembersFormSet
+from shuup.admin.modules.contact_groups.views.forms import (
+    ContactGroupMembersForm,
+    ContactGroupMembersFormSet,
+)
 from shuup.core.models import AnonymousContact
 from shuup.testing.factories import (
     create_random_company,
@@ -25,7 +28,9 @@ from shuup_tests.utils.forms import get_form_data
 
 @pytest.mark.django_db
 def test_contact_group_members_formset(rf):
-    FormSet = formset_factory(ContactGroupMembersForm, ContactGroupMembersFormSet, extra=1, can_delete=True)
+    FormSet = formset_factory(
+        ContactGroupMembersForm, ContactGroupMembersFormSet, extra=1, can_delete=True
+    )
     contact_group = get_default_customer_group()
     person = create_random_person()
 
@@ -41,7 +46,9 @@ def test_contact_group_members_formset(rf):
 
 
 def check_for_delete(request, contact_group, can_delete):
-    delete_url = reverse("shuup_admin:contact_group.delete", kwargs={"pk": contact_group.pk})
+    delete_url = reverse(
+        "shuup_admin:contact_group.delete", kwargs={"pk": contact_group.pk}
+    )
     view = ContactGroupEditView.as_view()
     response = view(request, pk=contact_group.pk).render()
     assert bool(delete_url in force_text(response.content)) == can_delete

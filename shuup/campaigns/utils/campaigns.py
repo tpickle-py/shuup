@@ -36,7 +36,9 @@ def get_total_price_of_products(basket, campaign):
     total_of_products = basket.shop.create_price(0)
     product_lines = basket.get_product_lines()
     if hasattr(campaign, "supplier") and campaign.supplier:
-        product_lines = [line for line in product_lines if line.supplier == campaign.supplier]
+        product_lines = [
+            line for line in product_lines if line.supplier == campaign.supplier
+        ]
 
     for product_line in product_lines:
         total_of_products += product_line.price

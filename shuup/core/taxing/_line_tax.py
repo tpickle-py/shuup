@@ -56,7 +56,13 @@ class LineTax(object):
         :type tax: shuup.core.models.Tax
         :type base_amount: shuup.utils.money.Money
         """
-        return cls(tax=tax, name=tax.name, base_amount=base_amount, amount=tax.calculate_amount(base_amount), **kwargs)
+        return cls(
+            tax=tax,
+            name=tax.name,
+            base_amount=base_amount,
+            amount=tax.calculate_amount(base_amount),
+            **kwargs,
+        )
 
 
 class SourceLineTax(LineTax):
@@ -79,4 +85,10 @@ class SourceLineTax(LineTax):
         self.base_amount = base_amount
 
     def __repr__(self):
-        return "%s(%r, %r, %r, %r)" % (type(self).__name__, self.tax, self.name, self.amount, self.base_amount)
+        return "%s(%r, %r, %r, %r)" % (
+            type(self).__name__,
+            self.tax,
+            self.name,
+            self.amount,
+            self.base_amount,
+        )

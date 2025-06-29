@@ -13,7 +13,12 @@ from .list import OrderListView
 from .log import NewLogEntryView
 from .payment import OrderCreatePaymentView, OrderDeletePaymentView, OrderSetPaidView
 from .refund import OrderCreateFullRefundView, OrderCreateRefundView
-from .shipment import OrderCreateShipmentView, ShipmentDeleteView, ShipmentListView, ShipmentSetSentView
+from .shipment import (
+    OrderCreateShipmentView,
+    ShipmentDeleteView,
+    ShipmentListView,
+    ShipmentSetSentView,
+)
 from .status import OrderStatusEditView, OrderStatusListView
 
 __all__ = [

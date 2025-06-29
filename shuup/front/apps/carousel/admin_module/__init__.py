@@ -16,7 +16,9 @@ from shuup.front.apps.carousel.models import Carousel
 
 class CarouselModule(AdminModule):
     name = _("Carousels")
-    breadcrumbs_menu_entry = MenuEntry(text=name, url="shuup_admin:carousel.list", category=CONTENT_MENU_CATEGORY)
+    breadcrumbs_menu_entry = MenuEntry(
+        text=name, url="shuup_admin:carousel.list", category=CONTENT_MENU_CATEGORY
+    )
 
     def get_urls(self):
         return get_edit_and_list_urls(

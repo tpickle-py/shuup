@@ -27,9 +27,17 @@ from ._basket_effects import (
     FreeProductLineForm,
 )
 from ._catalog import CatalogCampaignForm
-from ._catalog_conditions import ContactConditionForm, ContactGroupConditionForm, HourConditionForm
+from ._catalog_conditions import (
+    ContactConditionForm,
+    ContactGroupConditionForm,
+    HourConditionForm,
+)
 from ._catalog_effects import ProductDiscountAmountForm, ProductDiscountPercentageForm
-from ._catalog_filters import CategoryFilterForm, ProductFilterForm, ProductTypeFilterForm
+from ._catalog_filters import (
+    CategoryFilterForm,
+    ProductFilterForm,
+    ProductTypeFilterForm,
+)
 from ._coupon import CouponForm
 
 __all__ = [

@@ -18,10 +18,13 @@ def update_field(md, model, field):
 
 
 def md_to_html(apps, schema_editor):
-    md = Markdown(extensions=[
-        'markdown.extensions.extra',
-        'markdown.extensions.nl2br',
-    ], output_format="html5")
+    md = Markdown(
+        extensions=[
+            "markdown.extensions.extra",
+            "markdown.extensions.nl2br",
+        ],
+        output_format="html5",
+    )
     ProductTranslation = apps.get_model("shuup", "ProductTranslation")
     CategoryTranslation = apps.get_model("shuup", "CategoryTranslation")
     PaymentMethodTranslation = apps.get_model("shuup", "PaymentMethodTranslation")
@@ -33,11 +36,8 @@ def md_to_html(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0019_order_total_limit_behavior_component'),
+        ("shuup", "0019_order_total_limit_behavior_component"),
     ]
 
-    operations = [
-        migrations.RunPython(md_to_html, migrations.RunPython.noop)
-    ]
+    operations = [migrations.RunPython(md_to_html, migrations.RunPython.noop)]

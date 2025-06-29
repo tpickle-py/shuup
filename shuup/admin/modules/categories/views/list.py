@@ -17,7 +17,11 @@ from shuup.core.models import Category, CategoryStatus, CategoryVisibility
 
 class CategoryListView(PicotableListView):
     model = Category
-    category_status_choices = [(status.value, status) for status in CategoryStatus if status != CategoryStatus.DELETED]
+    category_status_choices = [
+        (status.value, status)
+        for status in CategoryStatus
+        if status != CategoryStatus.DELETED
+    ]
     default_columns = [
         Column("image", _("Image"), sortable=False, linked=True, raw=True),
         Column(
@@ -27,14 +31,22 @@ class CategoryListView(PicotableListView):
             display="format_name",
             linked=True,
             allow_highlight=False,
-            filter_config=MPTTFilter(choices="get_name_filter_choices", filter_field="id"),
+            filter_config=MPTTFilter(
+                choices="get_name_filter_choices", filter_field="id"
+            ),
         ),
         Column(
             "status",
             _("Status"),
-            filter_config=ChoicesFilter(choices=category_status_choices, default=CategoryStatus.VISIBLE.value),
+            filter_config=ChoicesFilter(
+                choices=category_status_choices, default=CategoryStatus.VISIBLE.value
+            ),
         ),
-        Column("visibility", _("Visibility"), filter_config=ChoicesFilter(choices=CategoryVisibility.choices)),
+        Column(
+            "visibility",
+            _("Visibility"),
+            filter_config=ChoicesFilter(choices=CategoryVisibility.choices),
+        ),
     ]
     toolbar_buttons_provider_key = "category_list_toolbar_provider"
     mass_actions_provider_key = "category_list_mass_actions_provider"

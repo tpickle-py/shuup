@@ -35,7 +35,10 @@ class ProductVariationLinkStatus(Enum):
 @python_2_unicode_compatible
 class ProductVariationVariable(TranslatableModel, SortableMixin):
     product = models.ForeignKey(
-        "Product", related_name="variation_variables", on_delete=models.CASCADE, verbose_name=_("product")
+        "Product",
+        related_name="variation_variables",
+        on_delete=models.CASCADE,
+        verbose_name=_("product"),
     )
     identifier = InternalIdentifierField(unique=False)
     translations = TranslatedFields(
@@ -54,13 +57,18 @@ class ProductVariationVariable(TranslatableModel, SortableMixin):
         ordering = ("ordering",)
 
     def __str__(self):
-        return force_text(self.safe_translation_getter("name") or self.identifier or repr(self))
+        return force_text(
+            self.safe_translation_getter("name") or self.identifier or repr(self)
+        )
 
 
 @python_2_unicode_compatible
 class ProductVariationVariableValue(TranslatableModel, SortableMixin):
     variable = models.ForeignKey(
-        ProductVariationVariable, related_name="values", on_delete=models.CASCADE, verbose_name=_("variation variable")
+        ProductVariationVariable,
+        related_name="values",
+        on_delete=models.CASCADE,
+        verbose_name=_("variation variable"),
     )
     identifier = InternalIdentifierField(unique=False)
 
@@ -80,19 +88,32 @@ class ProductVariationVariableValue(TranslatableModel, SortableMixin):
         ordering = ("ordering",)
 
     def __str__(self):
-        return force_text(self.safe_translation_getter("value") or self.identifier or repr(self))
+        return force_text(
+            self.safe_translation_getter("value") or self.identifier or repr(self)
+        )
 
 
 class ProductVariationResult(models.Model):
     product = models.ForeignKey(
-        "Product", related_name="variation_result_supers", on_delete=models.CASCADE, verbose_name=_("product")
+        "Product",
+        related_name="variation_result_supers",
+        on_delete=models.CASCADE,
+        verbose_name=_("product"),
     )
-    combination_hash = models.CharField(max_length=40, unique=True, db_index=True, verbose_name=_("combination hash"))
+    combination_hash = models.CharField(
+        max_length=40, unique=True, db_index=True, verbose_name=_("combination hash")
+    )
     result = models.ForeignKey(
-        "Product", related_name="variation_result_subs", on_delete=models.CASCADE, verbose_name=_("result")
+        "Product",
+        related_name="variation_result_subs",
+        on_delete=models.CASCADE,
+        verbose_name=_("result"),
     )
     status = EnumIntegerField(
-        ProductVariationLinkStatus, db_index=True, default=ProductVariationLinkStatus.VISIBLE, verbose_name=_("status")
+        ProductVariationLinkStatus,
+        db_index=True,
+        default=ProductVariationLinkStatus.VISIBLE,
+        verbose_name=_("status"),
     )
 
     @classmethod
@@ -122,7 +143,9 @@ def hash_combination(combination):
     bits = []
 
     for variable, value in six.iteritems(combination):
-        if isinstance(variable, six.integer_types) and isinstance(value, six.integer_types):
+        if isinstance(variable, six.integer_types) and isinstance(
+            value, six.integer_types
+        ):
             bits.append("%d=%d" % (variable, value))
         else:
             bits.append("%d=%d" % (variable.pk, value.pk))
@@ -176,9 +199,15 @@ def get_all_available_combinations(product):
 
     for value_set_combo in itertools.product(*value_sets_list):
         variable_to_value = dict(zip(variables_list, value_set_combo))
-        sorted_variable_to_value = sorted(variable_to_value.items(), key=lambda varval: varval[0].ordering)
-        text_description = ", ".join(sorted("%s: %s" % (var, val) for (var, val) in sorted_variable_to_value))
-        sku_part = "-".join(slugify(force_text(val))[:6] for (var, val) in sorted_variable_to_value)
+        sorted_variable_to_value = sorted(
+            variable_to_value.items(), key=lambda varval: varval[0].ordering
+        )
+        text_description = ", ".join(
+            sorted("%s: %s" % (var, val) for (var, val) in sorted_variable_to_value)
+        )
+        sku_part = "-".join(
+            slugify(force_text(val))[:6] for (var, val) in sorted_variable_to_value
+        )
         hash = hash_combination(variable_to_value)
         yield {
             "variable_to_value": variable_to_value,

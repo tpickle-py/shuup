@@ -7,20 +7,32 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_simple_cms', '0014_help_text_improvements'),
+        ("shuup_simple_cms", "0014_help_text_improvements"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='page',
-            name='available_from',
-            field=models.DateTimeField(blank=True, db_index=True, default=django.utils.timezone.now, help_text='Set an available date to restrict the page to be available only after a certain date and time. This is useful for pages describing sales campaigns or other time-sensitive pages.', null=True, verbose_name='available since'),
+            model_name="page",
+            name="available_from",
+            field=models.DateTimeField(
+                blank=True,
+                db_index=True,
+                default=django.utils.timezone.now,
+                help_text="Set an available date to restrict the page to be available only after a certain date and time. This is useful for pages describing sales campaigns or other time-sensitive pages.",
+                null=True,
+                verbose_name="available since",
+            ),
         ),
         migrations.AlterField(
-            model_name='page',
-            name='available_to',
-            field=models.DateTimeField(blank=True, db_index=True, help_text='Set an available date to restrict the page to be available only until a certain date and time. This is useful for pages describing sales campaigns or other time-sensitive pages.', null=True, verbose_name='available until'),
+            model_name="page",
+            name="available_to",
+            field=models.DateTimeField(
+                blank=True,
+                db_index=True,
+                help_text="Set an available date to restrict the page to be available only until a certain date and time. This is useful for pages describing sales campaigns or other time-sensitive pages.",
+                null=True,
+                verbose_name="available until",
+            ),
         ),
     ]

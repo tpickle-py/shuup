@@ -22,19 +22,27 @@ def _get_edit_object_view(rf, view, model_name, object_id, user, shop, mode=None
     data = {"model": model_name, "id": object_id or ""}
     if mode:
         data["mode"] = mode
-    request = apply_request_middleware(rf.get(reverse("shuup_admin:edit"), data), user=user, shop=shop)
+    request = apply_request_middleware(
+        rf.get(reverse("shuup_admin:edit"), data), user=user, shop=shop
+    )
     return view(request)
 
 
 @pytest.mark.parametrize(
     "creator_fn",
     [
-        lambda: factories.create_product("sku", factories.get_default_shop(), factories.get_default_supplier()),
+        lambda: factories.create_product(
+            "sku", factories.get_default_shop(), factories.get_default_supplier()
+        ),
         lambda: factories.create_random_person(),
         lambda: factories.create_random_company(),
         lambda: factories.create_random_order(
             customer=factories.create_random_person(),
-            products=[factories.create_product("p", factories.get_default_shop(), factories.get_default_supplier())],
+            products=[
+                factories.create_product(
+                    "p", factories.get_default_shop(), factories.get_default_supplier()
+                )
+            ],
         ),
         lambda: factories.create_random_user(),
     ],
@@ -47,25 +55,33 @@ def test_edit_object_view(rf, admin_user, creator_fn):
     model = ".".join(ContentType.objects.get_for_model(object_instance).natural_key())
 
     # correct shop
-    response = _get_edit_object_view(rf, view, model, object_instance.id, admin_user, shop)
+    response = _get_edit_object_view(
+        rf, view, model, object_instance.id, admin_user, shop
+    )
     assert response.status_code == 302
 
     urls = []
 
     try:
-        urls.append(get_model_url(object_instance, kind="edit", user=admin_user, shop=shop))
+        urls.append(
+            get_model_url(object_instance, kind="edit", user=admin_user, shop=shop)
+        )
     except NoModelUrl:
         pass
 
     try:
-        urls.append(get_model_url(object_instance, kind="detail", user=admin_user, shop=shop))
+        urls.append(
+            get_model_url(object_instance, kind="detail", user=admin_user, shop=shop)
+        )
     except NoModelUrl:
         pass
 
     assert response.url in urls
 
     # pass the mode query parameter
-    response = _get_edit_object_view(rf, view, model, object_instance.id, admin_user, shop, mode="test")
+    response = _get_edit_object_view(
+        rf, view, model, object_instance.id, admin_user, shop, mode="test"
+    )
     assert response.status_code == 302
     assert "mode=test" in response.url
 
@@ -92,7 +108,11 @@ def test_edit_object_view_errors(rf, admin_user):
     view = EditObjectView.as_view()
 
     # missing params
-    response = view(apply_request_middleware(rf.get(reverse("shuup_admin:edit")), user=admin_user, shop=shop))
+    response = view(
+        apply_request_middleware(
+            rf.get(reverse("shuup_admin:edit")), user=admin_user, shop=shop
+        )
+    )
     assert response.status_code == 400
     assert "Invalid object" in response.content.decode("utf-8")
 
@@ -111,7 +131,9 @@ def test_edit_object_view_errors(rf, admin_user):
     # object has no admin url
     from shuup.core.models import ConfigurationItem
 
-    config = ConfigurationItem.objects.create(shop=shop, key="test", value={"value": 123})
+    config = ConfigurationItem.objects.create(
+        shop=shop, key="test", value={"value": 123}
+    )
     model = ".".join(ContentType.objects.get_for_model(config).natural_key())
     with pytest.raises(Http404) as error:
         _get_edit_object_view(rf, view, model, config.id, admin_user, shop)

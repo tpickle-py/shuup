@@ -126,13 +126,19 @@ def customize_menu(entries, request):  # noqa (C901)
     """
     Merge system menu with customized admin menu
     """
-    customized_admin_menu = configuration.get(None, CUSTOM_ADMIN_MENU_USER_PREFIX.format(request.user.pk))
+    customized_admin_menu = configuration.get(
+        None, CUSTOM_ADMIN_MENU_USER_PREFIX.format(request.user.pk)
+    )
     if not customized_admin_menu:
         supplier = get_supplier(request)
         if supplier:
-            customized_admin_menu = configuration.get(None, CUSTOM_ADMIN_MENU_SUPPLIER_KEY)
+            customized_admin_menu = configuration.get(
+                None, CUSTOM_ADMIN_MENU_SUPPLIER_KEY
+            )
         elif getattr(request.user, "is_superuser", False):
-            customized_admin_menu = configuration.get(None, CUSTOM_ADMIN_MENU_SUPERUSER_KEY)
+            customized_admin_menu = configuration.get(
+                None, CUSTOM_ADMIN_MENU_SUPERUSER_KEY
+            )
         else:
             customized_admin_menu = configuration.get(None, CUSTOM_ADMIN_MENU_STAFF_KEY)
 
@@ -263,7 +269,9 @@ def get_menu_entry_categories(request):  # noqa (C901)
                     menu_categories[category_identifier] = category = _MenuCategory(
                         identifier=category_identifier,
                         name=category_identifier,
-                        icon=menu_category_icons.get(category_identifier, "fa fa-circle"),
+                        icon=menu_category_icons.get(
+                            category_identifier, "fa fa-circle"
+                        ),
                     )
             category.entries.append(entry)
             all_categories.add(category)
@@ -274,7 +282,9 @@ def get_menu_entry_categories(request):  # noqa (C901)
         if not cat.entries:
             continue
         categories.append(cat)
-    clean_categories = [c for menu_identifier, c in six.iteritems(menu_categories) if c in categories]
+    clean_categories = [
+        c for menu_identifier, c in six.iteritems(menu_categories) if c in categories
+    ]
 
     return customize_menu(clean_categories, request)
 

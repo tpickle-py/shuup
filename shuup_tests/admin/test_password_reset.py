@@ -19,12 +19,16 @@ from shuup_tests.utils.fixtures import REGULAR_USER_EMAIL, REGULAR_USER_PASSWORD
 def test_reset_admin_user_password(client):
     get_default_shop()
 
-    user = factories.create_random_user("en", is_staff=True, is_active=True, email=REGULAR_USER_EMAIL)
+    user = factories.create_random_user(
+        "en", is_staff=True, is_active=True, email=REGULAR_USER_EMAIL
+    )
     user.set_password(REGULAR_USER_PASSWORD)
     user.save(update_fields=("password",))
 
     assert len(mail.outbox) == 0
-    response = client.post(reverse("shuup_admin:request_password"), data={"email": user.email})
+    response = client.post(
+        reverse("shuup_admin:request_password"), data={"email": user.email}
+    )
     assert response.status_code == 302
     assert response.get("location")
     assert response.get("location").endswith(reverse("shuup_admin:login"))
@@ -51,14 +55,18 @@ def test_reset_admin_user_password(client):
 def test_reset_admin_user_password_errors(client):
     get_default_shop()
 
-    user = factories.create_random_user("en", is_staff=True, is_active=False, email=REGULAR_USER_EMAIL)
+    user = factories.create_random_user(
+        "en", is_staff=True, is_active=False, email=REGULAR_USER_EMAIL
+    )
     user.set_password(REGULAR_USER_PASSWORD)
     user.save()
 
     assert len(mail.outbox) == 0
 
     # user not active
-    response = client.post(reverse("shuup_admin:request_password"), data={"email": user.email})
+    response = client.post(
+        reverse("shuup_admin:request_password"), data={"email": user.email}
+    )
     assert response.status_code == 302
     assert len(mail.outbox) == 0
 
@@ -67,12 +75,16 @@ def test_reset_admin_user_password_errors(client):
     user.save()
 
     # user not staff
-    response = client.post(reverse("shuup_admin:request_password"), data={"email": user.email})
+    response = client.post(
+        reverse("shuup_admin:request_password"), data={"email": user.email}
+    )
     assert response.status_code == 302
     assert len(mail.outbox) == 0
 
     # non-existent email
-    response = client.post(reverse("shuup_admin:request_password"), data={"email": "doesntexist@email.ok"})
+    response = client.post(
+        reverse("shuup_admin:request_password"), data={"email": "doesntexist@email.ok"}
+    )
     assert response.status_code == 302
     assert len(mail.outbox) == 0
 
@@ -80,7 +92,9 @@ def test_reset_admin_user_password_errors(client):
     user.save()
 
     # all set
-    response = client.post(reverse("shuup_admin:request_password"), data={"email": user.email})
+    response = client.post(
+        reverse("shuup_admin:request_password"), data={"email": user.email}
+    )
     assert response.status_code == 302
     assert len(mail.outbox) == 1
     email_content = mail.outbox[0].body
@@ -90,7 +104,9 @@ def test_reset_admin_user_password_errors(client):
     # invalid token
     new_password = "new_pass"
     response = client.post(
-        reverse("shuup_admin:recover_password", kwargs=dict(uidb64=uid, token="invalid")),
+        reverse(
+            "shuup_admin:recover_password", kwargs=dict(uidb64=uid, token="invalid")
+        ),
         data={"new_password1": new_password, "new_password2": new_password},
     )
     assert response.status_code == 400
@@ -109,8 +125,12 @@ def test_reset_admin_user_password_errors(client):
         reverse("shuup_admin:recover_password", kwargs=dict(uidb64=uid, token=token)),
         data={"new_password1": new_password, "new_password2": "wrong"},
     )
-    assert response.status_code == 200  # Django forms likes to return invalid forms as 200. So be it.
-    assert escape("The two password fields didn't match.") in response.content.decode("utf-8")
+    assert (
+        response.status_code == 200
+    )  # Django forms likes to return invalid forms as 200. So be it.
+    assert escape("The two password fields didn't match.") in response.content.decode(
+        "utf-8"
+    )
 
     # all good
     response = client.post(

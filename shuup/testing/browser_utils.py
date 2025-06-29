@@ -6,7 +6,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 from django.utils.translation import activate
-from selenium.common.exceptions import ElementNotVisibleException, StaleElementReferenceException
+from selenium.common.exceptions import (
+    ElementNotVisibleException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC  # noqa: N812
 from selenium.webdriver.support.wait import WebDriverWait
@@ -31,7 +34,9 @@ def wait_until_disappeared(browser, css_selector, timeout=10, frequency=1.0):
     """
     wait_until_condition(
         browser,
-        condition=lambda x: not x.driver.find_element_by_css_selector(css_selector).is_displayed(),
+        condition=lambda x: not x.driver.find_element_by_css_selector(
+            css_selector
+        ).is_displayed(),
         timeout=timeout,
         frequency=frequency,
     )
@@ -52,7 +57,9 @@ def wait_until_appeared(browser, css_selector, timeout=10, frequency=1.0):
     """
     wait_until_condition(
         browser,
-        condition=lambda x: x.driver.find_element_by_css_selector(css_selector).is_displayed(),
+        condition=lambda x: x.driver.find_element_by_css_selector(
+            css_selector
+        ).is_displayed(),
         timeout=timeout,
         frequency=frequency,
     )
@@ -120,10 +127,14 @@ def click_element(browser, css_selector, timeout=10, frequency=1.0, header_heigh
     move_to_element(browser, css_selector, header_height)
     # selenium weirdness when clicking a button that already has focus...grumble grumble
     # http://stackoverflow.com/questions/21330894/why-do-i-have-to-click-twice-to-a-submit-input-using-selenium
-    browser.execute_script('document.querySelector("%s").focus()' % css_selector.replace('"', '\\"'))
+    browser.execute_script(
+        'document.querySelector("%s").focus()' % css_selector.replace('"', '\\"')
+    )
     wait_until_condition(
         browser,
-        condition=lambda x: EC.element_to_be_clickable((By.CSS_SELECTOR, css_selector))(browser.driver),
+        condition=lambda x: EC.element_to_be_clickable((By.CSS_SELECTOR, css_selector))(
+            browser.driver
+        ),
         timeout=timeout,
         frequency=frequency,
     )

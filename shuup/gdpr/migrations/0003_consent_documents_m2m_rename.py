@@ -6,17 +6,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('reversion', '0001_squashed_0004_auto_20160611_1202'),
-        ('shuup_simple_cms', '0007_gdpr'),
-        ('shuup_gdpr', '0002_consent_document'),
+        ("reversion", "0001_squashed_0004_auto_20160611_1202"),
+        ("shuup_simple_cms", "0007_gdpr"),
+        ("shuup_gdpr", "0002_consent_document"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='gdpruserconsent',
-            old_name='consents',
-            new_name='documents'
+            model_name="gdpruserconsent", old_name="consents", new_name="documents"
         )
     ]

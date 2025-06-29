@@ -37,7 +37,11 @@ PATTERNS = {
         "iso3166": "CY",
         "pattern": "99999999L",  # 1 block of 9 characters
     },
-    "CZ": {"country": "Czech Republic", "iso3166": "CZ", "pattern": ["99999999", "999999999", "9999999999"]},
+    "CZ": {
+        "country": "Czech Republic",
+        "iso3166": "CZ",
+        "pattern": ["99999999", "999999999", "9999999999"],
+    },
     "DE": {
         "country": "Germany",
         "iso3166": "DE",
@@ -61,7 +65,12 @@ PATTERNS = {
     "ES": {
         "country": "Spain",
         "iso3166": "ES",
-        "pattern": ["X9999999X4", "X99999999", "99999999X", "X9999999X"]  # 1 block of 9 characters
+        "pattern": [
+            "X9999999X4",
+            "X99999999",
+            "99999999X",
+            "X9999999X",
+        ],  # 1 block of 9 characters
         # CIF (Certificado de Identificación Fiscal): This is the tax ID number for all companies.
         # It consists of a letter followed by 8 digits. The letter represents the type of company,
         # the most common being an 'A' for Sociedad Anónima or a 'B' for Sociedad Limitada.
@@ -83,7 +92,12 @@ PATTERNS = {
     "GB": {
         "country": "United Kingdom",
         "iso3166": "GB",
-        "pattern": ["999999999", "999999999999", "GD999", "HA999"],  # 1 block of 9 or 12 digits
+        "pattern": [
+            "999999999",
+            "999999999999",
+            "GD999",
+            "HA999",
+        ],  # 1 block of 9 or 12 digits
     },
     "HU": {
         "iso3166": "HU",
@@ -95,7 +109,11 @@ PATTERNS = {
         "country": "Croatia",
         "pattern": "99999999999",  # 1 block of 11 digits
     },
-    "IE": {"iso3166": "IE", "country": "Ireland", "pattern": ["9S99999L", "9999999LL"]},  # 1 block of 8 or 9 characters
+    "IE": {
+        "iso3166": "IE",
+        "country": "Ireland",
+        "pattern": ["9S99999L", "9999999LL"],
+    },  # 1 block of 8 or 9 characters
     "IT": {
         "iso3166": "IT",
         "country": "Italy",
@@ -224,7 +242,9 @@ def verify_vat(vat_id, default_prefix=""):
     vat_id = vat_id.replace("-", "")  # TODO: Not sure if this is a good idea
 
     prefix = vat_id[:2]
-    if prefix not in PATTERNS:  # Okay, it's unknown thus far, so try again with the default prefix if any
+    if (
+        prefix not in PATTERNS
+    ):  # Okay, it's unknown thus far, so try again with the default prefix if any
         prefix = default_prefix
 
     # Then see if we know about this prefix.
@@ -241,12 +261,16 @@ def verify_vat(vat_id, default_prefix=""):
         patterns = [patterns]
 
     for pat in patterns:
-        regexp = compile_pattern(prefix, pat)  # Prefix will be added to the resulting spec.
+        regexp = compile_pattern(
+            prefix, pat
+        )  # Prefix will be added to the resulting spec.
         match = regexp.match(vat_id)
         if match:
             return (prefix, match.groups())
 
-    raise VatInvalidValidationError("VAT ID for %(country)s could not be validated" % spec)
+    raise VatInvalidValidationError(
+        "VAT ID for %(country)s could not be validated" % spec
+    )
 
 
 def get_vat_prefix_for_country(iso3166):

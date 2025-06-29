@@ -14,7 +14,9 @@ from shuup.core.models import PaymentMethod, ShippingMethod
 
 
 class ServiceProviderTypeForm(forms.Form):
-    providers = forms.CharField(label=_("Provider"), required=False, widget=forms.HiddenInput())
+    providers = forms.CharField(
+        label=_("Provider"), required=False, widget=forms.HiddenInput()
+    )
 
     def __init__(self, *args, **kwargs):
         self.provider_label = kwargs.pop("label", "")
@@ -23,7 +25,9 @@ class ServiceProviderTypeForm(forms.Form):
     def clean_providers(self):
         data = self.cleaned_data.get("providers", None)
         if not data:
-            self.add_error(None, _("Please activate at least one %s." % self.provider_label))
+            self.add_error(
+                None, _("Please activate at least one %s." % self.provider_label)
+            )
         return data
 
 
@@ -44,8 +48,12 @@ class ServiceWizardFormPartMixin(object):
         service_provider_form_defs = self._get_service_provider_form_defs()
 
         if self.request.method == "POST":
-            active_providers = self.request.POST.get(self.base_name + "-providers").split(",")
-            service_provider_form_defs = list(filter(lambda x: x.name in active_providers, service_provider_form_defs))
+            active_providers = self.request.POST.get(
+                self.base_name + "-providers"
+            ).split(",")
+            service_provider_form_defs = list(
+                filter(lambda x: x.name in active_providers, service_provider_form_defs)
+            )
         return [
             TemplatedWizardFormDef(
                 name=self.base_name,
@@ -68,7 +76,9 @@ class ServiceWizardFormPartMixin(object):
 class CarrierWizardPane(ServiceWizardFormPartMixin, WizardPane):
     identifier = "carrier"
     title = _("Carrier")
-    text = _("To start shipping products right away, please add shipping methods for your shop")
+    text = _(
+        "To start shipping products right away, please add shipping methods for your shop"
+    )
     icon = "shuup_admin/img/shipping.png"
     service_model = ShippingMethod
     base_name = "shipping_method_base"
@@ -84,7 +94,9 @@ class CarrierWizardPane(ServiceWizardFormPartMixin, WizardPane):
 class PaymentWizardPane(ServiceWizardFormPartMixin, WizardPane):
     identifier = "payment"
     title = _("Payment Provider")
-    text = _("To start accepting payments right away, please add payment methods for your shop")
+    text = _(
+        "To start accepting payments right away, please add payment methods for your shop"
+    )
     icon = "shuup_admin/img/payment.png"
     service_model = PaymentMethod
     base_name = "payment_method_base"

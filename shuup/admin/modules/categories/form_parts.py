@@ -21,7 +21,11 @@ class CategoryBaseFormPart(FormPart):
             CategoryBaseForm,
             template_name="shuup/admin/categories/_edit_base_form.jinja",
             required=True,
-            kwargs={"instance": self.object, "request": self.request, "languages": settings.LANGUAGES},
+            kwargs={
+                "instance": self.object,
+                "request": self.request,
+                "languages": settings.LANGUAGES,
+            },
         )
 
     def form_valid(self, form):

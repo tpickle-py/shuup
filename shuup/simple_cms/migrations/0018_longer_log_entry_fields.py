@@ -4,20 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_simple_cms', '0017_available_groups'),
+        ("shuup_simple_cms", "0017_available_groups"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pagelogentry',
-            name='identifier',
-            field=models.CharField(blank=True, db_index=True, max_length=256, verbose_name='identifier'),
+            model_name="pagelogentry",
+            name="identifier",
+            field=models.CharField(
+                blank=True, db_index=True, max_length=256, verbose_name="identifier"
+            ),
         ),
         migrations.AlterField(
-            model_name='pagelogentry',
-            name='message',
-            field=models.CharField(max_length=1024, verbose_name='message'),
+            model_name="pagelogentry",
+            name="message",
+            field=models.CharField(max_length=1024, verbose_name="message"),
         ),
     ]

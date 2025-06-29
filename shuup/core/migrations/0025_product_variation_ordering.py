@@ -6,20 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0024_product_shop_description'),
+        ("shuup", "0024_product_shop_description"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='productvariationvariable',
-            name='ordering',
+            model_name="productvariationvariable",
+            name="ordering",
             field=models.SmallIntegerField(db_index=True, default=0),
         ),
         migrations.AddField(
-            model_name='productvariationvariablevalue',
-            name='ordering',
+            model_name="productvariationvariablevalue",
+            name="ordering",
             field=models.SmallIntegerField(db_index=True, default=0),
         ),
     ]

@@ -14,8 +14,16 @@ from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from shuup.front.notify_events import OrderReceived, PaymentCreated, RefundCreated, ShipmentCreated, ShipmentDeleted
-from shuup.notify.script_template.factory import generic_send_email_script_template_factory
+from shuup.front.notify_events import (
+    OrderReceived,
+    PaymentCreated,
+    RefundCreated,
+    ShipmentCreated,
+    ShipmentDeleted,
+)
+from shuup.notify.script_template.factory import (
+    generic_send_email_script_template_factory,
+)
 from shuup.testing.modules.content.data import ORDER_CONFIRMATION
 
 mark_safe_lazy = lazy(mark_safe, six.text_type)
@@ -57,9 +65,13 @@ ShipmentCreatedEmailScriptTemplate = generic_send_email_script_template_factory(
     event=ShipmentCreated,
     name=_("Send Shipment Created Email"),
     description=_("Send an email to customer when a shipment is created."),
-    help_text=_("This script will send an email to customer when a shipment of his order has been created."),
+    help_text=_(
+        "This script will send an email to customer when a shipment of his order has been created."
+    ),
     initial={
-        "en-subject": _("{{ order.shop }} - Shipment created for order {{ order.identifier }}"),
+        "en-subject": _(
+            "{{ order.shop }} - Shipment created for order {{ order.identifier }}"
+        ),
         "en-body": SHIPMENT_CREATED_EMAIL_TEMPLATE,
     },
 )
@@ -70,9 +82,14 @@ ShipmentDeletedEmailScriptTemplate = generic_send_email_script_template_factory(
     name=_("Send Shipment Deleted Email"),
     description=_("Send email when a shipment is deleted."),
     help_text=_(
-        "This script will send an email to customer or to any configured email " "right after a shipment gets deleted."
+        "This script will send an email to customer or to any configured email "
+        "right after a shipment gets deleted."
     ),
-    initial={"en-subject": _("{{ order.shop }} - Shipment deleted for order {{ order.identifier }}")},
+    initial={
+        "en-subject": _(
+            "{{ order.shop }} - Shipment deleted for order {{ order.identifier }}"
+        )
+    },
 )
 
 PaymentCreatedEmailScriptTemplate = generic_send_email_script_template_factory(
@@ -81,9 +98,14 @@ PaymentCreatedEmailScriptTemplate = generic_send_email_script_template_factory(
     name=_("Send Payment Created Email"),
     description=_("Send email to customer when a payment is created."),
     help_text=_(
-        "This script will send an email to customer or to any configured email " "right after a payment gets created."
+        "This script will send an email to customer or to any configured email "
+        "right after a payment gets created."
     ),
-    initial={"en-subject": _("{{ order.shop }} - Payment created for order {{ order.identifier }}")},
+    initial={
+        "en-subject": _(
+            "{{ order.shop }} - Payment created for order {{ order.identifier }}"
+        )
+    },
 )
 
 RefundCreatedEmailScriptTemplate = generic_send_email_script_template_factory(
@@ -92,9 +114,14 @@ RefundCreatedEmailScriptTemplate = generic_send_email_script_template_factory(
     name=_("Send Refund Created Email"),
     description=_("Send email when a refund is created."),
     help_text=_(
-        "This script will send an email to customer or to any configured email " "right after a refund gets created."
+        "This script will send an email to customer or to any configured email "
+        "right after a refund gets created."
     ),
-    initial={"en-subject": _("{{ order.shop }} - Refund created for order {{ order.identifier }}")},
+    initial={
+        "en-subject": _(
+            "{{ order.shop }} - Refund created for order {{ order.identifier }}"
+        )
+    },
 )
 
 OrderConfirmationEmailScriptTemplate = generic_send_email_script_template_factory(
@@ -109,6 +136,8 @@ OrderConfirmationEmailScriptTemplate = generic_send_email_script_template_factor
     ),
     initial={
         "en-subject": ORDER_CONFIRMATION["subject"],
-        "en-body": linebreaksbr(template_loader.get_template(ORDER_CONFIRMATION["body_template"]).render()),
+        "en-body": linebreaksbr(
+            template_loader.get_template(ORDER_CONFIRMATION["body_template"]).render()
+        ),
     },
 )

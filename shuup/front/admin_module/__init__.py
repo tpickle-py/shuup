@@ -45,7 +45,9 @@ def get_unfinalized_cart_block(request, days=14):
         value=(data.get("sum") or 0),
         currency=shop.currency,
         icon="fa fa-calculator",
-        subtitle=_("Based on {b} carts over the last {d} days").format(b=data.get("count"), d=days),
+        subtitle=_("Based on {b} carts over the last {d} days").format(
+            b=data.get("count"), d=days
+        ),
     )
 
 
@@ -59,9 +61,15 @@ class CartAdminModule(AdminModule):
 
     def get_urls(self):
         return [
-            admin_url(r"^carts/$", "shuup.front.admin_module.carts.views.CartListView", name="cart.list"),
             admin_url(
-                r"^carts/(?P<pk>\d+)/$", "shuup.front.admin_module.carts.views.CartDetailView", name="cart.detail"
+                r"^carts/$",
+                "shuup.front.admin_module.carts.views.CartListView",
+                name="cart.list",
+            ),
+            admin_url(
+                r"^carts/(?P<pk>\d+)/$",
+                "shuup.front.admin_module.carts.views.CartDetailView",
+                name="cart.detail",
             ),
         ]
 

@@ -27,7 +27,11 @@ class PermissionGroupForm(forms.ModelForm):
         super(PermissionGroupForm, self).__init__(*args, **kwargs)
         self.fields["name"].help_text = _("The Permission Group name.")
 
-        initial_permissions = list(get_permissions_from_group(self.instance.pk)) if self.instance.pk else []
+        initial_permissions = (
+            list(get_permissions_from_group(self.instance.pk))
+            if self.instance.pk
+            else []
+        )
         self.admin_modules = self._get_module_choices()
         for admin_module in self.admin_modules:
             all_permissions_granted = True
@@ -50,9 +54,9 @@ class PermissionGroupForm(forms.ModelForm):
                 else:
                     all_permissions_granted = False
 
-            extra_permissions = list(get_permissions_from_urls(admin_module.get_urls())) + list(
-                admin_module.get_extra_permissions()
-            )
+            extra_permissions = list(
+                get_permissions_from_urls(admin_module.get_urls())
+            ) + list(admin_module.get_extra_permissions())
             for permission in extra_permissions:
                 field_id = "perm:{}".format(permission)
                 self.fields[field_id] = forms.BooleanField(
@@ -68,7 +72,9 @@ class PermissionGroupForm(forms.ModelForm):
                     all_permissions_granted = False
 
             admin_module.all_permissions_granted = all_permissions_granted
-            admin_module.partial_permissions_granted = False if all_permissions_granted else partial_permissions_granted
+            admin_module.partial_permissions_granted = (
+                False if all_permissions_granted else partial_permissions_granted
+            )
 
     def _get_module_choices(self):
         modules = [module for module in get_modules() if module.name != "_Base_"]

@@ -62,7 +62,9 @@ def _get_provide_specs_from_apps(category):
     """
     provides_black_list = getattr(settings, "SHUUP_PROVIDES_BLACKLIST", {})
     if not isinstance(provides_black_list, dict):
-        raise ImproperlyConfigured("Error! The setting `SHUUP_PROVIDES_BLACKLIST` MUST be a dictionary.")
+        raise ImproperlyConfigured(
+            "Error! The setting `SHUUP_PROVIDES_BLACKLIST` MUST be a dictionary."
+        )
 
     if category not in _provide_specs:  # (Re)load required?
         provide_list = []
@@ -72,7 +74,9 @@ def _get_provide_specs_from_apps(category):
                 continue
             spec_list = app_config.provides.get(category, ())
 
-            if isinstance(spec_list, six.string_types):  # Oh my, the user seems to have messed up here!
+            if isinstance(
+                spec_list, six.string_types
+            ):  # Oh my, the user seems to have messed up here!
                 # Not to worry! We can fix it. We have the technology!
                 spec_list = (spec_list,)
 
@@ -88,7 +92,9 @@ def _get_provide_specs_from_apps(category):
 def _load_provide_objects(category):
     provide_specs = _get_provide_specs_from_apps(category)
     loaded_provides = _loaded_provides[category]
-    if set(provide_specs) != set(loaded_provides.keys()):  # Changes occurred, reload provides
+    if set(provide_specs) != set(
+        loaded_provides.keys()
+    ):  # Changes occurred, reload provides
         _uncache(category)
         explanation = "Loading provides %s" % category
         loaded_provides = OrderedDict()
@@ -223,7 +229,9 @@ def load_module_instances(setting_name, provide_category):
 
 def _get_settings_value(setting_name):
     if not hasattr(settings, setting_name):
-        raise ImproperlyConfigured("Error! The setting `%s` MUST be set." % setting_name)
+        raise ImproperlyConfigured(
+            "Error! The setting `%s` MUST be set." % setting_name
+        )
     return getattr(settings, setting_name, None)
 
 

@@ -6,20 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('campaigns', '0015_set_coupon_shops'),
+        ("campaigns", "0015_set_coupon_shops"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='hourbasketcondition',
-            name='days',
-            field=models.CharField(max_length=255, verbose_name='days'),
+            model_name="hourbasketcondition",
+            name="days",
+            field=models.CharField(max_length=255, verbose_name="days"),
         ),
         migrations.AlterField(
-            model_name='hourcondition',
-            name='days',
-            field=models.CharField(max_length=255, verbose_name='days'),
+            model_name="hourcondition",
+            name="days",
+            field=models.CharField(max_length=255, verbose_name="days"),
         ),
     ]

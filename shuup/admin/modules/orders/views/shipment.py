@@ -23,7 +23,15 @@ from shuup.admin.utils.picotable import Column
 from shuup.admin.utils.urls import NoModelUrl, get_model_url
 from shuup.admin.utils.views import PicotableListView
 from shuup.core.excs import NoProductsToShipException, NoShippingAddressException
-from shuup.core.models import Order, Product, Shipment, ShipmentProduct, ShipmentStatus, Shop, UnitInterface
+from shuup.core.models import (
+    Order,
+    Product,
+    Shipment,
+    ShipmentProduct,
+    ShipmentStatus,
+    Shop,
+    UnitInterface,
+)
 from shuup.utils.django_compat import reverse
 from shuup.utils.excs import Problem
 
@@ -43,7 +51,9 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
     form_class = ShipmentForm  # Augmented manually
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
+            "id", flat=True
+        )
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_context_data(self, **kwargs):
@@ -79,11 +89,15 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
         form.product_summary = order.get_product_summary(supplier=supplier_id)
         form.product_names = dict(
             (product_id, text)
-            for (product_id, text) in order.lines.exclude(product=None).values_list("product_id", "text")
+            for (product_id, text) in order.lines.exclude(product=None).values_list(
+                "product_id", "text"
+            )
         )
         for product_id, info in sorted(six.iteritems(form.product_summary)):
             product_name = _("%(product_name)s (%(supplier)s)") % {
-                "product_name": form.product_names.get(product_id, "Product %s" % product_id),
+                "product_name": form.product_names.get(
+                    product_id, "Product %s" % product_id
+                ),
                 "supplier": ", ".join(info["suppliers"]),
             }
 
@@ -127,7 +141,9 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
         :return: Saved, complete Shipment object.
         :rtype: shuup.core.models.Shipment
         """
-        return order.create_shipment(product_quantities=product_quantities, shipment=shipment)
+        return order.create_shipment(
+            product_quantities=product_quantities, shipment=shipment
+        )
 
     def get_success_url(self):
         return get_model_url(self.object)
@@ -142,7 +158,8 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
 
         product_map = Product.objects.in_bulk(set(product_ids_to_quantities.keys()))
         products_to_quantities = dict(
-            (product_map[product_id], quantity) for (product_id, quantity) in six.iteritems(product_ids_to_quantities)
+            (product_map[product_id], quantity)
+            for (product_id, quantity) in six.iteritems(product_ids_to_quantities)
         )
 
         unsaved_shipment = Shipment(
@@ -159,7 +176,9 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
 
         try:
             shipment = self.create_shipment(
-                order=order, product_quantities=products_to_quantities, shipment=unsaved_shipment
+                order=order,
+                product_quantities=products_to_quantities,
+                shipment=unsaved_shipment,
             )
         except Problem as problem:
             messages.error(self.request, str(problem))
@@ -180,7 +199,9 @@ class ShipmentDeleteView(DetailView):
     context_object_name = "shipment"
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
+            "id", flat=True
+        )
         return Shipment.objects.filter(order__shop_id__in=shop_ids)
 
     def get_success_url(self):
@@ -201,7 +222,9 @@ class ShipmentSetSentView(DetailView):
     context_object_name = "shipment"
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
+            "id", flat=True
+        )
         return Shipment.objects.filter(order__shop_id__in=shop_ids)
 
     def get_success_url(self):
@@ -227,7 +250,9 @@ class ShipmentListView(PicotableListView):
         Column("order", _("Order"), display="get_order", raw=True),
         Column("get_content", _("Content"), display="get_content", raw=True),
         Column("supplier", _("Supplier"), display="get_supplier", raw=True),
-        Column("tracking_code", _("Tracking Code"), display="tracking_code_url", raw=True),
+        Column(
+            "tracking_code", _("Tracking Code"), display="tracking_code_url", raw=True
+        ),
         Column("status", _("Status"), display="create_action_buttons", raw=True),
     ]
 
@@ -247,9 +272,9 @@ class ShipmentListView(PicotableListView):
             return str(instance.order)
 
     def get_content(self, instance):
-        shipment_products = ShipmentProduct.objects.filter(shipment=instance).select_related(
-            "product", "product__sales_unit"
-        )
+        shipment_products = ShipmentProduct.objects.filter(
+            shipment=instance
+        ).select_related("product", "product__sales_unit")
         content = []
 
         for shipment_product in shipment_products:
@@ -259,10 +284,16 @@ class ShipmentListView(PicotableListView):
         return ", ".join(content)
 
     def create_action_buttons(self, instance):
-        if instance.order.shipping_method and instance.order.shipping_method.carrier.uses_default_shipments_manager:
+        if (
+            instance.order.shipping_method
+            and instance.order.shipping_method.carrier.uses_default_shipments_manager
+        ):
             if instance.status not in (ShipmentStatus.SENT, ShipmentStatus.ERROR):
                 url = "{base_url}?next={next_url}".format(
-                    base_url=reverse("shuup_admin:order.set-shipment-sent", kwargs={"pk": instance.pk}),
+                    base_url=reverse(
+                        "shuup_admin:order.set-shipment-sent",
+                        kwargs={"pk": instance.pk},
+                    ),
                     next_url=reverse("shuup_admin:order.shipments.list"),
                 )
                 return render_to_string(
@@ -292,10 +323,17 @@ class ShipmentListView(PicotableListView):
 
     def get_object_abstract(self, instance, item):
         return [
-            {"text": _("Shipment {shipment_id}").format(shipment_id=item.get("id")), "class": "header"},
+            {
+                "text": _("Shipment {shipment_id}").format(shipment_id=item.get("id")),
+                "class": "header",
+            },
             {"title": _("Order"), "text": " ", "raw": item.get("order")},
             {"title": _("Supplier"), "text": item.get("supplier")},
             {"title": _("Content"), "text": item.get("get_content")},
-            {"title": _("Tracking code"), "text": " ", "raw": item.get("tracking_code")},
+            {
+                "title": _("Tracking code"),
+                "text": " ",
+                "raw": item.get("tracking_code"),
+            },
             {"title": _("Status"), "text": " ", "raw": item.get("status")},
         ]

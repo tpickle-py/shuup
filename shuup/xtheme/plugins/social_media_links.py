@@ -159,4 +159,9 @@ class SocialMediaLinksPlugin(TemplatedPlugin):
         """
         links = self.config.get("links", {})
 
-        return sorted([(v["ordering"] or 0, self.icon_classes[k], v["url"]) for (k, v) in links.items()])
+        return sorted(
+            [
+                (v["ordering"] or 0, self.icon_classes[k], v["url"])
+                for (k, v) in links.items()
+            ]
+        )

@@ -9,7 +9,13 @@ from django.utils.translation import ugettext_lazy as _
 from uuid import uuid4
 
 from shuup.core.fields import MoneyValueField, QuantityField
-from shuup.core.models import Category, OrderLineType, PolymorphicShuupModel, Product, ShopProduct
+from shuup.core.models import (
+    Category,
+    OrderLineType,
+    PolymorphicShuupModel,
+    Product,
+    ShopProduct,
+)
 from shuup.core.order_creator._source import LineSource
 
 
@@ -19,7 +25,10 @@ class BasketLineEffect(PolymorphicShuupModel):
     admin_form_class = None
 
     campaign = models.ForeignKey(
-        on_delete=models.CASCADE, to="BasketCampaign", related_name="line_effects", verbose_name=_("campaign")
+        on_delete=models.CASCADE,
+        to="BasketCampaign",
+        related_name="line_effects",
+        verbose_name=_("campaign"),
     )
 
     def get_discount_lines(self, order_source, original_lines, supplier):
@@ -29,7 +38,9 @@ class BasketLineEffect(PolymorphicShuupModel):
         :return: amount of discount to accumulate for the product
         :rtype: Iterable[shuup.core.order_creator.SourceLine]
         """
-        raise NotImplementedError("Error! Not implemented: `BasketLineEffect` -> `get_discount_lines()`")
+        raise NotImplementedError(
+            "Error! Not implemented: `BasketLineEffect` -> `get_discount_lines()`"
+        )
 
 
 class FreeProductLine(BasketLineEffect):
@@ -67,7 +78,10 @@ class FreeProductLine(BasketLineEffect):
                 )
 
             if not shop_product.is_orderable(
-                supplier=supplier, customer=order_source.customer, quantity=self.quantity, allow_cache=False
+                supplier=supplier,
+                customer=order_source.customer,
+                quantity=self.quantity,
+                allow_cache=False,
             ):
                 continue
 
@@ -95,11 +109,17 @@ class DiscountFromProduct(BasketLineEffect):
     per_line_discount = models.BooleanField(
         default=True,
         verbose_name=_("per line discount"),
-        help_text=_("Disable this if you want to give discount for each matched product."),
+        help_text=_(
+            "Disable this if you want to give discount for each matched product."
+        ),
     )
 
     discount_amount = MoneyValueField(
-        default=None, blank=True, null=True, verbose_name=_("discount amount"), help_text=_("Flat amount of discount.")
+        default=None,
+        blank=True,
+        null=True,
+        verbose_name=_("discount amount"),
+        help_text=_("Flat amount of discount."),
     )
 
     products = models.ManyToManyField(Product, verbose_name=_("product"))
@@ -123,7 +143,11 @@ class DiscountFromProduct(BasketLineEffect):
                 continue
 
             base_price = line.base_unit_price.value * line.quantity
-            amnt = (self.discount_amount * line.quantity) if not self.per_line_discount else self.discount_amount
+            amnt = (
+                (self.discount_amount * line.quantity)
+                if not self.per_line_discount
+                else self.discount_amount
+            )
 
             # we use min() to limit the amount of discount to the products price
             discount_price = order_source.create_price(min(base_price, amnt))
@@ -143,7 +167,11 @@ class DiscountFromCategoryProducts(BasketLineEffect):
     name = _("Discount from Category products")
 
     discount_amount = MoneyValueField(
-        default=None, blank=True, null=True, verbose_name=_("discount amount"), help_text=_("Flat amount of discount.")
+        default=None,
+        blank=True,
+        null=True,
+        verbose_name=_("discount amount"),
+        help_text=_("Flat amount of discount."),
     )
     discount_percentage = models.DecimalField(
         max_digits=6,
@@ -153,7 +181,9 @@ class DiscountFromCategoryProducts(BasketLineEffect):
         verbose_name=_("discount percentage"),
         help_text=_("The discount percentage for this campaign."),
     )
-    category = models.ForeignKey(on_delete=models.CASCADE, to=Category, verbose_name=_("category"))
+    category = models.ForeignKey(
+        on_delete=models.CASCADE, to=Category, verbose_name=_("category")
+    )
 
     @property
     def description(self):
@@ -171,14 +201,19 @@ class DiscountFromCategoryProducts(BasketLineEffect):
             supplier = getattr(campaign, "supplier", None)
 
         product_ids = self.category.shop_products.values_list("product_id", flat=True)
-        for line in original_lines:  # Use original lines since we don't want to discount free product lines
+        for line in (
+            original_lines
+        ):  # Use original lines since we don't want to discount free product lines
             if supplier and line.supplier != supplier:
                 continue
 
             if not line.type == OrderLineType.PRODUCT:
                 continue
             if line.product.variation_parent:
-                if line.product.variation_parent.pk not in product_ids and line.product.pk not in product_ids:
+                if (
+                    line.product.variation_parent.pk not in product_ids
+                    and line.product.pk not in product_ids
+                ):
                     continue
             else:
                 if line.product.pk not in product_ids:
@@ -217,7 +252,9 @@ def _limit_discount_amount_by_min_price(line, order_source):
 
     # make sure the discount respects the minimum price of the product, if set
     try:
-        shop_product = line.product.get_shop_instance(order_source.shop, allow_cache=True)
+        shop_product = line.product.get_shop_instance(
+            order_source.shop, allow_cache=True
+        )
 
         if shop_product.minimum_price:
             min_total = shop_product.minimum_price.value * line.quantity

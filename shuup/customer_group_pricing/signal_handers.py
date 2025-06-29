@@ -37,16 +37,30 @@ def handle_contact_group_m2m_changed(sender, instance, **kwargs):
 @receiver(product_copied, dispatch_uid="customer_group_pricing_product_copied")
 def handle_product_copy(sender, shop, copied, copy, **kwargs):
     for price in CgpPrice.objects.filter(product=copied, shop=shop):
-        CgpPrice.objects.create(product=copy, shop=shop, group=price.group, price_value=price.price_value)
+        CgpPrice.objects.create(
+            product=copy, shop=shop, group=price.group, price_value=price.price_value
+        )
 
 
 # Bump prices cache when CgpDiscount is changed or deleted
-post_save.connect(handle_cgp_discount_post_save, sender=CgpDiscount, dispatch_uid="cgp:change_cgp_discount")
-pre_delete.connect(handle_cgp_discount_post_save, sender=CgpDiscount, dispatch_uid="cgp:delete_cgp_discount")
+post_save.connect(
+    handle_cgp_discount_post_save,
+    sender=CgpDiscount,
+    dispatch_uid="cgp:change_cgp_discount",
+)
+pre_delete.connect(
+    handle_cgp_discount_post_save,
+    sender=CgpDiscount,
+    dispatch_uid="cgp:delete_cgp_discount",
+)
 
 # Bump prices cache when CgpPrice is changed or deleted
-post_save.connect(handle_cgp_price_post_save, sender=CgpPrice, dispatch_uid="cgp:change_cgp_price")
-pre_delete.connect(handle_cgp_price_post_save, sender=CgpPrice, dispatch_uid="cgp:delete_cgp_price")
+post_save.connect(
+    handle_cgp_price_post_save, sender=CgpPrice, dispatch_uid="cgp:change_cgp_price"
+)
+pre_delete.connect(
+    handle_cgp_price_post_save, sender=CgpPrice, dispatch_uid="cgp:delete_cgp_price"
+)
 
 # Bump prices cache when ContactGroup members is changed
 m2m_changed.connect(

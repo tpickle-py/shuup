@@ -8,7 +8,11 @@
 import decimal
 import pytest
 
-from shuup.core.models import CountryLimitBehaviorComponent, OrderLineType, get_person_contact
+from shuup.core.models import (
+    CountryLimitBehaviorComponent,
+    OrderLineType,
+    get_person_contact,
+)
 from shuup.testing.factories import (
     create_product,
     get_address,
@@ -43,7 +47,13 @@ from shuup_tests.utils.basketish_order_source import BasketishOrderSource
     ],
 )
 def test_coutries_availability_for_shipping_method(
-    admin_user, countries, european_countries, not_in_countries, not_in_european_countries, shipping_country, available
+    admin_user,
+    countries,
+    european_countries,
+    not_in_countries,
+    not_in_european_countries,
+    shipping_country,
+    available,
 ):
     source = _get_source(admin_user, shipping_country, "FI")
     shipping_method = source.shipping_method
@@ -78,7 +88,13 @@ def test_coutries_availability_for_shipping_method(
     ],
 )
 def test_coutries_availability_for_payment_method(
-    admin_user, countries, european_countries, not_in_countries, not_in_european_countries, billing_country, available
+    admin_user,
+    countries,
+    european_countries,
+    not_in_countries,
+    not_in_european_countries,
+    billing_country,
+    available,
 ):
     source = _get_source(admin_user, "FI", billing_country)
     payment_method = source.payment_method
@@ -110,7 +126,10 @@ def _get_source(user, shipping_country, billing_country):
 
     supplier = get_default_supplier()
     product = create_product(
-        sku="test-%s--%s" % (prices_include_taxes, 10), shop=source.shop, supplier=supplier, default_price=10
+        sku="test-%s--%s" % (prices_include_taxes, 10),
+        shop=source.shop,
+        supplier=supplier,
+        default_price=10,
     )
     source.add_line(
         type=OrderLineType.PRODUCT,

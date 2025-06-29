@@ -56,14 +56,27 @@ def test_user_detail_works_at_all(rf, admin_user):
         password="suihku",
     )
     view_func = UserDetailView.as_view()
-    response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk)
+    response = view_func(
+        apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk
+    )
     assert response.status_code == 200
     response.render()
     assert force_text(user) in force_text(response.content)
-    response = view_func(apply_request_middleware(rf.post("/", {"set_is_active": "0"}), user=admin_user), pk=user.pk)
-    assert response.status_code < 500 and not get_user_model().objects.get(pk=user.pk).is_active
+    response = view_func(
+        apply_request_middleware(rf.post("/", {"set_is_active": "0"}), user=admin_user),
+        pk=user.pk,
+    )
+    assert (
+        response.status_code < 500
+        and not get_user_model().objects.get(pk=user.pk).is_active
+    )
     with pytest.raises(Problem):
-        view_func(apply_request_middleware(rf.post("/", {"set_is_active": "0"}), user=admin_user), pk=admin_user.pk)
+        view_func(
+            apply_request_middleware(
+                rf.post("/", {"set_is_active": "0"}), user=admin_user
+            ),
+            pk=admin_user.pk,
+        )
 
     user = get_user_model().objects.create(
         username=printable_gibberish(20),
@@ -89,7 +102,9 @@ def test_user_detail_and_login_as_url(rf, admin_user):
         password="suihkuunheti",
     )
     view_func = UserDetailView.as_view()
-    response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk)
+    response = view_func(
+        apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk
+    )
     assert response.status_code == 200
     response.render()
     assert force_text(user) in force_text(response.content)
@@ -97,7 +112,9 @@ def test_user_detail_and_login_as_url(rf, admin_user):
     assert force_text(login_as_url) in force_text(response.content)
 
     with override_settings(SHUUP_ADMIN_LOGIN_AS_REDIRECT_VIEW="giberish"):
-        response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk)
+        response = view_func(
+            apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk
+        )
         assert response.status_code == 200
         response.render()
         assert force_text(user) in force_text(response.content)
@@ -116,19 +133,27 @@ def test_user_detail_as_staff_and_login_as_url(rf, admin_user):
         is_staff=True,
     )
     view_func = UserDetailView.as_view()
-    response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk)
+    response = view_func(
+        apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk
+    )
     assert response.status_code == 200
     response.render()
     assert force_text(user) in force_text(response.content)
-    login_as_staff_url = reverse("shuup_admin:user.login-as-staff", kwargs={"pk": user.pk})
+    login_as_staff_url = reverse(
+        "shuup_admin:user.login-as-staff", kwargs={"pk": user.pk}
+    )
     assert force_text(login_as_staff_url) in force_text(response.content)
 
     with override_settings(SHUUP_ADMIN_LOGIN_AS_STAFF_REDIRECT_VIEW="giberish"):
-        response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk)
+        response = view_func(
+            apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk
+        )
         assert response.status_code == 200
         response.render()
         assert force_text(user) in force_text(response.content)
-        login_as_staff_url = reverse("shuup_admin:user.login-as-staff", kwargs={"pk": user.pk})
+        login_as_staff_url = reverse(
+            "shuup_admin:user.login-as-staff", kwargs={"pk": user.pk}
+        )
         assert force_text(login_as_staff_url) not in force_text(response.content)
 
 
@@ -218,7 +243,9 @@ def test_user_create(rf, admin_user):
         is_staff=True,
         is_superuser=False,
     )
-    response = view_func(apply_request_middleware(rf.get("/"), user=user, skip_session=True))
+    response = view_func(
+        apply_request_middleware(rf.get("/"), user=user, skip_session=True)
+    )
     assert response.status_code == 200
     response.render()
     assert "Staff status" not in force_text(response.content)
@@ -226,14 +253,20 @@ def test_user_create(rf, admin_user):
 
     # remove user staff permission
     view_func = UserChangePermissionsView.as_view()
-    response = view_func(apply_request_middleware(rf.post("/", {"is_staff": False}), user=admin_user), pk=last_user.id)
+    response = view_func(
+        apply_request_middleware(rf.post("/", {"is_staff": False}), user=admin_user),
+        pk=last_user.id,
+    )
     assert response.status_code == 302
     last_user = get_user_model().objects.last()
     assert last_user not in shop.staff_members.all()
 
     # add again, the member should not be inside shop staff member list
     view_func = UserChangePermissionsView.as_view()
-    response = view_func(apply_request_middleware(rf.post("/", {"is_staff": True}), user=admin_user), pk=last_user.id)
+    response = view_func(
+        apply_request_middleware(rf.post("/", {"is_staff": True}), user=admin_user),
+        pk=last_user.id,
+    )
     assert response.status_code == 302
     last_user = get_user_model().objects.last()
     assert last_user not in shop.staff_members.all()
@@ -308,7 +341,9 @@ def test_user_permission_view_as_staff_user(rf, admin_user):
     # Superuser can see the superuser status
     assert admin_user.is_superuser
     view_func = UserChangePermissionsView.as_view()
-    response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.id)
+    response = view_func(
+        apply_request_middleware(rf.get("/"), user=admin_user), pk=user.id
+    )
     assert response.status_code == 200
     response.render()
     assert "Superuser (Full rights) status" in force_text(response.content)
@@ -327,7 +362,9 @@ def test_user_detail_contact_seed(rf, admin_user):
 
     view_func = UserDetailView.as_view()
     # Check that fields populate . . .
-    request = apply_request_middleware(rf.get("/", {"contact_id": contact.pk}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"contact_id": contact.pk}), user=admin_user
+    )
     response = view_func(request)
     response.render()
     content = force_text(response.content)
@@ -343,7 +380,9 @@ def test_user_detail_contact_seed(rf, admin_user):
     assert response.status_code < 500
     # Check this new user is visible in the details now
     user = Contact.objects.get(pk=contact.pk).user
-    request = apply_request_middleware(rf.get("/", {"contact_id": contact.pk}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"contact_id": contact.pk}), user=admin_user
+    )
     response = view_func(request, pk=user.pk)
     response.render()
     content = force_text(response.content)
@@ -356,7 +395,9 @@ def test_user_detail_contact_seed(rf, admin_user):
 def test_user_permission_form_changes_group(rf, admin_user, regular_user):
     get_default_shop()
     form_class = modelform_factory(
-        model=get_user_model(), form=PermissionChangeFormBase, fields=("is_staff", "is_superuser")
+        model=get_user_model(),
+        form=PermissionChangeFormBase,
+        fields=("is_staff", "is_superuser"),
     )
 
     assert not regular_user.groups.all()
@@ -378,7 +419,9 @@ def test_user_permission_form_changes_group(rf, admin_user, regular_user):
 def test_login_as_user_errors(rf, admin_user, regular_user):
     get_default_shop()
     view_func = LoginAsUserView.as_view()
-    request = apply_request_middleware(rf.post("/"), user=regular_user, skip_session=True)
+    request = apply_request_middleware(
+        rf.post("/"), user=regular_user, skip_session=True
+    )
 
     # log in as self
     with pytest.raises(Problem):
@@ -474,7 +517,9 @@ def test_login_as_without_front_url(rf, admin_user, regular_user):
     def get_none():
         return None
 
-    with patch("shuup.admin.modules.users.views.detail.get_front_url", side_effect=get_none):
+    with patch(
+        "shuup.admin.modules.users.views.detail.get_front_url", side_effect=get_none
+    ):
         with pytest.raises(Problem):
             view_func(request, pk=regular_user.pk)
 
@@ -543,7 +588,9 @@ def test_login_as_staff_user(rf, admin_user):
     # Stop impersonating and since admin user have all access he should
     # be in user detail for staff user
     response = stop_impersonating_staff(request)
-    assert response["location"] == reverse("shuup_admin:user.detail", kwargs={"pk": staff_user.pk})
+    assert response["location"] == reverse(
+        "shuup_admin:user.detail", kwargs={"pk": staff_user.pk}
+    )
     assert get_user(request) == admin_user
 
 
@@ -557,7 +604,9 @@ def test_login_as_staff_without_front_url(rf, admin_user, regular_user):
     def get_none():
         return None
 
-    with patch("shuup.admin.modules.users.views.detail.get_admin_url", side_effect=get_none):
+    with patch(
+        "shuup.admin.modules.users.views.detail.get_admin_url", side_effect=get_none
+    ):
         with pytest.raises(Problem):
             view_func(request, pk=staff_user.pk)
 

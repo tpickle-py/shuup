@@ -7,25 +7,41 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0042_allow_longer_region_codes_for_addresses'),
+        ("shuup", "0042_allow_longer_region_codes_for_addresses"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='account_manager',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='shuup.PersonContact', verbose_name='account manager'),
+            model_name="order",
+            name="account_manager",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="shuup.PersonContact",
+                verbose_name="account manager",
+            ),
         ),
         migrations.AddField(
-            model_name='order',
-            name='customer_groups',
-            field=models.ManyToManyField(blank=True, related_name='customer_group_orders', to='shuup.ContactGroup', verbose_name='customer groups'),
+            model_name="order",
+            name="customer_groups",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="customer_group_orders",
+                to="shuup.ContactGroup",
+                verbose_name="customer groups",
+            ),
         ),
         migrations.AddField(
-            model_name='order',
-            name='tax_group',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='shuup.CustomerTaxGroup', verbose_name='tax group'),
+            model_name="order",
+            name="tax_group",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="shuup.CustomerTaxGroup",
+                verbose_name="tax group",
+            ),
         ),
     ]

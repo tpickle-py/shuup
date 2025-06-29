@@ -18,9 +18,13 @@ def is_tour_complete(shop, tour_key, user=None):
     :rtype: Boolean
     """
     user_id = user.pk if user else "-"
-    return configuration.get(shop, "shuup_%s_%s_tour_complete" % (tour_key, user_id), False)
+    return configuration.get(
+        shop, "shuup_%s_%s_tour_complete" % (tour_key, user_id), False
+    )
 
 
 def set_tour_complete(shop, tour_key, complete=True, user=None):
     user_id = user.pk if user else "-"
-    return configuration.set(shop, "shuup_%s_%s_tour_complete" % (tour_key, user_id), complete)
+    return configuration.set(
+        shop, "shuup_%s_%s_tour_complete" % (tour_key, user_id), complete
+    )

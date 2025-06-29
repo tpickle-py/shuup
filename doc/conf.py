@@ -137,7 +137,10 @@ todo_include_todos = True
 
 intersphinx_mapping = {
     "python": ("http://docs.python.org/3", None),
-    "django": ("http://docs.djangoproject.com/en/1.8/", "http://docs.djangoproject.com/en/1.8/_objects/"),
+    "django": (
+        "http://docs.djangoproject.com/en/1.8/",
+        "http://docs.djangoproject.com/en/1.8/_objects/",
+    ),
     "djpolymorph": ("http://django-polymorphic.readthedocs.org/en/latest/", None),
 }
 

@@ -77,13 +77,17 @@ def test_category_filter(reindex_catalog):
 
     category1 = Category.objects.create(name="Category 1")
     category1.shops.add(shop)
-    product1 = factories.create_product("p1", shop, factories.get_default_supplier(), "10")
+    product1 = factories.create_product(
+        "p1", shop, factories.get_default_supplier(), "10"
+    )
     shop_product1 = product1.get_shop_instance(shop)
     shop_product1.categories.add(category1)
 
     category2 = Category.objects.create(name="Category 2")
     category2.shops.add(shop)
-    product2 = factories.create_product("p2", shop, factories.get_default_supplier(), "20")
+    product2 = factories.create_product(
+        "p2", shop, factories.get_default_supplier(), "20"
+    )
     shop_product2 = product2.get_shop_instance(shop)
     shop_product2.categories.add(category2)
     reindex_catalog()
@@ -102,13 +106,17 @@ def test_category_filter(reindex_catalog):
     assert soup.find(id="product-%d" % product2.id)
 
     # 2) filter by category2 id only
-    response, soup = client.response_and_soup("{}?categories={}".format(url, category2.pk))
+    response, soup = client.response_and_soup(
+        "{}?categories={}".format(url, category2.pk)
+    )
     assert response.status_code == 200
     assert not soup.find(id="product-%d" % product1.id)
     assert soup.find(id="product-%d" % product2.id)
 
     # 3) filter by category1 and category2 id
-    response, soup = client.response_and_soup("{}?categories={},{}".format(url, category1.pk, category2.pk))
+    response, soup = client.response_and_soup(
+        "{}?categories={},{}".format(url, category1.pk, category2.pk)
+    )
     assert response.status_code == 200
     assert soup.find(id="product-%d" % product1.id)
     assert soup.find(id="product-%d" % product2.id)
@@ -127,18 +135,24 @@ def test_product_attributes_filter(reindex_catalog):
     category1 = Category.objects.create(name="Category 1")
     category1.shops.add(shop)
     product_type = ProductType.objects.create(name="Default Product Type")
-    options_attribute = create_attribute_with_options("attribute1", ["A", "B", "C"], 1, 3)
+    options_attribute = create_attribute_with_options(
+        "attribute1", ["A", "B", "C"], 1, 3
+    )
     product_type.attributes.add(options_attribute)
 
     choices = list(options_attribute.choices.all().order_by("translations__name"))
     option_a, option_b, option_c = choices
 
-    product1 = factories.create_product("p1", shop, factories.get_default_supplier(), "10", type=product_type)
+    product1 = factories.create_product(
+        "p1", shop, factories.get_default_supplier(), "10", type=product_type
+    )
     shop_product1 = product1.get_shop_instance(shop)
     shop_product1.categories.add(category1)
     product1.set_attribute_value("attribute1", [option_a.pk, option_c.pk])
 
-    product2 = factories.create_product("p2", shop, factories.get_default_supplier(), "10", type=product_type)
+    product2 = factories.create_product(
+        "p2", shop, factories.get_default_supplier(), "10", type=product_type
+    )
     shop_product2 = product2.get_shop_instance(shop)
     shop_product2.categories.add(category1)
     product2.set_attribute_value("attribute1", [option_c.pk])
@@ -146,7 +160,10 @@ def test_product_attributes_filter(reindex_catalog):
     reindex_catalog()
 
     client = SmartClient()
-    config = {"filter_products_by_products_attribute": True, "override_default_configuration": True}
+    config = {
+        "filter_products_by_products_attribute": True,
+        "override_default_configuration": True,
+    }
     set_configuration(category=category1, data=config)
 
     url = reverse("shuup:category", kwargs={"pk": category1.pk, "slug": category1.slug})
@@ -171,7 +188,10 @@ def test_product_attributes_filter(reindex_catalog):
     assert not soup.find(id="product-%d" % product2.id)
 
     # Check category setting doesn't override
-    config = {"filter_products_by_products_attribute": True, "override_default_configuration": False}
+    config = {
+        "filter_products_by_products_attribute": True,
+        "override_default_configuration": False,
+    }
     set_configuration(category=category1, data=config)
     url = reverse("shuup:category", kwargs={"pk": category1.pk, "slug": category1.slug})
     filtered_url = "{}?attribute1={}".format(url, option_a.pk)

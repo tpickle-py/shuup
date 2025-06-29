@@ -46,7 +46,7 @@ def get_language_choices():
       is in the language of the item.
     :rtype: Iterable[tuple[str,str,str]]
     """
-    for (code, name) in settings.LANGUAGES:
+    for code, name in settings.LANGUAGES:
         lang_info = translation.get_language_info(code)
         name_in_current_lang = translation.ugettext(name)
         local_name = lang_info["name_local"]
@@ -152,7 +152,12 @@ def safe_product_description(value):
 def cleanmeta(value):
     if isinstance(value, Undefined):
         return value
-    prepared_content = value.replace("&nbsp;", " ").replace("</p>", " ").replace("<br>", " ").replace('"', "'")
+    prepared_content = (
+        value.replace("&nbsp;", " ")
+        .replace("</p>", " ")
+        .replace("<br>", " ")
+        .replace('"', "'")
+    )
     return bleach.clean(prepared_content, tags=[], strip=True)
 
 

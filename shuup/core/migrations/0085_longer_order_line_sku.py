@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0084_tracking_url'),
+        ("shuup", "0084_tracking_url"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='orderline',
-            name='sku',
-            field=models.CharField(blank=True, max_length=128, verbose_name='line SKU'),
+            model_name="orderline",
+            name="sku",
+            field=models.CharField(blank=True, max_length=128, verbose_name="line SKU"),
         ),
     ]

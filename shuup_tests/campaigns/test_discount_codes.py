@@ -10,6 +10,7 @@
 2) If discount code: How many available
 3) If discount code: How many available for each user
 """
+
 import pytest
 from django.core.exceptions import ValidationError
 
@@ -34,8 +35,12 @@ from shuup_tests.utils import printable_gibberish
 
 def get_default_campaign(coupon=None):
     shop = get_default_shop()
-    campaign = BasketCampaign.objects.create(shop=shop, public_name="test", name="test", coupon=coupon, active=True)
-    BasketDiscountAmount.objects.create(discount_amount=shop.create_price("20"), campaign=campaign)
+    campaign = BasketCampaign.objects.create(
+        shop=shop, public_name="test", name="test", coupon=coupon, active=True
+    )
+    BasketDiscountAmount.objects.create(
+        discount_amount=shop.create_price("20"), campaign=campaign
+    )
     return campaign
 
 
@@ -54,7 +59,9 @@ def test_coupon_user_limit():
     get_default_campaign(coupon)
     contact = create_random_person()
     shop = get_default_shop()
-    product = create_product("test", shop=shop, supplier=get_default_supplier(shop), default_price="12")
+    product = create_product(
+        "test", shop=shop, supplier=get_default_supplier(shop), default_price="12"
+    )
     order = create_random_order(customer=contact)
     for x in range(50):
         coupon.use(order)
@@ -82,7 +89,9 @@ def test_coupon_amount_limit():
 
     contact = create_random_person()
     shop = get_default_shop()
-    product = create_product("test", shop=shop, supplier=get_default_supplier(shop), default_price="12")
+    product = create_product(
+        "test", shop=shop, supplier=get_default_supplier(shop), default_price="12"
+    )
     order = create_random_order(customer=contact)
 
     for x in range(50):
@@ -108,11 +117,15 @@ def test_coupon_amount_limit():
 def test_campaign_with_coupons1(rf):
     basket, dc, request, status = _init_basket_coupon_test(rf)
 
-    assert len(basket.get_final_lines()) == 3  # no discount was applied because coupon is required
+    assert (
+        len(basket.get_final_lines()) == 3
+    )  # no discount was applied because coupon is required
 
     basket.add_code(dc.code)
 
-    assert len(basket.get_final_lines()) == 4  # now basket has codes so they will be applied too
+    assert (
+        len(basket.get_final_lines()) == 4
+    )  # now basket has codes so they will be applied too
     assert OrderLineType.DISCOUNT in [l.type for l in basket.get_final_lines()]
 
     # Ensure codes persist between requests, so do what the middleware would, i.e.
@@ -122,7 +135,9 @@ def test_campaign_with_coupons1(rf):
     basket = get_basket(request)
 
     assert basket.codes == [dc.code]
-    assert len(basket.get_final_lines()) == 4  # now basket has codes so they will be applied too
+    assert (
+        len(basket.get_final_lines()) == 4
+    )  # now basket has codes so they will be applied too
     assert OrderLineType.DISCOUNT in [l.type for l in basket.get_final_lines()]
 
     basket.status = status
@@ -136,7 +151,9 @@ def test_campaign_with_coupons1(rf):
 def test_campaign_with_coupons2(rf):
     basket, dc, request, status = _init_basket_coupon_test(rf, code="tEsT")
 
-    assert len(basket.get_final_lines()) == 3  # no discount was applied because coupon is required
+    assert (
+        len(basket.get_final_lines()) == 3
+    )  # no discount was applied because coupon is required
 
     customer_code = "Test"  # Customer typoed the code, should still match
     basket.add_code(customer_code)
@@ -148,7 +165,9 @@ def test_campaign_with_coupons2(rf):
     assert customer_code.upper() not in basket.codes
     assert len(basket.codes) == 1  # only one code
 
-    assert len(basket.get_final_lines()) == 4  # now basket has codes so they will be applied too
+    assert (
+        len(basket.get_final_lines()) == 4
+    )  # now basket has codes so they will be applied too
     assert OrderLineType.DISCOUNT in [l.type for l in basket.get_final_lines()]
 
     # Ensure codes persist between requests, so do what the middleware would, i.e.
@@ -158,11 +177,17 @@ def test_campaign_with_coupons2(rf):
     basket = get_basket(request)
 
     assert basket.codes != [dc.code]  # they don't match like this
-    assert [c.upper() for c in basket.codes] == [dc.code.upper()]  # they match like this
-    assert [c.upper() for c in basket.codes] != [customer_code]  # they don't match like this
+    assert [c.upper() for c in basket.codes] == [
+        dc.code.upper()
+    ]  # they match like this
+    assert [c.upper() for c in basket.codes] != [
+        customer_code
+    ]  # they don't match like this
     assert basket.codes == [customer_code]  # they match like this
 
-    assert len(basket.get_final_lines()) == 4  # now basket has codes so they will be applied too
+    assert (
+        len(basket.get_final_lines()) == 4
+    )  # now basket has codes so they will be applied too
     assert OrderLineType.DISCOUNT in [l.type for l in basket.get_final_lines()]
 
     basket.status = status
@@ -178,12 +203,18 @@ def _init_basket_coupon_test(rf, code="TEST"):
     basket = get_basket(request)
     supplier = get_default_supplier(shop)
     for x in range(2):
-        product = create_product(printable_gibberish(), shop, supplier=supplier, default_price="50")
+        product = create_product(
+            printable_gibberish(), shop, supplier=supplier, default_price="50"
+        )
         basket.add_product(supplier=supplier, shop=shop, product=product, quantity=1)
     basket.shipping_method = get_shipping_method(shop=shop)  # For shippable products
     dc = Coupon.objects.create(code=code, active=True)
-    campaign = BasketCampaign.objects.create(shop=shop, name="test", public_name="test", coupon=dc, active=True)
-    BasketDiscountAmount.objects.create(discount_amount=shop.create_price("20"), campaign=campaign)
+    campaign = BasketCampaign.objects.create(
+        shop=shop, name="test", public_name="test", coupon=dc, active=True
+    )
+    BasketDiscountAmount.objects.create(
+        discount_amount=shop.create_price("20"), campaign=campaign
+    )
     rule = BasketTotalProductAmountCondition.objects.create(value=2)
     campaign.conditions.add(rule)
     campaign.save()

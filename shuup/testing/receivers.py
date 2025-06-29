@@ -22,9 +22,9 @@ def shop_product_orderability_check(sender, **kwargs):
     the project orderability signal handler has to adapt accordingly.
     """
     for shop in kwargs["shops"]:
-        for shop_product in ShopProduct.objects.filter(shop=shop, product_id__in=kwargs["product_ids"]).exclude(
-            visibility=ShopProductVisibility.NOT_VISIBLE
-        ):
+        for shop_product in ShopProduct.objects.filter(
+            shop=shop, product_id__in=kwargs["product_ids"]
+        ).exclude(visibility=ShopProductVisibility.NOT_VISIBLE):
             ensure_shop_product_visibility(shop_product)
 
 
@@ -39,7 +39,9 @@ def ensure_shop_product_visibility(shop_product):
             break
 
         if shop_product.is_purchasable(
-            supplier=supplier, customer=AnonymousContact(), quantity=shop_product.minimum_purchase_quantity
+            supplier=supplier,
+            customer=AnonymousContact(),
+            quantity=shop_product.minimum_purchase_quantity,
         ):
             # Product is purchasable for at least one supplier so we can
             # quit the purchasability checks for this product

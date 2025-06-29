@@ -12,7 +12,10 @@ from django.test import override_settings
 
 from shuup.admin.supplier_provider import get_supplier
 from shuup.apps.provides import override_provides
-from shuup.campaigns.admin_module.views import BasketCampaignEditView, BasketCampaignListView
+from shuup.campaigns.admin_module.views import (
+    BasketCampaignEditView,
+    BasketCampaignListView,
+)
 from shuup.campaigns.models.campaigns import BasketCampaign
 from shuup.core.models import Supplier
 from shuup.testing.factories import create_random_user, get_default_shop
@@ -38,8 +41,12 @@ DEFAULT_LINE_EFFECT_FORMS = [
 
 def get_form_parts(request, view, object):
     with override_provides("campaign_basket_condition", DEFAULT_CONDITION_FORMS):
-        with override_provides("campaign_basket_discount_effect_form", DEFAULT_DISCOUNT_EFFECT_FORMS):
-            with override_provides("campaign_basket_line_effect_form", DEFAULT_LINE_EFFECT_FORMS):
+        with override_provides(
+            "campaign_basket_discount_effect_form", DEFAULT_DISCOUNT_EFFECT_FORMS
+        ):
+            with override_provides(
+                "campaign_basket_line_effect_form", DEFAULT_LINE_EFFECT_FORMS
+            ):
                 initialized_view = view(request=request, kwargs={"pk": object.pk})
                 return initialized_view.get_form_parts(object)
 
@@ -50,7 +57,9 @@ def test_admin_campaign_edit_view_works_with_supplier(rf, admin_user):
     supplier = Supplier.objects.create(identifier=admin_user.username)
     view_func = BasketCampaignEditView.as_view()
     request = apply_request_middleware(rf.get("/"), user=admin_user)
-    campaign = BasketCampaign.objects.create(name="test campaign", active=True, shop=shop)
+    campaign = BasketCampaign.objects.create(
+        name="test campaign", active=True, shop=shop
+    )
     response = view_func(request, pk=campaign.pk)
     assert campaign.name in response.rendered_content
 
@@ -102,7 +111,9 @@ def test_campaign_creation_for_supplier(rf, admin_user):
             assert new_campaign
 
             # Another superuser shouldn't see this campaign
-            request = apply_request_middleware(rf.post("/", data=data), user=another_superuser)
+            request = apply_request_middleware(
+                rf.post("/", data=data), user=another_superuser
+            )
             assert get_supplier(request) == supplier2
             with pytest.raises(Http404):
                 response = view(request, pk=new_campaign.pk)
@@ -124,8 +135,12 @@ def test_campaign_list_for_suppliers(rf, admin_user):
     supplier_provider = "shuup.testing.supplier_provider.UsernameSupplierProvider"
     with override_settings(LANGUAGES=[("en", "en")]):
         with override_settings(SHUUP_ADMIN_SUPPLIER_PROVIDER_SPEC=supplier_provider):
-            campaign1 = BasketCampaign.objects.create(name="test campaign", active=True, shop=shop, supplier=supplier1)
-            campaign2 = BasketCampaign.objects.create(name="test campaign2", active=True, shop=shop, supplier=supplier2)
+            campaign1 = BasketCampaign.objects.create(
+                name="test campaign", active=True, shop=shop, supplier=supplier1
+            )
+            campaign2 = BasketCampaign.objects.create(
+                name="test campaign2", active=True, shop=shop, supplier=supplier2
+            )
 
             view = BasketCampaignListView()
             request = apply_request_middleware(rf.get("/"), user=superuser1, shop=shop)

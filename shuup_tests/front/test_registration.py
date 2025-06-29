@@ -18,7 +18,10 @@ from shuup.admin.modules.contacts.views import ContactDetailView
 from shuup.apps.provides import override_provides
 from shuup.core.models import CompanyContact, PersonContact, get_person_contact
 from shuup.front.apps.customer_information.views import CompanyEditView
-from shuup.front.apps.registration.forms import CompanyRegistrationForm, PersonRegistrationForm
+from shuup.front.apps.registration.forms import (
+    CompanyRegistrationForm,
+    PersonRegistrationForm,
+)
 from shuup.front.apps.registration.signals import user_reactivated
 from shuup.front.signals import company_registration_save, person_registration_save
 from shuup.notify.models import Script
@@ -108,7 +111,9 @@ def test_settings_has_account_activation_days():
 @pytest.mark.django_db
 def test_password_recovery_user_receives_email_1(client):
     get_default_shop()
-    user = get_user_model().objects.create_user(username="random_person", password="asdfg", email="random@shuup.local")
+    user = get_user_model().objects.create_user(
+        username="random_person", password="asdfg", email="random@shuup.local"
+    )
     n_outbox_pre = len(mail.outbox)
     client.post(reverse("shuup:recover_password"), data={"email": user.email})
     assert len(mail.outbox) == n_outbox_pre + 1, "Sending recovery email has failed"
@@ -120,7 +125,9 @@ def test_password_recovery_user_receives_email_1(client):
 @pytest.mark.django_db
 def test_password_recovery_user_receives_email_2(client):
     get_default_shop()
-    user = get_user_model().objects.create_user(username="random_person", password="asdfg", email="random@shuup.local")
+    user = get_user_model().objects.create_user(
+        username="random_person", password="asdfg", email="random@shuup.local"
+    )
     n_outbox_pre = len(mail.outbox)
     # Recover with username
     client.post(reverse("shuup:recover_password"), data={"username": user.username})
@@ -132,8 +139,12 @@ def test_password_recovery_user_receives_email_2(client):
 @pytest.mark.django_db
 def test_password_recovery_user_receives_email_3(client):
     get_default_shop()
-    user = get_user_model().objects.create_user(username="random_person", password="asdfg", email="random@shuup.local")
-    get_user_model().objects.create_user(username="another_random_person", password="asdfg", email="random@shuup.local")
+    user = get_user_model().objects.create_user(
+        username="random_person", password="asdfg", email="random@shuup.local"
+    )
+    get_user_model().objects.create_user(
+        username="another_random_person", password="asdfg", email="random@shuup.local"
+    )
 
     n_outbox_pre = len(mail.outbox)
     # Recover all users with email random@shuup.local
@@ -146,7 +157,9 @@ def test_password_recovery_user_receives_email_3(client):
 @pytest.mark.django_db
 def test_password_recovery_user_with_no_email(client):
     get_default_shop()
-    user = get_user_model().objects.create_user(username="random_person", password="asdfg")
+    user = get_user_model().objects.create_user(
+        username="random_person", password="asdfg"
+    )
     n_outbox_pre = len(mail.outbox)
     client.post(reverse("shuup:recover_password"), data={"username": user.username})
     assert len(mail.outbox) == n_outbox_pre, "No recovery emails sent"
@@ -154,7 +167,9 @@ def test_password_recovery_user_with_no_email(client):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("requiring_activation", (False, True))
-def test_user_will_be_redirected_to_user_account_page_after_activation(client, requiring_activation):
+def test_user_will_be_redirected_to_user_account_page_after_activation(
+    client, requiring_activation
+):
     """
     1. Register user
     2. Dig out the urls from the email
@@ -190,7 +205,11 @@ def test_user_will_be_redirected_to_user_account_page_after_activation(client, r
                     {
                         "fallback_language": {"constant": "en"},
                         "template_data": {
-                            "pt-br": {"content_type": "html", "subject": "", "body": ""},
+                            "pt-br": {
+                                "content_type": "html",
+                                "subject": "",
+                                "body": "",
+                            },
                             "en": {
                                 "content_type": "html",
                                 "subject": "User Activation Link",
@@ -223,13 +242,18 @@ def test_user_will_be_redirected_to_user_account_page_after_activation(client, r
 
         if requiring_activation:
             body = mail.outbox[-1].body
-            urls = re.findall("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", body)
+            urls = re.findall(
+                "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
+                body,
+            )
             assert user.registrationprofile.activation_key in urls[0]
             response = client.get(urls[0], follow=True)
-            assert email.encode("utf-8") in response.content, "email should be found from the page."
-            assert (
-                reverse("shuup:customer_edit") == response.request["PATH_INFO"]
-            ), "user should be on the account-page."
+            assert email.encode("utf-8") in response.content, (
+                "email should be found from the page."
+            )
+            assert reverse("shuup:customer_edit") == response.request["PATH_INFO"], (
+                "user should be on the account-page."
+            )
         else:
             assert len(mail.outbox) == 0
             assert user.is_active
@@ -240,7 +264,12 @@ def test_user_will_be_redirected_to_user_account_page_after_activation(client, r
 @pytest.mark.parametrize("allow_company_registration", (False, True))
 @pytest.mark.parametrize("company_registration_requires_approval", (False, True))
 def test_company_registration(
-    django_user_model, client, allow_company_registration, company_registration_requires_approval, rf, admin_user
+    django_user_model,
+    client,
+    allow_company_registration,
+    company_registration_requires_approval,
+    rf,
+    admin_user,
 ):
     if "shuup.front.apps.registration" not in settings.INSTALLED_APPS:
         pytest.skip("shuup.front.apps.registration required in installed apps")
@@ -248,7 +277,11 @@ def test_company_registration(
     shop = get_default_shop()
 
     configuration.set(shop, "allow_company_registration", allow_company_registration)
-    configuration.set(shop, "company_registration_requires_approval", company_registration_requires_approval)
+    configuration.set(
+        shop,
+        "company_registration_requires_approval",
+        company_registration_requires_approval,
+    )
 
     url = reverse("shuup:registration_register_company")
     Script.objects.create(
@@ -297,7 +330,11 @@ def test_company_registration(
                     {
                         "fallback_language": {"constant": "en"},
                         "template_data": {
-                            "en": {"content_type": "html", "subject": "Generic welcome message", "body": "Welcome!"},
+                            "en": {
+                                "content_type": "html",
+                                "subject": "Generic welcome message",
+                                "body": "Welcome!",
+                            },
                         },
                         "recipient": {"variable": "customer_email"},
                         "language": {"variable": "language"},
@@ -366,11 +403,14 @@ def test_company_registration(
             assert mail.outbox[0].subject == "Generic welcome message"
             assert mail.outbox[1].subject == "New company registered"
             # Activating Company for the first time from admin triggers company_approved_by_admin event
-            request = apply_request_middleware(rf.post("/", {"set_is_active": "1"}), user=admin_user)
+            request = apply_request_middleware(
+                rf.post("/", {"set_is_active": "1"}), user=admin_user
+            )
             view_func = ContactDetailView.as_view()
             response = view_func(request, pk=company.pk)
             urls = re.findall(
-                "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", mail.outbox[2].body
+                "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
+                mail.outbox[2].body,
             )
             assert mail.outbox[2].subject == "Company activated"
             assert user.registrationprofile.activation_key in urls[0]
@@ -402,14 +442,22 @@ def test_company_registration(
 @pytest.mark.parametrize("allow_company_registration", (False, True))
 @pytest.mark.parametrize("company_registration_requires_approval", (False, True))
 def test_create_company_from_customer_dashboard(
-    allow_company_registration, company_registration_requires_approval, client, rf, admin_user
+    allow_company_registration,
+    company_registration_requires_approval,
+    client,
+    rf,
+    admin_user,
 ):
     if "shuup.front.apps.registration" not in settings.INSTALLED_APPS:
         pytest.skip("shuup.front.apps.registration required in installed apps")
 
     shop = get_default_shop()
     configuration.set(None, "allow_company_registration", allow_company_registration)
-    configuration.set(None, "company_registration_requires_approval", company_registration_requires_approval)
+    configuration.set(
+        None,
+        "company_registration_requires_approval",
+        company_registration_requires_approval,
+    )
 
     Script.objects.create(
         event_identifier="company_registration_received",
@@ -426,7 +474,11 @@ def test_create_company_from_customer_dashboard(
                     {
                         "fallback_language": {"constant": "en"},
                         "template_data": {
-                            "en": {"content_type": "html", "subject": "Company Registered", "body": "Waiting approval"},
+                            "en": {
+                                "content_type": "html",
+                                "subject": "Company Registered",
+                                "body": "Waiting approval",
+                            },
                         },
                         "recipient": {"variable": "customer_email"},
                         "language": {"variable": "language"},
@@ -519,11 +571,14 @@ def test_create_company_from_customer_dashboard(
             assert PersonContact.objects.filter(is_active=True).count() == 1
             assert mail.outbox[0].subject == "Company Registered"
             # Activate new CompanyContact from admin
-            request = apply_request_middleware(rf.post("/", {"set_is_active": "1"}), user=admin_user)
+            request = apply_request_middleware(
+                rf.post("/", {"set_is_active": "1"}), user=admin_user
+            )
             view_func = ContactDetailView.as_view()
             response = view_func(request, pk=CompanyContact.objects.first().pk)
             urls = re.findall(
-                "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", mail.outbox[1].body
+                "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
+                mail.outbox[1].body,
             )
             assert mail.outbox[1].subject == "Company activated"
             assert CompanyContact.objects.filter(is_active=True).count() == 1
@@ -555,7 +610,12 @@ def test_provider_provides_fields(rf, admin_user):
     ):
         current_username = "test"
         request = apply_request_middleware(rf.post("/"), shop=shop)
-        payload = {"username": current_username, "password1": "asdf", "password2": "asdf", "email": "test@example.com"}
+        payload = {
+            "username": current_username,
+            "password1": "asdf",
+            "password2": "asdf",
+            "email": "test@example.com",
+        }
         form = PersonRegistrationForm(request=request, data=payload)
 
         assert FieldTestProvider.key in form.fields
@@ -569,11 +629,15 @@ def test_provider_provides_fields(rf, admin_user):
         assert form.is_valid()
 
         # test signal fires
-        person_registration_save.connect(change_username_signal, dispatch_uid="test_registration_change_username")
+        person_registration_save.connect(
+            change_username_signal, dispatch_uid="test_registration_change_username"
+        )
         user = form.save()
         assert user.username != current_username
         assert user.username == "changed_username"
-        person_registration_save.disconnect(dispatch_uid="test_registration_change_username")
+        person_registration_save.disconnect(
+            dispatch_uid="test_registration_change_username"
+        )
 
 
 @pytest.mark.django_db
@@ -583,8 +647,14 @@ def test_provider_provides_definitions(rf, admin_user):
 
     shop = get_default_shop()
 
-    with override_provides("front_company_registration_form_provider", ["shuup_tests.front.utils.FormDefTestProvider"]):
-        with override_provides("front_registration_field_provider", ["shuup_tests.front.utils.FieldTestProvider"]):
+    with override_provides(
+        "front_company_registration_form_provider",
+        ["shuup_tests.front.utils.FormDefTestProvider"],
+    ):
+        with override_provides(
+            "front_registration_field_provider",
+            ["shuup_tests.front.utils.FieldTestProvider"],
+        ):
             request = apply_request_middleware(rf.post("/"), shop=shop)
             current_username = "test"
             current_name = "123"
@@ -611,11 +681,16 @@ def test_provider_provides_definitions(rf, admin_user):
             assert "contact_person" in form_group.form_defs
             assert "user_account" in form_group.form_defs
 
-            assert form_group.form_defs["billing"].form_class == cached_load("SHUUP_ADDRESS_MODEL_FORM")
+            assert form_group.form_defs["billing"].form_class == cached_load(
+                "SHUUP_ADDRESS_MODEL_FORM"
+            )
 
             assert not form_group.is_valid()
             assert FormDefTestProvider.test_name in form_group.errors
-            assert FieldTestProvider.key in form_group.errors[FormDefTestProvider.test_name]
+            assert (
+                FieldTestProvider.key
+                in form_group.errors[FormDefTestProvider.test_name]
+            )
             assert len(form_group.errors) == 1  # no other errors
 
             key = "%s-%s" % (FormDefTestProvider.test_name, FieldTestProvider.key)
@@ -630,7 +705,8 @@ def test_provider_provides_definitions(rf, admin_user):
 
             # test signal fires
             company_registration_save.connect(
-                change_company_signal, dispatch_uid="test_registration_change_company_signal"
+                change_company_signal,
+                dispatch_uid="test_registration_change_company_signal",
             )
             form_group.save(commit=True)
             assert not User.objects.filter(username=username).exists()
@@ -638,7 +714,9 @@ def test_provider_provides_definitions(rf, admin_user):
 
             assert User.objects.filter(username="changed_username").exists()
             assert CompanyContact.objects.filter(name="changed_name").exists()
-            company_registration_save.disconnect(dispatch_uid="test_registration_change_company_signal")
+            company_registration_save.disconnect(
+                dispatch_uid="test_registration_change_company_signal"
+            )
 
 
 @pytest.mark.django_db
@@ -696,5 +774,9 @@ def test_account_reactivation_mail(client):
     reActivMail = mail.outbox[0]
     customer = get_person_contact(user)
     assert reActivMail.subject == "Welcome back " + customer.name
-    assert reActivMail.body == ("<p>Hello your account is now active again <code>" + customer.email + "</code></p>")
+    assert reActivMail.body == (
+        "<p>Hello your account is now active again <code>"
+        + customer.email
+        + "</code></p>"
+    )
     assert reActivMail.to[0] == customer.email

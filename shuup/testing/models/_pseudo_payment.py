@@ -13,7 +13,12 @@ from django.db import models
 from django.http.response import HttpResponse
 from django.utils.timezone import now
 
-from shuup.core.models import FixedCostBehaviorComponent, PaymentProcessor, ServiceChoice, WaivingCostBehaviorComponent
+from shuup.core.models import (
+    FixedCostBehaviorComponent,
+    PaymentProcessor,
+    ServiceChoice,
+    WaivingCostBehaviorComponent,
+)
 from shuup.utils.excs import Problem
 
 HTML_TEMPLATE = """
@@ -35,9 +40,17 @@ HTML_TEMPLATE = """
 
 class PseudoPaymentProcessor(PaymentProcessor):
     bg_color = models.CharField(
-        max_length=20, blank=True, default="white", verbose_name="Payment Page Background Color"
+        max_length=20,
+        blank=True,
+        default="white",
+        verbose_name="Payment Page Background Color",
     )
-    fg_color = models.CharField(max_length=20, blank=True, default="black", verbose_name="Payment Page Text Color")
+    fg_color = models.CharField(
+        max_length=20,
+        blank=True,
+        default="black",
+        verbose_name="Payment Page Text Color",
+    )
 
     def get_service_choices(self):
         return [
@@ -46,13 +59,19 @@ class PseudoPaymentProcessor(PaymentProcessor):
         ]
 
     def _create_service(self, choice_identifier, **kwargs):
-        service = super(PseudoPaymentProcessor, self)._create_service(choice_identifier, **kwargs)
+        service = super(PseudoPaymentProcessor, self)._create_service(
+            choice_identifier, **kwargs
+        )
         service.behavior_components.add(
-            WaivingCostBehaviorComponent.objects.create(price_value=10, waive_limit_value=1000)
+            WaivingCostBehaviorComponent.objects.create(
+                price_value=10, waive_limit_value=1000
+            )
         )
         if choice_identifier == "caps":
             service.behavior_components.add(
-                FixedCostBehaviorComponent.objects.create(price_value=50, description="UPPERCASING EXTRA FEE")
+                FixedCostBehaviorComponent.objects.create(
+                    price_value=50, description="UPPERCASING EXTRA FEE"
+                )
             )
         return service
 
@@ -68,7 +87,8 @@ class PseudoPaymentProcessor(PaymentProcessor):
             ("Return", urls.return_url),
         ]
         urls_html = "\n".join(
-            '<li><a href="%s?mac=%s">%s</a></li>' % (url, mac, transform(title)) for (title, url) in url_list
+            '<li><a href="%s?mac=%s">%s</a></li>' % (url, mac, transform(title))
+            for (title, url) in url_list
         )
         html = HTML_TEMPLATE % {
             "urls": urls_html,

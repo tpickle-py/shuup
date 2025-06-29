@@ -4,50 +4,57 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('campaigns', '0019_django2_managers'),
+        ("campaigns", "0019_django2_managers"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='basketcampaignlogentry',
-            name='identifier',
-            field=models.CharField(blank=True, db_index=True, max_length=256, verbose_name='identifier'),
+            model_name="basketcampaignlogentry",
+            name="identifier",
+            field=models.CharField(
+                blank=True, db_index=True, max_length=256, verbose_name="identifier"
+            ),
         ),
         migrations.AlterField(
-            model_name='basketcampaignlogentry',
-            name='message',
-            field=models.CharField(max_length=1024, verbose_name='message'),
+            model_name="basketcampaignlogentry",
+            name="message",
+            field=models.CharField(max_length=1024, verbose_name="message"),
         ),
         migrations.AlterField(
-            model_name='catalogcampaignlogentry',
-            name='identifier',
-            field=models.CharField(blank=True, db_index=True, max_length=256, verbose_name='identifier'),
+            model_name="catalogcampaignlogentry",
+            name="identifier",
+            field=models.CharField(
+                blank=True, db_index=True, max_length=256, verbose_name="identifier"
+            ),
         ),
         migrations.AlterField(
-            model_name='catalogcampaignlogentry',
-            name='message',
-            field=models.CharField(max_length=1024, verbose_name='message'),
+            model_name="catalogcampaignlogentry",
+            name="message",
+            field=models.CharField(max_length=1024, verbose_name="message"),
         ),
         migrations.AlterField(
-            model_name='couponlogentry',
-            name='identifier',
-            field=models.CharField(blank=True, db_index=True, max_length=256, verbose_name='identifier'),
+            model_name="couponlogentry",
+            name="identifier",
+            field=models.CharField(
+                blank=True, db_index=True, max_length=256, verbose_name="identifier"
+            ),
         ),
         migrations.AlterField(
-            model_name='couponlogentry',
-            name='message',
-            field=models.CharField(max_length=1024, verbose_name='message'),
+            model_name="couponlogentry",
+            name="message",
+            field=models.CharField(max_length=1024, verbose_name="message"),
         ),
         migrations.AlterField(
-            model_name='couponusagelogentry',
-            name='identifier',
-            field=models.CharField(blank=True, db_index=True, max_length=256, verbose_name='identifier'),
+            model_name="couponusagelogentry",
+            name="identifier",
+            field=models.CharField(
+                blank=True, db_index=True, max_length=256, verbose_name="identifier"
+            ),
         ),
         migrations.AlterField(
-            model_name='couponusagelogentry',
-            name='message',
-            field=models.CharField(max_length=1024, verbose_name='message'),
+            model_name="couponusagelogentry",
+            name="message",
+            field=models.CharField(max_length=1024, verbose_name="message"),
         ),
     ]

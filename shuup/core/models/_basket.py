@@ -12,7 +12,11 @@ from django.utils.translation import ugettext_lazy as _
 from uuid import uuid4
 
 from shuup.core.fields import CurrencyField, MoneyValueField, TaggedJSONField
-from shuup.utils.properties import MoneyPropped, TaxfulPriceProperty, TaxlessPriceProperty
+from shuup.utils.properties import (
+    MoneyPropped,
+    TaxfulPriceProperty,
+    TaxlessPriceProperty,
+)
 
 
 def generate_key():
@@ -21,9 +25,17 @@ def generate_key():
 
 class Basket(MoneyPropped, models.Model):
     # A combination of the PK and key is used to retrieve a basket for session situations.
-    key = models.CharField(max_length=32, default=generate_key, verbose_name=_("key"), unique=True, db_index=True)
+    key = models.CharField(
+        max_length=32,
+        default=generate_key,
+        verbose_name=_("key"),
+        unique=True,
+        db_index=True,
+    )
 
-    shop = models.ForeignKey(on_delete=models.CASCADE, to="Shop", verbose_name=_("shop"))
+    shop = models.ForeignKey(
+        on_delete=models.CASCADE, to="Shop", verbose_name=_("shop")
+    )
 
     customer = models.ForeignKey(
         on_delete=models.CASCADE,
@@ -50,11 +62,21 @@ class Basket(MoneyPropped, models.Model):
         verbose_name=_("creator"),
     )
 
-    created_on = models.DateTimeField(auto_now_add=True, db_index=True, editable=False, verbose_name=_("created on"))
-    updated_on = models.DateTimeField(auto_now=True, db_index=True, editable=False, verbose_name=_("updated on"))
-    persistent = models.BooleanField(db_index=True, default=False, verbose_name=_("persistent"))
-    deleted = models.BooleanField(db_index=True, default=False, verbose_name=_("deleted"))
-    finished = models.BooleanField(db_index=True, default=False, verbose_name=_("finished"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, db_index=True, editable=False, verbose_name=_("created on")
+    )
+    updated_on = models.DateTimeField(
+        auto_now=True, db_index=True, editable=False, verbose_name=_("updated on")
+    )
+    persistent = models.BooleanField(
+        db_index=True, default=False, verbose_name=_("persistent")
+    )
+    deleted = models.BooleanField(
+        db_index=True, default=False, verbose_name=_("deleted")
+    )
+    finished = models.BooleanField(
+        db_index=True, default=False, verbose_name=_("finished")
+    )
     title = models.CharField(max_length=64, blank=True, verbose_name=_("title"))
     data = TaggedJSONField(verbose_name=_("data"))
 
@@ -62,8 +84,12 @@ class Basket(MoneyPropped, models.Model):
     taxful_total_price = TaxfulPriceProperty("taxful_total_price_value", "currency")
     taxless_total_price = TaxlessPriceProperty("taxless_total_price_value", "currency")
 
-    taxless_total_price_value = MoneyValueField(default=0, null=True, blank=True, verbose_name=_("taxless total price"))
-    taxful_total_price_value = MoneyValueField(default=0, null=True, blank=True, verbose_name=_("taxful total price"))
+    taxless_total_price_value = MoneyValueField(
+        default=0, null=True, blank=True, verbose_name=_("taxless total price")
+    )
+    taxful_total_price_value = MoneyValueField(
+        default=0, null=True, blank=True, verbose_name=_("taxful total price")
+    )
     currency = CurrencyField(verbose_name=_("currency"))
     prices_include_tax = models.BooleanField(verbose_name=_("prices include tax"))
 

@@ -10,7 +10,13 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from enumfields import Enum
 
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
-from shuup.core.models import Product, ProductCrossSell, ProductCrossSellType, ProductMode, ShopProductVisibility
+from shuup.core.models import (
+    Product,
+    ProductCrossSell,
+    ProductCrossSellType,
+    ProductMode,
+    ShopProductVisibility,
+)
 from shuup.front.template_helpers.general import (
     get_best_selling_products,
     get_newest_products,
@@ -20,7 +26,10 @@ from shuup.front.template_helpers.general import (
 from shuup.front.template_helpers.product import map_relation_type
 from shuup.xtheme import TemplatedPlugin
 from shuup.xtheme.plugins.forms import GenericPluginForm, TranslatableField
-from shuup.xtheme.plugins.widgets import XThemeSelect2ModelChoiceField, XThemeSelect2ModelMultipleChoiceField
+from shuup.xtheme.plugins.widgets import (
+    XThemeSelect2ModelChoiceField,
+    XThemeSelect2ModelMultipleChoiceField,
+)
 
 
 class HighlightType(Enum):
@@ -43,7 +52,11 @@ class ProductHighlightPlugin(TemplatedPlugin):
         ("title", TranslatableField(label=_("Title"), required=False, initial="")),
         (
             "type",
-            forms.ChoiceField(label=_("Type"), choices=HighlightType.choices(), initial=HighlightType.NEWEST.value),
+            forms.ChoiceField(
+                label=_("Type"),
+                choices=HighlightType.choices(),
+                initial=HighlightType.NEWEST.value,
+            ),
         ),
         ("count", forms.IntegerField(label=_("Count"), min_value=1, initial=4)),
         (
@@ -85,7 +98,11 @@ class ProductHighlightPlugin(TemplatedPlugin):
         else:
             products = []
 
-        return {"request": context["request"], "title": self.get_translated_value("title"), "products": products}
+        return {
+            "request": context["request"],
+            "title": self.get_translated_value("title"),
+            "products": products,
+        }
 
 
 class ProductCrossSellsPlugin(TemplatedPlugin):
@@ -138,7 +155,16 @@ class ProductCrossSellsPlugin(TemplatedPlugin):
         count = self.config.get("count", 4)
         orderable_only = self.config.get("orderable_only", True)
         use_variation_parents = self.config.get("use_variation_parents", False)
-        return str((get_language(), title, relation_type, orderable_only, count, use_variation_parents))
+        return str(
+            (
+                get_language(),
+                title,
+                relation_type,
+                orderable_only,
+                count,
+                use_variation_parents,
+            )
+        )
 
     def get_context_data(self, context):
         count = self.config.get("count", 4)
@@ -216,7 +242,11 @@ class ProductsFromCategoryPlugin(TemplatedPlugin):
             products = get_products_for_categories(
                 context, [category_id], n_products=count, orderable_only=orderable_only
             )
-        return {"request": context["request"], "title": self.get_translated_value("title"), "products": products}
+        return {
+            "request": context["request"],
+            "title": self.get_translated_value("title"),
+            "products": products,
+        }
 
 
 class ProductSelectionConfigForm(GenericPluginForm):
@@ -254,7 +284,9 @@ class ProductSelectionPlugin(TemplatedPlugin):
     template_name = "shuup/xtheme/plugins/product_selection_plugin.jinja"
     editor_form_class = ProductSelectionConfigForm
     cacheable = True
-    fields = [("title", TranslatableField(label=_("Title"), required=False, initial=""))]
+    fields = [
+        ("title", TranslatableField(label=_("Title"), required=False, initial=""))
+    ]
 
     def get_cache_key(self, context, **kwargs) -> str:
         title = self.get_translated_value("title")
@@ -280,4 +312,8 @@ class ProductSelectionPlugin(TemplatedPlugin):
                 pk__in=products, mode__in=ProductMode.get_parent_modes()
             )
 
-        return {"request": request, "title": self.get_translated_value("title"), "products": products_qs}
+        return {
+            "request": request,
+            "title": self.get_translated_value("title"),
+            "products": products_qs,
+        }

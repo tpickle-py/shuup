@@ -48,9 +48,16 @@ class CheckoutMethodPhase(CheckoutPhaseViewMixin, LoginView):
     def get_form(self, form_class=None):
         form_group = FormGroup(**self.get_initial_form_group_kwargs())
         form_group.add_form_def(
-            name=self.login_form_key, form_class=LoginView.form_class, required=False, kwargs={"request": self.request}
+            name=self.login_form_key,
+            form_class=LoginView.form_class,
+            required=False,
+            kwargs={"request": self.request},
         )
-        form_group.add_form_def(name=self.checkout_method_choice_key, form_class=ChooseToRegisterForm, required=False)
+        form_group.add_form_def(
+            name=self.checkout_method_choice_key,
+            form_class=ChooseToRegisterForm,
+            required=False,
+        )
         return form_group
 
     def is_visible_for_user(self):
@@ -60,17 +67,23 @@ class CheckoutMethodPhase(CheckoutPhaseViewMixin, LoginView):
         return not self.is_visible_for_user()
 
     def is_valid(self):
-        checkout_method_choice = bool(self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None) is not None)
+        checkout_method_choice = bool(
+            self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None) is not None
+        )
         return bool(checkout_method_choice or self.request.customer)
 
     def form_valid(self, form):
         login_form = form.forms[self.login_form_key]
-        if login_form.cleaned_data:  # TODO: There is probably better way to figure out when to login
+        if (
+            login_form.cleaned_data
+        ):  # TODO: There is probably better way to figure out when to login
             return super(CheckoutMethodPhase, self).form_valid(login_form)
         checkout_choice_form = form.forms[self.checkout_method_choice_key]
         should_register = bool(int(checkout_choice_form.cleaned_data["register"] or 0))
         self.storage[CHECKOUT_CHOICE_STORAGE_KEY] = should_register
-        self.request.session["checkout_register:%s" % CHECKOUT_CHOICE_STORAGE_KEY] = should_register
+        self.request.session["checkout_register:%s" % CHECKOUT_CHOICE_STORAGE_KEY] = (
+            should_register
+        )
         return HttpResponseRedirect(self.get_success_url())
 
     def process(self):
@@ -101,14 +114,18 @@ class RegisterPhase(CheckoutPhaseViewMixin, RegistrationNoActivationView):
     template_name = "shuup/front/checkout/register.jinja"
 
     def is_visible_for_user(self):
-        checkout_method_choice_is_registered = bool(self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None))
+        checkout_method_choice_is_registered = bool(
+            self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None)
+        )
         return bool(not self.request.customer and checkout_method_choice_is_registered)
 
     def should_skip(self):
         return not self.is_visible_for_user()
 
     def is_valid(self):
-        checkout_method_choice_is_registered = bool(self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None))
+        checkout_method_choice_is_registered = bool(
+            self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None)
+        )
         return bool(self.request.customer and checkout_method_choice_is_registered)
 
     def process(self):

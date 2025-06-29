@@ -19,7 +19,13 @@ from shuup.admin.utils.permissions import get_missing_permissions
 from shuup.admin.utils.str_utils import camelcase_to_snakecase
 from shuup.admin.utils.urls import NoModelUrl, get_model_url
 from shuup.apps.provides import get_provide_objects
-from shuup.utils.django_compat import NoReverseMatch, Resolver404, force_text, resolve, reverse
+from shuup.utils.django_compat import (
+    NoReverseMatch,
+    Resolver404,
+    force_text,
+    resolve,
+    reverse,
+)
 
 
 class BaseToolbarButtonProvider(object):
@@ -97,7 +103,11 @@ class BaseActionButton(object):
 
     def get_computed_class(self):
         return " ".join(
-            filter(None, list(self.base_css_classes) + [self.extra_css_class, "disabled" if self.disabled else ""])
+            filter(
+                None,
+                list(self.base_css_classes)
+                + [self.extra_css_class, "disabled" if self.disabled else ""],
+            )
         )
 
 
@@ -121,7 +131,9 @@ class URLActionButton(BaseActionButton):
 
         if "required_permissions" not in kwargs:
             try:
-                permission = resolve(six.moves.urllib.parse.urlparse(force_text(url)).path).url_name
+                permission = resolve(
+                    six.moves.urllib.parse.urlparse(force_text(url)).path
+                ).url_name
                 kwargs["required_permissions"] = (permission,)
             except Resolver404:
                 pass
@@ -131,7 +143,11 @@ class URLActionButton(BaseActionButton):
     def render(self, request):
         if not get_missing_permissions(request.user, self.required_permissions):
             yield "<a %s>" % flatatt_filter(
-                {"href": self.url, "class": self.get_computed_class(), "title": self.tooltip}
+                {
+                    "href": self.url,
+                    "class": self.get_computed_class(),
+                    "title": self.tooltip,
+                }
             )
             yield self.render_label()
             yield "</a>"
@@ -165,7 +181,11 @@ class SettingsActionButton(URLActionButton):
             return_url = kwargs.get("return_url")
             if not return_url:
                 return_url = camelcase_to_snakecase(model.__name__)
-            kwargs["url"] = url + "?module=%s&model=%s&return_url=%s" % (model.__module__, model.__name__, return_url)
+            kwargs["url"] = url + "?module=%s&model=%s&return_url=%s" % (
+                model.__module__,
+                model.__name__,
+                return_url,
+            )
 
         return cls(**kwargs)
 
@@ -198,7 +218,9 @@ class NewActionButton(URLActionButton):
                 return None
             kwargs["url"] = url
 
-        kwargs.setdefault("text", _("New %(model)s") % {"model": model._meta.verbose_name})
+        kwargs.setdefault(
+            "text", _("New %(model)s") % {"model": model._meta.verbose_name}
+        )
         return cls(**kwargs)
 
 
@@ -233,7 +255,9 @@ class PostActionButton(BaseActionButton):
     containing `name`=`value` to `post_url`.
     """
 
-    def __init__(self, post_url=None, name=None, value=None, form_id=None, confirm=None, **kwargs):
+    def __init__(
+        self, post_url=None, name=None, value=None, form_id=None, confirm=None, **kwargs
+    ):
         self.post_url = post_url
         self.name = name
         self.value = value
@@ -252,7 +276,11 @@ class PostActionButton(BaseActionButton):
                     "type": "submit",
                     "title": self.tooltip,
                     "class": self.get_computed_class(),
-                    "onclick": ("return confirm(%s)" % json.dumps(force_text(self.confirm)) if self.confirm else None),
+                    "onclick": (
+                        "return confirm(%s)" % json.dumps(force_text(self.confirm))
+                        if self.confirm
+                        else None
+                    ),
                 }
             )
             yield self.render_label()
@@ -293,7 +321,12 @@ class DropdownActionButton(BaseActionButton):
                     yield bit
 
             yield "<button %s>" % flatatt_filter(
-                {"type": "button", "class": self.get_computed_class(), "data-toggle": "dropdown", "title": self.tooltip}
+                {
+                    "type": "button",
+                    "class": self.get_computed_class(),
+                    "data-toggle": "dropdown",
+                    "title": self.tooltip,
+                }
             )
 
             if not self.split_button:
@@ -458,7 +491,10 @@ class Toolbar(list):
         # but `PostActionButton`s use the HTML5 `formaction` attribute.
         yield '<div class="shuup-toolbar">'
         yield '<form method="POST">'
-        yield format_html("<input type='hidden' name='csrfmiddlewaretoken' value='{0}'>", get_token(request))
+        yield format_html(
+            "<input type='hidden' name='csrfmiddlewaretoken' value='{0}'>",
+            get_token(request),
+        )
         yield '<div class="btn-toolbar" role="toolbar">'
 
         for group in self:
@@ -477,12 +513,20 @@ class Toolbar(list):
 
         # add buttons from the view toolbar button provider
         if getattr(view, "toolbar_buttons_provider_key", None):
-            for toolbar_buttons_provider in get_provide_objects(view.toolbar_buttons_provider_key):
-                toolbar.extend(list(toolbar_buttons_provider.get_buttons_for_view(view)))
+            for toolbar_buttons_provider in get_provide_objects(
+                view.toolbar_buttons_provider_key
+            ):
+                toolbar.extend(
+                    list(toolbar_buttons_provider.get_buttons_for_view(view))
+                )
 
         # add buttons from the global toolbar button provider
-        for admin_toolbar_button_provider in get_provide_objects("admin_toolbar_button_provider"):
-            toolbar.extend(list(admin_toolbar_button_provider.get_buttons_for_view(view)))
+        for admin_toolbar_button_provider in get_provide_objects(
+            "admin_toolbar_button_provider"
+        ):
+            toolbar.extend(
+                list(admin_toolbar_button_provider.get_buttons_for_view(view))
+            )
 
         return toolbar
 
@@ -496,7 +540,10 @@ def try_reverse(viewname, **kwargs):
 
 def get_discard_button(discard_url):
     return URLActionButton(
-        url=discard_url, text=_("Discard Changes"), icon="fa fa-undo", extra_css_class="btn btn-inverse"
+        url=discard_url,
+        text=_("Discard Changes"),
+        icon="fa fa-undo",
+        extra_css_class="btn btn-inverse",
     )
 
 
@@ -581,7 +628,9 @@ def get_default_edit_toolbar(
         if object and object.pk:
             if discard_url:
                 dropdown_options.append(DropdownDivider())
-                dropdown_options.append(get_discard_button(try_reverse(discard_url, pk=object.pk)))
+                dropdown_options.append(
+                    get_discard_button(try_reverse(discard_url, pk=object.pk))
+                )
 
         save_dropdown = DropdownActionButton(
             dropdown_options,

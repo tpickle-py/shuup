@@ -49,15 +49,21 @@ def test_order_flow_with_multiple_suppliers():
         supplier = Supplier.objects.create(name=name)
         supplier.shops.add(shop_product.shop)
         shop_product.suppliers.add(supplier)
-        SupplierPrice.objects.create(supplier=supplier, shop=shop, product=product, amount_value=product_price)
+        SupplierPrice.objects.create(
+            supplier=supplier, shop=shop, product=product, amount_value=product_price
+        )
 
     strategy = "shuup.testing.supplier_pricing.supplier_strategy:CheapestSupplierPriceSupplierStrategy"
-    with override_settings(SHUUP_PRICING_MODULE="supplier_pricing", SHUUP_SHOP_PRODUCT_SUPPLIERS_STRATEGY=strategy):
-
+    with override_settings(
+        SHUUP_PRICING_MODULE="supplier_pricing",
+        SHUUP_SHOP_PRODUCT_SUPPLIERS_STRATEGY=strategy,
+    ):
         # Ok so cheapest price should be default supplier
         expected_supplier = shop_product.get_supplier()
         assert expected_supplier.name == "Mike Inc"
-        with override_current_theme_class(ClassicGrayTheme, shop):  # Ensure settings is refreshed from DB
+        with override_current_theme_class(
+            ClassicGrayTheme, shop
+        ):  # Ensure settings is refreshed from DB
             c = SmartClient()
 
             # Case 1: use default supplier
@@ -88,17 +94,23 @@ def test_order_flow_with_multiple_suppliers():
 
             order = _complete_checkout(c, n_orders_pre + 3)
             assert order
-            assert order.taxful_total_price_value == decimal.Decimal("80")  # Math: 2x10e + 3x20e
+            assert order.taxful_total_price_value == decimal.Decimal(
+                "80"
+            )  # Math: 2x10e + 3x20e
 
             product_lines = order.lines.products()
             assert len(product_lines) == 2
 
-            mikes_line = [line for line in product_lines if line.supplier.pk == mike_supplier.pk][0]
+            mikes_line = [
+                line for line in product_lines if line.supplier.pk == mike_supplier.pk
+            ][0]
             assert mikes_line
             assert mikes_line.quantity == 2
             assert mikes_line.base_unit_price_value == decimal.Decimal("10")
 
-            simon_line = [line for line in product_lines if line.supplier.pk == simon_supplier.pk][0]
+            simon_line = [
+                line for line in product_lines if line.supplier.pk == simon_supplier.pk
+            ][0]
             assert simon_line
             assert simon_line.quantity == 3
             assert simon_line.base_unit_price_value == decimal.Decimal("20")
@@ -126,13 +138,18 @@ def _complete_checkout(client, expected_order_count):
 
     methods_path = reverse("shuup:checkout", kwargs={"phase": "methods"})
     methods_soup = client.soup(methods_path)
-    assert client.post(methods_path, data=extract_form_fields(methods_soup)).status_code == 302  # Should redirect forth
+    assert (
+        client.post(methods_path, data=extract_form_fields(methods_soup)).status_code
+        == 302
+    )  # Should redirect forth
 
     confirm_path = reverse("shuup:checkout", kwargs={"phase": "confirm"})
     confirm_soup = client.soup(confirm_path)
     data = extract_form_fields(confirm_soup)
     data["accept_terms"] = True
-    assert client.post(confirm_path, data=data).status_code == 302  # Should redirect forth
+    assert (
+        client.post(confirm_path, data=data).status_code == 302
+    )  # Should redirect forth
 
     n_orders_post = Order.objects.count()
     assert n_orders_post == expected_order_count, "order was created"
@@ -159,6 +176,8 @@ def _fill_address_inputs(soup, with_company=False):
         inputs["company-tax_number"] = "FI1234567-1"
         inputs["company-company_name"] = "Example Oy"
     else:
-        inputs = dict((k, v) for (k, v) in inputs.items() if not k.startswith("company-"))
+        inputs = dict(
+            (k, v) for (k, v) in inputs.items() if not k.startswith("company-")
+        )
 
     return inputs

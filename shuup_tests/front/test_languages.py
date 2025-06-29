@@ -9,7 +9,10 @@ from django.test.utils import override_settings
 from django.utils.translation import activate, get_language
 
 from shuup.core import cache
-from shuup.front.utils.translation import get_shop_available_languages, set_shop_available_languages
+from shuup.front.utils.translation import (
+    get_shop_available_languages,
+    set_shop_available_languages,
+)
 from shuup.testing import factories
 from shuup.utils.django_compat import reverse
 from shuup_tests.utils import SmartClient
@@ -26,7 +29,12 @@ def test_shop_available_languages(admin_user):
     client = SmartClient()
 
     with override_settings(
-        LANGUAGES=[("it", "Italian"), ("fr", "French"), ("fi", "Finnish"), ("pt", "Portuguese")],
+        LANGUAGES=[
+            ("it", "Italian"),
+            ("fr", "French"),
+            ("fi", "Finnish"),
+            ("pt", "Portuguese"),
+        ],
         LANGUAGE_CODE="it",
         PARLER_DEFAULT_LANGUAGE_CODE="it",
     ):
@@ -113,7 +121,12 @@ def test_admin_set_shop_language(admin_user):
     client.login(username=admin_user.username, password="admin")
 
     with override_settings(
-        LANGUAGES=[("it", "Italian"), ("fr", "French"), ("fi", "Finnish"), ("pt-br", "Portuguese (Brazil)")],
+        LANGUAGES=[
+            ("it", "Italian"),
+            ("fr", "French"),
+            ("fi", "Finnish"),
+            ("pt-br", "Portuguese (Brazil)"),
+        ],
         LANGUAGE_CODE="it",
         PARLER_DEFAULT_LANGUAGE_CODE="it",
     ):

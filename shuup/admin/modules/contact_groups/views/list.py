@@ -24,7 +24,9 @@ class ContactGroupListView(PicotableListView):
             _("Name"),
             sort_field="translations__name",
             display="name",
-            filter_config=TextFilter(filter_field="translations__name", placeholder=_("Filter by name...")),
+            filter_config=TextFilter(
+                filter_field="translations__name", placeholder=_("Filter by name...")
+            ),
         ),
         Column("n_members", _("Number of Members")),
     ]
@@ -32,13 +34,20 @@ class ContactGroupListView(PicotableListView):
     mass_actions_provider_key = "contact_group_list_mass_actions_provider"
 
     def get_queryset(self):
-        return ContactGroup.objects.all_except_defaults().annotate(n_members=Count("members"))
+        return ContactGroup.objects.all_except_defaults().annotate(
+            n_members=Count("members")
+        )
 
     def get_context_data(self, **kwargs):
         context = super(ContactGroupListView, self).get_context_data(**kwargs)
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(ContactGroup, return_url="contact_group")
+            settings_button = SettingsActionButton.for_model(
+                ContactGroup, return_url="contact_group"
+            )
         else:
             settings_button = None
-        context["toolbar"] = Toolbar([NewActionButton("shuup_admin:contact_group.new"), settings_button], view=self)
+        context["toolbar"] = Toolbar(
+            [NewActionButton("shuup_admin:contact_group.new"), settings_button],
+            view=self,
+        )
         return context

@@ -22,7 +22,10 @@ _paragraph_re = re.compile(r"(?:\r\n|\r|\n){2,}")
 
 @jinja2.evalcontextfilter
 def nl2br(eval_ctx, value):
-    result = u"\n\n".join(u"<p>%s</p>" % p.replace("\n", "<br>\n") for p in _paragraph_re.split(jinja2.escape(value)))
+    result = "\n\n".join(
+        "<p>%s</p>" % p.replace("\n", "<br>\n")
+        for p in _paragraph_re.split(jinja2.escape(value))
+    )
     if eval_ctx.autoescape:
         result = jinja2.Markup(result)
     return result
@@ -240,9 +243,9 @@ class ArgValidator(Validator):
 
     def validate(self, docinfo):
         for arg in sorted(docinfo.missing_args):
-            yield u"Error! Missing mention of arg `%s`" % arg
+            yield "Error! Missing mention of arg `%s`" % arg
         for arg in sorted(docinfo.extraneous_args):
-            yield u"Error! Extraneous mention of arg `%s`" % arg
+            yield "Error! Extraneous mention of arg `%s`" % arg
 
 
 class ReturnValidator(Validator):
@@ -257,7 +260,7 @@ class ReturnValidator(Validator):
         rvv.visit(node)
         if rvv.has_valueful_return:
             if not (":return" in docstring or ":rtype" in docstring):
-                yield u"Error! Undocumented return value(s)"
+                yield "Error! Undocumented return value(s)"
 
 
 class DocInfo(object):
@@ -267,24 +270,34 @@ class DocInfo(object):
         self.node = node
         self.filename = filename
         self.directives = ""
-        directive_match = DOCCOV_DIRECTIVE_COMMENT_RE.search(linecache.getline(filename, node.lineno))
+        directive_match = DOCCOV_DIRECTIVE_COMMENT_RE.search(
+            linecache.getline(filename, node.lineno)
+        )
         if directive_match:
             self.directives = directive_match.group(1).lower()
         self.name = getattr(node, "name", None) or ""
-        self.docstring = (self.parse_docstring(node) or u"").strip()
-        self.named_args = [a.arg for a in node.args.args] if hasattr(node, "args") else []
+        self.docstring = (self.parse_docstring(node) or "").strip()
+        self.named_args = (
+            [a.arg for a in node.args.args] if hasattr(node, "args") else []
+        )
         if self.named_args and self.named_args[0] in IGNORED_FIRST_ARGS:
             self.named_args.pop(0)
 
-        self.required_args = set(arg for arg in self.named_args if arg not in IGNORED_ARGS)
+        self.required_args = set(
+            arg for arg in self.named_args if arg not in IGNORED_ARGS
+        )
         self.mentioned_args = set(self.parse_arg_mentions(self.docstring))
         self.missing_args = self.required_args - self.mentioned_args
-        self.extraneous_args = self.mentioned_args - self.required_args - set(["args", "kwargs"])
+        self.extraneous_args = (
+            self.mentioned_args - self.required_args - set(["args", "kwargs"])
+        )
         self.validation_errors = list(self.validate())
         self.valid = not self.validation_errors
 
     def _prevalidate(self):
-        if "migrations" in self.filename:  # Nothing in migration files is documentation-worthwhile
+        if (
+            "migrations" in self.filename
+        ):  # Nothing in migration files is documentation-worthwhile
             return False
         if "ignore" in self.directives:
             return False
@@ -298,7 +311,10 @@ class DocInfo(object):
 
         for validator_class in self.validator_classes:
             validator = validator_class()
-            if any((directive in self.directives) for directive in validator_class.disabling_directives):
+            if any(
+                (directive in self.directives)
+                for directive in validator_class.disabling_directives
+            ):
                 continue
             for error in validator.validate(self):
                 yield error
@@ -390,7 +406,13 @@ class DocCov(object):
             n_total = float(len(objects))
             n_undocumented = n_total - n_documented
 
-            file_totals = Counter({"n_documented": n_documented, "n_total": n_total, "n_undocumented": n_undocumented})
+            file_totals = Counter(
+                {
+                    "n_documented": n_documented,
+                    "n_total": n_total,
+                    "n_undocumented": n_undocumented,
+                }
+            )
 
             grand_totals += file_totals
 
@@ -419,10 +441,15 @@ class DocCov(object):
         env.filters["nl2br"] = nl2br
         data = env.from_string(REPORT_TEMPLATE).render(
             {
-                "percentage": round(grand_totals["n_documented"] / float(grand_totals["n_total"]) * 100, 2),
+                "percentage": round(
+                    grand_totals["n_documented"] / float(grand_totals["n_total"]) * 100,
+                    2,
+                ),
                 "grand_totals": grand_totals,
                 "files": template_file_list,
-                "files_by_percentage": sorted(template_file_list, key=lambda f: (f["percentage"], f["id"])),
+                "files_by_percentage": sorted(
+                    template_file_list, key=lambda f: (f["percentage"], f["id"])
+                ),
             }
         )
 
@@ -431,7 +458,13 @@ class DocCov(object):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("-o", "--output", dest="output", type=argparse.FileType("w", encoding="utf-8"), default=sys.stdout)
+    ap.add_argument(
+        "-o",
+        "--output",
+        dest="output",
+        type=argparse.FileType("w", encoding="utf-8"),
+        default=sys.stdout,
+    )
     ap.add_argument("-v", "--verbose", dest="verbose", action="store_true")
     ap.add_argument("-q", "--quiet", dest="quiet", action="store_true")
     ap.add_argument("roots", metavar="root", nargs="+")

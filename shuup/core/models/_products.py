@@ -23,7 +23,10 @@ from typing import TYPE_CHECKING, Iterable
 from shuup.core.excs import ImpossibleProductModeException
 from shuup.core.fields import InternalIdentifierField, MeasurementField
 from shuup.core.signals import post_clean, pre_clean
-from shuup.core.specs.product_kind import DefaultProductKindSpec, get_product_kind_choices
+from shuup.core.specs.product_kind import (
+    DefaultProductKindSpec,
+    get_product_kind_choices,
+)
 from shuup.core.taxing import TaxableItem
 from shuup.core.utils.slugs import generate_multilanguage_slugs
 from shuup.utils.analog import LogEntryKind, define_log_model
@@ -161,18 +164,30 @@ class ProductType(TranslatableModel):
 
 class ProductQuerySet(TranslatableQuerySet):
     def _visible(
-        self, shop, customer, language=None, purchasable_only=False, visibility: "ShopProductVisibility" = None
+        self,
+        shop,
+        customer,
+        language=None,
+        purchasable_only=False,
+        visibility: "ShopProductVisibility" = None,
     ):
         root = self.language(language) if language else self
 
         from shuup.core.catalog import ProductCatalog, ProductCatalogContext
 
         catalog = ProductCatalog(
-            ProductCatalogContext(shop=shop, contact=customer, purchasable_only=purchasable_only, visibility=visibility)
+            ProductCatalogContext(
+                shop=shop,
+                contact=customer,
+                purchasable_only=purchasable_only,
+                visibility=visibility,
+            )
         )
 
         qs = catalog.annotate_products_queryset(root.all())
-        qs = qs.select_related(*Product.COMMON_SELECT_RELATED).prefetch_related(*Product.COMMON_PREFETCH_RELATED)
+        qs = qs.select_related(*Product.COMMON_SELECT_RELATED).prefetch_related(
+            *Product.COMMON_PREFETCH_RELATED
+        )
         return qs.exclude(type__isnull=True)
 
     def listed(self, shop, customer=None, language=None, purchasable_only=False):
@@ -181,7 +196,9 @@ class ProductQuerySet(TranslatableQuerySet):
         """
         from ._product_shops import ShopProductVisibility
 
-        return self._visible(shop, customer, language, purchasable_only, ShopProductVisibility.LISTED)
+        return self._visible(
+            shop, customer, language, purchasable_only, ShopProductVisibility.LISTED
+        )
 
     def searchable(self, shop, customer=None, language=None, purchasable_only=False):
         """
@@ -189,38 +206,67 @@ class ProductQuerySet(TranslatableQuerySet):
         """
         from ._product_shops import ShopProductVisibility
 
-        return self._visible(shop, customer, language, purchasable_only, ShopProductVisibility.SEARCHABLE)
+        return self._visible(
+            shop, customer, language, purchasable_only, ShopProductVisibility.SEARCHABLE
+        )
 
     def visible(self, shop, customer=None, language=None, purchasable_only=False):
         """
         Deprecated 4.0: Use ProductCatalog directly
         """
-        return self._visible(shop, customer=customer, language=language, purchasable_only=purchasable_only)
+        return self._visible(
+            shop,
+            customer=customer,
+            language=language,
+            purchasable_only=purchasable_only,
+        )
 
     def all_except_deleted(self, language=None, shop=None):
         """
         Deprecated 4.0: Use ProductCatalog directly
         """
-        qs = (self.language(language) if language else self).exclude(Q(deleted=True) | Q(type__isnull=True))
+        qs = (self.language(language) if language else self).exclude(
+            Q(deleted=True) | Q(type__isnull=True)
+        )
         if shop:
             qs = qs.filter(shop_products__shop=shop)
-        qs = qs.select_related(*Product.COMMON_SELECT_RELATED).prefetch_related(*Product.COMMON_PREFETCH_RELATED)
+        qs = qs.select_related(*Product.COMMON_SELECT_RELATED).prefetch_related(
+            *Product.COMMON_PREFETCH_RELATED
+        )
         return qs
 
 
 @python_2_unicode_compatible
 class Product(TaxableItem, AttributableMixin, TranslatableModel):
-    COMMON_SELECT_RELATED = ("sales_unit", "type", "primary_image", "tax_class", "manufacturer")
+    COMMON_SELECT_RELATED = (
+        "sales_unit",
+        "type",
+        "primary_image",
+        "tax_class",
+        "manufacturer",
+    )
     COMMON_PREFETCH_RELATED = ("translations",)
 
     # Metadata
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on"))
-    modified_on = models.DateTimeField(auto_now=True, editable=False, verbose_name=_("modified on"))
-    deleted = models.BooleanField(default=False, editable=False, db_index=True, verbose_name=_("deleted"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on")
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True, editable=False, verbose_name=_("modified on")
+    )
+    deleted = models.BooleanField(
+        default=False, editable=False, db_index=True, verbose_name=_("deleted")
+    )
 
     # Behavior
-    kind = models.IntegerField(default=DefaultProductKindSpec.value, choices=get_product_kind_choices(), db_index=True)
-    mode = EnumIntegerField(ProductMode, default=ProductMode.NORMAL, verbose_name=_("mode"))
+    kind = models.IntegerField(
+        default=DefaultProductKindSpec.value,
+        choices=get_product_kind_choices(),
+        db_index=True,
+    )
+    mode = EnumIntegerField(
+        ProductMode, default=ProductMode.NORMAL, verbose_name=_("mode")
+    )
     variation_parent = models.ForeignKey(
         "self",
         null=True,
@@ -303,9 +349,15 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
             "This is useful for inventory/stock tracking and analysis."
         ),
     )
-    accounting_identifier = models.CharField(max_length=32, blank=True, verbose_name=_("bookkeeping account"))
-    profit_center = models.CharField(max_length=32, verbose_name=_("profit center"), blank=True)
-    cost_center = models.CharField(max_length=32, verbose_name=_("cost center"), blank=True)
+    accounting_identifier = models.CharField(
+        max_length=32, blank=True, verbose_name=_("bookkeeping account")
+    )
+    profit_center = models.CharField(
+        max_length=32, verbose_name=_("profit center"), blank=True
+    )
+    cost_center = models.CharField(
+        max_length=32, verbose_name=_("cost center"), blank=True
+    )
 
     # Physical dimensions
     width = MeasurementField(
@@ -356,7 +408,9 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
         null=True,
         verbose_name=_("manufacturer"),
         on_delete=models.SET_NULL,
-        help_text=_("Select a manufacturer for your product. To define these, search for `Manufacturers`."),
+        help_text=_(
+            "Select a manufacturer for your product. To define these, search for `Manufacturers`."
+        ),
     )
     primary_image = models.ForeignKey(
         "ProductMedia",
@@ -372,7 +426,9 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
             max_length=256,
             verbose_name=_("name"),
             db_index=True,
-            help_text=_("Enter a descriptive name for your product. This will be its title in your store front."),
+            help_text=_(
+                "Enter a descriptive name for your product. This will be its title in your store front."
+            ),
         ),
         description=models.TextField(
             blank=True,
@@ -450,7 +506,10 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
         from shuup.core.utils import context_cache
 
         key, val = context_cache.get_cached_value(
-            identifier="shop_product", item=self, context={"shop": shop}, allow_cache=allow_cache
+            identifier="shop_product",
+            item=self,
+            context={"shop": shop},
+            allow_cache=allow_cache,
         )
         if val is not None:
             return val
@@ -475,15 +534,19 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
         priced_children = []
         shop_product_query = Q(
             shop=context.shop,
-            product_id__in=self.variation_children.visible(shop=context.shop, customer=context.customer).values_list(
-                "id", flat=True
-            ),
+            product_id__in=self.variation_children.visible(
+                shop=context.shop, customer=context.customer
+            ).values_list("id", flat=True),
         )
 
         for shop_product in ShopProduct.objects.filter(shop_product_query):
-            if shop_product.is_orderable(supplier=None, customer=context.customer, quantity=1):
+            if shop_product.is_orderable(
+                supplier=None, customer=context.customer, quantity=1
+            ):
                 child = shop_product.product
-                priced_children.append((child, child.get_price_info(context, quantity=quantity)))
+                priced_children.append(
+                    (child, child.get_price_info(context, quantity=quantity))
+                )
 
         return sorted(priced_children, key=(lambda x: x[1].price))
 
@@ -507,7 +570,9 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
         :rtype: (shuup.core.pricing.Price, shuup.core.pricing.Price)
         """
         items = []
-        for child in self.variation_children.visible(shop=context.shop, customer=context.customer):
+        for child in self.variation_children.visible(
+            shop=context.shop, customer=context.customer
+        ):
             items.append(child.get_price_info(context, quantity=quantity))
 
         if not items:
@@ -529,7 +594,9 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
         :rtype: shuup.core.pricing.PriceInfo
         """
         items = []
-        for child in self.variation_children.visible(shop=context.shop, customer=context.customer):
+        for child in self.variation_children.visible(
+            shop=context.shop, customer=context.customer
+        ):
             items.append(child.get_price_info(context, quantity=quantity))
 
         if not items:
@@ -659,12 +726,16 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
         post_clean.send(type(self), instance=self)
 
     def delete(self, using=None):
-        raise NotImplementedError("Error! Not implemented: `Product` -> `delete()`. Use `soft_delete()` for products.")
+        raise NotImplementedError(
+            "Error! Not implemented: `Product` -> `delete()`. Use `soft_delete()` for products."
+        )
 
     def soft_delete(self, user=None):
         if not self.deleted:
             self.deleted = True
-            self.add_log_entry("Success! Deleted (soft).", kind=LogEntryKind.DELETION, user=user)
+            self.add_log_entry(
+                "Success! Deleted (soft).", kind=LogEntryKind.DELETION, user=user
+            )
             # Bypassing local `save()` on purpose.
             super(Product, self).save(update_fields=("deleted",))
 
@@ -713,7 +784,9 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
         """
         if combination_hash:
             if variables:
-                raise ValueError("Error! `combination_hash` and `variables` are mutually exclusive.")
+                raise ValueError(
+                    "Error! `combination_hash` and `variables` are mutually exclusive."
+                )
             variables = True  # Simplifies the below invariant checks
 
         self._raise_if_cant_link_to_parent(parent, variables)
@@ -728,10 +801,14 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
 
         if variables:
             if not combination_hash:  # No precalculated hash, need to figure that out
-                combination_hash = get_combination_hash_from_variable_mapping(parent, variables=variables)
+                combination_hash = get_combination_hash_from_variable_mapping(
+                    parent, variables=variables
+                )
 
             pvr = ProductVariationResult.objects.update_or_create(
-                product=parent, combination_hash=combination_hash, defaults=dict(result=self)
+                product=parent,
+                combination_hash=combination_hash,
+                defaults=dict(result=self),
             )[0]
             if parent.mode == ProductMode.SIMPLE_VARIATION_PARENT:
                 parent.verify_mode()
@@ -751,65 +828,100 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
         """
         if parent.is_variation_child():
             raise ImpossibleProductModeException(
-                _("Multilevel parentage hierarchies aren't supported (parent is a child already)."), code="multilevel"
+                _(
+                    "Multilevel parentage hierarchies aren't supported (parent is a child already)."
+                ),
+                code="multilevel",
             )
         if parent.mode == ProductMode.VARIABLE_VARIATION_PARENT and not variables:
             raise ImpossibleProductModeException(
-                _("Parent is a variable variation parent, yet variables were not passed."), code="no_variables"
+                _(
+                    "Parent is a variable variation parent, yet variables were not passed."
+                ),
+                code="no_variables",
             )
         if parent.mode == ProductMode.SIMPLE_VARIATION_PARENT and variables:
             raise ImpossibleProductModeException(
-                "Error! Parent is a simple variation parent, yet variables were passed.", code="extra_variables"
+                "Error! Parent is a simple variation parent, yet variables were passed.",
+                code="extra_variables",
             )
         if self.mode == ProductMode.SIMPLE_VARIATION_PARENT:
             raise ImpossibleProductModeException(
-                _("Multilevel parentage hierarchies aren't supported (this product is a simple variation parent)."),
+                _(
+                    "Multilevel parentage hierarchies aren't supported (this product is a simple variation parent)."
+                ),
                 code="multilevel",
             )
         if self.mode == ProductMode.VARIABLE_VARIATION_PARENT:
             raise ImpossibleProductModeException(
-                _("Multilevel parentage hierarchies aren't supported (this product is a variable variation parent)."),
+                _(
+                    "Multilevel parentage hierarchies aren't supported (this product is a variable variation parent)."
+                ),
                 code="multilevel",
             )
 
     def make_package(self, package_def):
         if self.mode != ProductMode.NORMAL:
             raise ImpossibleProductModeException(
-                _("Product is currently not a normal product, and can't be turned into a package."), code="abnormal"
+                _(
+                    "Product is currently not a normal product, and can't be turned into a package."
+                ),
+                code="abnormal",
             )
 
         for child_product, quantity in six.iteritems(package_def):
             if child_product.pk == self.pk:
-                raise ImpossibleProductModeException(_("Package can't contain itself."), code="content")
+                raise ImpossibleProductModeException(
+                    _("Package can't contain itself."), code="content"
+                )
             # :type child_product: Product
             if child_product.is_variation_parent():
                 raise ImpossibleProductModeException(
                     _("Variation parents can't belong in the package."), code="abnormal"
                 )
             if child_product.is_container():
-                raise ImpossibleProductModeException(_("Packages can't be nested."), code="multilevel")
+                raise ImpossibleProductModeException(
+                    _("Packages can't be nested."), code="multilevel"
+                )
             if quantity <= 0:
-                raise ImpossibleProductModeException(_("Quantity %s is invalid.") % quantity, code="quantity")
-            ProductPackageLink.objects.create(parent=self, child=child_product, quantity=quantity)
+                raise ImpossibleProductModeException(
+                    _("Quantity %s is invalid.") % quantity, code="quantity"
+                )
+            ProductPackageLink.objects.create(
+                parent=self, child=child_product, quantity=quantity
+            )
         self.verify_mode()
 
     def get_package_child_to_quantity_map(self):
         if self.is_container():
             product_id_to_quantity = dict(
-                ProductPackageLink.objects.filter(parent=self).values_list("child_id", "quantity")
+                ProductPackageLink.objects.filter(parent=self).values_list(
+                    "child_id", "quantity"
+                )
             )
-            products = dict((p.pk, p) for p in Product.objects.filter(pk__in=product_id_to_quantity.keys()))
-            return {products[product_id]: quantity for (product_id, quantity) in six.iteritems(product_id_to_quantity)}
+            products = dict(
+                (p.pk, p)
+                for p in Product.objects.filter(pk__in=product_id_to_quantity.keys())
+            )
+            return {
+                products[product_id]: quantity
+                for (product_id, quantity) in six.iteritems(product_id_to_quantity)
+            }
         return {}
 
     def is_variation_parent(self):
-        return self.mode in (ProductMode.SIMPLE_VARIATION_PARENT, ProductMode.VARIABLE_VARIATION_PARENT)
+        return self.mode in (
+            ProductMode.SIMPLE_VARIATION_PARENT,
+            ProductMode.VARIABLE_VARIATION_PARENT,
+        )
 
     def is_variation_child(self):
         return self.mode == ProductMode.VARIATION_CHILD
 
     def get_variation_siblings(self):
-        return Product.objects.filter(variation_parent=self.variation_parent).exclude(pk=self.pk)
+        return Product.objects.filter(variation_parent=self.variation_parent).exclude(
+            pk=self.pk
+        )
 
     def is_package_parent(self):
         return self.mode == ProductMode.PACKAGE_PARENT
@@ -822,16 +934,26 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
 
     def get_all_package_parents(self):
         return Product.objects.filter(
-            pk__in=(ProductPackageLink.objects.filter(child=self).values_list("parent", flat=True))
+            pk__in=(
+                ProductPackageLink.objects.filter(child=self).values_list(
+                    "parent", flat=True
+                )
+            )
         )
 
     def get_all_package_children(self):
         return Product.objects.filter(
-            pk__in=(ProductPackageLink.objects.filter(parent=self).values_list("child", flat=True))
+            pk__in=(
+                ProductPackageLink.objects.filter(parent=self).values_list(
+                    "child", flat=True
+                )
+            )
         )
 
     def get_public_media(self):
-        return self.media.filter(enabled=True, public=True).exclude(kind=ProductMediaKind.IMAGE)
+        return self.media.filter(enabled=True, public=True).exclude(
+            kind=ProductMediaKind.IMAGE
+        )
 
     def is_container(self):
         return self.is_package_parent() or self.is_subscription_parent()
@@ -842,10 +964,16 @@ ProductLogEntry = define_log_model(Product)
 
 class ProductCrossSell(models.Model):
     product1 = models.ForeignKey(
-        Product, related_name="cross_sell_1", on_delete=models.CASCADE, verbose_name=_("primary product")
+        Product,
+        related_name="cross_sell_1",
+        on_delete=models.CASCADE,
+        verbose_name=_("primary product"),
     )
     product2 = models.ForeignKey(
-        Product, related_name="cross_sell_2", on_delete=models.CASCADE, verbose_name=_("secondary product")
+        Product,
+        related_name="cross_sell_2",
+        on_delete=models.CASCADE,
+        verbose_name=_("secondary product"),
     )
     weight = models.IntegerField(default=0, verbose_name=_("weight"))
     type = EnumIntegerField(ProductCrossSellType, verbose_name=_("type"))
@@ -857,10 +985,17 @@ class ProductCrossSell(models.Model):
 
 class ProductAttribute(AppliedAttribute):
     _applied_fk_field = "product"
-    product = models.ForeignKey(Product, related_name="attributes", on_delete=models.CASCADE, verbose_name=_("product"))
+    product = models.ForeignKey(
+        Product,
+        related_name="attributes",
+        on_delete=models.CASCADE,
+        verbose_name=_("product"),
+    )
 
     translations = TranslatedFields(
-        translated_string_value=models.TextField(blank=True, verbose_name=_("translated value"))
+        translated_string_value=models.TextField(
+            blank=True, verbose_name=_("translated value")
+        )
     )
 
     class Meta:

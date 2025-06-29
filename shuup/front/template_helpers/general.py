@@ -28,11 +28,20 @@ from shuup.utils.translation import cache_translations_for_tree
 
 def get_login_form(request, id_prefix="quick-login"):
     # Getting the form from the Login view
-    form = cached_load("SHUUP_LOGIN_VIEW")(request=request).get_form(id_prefix=id_prefix)
+    form = cached_load("SHUUP_LOGIN_VIEW")(request=request).get_form(
+        id_prefix=id_prefix
+    )
     return form
 
 
-def _get_listed_products(context, n_products, ordering=None, filter_dict=None, orderable_only=True, extra_filters=None):
+def _get_listed_products(
+    context,
+    n_products,
+    ordering=None,
+    filter_dict=None,
+    orderable_only=True,
+    extra_filters=None,
+):
     """
     Returns all products marked as listed that are determined to be
     visible based on the current context.
@@ -84,7 +93,14 @@ def _get_listed_products(context, n_products, ordering=None, filter_dict=None, o
 
 
 @contextfunction
-def get_listed_products(context, n_products, ordering=None, filter_dict=None, orderable_only=True, extra_filters=None):
+def get_listed_products(
+    context,
+    n_products,
+    ordering=None,
+    filter_dict=None,
+    orderable_only=True,
+    extra_filters=None,
+):
     """
     A cached version of _get_listed_products
     """
@@ -102,13 +118,19 @@ def get_listed_products(context, n_products, ordering=None, filter_dict=None, or
 
 
 @contextfunction
-def get_best_selling_products(context, n_products=12, cutoff_days=30, orderable_only=True, supplier=None):
+def get_best_selling_products(
+    context, n_products=12, cutoff_days=30, orderable_only=True, supplier=None
+):
     request = context["request"]
-    products = _get_best_selling_products(cutoff_days, n_products, orderable_only, request, supplier=supplier)
+    products = _get_best_selling_products(
+        cutoff_days, n_products, orderable_only, request, supplier=supplier
+    )
     return products
 
 
-def _get_best_selling_products(cutoff_days, n_products, orderable_only, request, supplier=None):
+def _get_best_selling_products(
+    cutoff_days, n_products, orderable_only, request, supplier=None
+):
     data = get_best_selling_product_info(
         shop_ids=[request.shop.pk],
         cutoff_days=cutoff_days,
@@ -145,7 +167,11 @@ def _get_best_selling_products(cutoff_days, n_products, orderable_only, request,
 def get_newest_products(context, n_products=6, orderable_only=True):
     request = context["request"]
     products = _get_listed_products(
-        context, n_products, ordering="-pk", filter_dict={"variation_parent": None}, orderable_only=orderable_only
+        context,
+        n_products,
+        ordering="-pk",
+        filter_dict={"variation_parent": None},
+        orderable_only=orderable_only,
     )
     products = cache_product_things(request, products)
     return products
@@ -155,7 +181,11 @@ def get_newest_products(context, n_products=6, orderable_only=True):
 def get_random_products(context, n_products=6, orderable_only=True):
     request = context["request"]
     products = _get_listed_products(
-        context, n_products, ordering="?", filter_dict={"variation_parent": None}, orderable_only=orderable_only
+        context,
+        n_products,
+        ordering="?",
+        filter_dict={"variation_parent": None},
+        orderable_only=orderable_only,
     )
     products = cache_product_things(request, products)
     return products
@@ -168,7 +198,10 @@ def get_products_for_categories(context, categories, n_products=6, orderable_onl
         context,
         n_products,
         ordering="?",
-        filter_dict={"variation_parent": None, "shop_products__categories__in": categories},
+        filter_dict={
+            "variation_parent": None,
+            "shop_products__categories__in": categories,
+        },
         orderable_only=orderable_only,
     )
     products = cache_product_things(request, products)
@@ -188,7 +221,9 @@ def get_all_manufacturers(context, purchasable_only=False):
         )
     )
     manufacturers = Manufacturer.objects.filter(
-        pk__in=catalog.get_products_queryset().values_list("manufacturer_id", flat=True).distinct()
+        pk__in=catalog.get_products_queryset()
+        .values_list("manufacturer_id", flat=True)
+        .distinct()
     )
     return manufacturers
 
@@ -198,7 +233,9 @@ def get_root_categories(context):
     request = context["request"]
     language = get_language()
     roots = get_cached_trees(
-        Category.objects.all_visible(customer=request.customer, shop=request.shop, language=language)
+        Category.objects.all_visible(
+            customer=request.customer, shop=request.shop, language=language
+        )
     )
     cache_translations_for_tree(roots, languages=[language])
     return roots
@@ -279,7 +316,9 @@ def is_shop_admin(context):
 
 @contextfunction
 def is_company_registration_allowed(context, request=None):
-    current_request = request or context["request"]  # From macros it doesn't seem to always pass context correctly
+    current_request = (
+        request or context["request"]
+    )  # From macros it doesn't seem to always pass context correctly
     return allow_company_registration(current_request.shop)
 
 

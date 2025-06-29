@@ -30,7 +30,10 @@ def _clear_versions_for_request(**kwargs):
     _versions.__dict__.clear()
 
 
-request_finished.connect(_clear_versions_for_request, dispatch_uid="shuup.core.cache._clear_versions_for_request")
+request_finished.connect(
+    _clear_versions_for_request,
+    dispatch_uid="shuup.core.cache._clear_versions_for_request",
+)
 
 
 def _get_cache_key_namespace(cache_key):
@@ -57,7 +60,9 @@ def get_cache_duration(cache_key):
     namespace = _get_cache_key_namespace(cache_key)
     duration = settings.SHUUP_CACHE_DURATIONS.get(namespace)
     if duration is None:
-        duration = DEFAULT_CACHE_DURATIONS.get(namespace, settings.SHUUP_DEFAULT_CACHE_DURATION)
+        duration = DEFAULT_CACHE_DURATIONS.get(
+            namespace, settings.SHUUP_DEFAULT_CACHE_DURATION
+        )
     return duration
 
 
@@ -132,7 +137,9 @@ class VersionedCache(object):
             self._cache.set(key, value, timeout=timeout, version=version)
         except PicklingError:
             LOGGER.exception(
-                "Unable to set cache with key: {}, value: {!r}, value could not be pickled.".format(key, value)
+                "Unable to set cache with key: {}, value: {!r}, value could not be pickled.".format(
+                    key, value
+                )
             )
 
     def get(self, key, version=None, default=None):

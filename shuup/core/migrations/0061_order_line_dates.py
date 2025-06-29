@@ -7,21 +7,30 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0060_supplier_deleted'),
+        ("shuup", "0060_supplier_deleted"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='orderline',
-            name='created_on',
-            field=models.DateTimeField(auto_now_add=True, db_index=True, default=django.utils.timezone.now, verbose_name='created on'),
+            model_name="orderline",
+            name="created_on",
+            field=models.DateTimeField(
+                auto_now_add=True,
+                db_index=True,
+                default=django.utils.timezone.now,
+                verbose_name="created on",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='orderline',
-            name='modified_on',
-            field=models.DateTimeField(auto_now=True, db_index=True, default=django.utils.timezone.now, verbose_name='modified on'),
+            model_name="orderline",
+            name="modified_on",
+            field=models.DateTimeField(
+                auto_now=True,
+                db_index=True,
+                default=django.utils.timezone.now,
+                verbose_name="modified on",
+            ),
         ),
     ]

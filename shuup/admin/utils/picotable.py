@@ -97,7 +97,8 @@ class ChoicesFilter(Filter):
         if isinstance(choices, QuerySet):
             choices = [(c.pk, c) for c in choices]
         return [("_all", "---------")] + [
-            (force_text(value, strings_only=True), force_text(display)) for (value, display) in choices
+            (force_text(value, strings_only=True), force_text(display))
+            for (value, display) in choices
         ]
 
     def to_json(self, context):
@@ -134,7 +135,9 @@ class MPTTFilter(Select2Filter):
 class RangeFilter(Filter):
     type = "range"
 
-    def __init__(self, min=None, max=None, step=None, field_type=None, filter_field=None):
+    def __init__(
+        self, min=None, max=None, step=None, field_type=None, filter_field=None
+    ):
         """
         :param filter_field: Filter field (Django query expression). If None, column ID is used.
         :type filter_field: str|None
@@ -192,14 +195,21 @@ class DateRangeFilter(RangeFilter):
 
     def filter_queryset(self, queryset, column, value, context):
         if value:
-            value = {"min": try_parse_datetime(value.get("min")), "max": try_parse_datetime(value.get("max"))}
-        return super(DateRangeFilter, self).filter_queryset(queryset, column, value, context)
+            value = {
+                "min": try_parse_datetime(value.get("min")),
+                "max": try_parse_datetime(value.get("max")),
+            }
+        return super(DateRangeFilter, self).filter_queryset(
+            queryset, column, value, context
+        )
 
 
 class TextFilter(Filter):
     type = "text"
 
-    def __init__(self, field_type=None, placeholder=None, operator="icontains", filter_field=None):
+    def __init__(
+        self, field_type=None, placeholder=None, operator="icontains", filter_field=None
+    ):
         """
         :param filter_field: Filter field (Django query expression). If None, column ID is used.
         :type filter_field: str|None
@@ -220,7 +230,9 @@ class TextFilter(Filter):
             "text": compact(
                 {
                     "type": self.field_type,
-                    "placeholder": force_text(self.placeholder) if self.placeholder else None,
+                    "placeholder": force_text(self.placeholder)
+                    if self.placeholder
+                    else None,
                 }
             )
         }
@@ -271,7 +283,9 @@ class Column(object):
         self.sort_field = kwargs.pop("sort_field", None)
         self.allow_highlight = kwargs.pop("allow_highlight", True)
 
-        if kwargs and type(self) is Column:  # If we're not derived, validate that client code doesn't fail
+        if (
+            kwargs and type(self) is Column
+        ):  # If we're not derived, validate that client code doesn't fail
             raise NameError("Unexpected kwarg(s): %s" % kwargs.keys())
 
     def to_json(self, context=None):
@@ -279,13 +293,17 @@ class Column(object):
             "id": force_text(self.id),
             "title": force_text(self.title),
             "className": force_text(self.class_name) if self.class_name else None,
-            "filter": self.filter_config.to_json(context=context) if self.filter_config else None,
+            "filter": self.filter_config.to_json(context=context)
+            if self.filter_config
+            else None,
             "sortable": bool(self.sortable),
             "linked": bool(self.linked),
             "allowHighlight": bool(self.allow_highlight),
             "raw": bool(self.raw),
         }
-        return dict((key, value) for (key, value) in six.iteritems(out) if value is not None)
+        return dict(
+            (key, value) for (key, value) in six.iteritems(out) if value is not None
+        )
 
     def get_sort_field(self, sort_field):
         if self.sort_field:
@@ -309,7 +327,9 @@ class Column(object):
 
     def filter_queryset(self, queryset, value):
         if self.filter_config:
-            queryset = self.filter_config.filter_queryset(queryset, self, value, self.context)
+            queryset = self.filter_config.filter_queryset(
+                queryset, self, value, self.context
+            )
         return queryset
 
     def get_display_value(self, context, object):
@@ -382,13 +402,19 @@ class Picotable(object):
         self.context = context
         self.columns_by_id = dict((c.id, c) for c in self.columns)
         self.get_object_url = maybe_callable("get_object_url", context=self.context)
-        self.get_object_abstract = maybe_callable("get_object_abstract", context=self.context)
+        self.get_object_abstract = maybe_callable(
+            "get_object_abstract", context=self.context
+        )
         self.get_object_extra = maybe_callable("get_object_extra", context=self.context)
         self.default_filters = self._get_default_filters()
 
     def _get_default_filter(self, column):
         filter_config = getattr(column, "filter_config")
-        if filter_config and hasattr(filter_config, "default") and filter_config.default is not None:
+        if (
+            filter_config
+            and hasattr(filter_config, "default")
+            and filter_config.default is not None
+        ):
             field = filter_config.filter_field or column.id
             return (field, filter_config.default)
         else:
@@ -450,8 +476,12 @@ class Picotable(object):
         return out
 
     def process_item(self, object):
-        object_url = self.get_object_url(object) if callable(self.get_object_url) else None
-        object_extra = self.get_object_extra(object) if callable(self.get_object_extra) else None
+        object_url = (
+            self.get_object_url(object) if callable(self.get_object_url) else None
+        )
+        object_extra = (
+            self.get_object_extra(object) if callable(self.get_object_extra) else None
+        )
         out = {
             "_id": object.id,
             "_url": object_url,
@@ -459,10 +489,16 @@ class Picotable(object):
             "_extra": object_extra,
         }
         for column in self.columns:
-            out[column.id] = column.get_display_value(context=self.context, object=object)
+            out[column.id] = column.get_display_value(
+                context=self.context, object=object
+            )
 
         out["type"] = type(object).__name__
-        out["_abstract"] = self.get_object_abstract(object, item=out) if callable(self.get_object_abstract) else None
+        out["_abstract"] = (
+            self.get_object_abstract(object, item=out)
+            if callable(self.get_object_abstract)
+            else None
+        )
         return out
 
     def get_verbose_name_plural(self):
@@ -492,7 +528,9 @@ class PicotableViewMixin(object):
             queryset=self.get_queryset(),
             context=self,
         )
-        return JsonResponse(pico.get_data(json.loads(query_json)), encoder=ExtendedJSONEncoder)
+        return JsonResponse(
+            pico.get_data(json.loads(query_json)), encoder=ExtendedJSONEncoder
+        )
 
     def get(self, request, *args, **kwargs):
         query = request.GET.get("jq")
@@ -511,7 +549,9 @@ class PicotableViewMixin(object):
 
         mass_action = self._get_mass_action(action_identifier)
         if mass_action is None:
-            return JsonResponse({"error": force_text(_("Mass Action encountered an unknown error."))})
+            return JsonResponse(
+                {"error": force_text(_("Mass Action encountered an unknown error."))}
+            )
         if isinstance(mass_action, PicotableFileMassAction):
             return mass_action.process(request, ids)
 
@@ -523,12 +563,18 @@ class PicotableViewMixin(object):
 
         # add mass actions from the view mass action provider
         if getattr(self, "mass_actions_provider_key", None):
-            for mass_action_provider in get_provide_objects(self.mass_actions_provider_key):
-                mass_actions.extend(list(mass_action_provider.get_mass_actions_for_view(self)))
+            for mass_action_provider in get_provide_objects(
+                self.mass_actions_provider_key
+            ):
+                mass_actions.extend(
+                    list(mass_action_provider.get_mass_actions_for_view(self))
+                )
 
         # add mass actions from the global mass action provider
         for mass_action_provider in get_provide_objects("admin_mass_actions_provider"):
-            mass_actions.extend(list(mass_action_provider.get_mass_actions_for_view(self)))
+            mass_actions.extend(
+                list(mass_action_provider.get_mass_actions_for_view(self))
+            )
 
         return mass_actions
 
@@ -541,7 +587,9 @@ class PicotableViewMixin(object):
 
     def get_object_url(self, instance):
         try:
-            return get_model_url(instance, user=self.request.user, shop=self.request.shop)
+            return get_model_url(
+                instance, user=self.request.user, shop=self.request.shop
+            )
         except NoModelUrl:
             pass
         return None

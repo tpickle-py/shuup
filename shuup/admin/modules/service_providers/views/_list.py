@@ -21,7 +21,10 @@ class ServiceProviderListView(PicotableListView):
             "name",
             _("Name"),
             sort_field="base_translations__name",
-            filter_config=TextFilter(filter_field="base_translations__name", placeholder=_("Filter by name...")),
+            filter_config=TextFilter(
+                filter_field="base_translations__name",
+                placeholder=_("Filter by name..."),
+            ),
         ),
         Column("type", _("Type"), display="get_type_display", sortable=False),
     ]

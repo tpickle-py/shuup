@@ -28,13 +28,19 @@ from shuup.core.models import (
     ShopProduct,
     ShopProductVisibility,
 )
-from shuup.testing.factories import get_default_product_type, get_default_supplier, get_default_tax_class
+from shuup.testing.factories import (
+    get_default_product_type,
+    get_default_supplier,
+    get_default_tax_class,
+)
 from shuup.testing.modules.sample_data import SAMPLE_IMAGES_BASE_DIR
 from shuup.utils.filer import filer_image_from_data
 
 
 def create_sample_category(name, description, business_segment, image_file, shop):
-    category = Category.objects.create(name=name, description=description, status=CategoryStatus.VISIBLE)
+    category = Category.objects.create(
+        name=name, description=description, status=CategoryStatus.VISIBLE
+    )
 
     image_file_path = os.path.join(SAMPLE_IMAGES_BASE_DIR, image_file)
     path = "ProductCategories/Samples/%s" % business_segment.capitalize()
@@ -63,14 +69,18 @@ def create_sample_product(name, description, business_segment, image_file, shop)
     media_file = MediaFile.objects.create(file=filer_image)
     media_file.shops.add(shop)
 
-    media = ProductMedia.objects.create(product=product, kind=ProductMediaKind.IMAGE, file=filer_image)
+    media = ProductMedia.objects.create(
+        product=product, kind=ProductMediaKind.IMAGE, file=filer_image
+    )
     media.save()
     media.shops.add(shop)
     product.primary_image = media
     product.save()
 
     # create the price and round it to the number of decimals of the currency
-    price = shop.create_price(decimal.Decimal(random.random() * random.randrange(0, 500))).as_rounded()
+    price = shop.create_price(
+        decimal.Decimal(random.random() * random.randrange(0, 500))
+    ).as_rounded()
 
     sp = ShopProduct.objects.create(
         product=product,
@@ -91,7 +101,10 @@ def create_sample_product(name, description, business_segment, image_file, shop)
         from shuup.customer_group_pricing.models import CgpPrice
 
         CgpPrice.objects.create(
-            product=product, price_value=random.randint(15, 340), shop=shop, group=PersonContact.get_default_group()
+            product=product,
+            price_value=random.randint(15, 340),
+            shop=shop,
+            group=PersonContact.get_default_group(),
         )
 
     return product
@@ -138,5 +151,9 @@ def _filer_image_from_file_path(image_file_path, path):
     image.save(sio, format="JPEG")
 
     return filer_image_from_data(
-        request=None, path=path, file_name="{}.jpeg".format(file_name), file_data=sio.getvalue(), sha1=True
+        request=None,
+        path=path,
+        file_name="{}.jpeg".format(file_name),
+        file_data=sio.getvalue(),
+        sha1=True,
     )

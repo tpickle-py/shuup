@@ -38,8 +38,14 @@ def test_shop_and_supplier_info():
         client.login(username=staff_user.username, password="randpw")
         response, soup = client.response_and_soup(url)
         assert response.status_code == 200
-        assert shop.name in soup.find("div", {"class": "active-shop-and-supplier-info"}).text
-        assert supplier.name not in soup.find("div", {"class": "active-shop-and-supplier-info"}).text
+        assert (
+            shop.name
+            in soup.find("div", {"class": "active-shop-and-supplier-info"}).text
+        )
+        assert (
+            supplier.name
+            not in soup.find("div", {"class": "active-shop-and-supplier-info"}).text
+        )
 
     with override_settings(
         SHUUP_ENABLE_MULTIPLE_SHOPS=True,
@@ -50,5 +56,11 @@ def test_shop_and_supplier_info():
         client.login(username=staff_user.username, password="randpw")
         response, soup = client.response_and_soup(url)
         assert response.status_code == 200
-        assert shop.name in soup.find("div", {"class": "active-shop-and-supplier-info"}).text
-        assert supplier.name in soup.find("div", {"class": "active-shop-and-supplier-info"}).text
+        assert (
+            shop.name
+            in soup.find("div", {"class": "active-shop-and-supplier-info"}).text
+        )
+        assert (
+            supplier.name
+            in soup.find("div", {"class": "active-shop-and-supplier-info"}).text
+        )

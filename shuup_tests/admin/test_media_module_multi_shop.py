@@ -87,33 +87,55 @@ def test_edit_shared_folder(admin_user):
         folder = Folder.objects.create(name="Test folder")  # Shared folder
         folder_count = Folder.objects.count()
 
-        response = _mbv_command(shop1, admin_user, {"action": "rename_folder", "id": folder.pk, "name": "Space"})
+        response = _mbv_command(
+            shop1,
+            admin_user,
+            {"action": "rename_folder", "id": folder.pk, "name": "Space"},
+        )
         assert not response["success"]
-        response = _mbv_command(shop1, admin_user, {"action": "delete_folder", "id": folder.pk})
+        response = _mbv_command(
+            shop1, admin_user, {"action": "delete_folder", "id": folder.pk}
+        )
         assert not response["success"]
 
         # Let's make sure rename works when only one shop owns the folder
         media_folder = MediaFolder.objects.create(folder=folder)
         media_folder.shops.add(shop1)
-        response = _mbv_command(shop1, admin_user, {"action": "rename_folder", "id": folder.pk, "name": "Space"})
+        response = _mbv_command(
+            shop1,
+            admin_user,
+            {"action": "rename_folder", "id": folder.pk, "name": "Space"},
+        )
         assert response["success"]
         assert Folder.objects.get(pk=folder.pk).name == "Space"
 
         # Then add second shop for the folder and let's check and
         # renaming should be disabled again.
         media_folder.shops.add(shop2)
-        response = _mbv_command(shop1, admin_user, {"action": "rename_folder", "id": folder.pk, "name": "Space"})
+        response = _mbv_command(
+            shop1,
+            admin_user,
+            {"action": "rename_folder", "id": folder.pk, "name": "Space"},
+        )
         assert not response["success"]
-        response = _mbv_command(shop1, admin_user, {"action": "delete_folder", "id": folder.pk})
+        response = _mbv_command(
+            shop1, admin_user, {"action": "delete_folder", "id": folder.pk}
+        )
         assert not response["success"]
-        response = _mbv_command(shop2, admin_user, {"action": "delete_folder", "id": folder.pk})
+        response = _mbv_command(
+            shop2, admin_user, {"action": "delete_folder", "id": folder.pk}
+        )
         assert not response["success"]
 
         # Finally remove the folder as shop2
         media_folder.shops.remove(shop1)
-        response = _mbv_command(shop1, admin_user, {"action": "delete_folder", "id": folder.pk})
+        response = _mbv_command(
+            shop1, admin_user, {"action": "delete_folder", "id": folder.pk}
+        )
         assert response["error"] == "Folder matching query does not exist."
-        response = _mbv_command(shop2, admin_user, {"action": "delete_folder", "id": folder.pk})
+        response = _mbv_command(
+            shop2, admin_user, {"action": "delete_folder", "id": folder.pk}
+        )
         assert response["success"]
         assert Folder.objects.count() == folder_count - 1
 
@@ -126,48 +148,84 @@ def test_edit_shared_file(admin_user):
 
         folder1 = Folder.objects.create(name="folder1")
         folder2 = Folder.objects.create(name="folder2")
-        file = File.objects.create(original_filename="test.jpg", folder=folder1)  # Shared file
+        file = File.objects.create(
+            original_filename="test.jpg", folder=folder1
+        )  # Shared file
         file_count = File.objects.count()
         assert force_text(file) == "test.jpg"
 
-        response = _mbv_command(shop1, admin_user, {"action": "rename_file", "id": file.pk, "name": "test.tiff"})
+        response = _mbv_command(
+            shop1,
+            admin_user,
+            {"action": "rename_file", "id": file.pk, "name": "test.tiff"},
+        )
         assert not response["success"]
-        response = _mbv_command(shop1, admin_user, {"action": "move_file", "file_id": file.pk, "folder_id": folder2.pk})
+        response = _mbv_command(
+            shop1,
+            admin_user,
+            {"action": "move_file", "file_id": file.pk, "folder_id": folder2.pk},
+        )
         assert not response["success"]
         assert File.objects.get(pk=file.pk).folder == folder1
-        response = _mbv_command(shop1, admin_user, {"action": "delete_file", "id": file.pk})
+        response = _mbv_command(
+            shop1, admin_user, {"action": "delete_file", "id": file.pk}
+        )
         assert not response["success"]
 
         # Let's make sure rename works when only one shop owns the file
         media_file = MediaFile.objects.create(file=file)
         media_file.shops.add(shop1)
-        response = _mbv_command(shop1, admin_user, {"action": "rename_file", "id": file.pk, "name": "test.tiff"})
+        response = _mbv_command(
+            shop1,
+            admin_user,
+            {"action": "rename_file", "id": file.pk, "name": "test.tiff"},
+        )
         assert response["success"]
         file = File.objects.get(pk=file.pk)
         assert force_text(file) == "test.tiff"
 
         # Let's move the file to different folder
-        response = _mbv_command(shop1, admin_user, {"action": "move_file", "file_id": file.pk, "folder_id": folder2.pk})
+        response = _mbv_command(
+            shop1,
+            admin_user,
+            {"action": "move_file", "file_id": file.pk, "folder_id": folder2.pk},
+        )
         assert response["success"]
         assert File.objects.get(pk=file.pk).folder == folder2
 
         # Then add second shop for the file and let's check and
         # renaming should be disabled again.
         media_file.shops.add(shop2)
-        response = _mbv_command(shop1, admin_user, {"action": "rename_file", "id": file.pk, "name": "test.tiff"})
+        response = _mbv_command(
+            shop1,
+            admin_user,
+            {"action": "rename_file", "id": file.pk, "name": "test.tiff"},
+        )
         assert not response["success"]
-        response = _mbv_command(shop1, admin_user, {"action": "delete_file", "id": file.pk})
+        response = _mbv_command(
+            shop1, admin_user, {"action": "delete_file", "id": file.pk}
+        )
         assert not response["success"]
-        response = _mbv_command(shop2, admin_user, {"action": "rename_file", "id": file.pk, "name": "test.tiff"})
+        response = _mbv_command(
+            shop2,
+            admin_user,
+            {"action": "rename_file", "id": file.pk, "name": "test.tiff"},
+        )
         assert not response["success"]
-        response = _mbv_command(shop2, admin_user, {"action": "delete_file", "id": file.pk})
+        response = _mbv_command(
+            shop2, admin_user, {"action": "delete_file", "id": file.pk}
+        )
         assert not response["success"]
 
         # Finally remove the file as shop2
         media_file.shops.remove(shop1)
-        response = _mbv_command(shop1, admin_user, {"action": "delete_file", "id": file.pk})
+        response = _mbv_command(
+            shop1, admin_user, {"action": "delete_file", "id": file.pk}
+        )
         assert response["error"] == "File matching query does not exist."
-        response = _mbv_command(shop2, admin_user, {"action": "delete_file", "id": file.pk})
+        response = _mbv_command(
+            shop2, admin_user, {"action": "delete_file", "id": file.pk}
+        )
         assert response["success"]
         assert File.objects.count() == file_count - 1
 
@@ -188,8 +246,12 @@ def _mbv_command(shop, user, payload, method="post"):
 
 def _mbv_upload(shop, user, **extra_data):
     content = ("42" * 42).encode("UTF-8")
-    imuf = InMemoryUploadedFile(BytesIO(content), "file", "424242.pdf", "application/pdf", len(content), "UTF-8")
-    request = RequestFactory().post("/", dict({"action": "upload", "file": imuf}, **extra_data))
+    imuf = InMemoryUploadedFile(
+        BytesIO(content), "file", "424242.pdf", "application/pdf", len(content), "UTF-8"
+    )
+    request = RequestFactory().post(
+        "/", dict({"action": "upload", "file": imuf}, **extra_data)
+    )
     request.user = user
     request.session = {}
     set_shop(request, shop)
@@ -206,7 +268,9 @@ def _create_random_staff(shop):
 
 
 def _check_that_staff_can_see_folder(rf, shop, user, folder, expected_files_count):
-    request = apply_request_middleware(rf.get("/", {"action": "folder", "id": folder.id}), user=user, shop=shop)
+    request = apply_request_middleware(
+        rf.get("/", {"action": "folder", "id": folder.id}), user=user, shop=shop
+    )
     view_func = MediaBrowserView.as_view()
     response = view_func(request)
     assert isinstance(response, JsonResponse)

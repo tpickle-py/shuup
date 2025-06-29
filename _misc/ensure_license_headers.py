@@ -8,6 +8,7 @@
 """
 License header updater.
 """
+
 from __future__ import unicode_literals
 
 import argparse
@@ -25,7 +26,11 @@ LICENSE file in the root directory of this source tree.
 """.strip()
 
 PY_HEADER = "\n".join(("# " + line).strip() for line in HEADER.splitlines())
-JS_HEADER = "/**\n" + "\n".join((" * " + line).rstrip() for line in HEADER.splitlines()) + "\n */"
+JS_HEADER = (
+    "/**\n"
+    + "\n".join((" * " + line).rstrip() for line in HEADER.splitlines())
+    + "\n */"
+)
 
 PY_HEADER_LINES = PY_HEADER.encode("utf-8").splitlines()
 JS_HEADER_LINES = JS_HEADER.encode("utf-8").splitlines()
@@ -39,7 +44,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("root", nargs="+", help="Directory roots to recurse through")
     ap.add_argument("-w", "--write", help="Actually write changes", action="store_true")
-    ap.add_argument("-s", "--exit-status", help="Exit with error status when missing headers", action="store_true")
+    ap.add_argument(
+        "-s",
+        "--exit-status",
+        help="Exit with error status when missing headers",
+        action="store_true",
+    )
     ap.add_argument("-v", "--verbose", help="Log OK files too", action="store_true")
     args = ap.parse_args()
     adders = get_adders()

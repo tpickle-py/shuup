@@ -9,9 +9,16 @@
 import pytest
 
 from shuup.apps.provides import override_provides
-from shuup.campaigns.utils.matcher import ProductCampaignMatcher, get_matching_for_product
+from shuup.campaigns.utils.matcher import (
+    ProductCampaignMatcher,
+    get_matching_for_product,
+)
 from shuup.core.models import Category
-from shuup.testing.factories import create_product, create_random_person, get_default_shop
+from shuup.testing.factories import (
+    create_product,
+    create_random_person,
+    get_default_shop,
+)
 from shuup.testing.models import UltraFilter
 
 
@@ -104,5 +111,9 @@ def test_provides():
     with override_provides("campaign_catalog_filter", [__name__ + ":UltraFilter"]):
         uf = UltraFilter.objects.create()
         uf.products.add(product)
-        assert get_matching_for_product(shop_product, provide_category="campaign_catalog_filter")
-        assert not get_matching_for_product(shop_product, provide_category="test_test_test")
+        assert get_matching_for_product(
+            shop_product, provide_category="campaign_catalog_filter"
+        )
+        assert not get_matching_for_product(
+            shop_product, provide_category="test_test_test"
+        )

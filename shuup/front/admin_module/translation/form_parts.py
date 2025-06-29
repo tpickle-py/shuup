@@ -11,7 +11,10 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.form_part import FormPart, TemplatedFormDef
-from shuup.front.utils.translation import get_shop_available_languages, set_shop_available_languages
+from shuup.front.utils.translation import (
+    get_shop_available_languages,
+    set_shop_available_languages,
+)
 
 
 class TranslationSettingsForm(forms.Form):
@@ -39,7 +42,11 @@ class TranslationSettingsFormPart(FormPart):
             form_class=self.form,
             template_name="shuup/front/admin/translation.jinja",
             required=False,
-            kwargs={"initial": dict(available_languages=get_shop_available_languages(self.object))},
+            kwargs={
+                "initial": dict(
+                    available_languages=get_shop_available_languages(self.object)
+                )
+            },
         )
 
     def form_valid(self, form):

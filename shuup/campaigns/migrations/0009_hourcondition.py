@@ -9,23 +9,44 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('campaigns', '0008_freeproductline_quantity_to_quantityfield'),
+        ("campaigns", "0008_freeproductline_quantity_to_quantityfield"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HourCondition',
+            name="HourCondition",
             fields=[
-                ('contextcondition_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='campaigns.ContextCondition')),
-                ('hour_start', models.TimeField()),
-                ('hour_end', models.TimeField()),
-                ('days', models.CharField(max_length=255, validators=[django.core.validators.RegexValidator(re.compile('^\\d+(?:\\,\\d+)*\\Z'), code='invalid', message='Enter only digits separated by commas.')])),
+                (
+                    "contextcondition_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="campaigns.ContextCondition",
+                    ),
+                ),
+                ("hour_start", models.TimeField()),
+                ("hour_end", models.TimeField()),
+                (
+                    "days",
+                    models.CharField(
+                        max_length=255,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                re.compile("^\\d+(?:\\,\\d+)*\\Z"),
+                                code="invalid",
+                                message="Enter only digits separated by commas.",
+                            )
+                        ],
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('campaigns.contextcondition',),
+            bases=("campaigns.contextcondition",),
         ),
     ]

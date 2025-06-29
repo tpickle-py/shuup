@@ -10,7 +10,11 @@ import pytest
 
 from shuup.core.models import Product
 from shuup.core.utils.product_caching_object import ProductCachingObject
-from shuup.testing.factories import create_product, get_default_category, get_default_shop_product
+from shuup.testing.factories import (
+    create_product,
+    get_default_category,
+    get_default_shop_product,
+)
 
 
 def test_product_caching_object_nulling():
@@ -53,7 +57,9 @@ def test_product_caching_object():
     assert pco.product is product
     assert pco.product_id == product.pk
     assert ProductCachingObject().product != pco.product  # Assert PCOs are separate
-    assert pco._product_cache == pco.product  # This private property is courtesy of ModelCachingDescriptor
+    assert (
+        pco._product_cache == pco.product
+    )  # This private property is courtesy of ModelCachingDescriptor
 
     pco = ProductCachingObject()
     pco.product_id = product.pk

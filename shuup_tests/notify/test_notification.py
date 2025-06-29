@@ -31,12 +31,18 @@ def test_notification(admin_user, specific_user):
                 "message": "Hi {{ name }}!",
                 "message_identifier": "hi mom",
                 "url": "http://burymewithmymoney.com/",
-                "recipient_type": (RecipientType.SPECIFIC_USER if specific_user else RecipientType.ADMINS),
+                "recipient_type": (
+                    RecipientType.SPECIFIC_USER
+                    if specific_user
+                    else RecipientType.ADMINS
+                ),
                 "recipient": (admin_user if specific_user else None),
                 "priority": Priority.CRITICAL,
             },
         )
-    ).execute(Context.from_variables(name="Justin Case", shop=factories.get_default_shop()))
+    ).execute(
+        Context.from_variables(name="Justin Case", shop=factories.get_default_shop())
+    )
     notif = Notification.objects.last()
     assert isinstance(notif, Notification)
     if specific_user:
@@ -86,7 +92,9 @@ def test_notification_reverse_url():
     try:
         set_urlconf("shuup_tests.notify.notification_test_urls")
         n = Notification(shop=factories.get_default_shop())
-        kwargs = dict(viewname="test", kwargs={"arg": "yes"})  # kwargs within kwargs, oh my
+        kwargs = dict(
+            viewname="test", kwargs={"arg": "yes"}
+        )  # kwargs within kwargs, oh my
         n.set_reverse_url(**kwargs)
         n.save()
         with pytest.raises(ValueError):

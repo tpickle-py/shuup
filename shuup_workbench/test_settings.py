@@ -6,7 +6,9 @@
 # LICENSE file in the root directory of this source tree.
 import os
 
-BASE_DIR = os.getenv("SHUUP_WORKBENCH_BASE_DIR") or (os.path.dirname(os.path.dirname(__file__)))
+BASE_DIR = os.getenv("SHUUP_WORKBENCH_BASE_DIR") or (
+    os.path.dirname(os.path.dirname(__file__))
+)
 SECRET_KEY = "Shhhhh"
 MIRAGE_SECRET_KEY = "Shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
 DEBUG = True
@@ -111,7 +113,9 @@ if os.environ.get("SHUUP_TESTS_CI", False):
     LOGGING = {
         "version": 1,
         "formatters": {
-            "verbose": {"format": "[%(asctime)s] (%(name)s:%(levelname)s): %(message)s"},
+            "verbose": {
+                "format": "[%(asctime)s] (%(name)s:%(levelname)s): %(message)s"
+            },
         },
         "handlers": {
             "file": {
@@ -130,10 +134,16 @@ else:
     LOGGING = {
         "version": 1,
         "formatters": {
-            "verbose": {"format": "[%(asctime)s] (%(name)s:%(levelname)s): %(message)s"},
+            "verbose": {
+                "format": "[%(asctime)s] (%(name)s:%(levelname)s): %(message)s"
+            },
         },
         "handlers": {
-            "console": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "verbose"},
+            "console": {
+                "level": "DEBUG",
+                "class": "logging.StreamHandler",
+                "formatter": "verbose",
+            },
         },
         "loggers": {
             "shuup": {"handlers": ["console"], "level": "DEBUG", "propagate": True},

@@ -11,7 +11,10 @@ from django.utils.encoding import force_text
 
 from shuup.admin.base import AdminModule
 from shuup.admin.module_registry import get_modules, replace_modules
-from shuup.admin.modules.permission_groups.views.edit import PermissionGroupEditView, PermissionGroupForm
+from shuup.admin.modules.permission_groups.views.edit import (
+    PermissionGroupEditView,
+    PermissionGroupForm,
+)
 from shuup.admin.utils.permissions import get_permissions_from_group
 from shuup.testing.factories import get_default_shop
 from shuup.testing.utils import apply_request_middleware
@@ -28,7 +31,9 @@ def test_permission_group_edit_view(rf, admin_user):
     get_default_shop()
     group = get_default_permission_group()
     view_func = PermissionGroupEditView.as_view()
-    response = view_func(apply_request_middleware(rf.get("/"), pk=group.pk, user=admin_user))
+    response = view_func(
+        apply_request_middleware(rf.get("/"), pk=group.pk, user=admin_user)
+    )
     assert response.status_code == 200
 
 

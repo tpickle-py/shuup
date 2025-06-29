@@ -24,7 +24,9 @@ def test_shipment_weights_separate_shipments():
     order = _get_order(shop, supplier)
     product_lines = order.lines.exclude(product_id=None)
     for line in product_lines:
-        shipment = order.create_shipment({line.product: line.quantity}, supplier=supplier)
+        shipment = order.create_shipment(
+            {line.product: line.quantity}, supplier=supplier
+        )
         assert shipment.weight == line.quantity * line.product.gross_weight
 
 
@@ -34,7 +36,12 @@ def test_shipment_weights_ship_all():
     supplier = get_default_supplier()
     order = _get_order(shop, supplier)
     shipment = order.create_shipment_of_all_products(supplier=supplier)
-    assert shipment.weight == sum([_get_weight_from_product_data(product_data) for product_data in _get_product_data()])
+    assert shipment.weight == sum(
+        [
+            _get_weight_from_product_data(product_data)
+            for product_data in _get_product_data()
+        ]
+    )
 
 
 def _get_weight_from_product_data(product_data):
@@ -48,9 +55,15 @@ def _get_order(shop, supplier):
     for product_data in _get_product_data():
         quantity = product_data.pop("quantity")
         product = create_product(
-            sku=product_data.pop("sku"), shop=shop, supplier=supplier, default_price=3.33, **product_data
+            sku=product_data.pop("sku"),
+            shop=shop,
+            supplier=supplier,
+            default_price=3.33,
+            **product_data,
         )
-        add_product_to_order(order, supplier, product, quantity=quantity, taxless_base_unit_price=1)
+        add_product_to_order(
+            order, supplier, product, quantity=quantity, taxless_base_unit_price=1
+        )
     order.cache_prices()
     order.check_all_verified()
     order.save()

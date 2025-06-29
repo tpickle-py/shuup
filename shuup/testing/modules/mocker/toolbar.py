@@ -14,7 +14,6 @@ from shuup.admin.toolbar import BaseToolbarButtonProvider, DropdownItem, URLActi
 
 class MockContactToolbarButton(URLActionButton):
     def __init__(self, contact, **kwargs):
-
         kwargs["icon"] = "fa fa-user"
         kwargs["text"] = _("Hello") + contact.full_name
         kwargs["extra_css_class"] = "btn-info"
@@ -27,7 +26,6 @@ class MockContactToolbarButton(URLActionButton):
 
 class MockShopToolbarButton(URLActionButton):
     def __init__(self, shop, **kwargs):
-
         kwargs["icon"] = "fa fa-user"
         kwargs["text"] = _("Hello") + shop.name
         kwargs["extra_css_class"] = "btn-info"

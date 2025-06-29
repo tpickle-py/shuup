@@ -23,7 +23,10 @@ from shuup.core.models import Contact
 from shuup.core.tasks import run_task
 from shuup.gdpr.admin_module.forms import GDPRBaseFormPart, GDPRCookieCategoryFormPart
 from shuup.gdpr.models import GDPRCookieCategory, GDPRSettings
-from shuup.gdpr.utils import create_initial_required_cookie_category, ensure_gdpr_privacy_policy
+from shuup.gdpr.utils import (
+    create_initial_required_cookie_category,
+    ensure_gdpr_privacy_policy,
+)
 from shuup.utils.analog import LogEntryKind
 from shuup.utils.django_compat import reverse, reverse_lazy
 
@@ -90,13 +93,17 @@ class GDPRDownloadDataView(BaseContactView):
     def post(self, request, *args, **kwargs):
         contact = self.get_object()
         contact.add_log_entry(
-            "Info! User personal data download requested.", kind=LogEntryKind.NOTE, user=self.request.user
+            "Info! User personal data download requested.",
+            kind=LogEntryKind.NOTE,
+            user=self.request.user,
         )
         from shuup.gdpr.utils import get_all_contact_data
 
         data = json.dumps(get_all_contact_data(self.request.shop, contact))
         response = HttpResponse(data, content_type="application/json")
-        filename = "attachment; filename=user_data_{}.json".format(now().strftime("%Y-%m-%d_%H:%M:%S"))
+        filename = "attachment; filename=user_data_{}.json".format(
+            now().strftime("%Y-%m-%d_%H:%M:%S")
+        )
         response["Content-Disposition"] = filename
         return response
 
@@ -104,7 +111,11 @@ class GDPRDownloadDataView(BaseContactView):
 class GDPRAnonymizeView(BaseContactView):
     def post(self, request, *args, **kwargs):
         contact = self.get_object()
-        contact.add_log_entry("Info! User anonymization requested.", kind=LogEntryKind.NOTE, user=self.request.user)
+        contact.add_log_entry(
+            "Info! User anonymization requested.",
+            kind=LogEntryKind.NOTE,
+            user=self.request.user,
+        )
         with atomic():
             user_id = self.request.user.pk if self.request.user.pk else None
             run_task(
@@ -115,4 +126,6 @@ class GDPRAnonymizeView(BaseContactView):
             )
 
         messages.success(request, _("Contact was anonymized."))
-        return HttpResponseRedirect(reverse("shuup_admin:contact.detail", kwargs=dict(pk=contact.pk)))
+        return HttpResponseRedirect(
+            reverse("shuup_admin:contact.detail", kwargs=dict(pk=contact.pk))
+        )

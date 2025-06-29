@@ -46,12 +46,18 @@ def test_contact_set_is_active(rf, admin_user):
     contact = create_random_person(locale="en_US", minimum_name_comp_len=5)
     assert contact.is_active
 
-    request = apply_request_middleware(rf.post("/", {"set_is_active": "0"}), user=admin_user)
+    request = apply_request_middleware(
+        rf.post("/", {"set_is_active": "0"}), user=admin_user
+    )
     view_func = ContactDetailView.as_view()
     response = view_func(request, pk=contact.pk)
-    assert response.status_code < 500 and not Contact.objects.get(pk=contact.pk).is_active
+    assert (
+        response.status_code < 500 and not Contact.objects.get(pk=contact.pk).is_active
+    )
 
-    request = apply_request_middleware(rf.post("/", {"set_is_active": "1"}), user=admin_user)
+    request = apply_request_middleware(
+        rf.post("/", {"set_is_active": "1"}), user=admin_user
+    )
     view_func = ContactDetailView.as_view()
     response = view_func(request, pk=contact.pk)
     assert response.status_code < 500 and Contact.objects.get(pk=contact.pk).is_active
@@ -79,7 +85,9 @@ def test_admin_contact_edit(rf, admin_user):
 
 @pytest.mark.django_db
 def test_contact_module_search_multishop(rf):
-    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
+    with override_settings(
+        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
+    ):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -96,7 +104,9 @@ def test_contact_module_search_multishop(rf):
 
         # find the shop
         assert not empty_iterable(cm.get_search_results(request, query=contact.email))
-        assert not empty_iterable(cm.get_search_results(request, query=contact.first_name))
+        assert not empty_iterable(
+            cm.get_search_results(request, query=contact.first_name)
+        )
 
         # no shop found
         request = apply_request_middleware(rf.get("/"), user=staff_user, shop=shop1)

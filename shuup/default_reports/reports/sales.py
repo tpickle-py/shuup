@@ -38,7 +38,9 @@ class SalesReport(OrderReportMixin, ShuupReportBase):
         orders = self.get_objects().order_by("-order_date")[: self.queryset_row_limit]
         data = []
         # TODO: maybe make raw sql query in future
-        for order_date, orders_group in itertools.groupby(orders, key=self.extract_date):
+        for order_date, orders_group in itertools.groupby(
+            orders, key=self.extract_date
+        ):
             taxless_total = TaxlessPrice(0, currency=self.shop.currency)
             taxful_total = TaxfulPrice(0, currency=self.shop.currency)
             product_count = 0

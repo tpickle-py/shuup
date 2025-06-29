@@ -12,7 +12,10 @@ from shuup.campaigns.consts import (
 )
 from shuup.campaigns.models import CatalogFilter
 from shuup.campaigns.models.contact_group_sales_ranges import ContactGroupSalesRange
-from shuup.campaigns.models.matching import update_matching_catalog_filters, update_matching_category_filters
+from shuup.campaigns.models.matching import (
+    update_matching_catalog_filters,
+    update_matching_category_filters,
+)
 from shuup.core import cache
 from shuup.core.models import Category, ShopProduct
 
@@ -23,7 +26,9 @@ from .utils.sales_range import assign_to_group_based_on_sales
 def update_customers_groups(sender, instance, **kwargs):
     if not instance.order.customer:
         return
-    assign_to_group_based_on_sales(ContactGroupSalesRange, instance.order.shop, instance.order.customer)
+    assign_to_group_based_on_sales(
+        ContactGroupSalesRange, instance.order.shop, instance.order.customer
+    )
 
 
 def invalidate_context_condition_cache(sender, instance, **kwargs):

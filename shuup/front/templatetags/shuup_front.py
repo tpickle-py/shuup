@@ -23,7 +23,14 @@ class HelpersNamespace(object):
 
 def _get_helpers():
     helpers = HelpersNamespace()
-    from shuup.front.template_helpers import basket, category, general, order, product, urls
+    from shuup.front.template_helpers import (
+        basket,
+        category,
+        general,
+        order,
+        product,
+        urls,
+    )
 
     helpers.general = general
     helpers.basket = basket
@@ -44,7 +51,6 @@ library.global_function(name="shuup", fn=SimpleLazyObject(_get_helpers))
 
 @lru_cache()
 def _cached_markdown(str_value):
-
     return Markdown(
         extensions=[
             "markdown.extensions.extra",

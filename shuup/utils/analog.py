@@ -38,11 +38,22 @@ class LogEntryKind(Enum):
 
 class BaseLogEntry(models.Model):
     target = None  # This will be overridden dynamically
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
-    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, verbose_name=_("user"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, verbose_name=_("created on")
+    )
+    user = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.PROTECT,
+        verbose_name=_("user"),
+    )
     message = models.CharField(max_length=1024, verbose_name=_("message"))
-    identifier = models.CharField(max_length=256, db_index=True, blank=True, verbose_name=_("identifier"))
-    kind = EnumIntegerField(LogEntryKind, default=LogEntryKind.OTHER, verbose_name=_("log entry kind"))
+    identifier = models.CharField(
+        max_length=256, db_index=True, blank=True, verbose_name=_("identifier")
+    )
+    kind = EnumIntegerField(
+        LogEntryKind, default=LogEntryKind.OTHER, verbose_name=_("log entry kind")
+    )
     extra = JSONField(null=True, blank=True, verbose_name=_("extra data"))
 
     class Meta:
@@ -61,7 +72,10 @@ def define_log_model(model_class):
 
     class_dict = {
         "target": models.ForeignKey(
-            model_class, related_name="log_entries", on_delete=models.CASCADE, verbose_name=_("target")
+            model_class,
+            related_name="log_entries",
+            on_delete=models.CASCADE,
+            verbose_name=_("target"),
         ),
         "__module__": model_class.__module__,
         "Meta": Meta,
@@ -70,7 +84,15 @@ def define_log_model(model_class):
 
     log_entry_class = type(str(log_model_name), (BaseLogEntry,), class_dict)
 
-    def _add_log_entry(self, message, identifier=None, kind=LogEntryKind.OTHER, user=None, extra=None, save=True):
+    def _add_log_entry(
+        self,
+        message,
+        identifier=None,
+        kind=LogEntryKind.OTHER,
+        user=None,
+        extra=None,
+        save=True,
+    ):
         # You can also pass something that contains "user" as an
         # attribute for an user
         user = getattr(user, "user", user) or None

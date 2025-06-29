@@ -93,7 +93,9 @@ class SalesTestReport(ShuupReportBase):
 
     def get_objects(self):
         return (
-            Order.objects.filter(shop=self.shop, order_date__range=(self.start_date, self.end_date))
+            Order.objects.filter(
+                shop=self.shop, order_date__range=(self.start_date, self.end_date)
+            )
             .valid()
             .paid()
             .order_by("order_date")
@@ -106,7 +108,9 @@ class SalesTestReport(ShuupReportBase):
     def get_data(self):
         orders = self.get_objects().order_by("-order_date")
         data = []
-        for order_date, orders_group in itertools.groupby(orders, key=self.extract_date):
+        for order_date, orders_group in itertools.groupby(
+            orders, key=self.extract_date
+        ):
             taxless_total = TaxlessPrice(0, currency=self.shop.currency)
             taxful_total = TaxfulPrice(0, currency=self.shop.currency)
             paid_total = TaxfulPrice(0, currency=self.shop.currency)
@@ -122,7 +126,9 @@ class SalesTestReport(ShuupReportBase):
 
             data.append(
                 {
-                    "date": format_date(order_date, format="short", locale=get_current_babel_locale()),
+                    "date": format_date(
+                        order_date, format="short", locale=get_current_babel_locale()
+                    ),
                     "order_count": order_count,
                     "product_count": int(product_count),
                     "taxless_total": taxless_total,
@@ -145,7 +151,6 @@ class SalesTestReportForRequestTets(SalesTestReport):
 
 @pytest.mark.django_db
 def test_reporting(rf, admin_user):
-
     product_price = 100
     product_count = 2
     tax_rate = Decimal("0.10")
@@ -208,7 +213,9 @@ def test_reporting(rf, admin_user):
 
 @pytest.mark.django_db
 def test_html_writer(rf):
-    expected_taxful_total, expected_taxless_total, shop, order = initialize_report_test(10, 1, 0, 1)
+    expected_taxful_total, expected_taxless_total, shop, order = initialize_report_test(
+        10, 1, 0, 1
+    )
     data = {
         "report": SalesTestReport.get_name(),
         "shop": shop.pk,
@@ -235,7 +242,9 @@ def test_html_writer(rf):
 
 @pytest.mark.django_db
 def test_excel_writer(rf):
-    expected_taxful_total, expected_taxless_total, shop, order = initialize_report_test(10, 1, 0, 1)
+    expected_taxful_total, expected_taxless_total, shop, order = initialize_report_test(
+        10, 1, 0, 1
+    )
     data = {
         "report": SalesTestReport.get_name(),
         "shop": shop.pk,
@@ -251,7 +260,9 @@ def test_excel_writer(rf):
 
 
 def test_report_writer_populator_provide():
-    with override_provides("report_writer_populator", ["shuup.reports.writer.populate_default_writers"]):
+    with override_provides(
+        "report_writer_populator", ["shuup.reports.writer.populate_default_writers"]
+    ):
         populator = ReportWriterPopulator()
         populator.populate()
 
@@ -267,7 +278,13 @@ def test_report_writers():
     product = get_default_product()
     supplier = get_default_supplier()
     order = create_order_with_product(
-        product=product, supplier=supplier, quantity=1, taxless_base_unit_price=10, tax_rate=0, n_lines=2, shop=shop
+        product=product,
+        supplier=supplier,
+        quantity=1,
+        taxless_base_unit_price=10,
+        tax_rate=0,
+        n_lines=2,
+        shop=shop,
     )
     order.create_payment(order.taxful_total_price.amount)
 
@@ -303,7 +320,9 @@ def test_report_writers():
 
 
 def test_get_totals_return_correct_totals():
-    expected_taxful_total, expected_taxless_total, shop, order = initialize_report_test(10, 1, 0, 1)
+    expected_taxful_total, expected_taxless_total, shop, order = initialize_report_test(
+        10, 1, 0, 1
+    )
     report_data = {
         "report": SalesTestReport.get_name(),
         "shop": shop.pk,
@@ -339,7 +358,9 @@ def test_get_totals_return_correct_totals():
     assert totals == expected
 
 
-@pytest.mark.parametrize("start_date,end_date", [(None, None), ("1990-01-01", None), (None, "2100-01-01")])
+@pytest.mark.parametrize(
+    "start_date,end_date", [(None, None), ("1990-01-01", None), (None, "2100-01-01")]
+)
 @pytest.mark.django_db
 def test_none_dates(start_date, end_date):
     _, _, shop, order = initialize_report_test(10, 2, 0, 1)

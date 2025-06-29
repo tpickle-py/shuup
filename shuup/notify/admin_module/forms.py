@@ -20,11 +20,18 @@ from shuup.utils.i18n import get_language_name
 
 
 class ScriptForm(forms.ModelForm):
-    event_identifier = forms.ChoiceField(label=_("Event"), help_text=_("Choose which event to bind this script to."))
-    name = forms.CharField(label=_("Script Name"), help_text=_("Type in a descriptive name for your new script."))
+    event_identifier = forms.ChoiceField(
+        label=_("Event"), help_text=_("Choose which event to bind this script to.")
+    )
+    name = forms.CharField(
+        label=_("Script Name"),
+        help_text=_("Type in a descriptive name for your new script."),
+    )
     enabled = forms.BooleanField(
         label=_("Enable Script"),
-        help_text=_("Choose whether this script should be activated when its event fires."),
+        help_text=_(
+            "Choose whether this script should be activated when its event fires."
+        ),
         required=False,
     )
 
@@ -61,7 +68,9 @@ class ScriptItemEditForm(forms.Form):
         self.template_field_info = defaultdict(OrderedDict)
         self.template_languages = []
 
-        for identifier, binding in sorted(self.script_item.bindings.items(), key=lambda ib: ib[1].position):
+        for identifier, binding in sorted(
+            self.script_item.bindings.items(), key=lambda ib: ib[1].position
+        ):
             self._populate_binding_fields(identifier, binding)
 
         self._populate_template_fields()
@@ -72,7 +81,9 @@ class ScriptItemEditForm(forms.Form):
             self.template_languages = []
             # TODO: Should we get this list from somewhere else?
             for language_code, language_name in settings.LANGUAGES:
-                self.template_languages.append((language_code, get_language_name(language_code)))
+                self.template_languages.append(
+                    (language_code, get_language_name(language_code))
+                )
         elif template_use == TemplateUse.UNILINGUAL:
             self.template_languages = [(UNILINGUAL_TEMPLATE_LANGUAGE, _("Template"))]
         else:  # Nothing to do
@@ -84,7 +95,9 @@ class ScriptItemEditForm(forms.Form):
                 field = copy.deepcopy(base_field)
                 field.label = "%s (%s)" % (field.label, lang_name)
 
-                if lang_code == settings.PARLER_DEFAULT_LANGUAGE_CODE:  # Only default language is required
+                if (
+                    lang_code == settings.PARLER_DEFAULT_LANGUAGE_CODE
+                ):  # Only default language is required
                     field.required = getattr(base_field, "required", False)
                 else:
                     field.required = False
@@ -99,11 +112,15 @@ class ScriptItemEditForm(forms.Form):
         :param binding: Binding object.
         :type binding: Binding
         """
-        binding_field_info = self.binding_field_info.setdefault(binding_identifier, {"binding": binding})
+        binding_field_info = self.binding_field_info.setdefault(
+            binding_identifier, {"binding": binding}
+        )
         if binding.allow_constant:
             field_name = "b_%s_c" % binding_identifier
             self.fields[field_name] = binding.type.get_field(
-                label="Constant", required=(binding.required and not binding.allow_variable), initial=binding.default
+                label="Constant",
+                required=(binding.required and not binding.allow_variable),
+                initial=binding.default,
             )
             binding_field_info["constant"] = field_name
 
@@ -160,7 +177,9 @@ class ScriptItemEditForm(forms.Form):
             if constant_value:
                 if hasattr(constant_value, "value"):  # Might be an enum TODO: fixme
                     constant_value = constant_value.value
-                if hasattr(constant_value, "pk"):  # Might be a model instance TODO: fixme
+                if hasattr(
+                    constant_value, "pk"
+                ):  # Might be a model instance TODO: fixme
                     constant_value = constant_value.pk
                 new_data[identifier] = {"constant": constant_value}
                 return
@@ -192,8 +211,13 @@ class ScriptItemEditForm(forms.Form):
             if lang_code == settings.PARLER_DEFAULT_LANGUAGE_CODE:
                 for t_field_name, content in lang_vals.items():
                     actual_field_name = t_field_name_to_field_name[t_field_name]
-                    if self.fields[actual_field_name].required and not content:  # Add error only to default languages
-                        self.add_error(field_info[t_field_name], _("This field is missing content."))
+                    if (
+                        self.fields[actual_field_name].required and not content
+                    ):  # Add error only to default languages
+                        self.add_error(
+                            field_info[t_field_name],
+                            _("This field is missing content."),
+                        )
                         can_save = False
 
             if can_save:

@@ -43,7 +43,12 @@ class ClassicGrayTheme(BaseThemeFieldsMixin, Theme):
     ]
 
     _theme_fields = [
-        ("show_welcome_text", forms.BooleanField(required=False, initial=True, label=_("Show Frontpage Welcome Text")))
+        (
+            "show_welcome_text",
+            forms.BooleanField(
+                required=False, initial=True, label=_("Show Frontpage Welcome Text")
+            ),
+        )
     ]
 
     @property

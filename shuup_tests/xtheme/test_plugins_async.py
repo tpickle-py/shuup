@@ -81,7 +81,9 @@ def test_product_hightlight_plugin(rf, highlight_type, reindex_catalog):
 
     reindex_catalog()
 
-    plugin = ProductHighlightPlugin({"type": highlight_type, "count": 4, "cache_timeout": 120})
+    plugin = ProductHighlightPlugin(
+        {"type": highlight_type, "count": 4, "cache_timeout": 120}
+    )
     plugin_context = plugin.get_context_data(get_context(rf, is_ajax=False))
     context_products = plugin_context["products"]
 
@@ -99,7 +101,9 @@ def test_product_hightlight_plugin(rf, highlight_type, reindex_catalog):
         assert p4 in context_products
 
         check_expected_product_count(context_data_url, 4)
-        check_expected_product_count(context_data_url, 4)  # one for checking it is cached
+        check_expected_product_count(
+            context_data_url, 4
+        )  # one for checking it is cached
 
 
 @pytest.mark.django_db
@@ -117,7 +121,10 @@ def test_product_selection_plugin(rf, reindex_catalog):
 
     reindex_catalog()
     plugin = ProductSelectionPlugin(
-        {"products": [sp1.product.pk, sp2.product.pk, sp3.product.pk], "cache_timeout": 120}
+        {
+            "products": [sp1.product.pk, sp2.product.pk, sp3.product.pk],
+            "cache_timeout": 120,
+        }
     )
     plugin_context = plugin.get_context_data(get_context(rf, is_ajax=False))
     context_products = plugin_context["products"]
@@ -139,7 +146,9 @@ def test_product_selection_plugin(rf, reindex_catalog):
     with override_current_theme_class(None):
         theme = get_current_theme(get_default_shop())
         cell = LayoutCell(theme, ProductSelectionPlugin.identifier, sizes={"md": 8})
-        lcfg = LayoutCellFormGroup(layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/")))
+        lcfg = LayoutCellFormGroup(
+            layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/"))
+        )
         # not valid, products are required
         assert not lcfg.is_valid()
 
@@ -181,7 +190,9 @@ def test_product_from_category_plugin(rf, reindex_catalog):
     sp3.categories.add(category2)
 
     reindex_catalog()
-    plugin = ProductsFromCategoryPlugin({"category": category1.pk, "cache_timeout": 120})
+    plugin = ProductsFromCategoryPlugin(
+        {"category": category1.pk, "cache_timeout": 120}
+    )
     plugin_context = plugin.get_context_data(get_context(rf, is_ajax=False))
     context_products = plugin_context["products"]
 
@@ -201,7 +212,9 @@ def test_product_from_category_plugin(rf, reindex_catalog):
     with override_current_theme_class(None):
         theme = get_current_theme(get_default_shop())
         cell = LayoutCell(theme, ProductsFromCategoryPlugin.identifier, sizes={"md": 8})
-        lcfg = LayoutCellFormGroup(layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/")))
+        lcfg = LayoutCellFormGroup(
+            layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/"))
+        )
         assert not lcfg.is_valid()
 
         lcfg = LayoutCellFormGroup(

@@ -86,7 +86,10 @@ def _get_comments_before_assignments(module_name, names):
     name_assign_tokens = [
         (tokens[i - 1][1], i - 1)  # (name, position)
         for (i, t) in enumerate(tokens)
-        if i > 0 and t[0:2] == (token.OP, "=") and tokens[i - 1][0] == token.NAME and tokens[i - 1][1] in names
+        if i > 0
+        and t[0:2] == (token.OP, "=")
+        and tokens[i - 1][0] == token.NAME
+        and tokens[i - 1][1] in names
     ]
 
     def get_comment_before(pos):
@@ -94,7 +97,9 @@ def _get_comments_before_assignments(module_name, names):
         while p >= 0 and tokens[p][0] != token.NEWLINE:
             p -= 1
         return "\n".join(
-            re.sub("^#: ?", "", x[1]) for x in tokens[(p + 1) : pos] if x[0] == COMMENT_TOKEN and x[1].startswith("#:")
+            re.sub("^#: ?", "", x[1])
+            for x in tokens[(p + 1) : pos]
+            if x[0] == COMMENT_TOKEN and x[1].startswith("#:")
         )
 
     return dict((name, get_comment_before(pos)) for (name, pos) in name_assign_tokens)

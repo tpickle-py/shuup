@@ -49,7 +49,9 @@ def test_future_page_not_visible():
 @pytest.mark.django_db
 def test_current_page_is_visible():
     today = now()
-    page = create_page(available_from=today, available_to=today, shop=get_default_shop())
+    page = create_page(
+        available_from=today, available_to=today, shop=get_default_shop()
+    )
 
     assert Page.objects.visible(get_default_shop(), today).filter(pk=page.pk).exists()
     assert page.is_visible(today)

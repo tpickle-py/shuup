@@ -125,14 +125,20 @@ class Plugin(object):
         value = self.config.get(key)
         if not value:
             return default
-        if isinstance(value, dict):  # It's a dict, so assume it's something from TranslatableField
+        if isinstance(
+            value, dict
+        ):  # It's a dict, so assume it's something from TranslatableField
             language = language or get_language()
             if language in value:  # The language we requested exists, use that
                 return value[language]
-            if FALLBACK_LANGUAGE_CODE in value:  # An untranslated fallback exists, use that
+            if (
+                FALLBACK_LANGUAGE_CODE in value
+            ):  # An untranslated fallback exists, use that
                 return value[FALLBACK_LANGUAGE_CODE]
             return default  # Fall back to the default, then
-        return value  # Return the value itself; it's probably just something untranslated.
+        return (
+            value  # Return the value itself; it's probably just something untranslated.
+        )
 
     @classmethod
     def load(cls, identifier, theme=None):
@@ -170,7 +176,12 @@ class Plugin(object):
 
         for plugin in get_provide_objects("xtheme_plugin"):
             if plugin.identifier:
-                choices.append((plugin.identifier, getattr(plugin, "name", None) or plugin.identifier))
+                choices.append(
+                    (
+                        plugin.identifier,
+                        getattr(plugin, "name", None) or plugin.identifier,
+                    )
+                )
         choices.sort()
         return choices
 

@@ -7,25 +7,39 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('default_tax', '0002_postal_code_pattern_to_text'),
+        ("default_tax", "0002_postal_code_pattern_to_text"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='taxrule',
-            name='customer_tax_groups',
-            field=models.ManyToManyField(blank=True, help_text='The customer tax groups for which this tax rule is limited.', to='shuup.CustomerTaxGroup', verbose_name='customer tax groups'),
+            model_name="taxrule",
+            name="customer_tax_groups",
+            field=models.ManyToManyField(
+                blank=True,
+                help_text="The customer tax groups for which this tax rule is limited.",
+                to="shuup.CustomerTaxGroup",
+                verbose_name="customer tax groups",
+            ),
         ),
         migrations.AlterField(
-            model_name='taxrule',
-            name='enabled',
-            field=models.BooleanField(db_index=True, default=True, help_text='Check this if this tax rule is active.', verbose_name='enabled'),
+            model_name="taxrule",
+            name="enabled",
+            field=models.BooleanField(
+                db_index=True,
+                default=True,
+                help_text="Check this if this tax rule is active.",
+                verbose_name="enabled",
+            ),
         ),
         migrations.AlterField(
-            model_name='taxrule',
-            name='tax',
-            field=models.ForeignKey(help_text='The tax to apply when this rule is applied.', on_delete=django.db.models.deletion.PROTECT, to='shuup.Tax', verbose_name='tax'),
+            model_name="taxrule",
+            name="tax",
+            field=models.ForeignKey(
+                help_text="The tax to apply when this rule is applied.",
+                on_delete=django.db.models.deletion.PROTECT,
+                to="shuup.Tax",
+                verbose_name="tax",
+            ),
         ),
     ]

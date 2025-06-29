@@ -97,7 +97,9 @@ class Template(object):
         for field in fields.keys():
             field_template = data.get(field)
             if field_template:  # pragma: no branch
-                rendered[field] = render_in_context(self.context, field_template, html_intent=False)
+                rendered[field] = render_in_context(
+                    self.context, field_template, html_intent=False
+                )
 
         return rendered
 

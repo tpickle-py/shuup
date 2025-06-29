@@ -21,17 +21,25 @@ class AttributeListView(PicotableListView):
         Column(
             "identifier",
             _("Identifier"),
-            filter_config=TextFilter(filter_field="identifier", placeholder=_("Filter by identifier...")),
+            filter_config=TextFilter(
+                filter_field="identifier", placeholder=_("Filter by identifier...")
+            ),
         ),
         Column(
             "name",
             _("Name"),
             sort_field="translations__name",
             display="name",
-            filter_config=TextFilter(filter_field="translations__name", placeholder=_("Filter by name...")),
+            filter_config=TextFilter(
+                filter_field="translations__name", placeholder=_("Filter by name...")
+            ),
         ),
         Column("type", _("Type"), filter_config=ChoicesFilter(AttributeType.choices)),
-        Column("visibility_mode", _("Visibility Mode"), filter_config=ChoicesFilter(AttributeVisibility.choices)),
+        Column(
+            "visibility_mode",
+            _("Visibility Mode"),
+            filter_config=ChoicesFilter(AttributeVisibility.choices),
+        ),
         Column("searchable", _("Searchable")),
         Column("n_product_types", _("Used in # Product Types")),
     ]

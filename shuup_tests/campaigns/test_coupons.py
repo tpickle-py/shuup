@@ -15,7 +15,7 @@ from shuup.testing import factories
 
 @pytest.mark.django_db
 def test_utf8_coupon_force_text(rf):
-    code = u"HEINÄ"
+    code = "HEINÄ"
     coupon = Coupon(code=code)
     try:
         text = force_text(coupon)
@@ -32,18 +32,28 @@ def test_same_codes():
     dc1 = Coupon.objects.create(code="TEST")
     dc2 = Coupon.objects.create(code="TEST")
 
-    BasketCampaign.objects.create(name="test1", active=True, shop_id=shop1.id, coupon_id=dc1.id)
+    BasketCampaign.objects.create(
+        name="test1", active=True, shop_id=shop1.id, coupon_id=dc1.id
+    )
     with pytest.raises(ValidationError):
-        BasketCampaign.objects.create(name="test1", active=True, shop_id=shop1.id, coupon_id=dc2.id)
+        BasketCampaign.objects.create(
+            name="test1", active=True, shop_id=shop1.id, coupon_id=dc2.id
+        )
 
-    BasketCampaign.objects.create(name="test2", active=True, shop_id=shop2.id, coupon_id=dc2.id)
+    BasketCampaign.objects.create(
+        name="test2", active=True, shop_id=shop2.id, coupon_id=dc2.id
+    )
     with pytest.raises(ValidationError):
-        BasketCampaign.objects.create(name="test2", active=True, shop_id=shop2.id, coupon_id=dc1.id)
+        BasketCampaign.objects.create(
+            name="test2", active=True, shop_id=shop2.id, coupon_id=dc1.id
+        )
 
     # Disable one campaigns for dc1 and you should be able to set the code to different campaign again
     dc3 = Coupon.objects.create(code="TEST")
     BasketCampaign.objects.filter(coupon=dc1).update(active=False)
-    BasketCampaign.objects.create(name="test1", active=True, shop_id=shop1.id, coupon_id=dc3.id)
+    BasketCampaign.objects.create(
+        name="test1", active=True, shop_id=shop1.id, coupon_id=dc3.id
+    )
 
     # Try to reactivate the campaign for shop1
     c = BasketCampaign.objects.filter(coupon=dc1).first()
@@ -54,7 +64,9 @@ def test_same_codes():
 
     # Try to sneak one duplicate code by saving the coupon
     dc4 = Coupon.objects.create(code="TEST1")
-    BasketCampaign.objects.create(name="test4", active=True, shop_id=shop2.id, coupon_id=dc4.id)
+    BasketCampaign.objects.create(
+        name="test4", active=True, shop_id=shop2.id, coupon_id=dc4.id
+    )
     with pytest.raises(ValidationError):
         dc4.code = "TEST"
         dc4.save()

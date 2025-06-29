@@ -8,19 +8,35 @@ import shuup.core.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_testing', '0001_squashed_0003_update_managers'),
+        ("shuup_testing", "0001_squashed_0003_update_managers"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FieldsModel',
+            name="FieldsModel",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('separated_values', shuup.core.fields.SeparatedValuesField(blank=True)),
-                ('separated_values_semi', shuup.core.fields.SeparatedValuesField(blank=True)),
-                ('separated_values_dash', shuup.core.fields.SeparatedValuesField(blank=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "separated_values",
+                    shuup.core.fields.SeparatedValuesField(blank=True),
+                ),
+                (
+                    "separated_values_semi",
+                    shuup.core.fields.SeparatedValuesField(blank=True),
+                ),
+                (
+                    "separated_values_dash",
+                    shuup.core.fields.SeparatedValuesField(blank=True),
+                ),
             ],
         ),
     ]

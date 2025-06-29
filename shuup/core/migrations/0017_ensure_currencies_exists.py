@@ -13,7 +13,7 @@ def ensure_default_currencies_exists(apps, schema_editor):
         ("BRL", 2),
         ("JPY", 0),
         ("CNY", 2),
-        ("GBP", 2)
+        ("GBP", 2),
     ]
     for code, decimal_places in default_currencies:
         cur, created = Currency.objects.get_or_create(code=code)
@@ -23,11 +23,12 @@ def ensure_default_currencies_exists(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0016_currency'),
+        ("shuup", "0016_currency"),
     ]
 
     operations = [
-        migrations.RunPython(ensure_default_currencies_exists, migrations.RunPython.noop)
+        migrations.RunPython(
+            ensure_default_currencies_exists, migrations.RunPython.noop
+        )
     ]

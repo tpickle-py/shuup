@@ -13,7 +13,13 @@ from django.utils.translation import ugettext_lazy as _
 from shuup.admin.modules.contacts.utils import request_limited
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.toolbar import NewActionButton, SettingsActionButton, Toolbar
-from shuup.admin.utils.picotable import ChoicesFilter, Column, RangeFilter, Select2Filter, TextFilter
+from shuup.admin.utils.picotable import (
+    ChoicesFilter,
+    Column,
+    RangeFilter,
+    Select2Filter,
+    TextFilter,
+)
 from shuup.admin.utils.views import PicotableListView
 from shuup.core.models import CompanyContact, Contact, ContactGroup, PersonContact, Shop
 from shuup.utils.django_compat import force_text, reverse
@@ -22,14 +28,21 @@ from shuup.utils.django_compat import force_text, reverse
 class ContactTypeFilter(ChoicesFilter):
     def __init__(self):
         super(ContactTypeFilter, self).__init__(
-            choices=[("person", _("Person")), ("company", _("Company")), ("staff", _("Staff"))], default="_all"
+            choices=[
+                ("person", _("Person")),
+                ("company", _("Company")),
+                ("staff", _("Staff")),
+            ],
+            default="_all",
         )
 
     def filter_queryset(self, queryset, column, value, context):
         if value == "_all":
             return queryset.exclude(PersonContact___user__is_staff=True)
         elif value == "person":
-            return queryset.exclude(PersonContact___user__is_staff=True).instance_of(PersonContact)
+            return queryset.exclude(PersonContact___user__is_staff=True).instance_of(
+                PersonContact
+            )
         elif value == "company":
             return queryset.instance_of(CompanyContact)
         elif value == "staff":
@@ -42,16 +55,45 @@ class ContactListView(PicotableListView):
     model = Contact
     default_columns = [
         Column("name", _("Name"), linked=True, filter_config=TextFilter()),
-        Column("type", _("Type"), display="get_type_display", sortable=False, filter_config=ContactTypeFilter()),
+        Column(
+            "type",
+            _("Type"),
+            display="get_type_display",
+            sortable=False,
+            filter_config=ContactTypeFilter(),
+        ),
         Column("email", _("Email"), filter_config=TextFilter()),
         Column("phone", _("Phone"), filter_config=TextFilter()),
         Column(
-            "is_active", _("Active"), filter_config=ChoicesFilter([(False, _("no")), (True, _("yes"))], default=True)
+            "is_active",
+            _("Active"),
+            filter_config=ChoicesFilter(
+                [(False, _("no")), (True, _("yes"))], default=True
+            ),
         ),
-        Column("n_orders", _("# Orders"), class_name="text-right", filter_config=RangeFilter(step=1)),
-        Column("groups", _("Groups"), filter_config=Select2Filter("get_groups"), display="get_groups_display"),
-        Column("shops", _("Shops"), filter_config=Select2Filter("get_shops"), display="get_shops_display"),
-        Column("registration_shop", _("Registered in"), filter_config=Select2Filter("get_shops")),
+        Column(
+            "n_orders",
+            _("# Orders"),
+            class_name="text-right",
+            filter_config=RangeFilter(step=1),
+        ),
+        Column(
+            "groups",
+            _("Groups"),
+            filter_config=Select2Filter("get_groups"),
+            display="get_groups_display",
+        ),
+        Column(
+            "shops",
+            _("Shops"),
+            filter_config=Select2Filter("get_shops"),
+            display="get_shops_display",
+        ),
+        Column(
+            "registration_shop",
+            _("Registered in"),
+            filter_config=Select2Filter("get_shops"),
+        ),
     ]
 
     mass_actions = [
@@ -64,28 +106,43 @@ class ContactListView(PicotableListView):
 
     def __init__(self):
         super(ContactListView, self).__init__()
-        picture_column = [column for column in self.columns if column.id == "contact_picture"]
+        picture_column = [
+            column for column in self.columns if column.id == "contact_picture"
+        ]
         if picture_column:
             picture_column[0].raw = True
 
     def get_groups(self):
-        return list(ContactGroup.objects.translated().all_except_defaults().values_list("id", "translations__name"))
+        return list(
+            ContactGroup.objects.translated()
+            .all_except_defaults()
+            .values_list("id", "translations__name")
+        )
 
     def get_shops(self):
         return list(
-            Shop.objects.get_for_user(self.request.user).translated().values_list("id", "translations__public_name")
+            Shop.objects.get_for_user(self.request.user)
+            .translated()
+            .values_list("id", "translations__public_name")
         )
 
     def get_toolbar(self):
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(Contact, return_url="contact")
+            settings_button = SettingsActionButton.for_model(
+                Contact, return_url="contact"
+            )
         else:
             settings_button = None
         return Toolbar(
             [
-                NewActionButton.for_model(PersonContact, url=reverse("shuup_admin:contact.new") + "?type=person"),
                 NewActionButton.for_model(
-                    CompanyContact, extra_css_class="btn-info", url=reverse("shuup_admin:contact.new") + "?type=company"
+                    PersonContact,
+                    url=reverse("shuup_admin:contact.new") + "?type=person",
+                ),
+                NewActionButton.for_model(
+                    CompanyContact,
+                    extra_css_class="btn-info",
+                    url=reverse("shuup_admin:contact.new") + "?type=company",
                 ),
                 settings_button,
             ],
@@ -102,13 +159,21 @@ class ContactListView(PicotableListView):
             qs = qs.exclude(PersonContact___user__is_superuser=True)
 
         if self.request.GET.get("shop"):
-            qs = qs.filter(shops__in=Shop.objects.get_for_user(self.request.user).filter(pk=self.request.GET["shop"]))
+            qs = qs.filter(
+                shops__in=Shop.objects.get_for_user(self.request.user).filter(
+                    pk=self.request.GET["shop"]
+                )
+            )
 
         elif request_limited(self.request):
             shop = get_shop(self.request)
             qs = qs.filter(shops=shop)
 
-        return qs.filter(query).annotate(n_orders=Count("customer_orders")).order_by("-created_on")
+        return (
+            qs.filter(query)
+            .annotate(n_orders=Count("customer_orders"))
+            .order_by("-created_on")
+        )
 
     def get_type_display(self, instance):
         if isinstance(instance, PersonContact):

@@ -57,7 +57,10 @@ class CompanyEditView(DashboardViewMixin, FormView):
     template_name = "shuup/customer_information/edit_company.jinja"
 
     def dispatch(self, request, *args, **kwargs):
-        if not (bool(get_company_contact(self.request.user)) or allow_company_registration(self.request.shop)):
+        if not (
+            bool(get_company_contact(self.request.user))
+            or allow_company_registration(self.request.shop)
+        ):
             return redirect("shuup:customer_edit")
         return super(CompanyEditView, self).dispatch(request, *args, **kwargs)
 
@@ -97,7 +100,9 @@ class AddressBookEditView(DashboardViewMixin, FormView):
 
     def dispatch(self, request, *args, **kwargs):
         try:
-            self.instance = SavedAddress.objects.get(pk=kwargs.get("pk", 0), owner=self.request.customer)
+            self.instance = SavedAddress.objects.get(
+                pk=kwargs.get("pk", 0), owner=self.request.customer
+            )
         except Exception:
             self.instance = None
         return super(AddressBookEditView, self).dispatch(request, *args, **kwargs)

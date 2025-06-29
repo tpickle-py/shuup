@@ -50,13 +50,19 @@ def test_front_error_handlers(rf):
     """
     with override_settings(
         DEBUG=False,
-        SHUUP_ERROR_PAGE_HANDLERS_SPEC=["shuup.front.error_handlers.FrontPageErrorHandler"],
+        SHUUP_ERROR_PAGE_HANDLERS_SPEC=[
+            "shuup.front.error_handlers.FrontPageErrorHandler"
+        ],
         MIDDLEWARE_CLASSES=[],  # For Django < 2
         MIDDLEWARE=[],
         TEMPLATES=[  # Overriden to be sure about the contents of our 500.jinja
             {
                 "BACKEND": "django_jinja.backend.Jinja2",
-                "DIRS": [os.path.realpath(os.path.join(os.path.dirname(__file__), "templates"))],
+                "DIRS": [
+                    os.path.realpath(
+                        os.path.join(os.path.dirname(__file__), "templates")
+                    )
+                ],
                 "OPTIONS": {
                     "match_extension": ".jinja",
                     "newstyle_gettext": True,
@@ -96,8 +102,12 @@ def test_front_error_handlers(rf):
             install_error_handlers()
             assert urlconf.handler404 != four_oh_four
             assert urlconf.handler500 != handler500
-            assert "miss something? 404" in force_text(urlconf.handler404(rf.get("/notfound/")).content)
-            assert "intergalactic testing 500" in force_text(urlconf.handler500(rf.get("/aaargh/")).content)
+            assert "miss something? 404" in force_text(
+                urlconf.handler404(rf.get("/notfound/")).content
+            )
+            assert "intergalactic testing 500" in force_text(
+                urlconf.handler500(rf.get("/aaargh/")).content
+            )
 
             # Front must handle all possible apps
             error_handler = FrontPageErrorHandler()
@@ -128,7 +138,10 @@ def test_front_error_handlers(rf):
             from django.conf import settings
 
             # front can't handle static and media paths
-            for path in (settings.STATIC_URL + "mystaticfile", settings.MEDIA_URL + "mymediafile"):
+            for path in (
+                settings.STATIC_URL + "mystaticfile",
+                settings.MEDIA_URL + "mymediafile",
+            ):
                 request = rf.get(path)
                 assert error_handler.can_handle_error(request, 500) is False
                 assert error_handler.can_handle_error(request, 400) is False
@@ -142,13 +155,19 @@ def test_admin_error_handlers(rf):
     """
     with override_settings(
         DEBUG=False,
-        SHUUP_ERROR_PAGE_HANDLERS_SPEC=["shuup.admin.error_handlers.AdminPageErrorHandler"],
+        SHUUP_ERROR_PAGE_HANDLERS_SPEC=[
+            "shuup.admin.error_handlers.AdminPageErrorHandler"
+        ],
         MIDDLEWARE_CLASSES=[],  # For Django 2
         MIDDLEWARE=[],
         TEMPLATES=[  # Overriden to be sure about the contents of our 500.jinja
             {
                 "BACKEND": "django_jinja.backend.Jinja2",
-                "DIRS": [os.path.realpath(os.path.join(os.path.dirname(__file__), "templates"))],
+                "DIRS": [
+                    os.path.realpath(
+                        os.path.join(os.path.dirname(__file__), "templates")
+                    )
+                ],
                 "OPTIONS": {
                     "match_extension": ".jinja",
                     "newstyle_gettext": True,
@@ -191,8 +210,12 @@ def test_admin_error_handlers(rf):
             # but the functions of the handlers are pointing to our factory view
             assert urlconf.handler404 != four_oh_four
             assert urlconf.handler500 != handler500
-            assert "flesh wound" in force_text(urlconf.handler404(rf.get("/notfound/")).content)
-            assert "The best error" in force_text(urlconf.handler500(rf.get("/aaargh/")).content)
+            assert "flesh wound" in force_text(
+                urlconf.handler404(rf.get("/notfound/")).content
+            )
+            assert "The best error" in force_text(
+                urlconf.handler500(rf.get("/aaargh/")).content
+            )
 
             # Admin must handle only admin app errors
             error_handler = AdminPageErrorHandler()
@@ -238,7 +261,12 @@ def test_admin_error_handlers(rf):
 
 def test_install_error_handlers(rf):
     # no error handler set
-    with override_settings(DEBUG=False, SHUUP_ERROR_PAGE_HANDLERS_SPEC=[], MIDDLEWARE_CLASSES=[], MIDDLEWARE=[]):
+    with override_settings(
+        DEBUG=False,
+        SHUUP_ERROR_PAGE_HANDLERS_SPEC=[],
+        MIDDLEWARE_CLASSES=[],
+        MIDDLEWARE=[],
+    ):
 
         def intact_view(request, *args, **kwargs):
             return HttpResponse("OK")

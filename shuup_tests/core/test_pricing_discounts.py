@@ -20,7 +20,9 @@ from shuup.core.pricing import (
 from shuup.testing.factories import create_product, get_default_shop
 from shuup.testing.utils import apply_request_middleware
 
-provide_overrider = override_provides("discount_module", [__name__ + ":Minus25DiscountModule"])
+provide_overrider = override_provides(
+    "discount_module", [__name__ + ":Minus25DiscountModule"]
+)
 
 
 def setup_module(module):

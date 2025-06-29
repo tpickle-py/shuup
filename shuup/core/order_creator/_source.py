@@ -173,9 +173,12 @@ class OrderSource(object):
         for key, value in values.items():
             if not hasattr(self, key):
                 raise ValueError(
-                    "Error! Can't update `%r` with key `%r`, as it is not a pre-existing attribute." % (self, key)
+                    "Error! Can't update `%r` with key `%r`, as it is not a pre-existing attribute."
+                    % (self, key)
                 )
-            if isinstance(getattr(self, key), dict) and value:  # (Shallowly) merge dicts
+            if (
+                isinstance(getattr(self, key), dict) and value
+            ):  # (Shallowly) merge dicts
                 getattr(self, key).update(value)
             else:
                 setattr(self, key, value)
@@ -435,7 +438,11 @@ class OrderSource(object):
         :rtype: int
         """
         if supplier:
-            return sum(count_in_line(line) for line in self.get_product_lines() if line.supplier == supplier)
+            return sum(
+                count_in_line(line)
+                for line in self.get_product_lines()
+                if line.supplier == supplier
+            )
         return sum(count_in_line(line) for line in self.get_product_lines())
 
     @property
@@ -515,7 +522,11 @@ class OrderSource(object):
         self._add_lines_from_modifiers(lines)
 
         lines.extend(
-            _collect_lines_from_signal(post_compute_source_lines.send(sender=type(self), source=self, lines=lines))
+            _collect_lines_from_signal(
+                post_compute_source_lines.send(
+                    sender=type(self), source=self, lines=lines
+                )
+            )
         )
 
         return lines
@@ -577,7 +588,11 @@ class OrderSource(object):
             package_children = line.product.get_package_child_to_quantity_map()
 
             # multiply the quantity by the number os packages in the line
-            package_quantity = int(line.quantity) if line.product.mode == ProductMode.PACKAGE_PARENT else 1
+            package_quantity = (
+                int(line.quantity)
+                if line.product.mode == ProductMode.PACKAGE_PARENT
+                else 1
+            )
 
             for product, quantity in iteritems(package_children):
                 q_counter[product] += quantity * package_quantity
@@ -590,7 +605,11 @@ class OrderSource(object):
     @property
     def total_gross_weight(self):
         product_lines = self.get_product_lines()
-        return (sum(line.product.gross_weight * line.quantity for line in product_lines)) if product_lines else 0
+        return (
+            (sum(line.product.gross_weight * line.quantity for line in product_lines))
+            if product_lines
+            else 0
+        )
 
     def _get_object(self, model, pk):
         """
@@ -613,7 +632,9 @@ class OrderSource(object):
         """
         :rtype: Money
         """
-        return sum((line.tax_amount for line in self.get_final_lines()), self.zero_price.amount)
+        return sum(
+            (line.tax_amount for line in self.get_final_lines()), self.zero_price.amount
+        )
 
     def get_tax_summary(self):
         """
@@ -634,7 +655,7 @@ class OrderSource(object):
 
 
 def _collect_lines_from_signal(signal_results):
-    for (receiver, response) in signal_results:
+    for receiver, response in signal_results:
         for line in response:
             if isinstance(line, SourceLine):
                 yield line
@@ -710,13 +731,19 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
             self.tax_class = tax_class
         self.supplier = kwargs.pop("supplier", None)
         self.quantity = kwargs.pop("quantity", 0)
-        self.base_unit_price = ensure_decimal_places(kwargs.pop("base_unit_price", source.zero_price))
-        self.discount_amount = ensure_decimal_places(kwargs.pop("discount_amount", source.zero_price))
+        self.base_unit_price = ensure_decimal_places(
+            kwargs.pop("base_unit_price", source.zero_price)
+        )
+        self.discount_amount = ensure_decimal_places(
+            kwargs.pop("discount_amount", source.zero_price)
+        )
         self.sku = kwargs.pop("sku", "")
         self.text = kwargs.pop("text", "")
         self.require_verification = kwargs.pop("require_verification", False)
         self.accounting_identifier = kwargs.pop("accounting_identifier", "")
-        self.on_parent_change_behavior = kwargs.pop("on_parent_change_behavior", OrderLineBehavior.INHERIT)
+        self.on_parent_change_behavior = kwargs.pop(
+            "on_parent_change_behavior", OrderLineBehavior.INHERIT
+        )
         self.line_source = kwargs.pop("line_source", LineSource.CUSTOMER)
 
         self._taxes = None
@@ -728,7 +755,8 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
     def _state_check(self):
         if not self.base_unit_price.unit_matches_with(self.discount_amount):
             raise TypeError(
-                "Error! Unit price %r unit mismatch with discount %r." % (self.base_unit_price, self.discount_amount)
+                "Error! Unit price %r unit mismatch with discount %r."
+                % (self.base_unit_price, self.discount_amount)
             )
 
         assert self.shop is None or isinstance(self.shop, Shop)
@@ -756,9 +784,12 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
         forbidden_keys = set(dir(self)) - self._FIELDSET
         found_forbidden_keys = [key for key in kwargs if key in forbidden_keys]
         if found_forbidden_keys:
-            raise TypeError("Error! You may not add these keys to SourceLine: `%s`." % forbidden_keys)
+            raise TypeError(
+                "Error! You may not add these keys to SourceLine: `%s`."
+                % forbidden_keys
+            )
 
-        for (key, value) in kwargs.items():
+        for key, value in kwargs.items():
             if key in self._FIELDSET:
                 setattr(self, key, value)
             else:
@@ -767,7 +798,9 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
     def __repr__(self):
         key_values = [(key, getattr(self, key, None)) for key in self._FIELDS]
         set_key_values = [(k, v) for (k, v) in key_values if v is not None]
-        assigns = ["%s=%r" % (k, v) for (k, v) in (set_key_values + sorted(self._data.items()))]
+        assigns = [
+            "%s=%r" % (k, v) for (k, v) in (set_key_values + sorted(self._data.items()))
+        ]
         return "<%s(%r, %s)>" % (type(self).__name__, self.source, ", ".join(assigns))
 
     def get(self, key, default=None):
@@ -786,7 +819,9 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
         for line in self.source.get_lines():
             if line.line_id == self.parent_line_id:
                 return line
-        raise ValueError("Error! Invalid `parent_line_id`: `%r`." % (self.parent_line_id,))
+        raise ValueError(
+            "Error! Invalid `parent_line_id`: `%r`." % (self.parent_line_id,)
+        )
 
     @property
     def tax_class(self):
@@ -796,7 +831,8 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
     def tax_class(self, value):
         if self.product and value and value != self.product.tax_class:
             raise ValueError(
-                "Error! Conflicting product and line tax classes: `%r` vs. `%r`." % (self.product.tax_class, value)
+                "Error! Conflicting product and line tax classes: `%r` vs. `%r`."
+                % (self.product.tax_class, value)
             )
         self._tax_class = value
 
@@ -845,7 +881,8 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
                 raise TypeError("Error! Non-price field `%s` has `%r`." % (key, value))
             if not value.unit_matches_with(self.source.zero_price):
                 raise TypeError(
-                    "Error! Price `%r` (in field `%s`) not compatible with `%r`." % (value, key, self.source.zero_price)
+                    "Error! Price `%r` (in field `%s`) not compatible with `%r`."
+                    % (value, key, self.source.zero_price)
                 )
             return [(key, value.value)]
         assert not isinstance(value, Money)
@@ -854,7 +891,7 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
     @classmethod
     def _deserialize_data(cls, source, data):
         result = data.copy()
-        for (name, model) in cls._OBJECT_FIELDS.items():
+        for name, model in cls._OBJECT_FIELDS.items():
             id = result.pop(name + "_id", None)
             if id:
                 result[name] = source._get_object(model, id)

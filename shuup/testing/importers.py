@@ -15,7 +15,11 @@ class DummyImporter(DataImporter):
     model = Contact
 
     example_files = [
-        ImporterExampleFile("sample_dummy_importer.csv", "text/csv", "shuup_testing/sample_dummy_importer.jinja")
+        ImporterExampleFile(
+            "sample_dummy_importer.csv",
+            "text/csv",
+            "shuup_testing/sample_dummy_importer.jinja",
+        )
     ]
 
     def get_related_models(self):

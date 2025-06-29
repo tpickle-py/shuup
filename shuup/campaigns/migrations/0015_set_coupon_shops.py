@@ -18,9 +18,8 @@ def remove_coupons_shop(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('campaigns', '0014_campaign_supplier'),
+        ("campaigns", "0014_campaign_supplier"),
     ]
 
     operations = [

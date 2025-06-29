@@ -21,7 +21,9 @@ class GuideAdminModule(AdminModule):
         if settings.SHUUP_GUIDE_FETCH_RESULTS:
             try:
                 response = requests.get(
-                    settings.SHUUP_GUIDE_API_URL, timeout=settings.SHUUP_GUIDE_TIMEOUT_LIMIT, params={"q": query}
+                    settings.SHUUP_GUIDE_API_URL,
+                    timeout=settings.SHUUP_GUIDE_TIMEOUT_LIMIT,
+                    params={"q": query},
                 )
                 json = response.json()
                 if "results" in json:
@@ -43,7 +45,11 @@ class GuideAdminModule(AdminModule):
         else:
             url = manipulate_query_string(settings.SHUUP_GUIDE_LINK_URL, q=query)
             yield SearchResult(
-                text=_('Search guide for: "%s"') % query, url=url, is_action=True, relevance=0, target="_blank"
+                text=_('Search guide for: "%s"') % query,
+                url=url,
+                is_action=True,
+                relevance=0,
+                target="_blank",
             )
 
     def get_required_permissions(self):

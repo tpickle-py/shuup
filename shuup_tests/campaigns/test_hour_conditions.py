@@ -17,11 +17,15 @@ from shuup.campaigns.models.context_conditions import HourCondition
 
 
 def get_basket_condition(hour_start, hour_end, matching_days):
-    return HourBasketCondition.objects.create(hour_start=hour_start, hour_end=hour_end, days=matching_days)
+    return HourBasketCondition.objects.create(
+        hour_start=hour_start, hour_end=hour_end, days=matching_days
+    )
 
 
 def get_context_condition(hour_start, hour_end, matching_days):
-    return HourCondition.objects.create(hour_start=hour_start, hour_end=hour_end, days=matching_days)
+    return HourCondition.objects.create(
+        hour_start=hour_start, hour_end=hour_end, days=matching_days
+    )
 
 
 def mocked_now_basic():
@@ -32,7 +36,8 @@ def mocked_now_basic():
 @patch("django.utils.timezone.now", side_effect=mocked_now_basic)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "get_condition,params_for_matches", {(get_basket_condition, (None, None)), (get_context_condition, (None,))}
+    "get_condition,params_for_matches",
+    {(get_basket_condition, (None, None)), (get_context_condition, (None,))},
 )
 def test_hour_conditions(rf, get_condition, params_for_matches):
     timezone.activate(pytz.UTC)
@@ -55,14 +60,20 @@ def test_hour_conditions(rf, get_condition, params_for_matches):
     # Hour end shouldn't cause a match. Should be obvious that if the
     # merchant set start time 8:00 AM and end time 10:00 AM th campaign is no more
     # at 10:10 AM
-    hour_condition.hour_start = (timezone.now() - datetime.timedelta(hours=2)).time()  # 8:00 AM
+    hour_condition.hour_start = (
+        timezone.now() - datetime.timedelta(hours=2)
+    ).time()  # 8:00 AM
     hour_condition.hour_end = timezone.now().time()  # 10:00 PM
     hour_condition.save()
     assert not hour_condition.matches(*params_for_matches)
 
     # time in future shouldn't match
-    hour_condition.hour_start = (timezone.now() + datetime.timedelta(hours=2)).time()  # 12:00 PM
-    hour_condition.hour_end = (timezone.now() + datetime.timedelta(hours=4)).time()  # 14:00 PM
+    hour_condition.hour_start = (
+        timezone.now() + datetime.timedelta(hours=2)
+    ).time()  # 12:00 PM
+    hour_condition.hour_end = (
+        timezone.now() + datetime.timedelta(hours=4)
+    ).time()  # 14:00 PM
 
     hour_condition.days = matching_days
     hour_condition.save()
@@ -73,8 +84,12 @@ def test_hour_conditions(rf, get_condition, params_for_matches):
     assert not hour_condition.matches(*params_for_matches)
 
     # time in past shouldn't match
-    hour_condition.hour_start = (timezone.now() - datetime.timedelta(hours=3)).time()  # 7:00 AM
-    hour_condition.hour_end = (timezone.now() - datetime.timedelta(hours=2)).time()  # 8:00 AM
+    hour_condition.hour_start = (
+        timezone.now() - datetime.timedelta(hours=3)
+    ).time()  # 7:00 AM
+    hour_condition.hour_end = (
+        timezone.now() - datetime.timedelta(hours=2)
+    ).time()  # 8:00 AM
     hour_condition.days = matching_days
     hour_condition.save()
     assert not hour_condition.matches(*params_for_matches)
@@ -85,7 +100,9 @@ def test_hour_conditions(rf, get_condition, params_for_matches):
 
     # Special times (should match)
     hour_condition.hour_start = timezone.now().time()  # 10:00 AM
-    hour_condition.hour_end = (timezone.now() + datetime.timedelta(hours=14)).time()  # 0:00 AM
+    hour_condition.hour_end = (
+        timezone.now() + datetime.timedelta(hours=14)
+    ).time()  # 0:00 AM
     hour_condition.days = matching_days
     hour_condition.save()
     assert hour_condition.matches(*params_for_matches)
@@ -95,8 +112,12 @@ def test_hour_conditions(rf, get_condition, params_for_matches):
     assert not hour_condition.matches(*params_for_matches)
 
     # Special times (should not match)
-    hour_condition.hour_start = (timezone.now() + datetime.timedelta(hours=2)).time()  # 12:00 AM
-    hour_condition.hour_end = (timezone.now() + datetime.timedelta(hours=14)).time()  # 0:00 AM
+    hour_condition.hour_start = (
+        timezone.now() + datetime.timedelta(hours=2)
+    ).time()  # 12:00 AM
+    hour_condition.hour_end = (
+        timezone.now() + datetime.timedelta(hours=14)
+    ).time()  # 0:00 AM
     hour_condition.days = matching_days
     hour_condition.save()
     assert not hour_condition.matches(*params_for_matches)
@@ -109,22 +130,34 @@ def test_hour_conditions(rf, get_condition, params_for_matches):
     with override_settings(TIME_ZONE="America/Los_Angeles"):
         timezone.activate(pytz.timezone("America/Los_Angeles"))
         # So the 10:00 AM shouldn't match at all
-        hour_condition.hour_start = (timezone.now() - datetime.timedelta(hours=1)).time()  # 9:00 AM
-        hour_condition.hour_end = (timezone.now() + datetime.timedelta(hours=1)).time()  # 11:00 AM
+        hour_condition.hour_start = (
+            timezone.now() - datetime.timedelta(hours=1)
+        ).time()  # 9:00 AM
+        hour_condition.hour_end = (
+            timezone.now() + datetime.timedelta(hours=1)
+        ).time()  # 11:00 AM
         hour_condition.days = matching_days
         hour_condition.save()
         assert not hour_condition.matches(*params_for_matches)
 
         # Instead around 2:00 AM we will find a match
-        hour_condition.hour_start = (timezone.now() - datetime.timedelta(hours=9)).time()  # 1:00 AM
-        hour_condition.hour_end = (timezone.now() - datetime.timedelta(hours=7)).time()  # 3:00 AM
+        hour_condition.hour_start = (
+            timezone.now() - datetime.timedelta(hours=9)
+        ).time()  # 1:00 AM
+        hour_condition.hour_end = (
+            timezone.now() - datetime.timedelta(hours=7)
+        ).time()  # 3:00 AM
         hour_condition.days = matching_days
         hour_condition.save()
         assert hour_condition.matches(*params_for_matches)
 
         # Make sure that the hour end doesn't cause match
-        hour_condition.hour_start = (timezone.now() - datetime.timedelta(hours=9)).time()  # 1:00 AM
-        hour_condition.hour_end = (timezone.now() - datetime.timedelta(hours=8)).time()  # 2:00 AM
+        hour_condition.hour_start = (
+            timezone.now() - datetime.timedelta(hours=9)
+        ).time()  # 1:00 AM
+        hour_condition.hour_end = (
+            timezone.now() - datetime.timedelta(hours=8)
+        ).time()  # 2:00 AM
         hour_condition.days = matching_days
         hour_condition.save()
         assert not hour_condition.matches(*params_for_matches)
@@ -138,7 +171,8 @@ def mocked_now_weekday_change():
 @patch("django.utils.timezone.now", side_effect=mocked_now_weekday_change)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "get_condition,params_for_matches", {(get_basket_condition, (None, None)), (get_context_condition, (None,))}
+    "get_condition,params_for_matches",
+    {(get_basket_condition, (None, None)), (get_context_condition, (None,))},
 )
 def test_hour_conditions_localized_weekday(rf, get_condition, params_for_matches):
     timezone.activate(pytz.UTC)
@@ -170,7 +204,8 @@ def test_hour_conditions_localized_weekday(rf, get_condition, params_for_matches
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "get_condition,params_for_matches", {(get_basket_condition, (None, None)), (get_context_condition, (None,))}
+    "get_condition,params_for_matches",
+    {(get_basket_condition, (None, None)), (get_context_condition, (None,))},
 )
 def test_hour_conditions_end_before_start(rf, get_condition, params_for_matches):
     timezone.activate(pytz.UTC)

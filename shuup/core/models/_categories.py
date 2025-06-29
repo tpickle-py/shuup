@@ -56,7 +56,9 @@ class CategoryManager(TreeManager, TranslatableManager):
     queryset_class = CategoryQuerySet
 
     def get_queryset(self):
-        return self.queryset_class(self.model, using=self._db).order_by(self.tree_id_attr, self.left_attr)
+        return self.queryset_class(self.model, using=self._db).order_by(
+            self.tree_id_attr, self.left_attr
+        )
 
     def all_visible(self, customer, shop=None, language=None):
         root = (self.language(language) if language else self).all()
@@ -70,7 +72,12 @@ class CategoryManager(TreeManager, TranslatableManager):
             qs = root.filter(status=CategoryStatus.VISIBLE)
             if customer and not customer.is_anonymous:
                 qs = qs.filter(
-                    Q(visibility__in=(CategoryVisibility.VISIBLE_TO_ALL, CategoryVisibility.VISIBLE_TO_LOGGED_IN))
+                    Q(
+                        visibility__in=(
+                            CategoryVisibility.VISIBLE_TO_ALL,
+                            CategoryVisibility.VISIBLE_TO_LOGGED_IN,
+                        )
+                    )
                     | Q(visibility_groups__in=customer.groups.all())
                 )
             else:
@@ -79,7 +86,9 @@ class CategoryManager(TreeManager, TranslatableManager):
         return qs.distinct()
 
     def all_except_deleted(self, language=None, shop=None):
-        qs = (self.language(language) if language else self).exclude(status=CategoryStatus.DELETED)
+        qs = (self.language(language) if language else self).exclude(
+            status=CategoryStatus.DELETED
+        )
         if shop:
             qs = qs.filter(shops=shop)
         return qs
@@ -94,7 +103,9 @@ class Category(MPTTModel, TranslatableModel):
         related_name="children",
         verbose_name=_("parent category"),
         on_delete=models.CASCADE,
-        help_text=_("If your category is a sub-category of another category, you can link them here."),
+        help_text=_(
+            "If your category is a sub-category of another category, you can link them here."
+        ),
     )
     shops = models.ManyToManyField(
         "Shop",
@@ -116,7 +127,9 @@ class Category(MPTTModel, TranslatableModel):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        help_text=_("Category image. Will be shown in places defined by the graphical theme in use."),
+        help_text=_(
+            "Category image. Will be shown in places defined by the graphical theme in use."
+        ),
     )
     ordering = models.IntegerField(
         default=0,
@@ -140,13 +153,15 @@ class Category(MPTTModel, TranslatableModel):
     visible_in_menu = models.BooleanField(
         verbose_name=_("visible in menu"),
         default=True,
-        help_text=_("Enable if this category should be visible in the store front's menu."),
+        help_text=_(
+            "Enable if this category should be visible in the store front's menu."
+        ),
     )
     visibility_groups = models.ManyToManyField(
         "ContactGroup",
         blank=True,
         verbose_name=_("visible for groups"),
-        related_name=u"visible_categories",
+        related_name="visible_categories",
         help_text=_(
             "Select the customer groups you want to see this category. "
             "There are three groups created by default: Company, Person, Anonymous. "
@@ -205,10 +220,11 @@ class Category(MPTTModel, TranslatableModel):
                 filter(
                     None,
                     [
-                        ancestor.safe_translation_getter("name", any_language=True) or ancestor.identifier
-                        for ancestor in self.get_ancestors(ascending=reverse, include_self=True).prefetch_related(
-                            "translations"
-                        )
+                        ancestor.safe_translation_getter("name", any_language=True)
+                        or ancestor.identifier
+                        for ancestor in self.get_ancestors(
+                            ascending=reverse, include_self=True
+                        ).prefetch_related("translations")
                     ],
                 )
             )
@@ -265,7 +281,9 @@ class Category(MPTTModel, TranslatableModel):
                 child.parent = None
                 child.save()
             self.status = CategoryStatus.DELETED
-            self.add_log_entry("Success! Deleted (soft).", kind=LogEntryKind.DELETION, user=user)
+            self.add_log_entry(
+                "Success! Deleted (soft).", kind=LogEntryKind.DELETION, user=user
+            )
             self.save()
             category_deleted.send(sender=type(self), category=self)
 

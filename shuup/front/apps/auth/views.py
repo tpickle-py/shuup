@@ -48,7 +48,9 @@ class LoginView(FormView):
 
         form = form_class(**kwargs)
         form.fields[REDIRECT_FIELD_NAME] = forms.CharField(
-            widget=forms.HiddenInput, required=False, initial=self.request.GET.get(REDIRECT_FIELD_NAME)
+            widget=forms.HiddenInput,
+            required=False,
+            initial=self.request.GET.get(REDIRECT_FIELD_NAME),
         )
         return form
 
@@ -116,7 +118,9 @@ class RecoverPasswordConfirmView(FormView):
         if not valid:
             raise Problem(_("Error! This recovery link is invalid."))
 
-        return super(RecoverPasswordConfirmView, self).dispatch(request, *args, **kwargs)
+        return super(RecoverPasswordConfirmView, self).dispatch(
+            request, *args, **kwargs
+        )
 
     @atomic
     def form_valid(self, form):

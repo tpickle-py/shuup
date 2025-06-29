@@ -43,7 +43,12 @@ class NewCustomersReport(ShuupReportBase):
             user = getattr(contact, "user_id", 0)
 
             if created_on not in data:
-                data[created_on] = {"date": created_on, "users": 0, "personcontact": 0, "companycontact": 0}
+                data[created_on] = {
+                    "date": created_on,
+                    "users": 0,
+                    "personcontact": 0,
+                    "companycontact": 0,
+                }
 
             data[created_on][model] += 1
 

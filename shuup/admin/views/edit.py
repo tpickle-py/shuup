@@ -37,7 +37,11 @@ class EditObjectView(View):
                 # try edit first
                 try:
                     url = get_model_url(
-                        instance, kind="edit", user=request.user, shop=get_shop(request), raise_permission_denied=True
+                        instance,
+                        kind="edit",
+                        user=request.user,
+                        shop=get_shop(request),
+                        raise_permission_denied=True,
                     )
                 except NoModelUrl:
                     # try detail

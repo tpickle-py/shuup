@@ -17,7 +17,9 @@ from shuup.core.models import ContactGroupPriceDisplay
 
 class ContactGroupPriceDisplayModule(AdminModule):
     name = _("Contact Group Pricing Display")
-    breadcrumbs_menu_entry = MenuEntry(name, url="shuup_admin:contact_group_price_display.list")
+    breadcrumbs_menu_entry = MenuEntry(
+        name, url="shuup_admin:contact_group_price_display.list"
+    )
 
     def get_urls(self):
         return get_edit_and_list_urls(
@@ -38,4 +40,9 @@ class ContactGroupPriceDisplayModule(AdminModule):
         ]
 
     def get_model_url(self, object, kind, shop=None):
-        return derive_model_url(ContactGroupPriceDisplay, "shuup_admin:contact_group_price_display", object, kind)
+        return derive_model_url(
+            ContactGroupPriceDisplay,
+            "shuup_admin:contact_group_price_display",
+            object,
+            kind,
+        )

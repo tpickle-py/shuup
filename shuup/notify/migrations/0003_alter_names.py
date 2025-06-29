@@ -6,15 +6,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_notify', '0002_notify_script_template'),
+        ("shuup_notify", "0002_notify_script_template"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='script',
-            name='template',
-            field=models.CharField(blank=True, default=None, help_text='the template identifier used to create this script', max_length=64, null=True, verbose_name='template identifier'),
+            model_name="script",
+            name="template",
+            field=models.CharField(
+                blank=True,
+                default=None,
+                help_text="the template identifier used to create this script",
+                max_length=64,
+                null=True,
+                verbose_name="template identifier",
+            ),
         ),
     ]

@@ -15,13 +15,26 @@ from shuup.campaigns.models.basket_conditions import (
     CategoryProductsBasketCondition,
     ProductsInBasketCondition,
 )
-from shuup.campaigns.models.basket_effects import BasketDiscountAmount, BasketDiscountPercentage
+from shuup.campaigns.models.basket_effects import (
+    BasketDiscountAmount,
+    BasketDiscountPercentage,
+)
 from shuup.campaigns.models.basket_line_effects import DiscountFromCategoryProducts
 from shuup.campaigns.models.campaigns import BasketCampaign, Coupon, CouponUsage
-from shuup.core.models import Category, OrderLineType, Shop, ShopProduct, ShopStatus, Supplier
+from shuup.core.models import (
+    Category,
+    OrderLineType,
+    Shop,
+    ShopProduct,
+    ShopStatus,
+    Supplier,
+)
 from shuup.core.order_creator import OrderCreator
 from shuup.front.basket import get_basket
-from shuup.front.basket.commands import handle_add_campaign_code, handle_remove_campaign_code
+from shuup.front.basket.commands import (
+    handle_add_campaign_code,
+    handle_remove_campaign_code,
+)
 from shuup.testing.factories import (
     CategoryFactory,
     create_product,
@@ -50,8 +63,12 @@ def test_basket_campaign_with_multiple_supppliers(rf):
     discount_amount_supplier1 = "10"
     discount_amount_supplier2 = "40"
 
-    product1 = create_product("product1", shop=shop, supplier=supplier1, default_price=single_product_price)
-    product2 = create_product("product2", shop=shop, supplier=supplier2, default_price=single_product_price)
+    product1 = create_product(
+        "product1", shop=shop, supplier=supplier1, default_price=single_product_price
+    )
+    product2 = create_product(
+        "product2", shop=shop, supplier=supplier2, default_price=single_product_price
+    )
 
     basket.add_product(supplier=supplier1, shop=shop, product=product1, quantity=1)
     basket.add_product(supplier=supplier2, shop=shop, product=product2, quantity=1)
@@ -70,7 +87,9 @@ def test_basket_campaign_with_multiple_supppliers(rf):
     )
     campaign.conditions.add(basket_rule1)
     campaign.save()
-    BasketDiscountAmount.objects.create(campaign=campaign, discount_amount=discount_amount_supplier1)
+    BasketDiscountAmount.objects.create(
+        campaign=campaign, discount_amount=discount_amount_supplier1
+    )
 
     basket.uncache()
     lines = basket.get_final_lines()
@@ -88,7 +107,9 @@ def test_basket_campaign_with_multiple_supppliers(rf):
     )
     campaign.conditions.add(basket_rule2)
     campaign.save()
-    BasketDiscountAmount.objects.create(campaign=campaign, discount_amount=discount_amount_supplier2)
+    BasketDiscountAmount.objects.create(
+        campaign=campaign, discount_amount=discount_amount_supplier2
+    )
 
     basket.uncache()
     lines = basket.get_final_lines()
@@ -112,7 +133,9 @@ def test_basket_campaign_with_multiple_supppliers_sharing_product(rf):
     single_product_price = "50"
     discount_amount = "10"
 
-    product = create_product("product1", shop=shop, supplier=supplier1, default_price=single_product_price)
+    product = create_product(
+        "product1", shop=shop, supplier=supplier1, default_price=single_product_price
+    )
     shop_product = product.get_shop_instance(shop)
     shop_product.suppliers.add(supplier2)
 
@@ -132,7 +155,9 @@ def test_basket_campaign_with_multiple_supppliers_sharing_product(rf):
     )
     campaign.conditions.add(basket_rule)
     campaign.save()
-    BasketDiscountAmount.objects.create(campaign=campaign, discount_amount=discount_amount)
+    BasketDiscountAmount.objects.create(
+        campaign=campaign, discount_amount=discount_amount
+    )
 
     basket.uncache()
     assert len(basket.get_final_lines()) == 3  # +1 for shipping line
@@ -169,7 +194,9 @@ def test_basket_campaign_with_multiple_supppliers_sharing_product(rf):
     )
     campaign.conditions.add(basket_rule2)
     campaign.save()
-    BasketDiscountAmount.objects.create(campaign=campaign, discount_amount=discount_amount_2)
+    BasketDiscountAmount.objects.create(
+        campaign=campaign, discount_amount=discount_amount_2
+    )
 
     assert len(basket.get_final_lines()) == 4
     # No disocunt since not enough products in basket for supplier 1
@@ -187,5 +214,7 @@ def test_basket_campaign_with_multiple_supppliers_sharing_product(rf):
 
 def _get_discount_line(lines, discount_amount_value):
     for line in lines:
-        if "discount" in line.line_id and line.discount_amount.value == Decimal(discount_amount_value):
+        if "discount" in line.line_id and line.discount_amount.value == Decimal(
+            discount_amount_value
+        ):
             return line

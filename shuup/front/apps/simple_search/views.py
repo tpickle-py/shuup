@@ -10,7 +10,12 @@ from django.views.generic import ListView
 
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
 from shuup.core.models import Product, ProductMode, ShopProductVisibility
-from shuup.front.utils.sorts_and_filters import ProductListForm, get_product_queryset, get_query_filters, sort_products
+from shuup.front.utils.sorts_and_filters import (
+    ProductListForm,
+    get_product_queryset,
+    get_query_filters,
+    sort_products,
+)
 
 
 class SearchView(ListView):
@@ -20,7 +25,12 @@ class SearchView(ListView):
     context_object_name = "products"
 
     def dispatch(self, request, *args, **kwargs):
-        self.form = ProductListForm(request=self.request, shop=self.request.shop, category=None, data=self.request.GET)
+        self.form = ProductListForm(
+            request=self.request,
+            shop=self.request.shop,
+            category=None,
+            data=self.request.GET,
+        )
         return super(SearchView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -40,7 +50,8 @@ class SearchView(ListView):
             )
         )
         products = catalog.get_products_queryset().filter(
-            Q(mode__in=ProductMode.get_parent_modes()), Q(get_query_filters(self.request, None, data=data))
+            Q(mode__in=ProductMode.get_parent_modes()),
+            Q(get_query_filters(self.request, None, data=data)),
         )
         products = get_product_queryset(products, self.request, None, data)
         products = sort_products(self.request, None, products, data)

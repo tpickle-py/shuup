@@ -4,6 +4,7 @@ Sphinx Shoop theme.
 This theme is a fork of Sphinx ReadTheDocs theme from
 https://github.com/snide/sphinx_rtd_theme/.
 """
+
 import os
 
 __version__ = "0.6.0"

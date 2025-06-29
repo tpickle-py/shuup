@@ -34,11 +34,15 @@ class BasketStorage(six.with_metaclass(abc.ABCMeta)):
         if not stored_basket:
             return {}
         if stored_basket.shop_id != basket.shop.id:
-            msg = "Error! Cannot load basket of a different Shop (" "%s id=%r with Shop=%s, Dest. Basket Shop=%s)" % (
-                type(stored_basket).__name__,
-                stored_basket.id,
-                stored_basket.shop_id,
-                basket.shop.id,
+            msg = (
+                "Error! Cannot load basket of a different Shop ("
+                "%s id=%r with Shop=%s, Dest. Basket Shop=%s)"
+                % (
+                    type(stored_basket).__name__,
+                    stored_basket.id,
+                    stored_basket.shop_id,
+                    basket.shop.id,
+                )
             )
             raise BasketCompatibilityError(msg)
         price_units_diff = _price_units_diff(stored_basket, basket.shop)
@@ -129,7 +133,10 @@ class BaseDatabaseBasketStorage(BasketStorage):
         if hasattr(self.model, "supplier") and hasattr(basket, "supplier"):
             stored_basket.supplier = basket.supplier
 
-        stored_basket.class_spec = "%s.%s" % (basket.__class__.__module__, basket.__class__.__name__)
+        stored_basket.class_spec = "%s.%s" % (
+            basket.__class__.__module__,
+            basket.__class__.__name__,
+        )
 
         stored_basket.save()
         stored_basket.products.set(set(basket.product_ids))
@@ -152,7 +159,9 @@ class BaseDatabaseBasketStorage(BasketStorage):
         basket_get_kwargs = self.get_basket_kwargs(basket)
         stored_basket = None
         if basket_get_kwargs:
-            stored_basket = self.model.objects.filter(deleted=False, **basket_get_kwargs).first()
+            stored_basket = self.model.objects.filter(
+                deleted=False, **basket_get_kwargs
+            ).first()
         if not stored_basket:
             stored_basket = self.model(
                 shop=basket.shop,
@@ -177,7 +186,9 @@ def _price_units_diff(x, y):
     if x.currency != y.currency:
         diff.append("currency: %r vs %r" % (x.currency, y.currency))
     if x.prices_include_tax != y.prices_include_tax:
-        diff.append("includes_tax: %r vs %r" % (x.prices_include_tax, y.prices_include_tax))
+        diff.append(
+            "includes_tax: %r vs %r" % (x.prices_include_tax, y.prices_include_tax)
+        )
     return ", ".join(diff)
 
 

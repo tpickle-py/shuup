@@ -38,7 +38,9 @@ class ProcessPaymentView(DetailView):
     context_object_name = "order"
 
     def get_object(self, queryset=None):
-        return get_object_or_404(self.model, pk=self.kwargs["pk"], key=self.kwargs["key"])
+        return get_object_or_404(
+            self.model, pk=self.kwargs["pk"], key=self.kwargs["key"]
+        )
 
     def get_context_data(self, **kwargs):
         context = super(ProcessPaymentView, self).get_context_data(**kwargs)
@@ -52,7 +54,11 @@ class ProcessPaymentView(DetailView):
         payment_method = order.payment_method if order.payment_method_id else None
         if mode == "payment":
             if order.is_canceled():
-                messages.add_message(request, messages.INFO, _("The order is canceled so you can't pay for it."))
+                messages.add_message(
+                    request,
+                    messages.INFO,
+                    _("The order is canceled so you can't pay for it."),
+                )
                 return redirect("shuup:order_complete", pk=order.pk, key=order.key)
 
             if not order.is_paid():
@@ -62,11 +68,15 @@ class ProcessPaymentView(DetailView):
                     )
         elif mode == "return":
             if payment_method:
-                payment_method.process_payment_return_request(order=order, request=request)
+                payment_method.process_payment_return_request(
+                    order=order, request=request
+                )
         elif mode == "cancel":
             self.template_name = "shuup/front/order/payment_canceled.jinja"
             return self.render_to_response(self.get_context_data(object=order))
         else:
-            raise ImproperlyConfigured("Error! Unknown ProcessPaymentView mode: `%s`." % mode)
+            raise ImproperlyConfigured(
+                "Error! Unknown ProcessPaymentView mode: `%s`." % mode
+            )
 
         return redirect("shuup:order_complete", pk=order.pk, key=order.key)

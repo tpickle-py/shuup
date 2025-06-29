@@ -36,7 +36,11 @@ class SalesPerHour(OrderReportMixin, ShuupReportBase):
         data = []
         hour_data = {}
         for base_hour in range(0, 24):
-            hour_data[base_hour] = {"hour": base_hour, "order_amount": 0, "total_sales": 0}
+            hour_data[base_hour] = {
+                "hour": base_hour,
+                "order_amount": 0,
+                "total_sales": 0,
+            }
         for hour, matches in groups:
             total = 0
             amount = 0

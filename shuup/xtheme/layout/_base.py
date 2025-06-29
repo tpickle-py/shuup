@@ -22,7 +22,15 @@ class LayoutCell(object):
     A single cell in a layout. Maps to Bootstrap's `col-XX-XX` classes.
     """
 
-    def __init__(self, theme, plugin_identifier, config=None, sizes=None, align="", extra_classes=""):
+    def __init__(
+        self,
+        theme,
+        plugin_identifier,
+        config=None,
+        sizes=None,
+        align="",
+        extra_classes="",
+    ):
         """
         Initialize a layout cell with a given plugin, config and sizing configuration.
 
@@ -99,7 +107,9 @@ class LayoutCell(object):
                     if hasattr(plugin_inst, "get_cache_key")
                     else plugin_inst.identifier
                 )
-                hash_key = hashlib.sha1(f"{cache_key_prefix}-{cache_key}".encode("utf-8")).hexdigest()
+                hash_key = hashlib.sha1(
+                    f"{cache_key_prefix}-{cache_key}".encode("utf-8")
+                ).hexdigest()
                 full_cache_key = f"shuup_xtheme_cell:{hash_key}"
                 cached_content = cache.get(full_cache_key)
                 if cached_content is not None:
@@ -116,7 +126,9 @@ class LayoutCell(object):
             # catch any error while trying to render the cell
             LOGGER.exception(f"Failed to render the plugin: {self.plugin_identifier}")
             error_msg = gettext("Failed to render the plugin")
-            return mark_safe(mark_safe(f'<small class="plugin-render-error">{error_msg}</small>'))
+            return mark_safe(
+                mark_safe(f'<small class="plugin-render-error">{error_msg}</small>')
+            )
 
     @classmethod
     def unserialize(cls, theme, data):
@@ -201,7 +213,9 @@ class LayoutRow(object):
         :return: New row.
         :rtype: LayoutRow
         """
-        cells = [LayoutCell.unserialize(theme, cell_data) for cell_data in data["cells"]]
+        cells = [
+            LayoutCell.unserialize(theme, cell_data) for cell_data in data["cells"]
+        ]
         return cls(theme, cells=cells)
 
     def serialize(self):
@@ -298,7 +312,9 @@ class Layout(object):
         :rtype: Layout
         """
         rows = [LayoutRow.unserialize(theme, row_data) for row_data in data["rows"]]
-        return cls(theme, placeholder_name=data.get("name") or placeholder_name, rows=rows)
+        return cls(
+            theme, placeholder_name=data.get("name") or placeholder_name, rows=rows
+        )
 
     def serialize(self):
         """
@@ -307,7 +323,10 @@ class Layout(object):
         :return: Layout data dict.
         :rtype: dict
         """
-        return {"rows": [r.serialize() for r in self.rows], "name": self.placeholder_name}
+        return {
+            "rows": [r.serialize() for r in self.rows],
+            "name": self.placeholder_name,
+        }
 
     def __iter__(self):
         """
@@ -483,7 +502,9 @@ class Layout(object):
         to_x = int(to_x)
         to_y = int(to_y)
 
-        if not (0 <= from_y < len(self.rows)) or not (0 <= from_x < len(self.rows[from_y])):
+        if not (0 <= from_y < len(self.rows)) or not (
+            0 <= from_x < len(self.rows[from_y])
+        ):
             return False
         if not (0 <= to_y < len(self.rows)) or not (0 <= to_x <= len(self.rows[to_y])):
             return False

@@ -11,7 +11,11 @@ from shuup.core.models import SavedAddress, get_company_contact, get_person_cont
 from shuup.testing.factories import get_address, get_default_shop
 from shuup.utils.django_compat import reverse
 from shuup_tests.utils import SmartClient
-from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME, regular_user
+from shuup_tests.utils.fixtures import (
+    REGULAR_USER_PASSWORD,
+    REGULAR_USER_USERNAME,
+    regular_user,
+)
 
 User = get_user_model()
 
@@ -90,7 +94,9 @@ def test_addressbook_has_saved_addresses(regular_user):
     address = get_address()
     address.save()
     address_title = "TestAddress"
-    sa = SavedAddress.objects.create(owner=contact, address=address, title=address_title)
+    sa = SavedAddress.objects.create(
+        owner=contact, address=address, title=address_title
+    )
     addressbook_url = reverse("shuup:address_book")
 
     soup = client.soup(addressbook_url)
@@ -99,7 +105,9 @@ def test_addressbook_has_saved_addresses(regular_user):
     assert len(soup(text="Name:")) == 1
 
     second_address_title = "TestAddress2"
-    sa = SavedAddress.objects.create(owner=contact, address=address, title=second_address_title)
+    sa = SavedAddress.objects.create(
+        owner=contact, address=address, title=second_address_title
+    )
     soup = client.soup(addressbook_url)
     elems = [h for h in soup.find_all("h2") if h.text.strip() == second_address_title]
     assert len(elems) == 1
@@ -121,7 +129,11 @@ def test_addressbook_addresses_create_and_edit(regular_user):
 
     addressbook_url = reverse("shuup:address_book")
     soup = client.soup(addressbook_url)
-    elems = [h for h in soup.find_all("h2") if h.text.strip() == data.get("saved_address-title")]
+    elems = [
+        h
+        for h in soup.find_all("h2")
+        if h.text.strip() == data.get("saved_address-title")
+    ]
     assert len(elems) == 1
     assert len(soup(text="Name:")) == 1
 

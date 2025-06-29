@@ -17,6 +17,7 @@ except ImportError:
     def python_2_unicode_compatible(cls):
         return cls
 
+
 # Django.utils.six was removed in Django 4.0
 try:
     from django.utils import six
@@ -35,6 +36,7 @@ except ImportError:
         # Fallback for older versions
         def contextfunction(f):
             return f
+
 
 try:
     from jinja2 import contextfilter

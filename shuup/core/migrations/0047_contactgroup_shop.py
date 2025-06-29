@@ -7,15 +7,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0046_contact_registration_shop'),
+        ("shuup", "0046_contact_registration_shop"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contactgroup',
-            name='shop',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='contact_groups', to='shuup.Shop', verbose_name='shop'),
+            model_name="contactgroup",
+            name="shop",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="contact_groups",
+                to="shuup.Shop",
+                verbose_name="shop",
+            ),
         ),
     ]

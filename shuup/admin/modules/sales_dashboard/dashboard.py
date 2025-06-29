@@ -44,7 +44,10 @@ def get_orders_by_currency(currency):
 
 
 def month_iter(start_date, end_date):
-    return ((d.month, d.year) for d in rrule.rrule(rrule.MONTHLY, dtstart=start_date, until=end_date))
+    return (
+        (d.month, d.year)
+        for d in rrule.rrule(rrule.MONTHLY, dtstart=start_date, until=end_date)
+    )
 
 
 class OrderValueChartDashboardBlock(DashboardChartBlock):
@@ -88,16 +91,21 @@ class OrderValueChartDashboardBlock(DashboardChartBlock):
             sum=Sum("taxful_total_price_value"),
         )
 
-        for (month, year) in month_iter(chart_start_date, today):
+        for month, year in month_iter(chart_start_date, today):
             sales_date = date(year, month, 1)
             if sales_date not in sum_sales_data:
                 sum_sales_data[sales_date] = {"sum": Decimal(0)}
 
         # sort and recreated the ordered dict since we've put new items into
-        sum_sales_data = OrderedDict(sorted(six.iteritems(sum_sales_data), key=lambda x: x[0]))
+        sum_sales_data = OrderedDict(
+            sorted(six.iteritems(sum_sales_data), key=lambda x: x[0])
+        )
 
         locale = get_current_babel_locale()
-        labels = [format_date(k, format=get_year_and_month_format(locale), locale=locale) for k in sum_sales_data]
+        labels = [
+            format_date(k, format=get_year_and_month_format(locale), locale=locale)
+            for k in sum_sales_data
+        ]
         mixed_chart = MixedChart(
             title=_("Sales per Month (past 12 months)"),
             labels=labels,
@@ -123,14 +131,22 @@ class OrderValueChartDashboardBlock(DashboardChartBlock):
 
         # this will be on top of all bars
         if average_sales:
-            mixed_chart.add_data(_("Average Sales"), [v for v in average_sales], ChartType.LINE)
+            mixed_chart.add_data(
+                _("Average Sales"), [v for v in average_sales], ChartType.LINE
+            )
 
         # this will be under the cummulative bars
-        mixed_chart.add_data(_("Sales"), [v["sum"] for v in sum_sales_data.values()], ChartType.BAR)
+        mixed_chart.add_data(
+            _("Sales"), [v["sum"] for v in sum_sales_data.values()], ChartType.BAR
+        )
 
         # this will be under all others charts
         if cumulative_sales:
-            mixed_chart.add_data(_("Cumulative Total Sales"), [v for v in cumulative_sales], ChartType.BAR)
+            mixed_chart.add_data(
+                _("Cumulative Total Sales"),
+                [v for v in cumulative_sales],
+                ChartType.BAR,
+            )
 
         self.cached_chart = mixed_chart
         return mixed_chart
@@ -147,7 +163,11 @@ def get_sales_of_the_day_block(request, currency=None):
         currency = shop.currency
 
     # Sales of the day
-    todays_order_data = orders.complete().since(0).aggregate(count=Count("id"), sum=Sum("taxful_total_price_value"))
+    todays_order_data = (
+        orders.complete()
+        .since(0)
+        .aggregate(count=Count("id"), sum=Sum("taxful_total_price_value"))
+    )
     return DashboardMoneyBlock(
         id="todays_order_sum",
         color="green",
@@ -166,7 +186,9 @@ def get_lifetime_sales_block(request, currency=None):
         currency = shop.currency
 
     # Lifetime sales
-    lifetime_sales_data = orders.complete().aggregate(count=Count("id"), sum=Sum("taxful_total_price_value"))
+    lifetime_sales_data = orders.complete().aggregate(
+        count=Count("id"), sum=Sum("taxful_total_price_value")
+    )
 
     return DashboardMoneyBlock(
         id="lifetime_sales_sum",
@@ -186,7 +208,9 @@ def get_avg_purchase_size_block(request, currency=None):
     if not currency:
         currency = shop.currency
 
-    lifetime_sales_data = orders.complete().aggregate(count=Count("id"), sum=Sum("taxful_total_price_value"))
+    lifetime_sales_data = orders.complete().aggregate(
+        count=Count("id"), sum=Sum("taxful_total_price_value")
+    )
 
     # Average size of purchase with amount of orders it is calculated from
     average_purchase_size = Order.objects.filter(shop=shop).aggregate(
@@ -211,7 +235,9 @@ def get_open_orders_block(request, currency=None):
         currency = shop.currency
 
     # Open orders / open orders value
-    open_order_data = orders.incomplete().aggregate(count=Count("id"), sum=Sum("taxful_total_price_value"))
+    open_order_data = orders.incomplete().aggregate(
+        count=Count("id"), sum=Sum("taxful_total_price_value")
+    )
 
     return DashboardMoneyBlock(
         id="open_orders_sum",
@@ -236,9 +262,13 @@ def get_order_overview_for_date_range(currency, start_date, end_date, shop=None)
 
     orders_in_range = orders.in_date_range(start_date, end_date)
     q = orders_in_range.aggregate(
-        num_orders=Count("id"), num_customers=Count("customer", distinct=True), sales=Sum("taxful_total_price_value")
+        num_orders=Count("id"),
+        num_customers=Count("customer", distinct=True),
+        sales=Sum("taxful_total_price_value"),
     )
-    anon_orders = orders_in_range.filter(customer__isnull=True).aggregate(num_orders=Count("id"))
+    anon_orders = orders_in_range.filter(customer__isnull=True).aggregate(
+        num_orders=Count("id")
+    )
     q["num_customers"] += anon_orders["num_orders"]
     q["sales"] = TaxfulPrice(q["sales"] or 0, currency)
     return q
@@ -290,7 +320,10 @@ def get_recent_orders_block(request, currency=None):
     orders = get_orders_for_shop(request).valid().order_by("-order_date")[:5]
 
     block = DashboardContentBlock.by_rendering_template(
-        "recent_orders", request, "shuup/admin/sales_dashboard/_recent_orders_dashboard_block.jinja", {"orders": orders}
+        "recent_orders",
+        request,
+        "shuup/admin/sales_dashboard/_recent_orders_dashboard_block.jinja",
+        {"orders": orders},
     )
     block.size = "medium"
     block.sort_order = 2

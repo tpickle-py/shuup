@@ -38,7 +38,9 @@ class ServiceModule(AdminModule):
                 name=self.name_template % "delete",
             )
         ] + get_edit_and_list_urls(
-            url_prefix=self.url_prefix, view_template=self.view_template, name_template=self.name_template
+            url_prefix=self.url_prefix,
+            view_template=self.view_template,
+            name_template=self.name_template,
         )
 
     def get_menu_entries(self, request):
@@ -64,8 +66,12 @@ class ServiceModule(AdminModule):
 
     def get_permissions_help_texts(self) -> Iterable[str]:
         return {
-            get_object_selector_permission_name(Carrier): _("Allow the user to select carriers in admin."),
-            get_object_selector_permission_name(PaymentMethod): _("Allow the user to select payment methods in admin."),
+            get_object_selector_permission_name(Carrier): _(
+                "Allow the user to select carriers in admin."
+            ),
+            get_object_selector_permission_name(PaymentMethod): _(
+                "Allow the user to select payment methods in admin."
+            ),
             get_object_selector_permission_name(ShippingMethod): _(
                 "Allow the user to select shipping methods in admin."
             ),
@@ -83,7 +89,9 @@ class ShippingMethodModule(ServiceModule):
     url_name_prefix = "shuup_admin:shipping_method"
     icon = "fa fa-truck"
 
-    breadcrumbs_menu_entry = MenuEntry(text=name, url="shuup_admin:shipping_method.list")
+    breadcrumbs_menu_entry = MenuEntry(
+        text=name, url="shuup_admin:shipping_method.list"
+    )
 
 
 class PaymentMethodModule(ServiceModule):

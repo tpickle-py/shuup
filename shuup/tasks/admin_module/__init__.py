@@ -13,7 +13,12 @@ from shuup.admin.base import AdminModule, MenuEntry, SearchResult
 from shuup.admin.dashboard import DashboardContentBlock
 from shuup.admin.menu import CONTACTS_MENU_CATEGORY
 from shuup.admin.shop_provider import get_shop
-from shuup.admin.utils.urls import admin_url, derive_model_url, get_edit_and_list_urls, get_model_url
+from shuup.admin.utils.urls import (
+    admin_url,
+    derive_model_url,
+    get_edit_and_list_urls,
+    get_model_url,
+)
 from shuup.core.models import get_person_contact
 from shuup.tasks.models import Task, TaskStatus, TaskType
 from shuup.utils.django_compat import force_text
@@ -25,10 +30,14 @@ class TaskAdminModule(AdminModule):
 
     def get_urls(self):
         return get_edit_and_list_urls(
-            url_prefix="^tasks", view_template="shuup.tasks.admin_module.views.Task%sView", name_template="task.%s"
+            url_prefix="^tasks",
+            view_template="shuup.tasks.admin_module.views.Task%sView",
+            name_template="task.%s",
         ) + [
             admin_url(
-                r"^tasks/(?P<pk>\d+)/delete/$", "shuup.tasks.admin_module.views.TaskDeleteView", name="task.delete"
+                r"^tasks/(?P<pk>\d+)/delete/$",
+                "shuup.tasks.admin_module.views.TaskDeleteView",
+                name="task.delete",
             ),
             admin_url(
                 r"^tasks/(?P<pk>\d+)/set_status/$",
@@ -53,7 +62,7 @@ class TaskAdminModule(AdminModule):
         return derive_model_url(Task, "shuup_admin:task", object, kind)
 
     def get_dashboard_blocks(self, request):
-        """ Return the latest 10 pending tasks """
+        """Return the latest 10 pending tasks"""
         contact = get_person_contact(request.user)
         tasks = (
             Task.objects.for_shop(get_shop(request))
@@ -64,7 +73,10 @@ class TaskAdminModule(AdminModule):
 
         if tasks.exists():
             tasks_block = DashboardContentBlock.by_rendering_template(
-                "articles", request, "shuup/admin/tasks/tasks_dashboard_block.jinja", context=dict(tasks=tasks)
+                "articles",
+                request,
+                "shuup/admin/tasks/tasks_dashboard_block.jinja",
+                context=dict(tasks=tasks),
             )
             tasks_block.size = "medium"
             yield tasks_block
@@ -83,7 +95,9 @@ class TaskAdminModule(AdminModule):
             for task in tasks:
                 yield SearchResult(
                     text=force_text(
-                        "{task_name} [{task_status}]".format(**dict(task_name=task.name, task_status=task.status))
+                        "{task_name} [{task_status}]".format(
+                            **dict(task_name=task.name, task_status=task.status)
+                        )
                     ),
                     url=get_model_url(task, shop=shop),
                     category=_("Tasks"),

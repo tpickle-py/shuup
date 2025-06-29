@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0035_remove_shop_permissions'),
+        ("shuup", "0035_remove_shop_permissions"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contact',
-            name='shops',
-            field=models.ManyToManyField(blank=True, to='shuup.Shop'),
+            model_name="contact",
+            name="shops",
+            field=models.ManyToManyField(blank=True, to="shuup.Shop"),
         ),
     ]

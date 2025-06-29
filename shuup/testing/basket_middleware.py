@@ -15,6 +15,8 @@ class TestBasketCommandMiddleware(BaseBasketCommandMiddleware):
         kwargs["extra"]["extra"]["line_options"] = "works"
         return kwargs
 
-    def postprocess_response(self, basket, request, command: str, kwargs: dict, response: dict) -> dict:
+    def postprocess_response(
+        self, basket, request, command: str, kwargs: dict, response: dict
+    ) -> dict:
         response["it_works"] = True
         return response

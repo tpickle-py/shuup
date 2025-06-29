@@ -14,7 +14,9 @@ def create_task(shop, creator, task_type, task_name, comment=None, **kwargs):
     from shuup.tasks.models import Task
 
     with atomic():
-        task = Task(creator=creator, shop=shop, type=task_type, name=task_name, **kwargs)
+        task = Task(
+            creator=creator, shop=shop, type=task_type, name=task_name, **kwargs
+        )
         task.full_clean()
         task.save()
         if comment:

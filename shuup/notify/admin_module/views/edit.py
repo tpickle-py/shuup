@@ -36,7 +36,9 @@ class ScriptEditView(CreateOrUpdateView):
             # this script was created through a template
             # so show an option to easily edit the template
             if self.object.template:
-                template_cls = get_identifier_to_object_map(SCRIPT_TEMPLATES_PROVIDE_CATEGORY).get(self.object.template)
+                template_cls = get_identifier_to_object_map(
+                    SCRIPT_TEMPLATES_PROVIDE_CATEGORY
+                ).get(self.object.template)
 
                 # check whether is possible to edit the script through the template editor
                 if template_cls and template_cls(self.object).can_edit_script():
@@ -48,7 +50,10 @@ class ScriptEditView(CreateOrUpdateView):
                             text=_("Edit Template"),
                             icon="fa fa-pencil-square-o",
                             extra_css_class="btn-primary",
-                            url=reverse("shuup_admin:notify.script-template-edit", kwargs={"pk": self.object.pk}),
+                            url=reverse(
+                                "shuup_admin:notify.script-template-edit",
+                                kwargs={"pk": self.object.pk},
+                            ),
                         )
                     )
 
@@ -58,18 +63,25 @@ class ScriptEditView(CreateOrUpdateView):
                     text=edit_button_title,
                     icon="fa fa-pencil",
                     extra_css_class="btn-primary",
-                    url=reverse("shuup_admin:notify.script.edit-content", kwargs={"pk": self.object.pk}),
+                    url=reverse(
+                        "shuup_admin:notify.script.edit-content",
+                        kwargs={"pk": self.object.pk},
+                    ),
                 ),
             )
 
             buttons.insert(
                 1,
                 PostActionButton(
-                    post_url=reverse("shuup_admin:notify.script.delete", kwargs={"pk": self.object.pk}),
+                    post_url=reverse(
+                        "shuup_admin:notify.script.delete",
+                        kwargs={"pk": self.object.pk},
+                    ),
                     text=_("Delete"),
                     icon="fa fa-trash",
                     extra_css_class="btn-danger",
-                    confirm=_('Are you sure you wish to delete "%s" notification?') % self.object,
+                    confirm=_('Are you sure you wish to delete "%s" notification?')
+                    % self.object,
                     required_permissions=("notify.script.delete",),
                 ),
             )
@@ -92,4 +104,8 @@ class ScriptEditView(CreateOrUpdateView):
             return redirect("shuup_admin:notify.script.edit", pk=wf.pk)
 
     def get_queryset(self):
-        return super(ScriptEditView, self).get_queryset().filter(shop=get_shop(self.request))
+        return (
+            super(ScriptEditView, self)
+            .get_queryset()
+            .filter(shop=get_shop(self.request))
+        )

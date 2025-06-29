@@ -31,7 +31,9 @@ class BaseCheckoutView(View):
             phase_identifier = kwargs.get("phase", self.initial_phase)
 
         process = self.process_class(
-            phase_specs=self.phase_specs, phase_kwargs=dict(request=request, args=args, kwargs=kwargs), view=self
+            phase_specs=self.phase_specs,
+            phase_kwargs=dict(request=request, args=args, kwargs=kwargs),
+            view=self,
         )
         request.basket = process.basket
         if phase_identifier == "reset":

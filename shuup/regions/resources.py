@@ -13,7 +13,13 @@ window.initializeRegionFields('%(country_code_field)s', '%(region_code_field)s',
 """
 
 
-def add_init_fields_resource(context, country_code_field, region_code_field, region_field=None, placement="body_end"):
+def add_init_fields_resource(
+    context,
+    country_code_field,
+    region_code_field,
+    region_field=None,
+    placement="body_end",
+):
     add_resource(
         context,
         placement,
@@ -29,17 +35,34 @@ def add_init_fields_resource(context, country_code_field, region_code_field, reg
 
 
 def add_front_resources(context, content):
-    view_class = getattr(context["view"], "__class__", None) if context.get("view") else None
+    view_class = (
+        getattr(context["view"], "__class__", None) if context.get("view") else None
+    )
     if not view_class:
         return
 
     view_name = getattr(view_class, "__name__", "")
 
     # For front
-    if view_name in ["CheckoutMethodPhase", "CompanyRegistrationView", "CustomerEditView", "CompanyEditView"]:
+    if view_name in [
+        "CheckoutMethodPhase",
+        "CompanyRegistrationView",
+        "CustomerEditView",
+        "CompanyEditView",
+    ]:
         add_resource(context, "body_end", get_shuup_static_url("shuup-regions.js"))
-        add_init_fields_resource(context, "#id_billing-country", "#id_billing-region_code", "#id_billing-region")
-        add_init_fields_resource(context, "#id_shipping-country", "#id_shipping-region_code", "#id_shipping-region")
+        add_init_fields_resource(
+            context,
+            "#id_billing-country",
+            "#id_billing-region_code",
+            "#id_billing-region",
+        )
+        add_init_fields_resource(
+            context,
+            "#id_shipping-country",
+            "#id_shipping-region_code",
+            "#id_shipping-region",
+        )
 
     elif view_name in ["AddressesPhase"]:
         # the address phase can be requested through ajax
@@ -52,26 +75,50 @@ def add_front_resources(context, content):
 
         add_resource(context, placement, get_shuup_static_url("shuup-regions.js"))
         add_init_fields_resource(
-            context, "#id_billing-country", "#id_billing-region_code", "#id_billing-region", placement
+            context,
+            "#id_billing-country",
+            "#id_billing-region_code",
+            "#id_billing-region",
+            placement,
         )
         add_init_fields_resource(
-            context, "#id_shipping-country", "#id_shipping-region_code", "#id_shipping-region", placement
+            context,
+            "#id_shipping-country",
+            "#id_shipping-region_code",
+            "#id_shipping-region",
+            placement,
         )
 
     # For admin views
     elif view_name in ["ContactEditView", "OrderAddressEditView"]:
         add_resource(context, "body_end", get_shuup_static_url("shuup-regions.js"))
         add_init_fields_resource(
-            context, "#id_billing_address-country", "#id_billing_address-region_code", "#id_billing_address-region"
+            context,
+            "#id_billing_address-country",
+            "#id_billing_address-region_code",
+            "#id_billing_address-region",
         )
         add_init_fields_resource(
-            context, "#id_shipping_address-country", "#id_shipping_address-region_code", "#id_shipping_address-region"
+            context,
+            "#id_shipping_address-country",
+            "#id_shipping_address-region_code",
+            "#id_shipping_address-region",
         )
 
     # For admin order editor only regions is enough
     elif view_name == "OrderEditView":
         add_resource(context, "body_end", get_shuup_static_url("shuup-regions.js"))
 
-    elif view_name in ["AddressBookEditView", "WizardView", "ShopEditView", "SupplierEditView"]:
+    elif view_name in [
+        "AddressBookEditView",
+        "WizardView",
+        "ShopEditView",
+        "SupplierEditView",
+    ]:
         add_resource(context, "body_end", get_shuup_static_url("shuup-regions.js"))
-        add_init_fields_resource(context, "#id_address-country", "#id_address-region_code", "#id_address-region")
+        add_init_fields_resource(
+            context,
+            "#id_address-country",
+            "#id_address-region_code",
+            "#id_address-region",
+        )

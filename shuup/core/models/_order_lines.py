@@ -95,26 +95,45 @@ class AbstractOrderLine(MoneyPropped, models.Model, Priceful):
         verbose_name=_("parent line"),
     )
     ordering = models.IntegerField(default=0, verbose_name=_("ordering"))
-    type = EnumIntegerField(OrderLineType, default=OrderLineType.PRODUCT, verbose_name=_("line type"))
+    type = EnumIntegerField(
+        OrderLineType, default=OrderLineType.PRODUCT, verbose_name=_("line type")
+    )
     sku = models.CharField(max_length=128, blank=True, verbose_name=_("line SKU"))
     text = models.CharField(max_length=256, verbose_name=_("line text"))
-    accounting_identifier = models.CharField(max_length=32, blank=True, verbose_name=_("accounting identifier"))
-    require_verification = models.BooleanField(default=False, verbose_name=_("require verification"))
+    accounting_identifier = models.CharField(
+        max_length=32, blank=True, verbose_name=_("accounting identifier")
+    )
+    require_verification = models.BooleanField(
+        default=False, verbose_name=_("require verification")
+    )
     verified = models.BooleanField(default=False, verbose_name=_("verified"))
     extra_data = JSONField(blank=True, null=True, verbose_name=_("extra data"))
     labels = models.ManyToManyField("Label", blank=True, verbose_name=_("labels"))
 
     # The following fields govern calculation of the prices
     quantity = QuantityField(verbose_name=_("quantity"), default=1)
-    base_unit_price = PriceProperty("base_unit_price_value", "order.currency", "order.prices_include_tax")
-    discount_amount = PriceProperty("discount_amount_value", "order.currency", "order.prices_include_tax")
+    base_unit_price = PriceProperty(
+        "base_unit_price_value", "order.currency", "order.prices_include_tax"
+    )
+    discount_amount = PriceProperty(
+        "discount_amount_value", "order.currency", "order.prices_include_tax"
+    )
 
-    base_unit_price_value = MoneyValueField(verbose_name=_("unit price amount (undiscounted)"), default=0)
-    discount_amount_value = MoneyValueField(verbose_name=_("total amount of discount"), default=0)
+    base_unit_price_value = MoneyValueField(
+        verbose_name=_("unit price amount (undiscounted)"), default=0
+    )
+    discount_amount_value = MoneyValueField(
+        verbose_name=_("total amount of discount"), default=0
+    )
 
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on")
+    )
     modified_on = models.DateTimeField(
-        default=timezone.now, editable=False, db_index=True, verbose_name=_("modified on")
+        default=timezone.now,
+        editable=False,
+        db_index=True,
+        verbose_name=_("modified on"),
     )
 
     objects = OrderLineManager()
@@ -152,7 +171,12 @@ class AbstractOrderLine(MoneyPropped, models.Model, Priceful):
 
     @property
     def refunded_quantity(self):
-        return self.child_lines.filter(type=OrderLineType.REFUND).aggregate(total=Sum("quantity"))["total"] or 0
+        return (
+            self.child_lines.filter(type=OrderLineType.REFUND).aggregate(
+                total=Sum("quantity")
+            )["total"]
+            or 0
+        )
 
     @property
     def shipped_quantity(self):
@@ -160,7 +184,9 @@ class AbstractOrderLine(MoneyPropped, models.Model, Priceful):
             return 0
         return (
             ShipmentProduct.objects.filter(
-                shipment__supplier=self.supplier.id, product_id=self.product.id, shipment__order=self.order
+                shipment__supplier=self.supplier.id,
+                product_id=self.product.id,
+                shipment__order=self.order,
             ).aggregate(total=Sum("quantity"))["total"]
             or 0
         )
@@ -169,10 +195,14 @@ class AbstractOrderLine(MoneyPropped, models.Model, Priceful):
         if not self.sku:
             self.sku = ""
         if self.type == OrderLineType.PRODUCT and not self.product_id:
-            raise ValidationError("Error! Product-type order line can not be saved without a set product.")
+            raise ValidationError(
+                "Error! Product-type order line can not be saved without a set product."
+            )
 
         if self.product_id and self.type != OrderLineType.PRODUCT:
-            raise ValidationError("Error! Order line has product but is not of Product-type.")
+            raise ValidationError(
+                "Error! Order line has product but is not of Product-type."
+            )
 
         if self.product_id and not self.supplier_id:
             raise ValidationError("Error! Order line has product, but no supplier.")
@@ -183,7 +213,9 @@ class AbstractOrderLine(MoneyPropped, models.Model, Priceful):
 
 
 class OrderLine(LineWithUnit, AbstractOrderLine):
-    order = UnsavedForeignKey("Order", related_name="lines", on_delete=models.PROTECT, verbose_name=_("order"))
+    order = UnsavedForeignKey(
+        "Order", related_name="lines", on_delete=models.PROTECT, verbose_name=_("order")
+    )
 
     # TODO: Store the display and sales unit to OrderLine
 
@@ -195,9 +227,17 @@ class OrderLine(LineWithUnit, AbstractOrderLine):
 @python_2_unicode_compatible
 class OrderLineTax(MoneyPropped, ShuupModel, LineTax):
     order_line = models.ForeignKey(
-        OrderLine, related_name="taxes", on_delete=models.PROTECT, verbose_name=_("order line")
+        OrderLine,
+        related_name="taxes",
+        on_delete=models.PROTECT,
+        verbose_name=_("order line"),
     )
-    tax = models.ForeignKey("Tax", related_name="order_line_taxes", on_delete=models.PROTECT, verbose_name=_("tax"))
+    tax = models.ForeignKey(
+        "Tax",
+        related_name="order_line_taxes",
+        on_delete=models.PROTECT,
+        verbose_name=_("tax"),
+    )
     name = models.CharField(max_length=200, verbose_name=_("tax name"))
 
     amount = MoneyProperty("amount_value", "order_line.order.currency")
@@ -205,7 +245,8 @@ class OrderLineTax(MoneyPropped, ShuupModel, LineTax):
 
     amount_value = MoneyValueField(verbose_name=_("tax amount"))
     base_amount_value = MoneyValueField(
-        verbose_name=_("base amount"), help_text=_("Amount that this tax is calculated from.")
+        verbose_name=_("base amount"),
+        help_text=_("Amount that this tax is calculated from."),
     )
 
     ordering = models.IntegerField(default=0, verbose_name=_("ordering"))

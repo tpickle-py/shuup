@@ -53,4 +53,8 @@ class SupplierModule(AdminModule):
         return [get_object_selector_permission_name(Supplier)]
 
     def get_permissions_help_texts(self) -> Iterable[str]:
-        return {get_object_selector_permission_name(Supplier): _("Allow the user to select suppliers in admin.")}
+        return {
+            get_object_selector_permission_name(Supplier): _(
+                "Allow the user to select suppliers in admin."
+            )
+        }

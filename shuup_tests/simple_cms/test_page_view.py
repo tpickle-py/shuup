@@ -60,7 +60,9 @@ def test_owner_can_see_invisible_page(rf):
 
 @pytest.mark.django_db
 def test_visible_page_has_right_content(rf):
-    page = create_page(available_from=datetime.date(1988, 1, 1), shop=get_default_shop())
+    page = create_page(
+        available_from=datetime.date(1988, 1, 1), shop=get_default_shop()
+    )
     view_func = PageView.as_view()
     request = apply_request_middleware(rf.get("/"))
     assert is_anonymous(request.user)
@@ -71,8 +73,12 @@ def test_visible_page_has_right_content(rf):
 
 @pytest.mark.django_db
 def test_page_different_shops(rf):
-    shop1 = get_shop(status=ShopStatus.ENABLED, identifier="shop-1", name="Shop 1", domain="shop1")
-    shop2 = get_shop(status=ShopStatus.ENABLED, identifier="shop-2", name="Shop 2", domain="shop2")
+    shop1 = get_shop(
+        status=ShopStatus.ENABLED, identifier="shop-1", name="Shop 1", domain="shop1"
+    )
+    shop2 = get_shop(
+        status=ShopStatus.ENABLED, identifier="shop-2", name="Shop 2", domain="shop2"
+    )
 
     # dreate page only for shop2
     page = create_page(available_from=datetime.date(1988, 1, 1), shop=shop2)
@@ -97,13 +103,19 @@ def test_multilanguage_page_get_by_url(rf):
     # regardless of translation
     for lang in ("fi", "en"):
         for url in ("ham-fi", "ham-en"):
-            page = Page.objects.language(lang).filter(translations__url=url).get(pk=page_id)
+            page = (
+                Page.objects.language(lang)
+                .filter(translations__url=url)
+                .get(pk=page_id)
+            )
             assert page.get_current_language() == lang
 
 
 @pytest.mark.django_db
 def test_multilanguage_page_redirect(rf):
-    page = create_multilanguage_page(eternal=True, url="redirector", shop=get_default_shop())
+    page = create_multilanguage_page(
+        eternal=True, url="redirector", shop=get_default_shop()
+    )
     get_default_shop()
     view_func = PageView.as_view()
     request = apply_request_middleware(rf.get("/"))
@@ -115,7 +127,9 @@ def test_multilanguage_page_redirect(rf):
         page.set_current_language("en")
         english_url = page.url
         response = view_func(request, url=english_url)
-        assert response.status_code == 302  # Using the English URL - redirect to finnish
+        assert (
+            response.status_code == 302
+        )  # Using the English URL - redirect to finnish
         assert finnish_url in response["location"]
         # page.delete()
 
@@ -132,13 +146,19 @@ def test_multilanguage_page_404_no_xlate(rf):
     with translation.override("fi"):  # change language of the page to fi
         view_func = PageView.as_view()
         with pytest.raises(Http404):
-            response = view_func(request, url="no_content-udm")  # Using Udmurt URL, but xlate is Finnish . . .
+            response = view_func(
+                request, url="no_content-udm"
+            )  # Using Udmurt URL, but xlate is Finnish . . .
             assert response.status_code == 404  # ... should 404
 
 
 @pytest.mark.django_db
 def test_render_page_title(rf):
-    page = create_page(render_title=False, available_from=datetime.date(1988, 1, 1), shop=get_default_shop())
+    page = create_page(
+        render_title=False,
+        available_from=datetime.date(1988, 1, 1),
+        shop=get_default_shop(),
+    )
     view_func = PageView.as_view()
     request = apply_request_middleware(rf.get("/"))
     response = view_func(request, url=page.url)

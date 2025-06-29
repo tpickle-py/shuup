@@ -6,14 +6,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_simple_cms', '0008_page_show_child_timestamps'),
+        ("shuup_simple_cms", "0008_page_show_child_timestamps"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='page',
-            name='page_type',
+            model_name="page",
+            name="page_type",
         ),
     ]

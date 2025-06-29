@@ -55,4 +55,8 @@ class AttributeModule(AdminModule):
         return [get_object_selector_permission_name(Attribute)]
 
     def get_permissions_help_texts(self) -> Iterable[str]:
-        return {get_object_selector_permission_name(Attribute): _("Allow the user to select attributes in admin.")}
+        return {
+            get_object_selector_permission_name(Attribute): _(
+                "Allow the user to select attributes in admin."
+            )
+        }

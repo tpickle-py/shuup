@@ -17,7 +17,10 @@ class ProductLayout(Layout):
         product = context.get("product")
         if not product:
             return ""
-        return _("Content in this placeholder is shown for %(product_name)s only." % {"product_name": product.name})
+        return _(
+            "Content in this placeholder is shown for %(product_name)s only."
+            % {"product_name": product.name}
+        )
 
     def is_valid_context(self, context):
         return bool(context.get("product"))

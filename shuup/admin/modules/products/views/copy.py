@@ -27,7 +27,10 @@ class ProductCopyView(DetailView):
         qs = (
             super()
             .get_queryset()
-            .filter(shop=get_shop(self.request), product__kind__in=self.get_listing_product_kinds_values())
+            .filter(
+                shop=get_shop(self.request),
+                product__kind__in=self.get_listing_product_kinds_values(),
+            )
         )
 
         supplier = get_supplier(self.request)
@@ -49,9 +52,16 @@ class ProductCopyView(DetailView):
     def get(self, request, *args, **kwargs):
         shop_product = self.get_object()
         current_supplier = None if request.user.is_superuser else get_supplier(request)
-        cloner = cached_load("SHUUP_ADMIN_PRODUCT_CLONER")(request.shop, current_supplier)
+        cloner = cached_load("SHUUP_ADMIN_PRODUCT_CLONER")(
+            request.shop, current_supplier
+        )
         copied_shop_product = cloner.clone_product(shop_product=shop_product)
         messages.success(
-            request, _("{product_name} was successfully copied".format(product_name=copied_shop_product.product))
+            request,
+            _(
+                "{product_name} was successfully copied".format(
+                    product_name=copied_shop_product.product
+                )
+            ),
         )
         return HttpResponseRedirect(self.get_success_url(copied_shop_product))

@@ -12,7 +12,11 @@ from mock import patch
 
 from shuup.admin.utils.permissions import set_permissions_for_group
 from shuup.admin.utils.urls import NoModelUrl, admin_url, get_model_url
-from shuup.testing.factories import get_default_product, get_default_shop, get_default_staff_user
+from shuup.testing.factories import (
+    get_default_product,
+    get_default_shop,
+    get_default_staff_user,
+)
 from shuup_tests.admin.utils import admin_only_urls
 
 
@@ -43,7 +47,9 @@ def test_model_url_with_permissions():
     # If a user is given and permissions are provided, check for those permissions
     assert get_model_url(p, user=user, required_permissions=(), shop=shop)
     with pytest.raises(NoModelUrl):
-        assert get_model_url(p, user=user, required_permissions=["shop_product.new"], shop=shop)
+        assert get_model_url(
+            p, user=user, required_permissions=["shop_product.new"], shop=shop
+        )
 
     # Confirm that url is returned with correct permissions
     set_permissions_for_group(user.groups.first(), permissions)

@@ -30,7 +30,9 @@ def test_thumbnailing_none():
 def test_thumbnail_cache():
     image1 = factories.get_random_filer_image()
     image2 = factories.get_random_filer_image()
-    media = ProductMedia.objects.create(product=factories.get_default_product(), file=image2)
+    media = ProductMedia.objects.create(
+        product=factories.get_default_product(), file=image2
+    )
 
     cache_key, cached_url = _get_cached_thumbnail_url(image1, alias=None, generate=True)
     assert cache_key and not cached_url
@@ -45,10 +47,14 @@ def test_thumbnail_cache():
     assert cache_key and cached_url == url
 
     img_url = "http://www.shuup.com/logo.png"
-    cache_key, cached_url = _get_cached_thumbnail_url(img_url, alias=None, generate=True)
+    cache_key, cached_url = _get_cached_thumbnail_url(
+        img_url, alias=None, generate=True
+    )
     assert cache_key and not cached_url
     url = thumbnail(img_url)
-    cache_key, cached_url = _get_cached_thumbnail_url(img_url, alias=None, generate=True)
+    cache_key, cached_url = _get_cached_thumbnail_url(
+        img_url, alias=None, generate=True
+    )
     assert cache_key and cached_url == url
 
     source = Thumbnailer(file=BytesIO(TEST_PNG), name="logo.png")

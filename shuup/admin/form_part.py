@@ -19,7 +19,9 @@ from shuup.utils.form_group import FormDef, FormGroup
 class TemplatedFormDef(FormDef):
     def __init__(self, name, form_class, template_name, required=True, kwargs=None):
         self.template_name = template_name
-        super(TemplatedFormDef, self).__init__(name=name, form_class=form_class, required=required, kwargs=kwargs)
+        super(TemplatedFormDef, self).__init__(
+            name=name, form_class=form_class, required=required, kwargs=kwargs
+        )
 
 
 class FormPart(object):
@@ -53,7 +55,10 @@ class FormPartsViewMixin(object):
 
     def get_form_parts(self, object):
         form_part_classes = self.get_form_part_classes()
-        form_parts = [form_part_class(request=self.request, object=object) for form_part_class in form_part_classes]
+        form_parts = [
+            form_part_class(request=self.request, object=object)
+            for form_part_class in form_part_classes
+        ]
         form_parts.sort(key=lambda form_part: getattr(form_part, "priority", 0))
         return form_parts
 
@@ -79,7 +84,9 @@ class SaveFormPartsMixin(object):
     def save_form_parts(self, form):
         # trigger signal for extra form validations
         try:
-            view_form_valid.send(sender=type(self), view=self, form=form, request=self.request)
+            view_form_valid.send(
+                sender=type(self), view=self, form=form, request=self.request
+            )
         except ValidationError:
             return self.form_invalid(form)
 
@@ -88,14 +95,20 @@ class SaveFormPartsMixin(object):
         for form_part in form_parts:
             retval = form_part.form_valid(form)
 
-            if retval is not None:  # Allow a form part to change the identity of the object
+            if (
+                retval is not None
+            ):  # Allow a form part to change the identity of the object
                 self.object = retval
                 for form_part in form_parts:
                     form_part.object = self.object
         if is_new:
-            object_created.send(sender=type(self.object), object=self.object, request=self.request)
+            object_created.send(
+                sender=type(self.object), object=self.object, request=self.request
+            )
 
-        object_saved.send(sender=type(self.object), object=self.object, request=self.request)
+        object_saved.send(
+            sender=type(self.object), object=self.object, request=self.request
+        )
         self._add_create_or_change_message(self.request, self.object, is_new)
 
         if self.request.GET.get("redirect") and not self.request.POST.get("__next"):
@@ -105,7 +118,9 @@ class SaveFormPartsMixin(object):
             return HttpResponseRedirect(self.get_success_url())
 
         if is_new:
-            return HttpResponseRedirect(get_model_url(self.object, shop=self.request.shop))
+            return HttpResponseRedirect(
+                get_model_url(self.object, shop=self.request.shop)
+            )
         else:
             return HttpResponseRedirect(self.request.path)
 

@@ -37,7 +37,9 @@ def pytest_runtest_call(item):
     # To un-override, use `with override_current_theme_class()` (no arguments to re-enable database lookup)
     from shuup.themes.classic_gray.theme import ClassicGrayTheme
 
-    item.session._theme_overrider = override_current_theme_class(ClassicGrayTheme, get_default_shop())
+    item.session._theme_overrider = override_current_theme_class(
+        ClassicGrayTheme, get_default_shop()
+    )
     item.session._theme_overrider.__enter__()
     get_language_name.cache_clear()  # Clear language name lru_cache for each test
     get_setting.cache_clear()
@@ -90,14 +92,19 @@ def break_shop_product_id_sequence(db):
     from shuup.core.models import ShopProduct
 
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO SQLITE_SEQUENCE (name, seq) values ('%s', 1500)" % ShopProduct._meta.db_table)
+    cursor.execute(
+        "INSERT INTO SQLITE_SEQUENCE (name, seq) values ('%s', 1500)"
+        % ShopProduct._meta.db_table
+    )
 
 
 @pytest.fixture()
 def staff_user():
     from django.contrib.auth import get_user_model
 
-    return get_user_model().objects.create(is_staff=True, is_superuser=False, username="staff_user")
+    return get_user_model().objects.create(
+        is_staff=True, is_superuser=False, username="staff_user"
+    )
 
 
 @pytest.fixture()

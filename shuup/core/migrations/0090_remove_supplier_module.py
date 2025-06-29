@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0089_move_to_multiple_modules'),
+        ("shuup", "0089_move_to_multiple_modules"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='supplier',
-            name='module_identifier',
+            model_name="supplier",
+            name="module_identifier",
         ),
     ]

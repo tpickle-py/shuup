@@ -10,16 +10,29 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import force_text
 from django.utils.translation import activate, get_language
 
-from shuup.core.models import DefaultOrderStatus, OrderLineType, OrderStatus, OrderStatusManager, OrderStatusRole
+from shuup.core.models import (
+    DefaultOrderStatus,
+    OrderLineType,
+    OrderStatus,
+    OrderStatusManager,
+    OrderStatusRole,
+)
 from shuup.core.order_creator import OrderCreator
-from shuup.testing.factories import create_default_order_statuses, get_default_product, get_default_supplier
+from shuup.testing.factories import (
+    create_default_order_statuses,
+    get_default_product,
+    get_default_supplier,
+)
 from shuup_tests.core.test_order_creator import seed_source
 
 
 @pytest.mark.django_db
 def test_order_statuses_are_translatable():
     create_default_order_statuses()
-    assert OrderStatus.objects.translated(get_language()).count() == OrderStatus.objects.count()
+    assert (
+        OrderStatus.objects.translated(get_language()).count()
+        == OrderStatus.objects.count()
+    )
 
 
 @pytest.mark.django_db
@@ -37,7 +50,9 @@ def test_single_default_status_for_role():
         OrderStatus.objects.get_default_canceled()
 
     old_cancel = OrderStatus.objects.get(identifier=DefaultOrderStatus.CANCELED.value)
-    assert not old_cancel.default  # This will have been reset when another status became the default
+    assert (
+        not old_cancel.default
+    )  # This will have been reset when another status became the default
     old_cancel.default = True
     old_cancel.save()
 

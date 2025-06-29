@@ -13,13 +13,19 @@ class CampaignAppConfig(AppConfig):
     verbose_name = "Shuup Campaigns"
     label = "campaigns"
     provides = {
-        "admin_contact_group_form_part": ["shuup.campaigns.admin_module.form_parts:SalesRangesFormPart"],
+        "admin_contact_group_form_part": [
+            "shuup.campaigns.admin_module.form_parts:SalesRangesFormPart"
+        ],
         "discount_module": ["shuup.campaigns.modules:CatalogCampaignModule"],
-        "order_source_modifier_module": ["shuup.campaigns.modules:BasketCampaignModule"],
+        "order_source_modifier_module": [
+            "shuup.campaigns.modules:BasketCampaignModule"
+        ],
         "admin_module": [
             "shuup.campaigns.admin_module:CampaignAdminModule",
         ],
-        "admin_product_section": ["shuup.campaigns.admin_module.sections:ProductCampaignsSection"],
+        "admin_product_section": [
+            "shuup.campaigns.admin_module.sections:ProductCampaignsSection"
+        ],
         "admin_object_selector": [
             "shuup.campaigns.admin_module.object_selector.CouponAdminObjectSelector",
         ],
@@ -81,7 +87,9 @@ class CampaignAppConfig(AppConfig):
         from shuup.core.models import ContactGroup, Payment, ShopProduct
 
         post_save.connect(
-            update_customers_groups, sender=Payment, dispatch_uid="contact_group_sales:update_customers_groups"
+            update_customers_groups,
+            sender=Payment,
+            dispatch_uid="contact_group_sales:update_customers_groups",
         )
 
         # Invalidate context condition caches
@@ -118,7 +126,9 @@ class CampaignAppConfig(AppConfig):
             dispatch_uid="campaigns:invalidate_caches_for_product_type_filter_m2m_change",
         )
         post_save.connect(
-            update_filter_cache, sender=ShopProduct, dispatch_uid="campaigns:invalidate_caches_for_shop_product_save"
+            update_filter_cache,
+            sender=ShopProduct,
+            dispatch_uid="campaigns:invalidate_caches_for_shop_product_save",
         )
         m2m_changed.connect(
             update_filter_cache,

@@ -25,13 +25,21 @@ def test_basket_line_descriptor(rf):
 
     client = SmartClient()
     response = client.post(
-        path=reverse("shuup:basket"), data={"command": "add", "product_id": product.pk, "quantity": 1}
+        path=reverse("shuup:basket"),
+        data={"command": "add", "product_id": product.pk, "quantity": 1},
     )
 
     with override_provides(
-        "front_line_properties_descriptor", ["shuup.testing.line_properties_descriptor.TestLinePropertiesDescriptor"]
+        "front_line_properties_descriptor",
+        ["shuup.testing.line_properties_descriptor.TestLinePropertiesDescriptor"],
     ):
         soup = client.soup(reverse("shuup:basket"))
         basket_line_property = soup.find("p", {"class": "basket-line-property"})
-        assert basket_line_property.find("strong", {"class": "property-name"}).text.strip() == "Type:"
-        assert basket_line_property.find("span", {"class": "property-value"}).text.strip() == "product"
+        assert (
+            basket_line_property.find("strong", {"class": "property-name"}).text.strip()
+            == "Type:"
+        )
+        assert (
+            basket_line_property.find("span", {"class": "property-value"}).text.strip()
+            == "product"
+        )

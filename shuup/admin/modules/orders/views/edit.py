@@ -43,7 +43,12 @@ from shuup.core.models import (
 from shuup.core.pricing import get_pricing_module
 from shuup.utils.django_compat import force_text, reverse
 from shuup.utils.http import get_client_ip
-from shuup.utils.i18n import format_money, format_percent, get_current_babel_locale, get_locally_formatted_datetime
+from shuup.utils.i18n import (
+    format_money,
+    format_percent,
+    get_current_babel_locale,
+    get_locally_formatted_datetime,
+)
 
 
 def create_order_from_state(state, **kwargs):
@@ -95,7 +100,9 @@ def encode_method(method):
 
 def encode_line(line):
     if line.base_unit_price.amount.value != 0:
-        discount_percent = line.discount_amount.amount.value / (line.base_unit_price.amount.value * line.quantity)
+        discount_percent = line.discount_amount.amount.value / (
+            line.base_unit_price.amount.value * line.quantity
+        )
     else:
         discount_percent = 0
     return {
@@ -114,7 +121,9 @@ def encode_line(line):
 
 def get_line_data_for_edit(order, line):
     shop = order.shop
-    total_price = line.taxful_price.value if shop.prices_include_tax else line.taxless_price.value
+    total_price = (
+        line.taxful_price.value if shop.prices_include_tax else line.taxless_price.value
+    )
     base_data = {
         "id": line.id,
         "type": "other" if line.quantity else "text",
@@ -142,8 +151,12 @@ def get_line_data_for_edit(order, line):
                 "step": shop_product.purchase_multiple,
                 "logicalCount": stock_status.logical_count if stock_status else 0,
                 "physicalCount": stock_status.physical_count if stock_status else 0,
-                "salesDecimals": line.product.sales_unit.decimals if line.product.sales_unit else 0,
-                "salesUnit": line.product.sales_unit.symbol if line.product.sales_unit else "",
+                "salesDecimals": line.product.sales_unit.decimals
+                if line.product.sales_unit
+                else 0,
+                "salesUnit": line.product.sales_unit.symbol
+                if line.product.sales_unit
+                else "",
             }
         )
     if line.supplier:
@@ -189,7 +202,9 @@ class OrderEditView(CreateOrUpdateView):
 
     def get_config(self):
         order = self.object
-        shop_queryset = Shop.objects.get_for_user(self.request.user).filter(status=ShopStatus.ENABLED)
+        shop_queryset = Shop.objects.get_for_user(self.request.user).filter(
+            status=ShopStatus.ENABLED
+        )
         shops = [encode_shop(shop) for shop in shop_queryset]
         shop = self.request.shop
         customer_id = self.request.GET.get("contact_id")
@@ -203,7 +218,9 @@ class OrderEditView(CreateOrUpdateView):
             "paymentMethods": [encode_method(pm) for pm in payment_methods],
             "orderId": order.pk,
             "orderData": self.get_initial_order_data(),
-            "customerData": self.get_customer_data(customer_id) if customer_id else None,
+            "customerData": self.get_customer_data(customer_id)
+            if customer_id
+            else None,
         }
 
     def get_initial_order_data(self):
@@ -215,17 +232,26 @@ class OrderEditView(CreateOrUpdateView):
             "lines": [
                 get_line_data_for_edit(order, line)
                 for line in order.lines.filter(
-                    type__in=[OrderLineType.PRODUCT, OrderLineType.OTHER], parent_line_id=None
+                    type__in=[OrderLineType.PRODUCT, OrderLineType.OTHER],
+                    parent_line_id=None,
                 )
             ],
-            "shippingMethodId": (encode_method(order.shipping_method) if order.shipping_method else None),
-            "paymentMethodId": (encode_method(order.payment_method) if order.payment_method else None),
+            "shippingMethodId": (
+                encode_method(order.shipping_method) if order.shipping_method else None
+            ),
+            "paymentMethodId": (
+                encode_method(order.payment_method) if order.payment_method else None
+            ),
             "customer": {
                 "id": order.customer.id if order.customer else "",
                 "name": order.customer.name if order.customer else "",
                 "isCompany": bool(isinstance(order.customer, CompanyContact)),
-                "billingAddress": encode_address(order.billing_address, order.tax_number),
-                "shippingAddress": encode_address(order.shipping_address, order.tax_number),
+                "billingAddress": encode_address(
+                    order.billing_address, order.tax_number
+                ),
+                "shippingAddress": encode_address(
+                    order.shipping_address, order.tax_number
+                ),
             },
         }
 
@@ -233,15 +259,23 @@ class OrderEditView(CreateOrUpdateView):
         customer = Contact.objects.filter(pk=customer_id).first()
         if not customer:
             return JsonResponse(
-                {"success": False, "errorMessage": _("Contact `%s` does not exist.") % customer_id}, status=400
+                {
+                    "success": False,
+                    "errorMessage": _("Contact `%s` does not exist.") % customer_id,
+                },
+                status=400,
             )
         tax_number = getattr(customer, "tax_number", "")
         return {
             "id": customer.id,
             "name": customer.name,
             "isCompany": bool(isinstance(customer, CompanyContact)),
-            "billingAddress": encode_address(customer.default_billing_address, tax_number),
-            "shippingAddress": encode_address(customer.default_shipping_address, tax_number),
+            "billingAddress": encode_address(
+                customer.default_billing_address, tax_number
+            ),
+            "shippingAddress": encode_address(
+                customer.default_shipping_address, tax_number
+            ),
         }
 
     def dispatch(self, request, *args, **kwargs):
@@ -252,7 +286,10 @@ class OrderEditView(CreateOrUpdateView):
     def dispatch_command(self, request):
         handler = getattr(self, "handle_%s" % request.GET.get("command"), None)
         if not callable(handler):
-            return JsonResponse({"error": "Error! Unknown command `%s`." % request.GET.get("command")}, status=400)
+            return JsonResponse(
+                {"error": "Error! Unknown command `%s`." % request.GET.get("command")},
+                status=400,
+            )
         retval = handler(request)
         if not isinstance(retval, HttpResponse):
             retval = JsonResponse(retval)
@@ -272,18 +309,26 @@ class OrderEditView(CreateOrUpdateView):
             shop_product = product.get_shop_instance(shop)
         except ShopProduct.DoesNotExist:
             return {
-                "errorText": _("Product `%(product)s` is not available in the `%(shop)s` shop.")
+                "errorText": _(
+                    "Product `%(product)s` is not available in the `%(shop)s` shop."
+                )
                 % {"product": product.name, "shop": shop.name}
             }
 
         min_quantity = shop_product.minimum_purchase_quantity
         # Make quantity to be at least minimum quantity
         quantity = min_quantity if quantity < min_quantity else quantity
-        customer = Contact.objects.filter(pk=customer_id).first() if customer_id else None
+        customer = (
+            Contact.objects.filter(pk=customer_id).first() if customer_id else None
+        )
 
         supplier = None
         if supplier_id:
-            supplier = shop_product.suppliers.enabled(shop=shop_product.shop).filter(id=supplier_id).first()
+            supplier = (
+                shop_product.suppliers.enabled(shop=shop_product.shop)
+                .filter(id=supplier_id)
+                .first()
+            )
 
         if not supplier:
             supplier = shop_product.get_supplier(customer, quantity)
@@ -312,8 +357,15 @@ class OrderEditView(CreateOrUpdateView):
                 "value": price_info.discounted_unit_price.value,
                 "includesTax": price_info.base_unit_price.includes_tax,
             },
-            "product": {"text": product.name, "id": product.id, "url": get_model_url(product, shop=request.shop)},
-            "supplier": {"name": supplier.name if supplier else "", "id": supplier.id if supplier else None},
+            "product": {
+                "text": product.name,
+                "id": product.id,
+                "url": get_model_url(product, shop=request.shop),
+            },
+            "supplier": {
+                "name": supplier.name if supplier else "",
+                "id": supplier.id if supplier else None,
+            },
         }
 
     def handle_customer_data(self, request):
@@ -344,19 +396,23 @@ class OrderEditView(CreateOrUpdateView):
         customer = Contact.objects.get(pk=customer_id)
         companies = []
         if isinstance(customer, PersonContact):
-            companies = sorted(customer.company_memberships.all(), key=(lambda x: force_text(x)))
+            companies = sorted(
+                customer.company_memberships.all(), key=(lambda x: force_text(x))
+            )
         recent_orders = customer.customer_orders.valid().order_by("-id")[:10]
 
         order_summary = []
         for dt in customer.customer_orders.valid().datetimes("order_date", "year"):
-            summary = customer.customer_orders.filter(order_date__year=dt.year).aggregate(
-                total=Sum("taxful_total_price_value")
-            )
+            summary = customer.customer_orders.filter(
+                order_date__year=dt.year
+            ).aggregate(total=Sum("taxful_total_price_value"))
             order_summary.append(
                 {
                     "year": dt.year,
                     "total": format_currency(
-                        summary["total"], currency=recent_orders[0].currency, locale=get_current_babel_locale()
+                        summary["total"],
+                        currency=recent_orders[0].currency,
+                        locale=get_current_babel_locale(),
                     ),
                 }
             )
@@ -367,7 +423,9 @@ class OrderEditView(CreateOrUpdateView):
                 "phone_no": customer.phone,
                 "email": customer.email,
                 "tax_number": getattr(customer, "tax_number", ""),
-                "companies": [force_text(company) for company in companies] if len(companies) else None,
+                "companies": [force_text(company) for company in companies]
+                if len(companies)
+                else None,
                 "groups": [force_text(group) for group in customer.groups.all()],
                 "merchant_notes": customer.merchant_notes,
             },
@@ -406,9 +464,15 @@ class OrderEditView(CreateOrUpdateView):
             "taxfulTotal": format_money(source.taxful_total_price.amount),
             "taxlessTotal": format_money(source.taxless_total_price.amount),
             "totalDiscountAmount": format_money(source.total_discount.amount),
-            "orderLines": [encode_line(line) for line in source.get_final_lines(with_taxes=True)],
-            "billingAddress": source.billing_address.as_string_list() if source.billing_address else None,
-            "shippingAddress": source.shipping_address.as_string_list() if source.shipping_address else None,
+            "orderLines": [
+                encode_line(line) for line in source.get_final_lines(with_taxes=True)
+            ],
+            "billingAddress": source.billing_address.as_string_list()
+            if source.billing_address
+            else None,
+            "shippingAddress": source.shipping_address.as_string_list()
+            if source.shipping_address
+            else None,
         }
 
     @transaction.atomic
@@ -416,9 +480,13 @@ class OrderEditView(CreateOrUpdateView):
         state = json.loads(self.get_request_body(request))["state"]
         self.object = self.get_object()
         if self.object.pk:  # Edit
-            order = update_order_from_state(state, self.object, modified_by=request.user)
+            order = update_order_from_state(
+                state, self.object, modified_by=request.user
+            )
             assert self.object.pk == order.pk
-            messages.success(request, _("Order `%(identifier)s` was updated.") % vars(order))
+            messages.success(
+                request, _("Order `%(identifier)s` was updated.") % vars(order)
+            )
         else:  # Create
             order = create_order_from_state(
                 state,
@@ -426,7 +494,9 @@ class OrderEditView(CreateOrUpdateView):
                 ip_address=get_client_ip(request),
             )
             object_created.send(sender=Order, object=order, request=request)
-            messages.success(request, _("Order `%(identifier)s` created.") % vars(order))
+            messages.success(
+                request, _("Order `%(identifier)s` created.") % vars(order)
+            )
 
         object_saved.send(sender=Order, object=order, request=request)
         return JsonResponse(
@@ -438,10 +508,14 @@ class OrderEditView(CreateOrUpdateView):
         )
 
     def handle_source_data(self, request):
-        return _handle_or_return_error(self._handle_source_data, request, _("Could not proceed with the order: "))
+        return _handle_or_return_error(
+            self._handle_source_data, request, _("Could not proceed with the order: ")
+        )
 
     def handle_finalize(self, request):
-        return _handle_or_return_error(self._handle_finalize, request, _("Could not finalize the order: "))
+        return _handle_or_return_error(
+            self._handle_finalize, request, _("Could not finalize the order: ")
+        )
 
 
 class UpdateAdminCommentView(View):
@@ -450,7 +524,9 @@ class UpdateAdminCommentView(View):
     """
 
     def post(self, request, *args, **kwargs):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
+            "id", flat=True
+        )
         order = Order.objects.filter(pk=kwargs["pk"], shop_id__in=shop_ids).first()
         if not order:
             raise Http404()
@@ -474,4 +550,6 @@ def _handle_or_return_error(func, request, error_message):
             error_message += "\n" + "\n".join(force_text(err) for err in exc.messages)
         else:
             error_message += " {}".format(exc)
-        return JsonResponse({"success": False, "errorMessage": error_message}, status=400)
+        return JsonResponse(
+            {"success": False, "errorMessage": error_message}, status=400
+        )

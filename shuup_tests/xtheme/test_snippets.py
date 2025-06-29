@@ -66,7 +66,9 @@ def test_theme_selection():
         snippet=html_that_should_not_exist,
         themes="random.theme",
     )
-    with override_provides("xtheme_resource_injection", ["shuup.xtheme.resources:inject_global_snippet"]):
+    with override_provides(
+        "xtheme_resource_injection", ["shuup.xtheme.resources:inject_global_snippet"]
+    ):
         client = SmartClient()
         response, soup = client.response_and_soup("/")
         assert response.status_code == 200

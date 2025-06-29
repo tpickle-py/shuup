@@ -24,9 +24,15 @@ logger = getLogger(__name__)
 
 class ConfirmForm(forms.Form):
     product_ids = forms.CharField(widget=forms.HiddenInput(), required=True)
-    accept_terms = forms.BooleanField(required=True, label=_(u"I accept the terms and conditions"))
-    marketing = forms.BooleanField(required=False, label=_(u"I want to receive marketing material"), initial=False)
-    comment = forms.CharField(widget=forms.Textarea(), required=False, label=_(u"Comment"))
+    accept_terms = forms.BooleanField(
+        required=True, label=_("I accept the terms and conditions")
+    )
+    marketing = forms.BooleanField(
+        required=False, label=_("I want to receive marketing material"), initial=False
+    )
+    comment = forms.CharField(
+        widget=forms.Textarea(), required=False, label=_("Comment")
+    )
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
@@ -54,7 +60,9 @@ class ConfirmForm(forms.Form):
         product_ids = set(self.cleaned_data.get("product_ids", "").split(","))
         if product_ids != self.current_product_ids:
             raise forms.ValidationError(
-                _("There has been a change in product availability. Please review your cart and reconfirm your order.")
+                _(
+                    "There has been a change in product availability. Please review your cart and reconfirm your order."
+                )
             )
 
 
@@ -72,12 +80,17 @@ class ConfirmPhase(CheckoutPhaseViewMixin, FormView):
     def is_valid(self):
         # check that all form keys starting with "accept_" must have a valid value
         not_accepted_keys = [
-            key for key in self.storage.keys() if key.startswith("accept_") and not self.storage.get(key)
+            key
+            for key in self.storage.keys()
+            if key.startswith("accept_") and not self.storage.get(key)
         ]
         return bool(len(not_accepted_keys) == 0)
 
     def _get_product_ids(self):
-        return [str(product_id) for product_id in self.basket.get_product_ids_and_quantities().keys()]
+        return [
+            str(product_id)
+            for product_id in self.basket.get_product_ids_and_quantities().keys()
+        ]
 
     def get_form_kwargs(self):
         kwargs = super(ConfirmPhase, self).get_form_kwargs()
@@ -110,17 +123,25 @@ class ConfirmPhase(CheckoutPhaseViewMixin, FormView):
 
         # make sure to set marketing permission asked once
         if "marketing" in form.fields and order.customer:
-            if not order.customer.options or not order.customer.options.get("marketing_permission_asked"):
+            if not order.customer.options or not order.customer.options.get(
+                "marketing_permission_asked"
+            ):
                 order.customer.options = order.customer.options or {}
                 order.customer.options["marketing_permission_asked"] = True
                 order.customer.save(update_fields=["options"])
 
         if order.require_verification:
-            response = redirect("shuup:order_requires_verification", pk=order.pk, key=order.key)
+            response = redirect(
+                "shuup:order_requires_verification", pk=order.pk, key=order.key
+            )
         else:
-            response = redirect("shuup:order_process_payment", pk=order.pk, key=order.key)
+            response = redirect(
+                "shuup:order_process_payment", pk=order.pk, key=order.key
+            )
 
-        checkout_complete.send(sender=type(self), request=self.request, user=self.request.user, order=order)
+        checkout_complete.send(
+            sender=type(self), request=self.request, user=self.request.user, order=order
+        )
 
         return response
 
@@ -131,7 +152,9 @@ class ConfirmPhase(CheckoutPhaseViewMixin, FormView):
         basket.customer = self.request.customer
         basket.creator = self.request.user
         if "impersonator_user_id" in self.request.session:
-            basket.creator = get_user_model().objects.get(pk=self.request.session["impersonator_user_id"])
+            basket.creator = get_user_model().objects.get(
+                pk=self.request.session["impersonator_user_id"]
+            )
         basket.status = OrderStatus.objects.get_default_initial()
         order_creator = get_basket_order_creator()
         order = order_creator.create_order(basket)

@@ -60,7 +60,13 @@ def _is_folder_shared(folder):
 
 
 def _get_folder_query_filter(shop, user=None):
-    query = Q(Q(Q(media_folder__isnull=True) | Q(media_folder__shops__isnull=True) | Q(media_folder__shops=shop)))
+    query = Q(
+        Q(
+            Q(media_folder__isnull=True)
+            | Q(media_folder__shops__isnull=True)
+            | Q(media_folder__shops=shop)
+        )
+    )
     if user and not has_permission(user, "media.view-all"):
         root_folders = Folder.objects.filter(media_folder__owners=user)
         folders = []
@@ -68,7 +74,9 @@ def _get_folder_query_filter(shop, user=None):
             for root_media_folder in root_folder.media_folder.all():
                 folders.extend(root_media_folder.get_all_children())
 
-        query &= Q(Q(media_folder__visible=True) | Q(id__in=[folder.id for folder in folders]))
+        query &= Q(
+            Q(media_folder__visible=True) | Q(id__in=[folder.id for folder in folders])
+        )
     return query
 
 
@@ -91,7 +99,11 @@ def _is_file_shared(file):
 
 def _get_file_query(shop, folder=None):
     query = Q(is_public=True)
-    query &= Q(Q(media_file__isnull=True) | Q(media_file__shops__isnull=True) | Q(media_file__shops=shop))
+    query &= Q(
+        Q(media_file__isnull=True)
+        | Q(media_file__shops__isnull=True)
+        | Q(media_file__shops=shop)
+    )
     queryset = File.objects.filter(query)
     if folder:
         queryset = queryset.filter(folder=folder)
@@ -114,7 +126,10 @@ class MediaBrowserView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MediaBrowserView, self).get_context_data(**kwargs)
-        context["browser_config"] = {"filter": self.filter, "disabledMenus": self.disabledMenus}
+        context["browser_config"] = {
+            "filter": self.filter,
+            "disabledMenus": self.disabledMenus,
+        }
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -160,11 +175,13 @@ class MediaBrowserView(TemplateView):
         root_folders = None
 
         # If the user has a root folder and not permission to view all folders
-        if len(users_owned_folders) > 0 and not has_permission(self.user, "media.view-all"):
+        if len(users_owned_folders) > 0 and not has_permission(
+            self.user, "media.view-all"
+        ):
             all_accessed_folders = list(
-                Folder._tree_manager.filter(_get_folder_query_filter(shop, self.user)).order_by(
-                    users_owned_folders.first()._mptt_meta.level_attr
-                )
+                Folder._tree_manager.filter(
+                    _get_folder_query_filter(shop, self.user)
+                ).order_by(users_owned_folders.first()._mptt_meta.level_attr)
             )
             get_media_folder = cached_load("SHUUP_GET_MEDIA_FOLDER_FROM_FOLDER")
 
@@ -179,7 +196,9 @@ class MediaBrowserView(TemplateView):
             for index, folder in enumerate(all_accessed_folders):
                 media_folder = get_media_folder(folder)
                 if self.user in media_folder.owners.all():
-                    setattr(all_accessed_folders[index], folder._mptt_meta.level_attr, 0)
+                    setattr(
+                        all_accessed_folders[index], folder._mptt_meta.level_attr, 0
+                    )
                     ordered_folders.insert(0, all_accessed_folders[index])
                 else:
                     in_path = False
@@ -196,9 +215,13 @@ class MediaBrowserView(TemplateView):
             root_folders = get_cached_trees(ordered_folders)
         else:
             # Everything is shown under the fake root folder that is actually not a real folder
-            root_folders = get_cached_trees(Folder._tree_manager.filter(_get_folder_query_filter(shop, self.user)))
+            root_folders = get_cached_trees(
+                Folder._tree_manager.filter(_get_folder_query_filter(shop, self.user))
+            )
 
-        return JsonResponse({"rootFolder": filer_folder_to_json_dict(None, root_folders, self.user)})
+        return JsonResponse(
+            {"rootFolder": filer_folder_to_json_dict(None, root_folders, self.user)}
+        )
 
     def handle_get_path(self, data):
         """
@@ -231,7 +254,12 @@ class MediaBrowserView(TemplateView):
 
         else:
             return JsonResponse(
-                {"error": _("You do not have permissions to create a subfolder here."), "folder": {"id": parent.id}}
+                {
+                    "error": _(
+                        "You do not have permissions to create a subfolder here."
+                    ),
+                    "folder": {"id": parent.id},
+                }
             )
 
     def _create_folder(self, name, parent, shop):
@@ -241,7 +269,12 @@ class MediaBrowserView(TemplateView):
             folder.save()
 
         ensure_media_folder(shop, folder)
-        return JsonResponse({"success": True, "folder": filer_folder_to_json_dict(folder, (), self.user)})
+        return JsonResponse(
+            {
+                "success": True,
+                "folder": filer_folder_to_json_dict(folder, (), self.user),
+            }
+        )
 
     def handle_get_folder(self, data):
         shop = get_shop(self.request)
@@ -249,7 +282,9 @@ class MediaBrowserView(TemplateView):
             folder_id = int(data.get("id", 0))
             if folder_id:
                 folder = _get_folder_query(shop, self.user).get(pk=folder_id)
-                subfolders = folder.get_children().filter(_get_folder_query_filter(shop, self.user))
+                subfolders = folder.get_children().filter(
+                    _get_folder_query_filter(shop, self.user)
+                )
                 files = _get_file_query(shop, folder)
             else:
                 folder = None
@@ -261,7 +296,9 @@ class MediaBrowserView(TemplateView):
                     subfolders = Folder.objects.none()
 
         except ObjectDoesNotExist:
-            return JsonResponse({"folder": None, "error": "Error! Folder does not exist."})
+            return JsonResponse(
+                {"folder": None, "error": "Error! Folder does not exist."}
+            )
 
         if self.filter == "images":
             files = files.instance_of(Image)
@@ -271,10 +308,16 @@ class MediaBrowserView(TemplateView):
                 "folder": {
                     "id": folder.id if folder else 0,
                     "name": get_folder_name(folder),
-                    "files": [filer_file_to_json_dict(file, user=self.user) for file in files if file.is_public],
+                    "files": [
+                        filer_file_to_json_dict(file, user=self.user)
+                        for file in files
+                        if file.is_public
+                    ],
                     "folders": [
                         # Explicitly pass empty list of children to avoid recursion
-                        filer_folder_to_json_dict(subfolder, children=(), user=self.user)
+                        filer_folder_to_json_dict(
+                            subfolder, children=(), user=self.user
+                        )
                         for subfolder in subfolders.order_by("name")
                     ],
                 }
@@ -303,12 +346,17 @@ class MediaBrowserView(TemplateView):
         if (
             not _is_folder_shared(folder)
             and folder.media_folder.all().values_list("owners", flat=True)[0] is None
-            and (subfolder_of_users_root(self.user, folder) or has_permission(self.user, "media.rename-folder"))
+            and (
+                subfolder_of_users_root(self.user, folder)
+                or has_permission(self.user, "media.rename-folder")
+            )
         ):
             folder.name = data["name"]
             try:
                 folder.save(update_fields=("name",))
-                return JsonResponse({"success": True, "message": _("Folder was renamed.")})
+                return JsonResponse(
+                    {"success": True, "message": _("Folder was renamed.")}
+                )
             except IntegrityError:
                 message = _("Folder can't be renamed to %s." % (data["name"]))
                 return JsonResponse({"success": False, "message": message})
@@ -327,16 +375,25 @@ class MediaBrowserView(TemplateView):
         # the folder is in the subfolder tree of the users root folder or the user has the folder delete permissions.
         # Then they are alloed to delete the folder.
         if not _is_folder_shared(folder) and (
-            subfolder_of_users_root(self.user, folder) or has_permission(self.user, "media.delete-folder")
+            subfolder_of_users_root(self.user, folder)
+            or has_permission(self.user, "media.delete-folder")
         ):
-            new_selected_folder_id = folder.parent_id  # This will be changed by the delete function so save it here.
+            new_selected_folder_id = (
+                folder.parent_id
+            )  # This will be changed by the delete function so save it here.
             try:
                 message = delete_folder(folder)
             except models.ProtectedError:
                 message = _("This folder is protected and cannot be deleted.")
                 return JsonResponse({"success": False, "message": message})
             else:
-                return JsonResponse({"success": True, "message": message, "newFolderId": new_selected_folder_id})
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": message,
+                        "newFolderId": new_selected_folder_id,
+                    }
+                )
 
         message = _(
             "Can't delete this folder, either you don't have permssion to do it "
@@ -351,7 +408,9 @@ class MediaBrowserView(TemplateView):
         # If the file is not sheard between shops and
         # The file owner is the users trying to rename it or the users has the rename file permission.
         # Then they can rename it, else thay cant.
-        if not _is_file_shared(file) and (file.owner == self.user or has_permission(self.user, "media.rename-file")):
+        if not _is_file_shared(file) and (
+            file.owner == self.user or has_permission(self.user, "media.rename-file")
+        ):
             file.name = data["name"]
             file.save(update_fields=("name",))
             return JsonResponse({"success": True, "message": _("File was renamed.")})
@@ -366,7 +425,9 @@ class MediaBrowserView(TemplateView):
         # If the file is not sheard between shops and
         # The file owner is the users trying to delete it or the users has the delete file permission.
         # Then they can delete it, else thay cant.
-        if not _is_file_shared(file) and (file.owner == self.user or has_permission(self.user, "media.delete-file")):
+        if not _is_file_shared(file) and (
+            file.owner == self.user or has_permission(self.user, "media.delete-file")
+        ):
             try:
                 file.delete()
             except IntegrityError as ie:
@@ -395,7 +456,11 @@ class MediaBrowserView(TemplateView):
             {
                 "success": True,
                 "message": _("%(file)s moved from %(old)s to %(new)s.")
-                % {"file": file, "old": get_folder_name(old_folder), "new": get_folder_name(folder)},
+                % {
+                    "file": file,
+                    "old": get_folder_name(old_folder),
+                    "new": get_folder_name(folder),
+                },
             }
         )
 
@@ -404,11 +469,15 @@ def _process_form(request, folder):
     try:
         form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
-            filer_file = filer_image_from_upload(request, path=folder, upload_data=request.FILES["file"])
+            filer_file = filer_image_from_upload(
+                request, path=folder, upload_data=request.FILES["file"]
+            )
         elif not request.FILES["file"].content_type.startswith("image/"):
             form = UploadFileForm(request.POST, request.FILES)
             if form.is_valid():
-                filer_file = filer_file_from_upload(request, path=folder, upload_data=request.FILES["file"])
+                filer_file = filer_file_from_upload(
+                    request, path=folder, upload_data=request.FILES["file"]
+                )
 
         if not form.is_valid():
             return JsonResponse({"error": form.errors}, status=400)
@@ -429,7 +498,9 @@ def _process_form(request, folder):
 def media_upload(request, *args, **kwargs):
     shop = get_shop(request)
     try:
-        folder_id = int(request.POST.get("folder_id") or request.GET.get("folder_id") or 0)
+        folder_id = int(
+            request.POST.get("folder_id") or request.GET.get("folder_id") or 0
+        )
         path = request.POST.get("path") or request.GET.get("path") or None
         if folder_id != 0:
             folder = _get_folder_query(shop, request.user).get(pk=folder_id)
@@ -438,12 +509,19 @@ def media_upload(request, *args, **kwargs):
         else:
             folder = None  # Root folder upload. How bold!
     except Exception as exc:
-        return JsonResponse({"error": "Error! Invalid folder `%s`." % force_text(exc)}, status=400)
+        return JsonResponse(
+            {"error": "Error! Invalid folder `%s`." % force_text(exc)}, status=400
+        )
 
-    if subfolder_of_users_root(request.user, folder) or has_permission(request.user, "media.upload-to-folder"):
+    if subfolder_of_users_root(request.user, folder) or has_permission(
+        request.user, "media.upload-to-folder"
+    ):
         return _process_form(request, folder)
 
-    return JsonResponse({"error": _("You do not have permission to upload content to this folder")}, status=400)
+    return JsonResponse(
+        {"error": _("You do not have permission to upload content to this folder")},
+        status=400,
+    )
 
 
 class MediaFolderEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView):

@@ -39,7 +39,10 @@ class ShopWizardPane(WizardPane):
             WizardFormDef(
                 name="address",
                 form_class=ShopAddressWizardForm,
-                kwargs={"instance": self.object.contact_address, "user": self.request.user},
+                kwargs={
+                    "instance": self.object.contact_address,
+                    "user": self.request.user,
+                },
             ),
         ]
 

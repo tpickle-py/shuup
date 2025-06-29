@@ -19,7 +19,8 @@ def test_menu_updater():
     assert len(list(filter(lambda x: "entries" in x, main_menu))) == 0
 
     with override_provides(
-        "admin_main_menu_updater", ["shuup.testing.admin_main_menu_updater:TestAdminMainMenuUpdater"]
+        "admin_main_menu_updater",
+        ["shuup.testing.admin_main_menu_updater:TestAdminMainMenuUpdater"],
     ):
         main_menu = extend_main_menu(MAIN_MENU)
         assert len(list(filter(lambda x: "entries" in x, main_menu))) == 1

@@ -136,7 +136,9 @@ class Theme(object):
             from shuup.xtheme.models import ThemeSettings
 
             self._shop = shop
-            self._theme_settings = ThemeSettings.objects.get_or_create(theme_identifier=self.identifier, shop=shop)[0]
+            self._theme_settings = ThemeSettings.objects.get_or_create(
+                theme_identifier=self.identifier, shop=shop
+            )[0]
 
         else:
             raise ValueError(_("Either theme_settings or shop should be informed."))
@@ -270,7 +272,9 @@ class Theme(object):
 
         for plugin_spec in self.plugins:
             plugin = load(plugin_spec)
-            choices.append((plugin.identifier, getattr(plugin, "name", None) or plugin.identifier))
+            choices.append(
+                (plugin.identifier, getattr(plugin, "name", None) or plugin.identifier)
+            )
         choices.sort(key=lambda v: v[1])
         return choices
 
@@ -291,7 +295,12 @@ class Theme(object):
 
         for plugin in get_provide_objects("xtheme_plugin"):
             if plugin.identifier:
-                choices.append((plugin.identifier, getattr(plugin, "name", None) or plugin.identifier))
+                choices.append(
+                    (
+                        plugin.identifier,
+                        getattr(plugin, "name", None) or plugin.identifier,
+                    )
+                )
         choices.sort(key=lambda v: v[1])
         return choices
 
@@ -388,7 +397,9 @@ def override_current_theme_class(theme_class=_not_set, shop=None):
     else:
         from shuup.xtheme.models import ThemeSettings
 
-        theme_settings = ThemeSettings.objects.get_or_create(shop=shop, theme_identifier=theme_class.identifier)[0]
+        theme_settings = ThemeSettings.objects.get_or_create(
+            shop=shop, theme_identifier=theme_class.identifier
+        )[0]
         theme = theme_class(theme_settings)
         set_middleware_current_theme(theme)
         cache.set(get_theme_cache_key(shop), theme)
@@ -453,7 +464,9 @@ def get_theme_by_identifier(identifier, shop):
         if theme_cls.identifier == identifier:
             from shuup.xtheme.models import ThemeSettings
 
-            theme_settings = ThemeSettings.objects.get_or_create(theme_identifier=identifier, shop=shop)[0]
+            theme_settings = ThemeSettings.objects.get_or_create(
+                theme_identifier=identifier, shop=shop
+            )[0]
 
             return theme_cls(theme_settings=theme_settings, shop=shop)
 
@@ -507,10 +520,15 @@ def _get_current_theme(shop):
         theme_settings = None
 
     if theme_settings:
-        theme_cls = get_identifier_to_object_map("xtheme").get(theme_settings.theme_identifier)
+        theme_cls = get_identifier_to_object_map("xtheme").get(
+            theme_settings.theme_identifier
+        )
         if theme_cls is not None:
             theme = theme_cls(theme_settings=theme_settings, shop=shop)
         else:
-            log.warn("Warning! The active theme %r is currently not installed.", theme_settings.theme_identifier)
+            log.warn(
+                "Warning! The active theme %r is currently not installed.",
+                theme_settings.theme_identifier,
+            )
 
     return theme

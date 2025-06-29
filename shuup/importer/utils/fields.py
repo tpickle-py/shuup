@@ -49,10 +49,20 @@ def get_global_aliases():
     """
     return {
         "shop": ["store", "store_id", "_store"],
-        "default_price_value": ["price", "original_price", "originalprice", "default_price"],
+        "default_price_value": [
+            "price",
+            "original_price",
+            "originalprice",
+            "default_price",
+        ],
         "first_name": ["firstname"],
         "last_name": ["lastname"],
-        "street": ["street_address", "address_street", "addr_street", "address[street]"],
+        "street": [
+            "street_address",
+            "address_street",
+            "addr_street",
+            "address[street]",
+        ],
         "country": ["country_id"],
         "slug": ["url_key", "url"],
         "phone": ["telephone"],

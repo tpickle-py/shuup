@@ -11,7 +11,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from shuup import configuration
 from shuup.admin.form_part import FormPart, TemplatedFormDef
-from shuup.front.checkout.methods import PAYMENT_METHOD_REQUIRED_CONFIG_KEY, SHIPPING_METHOD_REQUIRED_CONFIG_KEY
+from shuup.front.checkout.methods import (
+    PAYMENT_METHOD_REQUIRED_CONFIG_KEY,
+    SHIPPING_METHOD_REQUIRED_CONFIG_KEY,
+)
 
 
 class CheckoutConfigurationForm(forms.Form):
@@ -36,8 +39,12 @@ class CheckoutShopFormPart(FormPart):
         if not self.object.pk:
             return
         initial = {
-            "shipping_method_required": configuration.get(self.object, SHIPPING_METHOD_REQUIRED_CONFIG_KEY, True),
-            "payment_method_required": configuration.get(self.object, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, True),
+            "shipping_method_required": configuration.get(
+                self.object, SHIPPING_METHOD_REQUIRED_CONFIG_KEY, True
+            ),
+            "payment_method_required": configuration.get(
+                self.object, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, True
+            ),
         }
         yield TemplatedFormDef(
             name=self.name,
@@ -51,5 +58,13 @@ class CheckoutShopFormPart(FormPart):
         if self.name not in form.forms:
             return
         data = form.forms[self.name].cleaned_data
-        configuration.set(self.object, SHIPPING_METHOD_REQUIRED_CONFIG_KEY, data.get("shipping_method_required", False))
-        configuration.set(self.object, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, data.get("payment_method_required", False))
+        configuration.set(
+            self.object,
+            SHIPPING_METHOD_REQUIRED_CONFIG_KEY,
+            data.get("shipping_method_required", False),
+        )
+        configuration.set(
+            self.object,
+            PAYMENT_METHOD_REQUIRED_CONFIG_KEY,
+            data.get("payment_method_required", False),
+        )

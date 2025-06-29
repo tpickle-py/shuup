@@ -9,7 +9,11 @@
 import decimal
 import pytest
 
-from shuup.core.models import OrderLineType, WeightBasedPriceRange, WeightBasedPricingBehaviorComponent
+from shuup.core.models import (
+    OrderLineType,
+    WeightBasedPriceRange,
+    WeightBasedPricingBehaviorComponent,
+)
 from shuup.core.models._service_behavior import _is_in_range
 from shuup.testing.factories import (
     create_product,
@@ -26,7 +30,10 @@ from .test_order_creator import seed_source
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "get_service,service_attr",
-    [(get_default_payment_method, "payment_method"), (get_default_shipping_method, "shipping_method")],
+    [
+        (get_default_payment_method, "payment_method"),
+        (get_default_shipping_method, "shipping_method"),
+    ],
 )
 def test_with_one_matching_range(admin_user, get_service, service_attr):
     ranges_data = [
@@ -36,20 +43,35 @@ def test_with_one_matching_range(admin_user, get_service, service_attr):
     ]
     service = get_service()
     _assign_component_for_service(service, ranges_data)
-    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("0"), "low")
-    _test_service_ranges_against_source(source, service, decimal.Decimal("0.0001"), "Low range")
+    source = _get_source_for_weight(
+        admin_user, service, service_attr, decimal.Decimal("0"), "low"
+    )
+    _test_service_ranges_against_source(
+        source, service, decimal.Decimal("0.0001"), "Low range"
+    )
 
-    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("32.45678"), "mid")
-    _test_service_ranges_against_source(source, service, decimal.Decimal("10.000000"), "Mid range")
+    source = _get_source_for_weight(
+        admin_user, service, service_attr, decimal.Decimal("32.45678"), "mid"
+    )
+    _test_service_ranges_against_source(
+        source, service, decimal.Decimal("10.000000"), "Mid range"
+    )
 
-    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("32.456780001"), "high")
-    _test_service_ranges_against_source(source, service, decimal.Decimal("23.567"), "High range")
+    source = _get_source_for_weight(
+        admin_user, service, service_attr, decimal.Decimal("32.456780001"), "high"
+    )
+    _test_service_ranges_against_source(
+        source, service, decimal.Decimal("23.567"), "High range"
+    )
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "get_service,service_attr",
-    [(get_default_payment_method, "payment_method"), (get_default_shipping_method, "shipping_method")],
+    [
+        (get_default_payment_method, "payment_method"),
+        (get_default_shipping_method, "shipping_method"),
+    ],
 )
 def test_with_multiple_matching_ranges(admin_user, get_service, service_attr):
     ranges_data = [
@@ -62,16 +84,28 @@ def test_with_multiple_matching_ranges(admin_user, get_service, service_attr):
     _assign_component_for_service(service, ranges_data)
 
     # Low, mid and expensive ranges match but the lowest price is selected
-    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("10.01"), "low")
-    _test_service_ranges_against_source(source, service, decimal.Decimal("0.0001"), "Low range")
+    source = _get_source_for_weight(
+        admin_user, service, service_attr, decimal.Decimal("10.01"), "low"
+    )
+    _test_service_ranges_against_source(
+        source, service, decimal.Decimal("0.0001"), "Low range"
+    )
 
     # Mid, high and expensive ranges matches but the mid range is selected
-    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("40"), "mid")
-    _test_service_ranges_against_source(source, service, decimal.Decimal("10.000000"), "Mid range")
+    source = _get_source_for_weight(
+        admin_user, service, service_attr, decimal.Decimal("40"), "mid"
+    )
+    _test_service_ranges_against_source(
+        source, service, decimal.Decimal("10.000000"), "Mid range"
+    )
 
     # High and expensive ranges match but the mid range is selected
-    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("100"), "high")
-    _test_service_ranges_against_source(source, service, decimal.Decimal("23.567"), "High range")
+    source = _get_source_for_weight(
+        admin_user, service, service_attr, decimal.Decimal("100"), "high"
+    )
+    _test_service_ranges_against_source(
+        source, service, decimal.Decimal("23.567"), "High range"
+    )
 
 
 def _assign_component_for_service(service, ranges_data):
@@ -79,12 +113,18 @@ def _assign_component_for_service(service, ranges_data):
     component = WeightBasedPricingBehaviorComponent.objects.create()
     for min, max, price, description in ranges_data:
         WeightBasedPriceRange.objects.create(
-            description=description, min_value=min, max_value=max, price_value=price, component=component
+            description=description,
+            min_value=min,
+            max_value=max,
+            price_value=price,
+            component=component,
         )
     service.behavior_components.add(component)
 
 
-def _test_service_ranges_against_source(source, service, target_price, target_description):
+def _test_service_ranges_against_source(
+    source, service, target_price, target_description
+):
     assert service.behavior_components.count() == 1
     costs = list(service.get_costs(source))
     unavailability_reasons = list(service.get_unavailability_reasons(source))
@@ -95,7 +135,9 @@ def _test_service_ranges_against_source(source, service, target_price, target_de
         assert costs[0].description == target_description
 
 
-def _get_source_for_weight(user, service, service_attr, total_gross_weight, sku, supplier=None):
+def _get_source_for_weight(
+    user, service, service_attr, total_gross_weight, sku, supplier=None
+):
     source = seed_source(user)
     supplier = supplier or get_default_supplier()
     product = create_product(
@@ -103,7 +145,7 @@ def _get_source_for_weight(user, service, service_attr, total_gross_weight, sku,
         shop=source.shop,
         supplier=supplier,
         default_price=3.33,
-        **{"net_weight": decimal.Decimal("0"), "gross_weight": total_gross_weight}
+        **{"net_weight": decimal.Decimal("0"), "gross_weight": total_gross_weight},
     )
     source.add_line(
         type=OrderLineType.PRODUCT,
@@ -145,23 +187,34 @@ def test_is_in_range():
     for value, min, max, result in test_data:
         assert (
             _is_in_range(
-                decimal.Decimal(value), decimal.Decimal(min) if min else None, decimal.Decimal(max) if max else None
+                decimal.Decimal(value),
+                decimal.Decimal(min) if min else None,
+                decimal.Decimal(max) if max else None,
             )
             == result
         )
         # Any range with None value should be False
-        assert not _is_in_range(None, decimal.Decimal(min) if min else None, decimal.Decimal(max) if max else None)
+        assert not _is_in_range(
+            None,
+            decimal.Decimal(min) if min else None,
+            decimal.Decimal(max) if max else None,
+        )
         # In case when both limits is given range shouldn't work in reverse order.
         if min and max and min != max:
             assert not _is_in_range(
-                decimal.Decimal(value), decimal.Decimal(max) if max else None, decimal.Decimal(min) if min else None
+                decimal.Decimal(value),
+                decimal.Decimal(max) if max else None,
+                decimal.Decimal(min) if min else None,
             )
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "get_service,service_attr",
-    [(get_default_payment_method, "payment_method"), (get_default_shipping_method, "shipping_method")],
+    [
+        (get_default_payment_method, "payment_method"),
+        (get_default_shipping_method, "shipping_method"),
+    ],
 )
 def test_out_of_range(admin_user, get_service, service_attr):
     ranges_data = [
@@ -171,12 +224,20 @@ def test_out_of_range(admin_user, get_service, service_attr):
     _assign_component_for_service(service, ranges_data)
 
     # Low, mid and expensive ranges match but the lowest price is selected
-    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("10.01"), "low")
-    _test_service_ranges_against_source(source, service, decimal.Decimal("0.0001"), "Low range")
+    source = _get_source_for_weight(
+        admin_user, service, service_attr, decimal.Decimal("10.01"), "low"
+    )
+    _test_service_ranges_against_source(
+        source, service, decimal.Decimal("0.0001"), "Low range"
+    )
 
     # Mid, high and expensive ranges matches but the mid range is selected
-    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("40"), "mid")
-    _test_service_ranges_against_source(source, service, decimal.Decimal("10.000000"), "Mid range")
+    source = _get_source_for_weight(
+        admin_user, service, service_attr, decimal.Decimal("40"), "mid"
+    )
+    _test_service_ranges_against_source(
+        source, service, decimal.Decimal("10.000000"), "Mid range"
+    )
 
 
 @pytest.mark.django_db
@@ -196,21 +257,36 @@ def test_matching_range_different_suppliers(admin_user):
 
     # as the shipping method is set for supplier_2, it shouldn't raise for items of supplier_1
     source = _get_source_for_weight(
-        admin_user, shipping_method, "shipping_method", decimal.Decimal("3"), "sup1", supplier=supplier_1
+        admin_user,
+        shipping_method,
+        "shipping_method",
+        decimal.Decimal("3"),
+        "sup1",
+        supplier=supplier_1,
     )
     assert not list(shipping_method.get_unavailability_reasons(source))
     assert not list(shipping_method.get_costs(source))
 
     # raise when correct supplier is set
     source = _get_source_for_weight(
-        admin_user, shipping_method, "shipping_method", decimal.Decimal("3"), "sup2", supplier=supplier_2
+        admin_user,
+        shipping_method,
+        "shipping_method",
+        decimal.Decimal("3"),
+        "sup2",
+        supplier=supplier_2,
     )
     assert list(shipping_method.get_unavailability_reasons(source))
     assert not list(shipping_method.get_costs(source))
 
     # don't raise with correct supplier and correct weight range
     source = _get_source_for_weight(
-        admin_user, shipping_method, "shipping_method", decimal.Decimal("14"), "sup3", supplier=supplier_2
+        admin_user,
+        shipping_method,
+        "shipping_method",
+        decimal.Decimal("14"),
+        "sup3",
+        supplier=supplier_2,
     )
     assert not list(shipping_method.get_unavailability_reasons(source))
     assert list(shipping_method.get_costs(source))

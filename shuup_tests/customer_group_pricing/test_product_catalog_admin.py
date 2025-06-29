@@ -10,7 +10,13 @@ from mock import patch
 
 from shuup.admin.modules.products.views.edit import ProductEditView
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
-from shuup.core.models import PersonContact, Product, ProductVisibility, ShippingMode, ShopProductVisibility
+from shuup.core.models import (
+    PersonContact,
+    Product,
+    ProductVisibility,
+    ShippingMode,
+    ShopProductVisibility,
+)
 from shuup.testing import factories
 from shuup.testing.utils import apply_request_middleware
 from shuup_tests.utils import atomic_commit_mock
@@ -52,18 +58,26 @@ def test_admin_custom_customer_price_updates(rf, admin_user):
     }
 
     # create a new product
-    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
+    request = apply_request_middleware(
+        rf.post("/", data=payload), shop=shop, user=admin_user
+    )
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = view(request, pk=None)
 
     assert response.status_code == 302
 
     anon_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
-    customer_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False, contact=contact))
+    customer_catalog = ProductCatalog(
+        context=ProductCatalogContext(purchasable_only=False, contact=contact)
+    )
 
     product = Product.objects.first()
-    _assert_products_queryset(anon_catalog, [(product.pk, Decimal(default_price), None)])
-    _assert_products_queryset(customer_catalog, [(product.pk, Decimal(group_price), None)])
+    _assert_products_queryset(
+        anon_catalog, [(product.pk, Decimal(default_price), None)]
+    )
+    _assert_products_queryset(
+        customer_catalog, [(product.pk, Decimal(group_price), None)]
+    )
 
     payload.update(
         {
@@ -80,14 +94,20 @@ def test_admin_custom_customer_price_updates(rf, admin_user):
         }
     )
 
-    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
+    request = apply_request_middleware(
+        rf.post("/", data=payload), shop=shop, user=admin_user
+    )
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = view(request, pk=product.get_shop_instance(shop).pk)
     assert response.status_code == 302
 
     # default price for both
-    _assert_products_queryset(anon_catalog, [(product.pk, Decimal(default_price), None)])
-    _assert_products_queryset(customer_catalog, [(product.pk, Decimal(default_price), None)])
+    _assert_products_queryset(
+        anon_catalog, [(product.pk, Decimal(default_price), None)]
+    )
+    _assert_products_queryset(
+        customer_catalog, [(product.pk, Decimal(default_price), None)]
+    )
 
 
 def test_admin_custom_customer_discount_updates(rf, admin_user):
@@ -126,18 +146,26 @@ def test_admin_custom_customer_discount_updates(rf, admin_user):
     }
 
     # create a new product
-    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
+    request = apply_request_middleware(
+        rf.post("/", data=payload), shop=shop, user=admin_user
+    )
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = view(request, pk=None)
 
     assert response.status_code == 302
 
     anon_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
-    customer_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False, contact=contact))
+    customer_catalog = ProductCatalog(
+        context=ProductCatalogContext(purchasable_only=False, contact=contact)
+    )
 
     product = Product.objects.first()
-    _assert_products_queryset(anon_catalog, [(product.pk, Decimal(default_price), None)])
-    _assert_products_queryset(customer_catalog, [(product.pk, Decimal(default_price), Decimal("10"))])
+    _assert_products_queryset(
+        anon_catalog, [(product.pk, Decimal(default_price), None)]
+    )
+    _assert_products_queryset(
+        customer_catalog, [(product.pk, Decimal(default_price), Decimal("10"))]
+    )
 
     payload.update(
         {
@@ -154,14 +182,20 @@ def test_admin_custom_customer_discount_updates(rf, admin_user):
         }
     )
 
-    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
+    request = apply_request_middleware(
+        rf.post("/", data=payload), shop=shop, user=admin_user
+    )
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = view(request, pk=product.get_shop_instance(shop).pk)
     assert response.status_code == 302
 
     # no discount for both
-    _assert_products_queryset(anon_catalog, [(product.pk, Decimal(default_price), None)])
-    _assert_products_queryset(customer_catalog, [(product.pk, Decimal(default_price), None)])
+    _assert_products_queryset(
+        anon_catalog, [(product.pk, Decimal(default_price), None)]
+    )
+    _assert_products_queryset(
+        customer_catalog, [(product.pk, Decimal(default_price), None)]
+    )
 
 
 def _assert_products_queryset(catalog, expected_prices):

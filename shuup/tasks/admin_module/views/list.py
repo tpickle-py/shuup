@@ -24,25 +24,45 @@ class TaskListView(PicotableListView):
             _("Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(filter_field="name", placeholder=_("Filter by name...")),
+            filter_config=TextFilter(
+                filter_field="name", placeholder=_("Filter by name...")
+            ),
         ),
         Column(
             "creator",
             _("Creator"),
             display="get_creator_name_display",
-            filter_config=TextFilter(filter_field="creator__name", placeholder=_("Filter by creator...")),
+            filter_config=TextFilter(
+                filter_field="creator__name", placeholder=_("Filter by creator...")
+            ),
         ),
-        Column("status", _("Status"), filter_config=ChoicesFilter(TaskStatus.choices), class_name="text-center"),
-        Column("priority", _("Priority"), display="get_priority_display", class_name="text-center"),
         Column(
-            "comments", _("Comments"), sort_field="comments", display="get_comments_count", class_name="text-center"
+            "status",
+            _("Status"),
+            filter_config=ChoicesFilter(TaskStatus.choices),
+            class_name="text-center",
+        ),
+        Column(
+            "priority",
+            _("Priority"),
+            display="get_priority_display",
+            class_name="text-center",
+        ),
+        Column(
+            "comments",
+            _("Comments"),
+            sort_field="comments",
+            display="get_comments_count",
+            class_name="text-center",
         ),
     ]
     toolbar_buttons_provider_key = "task_list_toolbar_provider"
     mass_actions_provider_key = "task_list_actions_provider"
 
     def get_comments_count(self, instance, **kwargs):
-        return instance.comments.for_contact(get_person_contact(self.request.user)).count()
+        return instance.comments.for_contact(
+            get_person_contact(self.request.user)
+        ).count()
 
     def get_queryset(self):
         return Task.objects.for_shop(get_shop(self.request))
@@ -64,7 +84,9 @@ class TaskTypeListView(PicotableListView):
             _("Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(filter_field="translations__name", placeholder=_("Filter by name...")),
+            filter_config=TextFilter(
+                filter_field="translations__name", placeholder=_("Filter by name...")
+            ),
         )
     ]
 

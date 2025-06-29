@@ -11,66 +11,117 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.FILER_IMAGE_MODEL),
-        ('shuup', '0052_add_shop_label_descriptions_and_service_label'),
+        ("shuup", "0052_add_shop_label_descriptions_and_service_label"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SupplierTranslation',
+            name="SupplierTranslation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('language_code', models.CharField(db_index=True, max_length=15, verbose_name='Language')),
-                ('description', models.TextField(blank=True, verbose_name='description')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "language_code",
+                    models.CharField(
+                        db_index=True, max_length=15, verbose_name="Language"
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, verbose_name="description"),
+                ),
             ],
             options={
-                'verbose_name': 'supplier Translation',
-                'db_table': 'shuup_supplier_translation',
-                'db_tablespace': '',
-                'managed': True,
-                'default_permissions': (),
+                "verbose_name": "supplier Translation",
+                "db_table": "shuup_supplier_translation",
+                "db_tablespace": "",
+                "managed": True,
+                "default_permissions": (),
             },
         ),
         migrations.AddField(
-            model_name='supplier',
-            name='contact_address',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='supplier_addresses', to='shuup.MutableAddress', verbose_name='contact address'),
+            model_name="supplier",
+            name="contact_address",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="supplier_addresses",
+                to="shuup.MutableAddress",
+                verbose_name="contact address",
+            ),
         ),
         migrations.AddField(
-            model_name='supplier',
-            name='created_on',
-            field=models.DateTimeField(auto_now_add=True, db_index=True, default=django.utils.timezone.now, verbose_name='created on'),
+            model_name="supplier",
+            name="created_on",
+            field=models.DateTimeField(
+                auto_now_add=True,
+                db_index=True,
+                default=django.utils.timezone.now,
+                verbose_name="created on",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='supplier',
-            name='is_approved',
-            field=models.BooleanField(default=True, help_text='Indicates whether this supplier is currently approved.', verbose_name='approved'),
+            model_name="supplier",
+            name="is_approved",
+            field=models.BooleanField(
+                default=True,
+                help_text="Indicates whether this supplier is currently approved.",
+                verbose_name="approved",
+            ),
         ),
         migrations.AddField(
-            model_name='supplier',
-            name='logo',
-            field=filer.fields.image.FilerImageField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='supplier_logos', to=settings.FILER_IMAGE_MODEL, verbose_name='logo'),
+            model_name="supplier",
+            name="logo",
+            field=filer.fields.image.FilerImageField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="supplier_logos",
+                to=settings.FILER_IMAGE_MODEL,
+                verbose_name="logo",
+            ),
         ),
         migrations.AddField(
-            model_name='supplier',
-            name='modified_on',
-            field=models.DateTimeField(auto_now=True, db_index=True, default=django.utils.timezone.now, verbose_name='modified on'),
+            model_name="supplier",
+            name="modified_on",
+            field=models.DateTimeField(
+                auto_now=True,
+                db_index=True,
+                default=django.utils.timezone.now,
+                verbose_name="modified on",
+            ),
         ),
         migrations.AddField(
-            model_name='supplier',
-            name='options',
-            field=jsonfield.fields.JSONField(blank=True, null=True, verbose_name='options'),
+            model_name="supplier",
+            name="options",
+            field=jsonfield.fields.JSONField(
+                blank=True, null=True, verbose_name="options"
+            ),
         ),
         migrations.AddField(
-            model_name='suppliertranslation',
-            name='master',
-            field=models.ForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='translations', to='shuup.Supplier'),
+            model_name="suppliertranslation",
+            name="master",
+            field=models.ForeignKey(
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="translations",
+                to="shuup.Supplier",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='suppliertranslation',
-            unique_together=set([('language_code', 'master')]),
+            name="suppliertranslation",
+            unique_together=set([("language_code", "master")]),
         ),
     ]

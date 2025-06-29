@@ -161,7 +161,9 @@ class CategoryFactory(DjangoModelFactory):
 
     identifier = factory.Sequence(lambda n: "category%d" % n)
     name = fuzzy.FuzzyText(length=6, prefix="Category ")
-    status = fuzzy.FuzzyChoice([CategoryStatus.INVISIBLE, CategoryStatus.VISIBLE, CategoryStatus.VISIBLE])
+    status = fuzzy.FuzzyChoice(
+        [CategoryStatus.INVISIBLE, CategoryStatus.VISIBLE, CategoryStatus.VISIBLE]
+    )
 
     @factory.post_generation
     def post(self, create, extracted, **kwargs):
@@ -197,9 +199,15 @@ def _generate_product_image(product):
     sio = BytesIO()
     image.save(sio, format="JPEG", quality=75)
     filer_file = filer_image_from_data(
-        request=None, path="ProductImages/Mock", file_name="%s.jpg" % product.sku, file_data=sio.getvalue(), sha1=True
+        request=None,
+        path="ProductImages/Mock",
+        file_name="%s.jpg" % product.sku,
+        file_data=sio.getvalue(),
+        sha1=True,
     )
-    media = ProductMedia.objects.create(product=product, kind=ProductMediaKind.IMAGE, file=filer_file)
+    media = ProductMedia.objects.create(
+        product=product, kind=ProductMediaKind.IMAGE, file=filer_file
+    )
     media.shops.set(Shop.objects.all())
     media.save()
     return media
@@ -249,13 +257,25 @@ def get_address(**overrides):
 ATTR_SPECS = [
     dict(type=AttributeType.BOOLEAN, identifier="awesome", name="Awesome?"),
     dict(type=AttributeType.INTEGER, identifier="bogomips", name="BogoMIPS"),
-    dict(type=AttributeType.DECIMAL, identifier="surface_pressure", name="Surface pressure (kPa)"),
-    dict(type=AttributeType.TIMEDELTA, identifier="time_to_finish", name="Time to finish"),
+    dict(
+        type=AttributeType.DECIMAL,
+        identifier="surface_pressure",
+        name="Surface pressure (kPa)",
+    ),
+    dict(
+        type=AttributeType.TIMEDELTA, identifier="time_to_finish", name="Time to finish"
+    ),
     dict(type=AttributeType.UNTRANSLATED_STRING, identifier="author", name="Author"),
     dict(type=AttributeType.TRANSLATED_STRING, identifier="genre", name="Genre"),
     dict(type=AttributeType.DATE, identifier="release_date", name="Release Date"),
-    dict(type=AttributeType.DATETIME, identifier="important_datetime", name="Time and Date of Eschaton"),
-    dict(type=AttributeType.CHOICES, identifier="list_choices", name="Options to select"),
+    dict(
+        type=AttributeType.DATETIME,
+        identifier="important_datetime",
+        name="Time and Date of Eschaton",
+    ),
+    dict(
+        type=AttributeType.CHOICES, identifier="list_choices", name="Options to select"
+    ),
 ]
 
 
@@ -269,15 +289,23 @@ def get_default_attribute_set():
             attr = Attribute.objects.create(**spec)
             assert attr.pk, "attribute was saved"
             assert str(attr) == spec["name"], "attribute has correct name"
-    return list(Attribute.objects.filter(identifier__in=set(spec["identifier"] for spec in ATTR_SPECS)))
+    return list(
+        Attribute.objects.filter(
+            identifier__in=set(spec["identifier"] for spec in ATTR_SPECS)
+        )
+    )
 
 
 def get_default_product_type():
     product_type = default_by_identifier(ProductType)
     if not product_type:
-        product_type = ProductType.objects.create(identifier=DEFAULT_IDENTIFIER, name="Default Product Type")
+        product_type = ProductType.objects.create(
+            identifier=DEFAULT_IDENTIFIER, name="Default Product Type"
+        )
         assert product_type.pk, "product type was saved"
-        assert product_type.identifier == "default", "product type has requested identifier"
+        assert product_type.identifier == "default", (
+            "product type has requested identifier"
+        )
         for attr in get_default_attribute_set():
             product_type.attributes.add(attr)
     return product_type
@@ -286,9 +314,13 @@ def get_default_product_type():
 def get_default_manufacturer():
     manufacturer = default_by_identifier(Manufacturer)
     if not manufacturer:
-        manufacturer = Manufacturer.objects.create(identifier=DEFAULT_IDENTIFIER, name="Default Manufacturer")
+        manufacturer = Manufacturer.objects.create(
+            identifier=DEFAULT_IDENTIFIER, name="Default Manufacturer"
+        )
         assert manufacturer.pk, "manufacturer was saved"
-        assert manufacturer.identifier == "default", "manufacturer has requested identifier"
+        assert manufacturer.identifier == "default", (
+            "manufacturer has requested identifier"
+        )
     return manufacturer
 
 
@@ -383,7 +415,14 @@ def get_default_payment_method():
 
 
 def get_payment_method(shop=None, price=None, waive_at=None, name=None):
-    return _get_service(PaymentMethod, CustomPaymentProcessor, name=name, shop=shop, price=price, waive_at=waive_at)
+    return _get_service(
+        PaymentMethod,
+        CustomPaymentProcessor,
+        name=name,
+        shop=shop,
+        price=price,
+        waive_at=waive_at,
+    )
 
 
 def get_default_shipping_method():
@@ -391,10 +430,19 @@ def get_default_shipping_method():
 
 
 def get_shipping_method(shop=None, price=None, waive_at=None, name=None):
-    return _get_service(ShippingMethod, CustomCarrier, name=name, shop=shop, price=price, waive_at=waive_at)
+    return _get_service(
+        ShippingMethod,
+        CustomCarrier,
+        name=name,
+        shop=shop,
+        price=price,
+        waive_at=waive_at,
+    )
 
 
-def _get_service(service_model, provider_model, name, shop=None, price=None, waive_at=None):
+def _get_service(
+    service_model, provider_model, name, shop=None, price=None, waive_at=None
+):
     default_shop = get_default_shop()
     if shop is None:
         shop = default_shop
@@ -414,10 +462,14 @@ def _get_service(service_model, provider_model, name, shop=None, price=None, wai
             tax_class=get_default_tax_class(),
         )
         if price and waive_at is None:
-            service.behavior_components.add(FixedCostBehaviorComponent.objects.create(price_value=price))
+            service.behavior_components.add(
+                FixedCostBehaviorComponent.objects.create(price_value=price)
+            )
         elif price:
             service.behavior_components.add(
-                WaivingCostBehaviorComponent.objects.create(price_value=price, waive_limit_value=waive_at)
+                WaivingCostBehaviorComponent.objects.create(
+                    price_value=price, waive_limit_value=waive_at
+                )
             )
     assert service.pk and service.identifier == identifier
     assert service.shop == shop
@@ -429,7 +481,9 @@ def get_default_customer_group(shop=None):
     if not shop:
         shop = get_default_shop()
     if not group:
-        group = ContactGroup.objects.create(name=DEFAULT_NAME, identifier=DEFAULT_IDENTIFIER, shop=shop)
+        group = ContactGroup.objects.create(
+            name=DEFAULT_NAME, identifier=DEFAULT_IDENTIFIER, shop=shop
+        )
         assert str(group) == DEFAULT_NAME
     return group
 
@@ -437,8 +491,12 @@ def get_default_customer_group(shop=None):
 def get_default_supplier(shop=None):
     supplier = default_by_identifier(Supplier)
     if not supplier:
-        supplier = Supplier.objects.create(name=DEFAULT_NAME, identifier=DEFAULT_IDENTIFIER, type=SupplierType.INTERNAL)
-        supplier_module = SupplierModule.objects.get_or_create(module_identifier="simple_supplier")[0]
+        supplier = Supplier.objects.create(
+            name=DEFAULT_NAME, identifier=DEFAULT_IDENTIFIER, type=SupplierType.INTERNAL
+        )
+        supplier_module = SupplierModule.objects.get_or_create(
+            module_identifier="simple_supplier"
+        )[0]
         supplier.supplier_modules.add(supplier_module)
         assert str(supplier) == DEFAULT_NAME
     if not shop:
@@ -450,7 +508,9 @@ def get_default_supplier(shop=None):
 def get_supplier(module_identifier, shop=None, **kwargs):
     name = kwargs.pop("name", DEFAULT_NAME)
     supplier = Supplier.objects.create(name=name, type=SupplierType.INTERNAL, **kwargs)
-    supplier_module, created = SupplierModule.objects.get_or_create(module_identifier=module_identifier)
+    supplier_module, created = SupplierModule.objects.get_or_create(
+        module_identifier=module_identifier
+    )
     supplier.supplier_modules.add(supplier_module)
     if shop:
         supplier.shops.add(shop)
@@ -472,7 +532,13 @@ def get_default_shop():
     return shop
 
 
-def get_shop(prices_include_tax=True, currency=DEFAULT_CURRENCY, identifier=None, enabled=False, **kwargs):
+def get_shop(
+    prices_include_tax=True,
+    currency=DEFAULT_CURRENCY,
+    identifier=None,
+    enabled=False,
+    **kwargs,
+):
     key = "shop:%s/taxful=%s" % (currency, prices_include_tax)
     values = {"prices_include_tax": prices_include_tax, "currency": currency}
     if enabled:
@@ -494,13 +560,19 @@ def get_shop(prices_include_tax=True, currency=DEFAULT_CURRENCY, identifier=None
 def complete_product(product):
     image = get_random_filer_image()
     media = ProductMedia.objects.create(
-        product=product, kind=ProductMediaKind.IMAGE, file=image, enabled=True, public=True
+        product=product,
+        kind=ProductMediaKind.IMAGE,
+        file=image,
+        enabled=True,
+        public=True,
     )
     product.primary_image = media
     product.save()
     assert product.primary_image_id
     sp = ShopProduct.objects.create(
-        product=product, shop=get_default_shop(), visibility=ShopProductVisibility.ALWAYS_VISIBLE
+        product=product,
+        shop=get_default_shop(),
+        visibility=ShopProductVisibility.ALWAYS_VISIBLE,
     )
     sp.suppliers.add(get_default_supplier())
 
@@ -526,14 +598,19 @@ def get_default_sales_unit():
     unit = default_by_identifier(SalesUnit)
     if not unit:
         unit = SalesUnit.objects.create(
-            identifier=DEFAULT_IDENTIFIER, decimals=0, name=DEFAULT_NAME, symbol=DEFAULT_NAME[:3].lower()
+            identifier=DEFAULT_IDENTIFIER,
+            decimals=0,
+            name=DEFAULT_NAME,
+            symbol=DEFAULT_NAME[:3].lower(),
         )
         assert str(unit) == DEFAULT_NAME
     return unit
 
 
 def get_fractional_sales_unit():
-    return SalesUnit.objects.create(identifier="fractional", decimals=2, name="Fractional unit", short_name="fra")
+    return SalesUnit.objects.create(
+        identifier="fractional", decimals=2, name="Fractional unit", short_name="fra"
+    )
 
 
 def get_default_category():
@@ -599,7 +676,10 @@ def create_product(sku, shop=None, supplier=None, default_price=None, **attrs):
     product.save()
     if shop:
         sp = ShopProduct.objects.create(
-            product=product, shop=shop, default_price=default_price, visibility=ShopProductVisibility.ALWAYS_VISIBLE
+            product=product,
+            shop=shop,
+            default_price=default_price,
+            visibility=ShopProductVisibility.ALWAYS_VISIBLE,
         )
         if supplier:
             sp.suppliers.add(supplier)
@@ -608,10 +688,15 @@ def create_product(sku, shop=None, supplier=None, default_price=None, **attrs):
     return product
 
 
-def create_package_product(sku, shop=None, supplier=None, default_price=None, children=4, **attrs):
+def create_package_product(
+    sku, shop=None, supplier=None, default_price=None, children=4, **attrs
+):
     package_product = create_product(sku, shop, supplier, default_price, **attrs)
     assert not package_product.get_package_child_to_quantity_map()
-    children = [create_product("PackageChild-%d" % x, shop=shop, supplier=supplier) for x in range(children)]
+    children = [
+        create_product("PackageChild-%d" % x, shop=shop, supplier=supplier)
+        for x in range(children)
+    ]
     package_def = {child: 1 + i for (i, child) in enumerate(children)}
     package_product.make_package(package_def)
     assert package_product.is_package_parent()
@@ -632,12 +717,24 @@ def create_empty_order(prices_include_tax=False, shop=None):
     return order
 
 
-def add_product_to_order(order, supplier, product, quantity, taxless_base_unit_price, tax_rate=0, pricing_context=None):
+def add_product_to_order(
+    order,
+    supplier,
+    product,
+    quantity,
+    taxless_base_unit_price,
+    tax_rate=0,
+    pricing_context=None,
+):
     if not pricing_context:
         pricing_context = _get_pricing_context(order.shop, order.customer)
     product_order_line = OrderLine(order=order)
     update_order_line_from_product(
-        pricing_context, order_line=product_order_line, product=product, quantity=quantity, supplier=supplier
+        pricing_context,
+        order_line=product_order_line,
+        product=product,
+        quantity=quantity,
+        supplier=supplier,
     )
     base_unit_price = order.shop.create_price(taxless_base_unit_price)
     if order.prices_include_tax:
@@ -657,16 +754,34 @@ def add_product_to_order(order, supplier, product, quantity, taxless_base_unit_p
     product_order_line.taxes.add(order_line_tax)
 
 
-def create_order_with_product(product, supplier, quantity, taxless_base_unit_price, tax_rate=0, n_lines=1, shop=None):
+def create_order_with_product(
+    product,
+    supplier,
+    quantity,
+    taxless_base_unit_price,
+    tax_rate=0,
+    n_lines=1,
+    shop=None,
+):
     order = create_empty_order(shop=shop)
     order.full_clean()
     order.save()
 
     pricing_context = _get_pricing_context(order.shop, order.customer)
     for x in range(n_lines):
-        add_product_to_order(order, supplier, product, quantity, taxless_base_unit_price, tax_rate, pricing_context)
+        add_product_to_order(
+            order,
+            supplier,
+            product,
+            quantity,
+            taxless_base_unit_price,
+            tax_rate,
+            pricing_context,
+        )
 
-    assert order.get_product_ids_and_quantities()[product.pk] == (quantity * n_lines), "Things got added"
+    assert order.get_product_ids_and_quantities()[product.pk] == (quantity * n_lines), (
+        "Things got added"
+    )
     order.cache_prices()
     order.save()
     return order
@@ -684,8 +799,13 @@ def get_random_filer_image():
 
 
 def get_faker(providers, locale="en"):
-    providers = [("faker.providers.%s" % provider if ("." not in provider) else provider) for provider in providers]
-    locale = locale or (random.choice(["en_US"] + list(find_available_locales(providers))))
+    providers = [
+        ("faker.providers.%s" % provider if ("." not in provider) else provider)
+        for provider in providers
+    ]
+    locale = locale or (
+        random.choice(["en_US"] + list(find_available_locales(providers)))
+    )
     fake = faker.Factory.create(locale=locale)
     fake.locale = locale
     lang_code = fake.locale.split("_")[0]
@@ -741,7 +861,10 @@ def create_random_person(locale="en", minimum_name_comp_len=0, shop=None):
         first_name = fake.first_name()
         last_name = fake.last_name()
         name = "%s %s" % (first_name, last_name)
-        if len(first_name) > minimum_name_comp_len and len(last_name) > minimum_name_comp_len:
+        if (
+            len(first_name) > minimum_name_comp_len
+            and len(last_name) > minimum_name_comp_len
+        ):
             break
     email = get_random_email(fake)
     phone = fake.phone_number()
@@ -780,10 +903,17 @@ def create_random_person(locale="en", minimum_name_comp_len=0, shop=None):
 def create_random_contact_group(shop=None):
     fake = get_faker(["job"])
     name = fake.job()
-    identifier = "%s-%s" % (ContactGroup.objects.count() + 1, name.lower().replace(" ", "-"))
+    identifier = "%s-%s" % (
+        ContactGroup.objects.count() + 1,
+        name.lower().replace(" ", "-"),
+    )
     if not shop:
         shop = get_default_shop()
-    return ContactGroup.objects.create(identifier=identifier, shop=shop, name=name,).set_price_display_options(
+    return ContactGroup.objects.create(
+        identifier=identifier,
+        shop=shop,
+        name=name,
+    ).set_price_display_options(
         show_pricing=random.choice([True, False]),
         show_prices_including_taxes=random.choice([True, False]),
         hide_prices=random.choice([True, False]),
@@ -841,12 +971,16 @@ def create_random_order(  # noqa
     else:
         source.billing_address = create_random_address()
         source.shipping_address = create_random_address()
-    source.order_date = order_date or (now() - datetime.timedelta(days=random.uniform(0, 400)))
+    source.order_date = order_date or (
+        now() - datetime.timedelta(days=random.uniform(0, 400))
+    )
 
     source.status = get_initial_order_status()
 
     if not products:
-        products = list(Product.objects.listed(source.shop, customer).order_by("?")[:40])
+        products = list(
+            Product.objects.listed(source.shop, customer).order_by("?")[:40]
+        )
 
     if random_products:
         quantity = random.randint(3, 10)
@@ -862,7 +996,9 @@ def create_random_order(  # noqa
         quantity = random.randint(1, 5)
         price_info = product.get_price_info(pricing_context, quantity=quantity)
         shop_product = product.get_shop_instance(source.shop)
-        supplier = shop_product.get_supplier(source.customer, quantity, source.shipping_address)
+        supplier = shop_product.get_supplier(
+            source.customer, quantity, source.shipping_address
+        )
         line = source.add_line(
             type=OrderLineType.PRODUCT,
             product=product,
@@ -879,7 +1015,14 @@ def create_random_order(  # noqa
         oc = OrderCreator()
         order = oc.create_order(source)
         if random.random() < completion_probability:
-            suppliers = set([line.supplier for line in order.lines.filter(supplier__isnull=False, quantity__gt=0)])
+            suppliers = set(
+                [
+                    line.supplier
+                    for line in order.lines.filter(
+                        supplier__isnull=False, quantity__gt=0
+                    )
+                ]
+            )
             for supplier in suppliers:
                 order.create_shipment_of_all_products(supplier=supplier)
 
@@ -888,7 +1031,9 @@ def create_random_order(  # noqa
 
             # also set complete
             order.save()
-            order.change_status(next_status=get_completed_order_status(), user=customer.user)
+            order.change_status(
+                next_status=get_completed_order_status(), user=customer.user
+            )
         return order
 
 
@@ -912,7 +1057,11 @@ def create_random_product_attribute():
 def create_random_user(locale="en", **kwargs):
     user_model = get_user_model()
     faker = get_faker(["person"], locale)
-    params = {user_model.USERNAME_FIELD: "{}-{}".format(uuid.uuid4().hex, slugify(faker.first_name()))}
+    params = {
+        user_model.USERNAME_FIELD: "{}-{}".format(
+            uuid.uuid4().hex, slugify(faker.first_name())
+        )
+    }
     params.update(kwargs or {})
     return user_model.objects.create(**params)
 
@@ -935,7 +1084,10 @@ def get_all_seeing_key(user_or_contact):
 def get_basket(shop=None):
     shop = shop or get_default_shop()
     return Basket.objects.create(
-        key=uuid.uuid1().hex, shop=shop, prices_include_tax=shop.prices_include_tax, currency=shop.currency
+        key=uuid.uuid1().hex,
+        shop=shop,
+        prices_include_tax=shop.prices_include_tax,
+        currency=shop.currency,
     )
 
 

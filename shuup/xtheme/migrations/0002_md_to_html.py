@@ -8,10 +8,13 @@ from markdown import Markdown
 
 
 def safe_convert(str):
-    md = Markdown(extensions=[
-        'markdown.extensions.extra',
-        'markdown.extensions.nl2br',
-    ], output_format="html5")
+    md = Markdown(
+        extensions=[
+            "markdown.extensions.extra",
+            "markdown.extensions.nl2br",
+        ],
+        output_format="html5",
+    )
     try:
         return md.convert(str)
     except:
@@ -45,11 +48,8 @@ def md_to_html(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_xtheme', '0001_initial'),
+        ("shuup_xtheme", "0001_initial"),
     ]
 
-    operations = [
-        migrations.RunPython(md_to_html, migrations.RunPython.noop)
-    ]
+    operations = [migrations.RunPython(md_to_html, migrations.RunPython.noop)]

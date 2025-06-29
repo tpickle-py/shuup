@@ -15,13 +15,19 @@ def forwards_func(apps, schema_editor):
     OrderStatusTranslation = apps.get_model("shuup", "OrderStatusTranslation")
 
     for object in OrderStatus.objects.all():
-        for language_code in OrderStatusTranslation.objects.all().values_list("language_code", flat=True).distinct():
-            translation = _get_translation(object, OrderStatusTranslation, language_code=language_code)
+        for language_code in (
+            OrderStatusTranslation.objects.all()
+            .values_list("language_code", flat=True)
+            .distinct()
+        ):
+            translation = _get_translation(
+                object, OrderStatusTranslation, language_code=language_code
+            )
             if translation:
                 trans, _ = OrderStatusTranslation.objects.update_or_create(
                     master_id=object.pk,
                     language_code=language_code,
-                    defaults={"public_name": translation.name}
+                    defaults={"public_name": translation.name},
                 )
 
 
@@ -39,50 +45,80 @@ def backwards_func(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0013_product_shipping_mode_default'),
+        ("shuup", "0013_product_shipping_mode_default"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='orderstatus',
-            name='is_active',
-            field=models.BooleanField(db_index=True, default=True, help_text='Define if the status is usable.', verbose_name='is active'),
+            model_name="orderstatus",
+            name="is_active",
+            field=models.BooleanField(
+                db_index=True,
+                default=True,
+                help_text="Define if the status is usable.",
+                verbose_name="is active",
+            ),
         ),
         migrations.AddField(
-            model_name='orderstatustranslation',
-            name='public_name',
-            field=models.CharField(default='status', help_text='The name shown for customer in shop front.', max_length=64, verbose_name='public name'),
+            model_name="orderstatustranslation",
+            name="public_name",
+            field=models.CharField(
+                default="status",
+                help_text="The name shown for customer in shop front.",
+                max_length=64,
+                verbose_name="public name",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='orderstatus',
-            name='default',
-            field=models.BooleanField(db_index=True, default=False, help_text='Defines if the status should be considered as default.', verbose_name='default'),
+            model_name="orderstatus",
+            name="default",
+            field=models.BooleanField(
+                db_index=True,
+                default=False,
+                help_text="Defines if the status should be considered as default.",
+                verbose_name="default",
+            ),
         ),
         migrations.AlterField(
-            model_name='orderstatus',
-            name='ordering',
-            field=models.IntegerField(db_index=True, default=0, help_text='The processing order of statuses. Default is always processed first.', verbose_name='ordering'),
+            model_name="orderstatus",
+            name="ordering",
+            field=models.IntegerField(
+                db_index=True,
+                default=0,
+                help_text="The processing order of statuses. Default is always processed first.",
+                verbose_name="ordering",
+            ),
         ),
         migrations.AlterField(
-            model_name='orderstatus',
-            name='role',
-            field=enumfields.fields.EnumIntegerField(db_index=True, default=0, enum=shuup.core.models.OrderStatusRole, help_text='Role of status. One role can have multiple order statuses.', verbose_name='role'),
+            model_name="orderstatus",
+            name="role",
+            field=enumfields.fields.EnumIntegerField(
+                db_index=True,
+                default=0,
+                enum=shuup.core.models.OrderStatusRole,
+                help_text="Role of status. One role can have multiple order statuses.",
+                verbose_name="role",
+            ),
         ),
         migrations.AlterField(
-            model_name='orderstatustranslation',
-            name='name',
-            field=models.CharField(help_text='Name of the order status', max_length=64, verbose_name='name'),
+            model_name="orderstatustranslation",
+            name="name",
+            field=models.CharField(
+                help_text="Name of the order status", max_length=64, verbose_name="name"
+            ),
         ),
         migrations.AlterModelOptions(
-            name='orderstatus',
-            options={'verbose_name': 'order status', 'verbose_name_plural': 'order statuses'},
+            name="orderstatus",
+            options={
+                "verbose_name": "order status",
+                "verbose_name_plural": "order statuses",
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='orderstatus',
-            unique_together=set([('identifier', 'role')]),
+            name="orderstatus",
+            unique_together=set([("identifier", "role")]),
         ),
-        migrations.RunPython(forwards_func, backwards_func)
+        migrations.RunPython(forwards_func, backwards_func),
     ]

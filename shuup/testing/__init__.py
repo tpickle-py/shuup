@@ -54,12 +54,17 @@ class ShuupTestingAppConfig(AppConfig):
         "admin_contact_section": [
             "shuup.testing.modules.mocker.sections:MockContactSection",
         ],
-        "importers": ["shuup.testing.importers.DummyImporter", "shuup.testing.importers.DummyFileImporter"],
+        "importers": [
+            "shuup.testing.importers.DummyImporter",
+            "shuup.testing.importers.DummyFileImporter",
+        ],
         "xtheme": [
             __name__ + ".themes:ShuupTestingTheme",
             __name__ + ".themes:ShuupTestingThemeWithCustomBase",
         ],
-        "pricing_module": ["shuup.testing.supplier_pricing.pricing:SupplierPricingModule"],
+        "pricing_module": [
+            "shuup.testing.supplier_pricing.pricing:SupplierPricingModule"
+        ],
     }
 
     def ready(self):

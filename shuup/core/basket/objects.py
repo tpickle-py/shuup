@@ -88,22 +88,34 @@ class BasketLine(SourceLine):
             return
 
         if self.product and type != OrderLineType.PRODUCT:
-            raise ValueError("Error! Can't set a line type for a basket line when it has a product set.")
+            raise ValueError(
+                "Error! Can't set a line type for a basket line when it has a product set."
+            )
         if type not in OrderLineType.as_dict():
-            raise ValueError("Error! Invalid basket line type. Only values of `OrderLineType` are allowed.")
+            raise ValueError(
+                "Error! Invalid basket line type. Only values of `OrderLineType` are allowed."
+            )
         self.__dict__["type"] = type
 
     def set_quantity(self, quantity):
-        cls = Decimal if self.product and self.product.sales_unit.allow_fractions else int
+        cls = (
+            Decimal if self.product and self.product.sales_unit.allow_fractions else int
+        )
         self.quantity = cls(max(0, quantity))
 
     @property
     def can_delete(self):
-        return self.type == OrderLineType.PRODUCT and self.line_source != LineSource.DISCOUNT_MODULE
+        return (
+            self.type == OrderLineType.PRODUCT
+            and self.line_source != LineSource.DISCOUNT_MODULE
+        )
 
     @property
     def can_change_quantity(self):
-        return self.type == OrderLineType.PRODUCT and self.line_source != LineSource.DISCOUNT_MODULE
+        return (
+            self.type == OrderLineType.PRODUCT
+            and self.line_source != LineSource.DISCOUNT_MODULE
+        )
 
 
 class _ExtraDataContainerProperty(object):
@@ -145,7 +157,11 @@ class BaseBasket(OrderSource):
 
     def get_cache_key(self):
         self._load()
-        return hashlib.md5(json.dumps(self._data, cls=TaggedJSONEncoder, sort_keys=True).encode("utf-8")).hexdigest()
+        return hashlib.md5(
+            json.dumps(self._data, cls=TaggedJSONEncoder, sort_keys=True).encode(
+                "utf-8"
+            )
+        ).hexdigest()
 
     def uncache(self):
         super(BaseBasket, self).uncache()
@@ -373,7 +389,9 @@ class BaseBasket(OrderSource):
 
         shipping_method = None
         if self.shipping_method_id:
-            shipping_method = ShippingMethod.objects.filter(pk=self.shipping_method_id).first()
+            shipping_method = ShippingMethod.objects.filter(
+                pk=self.shipping_method_id
+            ).first()
             self._shipping_method = shipping_method
         return shipping_method
 
@@ -384,7 +402,11 @@ class BaseBasket(OrderSource):
 
     @property
     def payment_method(self):
-        if self._payment_method and self.payment_method_id and self._payment_method.pk == int(self.payment_method_id):
+        if (
+            self._payment_method
+            and self.payment_method_id
+            and self._payment_method.pk == int(self.payment_method_id)
+        ):
             return self._payment_method
 
         if not self.payment_method_id:
@@ -392,7 +414,9 @@ class BaseBasket(OrderSource):
 
         payment_method = None
         if self.payment_method_id:
-            payment_method = PaymentMethod.objects.filter(pk=self.payment_method_id).first()
+            payment_method = PaymentMethod.objects.filter(
+                pk=self.payment_method_id
+            ).first()
             self._payment_method = payment_method
         return payment_method
 
@@ -512,27 +536,44 @@ class BaseBasket(OrderSource):
                 except ShopProduct.DoesNotExist:
                     continue
 
-                if shop_product.is_orderable(line.supplier, self.customer, quantity, allow_cache=False):
+                if shop_product.is_orderable(
+                    line.supplier, self.customer, quantity, allow_cache=False
+                ):
                     if product.is_package_parent():
                         quantity_map = product.get_package_child_to_quantity_map()
                         orderable = True
-                        for child_product, child_quantity in six.iteritems(quantity_map):
+                        for child_product, child_quantity in six.iteritems(
+                            quantity_map
+                        ):
                             sp = child_product.get_shop_instance(shop=self.shop)
                             in_basket_child_qty = orderable_counter[child_product.id]
-                            total_child_qty = (quantity * child_quantity) + in_basket_child_qty
-                            if not sp.is_orderable(line.supplier, self.customer, total_child_qty, allow_cache=False):
+                            total_child_qty = (
+                                quantity * child_quantity
+                            ) + in_basket_child_qty
+                            if not sp.is_orderable(
+                                line.supplier,
+                                self.customer,
+                                total_child_qty,
+                                allow_cache=False,
+                            ):
                                 orderable = False
                                 break
                         if orderable:
                             orderable_lines.append(line)
                             orderable_counter[product.id] = quantity
-                            for child_product, child_quantity in six.iteritems(quantity_map):
-                                orderable_counter[child_product.id] += child_quantity * line.quantity
+                            for child_product, child_quantity in six.iteritems(
+                                quantity_map
+                            ):
+                                orderable_counter[child_product.id] += (
+                                    child_quantity * line.quantity
+                                )
                     else:
                         orderable_lines.append(line)
                         orderable_counter[product.id] += line.quantity
         self._orderable_lines_cache = orderable_lines
-        self._unorderable_lines_cache = [line for line in lines if line not in orderable_lines]
+        self._unorderable_lines_cache = [
+            line for line in lines if line not in orderable_lines
+        ]
         self._lines_by_line_id_cache = lines_by_line_id
         self._lines_cached = True
 
@@ -552,7 +593,9 @@ class BaseBasket(OrderSource):
 
     def _initialize_product_line_data(self, product, supplier, shop, quantity=0):
         if product.variation_children.filter(deleted=False).exists():
-            raise ValueError("Error! Add a variation parent to the basket is not allowed.")
+            raise ValueError(
+                "Error! Add a variation parent to the basket is not allowed."
+            )
 
         return {
             "line_id": uuid4().hex,
@@ -567,7 +610,9 @@ class BaseBasket(OrderSource):
         if len(new_lines) != len(self._data_lines):
             self._data_lines = new_lines
 
-    def _compare_line_for_addition(self, current_line_data, product, supplier, shop, extra):
+    def _compare_line_for_addition(
+        self, current_line_data, product, supplier, shop, extra
+    ):
         """
         Compare raw line data for coalescing.
 
@@ -588,8 +633,12 @@ class BaseBasket(OrderSource):
         if current_line_data.get("shop_id") != shop.id:
             return False
 
-        if isinstance(extra, dict):  # If we have extra data, compare it to that in this line
-            if not compare_partial_dicts(extra, current_line_data):  # Extra data not similar? Okay then. :(
+        if isinstance(
+            extra, dict
+        ):  # If we have extra data, compare it to that in this line
+            if not compare_partial_dicts(
+                extra, current_line_data
+            ):  # Extra data not similar? Okay then. :(
                 return False
         return True
 
@@ -603,7 +652,9 @@ class BaseBasket(OrderSource):
         :return: dict of line or None.
         """
         for line_data in self._data_lines:
-            if self._compare_line_for_addition(line_data, product, supplier, shop, extra):
+            if self._compare_line_for_addition(
+                line_data, product, supplier, shop, extra
+            ):
                 return line_data
 
     def _add_or_replace_line(self, data_line):
@@ -618,9 +669,20 @@ class BaseBasket(OrderSource):
             index = len(line_ids)
         self.delete_line(data_line["line_id"])
         self._data_lines.insert(index, data_line)
-        self._data_lines = list(self._data_lines)  # This will set the dirty bit and call uncache.
+        self._data_lines = list(
+            self._data_lines
+        )  # This will set the dirty bit and call uncache.
 
-    def add_product(self, supplier, shop, product, quantity, force_new_line=False, extra=None, parent_line=None):
+    def add_product(
+        self,
+        supplier,
+        shop,
+        product,
+        quantity,
+        force_new_line=False,
+        extra=None,
+        parent_line=None,
+    ):
         if not extra:
             extra = {}
 
@@ -629,10 +691,14 @@ class BaseBasket(OrderSource):
 
         data = None
         if not force_new_line:
-            data = self._find_product_line_data(product=product, supplier=supplier, shop=shop, extra=extra)
+            data = self._find_product_line_data(
+                product=product, supplier=supplier, shop=shop, extra=extra
+            )
 
         if not data:
-            data = self._initialize_product_line_data(product=product, supplier=supplier, shop=shop)
+            data = self._initialize_product_line_data(
+                product=product, supplier=supplier, shop=shop
+            )
 
         if parent_line:
             data["parent_line_id"] = parent_line.line_id
@@ -647,7 +713,9 @@ class BaseBasket(OrderSource):
         """
         for line_data in self._data_lines:
             line = BasketLine.from_dict(self, line_data)
-            pricing_context = PricingContext(shop=self.shop, customer=self.customer, supplier=line.supplier)
+            pricing_context = PricingContext(
+                shop=self.shop, customer=self.customer, supplier=line.supplier
+            )
             line.cache_info(pricing_context)
             self._add_or_replace_line(line)
 
@@ -657,13 +725,23 @@ class BaseBasket(OrderSource):
         if new_quantity is not None:
             line.set_quantity(new_quantity)
         line.update(**kwargs)
-        line.cache_info(PricingContext(shop=self.shop, customer=self.customer, supplier=line.supplier))
+        line.cache_info(
+            PricingContext(
+                shop=self.shop, customer=self.customer, supplier=line.supplier
+            )
+        )
         self._add_or_replace_line(line)
         return line
 
-    def add_product_with_child_product(self, supplier, shop, product, child_product, quantity):
+    def add_product_with_child_product(
+        self, supplier, shop, product, child_product, quantity
+    ):
         parent_line = self.add_product(
-            supplier=supplier, shop=shop, product=product, quantity=quantity, force_new_line=True
+            supplier=supplier,
+            shop=shop,
+            product=product,
+            quantity=quantity,
+            force_new_line=True,
         )
         child_line = self.add_product(
             supplier=supplier,
@@ -714,7 +792,9 @@ class BaseBasket(OrderSource):
         :rtype: Iterable[dict]
         """
         for line in self._data_lines:
-            if six.text_type(line.get("parent_line_id")) == six.text_type(parent_line_id):
+            if six.text_type(line.get("parent_line_id")) == six.text_type(
+                parent_line_id
+            ):
                 yield line
 
     def _get_orderable(self):
@@ -726,7 +806,9 @@ class BaseBasket(OrderSource):
         shipping_methods = self.get_available_shipping_methods()
         payment_methods = self.get_available_payment_methods()
 
-        advice = _("Try to remove some products from the basket " "and order them separately.")
+        advice = _(
+            "Try to remove some products from the basket and order them separately."
+        )
 
         if self.has_shippable_lines() and not shipping_methods:
             msg = _("Products in basket can't be shipped together. %s")
@@ -762,7 +844,9 @@ class BaseBasket(OrderSource):
         """
         return [
             m
-            for m in ShippingMethod.objects.available(shop=self.shop, products=self.product_ids)
+            for m in ShippingMethod.objects.available(
+                shop=self.shop, products=self.product_ids
+            )
             if m.is_available_for(self)
         ]
 
@@ -774,7 +858,9 @@ class BaseBasket(OrderSource):
         """
         return [
             m
-            for m in PaymentMethod.objects.available(shop=self.shop, products=self.product_ids)
+            for m in PaymentMethod.objects.available(
+                shop=self.shop, products=self.product_ids
+            )
             if m.is_available_for(self)
         ]
 

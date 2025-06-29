@@ -23,8 +23,14 @@ class GenericScriptTemplateEmailContentForm(forms.Form):
     Generic form which contains the content of a email: subject and body.
     """
 
-    subject = forms.CharField(label=_("Subject"), help_text=_("The subject of the email"))
-    body = forms.CharField(label=_("Email content"), widget=TextEditorWidget, help_text=_("The content of the email."))
+    subject = forms.CharField(
+        label=_("Subject"), help_text=_("The subject of the email")
+    )
+    body = forms.CharField(
+        label=_("Email content"),
+        widget=TextEditorWidget,
+        help_text=_("The content of the email."),
+    )
 
 
 class GenericScriptTemplateEmailForm(forms.Form):
@@ -41,10 +47,14 @@ class GenericScriptTemplateEmailForm(forms.Form):
         initial="customer",
         choices=SEND_TO_CHOICES,
         widget=forms.Select(attrs={"class": "no-select2"}),
-        help_text=_("You can send this email to the customer or to " "other email of your choice."),
+        help_text=_(
+            "You can send this email to the customer or to other email of your choice."
+        ),
     )
     recipient = forms.EmailField(
-        label=_("Destination"), required=False, help_text=_("Fill with the destination email address.")
+        label=_("Destination"),
+        required=False,
+        help_text=_("Fill with the destination email address."),
     )
 
     def clean(self):
@@ -54,7 +64,11 @@ class GenericScriptTemplateEmailForm(forms.Form):
 
         if send_to == "other" and not recipient:
             self.add_error(
-                "recipient", _("Recipient is a required field when you don't want to " "send the email to customer.")
+                "recipient",
+                _(
+                    "Recipient is a required field when you don't want to "
+                    "send the email to customer."
+                ),
             )
         return cleaned_data
 
@@ -85,7 +99,9 @@ class GenericSendEmailScriptTemplate(BaseScriptTemplate):
         }
 
         if form["base"].cleaned_data.get("send_to") == "other":
-            action_data["recipient"] = {"constant": form["base"].cleaned_data["recipient"]}
+            action_data["recipient"] = {
+                "constant": form["base"].cleaned_data["recipient"]
+            }
         else:
             action_data["recipient"] = {"variable": "customer_email"}
 
@@ -95,8 +111,12 @@ class GenericSendEmailScriptTemplate(BaseScriptTemplate):
             # since cleaned_data will be blank if the user did not change anything
             action_data["template_data"][language] = {
                 "content_type": "html",
-                "subject": form_lang.cleaned_data.get("subject", form_lang.initial.get("subject", "")).strip(),
-                "body": form_lang.cleaned_data.get("body", form_lang.initial.get("body", "")).strip(),
+                "subject": form_lang.cleaned_data.get(
+                    "subject", form_lang.initial.get("subject", "")
+                ).strip(),
+                "body": form_lang.cleaned_data.get(
+                    "body", form_lang.initial.get("body", "")
+                ).strip(),
             }
 
         send_mail_action = SendEmail(action_data)
@@ -118,13 +138,17 @@ class GenericSendEmailScriptTemplate(BaseScriptTemplate):
         default_language = settings.PARLER_DEFAULT_LANGUAGE_CODE
 
         # the first form must be the first form, and required, as it is the fallback
-        form_group.add_form_def(default_language, self.multilingual_form_class, required=True)
+        form_group.add_form_def(
+            default_language, self.multilingual_form_class, required=True
+        )
 
         for language, __ in settings.LANGUAGES:
             # the default language was already added!
             if language == default_language:
                 continue
-            form_group.add_form_def(language, self.multilingual_form_class, required=False)
+            form_group.add_form_def(
+                language, self.multilingual_form_class, required=False
+            )
 
         return form_group
 
@@ -140,10 +164,19 @@ class GenericSendEmailScriptTemplate(BaseScriptTemplate):
                         send_email = action
                         break
 
-            send_to_customer = send_email.data.get("recipient", {}).get("variable") == "customer_email"
-            recipient = "" if send_to_customer else send_email.data["recipient"].get("constant", "")
+            send_to_customer = (
+                send_email.data.get("recipient", {}).get("variable") == "customer_email"
+            )
+            recipient = (
+                ""
+                if send_to_customer
+                else send_email.data["recipient"].get("constant", "")
+            )
 
-            initial = {"base-recipient": recipient, "base-send_to": "customer" if send_to_customer else "other"}
+            initial = {
+                "base-recipient": recipient,
+                "base-send_to": "customer" if send_to_customer else "other",
+            }
 
             for language, data in send_email.data["template_data"].items():
                 for data_key, data_value in data.items():
@@ -164,5 +197,9 @@ class GenericSendEmailScriptTemplate(BaseScriptTemplate):
 
         send_mails = []
         for step in self.script_instance.get_steps():
-            send_mails.extend(list(filter(lambda action: isinstance(action, SendEmail), step._actions)))
+            send_mails.extend(
+                list(
+                    filter(lambda action: isinstance(action, SendEmail), step._actions)
+                )
+            )
         return len(send_mails) == 1

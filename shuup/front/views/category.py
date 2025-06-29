@@ -9,12 +9,19 @@ from django.views.generic import DetailView, TemplateView
 
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
 from shuup.core.models import Category, ShopProductVisibility, Supplier
-from shuup.front.utils.sorts_and_filters import ProductListForm, get_product_queryset, get_query_filters, sort_products
+from shuup.front.utils.sorts_and_filters import (
+    ProductListForm,
+    get_product_queryset,
+    get_query_filters,
+    sort_products,
+)
 
 
 def get_context_data(context, request, category, product_filters):
     data = request.GET
-    context["form"] = form = ProductListForm(request=request, shop=request.shop, category=category, data=data)
+    context["form"] = form = ProductListForm(
+        request=request, shop=request.shop, category=category, data=data
+    )
     form.full_clean()
     data = form.cleaned_data
     if "sort" in form.fields and not data.get("sort"):
@@ -64,13 +71,19 @@ class CategoryView(DetailView):
         return {
             "shop_products__shop": self.request.shop,
             "variation_parent__isnull": True,
-            "shop_products__categories__in": self.object.get_descendants(include_self=True),
-            "shop_products__suppliers__in": Supplier.objects.enabled(shop=self.request.shop),
+            "shop_products__categories__in": self.object.get_descendants(
+                include_self=True
+            ),
+            "shop_products__suppliers__in": Supplier.objects.enabled(
+                shop=self.request.shop
+            ),
         }
 
     def get_context_data(self, **kwargs):
         context = super(CategoryView, self).get_context_data(**kwargs)
-        return get_context_data(context, self.request, self.object, self.get_product_filters())
+        return get_context_data(
+            context, self.request, self.object, self.get_product_filters()
+        )
 
 
 class AllCategoriesView(TemplateView):
@@ -85,7 +98,9 @@ class AllCategoriesView(TemplateView):
             "shop_products__shop": self.request.shop,
             "variation_parent__isnull": True,
             "shop_products__categories__id__in": category_ids,
-            "shop_products__suppliers__in": Supplier.objects.enabled(shop=self.request.shop),
+            "shop_products__suppliers__in": Supplier.objects.enabled(
+                shop=self.request.shop
+            ),
         }
 
     def get_context_data(self, **kwargs):

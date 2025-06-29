@@ -39,12 +39,17 @@ class StockAdjustmentForm(forms.Form):
         self.decimals = 0
         if sales_unit:
             self.decimals = sales_unit.decimals
-            self.fields["delta"] = FormattedDecimalFormField(label=_("Quantity"), decimal_places=sales_unit.decimals)
+            self.fields["delta"] = FormattedDecimalFormField(
+                label=_("Quantity"), decimal_places=sales_unit.decimals
+            )
 
     def clean_delta(self):
         delta = self.cleaned_data.get("delta")
         if delta == 0:
-            raise ValidationError(_("Only non-zero values can be added to stock."), code="stock_delta_zero")
+            raise ValidationError(
+                _("Only non-zero values can be added to stock."),
+                code="stock_delta_zero",
+            )
 
         if self.decimals:
             precision = Decimal("0.1") ** self.decimals
@@ -62,7 +67,9 @@ class AlertLimitForm(forms.Form):
         self.decimals = 0
         if sales_unit:
             self.decimals = sales_unit.decimals
-            self.fields["alert_limit"] = forms.DecimalField(label=_("Alert limit"), decimal_places=sales_unit.decimals)
+            self.fields["alert_limit"] = forms.DecimalField(
+                label=_("Alert limit"), decimal_places=sales_unit.decimals
+            )
 
     def clean_alert_limit(self):
         alert_limit = self.cleaned_data.get("alert_limit")

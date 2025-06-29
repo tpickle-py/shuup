@@ -8,6 +8,7 @@ without an instance.
 This fixes some warnings that Sphinx will yield when it tries to parse
 Shuup's models.
 """
+
 import django_countries.fields
 import jsonfield.subclassing
 

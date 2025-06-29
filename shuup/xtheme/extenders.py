@@ -26,10 +26,16 @@ class FrontMenuExtender(object):
     def _get_template(self, theme):
         path_template = "shuup/%s/%s"
         try:
-            template_name = path_template % (theme.template_dir, self.menu_item_template)
+            template_name = path_template % (
+                theme.template_dir,
+                self.menu_item_template,
+            )
             return get_template(template_name)
         except Exception:
-            template_name = path_template % ("xtheme", "menu_extension.jinja")  # super safe fallback
+            template_name = path_template % (
+                "xtheme",
+                "menu_extension.jinja",
+            )  # super safe fallback
             return get_template(template_name)
 
     def get_rendered_menu_items(self, request, theme):

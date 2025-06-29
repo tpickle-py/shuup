@@ -16,6 +16,7 @@ except ImportError:
 
 try:
     import shuup_setup_utils as utils
+
     HAS_SETUP_UTILS = True
 except ImportError:
     HAS_SETUP_UTILS = False
@@ -54,7 +55,8 @@ AUTHOR = "Shuup Commerce Inc."
 AUTHOR_EMAIL = "shuup@shuup.com"
 URL = "http://shuup.com/"
 DOWNLOAD_URL_TEMPLATE = (
-    "https://github.com/shuup/shuup/releases/download/" "v{version}/shuup-{version}-py2.py3-none-any.whl"
+    "https://github.com/shuup/shuup/releases/download/"
+    "v{version}/shuup-{version}-py2.py3-none-any.whl"
 )
 LICENSE = "OSL-3.0"  # https://spdx.org/licenses/
 CLASSIFIERS = """
@@ -93,17 +95,18 @@ if HAS_SETUP_UTILS:
         ]
     )
 
+
 def get_requirements():
     """Read requirements from pyproject.toml"""
     pyproject_path = os.path.join(TOPDIR, "pyproject.toml")
     if os.path.exists(pyproject_path):
         with open(pyproject_path, "rb") as f:
             pyproject_data = tomllib.load(f)
-        
+
         dependencies = pyproject_data.get("project", {}).get("dependencies", [])
         if dependencies:
             return dependencies
-    
+
     # Fallback to hardcoded list if pyproject.toml is not available or doesn't have dependencies
     return [
         "babel>=2.12.0",
@@ -141,6 +144,7 @@ def get_requirements():
         "xlrd>=2.0.0",
         "setuptools>=75.3.2",
     ]
+
 
 REQUIRES = get_requirements()
 

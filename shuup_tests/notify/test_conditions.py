@@ -7,7 +7,13 @@
 # LICENSE file in the root directory of this source tree.
 from __future__ import unicode_literals
 
-from shuup.notify.conditions.simple import BooleanEqual, Empty, IntegerEqual, NonEmpty, TextEqual
+from shuup.notify.conditions.simple import (
+    BooleanEqual,
+    Empty,
+    IntegerEqual,
+    NonEmpty,
+    TextEqual,
+)
 from shuup.notify.script import Context
 
 

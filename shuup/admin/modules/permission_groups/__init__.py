@@ -38,7 +38,9 @@ class PermissionGroupModule(AdminModule):
         ]
 
     def get_model_url(self, object, kind, shop=None):
-        return derive_model_url(PermissionGroup, "shuup_admin:permission_group", object, kind)
+        return derive_model_url(
+            PermissionGroup, "shuup_admin:permission_group", object, kind
+        )
 
     def get_extra_permissions(self) -> Iterable[str]:
         return [get_object_selector_permission_name(PermissionGroup)]

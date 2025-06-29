@@ -11,7 +11,12 @@ from collections import OrderedDict
 from django import forms
 from django.conf import settings
 from django.db.models import Q, QuerySet
-from django.forms import ChoiceField, ModelChoiceField, ModelMultipleChoiceField, MultipleChoiceField
+from django.forms import (
+    ChoiceField,
+    ModelChoiceField,
+    ModelMultipleChoiceField,
+    MultipleChoiceField,
+)
 from typing import Dict
 
 from shuup import configuration
@@ -27,7 +32,6 @@ FORM_MODIFIER_PROVIDER_KEY = "front_extend_product_list_form"
 
 
 class ProductListFormModifier(six.with_metaclass(abc.ABCMeta)):
-
     """
     Interface class for modifying product lists
 
@@ -81,7 +85,9 @@ class ProductListFormModifier(six.with_metaclass(abc.ABCMeta)):
         """
         pass
 
-    def sort_products_queryset(self, request, queryset: "QuerySet[Product]", data: Dict):
+    def sort_products_queryset(
+        self, request, queryset: "QuerySet[Product]", data: Dict
+    ):
         """
         Sort the products queryset
         Modify current queryset and return the new one.
@@ -97,7 +103,9 @@ class ProductListFormModifier(six.with_metaclass(abc.ABCMeta)):
         """
         pass
 
-    def get_products_queryset(self, request, queryset: "QuerySet[Product]", data: Dict) -> "QuerySet[Product]":
+    def get_products_queryset(
+        self, request, queryset: "QuerySet[Product]", data: Dict
+    ) -> "QuerySet[Product]":
         """
         Modify product queryset
 
@@ -145,7 +153,13 @@ class ProductListForm(forms.Form):
         for extend_obj in _get_active_modifiers(shop, category):
             for field_key, field in extend_obj.get_fields(request, category) or []:
                 is_choice_field = isinstance(
-                    field, (ModelMultipleChoiceField, ModelChoiceField, ChoiceField, MultipleChoiceField)
+                    field,
+                    (
+                        ModelMultipleChoiceField,
+                        ModelChoiceField,
+                        ChoiceField,
+                        MultipleChoiceField,
+                    ),
                 )
                 has_choices = is_choice_field and len(field.choices)
 
@@ -173,7 +187,9 @@ def get_configuration(shop=None, category=None, force_category_override=False):
 
     category_config = configuration.get(None, _get_category_configuration_key(category))
     # when override_default_configuration is True, we override the default configuration
-    if category_config and (category_config.get("override_default_configuration") or force_category_override):
+    if category_config and (
+        category_config.get("override_default_configuration") or force_category_override
+    ):
         return category_config
 
     return default_configuration
@@ -220,7 +236,9 @@ def get_product_queryset(queryset, request, category, data):
     queryset_data.update({"request": request, "category": category})
 
     for extend_obj in _get_active_modifiers(request.shop, category):
-        new_queryset = extend_obj.get_products_queryset(request, queryset, queryset_data)
+        new_queryset = extend_obj.get_products_queryset(
+            request, queryset, queryset_data
+        )
         if new_queryset is not None:
             queryset = new_queryset
 
@@ -247,7 +265,11 @@ def cached_product_queryset(queryset, request, category, data):
         item = "%sC%s" % (item, category.pk)
 
     key, products = context_cache.get_cached_value(
-        identifier="product_queryset", item=item, allow_cache=True, context=request, data=key_data
+        identifier="product_queryset",
+        item=item,
+        allow_cache=True,
+        context=request,
+        data=key_data,
     )
 
     if products is not None:
@@ -259,14 +281,21 @@ def cached_product_queryset(queryset, request, category, data):
 
 
 def _get_category_configuration_key(category):
-    return FACETED_CATEGORY_CONF_KEY_PREFIX % category.pk if category and category.pk else None
+    return (
+        FACETED_CATEGORY_CONF_KEY_PREFIX % category.pk
+        if category and category.pk
+        else None
+    )
 
 
 def _get_active_modifiers(shop=None, category=None):
     key = None
     if category:
         key, val = context_cache.get_cached_value(
-            identifier="active_modifiers", item=category, allow_cache=True, context={"shop": shop}
+            identifier="active_modifiers",
+            item=category,
+            allow_cache=True,
+            context={"shop": shop},
         )
         if val is not None:
             return val
@@ -289,4 +318,6 @@ def _get_active_modifiers(shop=None, category=None):
 
 
 def get_form_field_label(identifier, default):
-    return settings.SHUUP_FRONT_OVERRIDE_SORTS_AND_FILTERS_LABELS_LOGIC.get(identifier, default)
+    return settings.SHUUP_FRONT_OVERRIDE_SORTS_AND_FILTERS_LABELS_LOGIC.get(
+        identifier, default
+    )

@@ -9,7 +9,10 @@ from django.conf import settings
 from django.forms import BaseModelFormSet
 
 from shuup.core.models import Attribute, AttributeChoiceOption, AttributeType
-from shuup.utils.multilanguage_model_form import MultiLanguageModelForm, TranslatableModelForm
+from shuup.utils.multilanguage_model_form import (
+    MultiLanguageModelForm,
+    TranslatableModelForm,
+)
 
 
 class AttributeForm(MultiLanguageModelForm):

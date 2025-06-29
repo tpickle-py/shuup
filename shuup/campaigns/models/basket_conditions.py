@@ -10,10 +10,20 @@ from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from polymorphic.models import PolymorphicModel
 
-from shuup.campaigns.utils.campaigns import get_product_ids_and_quantities, get_total_price_of_products
+from shuup.campaigns.utils.campaigns import (
+    get_product_ids_and_quantities,
+    get_total_price_of_products,
+)
 from shuup.campaigns.utils.time_range import is_in_time_range
 from shuup.core.fields import MoneyValueField
-from shuup.core.models import Category, Contact, ContactGroup, Product, ProductMode, ShopProduct
+from shuup.core.models import (
+    Category,
+    Contact,
+    ContactGroup,
+    Product,
+    ProductMode,
+    ShopProduct,
+)
 from shuup.core.pricing import PricingContext
 from shuup.utils.django_compat import force_text
 from shuup.utils.properties import MoneyPropped, PriceProperty
@@ -36,18 +46,28 @@ class BasketTotalProductAmountCondition(BasketCondition):
     name = _("Basket product count")
 
     product_count = models.DecimalField(
-        verbose_name=_("product count in basket"), blank=True, null=True, max_digits=36, decimal_places=9
+        verbose_name=_("product count in basket"),
+        blank=True,
+        null=True,
+        max_digits=36,
+        decimal_places=9,
     )
 
     def matches(self, basket, lines):
         # if the campaign has a supplier, count only products from that supplier
         campaign = self.campaign.first()
-        supplier = campaign.supplier if hasattr(campaign, "supplier") and campaign.supplier else None
+        supplier = (
+            campaign.supplier
+            if hasattr(campaign, "supplier") and campaign.supplier
+            else None
+        )
         return basket.count_products(supplier) >= self.product_count
 
     @property
     def description(self):
-        return _("Limit the campaign to match when basket has at least the product count entered here.")
+        return _(
+            "Limit the campaign to match when basket has at least the product count entered here."
+        )
 
     @property
     def value(self):
@@ -62,8 +82,12 @@ class BasketTotalAmountCondition(MoneyPropped, BasketCondition):
     identifier = "basket_amount_condition"
     name = _("Basket total value")
 
-    amount = PriceProperty("amount_value", "campaign.shop.currency", "campaign.shop.prices_include_tax")
-    amount_value = MoneyValueField(default=None, blank=True, null=True, verbose_name=_("basket total amount"))
+    amount = PriceProperty(
+        "amount_value", "campaign.shop.currency", "campaign.shop.prices_include_tax"
+    )
+    amount_value = MoneyValueField(
+        default=None, blank=True, null=True, verbose_name=_("basket total amount")
+    )
 
     def matches(self, basket, lines):
         campaign = self.campaign.first()
@@ -72,7 +96,9 @@ class BasketTotalAmountCondition(MoneyPropped, BasketCondition):
 
     @property
     def description(self):
-        return _("Limit the campaign to match when it has at least the total value entered here worth of products.")
+        return _(
+            "Limit the campaign to match when it has at least the total value entered here worth of products."
+        )
 
     @property
     def value(self):
@@ -87,8 +113,12 @@ class BasketTotalUndiscountedProductAmountCondition(MoneyPropped, BasketConditio
     identifier = "basket_amount_condition_undiscounted"
     name = _("Undiscounted basket total value")
 
-    amount = PriceProperty("amount_value", "campaign.shop.currency", "campaign.shop.prices_include_tax")
-    amount_value = MoneyValueField(default=None, blank=True, null=True, verbose_name=_("basket total amount"))
+    amount = PriceProperty(
+        "amount_value", "campaign.shop.currency", "campaign.shop.prices_include_tax"
+    )
+    amount_value = MoneyValueField(
+        default=None, blank=True, null=True, verbose_name=_("basket total amount")
+    )
 
     def matches(self, basket, lines):
         from shuup.campaigns.models import CatalogCampaign
@@ -98,14 +128,18 @@ class BasketTotalUndiscountedProductAmountCondition(MoneyPropped, BasketConditio
         product_lines = basket.get_product_lines()
 
         if hasattr(campaign, "supplier") and campaign.supplier:
-            product_lines = [line for line in product_lines if line.supplier == campaign.supplier]
+            product_lines = [
+                line for line in product_lines if line.supplier == campaign.supplier
+            ]
 
         total_undiscounted_price_value = total_of_products.value
         shop = basket.shop
         context = PricingContext(shop, basket.customer)
 
         for line in product_lines:
-            if CatalogCampaign.get_matching(context, line.product.get_shop_instance(shop)):
+            if CatalogCampaign.get_matching(
+                context, line.product.get_shop_instance(shop)
+            ):
                 total_undiscounted_price_value -= line.price.value
         return total_undiscounted_price_value >= self.amount_value
 
@@ -130,17 +164,27 @@ class BasketMaxTotalProductAmountCondition(BasketCondition):
     name = _("Basket maximum product count")
 
     product_count = models.DecimalField(
-        verbose_name=_("maximum product count in basket"), blank=True, null=True, max_digits=36, decimal_places=9
+        verbose_name=_("maximum product count in basket"),
+        blank=True,
+        null=True,
+        max_digits=36,
+        decimal_places=9,
     )
 
     def matches(self, basket, lines):
         campaign = self.campaign.first()
-        supplier = campaign.supplier if hasattr(campaign, "supplier") and campaign.supplier else None
+        supplier = (
+            campaign.supplier
+            if hasattr(campaign, "supplier") and campaign.supplier
+            else None
+        )
         return basket.count_products(supplier) <= self.product_count
 
     @property
     def description(self):
-        return _("Limit the campaign to match when basket has at maximum the product count entered here.")
+        return _(
+            "Limit the campaign to match when basket has at maximum the product count entered here."
+        )
 
     @property
     def value(self):
@@ -155,8 +199,15 @@ class BasketMaxTotalAmountCondition(MoneyPropped, BasketCondition):
     identifier = "basket_max_amount_condition"
     name = _("Basket maximum total value")
 
-    amount = PriceProperty("amount_value", "campaign.shop.currency", "campaign.shop.prices_include_tax")
-    amount_value = MoneyValueField(default=None, blank=True, null=True, verbose_name=_("maximum basket total amount"))
+    amount = PriceProperty(
+        "amount_value", "campaign.shop.currency", "campaign.shop.prices_include_tax"
+    )
+    amount_value = MoneyValueField(
+        default=None,
+        blank=True,
+        null=True,
+        verbose_name=_("maximum basket total amount"),
+    )
 
     def matches(self, basket, lines):
         campaign = self.campaign.first()
@@ -165,7 +216,9 @@ class BasketMaxTotalAmountCondition(MoneyPropped, BasketCondition):
 
     @property
     def description(self):
-        return _("Limit the campaign to match when it has at maximum the total value entered here worth of products.")
+        return _(
+            "Limit the campaign to match when it has at maximum the total value entered here worth of products."
+        )
 
     @property
     def value(self):
@@ -191,15 +244,23 @@ class ProductsInBasketCondition(BasketCondition):
 
     model = Product
 
-    operator = EnumIntegerField(ComparisonOperator, default=ComparisonOperator.GTE, verbose_name=_("operator"))
+    operator = EnumIntegerField(
+        ComparisonOperator, default=ComparisonOperator.GTE, verbose_name=_("operator")
+    )
     quantity = models.PositiveIntegerField(default=1, verbose_name=_("quantity"))
     products = models.ManyToManyField(Product, verbose_name=_("products"), blank=True)
 
     def matches(self, basket, lines):
         campaign = self.campaign.first()
-        supplier = campaign.supplier if hasattr(campaign, "supplier") and campaign.supplier else None
+        supplier = (
+            campaign.supplier
+            if hasattr(campaign, "supplier") and campaign.supplier
+            else None
+        )
         product_id_to_qty = get_product_ids_and_quantities(basket, supplier)
-        product_ids = self.products.filter(id__in=product_id_to_qty.keys()).values_list("id", flat=True)
+        product_ids = self.products.filter(id__in=product_id_to_qty.keys()).values_list(
+            "id", flat=True
+        )
         for product_id in product_ids:
             if self.operator == ComparisonOperator.GTE:
                 return product_id_to_qty[product_id] >= self.quantity
@@ -225,7 +286,9 @@ class ContactGroupBasketCondition(BasketCondition):
     identifier = "basket_contact_group_condition"
     name = _("Contact Group")
 
-    contact_groups = models.ManyToManyField(ContactGroup, verbose_name=_("contact groups"))
+    contact_groups = models.ManyToManyField(
+        ContactGroup, verbose_name=_("contact groups")
+    )
 
     def matches(self, basket, lines=[]):
         contact_group_ids = basket.customer.groups.values_list("pk", flat=True)
@@ -273,9 +336,13 @@ class CategoryProductsBasketCondition(BasketCondition):
     identifier = "basket_category_condition"
     name = _("Category products in basket")
 
-    operator = EnumIntegerField(ComparisonOperator, default=ComparisonOperator.GTE, verbose_name=_("operator"))
+    operator = EnumIntegerField(
+        ComparisonOperator, default=ComparisonOperator.GTE, verbose_name=_("operator")
+    )
     quantity = models.PositiveIntegerField(default=1, verbose_name=_("quantity"))
-    categories = models.ManyToManyField(Category, related_name="+", verbose_name=_("categories"))
+    categories = models.ManyToManyField(
+        Category, related_name="+", verbose_name=_("categories")
+    )
     excluded_categories = models.ManyToManyField(
         Category,
         blank=True,
@@ -290,12 +357,14 @@ class CategoryProductsBasketCondition(BasketCondition):
     def matches(self, basket, lines):
         product_id_to_qty = get_product_ids_and_quantities(basket)
         if ShopProduct.objects.filter(
-            product_id__in=product_id_to_qty.keys(), categories__in=self.excluded_categories.all()
+            product_id__in=product_id_to_qty.keys(),
+            categories__in=self.excluded_categories.all(),
         ).exists():
             return False
 
         product_ids = ShopProduct.objects.filter(
-            categories__in=self.categories.all(), product_id__in=product_id_to_qty.keys()
+            categories__in=self.categories.all(),
+            product_id__in=product_id_to_qty.keys(),
         ).values_list("product_id", flat=True)
         product_count = sum(product_id_to_qty[product_id] for product_id in product_ids)
         if self.operator == ComparisonOperator.EQUALS:
@@ -313,16 +382,21 @@ class HourBasketCondition(BasketCondition):
     name = _("Day and hour")
 
     hour_start = models.TimeField(
-        verbose_name=_("start time"), help_text=_("12pm is considered noon and 12am as midnight.")
+        verbose_name=_("start time"),
+        help_text=_("12pm is considered noon and 12am as midnight."),
     )
     hour_end = models.TimeField(
         verbose_name=_("end time"),
-        help_text=_("12pm is considered noon and 12am as midnight. End time is not considered match."),
+        help_text=_(
+            "12pm is considered noon and 12am as midnight. End time is not considered match."
+        ),
     )
     days = models.CharField(max_length=255, verbose_name=_("days"))
 
     def matches(self, basket, lines):
-        return is_in_time_range(timezone.now(), self.hour_start, self.hour_end, self.values)
+        return is_in_time_range(
+            timezone.now(), self.hour_start, self.hour_end, self.values
+        )
 
     @property
     def description(self):
@@ -341,7 +415,12 @@ class ChildrenProductCondition(BasketCondition):
     product = models.ForeignKey(
         Product,
         on_delete=models.PROTECT,
-        limit_choices_to={"mode__in": [ProductMode.SIMPLE_VARIATION_PARENT, ProductMode.VARIABLE_VARIATION_PARENT]},
+        limit_choices_to={
+            "mode__in": [
+                ProductMode.SIMPLE_VARIATION_PARENT,
+                ProductMode.VARIABLE_VARIATION_PARENT,
+            ]
+        },
         null=True,
     )
 
@@ -355,7 +434,9 @@ class ChildrenProductCondition(BasketCondition):
 
     @property
     def description(self):
-        return _("Limit the campaign to match only variation children of the selected product.")
+        return _(
+            "Limit the campaign to match only variation children of the selected product."
+        )
 
     @property
     def values(self):

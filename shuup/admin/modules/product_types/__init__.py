@@ -52,4 +52,8 @@ class ProductTypeModule(AdminModule):
         return [get_object_selector_permission_name(ProductType)]
 
     def get_permissions_help_texts(self) -> Iterable[str]:
-        return {get_object_selector_permission_name(ProductType): _("Allow the user to select product types in admin.")}
+        return {
+            get_object_selector_permission_name(ProductType): _(
+                "Allow the user to select product types in admin."
+            )
+        }

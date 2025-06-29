@@ -24,11 +24,15 @@ SHUUP_BASKET_VIEW_SPEC = "shuup.front.views.basket:DefaultBasketView"
 #: from the basket.
 #:
 #: This view deals with commands ``POST``ed to ``/basket/``.
-SHUUP_BASKET_COMMAND_DISPATCHER_SPEC = "shuup.core.basket.command_dispatcher:BasketCommandDispatcher"
+SHUUP_BASKET_COMMAND_DISPATCHER_SPEC = (
+    "shuup.core.basket.command_dispatcher:BasketCommandDispatcher"
+)
 
 #: Spec string for the update method dispatcher. Used when the basket is updated (usually
 #: on the basket page).
-SHUUP_BASKET_UPDATE_METHODS_SPEC = "shuup.front.basket.update_methods:BasketUpdateMethods"
+SHUUP_BASKET_UPDATE_METHODS_SPEC = (
+    "shuup.front.basket.update_methods:BasketUpdateMethods"
+)
 
 #: Spec string for the basket class, used in the frontend.
 #:
@@ -63,7 +67,9 @@ SHUUP_FRONT_DEFAULT_SORT_CONFIGURATION = {
 #:
 #: Override this configuration for quick per project optimization or for adding
 #: something extra for your custom, templates, snippets and plugins.
-SHUUP_FRONT_PRODUCT_CONTEXT_SPEC = "shuup.front.utils.product:get_default_product_context"
+SHUUP_FRONT_PRODUCT_CONTEXT_SPEC = (
+    "shuup.front.utils.product:get_default_product_context"
+)
 
 #: Default cache duration for template helpers (in seconds).
 #:

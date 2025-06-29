@@ -16,7 +16,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from shuup import configuration
 from shuup.admin.form_part import FormPart, TemplatedFormDef
-from shuup.core.fields import FORMATTED_DECIMAL_FIELD_MAX_DIGITS, FormattedDecimalFormField
+from shuup.core.fields import (
+    FORMATTED_DECIMAL_FIELD_MAX_DIGITS,
+    FormattedDecimalFormField,
+)
 from shuup.core.models import ConfigurationItem
 from shuup.core.order_creator.constants import ORDER_MIN_TOTAL_CONFIG_KEY
 
@@ -35,7 +38,9 @@ class ShopOrderConfigurationForm(forms.Form):
         ),
     )
 
-    order_reference_number_prefix = forms.IntegerField(label=_("Reference number prefix"), required=False)
+    order_reference_number_prefix = forms.IntegerField(
+        label=_("Reference number prefix"), required=False
+    )
 
     def __init__(self, *args, **kwargs):
         from shuup.admin.modules.settings import consts
@@ -44,16 +49,22 @@ class ShopOrderConfigurationForm(forms.Form):
         shop = kwargs.pop("shop")
         kwargs["initial"] = {
             consts.ORDER_REFERENCE_NUMBER_LENGTH_FIELD: configuration.get(
-                shop, consts.ORDER_REFERENCE_NUMBER_LENGTH_FIELD, settings.SHUUP_REFERENCE_NUMBER_LENGTH
+                shop,
+                consts.ORDER_REFERENCE_NUMBER_LENGTH_FIELD,
+                settings.SHUUP_REFERENCE_NUMBER_LENGTH,
             ),
             consts.ORDER_REFERENCE_NUMBER_PREFIX_FIELD: configuration.get(
-                shop, consts.ORDER_REFERENCE_NUMBER_PREFIX_FIELD, settings.SHUUP_REFERENCE_NUMBER_PREFIX
+                shop,
+                consts.ORDER_REFERENCE_NUMBER_PREFIX_FIELD,
+                settings.SHUUP_REFERENCE_NUMBER_PREFIX,
             ),
         }
         super(ShopOrderConfigurationForm, self).__init__(*args, **kwargs)
 
         reference_method = configuration.get(
-            shop, consts.ORDER_REFERENCE_NUMBER_METHOD_FIELD, settings.SHUUP_REFERENCE_NUMBER_METHOD
+            shop,
+            consts.ORDER_REFERENCE_NUMBER_METHOD_FIELD,
+            settings.SHUUP_REFERENCE_NUMBER_METHOD,
         )
 
         self.prefix_disabled = reference_method in [
@@ -61,11 +72,15 @@ class ShopOrderConfigurationForm(forms.Form):
             OrderReferenceNumberMethod.SHOP_RUNNING.value,
         ]
 
-        self.fields[consts.ORDER_REFERENCE_NUMBER_PREFIX_FIELD].disabled = self.prefix_disabled
+        self.fields[
+            consts.ORDER_REFERENCE_NUMBER_PREFIX_FIELD
+        ].disabled = self.prefix_disabled
 
         decimal_places = 2  # default
         if shop.currency in babel.core.get_global("currency_fractions"):
-            decimal_places = babel.core.get_global("currency_fractions")[shop.currency][0]
+            decimal_places = babel.core.get_global("currency_fractions")[shop.currency][
+                0
+            ]
 
         self.fields[ORDER_MIN_TOTAL_CONFIG_KEY] = FormattedDecimalFormField(
             label=_("Order minimum total"),

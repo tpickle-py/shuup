@@ -51,7 +51,7 @@ def build_or_query(over_fields, term, operator=""):
 
 
 class SortableMixin(models.Model):
-    """ Utility mixin to add manual ordering to models"""
+    """Utility mixin to add manual ordering to models"""
 
     ordering = models.SmallIntegerField(default=0, db_index=True)
 

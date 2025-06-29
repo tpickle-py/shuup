@@ -44,8 +44,12 @@ class Notification(models.Model):
     A model for persistent notifications to be shown in the admin, etc.
     """
 
-    shop = models.ForeignKey(on_delete=models.CASCADE, to="shuup.Shop", verbose_name=_("shop"))
-    recipient_type = EnumIntegerField(RecipientType, default=RecipientType.ADMINS, verbose_name=_("recipient type"))
+    shop = models.ForeignKey(
+        on_delete=models.CASCADE, to="shuup.Shop", verbose_name=_("shop")
+    )
+    recipient_type = EnumIntegerField(
+        RecipientType, default=RecipientType.ADMINS, verbose_name=_("recipient type")
+    )
     recipient = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,
@@ -54,13 +58,21 @@ class Notification(models.Model):
         on_delete=models.SET_NULL,
         verbose_name=_("recipient"),
     )
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
-    message = models.CharField(max_length=140, editable=False, default="", verbose_name=_("message"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, verbose_name=_("created on")
+    )
+    message = models.CharField(
+        max_length=140, editable=False, default="", verbose_name=_("message")
+    )
     identifier = InternalIdentifierField(unique=False)
-    priority = EnumIntegerField(Priority, default=Priority.NORMAL, db_index=True, verbose_name=_("priority"))
+    priority = EnumIntegerField(
+        Priority, default=Priority.NORMAL, db_index=True, verbose_name=_("priority")
+    )
     _data = JSONField(blank=True, null=True, editable=False, db_column="data")
 
-    marked_read = models.BooleanField(db_index=True, editable=False, default=False, verbose_name=_("marked read"))
+    marked_read = models.BooleanField(
+        db_index=True, editable=False, default=False, verbose_name=_("marked read")
+    )
     marked_read_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,
@@ -70,7 +82,9 @@ class Notification(models.Model):
         on_delete=models.SET_NULL,
         verbose_name=_("marked read by"),
     )
-    marked_read_on = models.DateTimeField(null=True, blank=True, verbose_name=_("marked read on"))
+    marked_read_on = models.DateTimeField(
+        null=True, blank=True, verbose_name=_("marked read on")
+    )
 
     objects = NotificationManager()
 
@@ -82,7 +96,9 @@ class Notification(models.Model):
 
     def save(self, *args, **kwargs):
         if self.recipient_type == RecipientType.SPECIFIC_USER and not self.recipient_id:
-            raise ValueError("Error! With `RecipientType.SPECIFIC_USER`, recipient is required.")
+            raise ValueError(
+                "Error! With `RecipientType.SPECIFIC_USER`, recipient is required."
+            )
         super(Notification, self).save(*args, **kwargs)
 
     def mark_read(self, user):

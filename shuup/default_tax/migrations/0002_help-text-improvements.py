@@ -6,15 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('default_tax', '0001_squashed_0003_alter_names'),
+        ("default_tax", "0001_squashed_0003_alter_names"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='taxrule',
-            name='enabled',
-            field=models.BooleanField(db_index=True, default=True, help_text='Enable this if this tax rule is active.', verbose_name='enabled'),
+            model_name="taxrule",
+            name="enabled",
+            field=models.BooleanField(
+                db_index=True,
+                default=True,
+                help_text="Enable this if this tax rule is active.",
+                verbose_name="enabled",
+            ),
         ),
     ]

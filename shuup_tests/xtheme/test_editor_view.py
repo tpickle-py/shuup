@@ -33,7 +33,9 @@ def initialize_editor_view(view_name, placeholder_name, request=None):
     request.user = SuperUser()
     if hasattr(request.GET, "_mutable"):
         request.GET._mutable = True  # Ahem
-    request.GET.update({"theme": FauxTheme.identifier, "view": view_name, "ph": placeholder_name})
+    request.GET.update(
+        {"theme": FauxTheme.identifier, "view": view_name, "ph": placeholder_name}
+    )
 
     with plugin_override():
         with override_provides("xtheme", ["shuup_tests.xtheme.utils:FauxTheme"]):
@@ -84,7 +86,9 @@ def test_editor_view_functions():
         assert view_obj.current_cell
         assert view_obj.current_cell.serialize() == layout.get_cell(0, 0).serialize()
         # Go through the motions of adding and removing stuff programmatically
-        view_obj.dispatch_change_plugin(plugin="text")  # Well it was text to begin with, but...
+        view_obj.dispatch_change_plugin(
+            plugin="text"
+        )  # Well it was text to begin with, but...
         assert len(view_obj.layout.rows[0]) == 1
         view_obj.dispatch_add_cell(y=-1)
         assert len(view_obj.layout.rows[0]) == 1
@@ -119,16 +123,22 @@ def test_editor_save(rf):
         form_data["save"] = "1"
         request = rf.post("/pepe/", data=form_data)  # sort of rare pepe
         request.GET = dict(request.GET, x=0, y=0)
-        with initialize_editor_view(svc.view_name, layout.placeholder_name, request) as view_obj:
+        with initialize_editor_view(
+            svc.view_name, layout.placeholder_name, request
+        ) as view_obj:
             view_obj.dispatch(request)
             assert view_obj.form
             assert not view_obj.form.errors
-            assert view_obj.current_cell.config["text"] == {FALLBACK_LANGUAGE_CODE: new_text}
+            assert view_obj.current_cell.config["text"] == {
+                FALLBACK_LANGUAGE_CODE: new_text
+            }
 
 
 @pytest.mark.django_db
 def test_editor_view_commands():
-    with initialize_editor_view(printable_gibberish(), printable_gibberish()) as view_obj:
+    with initialize_editor_view(
+        printable_gibberish(), printable_gibberish()
+    ) as view_obj:
         view_obj.request.method = "POST"
         view_obj.request.POST = {"command": "add_row"}
         view_obj._populate_vars()  # don't tell anyone we're calling a private method here
@@ -139,7 +149,9 @@ def test_editor_view_commands():
 
 @pytest.mark.django_db
 def test_editor_view_unknown_command():
-    with initialize_editor_view(printable_gibberish(), printable_gibberish()) as view_obj:
+    with initialize_editor_view(
+        printable_gibberish(), printable_gibberish()
+    ) as view_obj:
         view_obj.request.method = "POST"
         view_obj.request.POST = {"command": printable_gibberish()}
         with pytest.raises(Problem):
@@ -166,9 +178,19 @@ def test_editor_cell_limits():
 def test_get_global_placeholder():
     request = RequestFactory().get("/")
     layout, svc = get_test_layout_and_svc()
-    with initialize_editor_view(svc.view_name, layout.placeholder_name, request=request) as view_obj:
-        view_name_1 = view_obj.dispatch(view_obj.request).context_data["view"].view_config.view_name
+    with initialize_editor_view(
+        svc.view_name, layout.placeholder_name, request=request
+    ) as view_obj:
+        view_name_1 = (
+            view_obj.dispatch(view_obj.request)
+            .context_data["view"]
+            .view_config.view_name
+        )
         view_obj.request.GET.update({"x": 0, "y": 0, "global_type": True})
-        view_name_2 = view_obj.dispatch(view_obj.request).context_data["view"].view_config.view_name
+        view_name_2 = (
+            view_obj.dispatch(view_obj.request)
+            .context_data["view"]
+            .view_config.view_name
+        )
         assert view_name_1 != view_name_2
         assert view_name_2 == XTHEME_GLOBAL_VIEW_NAME

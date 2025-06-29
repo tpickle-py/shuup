@@ -28,7 +28,7 @@ class FormDefinition(object):
 
 
 class FormDefProvider(object):
-    """ Provider to provide list of `FormDefinition`s"""
+    """Provider to provide list of `FormDefinition`s"""
 
     # the form group / form instantiating this object
     source = None

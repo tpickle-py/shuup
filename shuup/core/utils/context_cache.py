@@ -82,12 +82,16 @@ def bump_cache_for_shop_product(instance, shop=None):
 
     # Get all normal products linked to passed
     # shop product id
-    product_ids = Product.objects.filter(shop_products__id__in=shop_product_ids).values_list("id", flat=True)
+    product_ids = Product.objects.filter(
+        shop_products__id__in=shop_product_ids
+    ).values_list("id", flat=True)
 
     # Get all affect variation parent ids just in
     # case passed shop product ids includes child
     # products we need to bump simplings
-    variation_parent_ids = Product.objects.filter(id__in=product_ids).values_list("variation_parent_id", flat=True)
+    variation_parent_ids = Product.objects.filter(id__in=product_ids).values_list(
+        "variation_parent_id", flat=True
+    )
 
     # Get all packages or products in any package
     package_product_ids = ProductPackageLink.objects.filter(
@@ -100,15 +104,23 @@ def bump_cache_for_shop_product(instance, shop=None):
         Q(id__in=product_ids)
         | Q(variation_parent_id__in=product_ids)
         | Q(variation_parent_id__in=variation_parent_ids)
-        | Q(id__in=set(value for pair_of_values in package_product_ids for value in pair_of_values))
+        | Q(
+            id__in=set(
+                value
+                for pair_of_values in package_product_ids
+                for value in pair_of_values
+            )
+        )
     ).values_list("id", flat=True)
 
     # One extra query should be better what we have now
-    shop_product_ids_to_bump = ShopProduct.objects.filter(product_id__in=product_ids_to_bump).values_list(
-        "id", flat=True
-    )
+    shop_product_ids_to_bump = ShopProduct.objects.filter(
+        product_id__in=product_ids_to_bump
+    ).values_list("id", flat=True)
 
-    bump_cache_for_item_ids(shop_product_ids_to_bump, "shuup-shopproduct", ShopProduct, shop)
+    bump_cache_for_item_ids(
+        shop_product_ids_to_bump, "shuup-shopproduct", ShopProduct, shop
+    )
     bump_cache_for_item_ids(product_ids_to_bump, "shuup-product", Product, shop)
 
 
@@ -132,7 +144,9 @@ def bump_cache_for_product(product, shop=None):
     else:
         products = product
 
-    shop_product_ids = ShopProduct.objects.filter(product_id__in=products).values_list("pk", flat=True)
+    shop_product_ids = ShopProduct.objects.filter(product_id__in=products).values_list(
+        "pk", flat=True
+    )
     for shop_product_id in shop_product_ids:
         bump_cache_for_shop_product(shop_product_id, shop)
 
@@ -291,7 +305,9 @@ def _get_items_from_context(context):  # noqa (C901)
 def _get_val(v):
     if isinstance(v, dict):
         sorted_items = dict(sorted(v.items(), key=lambda item: item[0]))
-        return hashlib.sha1(str(frozenset(sorted_items.items())).encode("utf-8")).hexdigest()
+        return hashlib.sha1(
+            str(frozenset(sorted_items.items())).encode("utf-8")
+        ).hexdigest()
     if hasattr(v, "pk"):
         return v.pk
     if isinstance(v, QuerySet) or isinstance(v, TranslatableQuerySet):

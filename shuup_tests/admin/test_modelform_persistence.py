@@ -32,6 +32,8 @@ def test_modelform_persistence():
         test_product = Product(barcode="666")
         test_product.set_current_language("en")
         test_product.name = "foo"
-        frm = MultiProductForm(languages=["en"], instance=test_product, default_language="en")
+        frm = MultiProductForm(
+            languages=["en"], instance=test_product, default_language="en"
+        )
         assert frm["barcode"].value() == test_product.barcode
         assert frm.initial["name"] == test_product.name

@@ -8,7 +8,13 @@
 import pytest
 
 from shuup.core.models import AnonymousContact, get_person_contact
-from shuup.tasks.models import Task, TaskComment, TaskCommentVisibility, TaskStatus, TaskType
+from shuup.tasks.models import (
+    Task,
+    TaskComment,
+    TaskCommentVisibility,
+    TaskStatus,
+    TaskType,
+)
 from shuup.tasks.utils import create_task
 from shuup.testing import factories
 
@@ -76,9 +82,19 @@ def test_comment_visibility(admin_user):
     task_type = TaskType.objects.create(name="Request", shop=shop)
     task = create_task(shop, admin_contact, task_type, "my task")
 
-    task.comment(admin_contact, "This is only visibile for super users", TaskCommentVisibility.ADMINS_ONLY)
-    task.comment(staff_contact, "This is only visibile for staff only", TaskCommentVisibility.STAFF_ONLY)
-    task.comment(normal_contact, "This is visibile for everyone", TaskCommentVisibility.PUBLIC)
+    task.comment(
+        admin_contact,
+        "This is only visibile for super users",
+        TaskCommentVisibility.ADMINS_ONLY,
+    )
+    task.comment(
+        staff_contact,
+        "This is only visibile for staff only",
+        TaskCommentVisibility.STAFF_ONLY,
+    )
+    task.comment(
+        normal_contact, "This is visibile for everyone", TaskCommentVisibility.PUBLIC
+    )
 
     # admin see all comments
     assert task.comments.for_contact(admin_contact).count() == 3

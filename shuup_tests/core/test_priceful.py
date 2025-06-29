@@ -81,17 +81,23 @@ def test_tax_rate_and_percentage():
 
 
 def test_taxed_base_unit_prices():
-    assert_almost_equal(line.taxless_base_unit_price, TaxlessPrice(5, "EUR") / Decimal("1.1"))
+    assert_almost_equal(
+        line.taxless_base_unit_price, TaxlessPrice(5, "EUR") / Decimal("1.1")
+    )
     assert line.taxful_base_unit_price == TaxfulPrice(5, "EUR")
 
 
 def test_taxed_discounted_unit_prices():
-    assert_almost_equal(line.taxless_discounted_unit_price, TaxlessPrice(33, "EUR") / Decimal("1.1") / 9)
+    assert_almost_equal(
+        line.taxless_discounted_unit_price, TaxlessPrice(33, "EUR") / Decimal("1.1") / 9
+    )
     assert line.taxful_discounted_unit_price == TaxfulPrice(33, "EUR") / 9
 
 
 def test_taxed_discount_amounts():
-    assert_almost_equal(line.taxless_discount_amount, TaxlessPrice(12, "EUR") / Decimal("1.1"))
+    assert_almost_equal(
+        line.taxless_discount_amount, TaxlessPrice(12, "EUR") / Decimal("1.1")
+    )
 
     assert line.taxful_discount_amount == TaxfulPrice(12, "EUR")
 

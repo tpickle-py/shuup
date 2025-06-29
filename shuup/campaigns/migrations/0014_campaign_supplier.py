@@ -7,26 +7,47 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0057_remove_product_stock_behavior'),
-        ('campaigns', '0013_hourconfition_fix'),
+        ("shuup", "0057_remove_product_stock_behavior"),
+        ("campaigns", "0013_hourconfition_fix"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='basketcampaign',
-            name='supplier',
-            field=models.ForeignKey(blank=True, help_text='When set, this campaign will match only products from the selected supplier. Rules and Effects will also be restricted to the products of this supplier.', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='basket_campaigns', to='shuup.Supplier', verbose_name='supplier'),
+            model_name="basketcampaign",
+            name="supplier",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="When set, this campaign will match only products from the selected supplier. Rules and Effects will also be restricted to the products of this supplier.",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="basket_campaigns",
+                to="shuup.Supplier",
+                verbose_name="supplier",
+            ),
         ),
         migrations.AddField(
-            model_name='coupon',
-            name='shop',
-            field=models.ForeignKey(help_text='The shop where the coupon is active.', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='campaign_coupons', to='shuup.Shop', verbose_name='shop'),
+            model_name="coupon",
+            name="shop",
+            field=models.ForeignKey(
+                help_text="The shop where the coupon is active.",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="campaign_coupons",
+                to="shuup.Shop",
+                verbose_name="shop",
+            ),
         ),
         migrations.AddField(
-            model_name='coupon',
-            name='supplier',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='campaign_coupons', to='shuup.Supplier', verbose_name='supplier'),
+            model_name="coupon",
+            name="supplier",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="campaign_coupons",
+                to="shuup.Supplier",
+                verbose_name="supplier",
+            ),
         ),
     ]

@@ -32,7 +32,9 @@ def get_default_model_permissions(model):
     permissions = set()
 
     for default in model._meta.default_permissions:
-        permissions.add("%s.%s_%s" % (model._meta.app_label, default, model._meta.model_name))
+        permissions.add(
+            "%s.%s_%s" % (model._meta.app_label, default, model._meta.model_name)
+        )
 
     return permissions
 
@@ -65,11 +67,15 @@ def get_missing_permissions(user, permissions):
         group_permissions = cache.get(cache_key)
 
         if group_permissions is None:
-            group_permissions = get_permissions_from_groups(user.groups.values_list("pk", flat=True))
+            group_permissions = get_permissions_from_groups(
+                user.groups.values_list("pk", flat=True)
+            )
             cache.set(cache_key, group_permissions)
 
     if group_permissions:
-        missing_permissions = set(p for p in set(permissions) if p not in group_permissions)
+        missing_permissions = set(
+            p for p in set(permissions) if p not in group_permissions
+        )
     else:
         missing_permissions = set(permissions)
 
@@ -100,7 +106,9 @@ def get_permissions_for_user(user):
 
 def get_permissions_from_group(group):
     group_id = group if isinstance(group, six.integer_types) else group.pk
-    return set(configuration.get(None, _get_permission_key_for_group(group_id), default=[]))
+    return set(
+        configuration.get(None, _get_permission_key_for_group(group_id), default=[])
+    )
 
 
 def set_permissions_for_group(group, permissions):

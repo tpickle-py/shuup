@@ -10,6 +10,7 @@ Patched version of Django's Makemessages that works with Jinja2.
 Works by monkey patching django.utils.translation.trans_real.templatize
 with our version.
 """
+
 from __future__ import unicode_literals
 
 import babel.messages.extract
@@ -26,7 +27,7 @@ KEYWORDS = dict(
         "_L": None,
         "gettext_lazy": None,
         "ugettext_lazy": None,
-    }
+    },
 )
 
 JINJA_EXTENSIONS = [
@@ -57,7 +58,10 @@ class Command(makemessages.Command):
             action="store_true",
             dest="no_pot_date",
             default=False,
-            help=("Don't update POT-Creation-Date if it would be " "the only change to the PO file"),
+            help=(
+                "Don't update POT-Creation-Date if it would be "
+                "the only change to the PO file"
+            ),
         )
 
     def handle(self, *args, **options):
@@ -148,7 +152,7 @@ def jinja_messages_to_python(src, origin=None, **kwargs):
     """
     output = StringIO("")
     output_lineno = 1
-    for (lineno, message, comments, context) in extract_jinja(src, origin):
+    for lineno, message, comments, context in extract_jinja(src, origin):
         for comment in comments:
             output.write(("# %s %s\n" % (COMMENT_TAG, comment)))
             output_lineno += 1

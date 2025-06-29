@@ -11,7 +11,9 @@ from django.template.defaultfilters import linebreaksbr
 from django.utils.translation import activate
 
 from shuup.apps.provides import override_provides
-from shuup.front.apps.registration.notify_events import RegistrationReceivedEmailScriptTemplate
+from shuup.front.apps.registration.notify_events import (
+    RegistrationReceivedEmailScriptTemplate,
+)
 from shuup.front.notify_script_templates.generics import (
     OrderConfirmationEmailScriptTemplate,
     PaymentCreatedEmailScriptTemplate,
@@ -19,7 +21,11 @@ from shuup.front.notify_script_templates.generics import (
     ShipmentCreatedEmailScriptTemplate,
     ShipmentDeletedEmailScriptTemplate,
 )
-from shuup.notify.admin_module.views import ScriptTemplateConfigView, ScriptTemplateEditView, ScriptTemplateView
+from shuup.notify.admin_module.views import (
+    ScriptTemplateConfigView,
+    ScriptTemplateEditView,
+    ScriptTemplateView,
+)
 from shuup.notify.models import Script
 from shuup.notify.script_templates import PasswordResetTemplate
 from shuup.simple_supplier.notify_events import AlertLimitReached
@@ -40,13 +46,17 @@ def _assert_generic_script(script_template_cls, script, data):
     assert len(serialized_steps) == 1
     assert len(serialized_steps[0]["actions"]) == 1
     assert len(serialized_steps[0]["conditions"]) == 0
-    assert serialized_steps[0]["actions"][0]["recipient"]["variable"] == "customer_email"
+    assert (
+        serialized_steps[0]["actions"][0]["recipient"]["variable"] == "customer_email"
+    )
 
     for lang, _ in settings.LANGUAGES:
-        assert serialized_steps[0]["actions"][0]["template_data"][lang].get("body") == data.get("%s-body" % lang, "")
-        assert serialized_steps[0]["actions"][0]["template_data"][lang].get("subject") == data.get(
-            "%s-subject" % lang, ""
-        )
+        assert serialized_steps[0]["actions"][0]["template_data"][lang].get(
+            "body"
+        ) == data.get("%s-body" % lang, "")
+        assert serialized_steps[0]["actions"][0]["template_data"][lang].get(
+            "subject"
+        ) == data.get("%s-subject" % lang, "")
 
 
 def _assert_stock_alert_limit_script(script, data):
@@ -54,20 +64,30 @@ def _assert_stock_alert_limit_script(script, data):
     assert script.event_identifier == AlertLimitReached.identifier
     assert len(serialized_steps) == 1
     assert len(serialized_steps[0]["actions"]) == 1
-    assert serialized_steps[0]["actions"][0]["recipient"]["constant"] == data["base-recipient"]
+    assert (
+        serialized_steps[0]["actions"][0]["recipient"]["constant"]
+        == data["base-recipient"]
+    )
 
     if data["base-last24hrs"]:
         assert len(serialized_steps[0]["conditions"]) == 1
-        assert serialized_steps[0]["conditions"][0]["v1"]["variable"] == "dispatched_last_24hs"
-        assert serialized_steps[0]["conditions"][0]["v2"]["constant"] == (not data["base-last24hrs"])
+        assert (
+            serialized_steps[0]["conditions"][0]["v1"]["variable"]
+            == "dispatched_last_24hs"
+        )
+        assert serialized_steps[0]["conditions"][0]["v2"]["constant"] == (
+            not data["base-last24hrs"]
+        )
     else:
         assert serialized_steps[0]["conditions"] == []
 
     for lang, _ in settings.LANGUAGES:
-        assert serialized_steps[0]["actions"][0]["template_data"][lang].get("body") == data.get("%s-body" % lang, "")
-        assert serialized_steps[0]["actions"][0]["template_data"][lang].get("subject") == data.get(
-            "%s-subject" % lang, ""
-        )
+        assert serialized_steps[0]["actions"][0]["template_data"][lang].get(
+            "body"
+        ) == data.get("%s-body" % lang, "")
+        assert serialized_steps[0]["actions"][0]["template_data"][lang].get(
+            "subject"
+        ) == data.get("%s-subject" % lang, "")
 
 
 @pytest.mark.django_db
@@ -108,7 +128,13 @@ def test_generic_script_template_manual(script_template_cls):
     # edit
     script_template = script_template_cls(script)
     assert script_template.can_edit_script()
-    data.update({"base-send_to": "customer", "en-body": "my body 2", "en-subject": "something 2"})
+    data.update(
+        {
+            "base-send_to": "customer",
+            "en-body": "my body 2",
+            "en-subject": "something 2",
+        }
+    )
     form = script_template.get_form(data=data)
     assert form.is_valid()
     edited_script = script_template.update_script(form)
@@ -141,10 +167,14 @@ def test_generic_script_template_admin(rf, admin_user, script_template_cls):
     identifier = script_template_cls.identifier
 
     # should redirect us since the script template has a bound form
-    request = apply_request_middleware(rf.post("/", {"id": identifier}), user=admin_user)
+    request = apply_request_middleware(
+        rf.post("/", {"id": identifier}), user=admin_user
+    )
     response = ScriptTemplateView.as_view()(request)
     assert response.status_code == 302
-    assert response.url == reverse("shuup_admin:notify.script-template-config", kwargs={"id": identifier})
+    assert response.url == reverse(
+        "shuup_admin:notify.script-template-config", kwargs={"id": identifier}
+    )
     assert Script.objects.count() == 0
 
     # create
@@ -230,10 +260,14 @@ def test_stock_alert_limit_script_template_admin(rf, admin_user):
     identifier = StockLimitEmailScriptTemplate.identifier
 
     # should redirect us since the script template has a bound form
-    request = apply_request_middleware(rf.post("/", {"id": identifier}), user=admin_user)
+    request = apply_request_middleware(
+        rf.post("/", {"id": identifier}), user=admin_user
+    )
     response = ScriptTemplateView.as_view()(request)
     assert response.status_code == 302
-    assert response.url == reverse("shuup_admin:notify.script-template-config", kwargs={"id": identifier})
+    assert response.url == reverse(
+        "shuup_admin:notify.script-template-config", kwargs={"id": identifier}
+    )
     assert Script.objects.count() == 0
 
     # create
@@ -270,8 +304,10 @@ def test_stock_alert_limit_script_template_admin(rf, admin_user):
 
 @pytest.mark.django_db
 def test_dummy_script_template_manual(rf):
-
-    with override_provides("notify_script_template", ["shuup.testing.notify_script_templates:DummyScriptTemplate"]):
+    with override_provides(
+        "notify_script_template",
+        ["shuup.testing.notify_script_templates:DummyScriptTemplate"],
+    ):
         shop = get_default_shop()
         Script.objects.all().delete()
 
@@ -296,12 +332,16 @@ def test_dummy_script_template_manual(rf):
 
 @pytest.mark.django_db
 def test_dummy_script_template_admin(rf, admin_user):
-
-    with override_provides("notify_script_template", ["shuup.testing.notify_script_templates:DummyScriptTemplate"]):
+    with override_provides(
+        "notify_script_template",
+        ["shuup.testing.notify_script_templates:DummyScriptTemplate"],
+    ):
         get_default_shop()
 
         Script.objects.all().delete()
-        request = apply_request_middleware(rf.post("/", {"id": DummyScriptTemplate.identifier}), user=admin_user)
+        request = apply_request_middleware(
+            rf.post("/", {"id": DummyScriptTemplate.identifier}), user=admin_user
+        )
         response = ScriptTemplateView.as_view()(request)
         assert response.status_code == 302
         assert response.url == reverse("shuup_admin:notify.script.list")

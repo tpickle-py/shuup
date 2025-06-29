@@ -29,7 +29,9 @@ def _get_price_expiration_cache_key(shop_id):
     return "price_expiration_%s" % shop_id
 
 
-def get_potential_discounts_for_product(context, product, available_only=True, groups_ids=None, all_contacts=False):
+def get_potential_discounts_for_product(
+    context, product, available_only=True, groups_ids=None, all_contacts=False
+):
     """
     Get a queryset of all possible discounts for a given context and product
 
@@ -45,9 +47,9 @@ def get_potential_discounts_for_product(context, product, available_only=True, g
     category_ids = set(
         [
             category_id
-            for category_id in ShopProduct.objects.filter(product_id=product_id, shop=context.shop).values_list(
-                "categories__id", flat=True
-            )
+            for category_id in ShopProduct.objects.filter(
+                product_id=product_id, shop=context.shop
+            ).values_list("categories__id", flat=True)
             if category_id
         ]
     )
@@ -73,7 +75,9 @@ def get_potential_discounts_for_product(context, product, available_only=True, g
             | (Q(exclude_selected_category=True) & ~Q(category__id__in=category_ids))
         )
     else:
-        condition_query &= Q(category__isnull=True) | Q(exclude_selected_category=True, category__isnull=False)
+        condition_query &= Q(category__isnull=True) | Q(
+            exclude_selected_category=True, category__isnull=False
+        )
 
     # Apply contact conditions
     if not all_contacts:
@@ -84,7 +88,9 @@ def get_potential_discounts_for_product(context, product, available_only=True, g
 
     if group_ids:
         # Apply contact group conditions
-        condition_query &= Q(Q(contact_group__isnull=True) | Q(contact_group__id__in=group_ids))
+        condition_query &= Q(
+            Q(contact_group__isnull=True) | Q(contact_group__id__in=group_ids)
+        )
     else:
         condition_query &= Q(contact_group__isnull=True)
 
@@ -123,7 +129,9 @@ def get_next_dates_for_range(weekday, from_hour, to_hour):
     from django.utils.timezone import now
 
     now_datetime = now()
-    next_date = now_datetime + datetime.timedelta(days=(abs(weekday - now_datetime.weekday()) % 7))
+    next_date = now_datetime + datetime.timedelta(
+        days=(abs(weekday - now_datetime.weekday()) % 7)
+    )
     ranges = [
         next_date.replace(hour=from_hour.hour, minute=from_hour.minute),
         next_date.replace(hour=to_hour.hour, minute=to_hour.minute),
@@ -173,7 +181,9 @@ def get_price_expiration(context, product):
     :returns the price expiration time timestamp
     """
     cache_params = dict(
-        identifier="price_expiration", item=_get_price_expiration_cache_key(context.shop.pk), context={}
+        identifier="price_expiration",
+        item=_get_price_expiration_cache_key(context.shop.pk),
+        context={},
     )
 
     if settings.SHUUP_DISCOUNTS_PER_PRODUCT_EXPIRATION_DATES:
@@ -191,14 +201,20 @@ def get_price_expiration(context, product):
     from shuup.discounts.models import Discount, TimeRange
 
     if settings.SHUUP_DISCOUNTS_PER_PRODUCT_EXPIRATION_DATES:
-        potential_discounts = get_potential_discounts_for_product(context, product, available_only=False)
+        potential_discounts = get_potential_discounts_for_product(
+            context, product, available_only=False
+        )
     else:
         potential_discounts = Discount.objects.active(context.shop)
 
     event_dates = []
 
-    time_ranges = TimeRange.objects.filter(happy_hour__discounts__in=potential_discounts).distinct()
-    for weekday, from_hour, to_hour in time_ranges.values_list("weekday", "from_hour", "to_hour"):
+    time_ranges = TimeRange.objects.filter(
+        happy_hour__discounts__in=potential_discounts
+    ).distinct()
+    for weekday, from_hour, to_hour in time_ranges.values_list(
+        "weekday", "from_hour", "to_hour"
+    ):
         event_dates.extend(get_next_dates_for_range(weekday, from_hour, to_hour))
 
     from django.utils.timezone import now
@@ -206,12 +222,16 @@ def get_price_expiration(context, product):
     now_datetime = now()
 
     if event_dates:
-        min_event_date = min(event_date for event_date in event_dates if event_date > now_datetime)
+        min_event_date = min(
+            event_date for event_date in event_dates if event_date > now_datetime
+        )
         min_event_date_timestamp = to_timestamp(min_event_date)
 
         # cache the value in the context cache, setting the timeout as the price expiration time
         cache_timeout = max((min_event_date - now_datetime).total_seconds(), 0)
-        context_cache.set_cached_value(key, min_event_date_timestamp, timeout=cache_timeout)
+        context_cache.set_cached_value(
+            key, min_event_date_timestamp, timeout=cache_timeout
+        )
 
         # cache the context in the context, so if it is used again it will contain the calculated value
         setattr(context, context_cache_key, min_event_date_timestamp)
@@ -271,10 +291,14 @@ def index_related_discount_shop_products(discounts: "Iterable[Discount]"):  # no
             for supplier in suppliers:
                 index_shop_product_price(shop_product, supplier, discounts_groups_ids)
 
-        index_linked_shop_products(discount, discounts_groups_ids, indexed_shop_products)
+        index_linked_shop_products(
+            discount, discounts_groups_ids, indexed_shop_products
+        )
 
 
-def index_linked_shop_products(discount, discounts_groups_ids=[], ignore_shop_products_ids=[]):
+def index_linked_shop_products(
+    discount, discounts_groups_ids=[], ignore_shop_products_ids=[]
+):
     """
     Reindex all shop products previously linked
     this is required when a shop product shouldn't be linked anymore
@@ -301,7 +325,9 @@ def index_linked_shop_products(discount, discounts_groups_ids=[], ignore_shop_pr
         ).delete()
 
         for supplier in discounts_link.shop_product.suppliers.all():
-            index_shop_product_price(discounts_link.shop_product, supplier, discounts_groups_ids)
+            index_shop_product_price(
+                discounts_link.shop_product, supplier, discounts_groups_ids
+            )
 
 
 def index_shop_product_price(
@@ -316,13 +342,21 @@ def index_shop_product_price(
     from shuup.discounts.modules import ProductDiscountModule
 
     default_price = shop_product.default_price_value
-    context = PricingContext(shop=shop_product.shop, customer=AnonymousContact(), supplier=supplier)
+    context = PricingContext(
+        shop=shop_product.shop, customer=AnonymousContact(), supplier=supplier
+    )
     discounts = get_potential_discounts_for_product(
-        context, shop_product.product, available_only=False, groups_ids=contact_groups_ids, all_contacts=True
+        context,
+        shop_product.product,
+        available_only=False,
+        groups_ids=contact_groups_ids,
+        all_contacts=True,
     )
 
     # link this shop product to the potencial discounts
-    discounts_link = ShopProductCatalogDiscountsLink.objects.get_or_create(shop_product=shop_product)[0]
+    discounts_link = ShopProductCatalogDiscountsLink.objects.get_or_create(
+        shop_product=shop_product
+    )[0]
     discounts_link.discounts.set(discounts)
 
     if not discounts.exists():
@@ -343,7 +377,9 @@ def index_shop_product_price(
             discount_options.append(default_price - discount.discount_amount_value)
 
         if discount.discount_percentage is not None:
-            discount_options.append(default_price - (default_price * discount.discount_percentage))
+            discount_options.append(
+                default_price - (default_price * discount.discount_percentage)
+            )
 
         best_discounted_price = max(min(discount_options), 0)
         happy_hours_times = list(

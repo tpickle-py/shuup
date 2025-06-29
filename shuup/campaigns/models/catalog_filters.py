@@ -42,7 +42,9 @@ class ProductTypeFilter(CatalogFilter):
         return shop_product.product.type_id in self.values.values_list("id", flat=True)
 
     def filter_queryset(self, queryset):
-        return queryset.filter(product__type_id__in=self.values.values_list("id", flat=True))
+        return queryset.filter(
+            product__type_id__in=self.values.values_list("id", flat=True)
+        )
 
     @property
     def description(self):
@@ -70,11 +72,17 @@ class ProductFilter(CatalogFilter):
 
     def matches(self, shop_product):
         product_ids = self.values.values_list("pk", flat=True)
-        return shop_product.product.pk in product_ids or shop_product.product.variation_parent_id in product_ids
+        return (
+            shop_product.product.pk in product_ids
+            or shop_product.product.variation_parent_id in product_ids
+        )
 
     def filter_queryset(self, queryset):
         product_ids = self.products.values_list("id", flat=True)
-        return queryset.filter(Q(product_id__in=product_ids) | Q(product__variation_parent_id__in=product_ids))
+        return queryset.filter(
+            Q(product_id__in=product_ids)
+            | Q(product__variation_parent_id__in=product_ids)
+        )
 
     @property
     def description(self):
@@ -100,7 +108,9 @@ class CategoryFilter(CatalogFilter):
         shop_products = []
         shop = Shop.objects.first()
         cat_ids = self.categories.all_except_deleted().values_list("pk", flat=True)
-        for parent in ShopProduct.objects.filter(categories__id__in=cat_ids).select_related("product"):
+        for parent in ShopProduct.objects.filter(
+            categories__id__in=cat_ids
+        ).select_related("product"):
             shop_products.append(parent)
             for child in parent.product.variation_children.all():
                 try:
@@ -111,22 +121,32 @@ class CategoryFilter(CatalogFilter):
         return shop_products
 
     def matches(self, shop_product):
-        ids = list(shop_product.categories.all_except_deleted().values_list("id", flat=True))
+        ids = list(
+            shop_product.categories.all_except_deleted().values_list("id", flat=True)
+        )
         for child in shop_product.product.variation_children.all():
             try:
                 child_sp = child.get_shop_instance(shop_product.shop)
             except ShopProduct.DoesNotExist:
                 continue
 
-            ids += list(child_sp.categories.all_except_deleted().values_list("id", flat=True))
+            ids += list(
+                child_sp.categories.all_except_deleted().values_list("id", flat=True)
+            )
 
         if shop_product.product.variation_parent:
             try:
-                parent_sp = shop_product.product.variation_parent.get_shop_instance(shop_product.shop)
+                parent_sp = shop_product.product.variation_parent.get_shop_instance(
+                    shop_product.shop
+                )
             except ShopProduct.DoesNotExist:
                 pass
             else:
-                ids += list(parent_sp.categories.all_except_deleted().values_list("id", flat=True))
+                ids += list(
+                    parent_sp.categories.all_except_deleted().values_list(
+                        "id", flat=True
+                    )
+                )
 
         new_ids = self.values.values_list("id", flat=True)
         return bool([x for x in ids if x in new_ids])

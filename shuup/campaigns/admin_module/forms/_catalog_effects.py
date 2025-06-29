@@ -7,7 +7,10 @@
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.forms.fields import PercentageField
-from shuup.campaigns.models.product_effects import ProductDiscountAmount, ProductDiscountPercentage
+from shuup.campaigns.models.product_effects import (
+    ProductDiscountAmount,
+    ProductDiscountPercentage,
+)
 
 from ._base import BaseEffectModelForm
 

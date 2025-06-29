@@ -6,15 +6,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0011_remove_product_category'),
+        ("shuup", "0011_remove_product_category"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='contact',
-            old_name='language',
-            new_name='_language',
+            model_name="contact",
+            old_name="language",
+            new_name="_language",
         ),
     ]

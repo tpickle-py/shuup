@@ -10,8 +10,12 @@ import pytest
 from bs4 import BeautifulSoup
 from django.utils.encoding import force_text
 
-from shuup.admin.modules.contact_group_price_display.views import ContactGroupPriceDisplayEditView
-from shuup.admin.modules.contact_group_price_display.views.forms import PriceDisplayChoices
+from shuup.admin.modules.contact_group_price_display.views import (
+    ContactGroupPriceDisplayEditView,
+)
+from shuup.admin.modules.contact_group_price_display.views.forms import (
+    PriceDisplayChoices,
+)
 from shuup.core.models import (
     AnonymousContact,
     CompanyContact,

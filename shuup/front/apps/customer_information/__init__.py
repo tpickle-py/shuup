@@ -24,7 +24,9 @@ class AppConfig(shuup.apps.AppConfig):
             __name__ + ".dashboard_items:CompanyDashboardItem",
             __name__ + ".dashboard_items:AddressBookDashboardItem",
         ],
-        "notify_event": ["shuup.front.apps.customer_information.notify_events:CompanyAccountCreated"],
+        "notify_event": [
+            "shuup.front.apps.customer_information.notify_events:CompanyAccountCreated"
+        ],
     }
 
 

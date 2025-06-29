@@ -32,10 +32,14 @@ class TaxRuleForm(forms.ModelForm):
         ]
         help_texts = {
             "country_codes_pattern": format_lazy(
-                PATTERN_SYNTAX_HELP_TEXT, " ", _("Use ISO 3166-1 country codes (US, FI etc.)")
+                PATTERN_SYNTAX_HELP_TEXT,
+                " ",
+                _("Use ISO 3166-1 country codes (US, FI etc.)"),
             ),
             "region_codes_pattern": format_lazy(
-                PATTERN_SYNTAX_HELP_TEXT, " ", _("Use two letter state codes for the US")
+                PATTERN_SYNTAX_HELP_TEXT,
+                " ",
+                _("Use two letter state codes for the US"),
             ),
             "postal_codes_pattern": PATTERN_SYNTAX_HELP_TEXT,
         }

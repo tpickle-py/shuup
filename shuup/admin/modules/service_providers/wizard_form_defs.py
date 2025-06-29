@@ -28,7 +28,10 @@ class ServiceWizardFormDef(TemplatedWizardFormDef):
             },
         }
         super(ServiceWizardFormDef, self).__init__(
-            form_class=form_class, template_name=template_name, extra_js=extra_js, **form_def_kwargs
+            form_class=form_class,
+            template_name=template_name,
+            extra_js=extra_js,
+            **form_def_kwargs,
         )
 
     def visible(self):

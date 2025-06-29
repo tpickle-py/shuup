@@ -29,8 +29,12 @@ class SendEmail(Action):
     template_use = TemplateUse.MULTILINGUAL
     template_fields = {
         "subject": forms.CharField(required=True, label=_("Subject")),
-        "email_template": forms.ChoiceField(choices=[(None, "-----")], label=_("Email Template"), required=False),
-        "body": forms.CharField(required=True, label=_("Email Body"), widget=CodeEditorWithHTMLPreview),
+        "email_template": forms.ChoiceField(
+            choices=[(None, "-----")], label=_("Email Template"), required=False
+        ),
+        "body": forms.CharField(
+            required=True, label=_("Email Body"), widget=CodeEditorWithHTMLPreview
+        ),
         "content_type": forms.ChoiceField(
             required=True,
             label=_("Content type"),
@@ -38,14 +42,25 @@ class SendEmail(Action):
             initial=EMAIL_CONTENT_TYPE_CHOICES[0][0],
         ),
     }
-    recipient = Binding(_("Recipient"), type=Email, constant_use=ConstantUse.VARIABLE_OR_CONSTANT, required=True)
-    reply_to_address = Binding(_("Reply-To"), type=Email, constant_use=ConstantUse.VARIABLE_OR_CONSTANT)
+    recipient = Binding(
+        _("Recipient"),
+        type=Email,
+        constant_use=ConstantUse.VARIABLE_OR_CONSTANT,
+        required=True,
+    )
+    reply_to_address = Binding(
+        _("Reply-To"), type=Email, constant_use=ConstantUse.VARIABLE_OR_CONSTANT
+    )
     cc = Binding(
         _("Carbon Copy (CC)"),
         type=Email,
         constant_use=ConstantUse.VARIABLE_OR_CONSTANT,
     )
-    bcc = Binding(_("Blind Carbon Copy (BCC)"), type=Email, constant_use=ConstantUse.VARIABLE_OR_CONSTANT)
+    bcc = Binding(
+        _("Blind Carbon Copy (BCC)"),
+        type=Email,
+        constant_use=ConstantUse.VARIABLE_OR_CONSTANT,
+    )
     from_email = Binding(
         _("From email"),
         type=Text,
@@ -57,7 +72,12 @@ class SendEmail(Action):
             'support@store.com or even "Store Support" <support@store.com>.'
         ),
     )
-    language = Binding(_("Language"), type=Language, constant_use=ConstantUse.VARIABLE_OR_CONSTANT, required=True)
+    language = Binding(
+        _("Language"),
+        type=Language,
+        constant_use=ConstantUse.VARIABLE_OR_CONSTANT,
+        required=True,
+    )
     fallback_language = Binding(
         _("Fallback language"),
         type=Language,
@@ -89,13 +109,23 @@ class SendEmail(Action):
         """
         recipient = get_email_list(self.get_value(context, "recipient"))
         if not recipient:
-            context.log(logging.INFO, "Info! %s: Not sending mail, no recipient.", self.identifier)
+            context.log(
+                logging.INFO,
+                "Info! %s: Not sending mail, no recipient.",
+                self.identifier,
+            )
             return
 
         send_identifier = self.get_value(context, "send_identifier")
-        if send_identifier and context.log_entry_queryset.filter(identifier=send_identifier).exists():
+        if (
+            send_identifier
+            and context.log_entry_queryset.filter(identifier=send_identifier).exists()
+        ):
             context.log(
-                logging.INFO, "Info! %s: Not sending mail, it was already sent (%r).", self.identifier, send_identifier
+                logging.INFO,
+                "Info! %s: Not sending mail, it was already sent (%r).",
+                self.identifier,
+                send_identifier,
             )
             return
 
@@ -138,19 +168,35 @@ class SendEmail(Action):
         bcc = get_email_list(self.get_value(context, "bcc"))
         cc = get_email_list(self.get_value(context, "cc"))
 
-        subject = " ".join(subject.splitlines())  # Email headers may not contain newlines
+        subject = " ".join(
+            subject.splitlines()
+        )  # Email headers may not contain newlines
         message = EmailMessage(
-            subject=subject, body=body, to=recipient, reply_to=reply_to, from_email=from_email, bcc=bcc, cc=cc
+            subject=subject,
+            body=body,
+            to=recipient,
+            reply_to=reply_to,
+            from_email=from_email,
+            bcc=bcc,
+            cc=cc,
         )
         message.content_subtype = content_type
-        notification_email_before_send.send(sender=type(self), action=self, message=message, context=context)
+        notification_email_before_send.send(
+            sender=type(self), action=self, message=message, context=context
+        )
         message.send()
-        context.log(logging.INFO, "Info! %s: Mail sent to %s.", self.identifier, recipient)
+        context.log(
+            logging.INFO, "Info! %s: Mail sent to %s.", self.identifier, recipient
+        )
 
-        notification_email_sent.send(sender=type(self), message=message, context=context)
+        notification_email_sent.send(
+            sender=type(self), message=message, context=context
+        )
 
         if send_identifier:
-            context.add_log_entry_on_log_target("Info! Email sent to %s: %s" % (recipient, subject), send_identifier)
+            context.add_log_entry_on_log_target(
+                "Info! Email sent to %s: %s" % (recipient, subject), send_identifier
+            )
 
 
 def get_email_list(email):

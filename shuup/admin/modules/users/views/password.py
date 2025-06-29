@@ -24,7 +24,9 @@ from shuup.utils.excs import Problem
 class PasswordChangeForm(forms.Form):
     error_messages = {
         "password_mismatch": _("The two password fields didn't match."),
-        "password_incorrect": _("Your old password was entered incorrectly. Please enter it again."),
+        "password_incorrect": _(
+            "Your old password was entered incorrectly. Please enter it again."
+        ),
     }
     old_password = forms.CharField(
         label=_("Your Password"),
@@ -32,16 +34,23 @@ class PasswordChangeForm(forms.Form):
         help_text=_("For security purposes, we need your current password."),
     )
     password1 = forms.CharField(label=_("New Password"), widget=forms.PasswordInput)
-    password2 = forms.CharField(label=_("New Password (again)"), widget=forms.PasswordInput)
+    password2 = forms.CharField(
+        label=_("New Password (again)"), widget=forms.PasswordInput
+    )
 
     def __init__(self, changing_user, target_user, *args, **kwargs):
         super(PasswordChangeForm, self).__init__(*args, **kwargs)
         self.changing_user = changing_user
         self.target_user = target_user
-        if getattr(self.target_user, "is_superuser", False) and not getattr(self.changing_user, "is_superuser", False):
+        if getattr(self.target_user, "is_superuser", False) and not getattr(
+            self.changing_user, "is_superuser", False
+        ):
             raise Problem(_("You can not change the password of a superuser."))
 
-        if not (self.changing_user == self.target_user or getattr(self.target_user, "is_superuser", False)):
+        if not (
+            self.changing_user == self.target_user
+            or getattr(self.target_user, "is_superuser", False)
+        ):
             # Only require old password when changing your own or a superuser's password.
             self.fields.pop("old_password")
 
@@ -86,7 +95,10 @@ class UserChangePasswordView(UpdateView):
 
     def get_toolbar(self):
         toolbar = get_default_edit_toolbar(
-            self, "change_password_form", discard_url=get_model_url(self.object), with_split_save=False
+            self,
+            "change_password_form",
+            discard_url=get_model_url(self.object),
+            with_split_save=False,
         )
         return toolbar
 
@@ -120,13 +132,19 @@ class UserResetPasswordView(DetailView):
 
     def process_user(self, user):
         if "shuup.front.apps.auth" not in settings.INSTALLED_APPS:
-            raise Problem(_("Error! The `shuup.front.apps.auth` app needs to be enabled for password reset."))
+            raise Problem(
+                _(
+                    "Error! The `shuup.front.apps.auth` app needs to be enabled for password reset."
+                )
+            )
 
         r = RecoverPasswordForm()
         r.request = self.request
         if r.process_user(user, self.request):
             messages.success(
-                self.request, _("Password recovery email sent to %(email)s.") % {"email": getattr(user, "email", "")}
+                self.request,
+                _("Password recovery email sent to %(email)s.")
+                % {"email": getattr(user, "email", "")},
             )
         else:
             raise Problem(_("Error! Sending the password recovery email failed."))

@@ -56,7 +56,10 @@ def test_reports_admin_permissions(rf):
                 response.render()
                 assert response.content
                 soup = BeautifulSoup(response.content)
-                assert soup.find("div", {"class": "content-block"}).text == "No reports available"
+                assert (
+                    soup.find("div", {"class": "content-block"}).text
+                    == "No reports available"
+                )
                 expected_report_identifiers = []
                 for report_cls in [SalesReport, TotalSales, SalesPerHour]:
                     expected_report_identifiers.append(report_cls.identifier)
@@ -66,5 +69,7 @@ def test_reports_admin_permissions(rf):
                     response.render()
                     assert response.content
                     soup = BeautifulSoup(response.content)
-                    for option in soup.find("select", {"id": "id_report"}).findAll("option"):
+                    for option in soup.find("select", {"id": "id_report"}).findAll(
+                        "option"
+                    ):
                         assert option["value"] in expected_report_identifiers

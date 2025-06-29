@@ -28,7 +28,9 @@ class CartDetailView(DetailView):
         if not basket_class:
             basket_class = cached_load("SHUUP_BASKET_CLASS_SPEC")
 
-        basket = basket_class(self.request, basket_name=self.object.key, shop=self.object.shop)
+        basket = basket_class(
+            self.request, basket_name=self.object.key, shop=self.object.shop
+        )
         context["basket"] = basket
 
         sources = [

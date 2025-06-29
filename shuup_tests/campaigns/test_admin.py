@@ -44,12 +44,16 @@ def test_campaigned_product_view(rf, admin_user):
             render_product_view(shop_product, request)
             product2 = create_product("test-product2", shop)
             sp2 = product2.get_shop_instance(shop)
-            render_product_view(sp2, request)  # should not break even though shop_product is not available
+            render_product_view(
+                sp2, request
+            )  # should not break even though shop_product is not available
 
 
 def render_product_view(shop_product, request):
     view_func = ProductEditView.as_view()
     response = view_func(request, pk=shop_product.pk)
-    assert shop_product.product.sku in response.rendered_content  # it's probable the SKU is there
+    assert (
+        shop_product.product.sku in response.rendered_content
+    )  # it's probable the SKU is there
     response = view_func(request, pk=None)  # "new mode"
     assert response.rendered_content  # yeah, something gets rendered

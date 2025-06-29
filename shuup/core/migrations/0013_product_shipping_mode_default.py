@@ -9,15 +9,18 @@ import shuup.core.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0012_contact_language'),
+        ("shuup", "0012_contact_language"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='product',
-            name='shipping_mode',
-            field=enumfields.fields.EnumIntegerField(default=1, enum=shuup.core.models.ShippingMode, verbose_name='shipping mode'),
+            model_name="product",
+            name="shipping_mode",
+            field=enumfields.fields.EnumIntegerField(
+                default=1,
+                enum=shuup.core.models.ShippingMode,
+                verbose_name="shipping mode",
+            ),
         ),
     ]

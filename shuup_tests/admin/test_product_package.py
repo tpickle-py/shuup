@@ -13,7 +13,12 @@ from shuup.admin.modules.products.utils import clear_existing_package
 from shuup.admin.modules.products.views import ProductPackageView
 from shuup.core.models import ProductMode, ShopProduct
 from shuup.simple_supplier.module import SimpleSupplierModule
-from shuup.testing.factories import create_package_product, create_product, get_default_shop, get_supplier
+from shuup.testing.factories import (
+    create_package_product,
+    create_product,
+    get_default_shop,
+    get_supplier,
+)
 from shuup.testing.utils import apply_all_middleware
 from shuup.utils.excs import Problem
 from shuup_tests.utils import printable_gibberish
@@ -22,7 +27,9 @@ from shuup_tests.utils.forms import get_form_data
 
 @pytest.mark.django_db
 def test_package_child_formset():
-    FormSet = formset_factory(PackageChildForm, PackageChildFormSet, extra=5, can_delete=True)
+    FormSet = formset_factory(
+        PackageChildForm, PackageChildFormSet, extra=5, can_delete=True
+    )
     parent = create_product(printable_gibberish())
     child = create_product(printable_gibberish())
 
@@ -32,7 +39,9 @@ def test_package_child_formset():
 
     assert not parent.get_all_package_children()
 
-    data = dict(get_form_data(formset, True), **{"form-0-child": child.pk, "form-0-quantity": 2})
+    data = dict(
+        get_form_data(formset, True), **{"form-0-child": child.pk, "form-0-quantity": 2}
+    )
     formset = FormSet(parent_product=parent, data=data)
     formset.save()
     assert parent.get_all_package_children()
@@ -43,7 +52,9 @@ def test_package_child_formset():
 
 @pytest.mark.django_db
 def test_product_not_in_normal_mode():
-    FormSet = formset_factory(PackageChildForm, PackageChildFormSet, extra=5, can_delete=True)
+    FormSet = formset_factory(
+        PackageChildForm, PackageChildFormSet, extra=5, can_delete=True
+    )
     parent = create_product(printable_gibberish())
     child_1 = create_product(printable_gibberish())
     child_1.link_to_parent(parent)
@@ -55,14 +66,19 @@ def test_product_not_in_normal_mode():
     # Trying to create a package from a non-normal mode product
     with pytest.raises(Problem):
         formset = FormSet(parent_product=parent)
-        data = dict(get_form_data(formset, True), **{"form-0-child": child_2.pk, "form-0-quantity": 2})
+        data = dict(
+            get_form_data(formset, True),
+            **{"form-0-child": child_2.pk, "form-0-quantity": 2},
+        )
         formset = FormSet(parent_product=parent, data=data)
         formset.save()
 
 
 @pytest.mark.django_db
 def test_cannot_add_product_to_own_package(rf):
-    FormSet = formset_factory(PackageChildForm, PackageChildFormSet, extra=5, can_delete=True)
+    FormSet = formset_factory(
+        PackageChildForm, PackageChildFormSet, extra=5, can_delete=True
+    )
     parent = create_product(printable_gibberish())
 
     # No products in the package
@@ -72,7 +88,10 @@ def test_cannot_add_product_to_own_package(rf):
     assert not parent.get_all_package_children()
 
     # Try to add a product to its own package
-    data = dict(get_form_data(formset, True), **{"form-0-child": parent.pk, "form-0-quantity": 2})
+    data = dict(
+        get_form_data(formset, True),
+        **{"form-0-child": parent.pk, "form-0-quantity": 2},
+    )
     formset = FormSet(parent_product=parent, data=data)
     formset.save()
     assert not parent.get_all_package_children()
@@ -82,7 +101,9 @@ def test_cannot_add_product_to_own_package(rf):
 @pytest.mark.django_db
 def test_package_edit_view(admin_user, rf, supplier_enabled):
     shop = get_default_shop()
-    supplier = get_supplier(SimpleSupplierModule.identifier, shop=shop, stock_managed=True)
+    supplier = get_supplier(
+        SimpleSupplierModule.identifier, shop=shop, stock_managed=True
+    )
     supplier.enabled = supplier_enabled
     supplier.save()
     package = create_package_product(printable_gibberish(), shop, supplier)
@@ -90,8 +111,12 @@ def test_package_edit_view(admin_user, rf, supplier_enabled):
     response = ProductPackageView.as_view()(request=request, pk=package.pk)
 
     product_ids = []
-    for shop_product in ShopProduct.objects.filter(suppliers=supplier, product__mode=ProductMode.NORMAL):
-        supplier.adjust_stock(product_id=shop_product.product_id, delta=shop_product.product_id)
+    for shop_product in ShopProduct.objects.filter(
+        suppliers=supplier, product__mode=ProductMode.NORMAL
+    ):
+        supplier.adjust_stock(
+            product_id=shop_product.product_id, delta=shop_product.product_id
+        )
         product_ids.append(shop_product.product_id)
 
     assert response.status_code == 200

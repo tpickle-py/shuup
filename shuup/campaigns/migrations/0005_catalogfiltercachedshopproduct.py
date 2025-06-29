@@ -7,19 +7,40 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0010_update_managers'),
-        ('campaigns', '0004_logmodels'),
+        ("shuup", "0010_update_managers"),
+        ("campaigns", "0004_logmodels"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CatalogFilterCachedShopProduct',
+            name="CatalogFilterCachedShopProduct",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('filter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='cached_shop_products', to='campaigns.CatalogFilter')),
-                ('shop_product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='cached_catalog_campaign_filters', to='shuup.ShopProduct')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "filter",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="cached_shop_products",
+                        to="campaigns.CatalogFilter",
+                    ),
+                ),
+                (
+                    "shop_product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="cached_catalog_campaign_filters",
+                        to="shuup.ShopProduct",
+                    ),
+                ),
             ],
         ),
     ]

@@ -15,7 +15,9 @@ from shuup.testing.utils import apply_request_middleware
 from shuup_tests.utils.fixtures import regular_user
 
 
-def do_request_and_asserts(rf, contact, maintenance=False, expect_all_seeing=False, expect_toolbar=False):
+def do_request_and_asserts(
+    rf, contact, maintenance=False, expect_all_seeing=False, expect_toolbar=False
+):
     request = apply_request_middleware(rf.get("/"), user=contact.user, customer=contact)
     response = IndexView.as_view()(request)
     response.render()
@@ -34,7 +36,11 @@ def do_request_and_asserts(rf, contact, maintenance=False, expect_all_seeing=Fal
         texts.append(elem.text.strip())
 
     if contact.user.is_superuser:
-        text = "show only visible products and categories" if expect_all_seeing else "show all products and categories"
+        text = (
+            "show only visible products and categories"
+            if expect_all_seeing
+            else "show all products and categories"
+        )
         assert_text_in_texts(texts, text, True)
     else:
         assert_text_in_texts(texts, "show only visible products and categories", False)
@@ -52,7 +58,13 @@ def test_all_seeing_and_maintenance(rf, admin_user):
     assert admin_contact.is_all_seeing
 
     assert admin_contact.user.is_superuser
-    do_request_and_asserts(rf, admin_contact, maintenance=False, expect_all_seeing=True, expect_toolbar=True)
+    do_request_and_asserts(
+        rf,
+        admin_contact,
+        maintenance=False,
+        expect_all_seeing=True,
+        expect_toolbar=True,
+    )
     configuration.set(None, get_all_seeing_key(admin_contact), False)
 
     # Test maintenance mode badge
@@ -64,7 +76,9 @@ def test_all_seeing_and_maintenance(rf, admin_user):
 def test_regular_user_is_blind(rf, regular_user):
     shop = get_default_shop()
     contact = get_person_contact(regular_user)
-    do_request_and_asserts(rf, contact, maintenance=False, expect_all_seeing=False, expect_toolbar=False)
+    do_request_and_asserts(
+        rf, contact, maintenance=False, expect_all_seeing=False, expect_toolbar=False
+    )
 
     # user needs to be superuser to even get a glimpse
     assert not contact.is_all_seeing
@@ -72,7 +86,9 @@ def test_regular_user_is_blind(rf, regular_user):
     assert not contact.is_all_seeing  # only superusers can be allseeing
 
     # Contact might be all-seeing in database but toolbar requires superuser
-    do_request_and_asserts(rf, contact, maintenance=False, expect_all_seeing=False, expect_toolbar=False)
+    do_request_and_asserts(
+        rf, contact, maintenance=False, expect_all_seeing=False, expect_toolbar=False
+    )
 
 
 def assert_text_in_texts(texts, expected_text, expected_outcome):

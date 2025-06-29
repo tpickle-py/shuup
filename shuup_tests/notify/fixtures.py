@@ -10,21 +10,39 @@ from __future__ import unicode_literals
 from django import forms
 
 from shuup.notify.base import Action, Event, Variable
-from shuup.notify.enums import UNILINGUAL_TEMPLATE_LANGUAGE, StepConditionOperator, TemplateUse
+from shuup.notify.enums import (
+    UNILINGUAL_TEMPLATE_LANGUAGE,
+    StepConditionOperator,
+    TemplateUse,
+)
 from shuup.notify.models import Script
 from shuup.notify.script import Context
 from shuup.notify.template import Template
 from shuup.notify.typology import Language, Model, Text
-from shuup.testing.factories import create_random_order, create_random_person, get_default_product
+from shuup.testing.factories import (
+    create_random_order,
+    create_random_person,
+    get_default_product,
+)
 from shuup.testing.text_data import random_title
 
 TEST_STEP_DATA = [
     {
         "next": "continue",
-        "actions": [{"identifier": "set_debug_flag", "flag_name": {"constant": "success"}}],
+        "actions": [
+            {"identifier": "set_debug_flag", "flag_name": {"constant": "success"}}
+        ],
         "conditions": [
-            {"identifier": "language_equal", "v1": {"variable": "order_language"}, "v2": {"constant": "fi"}},
-            {"identifier": "language_equal", "v1": {"variable": "order_language"}, "v2": {"constant": "ja"}},
+            {
+                "identifier": "language_equal",
+                "v1": {"variable": "order_language"},
+                "v2": {"constant": "fi"},
+            },
+            {
+                "identifier": "language_equal",
+                "v1": {"variable": "order_language"},
+                "v2": {"constant": "ja"},
+            },
         ],
         "cond_op": StepConditionOperator.ANY.value,
         "enabled": True,
@@ -74,13 +92,21 @@ class ATestEvent(Event):
 class ATestTemplateUsingAction(Action):
     identifier = "test_template_action"
     template_use = TemplateUse.MULTILINGUAL
-    template_fields = {"subject": forms.CharField(), "body": forms.CharField(), "content_type": forms.CharField()}
+    template_fields = {
+        "subject": forms.CharField(),
+        "body": forms.CharField(),
+        "content_type": forms.CharField(),
+    }
 
 
 class ATestUnilingualTemplateUsingAction(Action):
     identifier = "test_unilingual_template_action"
     template_use = TemplateUse.UNILINGUAL
-    template_fields = {"subject": forms.CharField(), "body": forms.CharField(), "content_type": forms.CharField()}
+    template_fields = {
+        "subject": forms.CharField(),
+        "body": forms.CharField(),
+        "content_type": forms.CharField(),
+    }
 
 
 def get_test_script():
@@ -93,7 +119,9 @@ def get_initialized_test_event(identifier=None):
     get_default_product()
     customer = create_random_person()
     order = create_random_order(customer)
-    return ATestEvent(order_language=order.language, order=order, just_some_text=random_title())
+    return ATestEvent(
+        order_language=order.language, order=order, just_some_text=random_title()
+    )
 
 
 def get_test_template():

@@ -89,7 +89,9 @@ def test_as_rounded_returns_same_type():
     assert amount.as_rounded().is_cool
 
 
-@pytest.mark.parametrize("currency,digits", [("USD", 2), ("EUR", 2), ("JPY", 0), ("CLF", 4), ("BRL", 2)])
+@pytest.mark.parametrize(
+    "currency,digits", [("USD", 2), ("EUR", 2), ("JPY", 0), ("CLF", 4), ("BRL", 2)]
+)
 def test_as_rounded_values(currency, digits):
     set_precision_provider(babel_precision_provider.get_precision)
 

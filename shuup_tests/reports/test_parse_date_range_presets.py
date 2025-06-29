@@ -27,7 +27,9 @@ def test_parse_date_range_presets():
         assert end == local_now()
 
         start, end = parse_date_range_preset(DateRangeChoices.RUNNING_WEEK)
-        assert start == local_now().replace(month=11, day=27, hour=0, minute=0, second=0)
+        assert start == local_now().replace(
+            month=11, day=27, hour=0, minute=0, second=0
+        )
         assert end == local_now()
 
         start, end = parse_date_range_preset(DateRangeChoices.RUNNING_MONTH)
@@ -75,10 +77,14 @@ def test_parse_date_range_presets_running_week(locale):
     def saturday():
         return datetime.datetime(2017, 12, 9, 17, 1, tzinfo=pytz.UTC)
 
-    with mock.patch("shuup.utils.i18n.get_current_babel_locale", side_effect=get_locale):
+    with mock.patch(
+        "shuup.utils.i18n.get_current_babel_locale", side_effect=get_locale
+    ):
         for local_now in [monday, tuesday, wednesday, thursday, friday, saturday]:
             with mock.patch("shuup.utils.dates.local_now", side_effect=local_now):
                 start, end = parse_date_range_preset(DateRangeChoices.THIS_WEEK)
-                assert start == local_now().replace(day=(3 if locale == "en-US" else 4), hour=0, minute=0, second=0)
+                assert start == local_now().replace(
+                    day=(3 if locale == "en-US" else 4), hour=0, minute=0, second=0
+                )
                 assert start.weekday() == get_locale().first_week_day
                 assert end == local_now()

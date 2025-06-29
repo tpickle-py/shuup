@@ -8,35 +8,58 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_simple_cms', '0013_add_supplier'),
+        ("shuup_simple_cms", "0013_add_supplier"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='page',
-            name='list_children_on_page',
-            field=models.BooleanField(default=False, help_text='Enable this if this page should display all of its children pages.', verbose_name='display children on page'),
+            model_name="page",
+            name="list_children_on_page",
+            field=models.BooleanField(
+                default=False,
+                help_text="Enable this if this page should display all of its children pages.",
+                verbose_name="display children on page",
+            ),
         ),
         migrations.AlterField(
-            model_name='page',
-            name='parent',
-            field=mptt.fields.TreeForeignKey(blank=True, help_text='Set this to a parent page if this page should be subcategorized (sub-menu) under another page.', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='children', to='shuup_simple_cms.Page', verbose_name='parent'),
+            model_name="page",
+            name="parent",
+            field=mptt.fields.TreeForeignKey(
+                blank=True,
+                help_text="Set this to a parent page if this page should be subcategorized (sub-menu) under another page.",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="children",
+                to="shuup_simple_cms.Page",
+                verbose_name="parent",
+            ),
         ),
         migrations.AlterField(
-            model_name='page',
-            name='render_title',
-            field=models.BooleanField(default=True, help_text='Enable this if this page should have a visible title.', verbose_name='render title'),
+            model_name="page",
+            name="render_title",
+            field=models.BooleanField(
+                default=True,
+                help_text="Enable this if this page should have a visible title.",
+                verbose_name="render title",
+            ),
         ),
         migrations.AlterField(
-            model_name='page',
-            name='show_child_timestamps',
-            field=models.BooleanField(default=True, help_text='Enable this if you want to show timestamps on the child pages. Please note, that this requires the children to be listed on the page as well.', verbose_name='show child page timestamps'),
+            model_name="page",
+            name="show_child_timestamps",
+            field=models.BooleanField(
+                default=True,
+                help_text="Enable this if you want to show timestamps on the child pages. Please note, that this requires the children to be listed on the page as well.",
+                verbose_name="show child page timestamps",
+            ),
         ),
         migrations.AlterField(
-            model_name='page',
-            name='visible_in_menu',
-            field=models.BooleanField(default=False, help_text='Enable this if this page should have a visible link in the top menu of the store front.', verbose_name='visible in menu'),
+            model_name="page",
+            name="visible_in_menu",
+            field=models.BooleanField(
+                default=False,
+                help_text="Enable this if this page should have a visible link in the top menu of the store front.",
+                verbose_name="visible in menu",
+            ),
         ),
     ]

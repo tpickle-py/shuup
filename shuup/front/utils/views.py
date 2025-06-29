@@ -18,7 +18,10 @@ def cache_product_things(request, products, language=None, attribute_identifiers
     language = language or get_language()
     if attribute_identifiers:
         Product.cache_attributes_for_targets(
-            ProductAttribute, products, attribute_identifiers=attribute_identifiers, language=language
+            ProductAttribute,
+            products,
+            attribute_identifiers=attribute_identifiers,
+            language=language,
         )
     products = cache_translations(products, (language,))
     return products

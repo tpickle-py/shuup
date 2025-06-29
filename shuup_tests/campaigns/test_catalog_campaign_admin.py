@@ -39,7 +39,9 @@ DEFAULT_EFFECT_FORMS = [
 def get_form_parts(request, view, object):
     with override_provides("campaign_context_condition", DEFAULT_CONDITION_FORMS):
         with override_provides("campaign_catalog_filter", DEFAULT_FILTER_FORMS):
-            with override_provides("campaign_product_discount_effect_form", DEFAULT_EFFECT_FORMS):
+            with override_provides(
+                "campaign_product_discount_effect_form", DEFAULT_EFFECT_FORMS
+            ):
                 initialized_view = view(request=request, kwargs={"pk": object.pk})
                 return initialized_view.get_form_parts(object)
 
@@ -49,7 +51,9 @@ def test_admin_campaign_edit_view_works(rf, admin_user):
     shop = get_default_shop()
     view_func = CatalogCampaignEditView.as_view()
     request = apply_request_middleware(rf.get("/"), user=admin_user)
-    campaign = CatalogCampaign.objects.create(name="test campaign", active=True, shop=shop)
+    campaign = CatalogCampaign.objects.create(
+        name="test campaign", active=True, shop=shop
+    )
     response = view_func(request, pk=campaign.pk)
     assert campaign.name in response.rendered_content
 
@@ -71,11 +75,18 @@ def test_campaign_new_mode_view_formsets(rf, admin_user):
 def test_campaign_edit_view_formsets(rf, admin_user):
     view = CatalogCampaignEditView
     shop = get_default_shop()
-    object = CatalogCampaign.objects.create(name="test campaign", active=True, shop=shop)
+    object = CatalogCampaign.objects.create(
+        name="test campaign", active=True, shop=shop
+    )
     request = apply_request_middleware(rf.get("/"), user=admin_user)
     form_parts = get_form_parts(request, view, object)
     # form parts should include forms  plus one for the base form
-    assert len(form_parts) == (len(DEFAULT_CONDITION_FORMS) + len(DEFAULT_FILTER_FORMS) + len(DEFAULT_EFFECT_FORMS) + 1)
+    assert len(form_parts) == (
+        len(DEFAULT_CONDITION_FORMS)
+        + len(DEFAULT_FILTER_FORMS)
+        + len(DEFAULT_EFFECT_FORMS)
+        + 1
+    )
 
 
 @pytest.mark.django_db
@@ -108,7 +119,9 @@ def test_campaign_edit_save(rf, admin_user):
     """
     with override_settings(LANGUAGES=[("en", "en")]):
         shop = get_default_shop()
-        object = CatalogCampaign.objects.create(name="test campaign", active=True, shop=shop)
+        object = CatalogCampaign.objects.create(
+            name="test campaign", active=True, shop=shop
+        )
         object.save()
         view = CatalogCampaignEditView.as_view()
         new_name = "Test Campaign"
@@ -129,7 +142,9 @@ def test_campaign_edit_save(rf, admin_user):
         with override_provides("campaign_context_condition", []):
             with override_provides("campaign_catalog_filter", []):
                 with override_provides("campaign_product_discount_effect_form", []):
-                    request = apply_request_middleware(rf.post("/", data=data), user=admin_user)
+                    request = apply_request_middleware(
+                        rf.post("/", data=data), user=admin_user
+                    )
                     response = view(request, pk=object.pk)
                     assert response.status_code in [200, 302]
 
@@ -167,10 +182,14 @@ def test_campaign_end_date(rf, admin_user):
         with override_provides("campaign_context_condition", []):
             with override_provides("campaign_catalog_filter", []):
                 with override_provides("campaign_product_discount_effect_form", []):
-                    request = apply_request_middleware(rf.post("/", data=data), user=admin_user)
+                    request = apply_request_middleware(
+                        rf.post("/", data=data), user=admin_user
+                    )
                     response = view(request, pk=object.pk)
                     assert response.status_code in [200, 302]
                     content = response.render().content.decode("utf-8")
-                    assert "Campaign end date can&#39;t be before a start date." in content
+                    assert (
+                        "Campaign end date can&#39;t be before a start date." in content
+                    )
         assert CatalogCampaign.objects.count() == methods_before
         assert CatalogCampaign.objects.get(pk=object.pk).name == old_name

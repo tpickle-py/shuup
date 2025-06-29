@@ -30,7 +30,9 @@ class CustomerSalesReport(OrderReportMixin, ShuupReportBase):
 
     def get_objects(self):
         return (
-            Contact.objects.filter(customer_orders__in=super(CustomerSalesReport, self).get_objects())
+            Contact.objects.filter(
+                customer_orders__in=super(CustomerSalesReport, self).get_objects()
+            )
             .annotate(
                 order_count=Count("customer_orders", distinct=True),
                 average_sales=Avg("customer_orders__taxful_total_price_value"),
@@ -39,7 +41,9 @@ class CustomerSalesReport(OrderReportMixin, ShuupReportBase):
             )
             .filter(order_count__gt=0)
             .order_by("-%s" % self.options["order_by"])[: self.queryset_row_limit]
-            .values("name", "order_count", "average_sales", "taxless_total", "taxful_total")
+            .values(
+                "name", "order_count", "average_sales", "taxless_total", "taxful_total"
+            )
         )
 
     def get_data(self):

@@ -24,7 +24,12 @@ class CartViewMixin(object):
 
     def get_queryset(self):
         qs = super(CartViewMixin, self).get_queryset()
-        return qs.filter(persistent=True, deleted=False, customer=self.request.customer, shop=self.request.shop)
+        return qs.filter(
+            persistent=True,
+            deleted=False,
+            customer=self.request.customer,
+            shop=self.request.shop,
+        )
 
 
 class CartListView(DashboardViewMixin, CartViewMixin, ListView):
@@ -69,9 +74,15 @@ class CartSaveView(View):
         if not request.customer:
             return JsonResponse({"ok": False}, status=403)
         if not title:
-            return JsonResponse({"ok": False, "error": force_text(_("Please enter a basket title."))}, status=400)
+            return JsonResponse(
+                {"ok": False, "error": force_text(_("Please enter a basket title."))},
+                status=400,
+            )
         if basket.is_empty:
-            return JsonResponse({"ok": False, "error": force_text(_("Can't save an empty basket."))}, status=400)
+            return JsonResponse(
+                {"ok": False, "error": force_text(_("Can't save an empty basket."))},
+                status=400,
+            )
         saved_basket = StoredBasket(
             shop=basket.shop,
             customer=basket.customer,
@@ -93,9 +104,15 @@ class CartAddAllProductsView(CartViewMixin, SingleObjectMixin, View):
     def get_object(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs.get("pk"))
 
-    def _get_supplier(self, shop_product, supplier_id, customer, quantity, shipping_address):
+    def _get_supplier(
+        self, shop_product, supplier_id, customer, quantity, shipping_address
+    ):
         if supplier_id:
-            supplier = shop_product.suppliers.enabled(shop=shop_product.shop).filter(pk=supplier_id).first()
+            supplier = (
+                shop_product.suppliers.enabled(shop=shop_product.shop)
+                .filter(pk=supplier_id)
+                .first()
+            )
         else:
             supplier = shop_product.get_supplier(customer, quantity, shipping_address)
         return supplier
@@ -114,10 +131,19 @@ class CartAddAllProductsView(CartViewMixin, SingleObjectMixin, View):
             try:
                 shop_product = product.get_shop_instance(shop=request.shop)
             except ShopProduct.DoesNotExist:
-                errors.append({"product": line.text, "message": _("Product is not available in this shop.")})
+                errors.append(
+                    {
+                        "product": line.text,
+                        "message": _("Product is not available in this shop."),
+                    }
+                )
                 continue
             supplier = self._get_supplier(
-                shop_product, line.get("supplier_id"), basket.customer, line.get("quantity"), basket.shipping_address
+                shop_product,
+                line.get("supplier_id"),
+                basket.customer,
+                line.get("quantity"),
+                basket.shipping_address,
             )
             if not supplier:
                 errors.append({"product": line.text, "message": _("Invalid supplier.")})
@@ -126,15 +152,32 @@ class CartAddAllProductsView(CartViewMixin, SingleObjectMixin, View):
             try:
                 quantity = line.get("quantity", 0)
                 quantity_added += quantity
-                product_quantity = quantity + product_ids_to_quantities.get(line["product_id"], 0)
-                shop_product.raise_if_not_orderable(
-                    supplier=supplier, quantity=product_quantity, customer=request.customer
+                product_quantity = quantity + product_ids_to_quantities.get(
+                    line["product_id"], 0
                 )
-                basket.add_product(supplier=supplier, shop=request.shop, product=product, quantity=quantity)
+                shop_product.raise_if_not_orderable(
+                    supplier=supplier,
+                    quantity=product_quantity,
+                    customer=request.customer,
+                )
+                basket.add_product(
+                    supplier=supplier,
+                    shop=request.shop,
+                    product=product,
+                    quantity=quantity,
+                )
             except ProductNotOrderableProblem as e:
-                errors.append({"product": line["text"], "message": force_text(e.message)})
+                errors.append(
+                    {"product": line["text"], "message": force_text(e.message)}
+                )
         return JsonResponse(
-            {"errors": errors, "success": force_text(_("%d product(s) added to cart." % quantity_added))}, status=200
+            {
+                "errors": errors,
+                "success": force_text(
+                    _("%d product(s) added to cart." % quantity_added)
+                ),
+            },
+            status=200,
         )
 
 

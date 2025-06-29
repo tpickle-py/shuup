@@ -8,7 +8,13 @@
 import pytest
 
 from shuup.core import cache
-from shuup.core.models import AnonymousContact, Manufacturer, Product, ShopProductVisibility, Supplier
+from shuup.core.models import (
+    AnonymousContact,
+    Manufacturer,
+    Product,
+    ShopProductVisibility,
+    Supplier,
+)
 from shuup.front.apps.auth.forms import EmailAuthenticationForm
 from shuup.testing.factories import (
     create_order_with_product,
@@ -61,23 +67,35 @@ def test_get_listed_products_orderable_only(reindex_catalog):
 
     from shuup.front.template_helpers import general
 
-    assert len(general.get_listed_products(context, n_products, orderable_only=True)) == 0
-    assert len(general.get_listed_products(context, n_products, orderable_only=False)) == 2
+    assert (
+        len(general.get_listed_products(context, n_products, orderable_only=True)) == 0
+    )
+    assert (
+        len(general.get_listed_products(context, n_products, orderable_only=False)) == 2
+    )
 
     # Increase stock on product
     quantity = product.get_shop_instance(shop).minimum_purchase_quantity
     simple_supplier.adjust_stock(product.id, quantity)
     reindex_catalog()
 
-    assert len(general.get_listed_products(context, n_products, orderable_only=True)) == 1
-    assert len(general.get_listed_products(context, n_products, orderable_only=False)) == 2
+    assert (
+        len(general.get_listed_products(context, n_products, orderable_only=True)) == 1
+    )
+    assert (
+        len(general.get_listed_products(context, n_products, orderable_only=False)) == 2
+    )
 
     # Decrease stock on product
     simple_supplier.adjust_stock(product.id, -quantity)
     reindex_catalog()
 
-    assert len(general.get_listed_products(context, n_products, orderable_only=True)) == 0
-    assert len(general.get_listed_products(context, n_products, orderable_only=False)) == 2
+    assert (
+        len(general.get_listed_products(context, n_products, orderable_only=True)) == 0
+    )
+    assert (
+        len(general.get_listed_products(context, n_products, orderable_only=False)) == 2
+    )
 
 
 @pytest.mark.django_db
@@ -101,11 +119,15 @@ def test_get_listed_products_filter(reindex_catalog):
     from shuup.front.template_helpers import general
 
     filter_dict = {"id": product_1.id}
-    product_list = general.get_listed_products(context, n_products=2, filter_dict=filter_dict)
+    product_list = general.get_listed_products(
+        context, n_products=2, filter_dict=filter_dict
+    )
     assert product_1 in product_list
     assert product_2 not in product_list
 
-    product_list = general.get_listed_products(context, n_products=2, filter_dict=filter_dict, orderable_only=False)
+    product_list = general.get_listed_products(
+        context, n_products=2, filter_dict=filter_dict, orderable_only=False
+    )
     assert product_1 in product_list
     assert product_2 not in product_list
 
@@ -129,14 +151,20 @@ def test_get_best_selling_products(reindex_catalog):
 
     product1 = create_product("product1", shop, supplier, 10)
     product2 = create_product("product2", shop, supplier, 20)
-    create_order_with_product(product1, supplier, quantity=1, taxless_base_unit_price=10, shop=shop)
-    create_order_with_product(product2, supplier, quantity=2, taxless_base_unit_price=20, shop=shop)
+    create_order_with_product(
+        product1, supplier, quantity=1, taxless_base_unit_price=10, shop=shop
+    )
+    create_order_with_product(
+        product2, supplier, quantity=2, taxless_base_unit_price=20, shop=shop
+    )
 
     reindex_catalog()
     cache.clear()
 
     # Two products sold
-    best_selling_products = list(general.get_best_selling_products(context, n_products=3))
+    best_selling_products = list(
+        general.get_best_selling_products(context, n_products=3)
+    )
     assert len(best_selling_products) == 2
     assert product1 in best_selling_products
     assert product2 in best_selling_products
@@ -149,26 +177,37 @@ def test_get_best_selling_products(reindex_catalog):
     reindex_catalog()
     cache.clear()
 
-    best_selling_products = list(general.get_best_selling_products(context, n_products=3))
+    best_selling_products = list(
+        general.get_best_selling_products(context, n_products=3)
+    )
     assert len(best_selling_products) == 1
     assert product1 not in best_selling_products
     assert product2 in best_selling_products
 
     # add a new product with discounted amount
-    product3 = create_product("product3", supplier=supplier, shop=shop, default_price=30)
-    create_order_with_product(product3, supplier, quantity=1, taxless_base_unit_price=30, shop=shop)
+    product3 = create_product(
+        "product3", supplier=supplier, shop=shop, default_price=30
+    )
+    create_order_with_product(
+        product3, supplier, quantity=1, taxless_base_unit_price=30, shop=shop
+    )
 
     reindex_catalog()
 
     from shuup.customer_group_pricing.models import CgpDiscount
 
     CgpDiscount.objects.create(
-        shop=shop, product=product3, group=AnonymousContact.get_default_group(), discount_amount_value=5
+        shop=shop,
+        product=product3,
+        group=AnonymousContact.get_default_group(),
+        discount_amount_value=5,
     )
     reindex_catalog()
     cache.clear()
 
-    best_selling_products = list(general.get_best_selling_products(context, n_products=3, orderable_only=True))
+    best_selling_products = list(
+        general.get_best_selling_products(context, n_products=3, orderable_only=True)
+    )
     assert len(best_selling_products) == 2
     assert product1 not in best_selling_products
     assert product2 in best_selling_products
@@ -192,20 +231,28 @@ def test_get_best_selling_products_per_supplier(reindex_catalog):
 
     product1 = create_product("product1", shop, supplier, 10)
     product2 = create_product("product2", shop, supplier2, 20)
-    create_order_with_product(product1, supplier, quantity=1, taxless_base_unit_price=10, shop=shop)
-    create_order_with_product(product2, supplier2, quantity=2, taxless_base_unit_price=20, shop=shop)
+    create_order_with_product(
+        product1, supplier, quantity=1, taxless_base_unit_price=10, shop=shop
+    )
+    create_order_with_product(
+        product2, supplier2, quantity=2, taxless_base_unit_price=20, shop=shop
+    )
 
     reindex_catalog()
 
     # Two products sold, but only one supplier
-    best_selling_products = list(general.get_best_selling_products(context, n_products=3, supplier=supplier))
+    best_selling_products = list(
+        general.get_best_selling_products(context, n_products=3, supplier=supplier)
+    )
     assert len(best_selling_products) == 1
     assert product1 in best_selling_products
     assert product2 not in best_selling_products
 
     # Two products sold, but only one supplier
     cache.clear()
-    best_selling_products = list(general.get_best_selling_products(context, n_products=3, supplier=supplier2))
+    best_selling_products = list(
+        general.get_best_selling_products(context, n_products=3, supplier=supplier2)
+    )
     assert len(best_selling_products) == 1
     assert product1 not in best_selling_products
     assert product2 in best_selling_products
@@ -217,13 +264,19 @@ def test_get_best_selling_products_per_supplier(reindex_catalog):
     reindex_catalog()
 
     cache.clear()
-    best_selling_products = list(general.get_best_selling_products(context, n_products=3, supplier=supplier2))
-    assert len(best_selling_products) == 1  # Since there isn't any orders yet for supplier 2
+    best_selling_products = list(
+        general.get_best_selling_products(context, n_products=3, supplier=supplier2)
+    )
+    assert (
+        len(best_selling_products) == 1
+    )  # Since there isn't any orders yet for supplier 2
     assert product2 in best_selling_products
 
     # get for all suppliers
     cache.clear()
-    best_selling_products = list(general.get_best_selling_products(context, n_products=3))
+    best_selling_products = list(
+        general.get_best_selling_products(context, n_products=3)
+    )
     assert len(best_selling_products) == 2
     assert product1 in best_selling_products
     assert product2 in best_selling_products
@@ -239,60 +292,102 @@ def test_best_selling_products_with_multiple_orders(reindex_catalog):
     n_products = 2
     price = 10
 
-    product_1 = create_product("test-sku-1", supplier=supplier, shop=shop, default_price=price)
-    product_2 = create_product("test-sku-2", supplier=supplier, shop=shop, default_price=price)
-    create_order_with_product(product_1, supplier, quantity=1, taxless_base_unit_price=price, shop=shop)
-    create_order_with_product(product_2, supplier, quantity=1, taxless_base_unit_price=price, shop=shop)
-
-    reindex_catalog()
-    cache.clear()
-
-    # Two initial products sold
-    assert product_1 in general.get_best_selling_products(context, n_products=n_products)
-    assert product_2 in general.get_best_selling_products(context, n_products=n_products)
-
-    product_3 = create_product("test-sku-3", supplier=supplier, shop=shop, default_price=price)
-    create_order_with_product(product_3, supplier, quantity=2, taxless_base_unit_price=price, shop=shop)
-
-    reindex_catalog()
-    cache.clear()
-
-    # Third product sold in greater quantity
-    assert product_3 in general.get_best_selling_products(context, n_products=n_products)
-
-    create_order_with_product(product_1, supplier, quantity=4, taxless_base_unit_price=price, shop=shop)
-    create_order_with_product(product_2, supplier, quantity=4, taxless_base_unit_price=price, shop=shop)
-
-    reindex_catalog()
-    cache.clear()
-
-    # Third product outsold by first two products
-    assert product_3 not in general.get_best_selling_products(context, n_products=n_products)
-
-    children = [create_product("SimpleVarChild-%d" % x, supplier=supplier, shop=shop) for x in range(5)]
-    for child in children:
-        child.link_to_parent(product_3)
-        create_order_with_product(child, supplier, quantity=1, taxless_base_unit_price=price, shop=shop)
-
-    reindex_catalog()
-    cache.clear()
-
-    # Third product now sold in greatest quantity
-    assert product_3 == general.get_best_selling_products(context, n_products=n_products)[0]
-
-    # add a new product with discounted amount
-    product_4 = create_product("test-sku-4", supplier=supplier, shop=shop, default_price=price)
-    create_order_with_product(product_4, supplier, quantity=20, taxless_base_unit_price=price, shop=shop)
-    from shuup.customer_group_pricing.models import CgpDiscount
-
-    CgpDiscount.objects.create(
-        shop=shop, product=product_4, group=AnonymousContact.get_default_group(), discount_amount_value=(price * 0.1)
+    product_1 = create_product(
+        "test-sku-1", supplier=supplier, shop=shop, default_price=price
+    )
+    product_2 = create_product(
+        "test-sku-2", supplier=supplier, shop=shop, default_price=price
+    )
+    create_order_with_product(
+        product_1, supplier, quantity=1, taxless_base_unit_price=price, shop=shop
+    )
+    create_order_with_product(
+        product_2, supplier, quantity=1, taxless_base_unit_price=price, shop=shop
     )
 
     reindex_catalog()
     cache.clear()
 
-    assert product_4 == general.get_best_selling_products(context, n_products=n_products)[0]
+    # Two initial products sold
+    assert product_1 in general.get_best_selling_products(
+        context, n_products=n_products
+    )
+    assert product_2 in general.get_best_selling_products(
+        context, n_products=n_products
+    )
+
+    product_3 = create_product(
+        "test-sku-3", supplier=supplier, shop=shop, default_price=price
+    )
+    create_order_with_product(
+        product_3, supplier, quantity=2, taxless_base_unit_price=price, shop=shop
+    )
+
+    reindex_catalog()
+    cache.clear()
+
+    # Third product sold in greater quantity
+    assert product_3 in general.get_best_selling_products(
+        context, n_products=n_products
+    )
+
+    create_order_with_product(
+        product_1, supplier, quantity=4, taxless_base_unit_price=price, shop=shop
+    )
+    create_order_with_product(
+        product_2, supplier, quantity=4, taxless_base_unit_price=price, shop=shop
+    )
+
+    reindex_catalog()
+    cache.clear()
+
+    # Third product outsold by first two products
+    assert product_3 not in general.get_best_selling_products(
+        context, n_products=n_products
+    )
+
+    children = [
+        create_product("SimpleVarChild-%d" % x, supplier=supplier, shop=shop)
+        for x in range(5)
+    ]
+    for child in children:
+        child.link_to_parent(product_3)
+        create_order_with_product(
+            child, supplier, quantity=1, taxless_base_unit_price=price, shop=shop
+        )
+
+    reindex_catalog()
+    cache.clear()
+
+    # Third product now sold in greatest quantity
+    assert (
+        product_3
+        == general.get_best_selling_products(context, n_products=n_products)[0]
+    )
+
+    # add a new product with discounted amount
+    product_4 = create_product(
+        "test-sku-4", supplier=supplier, shop=shop, default_price=price
+    )
+    create_order_with_product(
+        product_4, supplier, quantity=20, taxless_base_unit_price=price, shop=shop
+    )
+    from shuup.customer_group_pricing.models import CgpDiscount
+
+    CgpDiscount.objects.create(
+        shop=shop,
+        product=product_4,
+        group=AnonymousContact.get_default_group(),
+        discount_amount_value=(price * 0.1),
+    )
+
+    reindex_catalog()
+    cache.clear()
+
+    assert (
+        product_4
+        == general.get_best_selling_products(context, n_products=n_products)[0]
+    )
 
 
 @pytest.mark.django_db
@@ -301,9 +396,15 @@ def test_get_newest_products(reindex_catalog):
 
     supplier = get_default_supplier()
     shop = get_default_shop()
-    products = [create_product("sku-%d" % x, supplier=supplier, shop=shop, default_price=x + 1) for x in range(2)]
+    products = [
+        create_product("sku-%d" % x, supplier=supplier, shop=shop, default_price=x + 1)
+        for x in range(2)
+    ]
     children = [
-        create_product("SimpleVarChild-%d" % x, supplier=supplier, shop=shop, default_price=x + 1) for x in range(2)
+        create_product(
+            "SimpleVarChild-%d" % x, supplier=supplier, shop=shop, default_price=x + 1
+        )
+        for x in range(2)
     ]
 
     for child in children:
@@ -337,8 +438,13 @@ def test_get_random_products(reindex_catalog):
     supplier = get_default_supplier()
     shop = get_default_shop()
 
-    products = [create_product("sku-%d" % x, supplier=supplier, shop=shop) for x in range(2)]
-    children = [create_product("SimpleVarChild-%d" % x, supplier=supplier, shop=shop) for x in range(2)]
+    products = [
+        create_product("sku-%d" % x, supplier=supplier, shop=shop) for x in range(2)
+    ]
+    children = [
+        create_product("SimpleVarChild-%d" % x, supplier=supplier, shop=shop)
+        for x in range(2)
+    ]
 
     for child in children:
         child.link_to_parent(products[0])
@@ -362,8 +468,13 @@ def test_products_for_category(reindex_catalog):
     shop = get_default_shop()
 
     category = get_default_category()
-    products = [create_product("sku-%d" % x, supplier=supplier, shop=shop) for x in range(2)]
-    children = [create_product("SimpleVarChild-%d" % x, supplier=supplier, shop=shop) for x in range(2)]
+    products = [
+        create_product("sku-%d" % x, supplier=supplier, shop=shop) for x in range(2)
+    ]
+    children = [
+        create_product("SimpleVarChild-%d" % x, supplier=supplier, shop=shop)
+        for x in range(2)
+    ]
     category.shops.add(shop)
 
     for child in children:
@@ -397,7 +508,9 @@ def test_get_all_manufacturers(reindex_catalog):
     manuf1.shops.add(shop)
     manuf2.shops.add(shop)
 
-    products = [create_product("sku-%d" % x, supplier=supplier, shop=shop) for x in range(3)]
+    products = [
+        create_product("sku-%d" % x, supplier=supplier, shop=shop) for x in range(3)
+    ]
     products[0].manufacturer = manuf1
     products[0].save()
     products[1].manufacturer = manuf2

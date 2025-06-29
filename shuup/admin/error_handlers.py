@@ -40,4 +40,8 @@ class AdminPageErrorHandler(ErrorPageHandler):
 
     @classmethod
     def handle_error(cls, request, error_status):
-        return render(request, "shuup/admin/errors/{}.jinja".format(error_status), status=error_status)
+        return render(
+            request,
+            "shuup/admin/errors/{}.jinja".format(error_status),
+            status=error_status,
+        )

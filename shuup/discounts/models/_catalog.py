@@ -16,5 +16,9 @@ class ShopProductCatalogDiscountsLink(models.Model):
     must be reindexed.
     """
 
-    shop_product = models.OneToOneField("shuup.ShopProduct", related_name="discounts_link", on_delete=models.CASCADE)
-    discounts = models.ManyToManyField("discounts.Discount", related_name="shop_products_link", blank=True)
+    shop_product = models.OneToOneField(
+        "shuup.ShopProduct", related_name="discounts_link", on_delete=models.CASCADE
+    )
+    discounts = models.ManyToManyField(
+        "discounts.Discount", related_name="shop_products_link", blank=True
+    )

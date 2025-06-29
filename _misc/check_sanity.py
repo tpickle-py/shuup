@@ -34,7 +34,9 @@ from sanity_utils import find_files
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("root", nargs="?", default=".", help="Root directory (defaults to %(default)s)")
+    ap.add_argument(
+        "root", nargs="?", default=".", help="Root directory (defaults to %(default)s)"
+    )
     args = ap.parse_args()
     generated_resources = set()
     paths = find_files(args.root, generated_resources)
@@ -58,7 +60,7 @@ def check_sanity_of_files(paths, ignored_paths):
 def check_sanity_of_file(path):
     reported = set()  # reported codes
     with open(path, "rb") as fp:
-        for (num, line) in enumerate(fp, 1):
+        for num, line in enumerate(fp, 1):
             for insanity_cls in INSANITY_CLASSES:
                 obj = insanity_cls.create_if_present(path, num, line)
                 if obj and not (obj.only_once and obj.code in reported):

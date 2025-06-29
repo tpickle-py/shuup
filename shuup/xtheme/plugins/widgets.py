@@ -35,7 +35,15 @@ class XThemeModelChoiceField(forms.ModelChoiceField):
 
 class XThemeSelect2ModelMultipleChoiceField(forms.MultipleChoiceField):
     def __init__(
-        self, model, required=True, label=None, initial=None, help_text="", extra_widget_attrs={}, *args, **kwargs
+        self,
+        model,
+        required=True,
+        label=None,
+        initial=None,
+        help_text="",
+        extra_widget_attrs={},
+        *args,
+        **kwargs,
     ):
         widget_attrs = {"data-model": model}
         widget_attrs.update(extra_widget_attrs)
@@ -46,7 +54,10 @@ class XThemeSelect2ModelMultipleChoiceField(forms.MultipleChoiceField):
 
             app_label, model_name = model.split(".")
             model = apps.get_model(app_label, model_name)
-            choices = [(instance.pk, force_text(instance)) for instance in model.objects.filter(pk__in=initial)]
+            choices = [
+                (instance.pk, force_text(instance))
+                for instance in model.objects.filter(pk__in=initial)
+            ]
 
         super(XThemeSelect2ModelMultipleChoiceField, self).__init__(
             choices=choices,
@@ -56,17 +67,27 @@ class XThemeSelect2ModelMultipleChoiceField(forms.MultipleChoiceField):
             initial=initial,
             help_text=help_text,
             *args,
-            **kwargs
+            **kwargs,
         )
 
     def validate(self, value):
         if self.required and not value:
-            raise forms.ValidationError(self.error_messages["required"], code="required")
+            raise forms.ValidationError(
+                self.error_messages["required"], code="required"
+            )
 
 
 class XThemeSelect2ModelChoiceField(forms.ChoiceField):
     def __init__(
-        self, model, required=True, label=None, initial=None, help_text="", extra_widget_attrs={}, *args, **kwargs
+        self,
+        model,
+        required=True,
+        label=None,
+        initial=None,
+        help_text="",
+        extra_widget_attrs={},
+        *args,
+        **kwargs,
     ):
         widget_attrs = {"data-model": model}
         widget_attrs.update(extra_widget_attrs)
@@ -89,9 +110,11 @@ class XThemeSelect2ModelChoiceField(forms.ChoiceField):
             initial=initial,
             help_text=help_text,
             *args,
-            **kwargs
+            **kwargs,
         )
 
     def validate(self, value):
         if self.required and not value:
-            raise forms.ValidationError(self.error_messages["required"], code="required")
+            raise forms.ValidationError(
+                self.error_messages["required"], code="required"
+            )

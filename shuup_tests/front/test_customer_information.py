@@ -27,7 +27,11 @@ from shuup.testing.soup_utils import extract_form_fields
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse
 from shuup_tests.utils import SmartClient
-from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME, regular_user
+from shuup_tests.utils.fixtures import (
+    REGULAR_USER_PASSWORD,
+    REGULAR_USER_USERNAME,
+    regular_user,
+)
 
 User = get_user_model()
 
@@ -65,7 +69,9 @@ def default_address_data(address_type):
 @pytest.mark.django_db
 @pytest.mark.parametrize("allow_image_uploads", (False, True))
 def test_new_user_information_edit(allow_image_uploads):
-    with override_settings(SHUUP_CUSTOMER_INFORMATION_ALLOW_PICTURE_UPLOAD=allow_image_uploads):
+    with override_settings(
+        SHUUP_CUSTOMER_INFORMATION_ALLOW_PICTURE_UPLOAD=allow_image_uploads
+    ):
         client = SmartClient()
         get_default_shop()
         # create new user
@@ -85,7 +91,9 @@ def test_new_user_information_edit(allow_image_uploads):
         soup = client.soup(customer_edit_url)
 
         assert soup.find(attrs={"name": "contact-email"})["value"] == user.email
-        assert soup.find(attrs={"name": "contact-first_name"})["value"] == user.first_name
+        assert (
+            soup.find(attrs={"name": "contact-first_name"})["value"] == user.first_name
+        )
         assert soup.find(attrs={"name": "contact-last_name"})["value"] == user.last_name
 
         # Test POSTing
@@ -105,7 +113,11 @@ def test_new_user_information_edit(allow_image_uploads):
             tmp_file = tempfile.NamedTemporaryFile(suffix=".jpg")
             generate_image(120, 120).save(tmp_file)
             with open(tmp_file.name, "rb") as data:
-                response = client.post(reverse("shuup:media-upload"), data=dict({"file": data}), format="multipart")
+                response = client.post(
+                    reverse("shuup:media-upload"),
+                    data=dict({"file": data}),
+                    format="multipart",
+                )
             assert response.status_code == 200
             data = json.loads(response.content.decode("utf-8"))
             file_id = data["file"]["id"]
@@ -123,7 +135,10 @@ def test_new_user_information_edit(allow_image_uploads):
             # Fetch page and check that the picture rendered there
             customer_edit_url = reverse("shuup:customer_edit")
             soup = client.soup(customer_edit_url)
-            assert int(soup.find(attrs={"id": "id_contact-picture-dropzone"})["data-id"]) == file_id
+            assert (
+                int(soup.find(attrs={"id": "id_contact-picture-dropzone"})["data-id"])
+                == file_id
+            )
         else:
             assert contact.picture is None
 
@@ -255,7 +270,9 @@ def test_company_tax_number_limitations(regular_user, allow_company_registration
         # another company tries to use same tax number
         new_user_password = "derpy"
         new_user_username = "derpy"
-        user = User.objects.create_user(new_user_username, "derpy@shuup.com", new_user_password)
+        user = User.objects.create_user(
+            new_user_username, "derpy@shuup.com", new_user_password
+        )
         person = get_person_contact(user=user)
         assert not get_company_contact(user)
 
@@ -298,7 +315,10 @@ def test_person_contact_form_field_overrides():
         assert form.fields["phone"].required is False
 
     with override_settings(
-        SHUUP_PERSON_CONTACT_FIELD_PROPERTIES={"gender": {"widget": forms.HiddenInput()}, "phone": {"required": True}}
+        SHUUP_PERSON_CONTACT_FIELD_PROPERTIES={
+            "gender": {"widget": forms.HiddenInput()},
+            "phone": {"required": True},
+        }
     ):
         form = PersonContactForm()
         assert type(form.fields["gender"].widget) == forms.HiddenInput

@@ -6,20 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0028_displayunit'),
+        ("shuup", "0028_displayunit"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='personcontact',
-            name='first_name',
+            model_name="personcontact",
+            name="first_name",
             field=models.CharField(blank=True, max_length=120),
         ),
         migrations.AlterField(
-            model_name='personcontact',
-            name='last_name',
+            model_name="personcontact",
+            name="last_name",
             field=models.CharField(blank=True, max_length=120),
         ),
     ]

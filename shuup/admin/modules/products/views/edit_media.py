@@ -87,7 +87,12 @@ class ProductMediaEditView(UpdateView):
     form_class = ProductMediaFormSet
 
     def get_breadcrumb_parents(self):
-        return [MenuEntry(text="%s" % self.object, url=get_model_url(self.object, shop=self.request.shop))]
+        return [
+            MenuEntry(
+                text="%s" % self.object,
+                url=get_model_url(self.object, shop=self.request.shop),
+            )
+        ]
 
     def get_object(self, queryset=None):
         if not self.kwargs.get(self.pk_url_kwarg):
@@ -117,7 +122,9 @@ class ProductMediaEditView(UpdateView):
     def get_form_kwargs(self):
         kwargs = super(ProductMediaEditView, self).get_form_kwargs()
         instance = kwargs.pop("instance", None)
-        kwargs["queryset"] = ProductMedia.objects.filter(product=instance).order_by("ordering")
+        kwargs["queryset"] = ProductMedia.objects.filter(product=instance).order_by(
+            "ordering"
+        )
         kwargs["product"] = instance
         return kwargs
 
@@ -140,32 +147,59 @@ class ProductMediaBulkAdderView(View):
         shop = self.request.shop
         shop_id = self.request.POST.get("shop_id", shop.pk)
         if not ids or not shop_product_id:
-            return JsonResponse({"response": "error", "message": "Error! Bad request."}, status=400)
+            return JsonResponse(
+                {"response": "error", "message": "Error! Bad request."}, status=400
+            )
         if not Shop.objects.filter(pk=shop_id).exists():
-            return JsonResponse({"response": "error", "message": "Error! Invalid shop id `%s`." % shop_id}, status=400)
+            return JsonResponse(
+                {
+                    "response": "error",
+                    "message": "Error! Invalid shop id `%s`." % shop_id,
+                },
+                status=400,
+            )
 
-        shop_product = ShopProduct.objects.filter(pk=shop_product_id, shop_id=shop_id).first()
+        shop_product = ShopProduct.objects.filter(
+            pk=shop_product_id, shop_id=shop_id
+        ).first()
         if not shop_product:
             return JsonResponse(
-                {"response": "error", "message": "Error! Invalid shop product id `%s`." % shop_product_id}, status=400
+                {
+                    "response": "error",
+                    "message": "Error! Invalid shop product id `%s`." % shop_product_id,
+                },
+                status=400,
             )
         if kind == "images":
             kind = ProductMediaKind.IMAGE
         elif kind == "media":
             kind = ProductMediaKind.GENERIC_FILE
         else:
-            return JsonResponse({"response": "error", "message": "Error! Invalid file kind `%s`." % kind}, status=400)
+            return JsonResponse(
+                {
+                    "response": "error",
+                    "message": "Error! Invalid file kind `%s`." % kind,
+                },
+                status=400,
+            )
         for file_id in ids:
             if not File.objects.filter(id=file_id).exists():
                 return JsonResponse(
-                    {"response": "error", "message": "Error! Invalid file id `%s`." % file_id}, status=400
+                    {
+                        "response": "error",
+                        "message": "Error! Invalid file id `%s`." % file_id,
+                    },
+                    status=400,
                 )
 
         added = []
 
         for file_id in ids:
             if not ProductMedia.objects.filter(
-                product_id=shop_product.product_id, file_id=file_id, kind=kind, shops__in=[shop_id]
+                product_id=shop_product.product_id,
+                file_id=file_id,
+                kind=kind,
+                shops__in=[shop_id],
             ).exists():
                 image = ProductMedia.objects.create(
                     product_id=shop_product.product_id,
@@ -174,8 +208,17 @@ class ProductMediaBulkAdderView(View):
                 )
                 image.shops.add(shop_id)
                 added.append(
-                    {"product": image.product_id, "file": int(file_id), "kind": kind.value, "product_media": image.pk}
+                    {
+                        "product": image.product_id,
+                        "file": int(file_id),
+                        "kind": kind.value,
+                        "product_media": image.pk,
+                    }
                 )
         return JsonResponse(
-            {"response": "success", "added": added, "message": force_text(_("Files added to the product."))}
+            {
+                "response": "success",
+                "added": added,
+                "message": force_text(_("Files added to the product.")),
+            }
         )

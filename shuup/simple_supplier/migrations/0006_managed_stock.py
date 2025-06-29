@@ -6,15 +6,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('simple_supplier', '0005_simple_supplier_related_name'),
+        ("simple_supplier", "0005_simple_supplier_related_name"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='stockcount',
-            name='stock_managed',
-            field=models.BooleanField(default=True, help_text='Use this to override the supplier default stock behavior per product.', verbose_name='stock managed'),
+            model_name="stockcount",
+            name="stock_managed",
+            field=models.BooleanField(
+                default=True,
+                help_text="Use this to override the supplier default stock behavior per product.",
+                verbose_name="stock managed",
+            ),
         ),
     ]

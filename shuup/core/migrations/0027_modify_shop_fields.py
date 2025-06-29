@@ -11,41 +11,60 @@ import shuup.core.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('shuup', '0026_address_geolocation'),
+        ("shuup", "0026_address_geolocation"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='productvariationvariable',
-            options={'ordering': ('ordering',), 'verbose_name': 'variation variable', 'verbose_name_plural': 'variation variables'},
+            name="productvariationvariable",
+            options={
+                "ordering": ("ordering",),
+                "verbose_name": "variation variable",
+                "verbose_name_plural": "variation variables",
+            },
         ),
         migrations.AlterModelOptions(
-            name='productvariationvariablevalue',
-            options={'ordering': ('ordering',), 'verbose_name': 'variation value', 'verbose_name_plural': 'variation values'},
+            name="productvariationvariablevalue",
+            options={
+                "ordering": ("ordering",),
+                "verbose_name": "variation value",
+                "verbose_name_plural": "variation values",
+            },
         ),
         migrations.AddField(
-            model_name='shop',
-            name='created_on',
-            field=models.DateTimeField(auto_now_add=True, default=datetime.datetime(2017, 1, 28, 20, 34, 40, 225690, tzinfo=utc)),
+            model_name="shop",
+            name="created_on",
+            field=models.DateTimeField(
+                auto_now_add=True,
+                default=datetime.datetime(2017, 1, 28, 20, 34, 40, 225690, tzinfo=utc),
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='shop',
-            name='modified_on',
-            field=models.DateTimeField(auto_now=True, default=datetime.datetime(2017, 1, 28, 20, 34, 45, 938085, tzinfo=utc)),
+            model_name="shop",
+            name="modified_on",
+            field=models.DateTimeField(
+                auto_now=True,
+                default=datetime.datetime(2017, 1, 28, 20, 34, 45, 938085, tzinfo=utc),
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='shop',
-            name='staff_members',
-            field=models.ManyToManyField(blank=True, related_name='_shop_staff_members_+', to=settings.AUTH_USER_MODEL),
+            model_name="shop",
+            name="staff_members",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="_shop_staff_members_+",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='shop',
-            name='identifier',
-            field=shuup.core.fields.InternalIdentifierField(blank=True, editable=False, max_length=128, null=True, unique=True),
+            model_name="shop",
+            name="identifier",
+            field=shuup.core.fields.InternalIdentifierField(
+                blank=True, editable=False, max_length=128, null=True, unique=True
+            ),
         ),
     ]

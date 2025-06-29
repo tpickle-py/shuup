@@ -35,7 +35,9 @@ class StocksAdminModule(AdminModule):
                 name="simple_supplier.stock_managed",
             ),
             admin_url(
-                r"^stocks/", "shuup.simple_supplier.admin_module.views.StocksListView", name="simple_supplier.stocks"
+                r"^stocks/",
+                "shuup.simple_supplier.admin_module.views.StocksListView",
+                name="simple_supplier.stocks",
             ),
             admin_url(
                 r"^list-settings/",

@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0059_contact_options'),
+        ("shuup", "0059_contact_options"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='supplier',
-            name='deleted',
-            field=models.BooleanField(default=False, verbose_name='deleted'),
+            model_name="supplier",
+            name="deleted",
+            field=models.BooleanField(default=False, verbose_name="deleted"),
         ),
     ]

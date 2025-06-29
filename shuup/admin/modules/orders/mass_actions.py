@@ -14,7 +14,10 @@ from six import BytesIO
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.utils.picotable import PicotableFileMassAction, PicotableMassAction
 from shuup.core.models import Order, Shipment
-from shuup.order_printouts.admin_module.views import get_confirmation_pdf, get_delivery_pdf
+from shuup.order_printouts.admin_module.views import (
+    get_confirmation_pdf,
+    get_delivery_pdf,
+)
 from shuup.utils.django_compat import force_text
 
 
@@ -40,11 +43,16 @@ class OrderConfirmationPdfAction(PicotableFileMassAction):
 
     def process(self, request, ids):
         if isinstance(ids, six.string_types) and ids == "all":
-            return JsonResponse({"error": ugettext("Error! Selecting all is not supported.")}, status=400)
+            return JsonResponse(
+                {"error": ugettext("Error! Selecting all is not supported.")},
+                status=400,
+            )
         if len(ids) == 1:
             try:
                 response = get_confirmation_pdf(request, ids[0])
-                response["Content-Disposition"] = "attachment; filename=order_%s_confirmation.pdf" % ids[0]
+                response["Content-Disposition"] = (
+                    "attachment; filename=order_%s_confirmation.pdf" % ids[0]
+                )
                 return response
             except Exception as e:
                 msg = e.message if hasattr(e, "message") else e
@@ -70,7 +78,9 @@ class OrderConfirmationPdfAction(PicotableFileMassAction):
             ret_zip = buff.getvalue()
             buff.close()
             response = HttpResponse(content_type="application/zip")
-            response["Content-Disposition"] = "attachment; filename=order_confirmation_pdf.zip"
+            response["Content-Disposition"] = (
+                "attachment; filename=order_confirmation_pdf.zip"
+            )
             response.write(ret_zip)
             return response
         return JsonResponse({"errors": errors}, status=400)
@@ -82,13 +92,19 @@ class OrderDeliveryPdfAction(PicotableFileMassAction):
 
     def process(self, request, ids):
         if isinstance(ids, six.string_types) and ids == "all":
-            return JsonResponse({"error": ugettext("Error! Selecting all is not supported.")})
-        shipment_ids = set(Shipment.objects.filter(order_id__in=ids).values_list("id", flat=True))
+            return JsonResponse(
+                {"error": ugettext("Error! Selecting all is not supported.")}
+            )
+        shipment_ids = set(
+            Shipment.objects.filter(order_id__in=ids).values_list("id", flat=True)
+        )
         if len(shipment_ids) == 1:
             try:
                 shipment_id = shipment_ids.pop()
                 response = get_delivery_pdf(request, shipment_id)
-                response["Content-Disposition"] = "attachment; filename=shipment_%s_delivery.pdf" % shipment_id
+                response["Content-Disposition"] = (
+                    "attachment; filename=shipment_%s_delivery.pdf" % shipment_id
+                )
                 return response
             except Exception as e:
                 msg = e.message if hasattr(e, "message") else e
@@ -114,7 +130,9 @@ class OrderDeliveryPdfAction(PicotableFileMassAction):
             ret_zip = buff.getvalue()
             buff.close()
             response = HttpResponse(content_type="application/zip")
-            response["Content-Disposition"] = "attachment; filename=order_delivery_pdf.zip"
+            response["Content-Disposition"] = (
+                "attachment; filename=order_delivery_pdf.zip"
+            )
             response.write(ret_zip)
             return response
         return JsonResponse({"errors": errors})

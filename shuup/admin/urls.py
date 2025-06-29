@@ -32,7 +32,9 @@ from shuup.utils.i18n import javascript_catalog_all
 
 
 def login(request, **kwargs):
-    if not is_anonymous(request.user) and request.method == "POST":  # We're logging in, so log out first
+    if (
+        not is_anonymous(request.user) and request.method == "POST"
+    ):  # We're logging in, so log out first
         do_logout(request)
 
     kwargs.setdefault("extra_context", {})["error"] = request.GET.get("error")
@@ -47,14 +49,35 @@ def get_urls():
         [
             admin_url(r"^$", DashboardView.as_view(), name="dashboard", permissions=()),
             admin_url(r"^home/$", HomeView.as_view(), name="home", permissions=()),
-            admin_url(r"^wizard/$", WizardView.as_view(), name="wizard", permissions=()),
+            admin_url(
+                r"^wizard/$", WizardView.as_view(), name="wizard", permissions=()
+            ),
             admin_url(r"^tour/$", TourView.as_view(), name="tour", permissions=()),
-            admin_url(r"^search/$", SearchView.as_view(), name="search", permissions=()),
-            admin_url(r"^select/$", MultiselectAjaxView.as_view(), name="select", permissions=()),
-            admin_url(r"^object-selector/$", ObjectSelectorView.as_view(), name="object_selector", permissions=()),
-            admin_url(r"^edit/$", EditObjectView.as_view(), name="edit", permissions=()),
+            admin_url(
+                r"^search/$", SearchView.as_view(), name="search", permissions=()
+            ),
+            admin_url(
+                r"^select/$",
+                MultiselectAjaxView.as_view(),
+                name="select",
+                permissions=(),
+            ),
+            admin_url(
+                r"^object-selector/$",
+                ObjectSelectorView.as_view(),
+                name="object_selector",
+                permissions=(),
+            ),
+            admin_url(
+                r"^edit/$", EditObjectView.as_view(), name="edit", permissions=()
+            ),
             admin_url(r"^menu/$", MenuView.as_view(), name="menu", permissions=()),
-            admin_url(r"^toggle-menu/$", MenuToggleView.as_view(), name="menu_toggle", permissions=()),
+            admin_url(
+                r"^toggle-menu/$",
+                MenuToggleView.as_view(),
+                name="menu_toggle",
+                permissions=(),
+            ),
             admin_url(
                 r"^stop-impersonating-staff/$",
                 stop_impersonating_staff,
@@ -69,7 +92,13 @@ def get_urls():
                 require_authentication=False,
                 permissions=(),
             ),
-            admin_url(r"^logout/$", LogoutView, name="logout", require_authentication=False, permissions=()),
+            admin_url(
+                r"^logout/$",
+                LogoutView,
+                name="logout",
+                require_authentication=False,
+                permissions=(),
+            ),
             admin_url(
                 r"^recover-password/(?P<uidb64>.+)/(?P<token>.+)/$",
                 ResetPasswordView,
@@ -84,7 +113,12 @@ def get_urls():
                 require_authentication=False,
                 permissions=(),
             ),
-            admin_url(r"^set-language/$", csrf_exempt(set_language), name="set-language", permissions=()),
+            admin_url(
+                r"^set-language/$",
+                csrf_exempt(set_language),
+                name="set-language",
+                permissions=(),
+            ),
         ]
     )
 

@@ -39,7 +39,9 @@ def test_order_full_refund_with_taxes(include_tax):
     tax = factories.get_tax("sales-tax", "Sales Tax", tax_rate)
     factories.create_default_tax_rule(tax)
 
-    product = factories.create_product("sku", shop=shop, supplier=supplier, default_price=product_price)
+    product = factories.create_product(
+        "sku", shop=shop, supplier=supplier, default_price=product_price
+    )
 
     line = source.add_line(
         line_id="product-line",
@@ -71,7 +73,10 @@ def test_order_full_refund_with_taxes(include_tax):
 
     # Lines without quantity shouldn't affect refunds
     other_line = source.add_line(
-        text="This random line for textual information", line_id="other-line", type=OrderLineType.OTHER, quantity=0
+        text="This random line for textual information",
+        line_id="other-line",
+        type=OrderLineType.OTHER,
+        quantity=0,
     )
     # Lines with quantity again should be able to be refunded normally.
     other_line_with_quantity = source.add_line(
@@ -107,10 +112,17 @@ def test_order_full_refund_with_taxes(include_tax):
         if parent_order_line.quantity == 0:
             assert not parent_order_line.child_lines.exists()
         else:
-            refund_line = parent_order_line.child_lines.filter(type=OrderLineType.REFUND).first()
+            refund_line = parent_order_line.child_lines.filter(
+                type=OrderLineType.REFUND
+            ).first()
             assert refund_line
-            assert parent_order_line.taxful_price.value == -refund_line.taxful_price.value
-            assert parent_order_line.taxless_price.value == -refund_line.taxless_price.value
+            assert (
+                parent_order_line.taxful_price.value == -refund_line.taxful_price.value
+            )
+            assert (
+                parent_order_line.taxless_price.value
+                == -refund_line.taxless_price.value
+            )
             assert parent_order_line.price.value == -refund_line.price.value
 
 
@@ -131,7 +143,9 @@ def test_order_partial_refund_with_taxes(include_tax):
     tax = factories.get_tax("sales-tax", "Sales Tax", tax_rate)
     factories.create_default_tax_rule(tax)
 
-    product = factories.create_product("sku", shop=shop, supplier=supplier, default_price=product_price)
+    product = factories.create_product(
+        "sku", shop=shop, supplier=supplier, default_price=product_price
+    )
 
     line = source.add_line(
         line_id="product-line",
@@ -189,7 +203,9 @@ def test_order_partial_refund_with_taxes(include_tax):
     else:
         # the refunded amount it considered a taxful price internally
         raw_total_price = Decimal(product_price - discount_amount)
-        assert total_taxful == bround((raw_total_price * (1 + tax_rate)) - refunded_amount)
+        assert total_taxful == bround(
+            (raw_total_price * (1 + tax_rate)) - refunded_amount
+        )
         assert total_taxless == bround(raw_total_price - taxless_refunded_amount)
 
     refund_line = order.lines.refunds().filter(type=OrderLineType.REFUND).first()

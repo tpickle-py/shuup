@@ -55,7 +55,11 @@ def get_view_config(context, global_type=False):
 
 
 def render_placeholder(
-    context, placeholder_name, default_layout=None, template_name=None, global_type=False
+    context,
+    placeholder_name,
+    default_layout=None,
+    template_name=None,
+    global_type=False,
 ):  # doccov: noargs
     """
     Render a placeholder in a given context.
@@ -82,7 +86,14 @@ class PlaceholderRenderer(object):
 
     # TODO: Maybe make this pluggable per-theme?
 
-    def __init__(self, context, placeholder_name, default_layout=None, template_name=None, global_type=False):
+    def __init__(
+        self,
+        context,
+        placeholder_name,
+        default_layout=None,
+        template_name=None,
+        global_type=False,
+    ):
         """
         :param context: Rendering context
         :type context: jinja2.runtime.Context
@@ -99,10 +110,14 @@ class PlaceholderRenderer(object):
         self.context = context
         self.view_config = get_view_config(context, global_type=global_type)
         self.placeholder_name = placeholder_name
-        self.template_name = "_xtheme_global_template_name" if global_type else template_name
+        self.template_name = (
+            "_xtheme_global_template_name" if global_type else template_name
+        )
         self.default_layout = default_layout
         # Fetch all layouts for this placeholder context combination
-        self.layouts = self.view_config.get_placeholder_layouts(context, placeholder_name, self.default_layout)
+        self.layouts = self.view_config.get_placeholder_layouts(
+            context, placeholder_name, self.default_layout
+        )
         self.global_type = global_type
         # For non-global placeholders, editing is only available for placeholders in the "base" template, i.e.
         # one that is not an `extend` parent.  Declaring placeholders in `include`d templates is fine,
@@ -141,9 +156,15 @@ class PlaceholderRenderer(object):
         return Markup('<div class="placeholder-edit-wrap">%s</div>' % full_content)
 
     def _get_wrapper_attrs(self, layout):
-        layout_data_key = get_layout_data_key(self.placeholder_name, layout, self.context)
+        layout_data_key = get_layout_data_key(
+            self.placeholder_name, layout, self.context
+        )
         attrs = {
-            "class": ["xt-ph", "xt-ph-edit" if self.edit else None, "xt-global-ph" if self.global_type else None],
+            "class": [
+                "xt-ph",
+                "xt-ph-edit" if self.edit else None,
+                "xt-global-ph" if self.global_type else None,
+            ],
             "id": "xt-ph-%s" % layout_data_key,
         }
         if self.edit:
@@ -156,7 +177,9 @@ class PlaceholderRenderer(object):
             attrs["data-xt-layout-data-key"] = layout_data_key
             attrs["data-xt-placeholder-name"] = self.placeholder_name
             attrs["data-xt-global-type"] = "global" if self.global_type else None
-            attrs["title"] = _("Click to edit placeholder: %s") % self.placeholder_name.title()
+            attrs["title"] = (
+                _("Click to edit placeholder: %s") % self.placeholder_name.title()
+            )
         return attrs
 
     def _render_layout(self, write, layout):
@@ -210,7 +233,9 @@ class PlaceholderRenderer(object):
                     ),
                     lang=language,
                     placeholder=self.placeholder_name,
-                    data_key=get_layout_data_key(self.placeholder_name, layout, self.context),
+                    data_key=get_layout_data_key(
+                        self.placeholder_name, layout, self.context
+                    ),
                 )
             )
             self._render_cell(write, layout, x, cell, cache_key_prefix)
@@ -233,9 +258,15 @@ class PlaceholderRenderer(object):
             if width is None or width == 0:
                 continue
             if width < 0:
-                classes.append(layout.hide_cell_class_template % {"breakpoint": breakpoint, "width": width})
+                classes.append(
+                    layout.hide_cell_class_template
+                    % {"breakpoint": breakpoint, "width": width}
+                )
             else:
-                classes.append(layout.cell_class_template % {"breakpoint": breakpoint, "width": width})
+                classes.append(
+                    layout.cell_class_template
+                    % {"breakpoint": breakpoint, "width": width}
+                )
 
         classes.append(cell.align)
         if cell.extra_classes:
@@ -252,7 +283,10 @@ class PlaceholderRenderer(object):
 
     def _render_default_layout_script_tag(self, write):
         # This script tag is read by editor.js
-        write("<script%s>" % get_html_attrs({"class": "xt-ph-default-layout", "type": "text/plain"}))
+        write(
+            "<script%s>"
+            % get_html_attrs({"class": "xt-ph-default-layout", "type": "text/plain"})
+        )
         layout = self.default_layout
         if hasattr(layout, "serialize"):
             layout = layout.serialize()

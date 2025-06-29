@@ -16,10 +16,20 @@ from shuup.utils.properties import MoneyPropped, PriceProperty
 
 
 class CgpBase(models.Model):
-    product = models.ForeignKey("shuup.Product", related_name="+", on_delete=models.CASCADE, verbose_name=_("product"))
-    shop = models.ForeignKey("shuup.Shop", db_index=True, on_delete=models.CASCADE, verbose_name=_("shop"))
+    product = models.ForeignKey(
+        "shuup.Product",
+        related_name="+",
+        on_delete=models.CASCADE,
+        verbose_name=_("product"),
+    )
+    shop = models.ForeignKey(
+        "shuup.Shop", db_index=True, on_delete=models.CASCADE, verbose_name=_("shop")
+    )
     group = models.ForeignKey(
-        "shuup.ContactGroup", db_index=True, on_delete=models.CASCADE, verbose_name=_("contact group")
+        "shuup.ContactGroup",
+        db_index=True,
+        on_delete=models.CASCADE,
+        verbose_name=_("contact group"),
     )
 
     class Meta:
@@ -53,7 +63,9 @@ class CgpPrice(MoneyPropped, CgpBase):
 
 
 class CgpDiscount(MoneyPropped, CgpBase):
-    discount_amount = PriceProperty("discount_amount_value", "shop.currency", "shop.prices_include_tax")
+    discount_amount = PriceProperty(
+        "discount_amount_value", "shop.currency", "shop.prices_include_tax"
+    )
     discount_amount_value = MoneyValueField(verbose_name=_("discount amount"))
 
     class Meta(CgpBase.Meta):

@@ -37,8 +37,12 @@ class ResetPasswordAction(PicotableMassAction):
             # if user is staff, then use the admin url and templates
             if user.is_staff or user.is_superuser:
                 reset_url_name = "shuup_admin:recover_password"
-                subject_template_name = "shuup/admin/auth/recover_password_mail_subject.jinja"
-                email_template_name = "shuup/admin/auth/recover_password_mail_content.jinja"
+                subject_template_name = (
+                    "shuup/admin/auth/recover_password_mail_subject.jinja"
+                )
+                email_template_name = (
+                    "shuup/admin/auth/recover_password_mail_content.jinja"
+                )
             else:
                 reset_url_name = "shuup:recover_password_confirm"
                 subject_template_name = "shuup/user/recover_password_mail_subject.jinja"

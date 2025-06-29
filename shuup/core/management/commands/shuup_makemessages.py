@@ -10,6 +10,7 @@ Makemessages helper for Shuup projects.
 Runs Django's makemessages for django and djangojs domains with sane
 defaults for Shuup projects (ignores and extensions).
 """
+
 from __future__ import unicode_literals
 
 from . import makemessages

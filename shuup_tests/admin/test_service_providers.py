@@ -13,7 +13,11 @@ from django.test import override_settings
 from shuup.admin.modules.service_providers.views import ServiceProviderEditView
 from shuup.apps.provides import override_provides
 from shuup.core.models import CustomCarrier, CustomPaymentProcessor
-from shuup.testing.factories import get_default_payment_method, get_default_shipping_method, get_default_shop
+from shuup.testing.factories import (
+    get_default_payment_method,
+    get_default_shipping_method,
+    get_default_shop,
+)
 from shuup.testing.models import PseudoPaymentProcessor
 from shuup.testing.utils import apply_all_middleware
 
@@ -44,7 +48,11 @@ def get_bs_object_for_view(request, view, user, object=None):
 
 @pytest.mark.parametrize(
     "sp_model,type_param",
-    [(None, None), (CustomCarrier, "shuup.customcarrier"), (CustomPaymentProcessor, "shuup.custompaymentprocessor")],
+    [
+        (None, None),
+        (CustomCarrier, "shuup.customcarrier"),
+        (CustomPaymentProcessor, "shuup.custompaymentprocessor"),
+    ],
 )
 def test_new_service_providers_type_select(rf, admin_user, sp_model, type_param):
     """
@@ -62,7 +70,9 @@ def test_new_service_providers_type_select(rf, admin_user, sp_model, type_param)
         if type_param:
             url += "?type=%s" % type_param
         soup = get_bs_object_for_view(rf.get(url), view, admin_user)
-        selected_type = soup.find("select", attrs={"id": "id_type"}).find("option", selected=True)["value"]
+        selected_type = soup.find("select", attrs={"id": "id_type"}).find(
+            "option", selected=True
+        )["value"]
         if type_param:
             assert type_param == selected_type
         else:
@@ -161,20 +171,28 @@ def test_service_provide_edit_view(rf, admin_user, sp_model, extra_inputs):
         view = ServiceProviderEditView.as_view()
         provider_name = "some name"
         service_provider = sp_model.objects.create(name=provider_name)
-        soup = get_bs_object_for_view(rf.get("/"), view, admin_user, object=service_provider)
+        soup = get_bs_object_for_view(
+            rf.get("/"), view, admin_user, object=service_provider
+        )
         provider_form = soup.find("form", attrs={"id": "service_provider_form"})
         rendered_fields = []
         for input_field in provider_form.findAll("input"):
             rendered_fields.append(input_field["name"])
 
         assert rendered_fields == (base_inputs + extra_inputs)
-        assert provider_form.find("input", attrs={"name": "name__en"})["value"] == provider_name
+        assert (
+            provider_form.find("input", attrs={"name": "name__en"})["value"]
+            == provider_name
+        )
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "get_object,service_provider_attr",
-    [(get_default_shipping_method, "carrier"), (get_default_payment_method, "payment_processor")],
+    [
+        (get_default_shipping_method, "carrier"),
+        (get_default_payment_method, "payment_processor"),
+    ],
 )
 def test_delete(get_object, service_provider_attr):
     method = get_object()

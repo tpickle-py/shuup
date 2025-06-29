@@ -44,7 +44,9 @@ class ContactLayout(Layout):
     identifier = "xtheme-contact-layout"
 
     def get_help_text(self, context):
-        return _("Content in this box is shown to all logged-in contacts (both person and company; not anonymous).")
+        return _(
+            "Content in this box is shown to all logged-in contacts (both person and company; not anonymous)."
+        )
 
     def is_valid_context(self, context):
         customer = get_customer_from_context(context)

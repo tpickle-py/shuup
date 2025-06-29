@@ -29,7 +29,9 @@ class OrderDetailView(DetailView):
         return OrderDetailToolbar(self.object)
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
+            "id", flat=True
+        )
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_context_data(self, **kwargs):
@@ -38,13 +40,17 @@ class OrderDetailView(DetailView):
         context["title"] = force_text(self.object)
         context["order_sections"] = []
 
-        order_sections_provides = sorted(get_provide_objects("admin_order_section"), key=lambda x: x.order)
+        order_sections_provides = sorted(
+            get_provide_objects("admin_order_section"), key=lambda x: x.order
+        )
         for admin_order_section in order_sections_provides:
             # Check whether the Section should be visible for the current object
             if admin_order_section.visible_for_object(self.object, self.request):
                 context["order_sections"].append(admin_order_section)
                 # Add additional context data where the key is the order_section identifier
-                section_context = admin_order_section.get_context_data(self.object, self.request)
+                section_context = admin_order_section.get_context_data(
+                    self.object, self.request
+                )
                 context[admin_order_section.identifier] = section_context
 
         return context
@@ -54,7 +60,9 @@ class OrderSetStatusView(DetailView):
     model = Order
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
+            "id", flat=True
+        )
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get(self, request, *args, **kwargs):
@@ -67,11 +75,15 @@ class OrderSetStatusView(DetailView):
         if new_status.role == OrderStatusRole.COMPLETE and not order.can_set_complete():
             raise Problem(_("Unable to set order as completed at this point."))
         if new_status.role == OrderStatusRole.CANCELED and not order.can_set_canceled():
-            raise Problem(_("You can't cancel orders that are paid, shipped, or already canceled."))
+            raise Problem(
+                _(
+                    "You can't cancel orders that are paid, shipped, or already canceled."
+                )
+            )
         order.change_status(next_status=new_status, user=request.user)
-        message = _("Order status changed: from `{old_status}` to `{new_status}`.").format(
-            old_status=old_status, new_status=new_status
-        )
+        message = _(
+            "Order status changed: from `{old_status}` to `{new_status}`."
+        ).format(old_status=old_status, new_status=new_status)
         order.add_log_entry(message, user=request.user, identifier="status_change")
         messages.success(self.request, message)
 

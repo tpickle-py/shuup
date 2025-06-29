@@ -57,8 +57,13 @@ def test_contact_groups(rf, regular_user):
     assert not g1.shop
 
     assert group.price_display_options.exists()
-    assert group.price_display_options.for_group_and_shop(group, shop) != group.price_display_options.first()
-    assert ContactGroupPriceDisplay.objects.count() == 2  # new one was created (shop + anonymous)
+    assert (
+        group.price_display_options.for_group_and_shop(group, shop)
+        != group.price_display_options.first()
+    )
+    assert (
+        ContactGroupPriceDisplay.objects.count() == 2
+    )  # new one was created (shop + anonymous)
 
     g2 = ContactGroupPriceDisplay.objects.exclude(id=g1.id).first()
     assert g2.group == group  # same group as before
@@ -89,7 +94,9 @@ def test_contact_groups(rf, regular_user):
 
     groups = ContactGroup.objects.all()
     assert groups.count() == 2  # two groups
-    assert not groups.filter(shop=shop).exists()  # still not exists as we are using defaults
+    assert not groups.filter(
+        shop=shop
+    ).exists()  # still not exists as we are using defaults
     assert groups.filter(shop__isnull=True).count() == 2
     assert (
         groups.filter(
@@ -106,7 +113,8 @@ def test_contact_groups(rf, regular_user):
     assert group.price_display_options.count() == 2  # all in same group
 
     assert (
-        group.price_display_options.for_group_and_shop(group_with_shop, shop) not in group.price_display_options.all()
+        group.price_display_options.for_group_and_shop(group_with_shop, shop)
+        not in group.price_display_options.all()
     )
 
     assert ContactGroupPriceDisplay.objects.count() == 4  # new was created
@@ -117,10 +125,14 @@ def test_plain_contact_group():
     shop = get_default_shop()
 
     with pytest.raises(ValidationError) as exc_info:
-        ContactGroup.objects.create(identifier=AnonymousContact.default_contact_group_identifier, shop=shop)
+        ContactGroup.objects.create(
+            identifier=AnonymousContact.default_contact_group_identifier, shop=shop
+        )
         assert exc_info.value == "Cannot set shop for default Contact Group."
 
-    cg = ContactGroup.objects.create(identifier="test", shop=shop).set_price_display_options(hide_prices=True)
+    cg = ContactGroup.objects.create(
+        identifier="test", shop=shop
+    ).set_price_display_options(hide_prices=True)
     assert isinstance(cg, ContactGroup)
 
     cg = ContactGroup.objects.create(identifier="test2", shop=shop)

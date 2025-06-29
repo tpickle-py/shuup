@@ -37,7 +37,11 @@ def get_search_results(request, query):
                         is_action=True,
                     )
                 )
-    results = sorted(chain(normal_results, menu_entry_results), key=lambda r: r.relevance, reverse=True)
+    results = sorted(
+        chain(normal_results, menu_entry_results),
+        key=lambda r: r.relevance,
+        reverse=True,
+    )
     return results
 
 

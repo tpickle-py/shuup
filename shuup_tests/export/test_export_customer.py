@@ -26,10 +26,14 @@ def test_export_customer_sample(rf):
     request = apply_request_middleware(rf.get("/"), user=get_default_staff_user())
     view_instance = ContactListView()
     view_instance.request = request
-    view_settings = ViewSettings(Contact, ContactListView.default_columns, view_instance)
+    view_settings = ViewSettings(
+        Contact, ContactListView.default_columns, view_instance
+    )
     setting_cols = view_settings.columns
 
-    customer_from_query = base_view.get_queryset(request, view_instance, [random_customer.pk])[0]
+    customer_from_query = base_view.get_queryset(
+        request, view_instance, [random_customer.pk]
+    )[0]
     assert customer_from_query.pk == random_customer.pk
 
     response = base_view.process(request, [random_customer.pk])
@@ -41,8 +45,10 @@ def test_export_customer_sample(rf):
     headers = body.pop(0)
     for dr in setting_cols:
         index = setting_cols.index(dr)
-        assert (strip_tags(dr.get_display_value(view_settings.view_context, random_customer))) == body[0][0].split(";")[
-            index
-        ]
+        assert (
+            strip_tags(
+                dr.get_display_value(view_settings.view_context, random_customer)
+            )
+        ) == body[0][0].split(";")[index]
 
     assert len(view_settings.columns) == len(headers[0].split(";"))

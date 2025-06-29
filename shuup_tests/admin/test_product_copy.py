@@ -41,14 +41,20 @@ def test_product_copy(rf, admin_user):
     supplier = factories.get_default_supplier()
     request = apply_request_middleware(rf.get("/", {}), user=admin_user)
     price = 10
-    product = factories.create_product("product", shop=shop, supplier=supplier, default_price=price)
+    product = factories.create_product(
+        "product", shop=shop, supplier=supplier, default_price=price
+    )
 
     attribute_key = "author"
     attribute_value = "batman"
     product.set_attribute_value(attribute_key, attribute_value)
 
     media = ProductMedia.objects.create(
-        product=product, kind=ProductMediaKind.IMAGE, file=factories.get_random_filer_image(), enabled=True, public=True
+        product=product,
+        kind=ProductMediaKind.IMAGE,
+        file=factories.get_random_filer_image(),
+        enabled=True,
+        public=True,
     )
     product.primary_image = media
     product.media.add(media)

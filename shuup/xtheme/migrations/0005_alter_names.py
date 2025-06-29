@@ -6,15 +6,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_xtheme', '0004_convert_shop_themes'),
+        ("shuup_xtheme", "0004_convert_shop_themes"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='themesettings',
-            name='theme_identifier',
-            field=models.CharField(db_index=True, max_length=64, verbose_name='theme identifier'),
+            model_name="themesettings",
+            name="theme_identifier",
+            field=models.CharField(
+                db_index=True, max_length=64, verbose_name="theme identifier"
+            ),
         ),
     ]

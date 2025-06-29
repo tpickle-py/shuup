@@ -26,7 +26,9 @@ def test_simple_supplier(rf):
 
     product_qty = 5
     shipment = Shipment.objects.create(supplier=supplier, type=ShipmentType.IN)
-    ShipmentProduct.objects.create(shipment=shipment, product=product, quantity=product_qty)
+    ShipmentProduct.objects.create(
+        shipment=shipment, product=product, quantity=product_qty
+    )
 
     assert shipment.status == ShipmentStatus.NOT_SENT
 

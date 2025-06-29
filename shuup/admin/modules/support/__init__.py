@@ -23,7 +23,10 @@ class ShuupSupportModule(AdminModule):
         resource = cache.get(cache_key)
         if not resource:
             try:
-                r = requests.get("https://www.shuup.com/%s/api/%s/" % (request.LANGUAGE_CODE, resource_id))
+                r = requests.get(
+                    "https://www.shuup.com/%s/api/%s/"
+                    % (request.LANGUAGE_CODE, resource_id)
+                )
                 resource = r.json()
                 cache.set(cache_key, resource, timeout=SECONDS_IN_DAY)
             except Exception:
@@ -34,7 +37,10 @@ class ShuupSupportModule(AdminModule):
         articles = self._get_resource(request, "articles")
         if articles.get("articles"):
             article_block = DashboardContentBlock.by_rendering_template(
-                "articles", request, "shuup/admin/support/_articles_dashboard_block.jinja", articles
+                "articles",
+                request,
+                "shuup/admin/support/_articles_dashboard_block.jinja",
+                articles,
             )
             article_block.size = "small"
             return [article_block]

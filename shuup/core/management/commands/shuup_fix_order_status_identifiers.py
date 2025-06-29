@@ -22,14 +22,18 @@ class Command(BaseCommand):
 
         to_post_process = []
 
-        for (role, invalid_identifier, valid_identifier) in data:
-            status = OrderStatus.objects.filter(identifier=invalid_identifier, role=role).first()
+        for role, invalid_identifier, valid_identifier in data:
+            status = OrderStatus.objects.filter(
+                identifier=invalid_identifier, role=role
+            ).first()
             if not status:
                 self.stdout.write("No changes to {} statuses".format(role))
                 continue
             tmp_identifier = valid_identifier + "_tmp"
             self.stdout.write(
-                "Updating identifier of {} status: {!r} -> {!r}".format(role, status.identifier, tmp_identifier)
+                "Updating identifier of {} status: {!r} -> {!r}".format(
+                    role, status.identifier, tmp_identifier
+                )
             )
             status.identifier = tmp_identifier
             status.save()
@@ -38,7 +42,9 @@ class Command(BaseCommand):
         for status in to_post_process:
             new_identifier = status.identifier.replace("_tmp", "")
             self.stdout.write(
-                "Updating identifier of {} status: {!r} -> {!r}".format(status.role, status.identifier, new_identifier)
+                "Updating identifier of {} status: {!r} -> {!r}".format(
+                    status.role, status.identifier, new_identifier
+                )
             )
             status.identifier = new_identifier
             status.save()

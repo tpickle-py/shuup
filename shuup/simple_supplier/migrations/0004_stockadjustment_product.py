@@ -7,15 +7,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('simple_supplier', '0001_squashed_0003_stockcount_alert_limit'),
+        ("simple_supplier", "0001_squashed_0003_stockcount_alert_limit"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='stockadjustment',
-            name='product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='stock_adjustments', to='shuup.Product', verbose_name='product'),
+            model_name="stockadjustment",
+            name="product",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="stock_adjustments",
+                to="shuup.Product",
+                verbose_name="product",
+            ),
         ),
     ]

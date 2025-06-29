@@ -7,15 +7,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0057_remove_product_stock_behavior'),
+        ("shuup", "0057_remove_product_stock_behavior"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='product',
-            name='type',
-            field=models.ForeignKey(help_text='Select a product type for your product. These allow you to configure custom attributes to help with classification and analysis.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='products', to='shuup.ProductType', verbose_name='product type'),
+            model_name="product",
+            name="type",
+            field=models.ForeignKey(
+                help_text="Select a product type for your product. These allow you to configure custom attributes to help with classification and analysis.",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="products",
+                to="shuup.ProductType",
+                verbose_name="product type",
+            ),
         ),
     ]

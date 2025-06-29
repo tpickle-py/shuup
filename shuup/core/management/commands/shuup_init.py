@@ -16,7 +16,15 @@ from six import print_
 
 from shuup import configuration
 from shuup.core.defaults.order_statuses import create_default_order_statuses
-from shuup.core.models import Currency, CustomerTaxGroup, ProductType, SalesUnit, Shop, ShopStatus, Supplier
+from shuup.core.models import (
+    Currency,
+    CustomerTaxGroup,
+    ProductType,
+    SalesUnit,
+    Shop,
+    ShopStatus,
+    Supplier,
+)
 from shuup.core.telemetry import get_installation_key, is_telemetry_enabled
 from shuup.xtheme import set_current_theme
 
@@ -88,9 +96,13 @@ class Initializer(object):
         if not settings.DEBUG and is_telemetry_enabled():
             try:
                 data = json.dumps({"key": get_installation_key()})
-                resp = requests.get(url=settings.SHUUP_SUPPORT_ID_URL, data=data, timeout=5)
+                resp = requests.get(
+                    url=settings.SHUUP_SUPPORT_ID_URL, data=data, timeout=5
+                )
                 if resp.json().get("support_id"):
-                    configuration.set(None, "shuup_support_id", resp.json().get("support_id"))
+                    configuration.set(
+                        None, "shuup_support_id", resp.json().get("support_id")
+                    )
             except Exception:
                 print_("Failed to get support id.")
 

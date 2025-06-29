@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_xtheme', '0006_snippets'),
+        ("shuup_xtheme", "0006_snippets"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='savedviewconfig',
-            name='modified_on',
-            field=models.DateTimeField(auto_now=True, verbose_name='modified on'),
+            model_name="savedviewconfig",
+            name="modified_on",
+            field=models.DateTimeField(auto_now=True, verbose_name="modified on"),
         ),
     ]

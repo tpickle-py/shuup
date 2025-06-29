@@ -30,7 +30,9 @@ def test_single_supplier(admin_user):
     shipping_method.behavior_components.add(component)
 
     source = seed_source(admin_user)
-    product = create_product(sku="sup1", shop=source.shop, supplier=get_default_supplier(), default_price=5)
+    product = create_product(
+        sku="sup1", shop=source.shop, supplier=get_default_supplier(), default_price=5
+    )
     source.add_line(
         type=OrderLineType.PRODUCT,
         product=product,
@@ -73,8 +75,12 @@ def test_different_suppliers(admin_user):
     shipping_method.behavior_components.add(component)
 
     source = seed_source(admin_user)
-    product_1 = create_product(sku="sup1", shop=source.shop, supplier=supplier_1, default_price=25)
-    product_2 = create_product(sku="sup2", shop=source.shop, supplier=supplier_2, default_price=4)
+    product_1 = create_product(
+        sku="sup1", shop=source.shop, supplier=supplier_1, default_price=25
+    )
+    product_2 = create_product(
+        sku="sup2", shop=source.shop, supplier=supplier_2, default_price=4
+    )
     source.add_line(
         type=OrderLineType.PRODUCT,
         product=product_1,

@@ -21,7 +21,9 @@ class TestExtender(FrontMenuExtender):
 def test_extender_renders_main_menu(rf):
     get_default_shop()
 
-    with override_provides("front_menu_extender", ["shuup_tests.xtheme.test_extenders:TestExtender"]):
+    with override_provides(
+        "front_menu_extender", ["shuup_tests.xtheme.test_extenders:TestExtender"]
+    ):
         c = SmartClient()
         soup = c.soup(reverse("shuup:index"))
         link_texts = [a.text for a in soup.findAll("a")]

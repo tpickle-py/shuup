@@ -27,7 +27,11 @@ class LayoutCellGeneralInfoForm(forms.Form):
         (int(CELL_FULL_WIDTH / 4), _("One Fourth (1/4)")),
     ]
 
-    CELL_ALIGN_CHOICES = [(" ", _("Auto")), ("pull-left", _("Left")), ("pull-right", _("Right"))]
+    CELL_ALIGN_CHOICES = [
+        (" ", _("Auto")),
+        ("pull-left", _("Left")),
+        ("pull-right", _("Right")),
+    ]
 
     def __init__(self, **kwargs):
         self.layout_cell = kwargs.pop("layout_cell")
@@ -47,12 +51,17 @@ class LayoutCellGeneralInfoForm(forms.Form):
                 initial_cell_width = self.CELL_FULL_WIDTH
 
             self.fields["cell_width"] = forms.ChoiceField(
-                label=_("Cell width"), choices=self.CELL_WIDTH_CHOICES, initial=initial_cell_width, required=False
+                label=_("Cell width"),
+                choices=self.CELL_WIDTH_CHOICES,
+                initial=initial_cell_width,
+                required=False,
             )
 
             initial_cell_align = self.layout_cell.align or self.CELL_ALIGN_CHOICES[0][0]
             self.fields["cell_align"] = forms.ChoiceField(
-                label=_("Cell align"), choices=self.CELL_ALIGN_CHOICES, initial=initial_cell_align
+                label=_("Cell align"),
+                choices=self.CELL_ALIGN_CHOICES,
+                initial=initial_cell_align,
             )
 
             initial_cell_style = self.layout_cell.extra_classes or ""
@@ -64,7 +73,9 @@ class LayoutCellGeneralInfoForm(forms.Form):
             )
 
         if self.theme:
-            plugin_choices = self.theme.get_all_plugin_choices(empty_label=_("No Plugin"))
+            plugin_choices = self.theme.get_all_plugin_choices(
+                empty_label=_("No Plugin")
+            )
             plugin_field = self.fields["plugin"]
             plugin_field.choices = plugin_field.widget.choices = plugin_choices
             plugin_field.initial = self.layout_cell.plugin_identifier
@@ -81,7 +92,9 @@ class LayoutCellGeneralInfoForm(forms.Form):
         data = self.cleaned_data
         sizes = ["sm", "md"]  # TODO: Parametrize? Currently Bootstrap dependent.
         for size in sizes:
-            self.layout_cell.sizes[size] = int(data["cell_width"]) if data["cell_width"] else None
+            self.layout_cell.sizes[size] = (
+                int(data["cell_width"]) if data["cell_width"] else None
+            )
 
         self.layout_cell.align = data["cell_align"]
         self.layout_cell.extra_classes = data["cell_extra_classes"].strip()
@@ -99,7 +112,9 @@ class LayoutCellFormGroup(FormGroup):
         assert isinstance(self.layout_cell, LayoutCell)
         super(LayoutCellFormGroup, self).__init__(**kwargs)
         self.add_form_def(
-            "general", LayoutCellGeneralInfoForm, kwargs={"layout_cell": self.layout_cell, "theme": self.theme}
+            "general",
+            LayoutCellGeneralInfoForm,
+            kwargs={"layout_cell": self.layout_cell, "theme": self.theme},
         )
         plugin = self.layout_cell.instantiate_plugin()
         if plugin:

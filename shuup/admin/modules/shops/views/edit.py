@@ -14,11 +14,19 @@ from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import View
 
-from shuup.admin.form_part import FormPart, FormPartsViewMixin, SaveFormPartsMixin, TemplatedFormDef
+from shuup.admin.form_part import (
+    FormPart,
+    FormPartsViewMixin,
+    SaveFormPartsMixin,
+    TemplatedFormDef,
+)
 from shuup.admin.modules.shops.forms import ContactAddressForm, ShopBaseForm
 from shuup.admin.shop_provider import set_shop
 from shuup.admin.toolbar import get_default_edit_toolbar
-from shuup.admin.utils.views import CreateOrUpdateView, check_and_raise_if_only_one_allowed
+from shuup.admin.utils.views import (
+    CreateOrUpdateView,
+    check_and_raise_if_only_one_allowed,
+)
 from shuup.admin.utils.wizard import onboarding_complete
 from shuup.apps.provides import get_provide_objects
 from shuup.core.models import Shop
@@ -66,7 +74,9 @@ class ContactAddressFormPart(FormPart):
 class ShopEnablerView(View):
     def post(self, request, *args, **kwargs):
         if not onboarding_complete(request):
-            messages.error(request, _("There are still some pending actions to complete."))
+            messages.error(
+                request, _("There are still some pending actions to complete.")
+            )
             return HttpResponseRedirect(reverse("shuup_admin:home"))
         enable = request.POST.get("enable", True)
         if kwargs.get("pk") == str(request.shop.pk):
@@ -94,7 +104,9 @@ class ShopEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView):
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
         with_split_save = ShuupSettings.get_setting("SHUUP_ENABLE_MULTIPLE_SHOPS")
-        toolbar = get_default_edit_toolbar(self, save_form_id, with_split_save=with_split_save)
+        toolbar = get_default_edit_toolbar(
+            self, save_form_id, with_split_save=with_split_save
+        )
 
         for button in get_provide_objects("admin_shop_edit_toolbar_button"):
             if button.visible_for_object(self.object):
@@ -115,4 +127,6 @@ class ShopSelectView(View):
         shop = Shop.objects.filter(pk=kwargs.get("pk")).first()
         set_shop(request, shop)
         messages.info(request, (_("Shop {} is now active.")).format(shop.name))
-        return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("shuup_admin:home")))
+        return HttpResponseRedirect(
+            request.META.get("HTTP_REFERER", reverse("shuup_admin:home"))
+        )

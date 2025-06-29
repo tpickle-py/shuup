@@ -25,7 +25,9 @@ from shuup.utils.i18n import format_money
 def init_test():
     shop = factories.get_default_shop()
     product = factories.create_product("test", shop=shop, default_price=10)
-    discount = Discount.objects.create(active=True, product=product, discounted_price_value=6, shop=shop)
+    discount = Discount.objects.create(
+        active=True, product=product, discounted_price_value=6, shop=shop
+    )
     happy_hour = HappyHour.objects.create(name="Happy", shop=shop)
     discount.happy_hours.add(happy_hour)
     return happy_hour
@@ -35,9 +37,14 @@ def set_valid_times_condition(happy_hour, hour_start, hour_end, matching_days):
     happy_hour.time_ranges.all().delete()
     for matching_day in matching_days.split(","):
         if hour_end < hour_start:
-            with pytest.raises(ValidationError):  # Valid hours has to be splitted. Admin should take care of this.
+            with pytest.raises(
+                ValidationError
+            ):  # Valid hours has to be splitted. Admin should take care of this.
                 TimeRange.objects.create(
-                    happy_hour=happy_hour, from_hour=hour_start, to_hour=hour_end, weekday=matching_day
+                    happy_hour=happy_hour,
+                    from_hour=hour_start,
+                    to_hour=hour_end,
+                    weekday=matching_day,
                 )
 
             matching_day = int(matching_day)
@@ -57,7 +64,10 @@ def set_valid_times_condition(happy_hour, hour_start, hour_end, matching_days):
             )
         else:
             TimeRange.objects.create(
-                happy_hour=happy_hour, from_hour=hour_start, to_hour=hour_end, weekday=matching_day
+                happy_hour=happy_hour,
+                from_hour=hour_start,
+                to_hour=hour_end,
+                weekday=matching_day,
             )
 
 
@@ -98,7 +108,9 @@ def test_happy_hour(rf):
     # at 10:10 AM
     new_hour_start = (timezone.now() - datetime.timedelta(hours=2)).time()  # 8:00 AM
     new_hour_end = timezone.now().time()  # 10:00 PM
-    set_valid_times_condition(happy_hour, new_hour_start, new_hour_end, non_matching_days)
+    set_valid_times_condition(
+        happy_hour, new_hour_start, new_hour_end, non_matching_days
+    )
     assert Discount.objects.available().count() == 0
     assert Discount.objects.available(shop).count() == 0
 
@@ -123,7 +135,9 @@ def test_happy_hour(rf):
     assert Discount.objects.available().count() == 1
     assert Discount.objects.available(shop).count() == 1
 
-    set_valid_times_condition(happy_hour, new_hour_start, new_hour_end, non_matching_days)
+    set_valid_times_condition(
+        happy_hour, new_hour_start, new_hour_end, non_matching_days
+    )
     assert Discount.objects.available().count() == 0
     assert Discount.objects.available(shop).count() == 0
 
@@ -140,23 +154,35 @@ def test_happy_hour(rf):
         timezone.activate(pytz.timezone("America/Los_Angeles"))
 
         # So the 10:00 AM shouldn't match at all
-        new_hour_start = (timezone.now() - datetime.timedelta(hours=1)).time()  # 9:00 AM
+        new_hour_start = (
+            timezone.now() - datetime.timedelta(hours=1)
+        ).time()  # 9:00 AM
         new_hour_end = (timezone.now() + datetime.timedelta(hours=1)).time()  # 11:00 AM
-        set_valid_times_condition(happy_hour, new_hour_start, new_hour_end, matching_days)
+        set_valid_times_condition(
+            happy_hour, new_hour_start, new_hour_end, matching_days
+        )
         assert Discount.objects.available().count() == 0
         assert Discount.objects.available(shop).count() == 0
 
         # Instead around 2:00 AM we will find a match
-        new_hour_start = (timezone.now() - datetime.timedelta(hours=9)).time()  # 1:00 AM
+        new_hour_start = (
+            timezone.now() - datetime.timedelta(hours=9)
+        ).time()  # 1:00 AM
         new_hour_end = (timezone.now() - datetime.timedelta(hours=7)).time()  # 3:00 AM
-        set_valid_times_condition(happy_hour, new_hour_start, new_hour_end, matching_days)
+        set_valid_times_condition(
+            happy_hour, new_hour_start, new_hour_end, matching_days
+        )
         assert Discount.objects.available().count() == 1
         assert Discount.objects.available(shop).count() == 1
 
         # Make sure that the hour end doesn't cause match
-        new_hour_start = (timezone.now() - datetime.timedelta(hours=9)).time()  # 1:00 AM
+        new_hour_start = (
+            timezone.now() - datetime.timedelta(hours=9)
+        ).time()  # 1:00 AM
         new_hour_end = (timezone.now() - datetime.timedelta(hours=8)).time()  # 2:00 AM
-        set_valid_times_condition(happy_hour, new_hour_start, new_hour_end, matching_days)
+        set_valid_times_condition(
+            happy_hour, new_hour_start, new_hour_end, matching_days
+        )
         assert Discount.objects.available().count() == 0
         assert Discount.objects.available(shop).count() == 0
 
@@ -221,7 +247,9 @@ def test_happy_hour_localized_weekday(rf):
         # Matching to UTC date doesn't work
         hour_start = (timezone.now().replace(hour=17)).time()  # 5:00 PM
         hour_end = (timezone.now().replace(hour=20)).time()  # 8:00 PM
-        set_valid_times_condition(happy_hour, hour_start, hour_end, matching_day_for_utc)
+        set_valid_times_condition(
+            happy_hour, hour_start, hour_end, matching_day_for_utc
+        )
         assert Discount.objects.available().count() == 0
         assert Discount.objects.available(shop).count() == 0
 
@@ -305,14 +333,26 @@ def test_happy_hour_prices_expiration(rf):
         happy_hour = init_test()
 
         # it is now: 2018-01-01 09:00 AM
-        before_happy_hour = datetime.datetime(2018, 1, 1, 9, 0, tzinfo=pytz.UTC)  # 09:00 AM
-        inside_happy_hour = datetime.datetime(2018, 1, 1, 10, 30, tzinfo=pytz.UTC)  # 10:30 AM
-        after_happy_hours = datetime.datetime(2018, 1, 1, 11, 20, tzinfo=pytz.UTC)  # 11:30 AM
+        before_happy_hour = datetime.datetime(
+            2018, 1, 1, 9, 0, tzinfo=pytz.UTC
+        )  # 09:00 AM
+        inside_happy_hour = datetime.datetime(
+            2018, 1, 1, 10, 30, tzinfo=pytz.UTC
+        )  # 10:30 AM
+        after_happy_hours = datetime.datetime(
+            2018, 1, 1, 11, 20, tzinfo=pytz.UTC
+        )  # 11:30 AM
 
         # Create condition from 10am to 11am
-        hour_start = datetime.datetime(2018, 1, 1, 10, 0, tzinfo=pytz.UTC).time()  # 10:00 AM
-        hour_end = datetime.datetime(2018, 1, 1, 11, 0, tzinfo=pytz.UTC).time()  # 11:00 AM
-        set_valid_times_condition(happy_hour, hour_start, hour_end, str(before_happy_hour.weekday()))
+        hour_start = datetime.datetime(
+            2018, 1, 1, 10, 0, tzinfo=pytz.UTC
+        ).time()  # 10:00 AM
+        hour_end = datetime.datetime(
+            2018, 1, 1, 11, 0, tzinfo=pytz.UTC
+        ).time()  # 11:00 AM
+        set_valid_times_condition(
+            happy_hour, hour_start, hour_end, str(before_happy_hour.weekday())
+        )
 
         shop = happy_hour.shop
         discount = happy_hour.discounts.first()
@@ -325,8 +365,12 @@ def test_happy_hour_prices_expiration(rf):
             return apply_request_middleware(rf.get("/"))
 
         price_template = engines["jinja2"].from_string("{{ product|price }}")
-        is_discounted_template = engines["jinja2"].from_string("{{ product|is_discounted }}")
-        discount_percent_template = engines["jinja2"].from_string("{{ product|discount_percent }}")
+        is_discounted_template = engines["jinja2"].from_string(
+            "{{ product|is_discounted }}"
+        )
+        discount_percent_template = engines["jinja2"].from_string(
+            "{{ product|discount_percent }}"
+        )
 
         # we start with time being before happy hour
         with patch("django.utils.timezone.now", new=lambda: before_happy_hour):
@@ -336,12 +380,19 @@ def test_happy_hour_prices_expiration(rf):
                 # run twice to make sure caches are being used
                 for cache_test in range(2):
                     context = dict(product=product, request=get_request())
-                    assert price_template.render(context) == format_money(shop_product.default_price)
+                    assert price_template.render(context) == format_money(
+                        shop_product.default_price
+                    )
                     assert is_discounted_template.render(context) == "False"
                     assert discount_percent_template.render(context) == "0%"
 
                     if cache_test == 1:
-                        assert get_cached_price_info(get_request(), product, 1, supplier=shop_product.get_supplier())
+                        assert get_cached_price_info(
+                            get_request(),
+                            product,
+                            1,
+                            supplier=shop_product.get_supplier(),
+                        )
 
         # now we are inside happy hour range
         with patch("django.utils.timezone.now", new=lambda: inside_happy_hour):
@@ -358,7 +409,12 @@ def test_happy_hour_prices_expiration(rf):
                     assert discount_percent_template.render(context) == "40%"
 
                     if cache_test == 1:
-                        assert get_cached_price_info(get_request(), product, 1, supplier=shop_product.get_supplier())
+                        assert get_cached_price_info(
+                            get_request(),
+                            product,
+                            1,
+                            supplier=shop_product.get_supplier(),
+                        )
 
                 # we change the discounted price from $6 to $7
                 # cached should be bumped
@@ -373,7 +429,12 @@ def test_happy_hour_prices_expiration(rf):
                     assert discount_percent_template.render(context) == "30%"
 
                     if cache_test == 1:
-                        assert get_cached_price_info(get_request(), product, 1, supplier=shop_product.get_supplier())
+                        assert get_cached_price_info(
+                            get_request(),
+                            product,
+                            1,
+                            supplier=shop_product.get_supplier(),
+                        )
 
         # now we are inside happy hour range
         with patch("django.utils.timezone.now", new=lambda: after_happy_hours):
@@ -383,9 +444,16 @@ def test_happy_hour_prices_expiration(rf):
                 # run twice to make sure caches are being used
                 for cache_test in range(2):
                     context = dict(product=product, request=get_request())
-                    assert price_template.render(context) == format_money(shop_product.default_price)
+                    assert price_template.render(context) == format_money(
+                        shop_product.default_price
+                    )
                     assert is_discounted_template.render(context) == "False"
                     assert discount_percent_template.render(context) == "0%"
 
                     if cache_test == 1:
-                        assert get_cached_price_info(get_request(), product, 1, supplier=shop_product.get_supplier())
+                        assert get_cached_price_info(
+                            get_request(),
+                            product,
+                            1,
+                            supplier=shop_product.get_supplier(),
+                        )

@@ -15,7 +15,10 @@ from registration.forms import RegistrationForm
 from shuup.apps.provides import get_provide_objects
 from shuup.core.models import CompanyContact, PersonContact, get_person_contact
 from shuup.front.signals import company_registration_save, person_registration_save
-from shuup.front.utils.companies import TaxNumberCleanMixin, company_registration_requires_approval
+from shuup.front.utils.companies import (
+    TaxNumberCleanMixin,
+    company_registration_requires_approval,
+)
 from shuup.utils.form_group import FormGroup
 from shuup.utils.importing import cached_load
 
@@ -58,7 +61,7 @@ class ContactPersonForm(forms.ModelForm):
 
     def __init__(self, **kwargs):
         super(ContactPersonForm, self).__init__(**kwargs)
-        for (field_name, formfield) in self.fields.items():
+        for field_name, formfield in self.fields.items():
             if field_name in ["first_name", "last_name", "email"]:
                 formfield.required = True
                 formfield.help_text = None
@@ -79,7 +82,9 @@ class PersonRegistrationForm(RegistrationForm):
             user = super(PersonRegistrationForm, self).save(*args, **kwargs)
             contact = get_person_contact(user)
             contact.add_to_shop(self.request.shop)
-            person_registration_save.send(sender=type(self), request=self.request, user=user, contact=contact)
+            person_registration_save.send(
+                sender=type(self), request=self.request, user=user, contact=contact
+            )
         return user
 
 
@@ -93,7 +98,9 @@ class CompanyRegistrationForm(FormGroup):
         self.add_form_def("contact_person", ContactPersonForm)
         self.add_form_def("user_account", UserCreationForm)
 
-        for provider_cls in get_provide_objects("front_company_registration_form_provider"):
+        for provider_cls in get_provide_objects(
+            "front_company_registration_form_provider"
+        ):
             provider = provider_cls(self, self.request)
             for definition in provider.get_definitions():
                 self.add_form_def(
@@ -148,5 +155,7 @@ class CompanyRegistrationForm(FormGroup):
             company.add_to_shop(self.request.shop)
             company.members.add(person)
 
-        company_registration_save.send(sender=type(self), request=self.request, user=user, company=company)
+        company_registration_save.send(
+            sender=type(self), request=self.request, user=user, company=company
+        )
         return user

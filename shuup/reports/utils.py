@@ -44,7 +44,13 @@ def get_first_day_of_the_current_week(today_start):
     def get_prospect(i):
         return today_start - datetime.timedelta(days=i)
 
-    return iterables.first([get_prospect(i) for i in range(1, 7) if get_prospect(i).weekday() == locale.first_week_day])
+    return iterables.first(
+        [
+            get_prospect(i)
+            for i in range(1, 7)
+            if get_prospect(i).weekday() == locale.first_week_day
+        ]
+    )
 
 
 def parse_date_range_preset(value):
@@ -87,5 +93,7 @@ def parse_date_range(value):
         raise ValueError("Error! Can't split date range: `%r`." % value)
     date_range = (dates.try_parse_datetime(start), dates.try_parse_datetime(end))
     if any(p is None for p in date_range):
-        raise ValueError("Error! Invalid date range: `%r` (parsed as `%r`)." % (value, date_range))
+        raise ValueError(
+            "Error! Invalid date range: `%r` (parsed as `%r`)." % (value, date_range)
+        )
     return date_range

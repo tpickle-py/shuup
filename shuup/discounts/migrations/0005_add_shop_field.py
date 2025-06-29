@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("shuup", "0094_product_catalog"),
         ("discounts", "0004_improve_availabilityexception_descriptions"),

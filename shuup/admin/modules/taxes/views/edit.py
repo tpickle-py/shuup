@@ -8,7 +8,12 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.breadcrumbs import BreadcrumbedView
-from shuup.admin.form_part import FormPart, FormPartsViewMixin, SaveFormPartsMixin, TemplatedFormDef
+from shuup.admin.form_part import (
+    FormPart,
+    FormPartsViewMixin,
+    SaveFormPartsMixin,
+    TemplatedFormDef,
+)
 from shuup.admin.forms.fields import PercentageField
 from shuup.admin.toolbar import get_default_edit_toolbar
 from shuup.admin.utils.views import CreateOrUpdateView
@@ -72,7 +77,9 @@ class CustomerTaxGroupEditView(BreadcrumbedView, CreateOrUpdateView):
     parent_url = "shuup_admin:customer_tax_group.list"
 
 
-class TaxClassEditView(SaveFormPartsMixin, FormPartsViewMixin, BreadcrumbedView, CreateOrUpdateView):
+class TaxClassEditView(
+    SaveFormPartsMixin, FormPartsViewMixin, BreadcrumbedView, CreateOrUpdateView
+):
     model = TaxClass
     template_name = "shuup/admin/taxes/edit_tax_class.jinja"
     base_form_part_classes = [TaxClassFormPart]

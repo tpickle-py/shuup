@@ -9,7 +9,10 @@ import pytest
 
 from shuup.admin.modules.media import MediaModule
 from shuup.admin.template_helpers.shuup_admin import get_browser_urls
-from shuup.admin.utils.permissions import get_permissions_from_urls, set_permissions_for_group
+from shuup.admin.utils.permissions import (
+    get_permissions_from_urls,
+    set_permissions_for_group,
+)
 from shuup.testing import factories
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse
@@ -39,6 +42,8 @@ def test_browser_config_as_shop_staff(rf):
     urls = get_browser_urls(request)
     assert urls["media"] == reverse("shuup_admin:media.browse")
 
-    media_module_permission_urls = set(get_permissions_from_urls(MediaModule().get_urls()))
+    media_module_permission_urls = set(
+        get_permissions_from_urls(MediaModule().get_urls())
+    )
     assert "media.browse" in media_module_permission_urls
     assert "shuup_admin:media.browse" not in media_module_permission_urls

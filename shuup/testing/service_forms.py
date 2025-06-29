@@ -7,7 +7,11 @@
 
 from shuup.admin.forms import ShuupAdminForm
 
-from .models import CarrierWithCheckoutPhase, PaymentWithCheckoutPhase, PseudoPaymentProcessor
+from .models import (
+    CarrierWithCheckoutPhase,
+    PaymentWithCheckoutPhase,
+    PseudoPaymentProcessor,
+)
 
 
 class PseudoPaymentProcessorForm(ShuupAdminForm):

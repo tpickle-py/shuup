@@ -10,7 +10,10 @@ import decimal
 import pytest
 from django.test import override_settings
 
-from shuup.admin.modules.services.views import PaymentMethodEditView, ShippingMethodEditView
+from shuup.admin.modules.services.views import (
+    PaymentMethodEditView,
+    ShippingMethodEditView,
+)
 from shuup.core.models import (
     CountryLimitBehaviorComponent,
     FixedCostBehaviorComponent,
@@ -56,9 +59,14 @@ def get_default_behavior_settings():
             "max_weight": 1,
             "id": "",
         },
-        GroupAvailabilityBehaviorComponent.__name__.lower(): {"groups": [get_default_customer_group().pk]},
+        GroupAvailabilityBehaviorComponent.__name__.lower(): {
+            "groups": [get_default_customer_group().pk]
+        },
         StaffOnlyBehaviorComponent.__name__.lower(): {},
-        OrderTotalLimitBehaviorComponent.__name__.lower(): {"min_price_value": 0, "max_price_value": 21},
+        OrderTotalLimitBehaviorComponent.__name__.lower(): {
+            "min_price_value": 0,
+            "max_price_value": 21,
+        },
         CountryLimitBehaviorComponent.__name__.lower(): {
             "available_in_countries": [
                 "FI",
@@ -67,7 +75,9 @@ def get_default_behavior_settings():
     }
 
 
-def get_default_data(object, service_provider_attr, service_provider_attr_field, delete=False):
+def get_default_data(
+    object, service_provider_attr, service_provider_attr_field, delete=False
+):
     data = {
         "base-name__en": object.name,
         "base-shop": object.shop.id,
@@ -105,11 +115,23 @@ def get_default_component_form_data(delete=False):
 @pytest.mark.parametrize(
     "view,model,get_object,service_provider_attr",
     [
-        (PaymentMethodEditView, PaymentMethod, get_default_payment_method, "payment_processor"),
-        (ShippingMethodEditView, ShippingMethod, get_default_shipping_method, "carrier"),
+        (
+            PaymentMethodEditView,
+            PaymentMethod,
+            get_default_payment_method,
+            "payment_processor",
+        ),
+        (
+            ShippingMethodEditView,
+            ShippingMethod,
+            get_default_shipping_method,
+            "carrier",
+        ),
     ],
 )
-def test_behavior_add_save(rf, admin_user, view, model, get_object, service_provider_attr):
+def test_behavior_add_save(
+    rf, admin_user, view, model, get_object, service_provider_attr
+):
     """
     To make things little bit more simple let's use only english as
     a language.
@@ -120,7 +142,9 @@ def test_behavior_add_save(rf, admin_user, view, model, get_object, service_prov
         view = view.as_view()
         service_provider_attr_field = "base-%s" % service_provider_attr
 
-        data = get_default_data(object, service_provider_attr, service_provider_attr_field)
+        data = get_default_data(
+            object, service_provider_attr, service_provider_attr_field
+        )
         components_before = object.behavior_components.count()
         assert not components_before
 
@@ -134,11 +158,23 @@ def test_behavior_add_save(rf, admin_user, view, model, get_object, service_prov
 @pytest.mark.parametrize(
     "view,model,get_object,service_provider_attr",
     [
-        (PaymentMethodEditView, PaymentMethod, get_default_payment_method, "payment_processor"),
-        (ShippingMethodEditView, ShippingMethod, get_default_shipping_method, "carrier"),
+        (
+            PaymentMethodEditView,
+            PaymentMethod,
+            get_default_payment_method,
+            "payment_processor",
+        ),
+        (
+            ShippingMethodEditView,
+            ShippingMethod,
+            get_default_shipping_method,
+            "carrier",
+        ),
     ],
 )
-def test_behavior_delete_save(rf, admin_user, view, model, get_object, service_provider_attr):
+def test_behavior_delete_save(
+    rf, admin_user, view, model, get_object, service_provider_attr
+):
     """
     Only testing one initial behavior component
     """
@@ -148,12 +184,16 @@ def test_behavior_delete_save(rf, admin_user, view, model, get_object, service_p
         view = view.as_view()
         service_provider_attr_field = "base-%s" % service_provider_attr
 
-        component = WeightLimitsBehaviorComponent.objects.create(min_weight=0, max_weight=1)
+        component = WeightLimitsBehaviorComponent.objects.create(
+            min_weight=0, max_weight=1
+        )
         object.behavior_components.add(component)
         components_before = object.behavior_components.count()
         assert components_before == 1
 
-        data = get_default_data(object, service_provider_attr, service_provider_attr_field, delete=True)
+        data = get_default_data(
+            object, service_provider_attr, service_provider_attr_field, delete=True
+        )
         data["weightlimitsbehaviorcomponent-0-id"] = component.id
         data["weightlimitsbehaviorcomponent-INITIAL_FORMS"] = 1
         data["weightlimitsbehaviorcomponent-TOTAL_FORMS"] = 2

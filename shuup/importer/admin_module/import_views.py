@@ -21,21 +21,32 @@ from shuup.admin.shop_provider import get_shop
 from shuup.admin.supplier_provider import get_supplier
 from shuup.admin.toolbar import NewActionButton
 from shuup.admin.utils.permissions import has_permission
-from shuup.admin.utils.picotable import ChoicesFilter, Column, DateRangeFilter, Picotable
+from shuup.admin.utils.picotable import (
+    ChoicesFilter,
+    Column,
+    DateRangeFilter,
+    Picotable,
+)
 from shuup.admin.utils.views import PicotableListView
 from shuup.apps.provides import get_provide_objects
 from shuup.core.models import BackgroundTaskExecution, BackgroundTaskExecutionStatus
 from shuup.core.tasks import LOGGER, run_task
 from shuup.importer.admin_module.forms import ImportForm, ImportSettingsForm
 from shuup.importer.exceptions import ImporterError
-from shuup.importer.utils import get_import_file_path, get_importer, get_importer_choices
+from shuup.importer.utils import (
+    get_import_file_path,
+    get_importer,
+    get_importer_choices,
+)
 from shuup.importer.utils.importer import FileImporter, ImportMode
 from shuup.utils.django_compat import reverse
 
 logger = logging.getLogger(__name__)
 
 
-IMPORTER_NAMES_MAP = {importer.identifier: importer.name for importer in get_provide_objects("importers")}
+IMPORTER_NAMES_MAP = {
+    importer.identifier: importer.name for importer in get_provide_objects("importers")
+}
 
 
 class ImporterPicotable(Picotable):
@@ -69,7 +80,8 @@ class ImportProcessView(TemplateView):
             stored=True,
             queue="data_import",
             importer=request.GET["importer"],
-            import_mode=request.POST.get("import_mode") or ImportMode.CREATE_UPDATE.value,
+            import_mode=request.POST.get("import_mode")
+            or ImportMode.CREATE_UPDATE.value,
             file_name=request.GET["n"],
             language=request.GET.get("lang"),
             shop_id=shop.pk,
@@ -92,7 +104,9 @@ class ImportProcessView(TemplateView):
         )
         file_importer.prepare()
 
-        settings_form = ImportSettingsForm(data=self.request.POST if self.request.POST else None)
+        settings_form = ImportSettingsForm(
+            data=self.request.POST if self.request.POST else None
+        )
         if settings_form.is_bound:
             settings_form.is_valid()
 
@@ -120,7 +134,10 @@ class ImportView(FormView):
         file = self.request.FILES["file"]
         basename, ext = os.path.splitext(file.name)
 
-        import_name = "%s%s" % (hashlib.sha256(("%s" % datetime.now()).encode("utf-8")).hexdigest(), ext)
+        import_name = "%s%s" % (
+            hashlib.sha256(("%s" % datetime.now()).encode("utf-8")).hexdigest(),
+            ext,
+        )
         full_path = get_import_file_path(import_name)
         if not os.path.isdir(os.path.dirname(full_path)):
             os.makedirs(os.path.dirname(full_path))
@@ -132,7 +149,9 @@ class ImportView(FormView):
         next_url = request.POST.get("next")
         importer = request.POST.get("importer")
         lang = request.POST.get("language")
-        return redirect("%s?n=%s&importer=%s&lang=%s" % (next_url, import_name, importer, lang))
+        return redirect(
+            "%s?n=%s&importer=%s&lang=%s" % (next_url, import_name, importer, lang)
+        )
 
     def get_form_kwargs(self):
         kwargs = super(ImportView, self).get_form_kwargs()
@@ -178,7 +197,9 @@ class ExampleFileDownloadView(View):
             raise Http404(_("Invalid file name."))
 
         response = HttpResponse(content_type=example_file.content_type)
-        response["Content-Disposition"] = "attachment; filename=%s" % example_file.file_name
+        response["Content-Disposition"] = (
+            "attachment; filename=%s" % example_file.file_name
+        )
 
         data = importer_cls.get_example_file_content(example_file, request)
 
@@ -192,7 +213,9 @@ class ExampleFileDownloadView(View):
 
 def get_imports_queryset(request):
     # get only executions from tasks inside `data_import` queue
-    queryset = BackgroundTaskExecution.objects.select_related("task", "task__user").filter(task__queue="data_import")
+    queryset = BackgroundTaskExecution.objects.select_related(
+        "task", "task__user"
+    ).filter(task__queue="data_import")
 
     if not has_permission(request.user, "importer.show-all-imports"):
         shop = get_shop(request)
@@ -209,9 +232,16 @@ class ImportListView(PicotableListView):
     picotable_class = ImporterPicotable
     model = BackgroundTaskExecution
     default_columns = [
-        Column("started_on", _("Import date"), sortable=True, filter_config=DateRangeFilter()),
+        Column(
+            "started_on",
+            _("Import date"),
+            sortable=True,
+            filter_config=DateRangeFilter(),
+        ),
         Column("importer", _("Importer"), sortable=False, display="get_importer"),
-        Column("import_mode", _("Import mode"), sortable=False, display="get_import_mode"),
+        Column(
+            "import_mode", _("Import mode"), sortable=False, display="get_import_mode"
+        ),
         Column("user", _("User"), sort_field="task__user", display="get_user"),
         Column(
             "status",
@@ -245,7 +275,11 @@ class ImportListView(PicotableListView):
     def get_toolbar(self):
         toolbar = super().get_toolbar()
         toolbar.append(
-            NewActionButton(url=reverse("shuup_admin:importer.import.new"), text=_("Import file"), icon="fa fa-upload")
+            NewActionButton(
+                url=reverse("shuup_admin:importer.import.new"),
+                text=_("Import file"),
+                icon="fa fa-upload",
+            )
         )
         return toolbar
 
@@ -253,7 +287,9 @@ class ImportListView(PicotableListView):
         return get_imports_queryset(self.request).defer("result", "error_log")
 
     def get_object_url(self, instance):
-        return reverse("shuup_admin:importer.import.detail", kwargs=dict(pk=instance.pk))
+        return reverse(
+            "shuup_admin:importer.import.detail", kwargs=dict(pk=instance.pk)
+        )
 
     def get_object_abstract(self, instance, item):
         return [
@@ -296,6 +332,8 @@ class ImportDetailView(DetailView):
             if updated_objects:
                 model = apps.get_model(updated_objects[0]["model"])
                 pks = [obj["pk"] for obj in updated_objects]
-                context["updated_objects"] = model.objects.filter(pk__in=pks).order_by("pk")
+                context["updated_objects"] = model.objects.filter(pk__in=pks).order_by(
+                    "pk"
+                )
 
         return context

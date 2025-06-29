@@ -17,7 +17,6 @@ from ._active_list import DiscountListView
 
 
 class ArchivedDiscountListView(DiscountListView):
-
     mass_actions = [
         "shuup.discounts.admin.mass_actions:UnarchiveMassAction",
         "shuup.discounts.admin.mass_actions:DeleteMassAction",

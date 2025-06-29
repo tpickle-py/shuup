@@ -10,7 +10,16 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.forms.fields import ObjectSelect2MultipleField
-from shuup.core.models import Carrier, Contact, OrderLineType, OrderStatus, ShippingMethod, Supplier, Tax, TaxClass
+from shuup.core.models import (
+    Carrier,
+    Contact,
+    OrderLineType,
+    OrderStatus,
+    ShippingMethod,
+    Supplier,
+    Tax,
+    TaxClass,
+)
 from shuup.reports.forms import BaseReportForm
 
 
@@ -48,12 +57,14 @@ class OrderReportForm(BaseReportForm):
 
 
 class OrderLineReportForm(BaseReportForm):
-
     order_line_type = forms.MultipleChoiceField(
         label=_("Order Line Type"),
         required=False,
         initial=[OrderLineType.PRODUCT.value],
-        choices=[(line_type.value, line_type.name.capitalize()) for line_type in OrderLineType],
+        choices=[
+            (line_type.value, line_type.name.capitalize())
+            for line_type in OrderLineType
+        ],
     )  # Because value of OrderLineType.PRODUCT is 1
 
     def __init__(self, *args, **kwargs):
@@ -94,7 +105,12 @@ class ProductTotalSalesReportForm(OrderReportForm):
         ("taxful_total", _("Taxful Total")),
     )
 
-    order_by = forms.ChoiceField(label=_("Sort order"), initial="quantity", required=True, choices=SORT_ORDER_CHOICES)
+    order_by = forms.ChoiceField(
+        label=_("Sort order"),
+        initial="quantity",
+        required=True,
+        choices=SORT_ORDER_CHOICES,
+    )
 
 
 class NewCustomersReportForm(BaseReportForm):
@@ -105,7 +121,10 @@ class NewCustomersReportForm(BaseReportForm):
     )
 
     group_by = forms.ChoiceField(
-        label=_("Group by"), initial=GROUP_BY_CHOICES[1], required=True, choices=GROUP_BY_CHOICES
+        label=_("Group by"),
+        initial=GROUP_BY_CHOICES[1],
+        required=True,
+        choices=GROUP_BY_CHOICES,
     )
 
 
@@ -117,13 +136,19 @@ class CustomerSalesReportForm(OrderReportForm):
         ("taxful_total", _("Taxful Total")),
     )
     order_by = forms.ChoiceField(
-        label=_("Sort order"), initial="order_count", required=True, choices=SORT_ORDER_CHOICES
+        label=_("Sort order"),
+        initial="order_count",
+        required=True,
+        choices=SORT_ORDER_CHOICES,
     )
 
 
 class TaxesReportForm(OrderReportForm):
     tax = ObjectSelect2MultipleField(
-        label=_("Tax"), model=Tax, required=False, help_text=_("Filter report results by tax.")
+        label=_("Tax"),
+        model=Tax,
+        required=False,
+        help_text=_("Filter report results by tax."),
     )
 
     tax_class = ObjectSelect2MultipleField(
@@ -144,7 +169,9 @@ class TaxesReportForm(OrderReportForm):
         if self.data and "tax_class" in self.data:
             tax_classes = TaxClass.objects.filter(pk__in=self.data.getlist("tax_class"))
             self.fields["tax_class"].initial = tax_classes
-            self.fields["tax_class"].widget.choices = [(obj.pk, obj.name) for obj in tax_classes]
+            self.fields["tax_class"].widget.choices = [
+                (obj.pk, obj.name) for obj in tax_classes
+            ]
 
 
 class ShippingReportForm(OrderReportForm):
@@ -166,11 +193,17 @@ class ShippingReportForm(OrderReportForm):
         super(ShippingReportForm, self).__init__(*args, **kwargs)
 
         if self.data and "shipping_method" in self.data:
-            shipping_method = ShippingMethod.objects.filter(pk__in=self.data.getlist("shipping_method"))
+            shipping_method = ShippingMethod.objects.filter(
+                pk__in=self.data.getlist("shipping_method")
+            )
             self.fields["shipping_method"].initial = shipping_method.first()
-            self.fields["shipping_method"].widget.choices = [(obj.pk, obj.name) for obj in shipping_method]
+            self.fields["shipping_method"].widget.choices = [
+                (obj.pk, obj.name) for obj in shipping_method
+            ]
 
         if self.data and "carrier" in self.data:
             carrier = Carrier.objects.filter(pk__in=self.data.getlist("carrier"))
             self.fields["carrier"].initial = carrier
-            self.fields["carrier"].widget.choices = [(obj.pk, obj.name) for obj in carrier]
+            self.fields["carrier"].widget.choices = [
+                (obj.pk, obj.name) for obj in carrier
+            ]

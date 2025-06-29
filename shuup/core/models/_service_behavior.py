@@ -20,14 +20,20 @@ from parler.models import TranslatableModel, TranslatedField, TranslatedFields
 from shuup.core.fields import MeasurementField, MoneyValueField
 
 from ._addresses import REGION_ISO3166
-from ._service_base import ServiceBehaviorComponent, ServiceCost, TranslatableServiceBehaviorComponent
+from ._service_base import (
+    ServiceBehaviorComponent,
+    ServiceCost,
+    TranslatableServiceBehaviorComponent,
+)
 
 
 class FixedCostBehaviorComponent(TranslatableServiceBehaviorComponent):
     name = _("Fixed cost")
     help_text = _("Add a fixed cost to the price of the service.")
 
-    price_value = MoneyValueField(help_text=_("The fixed cost to apply to this service."))
+    price_value = MoneyValueField(
+        help_text=_("The fixed cost to apply to this service.")
+    )
     description = TranslatedField(any_language=True)
 
     translations = TranslatedFields(
@@ -35,7 +41,9 @@ class FixedCostBehaviorComponent(TranslatableServiceBehaviorComponent):
             max_length=100,
             blank=True,
             verbose_name=_("description"),
-            help_text=_("The order line text to display when this behavior is applied."),
+            help_text=_(
+                "The order line text to display when this behavior is applied."
+            ),
         ),
     )
 
@@ -48,14 +56,19 @@ class FixedCostBehaviorComponent(TranslatableServiceBehaviorComponent):
 class WaivingCostBehaviorComponent(TranslatableServiceBehaviorComponent):
     name = _("Waiving cost")
     help_text = _(
-        "If the total price of the products is less than a waive limit " "add cost to the price of the service."
+        "If the total price of the products is less than a waive limit "
+        "add cost to the price of the service."
     )
 
     price_value = MoneyValueField(
-        help_text=_("The cost to apply to this service if the total price is below the waive limit.")
+        help_text=_(
+            "The cost to apply to this service if the total price is below the waive limit."
+        )
     )
     waive_limit_value = MoneyValueField(
-        help_text=_("The total price of products limit, at which this service cost is waived.")
+        help_text=_(
+            "The total price of products limit, at which this service cost is waived."
+        )
     )
     description = TranslatedField(any_language=True)
 
@@ -64,7 +77,9 @@ class WaivingCostBehaviorComponent(TranslatableServiceBehaviorComponent):
             max_length=100,
             blank=True,
             verbose_name=_("description"),
-            help_text=_("The order line text to display when this behavior is applied."),
+            help_text=_(
+                "The order line text to display when this behavior is applied."
+            ),
         ),
     )
 
@@ -91,7 +106,9 @@ class WaivingCostBehaviorComponent(TranslatableServiceBehaviorComponent):
 
 class WeightLimitsBehaviorComponent(ServiceBehaviorComponent):
     name = _("Weight limits")
-    help_text = _("Limit availability of the service based on " "total weight of the products.")
+    help_text = _(
+        "Limit availability of the service based on total weight of the products."
+    )
 
     min_weight = models.DecimalField(
         max_digits=36,
@@ -120,7 +137,14 @@ class WeightLimitsBehaviorComponent(ServiceBehaviorComponent):
 
         # sum the weight of products of the given supplier
         if service.supplier:
-            weight = sum(((line.get("weight") or 0) for line in lines if line.supplier == service.supplier), 0)
+            weight = sum(
+                (
+                    (line.get("weight") or 0)
+                    for line in lines
+                    if line.supplier == service.supplier
+                ),
+                0,
+            )
         else:
             weight = sum(((line.get("weight") or 0) for line in lines), 0)
 
@@ -134,7 +158,9 @@ class WeightLimitsBehaviorComponent(ServiceBehaviorComponent):
 
 class WeightBasedPriceRange(TranslatableModel):
     component = models.ForeignKey(
-        "WeightBasedPricingBehaviorComponent", related_name="ranges", on_delete=models.CASCADE
+        "WeightBasedPricingBehaviorComponent",
+        related_name="ranges",
+        on_delete=models.CASCADE,
     )
     min_value = MeasurementField(
         unit=settings.SHUUP_MASS_UNIT,
@@ -150,7 +176,11 @@ class WeightBasedPriceRange(TranslatableModel):
         null=True,
         help_text=_("The maximum weight before this price no longer applies."),
     )
-    price_value = MoneyValueField(help_text=_("The cost to apply to this service when the weight criteria is met."))
+    price_value = MoneyValueField(
+        help_text=_(
+            "The cost to apply to this service when the weight criteria is met."
+        )
+    )
     description = TranslatedField(any_language=True)
 
     translations = TranslatedFields(
@@ -158,7 +188,9 @@ class WeightBasedPriceRange(TranslatableModel):
             max_length=100,
             blank=True,
             verbose_name=_("description"),
-            help_text=_("The order line text to display when this behavior is applied."),
+            help_text=_(
+                "The order line text to display when this behavior is applied."
+            ),
         ),
     )
 
@@ -192,7 +224,11 @@ class WeightBasedPricingBehaviorComponent(ServiceBehaviorComponent):
         else:
             total_gross_weight = source.total_gross_weight
 
-        matching_ranges = [range for range in self.ranges.all() if range.matches_to_value(total_gross_weight)]
+        matching_ranges = [
+            range
+            for range in self.ranges.all()
+            if range.matches_to_value(total_gross_weight)
+        ]
         if not matching_ranges:
             return
         return min(matching_ranges, key=lambda x: x.price_value)
@@ -209,9 +245,17 @@ class WeightBasedPricingBehaviorComponent(ServiceBehaviorComponent):
             from shuup.core.models import Order
 
             if isinstance(source, Order):
-                lines_count = source.lines.products().filter(supplier=service.supplier).count()
+                lines_count = (
+                    source.lines.products().filter(supplier=service.supplier).count()
+                )
             else:
-                lines_count = len([line for line in source.get_product_lines() if line.supplier == service.supplier])
+                lines_count = len(
+                    [
+                        line
+                        for line in source.get_product_lines()
+                        if line.supplier == service.supplier
+                    ]
+                )
 
             # there is no line for the given supplier, don't go further
             if not lines_count:
@@ -219,7 +263,9 @@ class WeightBasedPricingBehaviorComponent(ServiceBehaviorComponent):
 
         range = self._get_matching_range_with_lowest_price(service, source)
         if not range:
-            yield ValidationError(_("Weight does not match with any range."), code="out_of_range")
+            yield ValidationError(
+                _("Weight does not match with any range."), code="out_of_range"
+            )
 
 
 class GroupAvailabilityBehaviorComponent(ServiceBehaviorComponent):
@@ -227,7 +273,9 @@ class GroupAvailabilityBehaviorComponent(ServiceBehaviorComponent):
     help_text = _("Make service available only for specific contact groups.")
 
     groups = models.ManyToManyField(
-        "ContactGroup", verbose_name=_("groups"), help_text=_("The contact groups for which this service is available.")
+        "ContactGroup",
+        verbose_name=_("groups"),
+        help_text=_("The contact groups for which this service is available."),
     )
 
     def get_unavailability_reasons(self, service, source):
@@ -238,17 +286,23 @@ class GroupAvailabilityBehaviorComponent(ServiceBehaviorComponent):
         customer_groups = set(source.customer.groups.all().values_list("pk", flat=True))
         groups_to_match = set(self.groups.all().values_list("pk", flat=True))
         if not bool(customer_groups & groups_to_match):
-            yield ValidationError(_("Service is not available for any of the customer's groups."))
+            yield ValidationError(
+                _("Service is not available for any of the customer's groups.")
+            )
 
 
 class StaffOnlyBehaviorComponent(ServiceBehaviorComponent):
     name = _("Access to Admin Panel only availability")
-    help_text = _("Make service available only for people with `Access to Admin Panel` rights.")
+    help_text = _(
+        "Make service available only for people with `Access to Admin Panel` rights."
+    )
 
     def get_unavailability_reasons(self, service, source):
         if not source.creator or not source.creator.is_staff:
             yield ValidationError(
-                _("Service is only available for people with `Access to Admin Panel` (`is_staff`) rights.")
+                _(
+                    "Service is only available for people with `Access to Admin Panel` (`is_staff`) rights."
+                )
             )
 
 
@@ -256,8 +310,12 @@ class OrderTotalLimitBehaviorComponent(ServiceBehaviorComponent):
     name = _("Order total price limit")
     help_text = _("Limit service availability based on order's total price.")
 
-    min_price_value = MoneyValueField(blank=True, null=True, verbose_name=_("min price value"))
-    max_price_value = MoneyValueField(blank=True, null=True, verbose_name=_("max price value"))
+    min_price_value = MoneyValueField(
+        blank=True, null=True, verbose_name=_("min price value")
+    )
+    max_price_value = MoneyValueField(
+        blank=True, null=True, verbose_name=_("max price value")
+    )
 
     def get_unavailability_reasons(self, service, source):
         if service.supplier:
@@ -287,13 +345,16 @@ class OrderTotalLimitBehaviorComponent(ServiceBehaviorComponent):
             total = total.value
         else:
             total = (
-                source.taxful_total_price.value if source.shop.prices_include_tax else source.taxless_total_price.value
+                source.taxful_total_price.value
+                if source.shop.prices_include_tax
+                else source.taxless_total_price.value
             )
 
         is_in_range = _is_in_range(total, self.min_price_value, self.max_price_value)
         if not is_in_range:
             yield ValidationError(
-                _("Order's total price is not within the defined service limits."), code="order_total_out_of_range"
+                _("Order's total price is not within the defined service limits."),
+                code="order_total_out_of_range",
             )
 
 
@@ -301,18 +362,31 @@ class CountryLimitBehaviorComponent(ServiceBehaviorComponent):
     name = _("Country limit")
     help_text = _("Limit service availability based on countries selected.")
 
-    available_in_countries = JSONField(blank=True, null=True, verbose_name=_("available in countries"))
-    available_in_european_countries = models.BooleanField(default=False, verbose_name=_("available in european union"))
-    unavailable_in_countries = JSONField(blank=True, null=True, verbose_name=_("unavailable in countries"))
+    available_in_countries = JSONField(
+        blank=True, null=True, verbose_name=_("available in countries")
+    )
+    available_in_european_countries = models.BooleanField(
+        default=False, verbose_name=_("available in european union")
+    )
+    unavailable_in_countries = JSONField(
+        blank=True, null=True, verbose_name=_("unavailable in countries")
+    )
     unavailable_in_european_countries = models.BooleanField(
         default=False, verbose_name=_("unavailable in european union")
     )
 
     def get_unavailability_reasons(self, service, source):
-        address = source.shipping_address if hasattr(service, "carrier") else source.billing_address
+        address = (
+            source.shipping_address
+            if hasattr(service, "carrier")
+            else source.billing_address
+        )
         country = address.country if address else settings.SHUUP_ADDRESS_HOME_COUNTRY
         if not (address or country):
-            yield ValidationError(_("Service is not available without a defined country."), code="no_country")
+            yield ValidationError(
+                _("Service is not available without a defined country."),
+                code="no_country",
+            )
 
         allowed_countries = self.available_in_countries or []
         if self.available_in_european_countries:
@@ -328,7 +402,9 @@ class CountryLimitBehaviorComponent(ServiceBehaviorComponent):
                 is_available = bool(country not in restricted_countries)
 
         if not is_available:
-            yield ValidationError(_("Service is not available for this country."), code="invalid_country")
+            yield ValidationError(
+                _("Service is not available for this country."), code="invalid_country"
+            )
 
 
 class RoundingMode(Enum):
@@ -338,8 +414,12 @@ class RoundingMode(Enum):
     ROUND_DOWN = decimal.ROUND_DOWN
 
     class Labels:
-        ROUND_HALF_UP = _("round up to the nearest number with ties going up, away from zero")
-        ROUND_HALF_DOWN = _("round to the nearest number with ties going down, towards zero")
+        ROUND_HALF_UP = _(
+            "round up to the nearest number with ties going up, away from zero"
+        )
+        ROUND_HALF_DOWN = _(
+            "round to the nearest number with ties going down, towards zero"
+        )
         ROUND_UP = _("round up, away from zero, towards the farther round number")
         ROUND_DOWN = _("round down, towards zero, towards the closest round number")
 
@@ -361,6 +441,8 @@ def _is_in_range(value, min_value, max_value):
         return False
     if (not (min_value or max_value)) or (min_value == max_value == value):
         return True
-    if (not min_value or value > min_value) and (max_value is None or value <= max_value):
+    if (not min_value or value > min_value) and (
+        max_value is None or value <= max_value
+    ):
         return True
     return False

@@ -19,8 +19,12 @@ from shuup.testing.utils import apply_request_middleware
 @pytest.mark.django_db
 def test_objectSelectField(rf, admin_user):
     activate("en")
-    attr1 = Attribute.objects.create(type=AttributeType.INTEGER, identifier="attr-1", name="Attribute 1")
-    attr2 = Attribute.objects.create(type=AttributeType.INTEGER, identifier="attr-2", name="Attribute 2")
+    attr1 = Attribute.objects.create(
+        type=AttributeType.INTEGER, identifier="attr-1", name="Attribute 1"
+    )
+    attr2 = Attribute.objects.create(
+        type=AttributeType.INTEGER, identifier="attr-2", name="Attribute 2"
+    )
     product_type = ProductType.objects.create(name="Test product type")
     product_type.attributes.add(attr1)
     product_type.attributes.add(attr2)
@@ -33,7 +37,9 @@ def test_objectSelectField(rf, admin_user):
     content_soup = BeautifulSoup(response.content, "lxml")
 
     options_names = [option.text for option in content_soup.findAll("option")]
-    options_values = [int(option.attrs["value"]) for option in content_soup.findAll("option")]
+    options_values = [
+        int(option.attrs["value"]) for option in content_soup.findAll("option")
+    ]
     assert attr1.name in options_names
     assert attr2.name in options_names
     assert attr1.id in options_values

@@ -79,7 +79,11 @@ def test_ref_lengths():
     order.reference_number = None
     order.save()
 
-    configuration.set(shop, consts.ORDER_REFERENCE_NUMBER_METHOD_FIELD, OrderReferenceNumberMethod.UNIQUE.value)
+    configuration.set(
+        shop,
+        consts.ORDER_REFERENCE_NUMBER_METHOD_FIELD,
+        OrderReferenceNumberMethod.UNIQUE.value,
+    )
     ref_number = get_reference_number(order)
     assert len(ref_number) == 17 + 1  # unique ref + checksum
 
@@ -100,7 +104,11 @@ def test_ref_lengths():
     order.reference_number = None
     order.save()
 
-    configuration.set(shop, consts.ORDER_REFERENCE_NUMBER_METHOD_FIELD, OrderReferenceNumberMethod.RUNNING.value)
+    configuration.set(
+        shop,
+        consts.ORDER_REFERENCE_NUMBER_METHOD_FIELD,
+        OrderReferenceNumberMethod.RUNNING.value,
+    )
     ref_number = get_reference_number(order)
     assert len(ref_number) == 19 + 1
     order.reference_number = None
@@ -120,7 +128,11 @@ def test_ref_lengths():
 
     # reset prefix
     configuration.set(shop, consts.ORDER_REFERENCE_NUMBER_PREFIX_FIELD, "")
-    configuration.set(shop, consts.ORDER_REFERENCE_NUMBER_METHOD_FIELD, OrderReferenceNumberMethod.SHOP_RUNNING.value)
+    configuration.set(
+        shop,
+        consts.ORDER_REFERENCE_NUMBER_METHOD_FIELD,
+        OrderReferenceNumberMethod.SHOP_RUNNING.value,
+    )
     ref_number = get_reference_number(order)
     assert len(ref_number) == 19 + 1  # Finnish case
     order.reference_number = None

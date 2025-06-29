@@ -14,7 +14,13 @@ class AddressHandlerMeta(ImportMetaBase):
     aliases = {"name_ext": ["extension", "ext"]}
 
     post_save_handlers = {
-        "handle_row_address": ["city", "country", "postal code", "region code", "street"],
+        "handle_row_address": [
+            "city",
+            "country",
+            "postal code",
+            "region code",
+            "street",
+        ],
     }
 
     def handle_row_address(self, fields, row_session):
@@ -53,7 +59,8 @@ class PersonContactImporter(DataImporter):
 
     example_files = [
         ImporterExampleFile(
-            "person_contact_sample.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            "person_contact_sample.xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
     ]
 
@@ -79,7 +86,8 @@ class CompanyContactImporter(DataImporter):
 
     example_files = [
         ImporterExampleFile(
-            "company_contact_sample.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            "company_contact_sample.xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
     ]
 

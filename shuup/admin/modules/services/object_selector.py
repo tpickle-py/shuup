@@ -17,7 +17,9 @@ class CarrierAdminObjectSelector(BaseAdminObjectSelector):
 
     @classmethod
     def handles_selector(cls, selector):
-        if selector == cls.get_selector_for_model(Carrier) or selector == cls.get_selector_for_model(CustomCarrier):
+        if selector == cls.get_selector_for_model(
+            Carrier
+        ) or selector == cls.get_selector_for_model(CustomCarrier):
             return True
         return cls.handle_subclass_selector(selector, Carrier)
 
@@ -71,7 +73,7 @@ class ShippingMethodAdminObjectSelector(BaseAdminObjectSelector):
         """
         Returns an iterable of tuples of (id, text)
         """
-        qs = ShippingMethod.objects.translated(name__icontains=search_term).values_list("id", "translations__name")[
-            : self.search_limit
-        ]
+        qs = ShippingMethod.objects.translated(name__icontains=search_term).values_list(
+            "id", "translations__name"
+        )[: self.search_limit]
         return [{"id": id, "name": name} for id, name in list(qs)]

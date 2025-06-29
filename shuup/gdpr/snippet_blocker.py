@@ -15,10 +15,14 @@ from shuup.xtheme.resources import SnippetBlocker
 class GDPRSnippetBlocker(SnippetBlocker):
     @classmethod
     def should_block_global_snippet_injection(cls, snippet: Snippet, context: dict):
-        gdpr_cookies = list(snippet.blocked_gdpr_cookies.values_list("cookies", flat=True))
+        gdpr_cookies = list(
+            snippet.blocked_gdpr_cookies.values_list("cookies", flat=True)
+        )
 
         request = context.get("request")
-        if not request or not request.COOKIES.get(settings.SHUUP_GDPR_CONSENT_COOKIE_NAME):
+        if not request or not request.COOKIES.get(
+            settings.SHUUP_GDPR_CONSENT_COOKIE_NAME
+        ):
             # block if there is some configured cookie that needs to be consented
             # and there is no way of detecting it
             return bool(gdpr_cookies)
@@ -29,7 +33,9 @@ class GDPRSnippetBlocker(SnippetBlocker):
                 if cookie.strip():
                     unique_cookies.add(cookie.strip())
 
-        consent_data = json.loads(request.COOKIES.get(settings.SHUUP_GDPR_CONSENT_COOKIE_NAME))
+        consent_data = json.loads(
+            request.COOKIES.get(settings.SHUUP_GDPR_CONSENT_COOKIE_NAME)
+        )
         consented_cookies = set(list(consent_data.get("cookies") or []))
 
         # the snippet can be only injected if the user consented to all cookies

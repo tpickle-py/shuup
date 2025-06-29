@@ -29,7 +29,10 @@ def _get_basic_available_query(for_datetime, shop=None):
     discounts that is active and the end datetime is
     null or in future.
     """
-    query = Q(Q(active=True) & (Q(end_datetime__isnull=True) | Q(end_datetime__gte=for_datetime)))
+    query = Q(
+        Q(active=True)
+        & (Q(end_datetime__isnull=True) | Q(end_datetime__gte=for_datetime))
+    )
 
     if shop:
         query &= Q(shop=shop)
@@ -42,11 +45,15 @@ class DiscountQueryset(models.QuerySet):
         return self.filter(_get_basic_available_query(timezone.now(), shop))
 
     def archived(self, shop=None):
-        shop_query = Q()  # Since the exclude returns active discounts for other shop too
+        shop_query = (
+            Q()
+        )  # Since the exclude returns active discounts for other shop too
         if shop:
             shop_query &= Q(shop=shop)
 
-        return self.exclude(_get_basic_available_query(timezone.now(), shop)).filter(shop_query)
+        return self.exclude(_get_basic_available_query(timezone.now(), shop)).filter(
+            shop_query
+        )
 
     def available(self, shop=None):
         user_current_datetime = timezone.localtime(timezone.now())
@@ -55,8 +62,14 @@ class DiscountQueryset(models.QuerySet):
 
         query = Q(
             Q(active=True)
-            & (Q(start_datetime__isnull=True) | Q(start_datetime__lte=user_current_datetime))
-            & (Q(end_datetime__isnull=True) | Q(end_datetime__gte=user_current_datetime))
+            & (
+                Q(start_datetime__isnull=True)
+                | Q(start_datetime__lte=user_current_datetime)
+            )
+            & (
+                Q(end_datetime__isnull=True)
+                | Q(end_datetime__gte=user_current_datetime)
+            )
             & (
                 Q(happy_hours__time_ranges__isnull=True)
                 | Q(
@@ -80,10 +93,15 @@ class Discount(models.Model, MoneyPropped):
         blank=True,
         max_length=120,
         verbose_name=_("name"),
-        help_text=_("The name for this discount. Used internally with discount lists for filtering."),
+        help_text=_(
+            "The name for this discount. Used internally with discount lists for filtering."
+        ),
     )
     shop = models.ForeignKey(
-        "shuup.Shop", verbose_name=_("shop"), related_name="shop_discounts", on_delete=models.CASCADE
+        "shuup.Shop",
+        verbose_name=_("shop"),
+        related_name="shop_discounts",
+        on_delete=models.CASCADE,
     )
     identifier = InternalIdentifierField(unique=True)
     created_by = models.ForeignKey(
@@ -102,8 +120,12 @@ class Discount(models.Model, MoneyPropped):
         on_delete=models.SET_NULL,
         verbose_name=_("modified by"),
     )
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
-    modified_on = models.DateTimeField(auto_now=True, editable=False, verbose_name=_("modified on"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, verbose_name=_("created on")
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True, editable=False, verbose_name=_("modified on")
+    )
 
     supplier = models.ForeignKey(
         on_delete=models.CASCADE,
@@ -117,7 +139,9 @@ class Discount(models.Model, MoneyPropped):
     active = models.BooleanField(
         default=True,
         verbose_name=_("active"),
-        help_text=_("Enable this if the discount is currently active. Please also set a start and an end date."),
+        help_text=_(
+            "Enable this if the discount is currently active. Please also set a start and an end date."
+        ),
     )
     start_datetime = models.DateTimeField(
         null=True,
@@ -218,11 +242,19 @@ class Discount(models.Model, MoneyPropped):
 
     def clean(self):
         if self.active and (not self.start_datetime or not self.end_datetime):
-            raise ValidationError(_("Start date and end date are required when the discount is active."))
+            raise ValidationError(
+                _("Start date and end date are required when the discount is active.")
+            )
 
-        values = (self.discount_percentage, self.discount_amount_value, self.discounted_price_value)
+        values = (
+            self.discount_percentage,
+            self.discount_amount_value,
+            self.discounted_price_value,
+        )
         valid_values_count = len([v for v in values if v])
         if valid_values_count == 0 or valid_values_count > 1:
             raise ValidationError(
-                _("Either discounted price or discount percentage or discount amount should be configured.")
+                _(
+                    "Either discounted price or discount percentage or discount amount should be configured."
+                )
             )

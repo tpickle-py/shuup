@@ -27,7 +27,11 @@ urlpatterns = [
         maintenance_mode_exempt(RecoverPasswordConfirmView.as_view()),
         name="recover_password_confirm",
     ),
-    url(r"^recover-password/sent/$", RecoverPasswordSentView.as_view(), name="recover_password_sent"),
+    url(
+        r"^recover-password/sent/$",
+        RecoverPasswordSentView.as_view(),
+        name="recover_password_sent",
+    ),
     url(
         r"^recover-password/complete/$",
         maintenance_mode_exempt(RecoverPasswordCompleteView.as_view()),

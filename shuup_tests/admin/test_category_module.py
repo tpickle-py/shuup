@@ -11,8 +11,17 @@ from django.test import override_settings
 
 from shuup.admin.modules.categories import CategoryModule
 from shuup.admin.modules.categories.forms import CategoryBaseForm, CategoryProductForm
-from shuup.admin.modules.categories.views import CategoryCopyVisibilityView, CategoryEditView
-from shuup.core.models import Category, CategoryStatus, CategoryVisibility, ProductMode, ShopProductVisibility
+from shuup.admin.modules.categories.views import (
+    CategoryCopyVisibilityView,
+    CategoryEditView,
+)
+from shuup.core.models import (
+    Category,
+    CategoryStatus,
+    CategoryVisibility,
+    ProductMode,
+    ShopProductVisibility,
+)
 from shuup.testing.factories import (
     CategoryFactory,
     create_product,
@@ -41,7 +50,9 @@ def test_category_form_saving(rf, admin_user):
         shop = get_default_shop()
         category = CategoryFactory()
         request = apply_request_middleware(rf.get("/"), user=admin_user, shop=shop)
-        form_kwargs = dict(instance=category, request=request, languages=("sw",), default_language="sw")
+        form_kwargs = dict(
+            instance=category, request=request, languages=("sw",), default_language="sw"
+        )
         form = CategoryBaseForm(**form_kwargs)
         assert isinstance(form, CategoryBaseForm)
         form_data = get_form_data(form, prepared=True)
@@ -70,7 +81,12 @@ def test_category_form_with_parent(rf, admin_user):
         assert shop not in category3.shops.all()
 
         request = apply_request_middleware(rf.get("/"), user=admin_user, shop=shop)
-        form_kwargs = dict(instance=category1, request=request, languages=("sw",), default_language="sw")
+        form_kwargs = dict(
+            instance=category1,
+            request=request,
+            languages=("sw",),
+            default_language="sw",
+        )
         form = CategoryBaseForm(**form_kwargs)
         assert isinstance(form, CategoryBaseForm)
         form_data = get_form_data(form, prepared=True)
@@ -79,7 +95,9 @@ def test_category_form_with_parent(rf, admin_user):
                 form_data[form.add_prefix(dst_field)] = "IJWEHGWOHKSL"
 
         # Make sure we have right parent options
-        parent_bound_field = [field for field in form.visible_fields() if field.name == "parent"][0]
+        parent_bound_field = [
+            field for field in form.visible_fields() if field.name == "parent"
+        ][0]
         assert len(parent_bound_field.field.choices) == 1
         assert parent_bound_field.field.choices[0][0] is None
 
@@ -89,7 +107,9 @@ def test_category_form_with_parent(rf, admin_user):
         assert isinstance(form, CategoryBaseForm)
 
         # Make sure category 2 is now in parent options
-        parent_bound_field = [field for field in form.visible_fields() if field.name == "parent"][0]
+        parent_bound_field = [
+            field for field in form.visible_fields() if field.name == "parent"
+        ][0]
         assert len(parent_bound_field.field.choices) == 2
         assert parent_bound_field.field.choices[1][0] == category2.id
 
@@ -153,7 +173,9 @@ def test_products_form_add_multiple_products():
         product_ids.append(product.id)
 
     for x in range(0, 5):
-        product = create_product("parent_%s" % x, shop=shop, mode=ProductMode.SIMPLE_VARIATION_PARENT)
+        product = create_product(
+            "parent_%s" % x, shop=shop, mode=ProductMode.SIMPLE_VARIATION_PARENT
+        )
         for y in range(0, 3):
             child_product = create_product("child_%s_%s" % (x, y), shop=shop)
             child_product.link_to_parent(product)
@@ -166,7 +188,9 @@ def test_products_form_add_multiple_products():
     form.save()
 
     category.refresh_from_db()
-    assert category.shop_products.count() == 35  # 15 normal products and 5 parents with 3 children each
+    assert (
+        category.shop_products.count() == 35
+    )  # 15 normal products and 5 parents with 3 children each
 
 
 @pytest.mark.django_db
@@ -203,7 +227,9 @@ def test_products_form_remove_with_parent():
     category = get_default_category()
     category.shops.add(shop)
 
-    product = create_product("test_product", shop=shop, mode=ProductMode.SIMPLE_VARIATION_PARENT)
+    product = create_product(
+        "test_product", shop=shop, mode=ProductMode.SIMPLE_VARIATION_PARENT
+    )
     shop_product = product.get_shop_instance(shop)
     shop_product.primary_category = category
     shop_product.save()
@@ -248,7 +274,9 @@ def test_category_create(rf, admin_user):
             "base-ordering": 1,
         }
         assert Category.objects.count() == 0
-        request = apply_request_middleware(rf.post("/", data=data), user=admin_user, shop=shop)
+        request = apply_request_middleware(
+            rf.post("/", data=data), user=admin_user, shop=shop
+        )
         response = view(request, pk=None)
         if hasattr(response, "render"):
             response.render()
@@ -275,7 +303,9 @@ def test_category_create_with_parent(rf, admin_user):
             "base-parent": default_category.pk,
         }
         assert Category.objects.count() == 1
-        request = apply_request_middleware(rf.post("/", data=data), user=admin_user, shop=shop)
+        request = apply_request_middleware(
+            rf.post("/", data=data), user=admin_user, shop=shop
+        )
         response = view(request, pk=None)
         if hasattr(response, "render"):
             response.render()
@@ -283,7 +313,9 @@ def test_category_create_with_parent(rf, admin_user):
         assert Category.objects.count() == 1
 
         default_category.shops.add(shop)
-        request = apply_request_middleware(rf.post("/", data=data), user=admin_user, shop=shop)
+        request = apply_request_middleware(
+            rf.post("/", data=data), user=admin_user, shop=shop
+        )
         response = view(request, pk=None)
         if hasattr(response, "render"):
             response.render()
@@ -313,4 +345,6 @@ def test_category_copy_visibility(rf, admin_user):
     assert shop_product.visibility == ShopProductVisibility.NOT_VISIBLE
     assert shop_product.visibility_limit.value == category.visibility.value
     assert shop_product.visibility_groups.count() == category.visibility_groups.count()
-    assert set(shop_product.visibility_groups.all()) == set(category.visibility_groups.all())
+    assert set(shop_product.visibility_groups.all()) == set(
+        category.visibility_groups.all()
+    )

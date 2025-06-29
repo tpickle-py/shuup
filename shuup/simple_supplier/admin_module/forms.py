@@ -10,7 +10,10 @@ from django import forms
 from shuup.admin.form_part import FormPart, TemplatedFormDef
 from shuup.core.models import Product, Supplier
 from shuup.simple_supplier.module import SimpleSupplierModule
-from shuup.simple_supplier.utils import get_stock_adjustment_div, get_stock_information_html
+from shuup.simple_supplier.utils import (
+    get_stock_adjustment_div,
+    get_stock_information_html,
+)
 
 
 class SimpleSupplierForm(forms.Form):
@@ -35,7 +38,8 @@ class SimpleSupplierForm(forms.Form):
 
     def get_suppliers(self, product):
         return Supplier.objects.filter(
-            shop_products__product=product, supplier_modules__module_identifier="simple_supplier"
+            shop_products__product=product,
+            supplier_modules__module_identifier="simple_supplier",
         ).distinct()
 
     def can_manage_stock(self):

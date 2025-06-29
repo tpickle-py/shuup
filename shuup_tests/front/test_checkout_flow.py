@@ -49,7 +49,9 @@ def fill_address_inputs(soup, with_company=False):
         inputs["company-tax_number"] = "FI1234567-1"
         inputs["company-company_name"] = "Example Oy"
     else:
-        inputs = dict((k, v) for (k, v) in inputs.items() if not k.startswith("company-"))
+        inputs = dict(
+            (k, v) for (k, v) in inputs.items() if not k.startswith("company-")
+        )
 
     return inputs
 
@@ -77,12 +79,16 @@ def _populate_client_basket(client):
         assert add_to_basket_resp.status_code < 400
         product_ids.append(inputs["product_id"])
     basket_soup = client.soup(basket_path)
-    assert b"no such element" not in basket_soup.renderContents(), "All product details are not rendered correctly"
+    assert b"no such element" not in basket_soup.renderContents(), (
+        "All product details are not rendered correctly"
+    )
     return product_ids
 
 
 def _get_payment_method_with_phase():
-    processor = PaymentWithCheckoutPhase.objects.create(identifier="processor_with_phase", enabled=True)
+    processor = PaymentWithCheckoutPhase.objects.create(
+        identifier="processor_with_phase", enabled=True
+    )
     assert isinstance(processor, PaymentWithCheckoutPhase)
     return processor.create_service(
         None,
@@ -95,7 +101,9 @@ def _get_payment_method_with_phase():
 
 
 def _get_shipping_method_with_phase():
-    carrier = CarrierWithCheckoutPhase.objects.create(identifier="carrier_with_phase", enabled=True)
+    carrier = CarrierWithCheckoutPhase.objects.create(
+        identifier="carrier_with_phase", enabled=True
+    )
     assert isinstance(carrier, CarrierWithCheckoutPhase)
     return carrier.create_service(
         None,
@@ -108,7 +116,10 @@ def _get_shipping_method_with_phase():
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("with_company, with_signal", [(False, True), (True, True), (False, False), (True, False)])
+@pytest.mark.parametrize(
+    "with_company, with_signal",
+    [(False, True), (True, True), (False, False), (True, False)],
+)
 def test_basic_order_flow(with_company, with_signal):
     cache.clear()
     create_default_order_statuses()
@@ -129,15 +140,21 @@ def test_basic_order_flow(with_company, with_signal):
 
     methods_path = reverse("shuup:checkout", kwargs={"phase": "methods"})
     methods_soup = c.soup(methods_path)
-    assert c.post(methods_path, data=extract_form_fields(methods_soup)).status_code == 302  # Should redirect forth
+    assert (
+        c.post(methods_path, data=extract_form_fields(methods_soup)).status_code == 302
+    )  # Should redirect forth
 
     if with_signal:
-        checkout_complete.connect(checkout_complete_signal, dispatch_uid="checkout_complete_signal")
+        checkout_complete.connect(
+            checkout_complete_signal, dispatch_uid="checkout_complete_signal"
+        )
 
     confirm_path = reverse("shuup:checkout", kwargs={"phase": "confirm"})
     confirm_soup = c.soup(confirm_path)
     Product.objects.get(pk=product_ids[0]).soft_delete()
-    assert c.post(confirm_path, data=extract_form_fields(confirm_soup)).status_code == 200  # user needs to reconfirm
+    assert (
+        c.post(confirm_path, data=extract_form_fields(confirm_soup)).status_code == 200
+    )  # user needs to reconfirm
     data = extract_form_fields(confirm_soup)
     data["accept_terms"] = True
     data["product_ids"] = ",".join(product_ids[1:])
@@ -158,9 +175,27 @@ def test_basic_order_flow(with_company, with_signal):
 @pytest.mark.parametrize(
     "get_shipping_method,shipping_data,get_payment_method,payment_data,cancel_order",
     [
-        (get_default_shipping_method, None, _get_payment_method_with_phase, {"input_field": True}, True),
-        (get_default_shipping_method, None, _get_payment_method_with_phase, {"input_field": True}, False),
-        (_get_shipping_method_with_phase, {"input_field": "20540"}, get_default_payment_method, None, False),
+        (
+            get_default_shipping_method,
+            None,
+            _get_payment_method_with_phase,
+            {"input_field": True},
+            True,
+        ),
+        (
+            get_default_shipping_method,
+            None,
+            _get_payment_method_with_phase,
+            {"input_field": True},
+            False,
+        ),
+        (
+            _get_shipping_method_with_phase,
+            {"input_field": "20540"},
+            get_default_payment_method,
+            None,
+            False,
+        ),
         (
             _get_shipping_method_with_phase,
             {"input_field": "20540"},
@@ -170,7 +205,9 @@ def test_basic_order_flow(with_company, with_signal):
         ),
     ],
 )
-def test_order_flow_with_phases(get_shipping_method, shipping_data, get_payment_method, payment_data, cancel_order):
+def test_order_flow_with_phases(
+    get_shipping_method, shipping_data, get_payment_method, payment_data, cancel_order
+):
     cache.clear()
     create_default_order_statuses()
     populate_if_required()
@@ -196,7 +233,13 @@ def test_order_flow_with_phases(get_shipping_method, shipping_data, get_payment_
     # Phase: Methods
     response = c.get(methods_path)
     assert response.status_code == 200
-    response = c.post(methods_path, data={"shipping_method": shipping_method.pk, "payment_method": payment_method.pk})
+    response = c.post(
+        methods_path,
+        data={
+            "shipping_method": shipping_method.pk,
+            "payment_method": payment_method.pk,
+        },
+    )
     assert response.status_code == 302, "Methods phase should redirect forth"
 
     if isinstance(shipping_method.carrier, CarrierWithCheckoutPhase):
@@ -226,8 +269,12 @@ def test_order_flow_with_phases(get_shipping_method, shipping_data, get_payment_
 
     if cancel_order:
         order.set_canceled()
-        process_payment_path = reverse("shuup:order_process_payment", kwargs={"pk": order.pk, "key": order.key})
-        process_payment_return_path = reverse("shuup:order_complete", kwargs={"pk": order.pk, "key": order.key})
+        process_payment_path = reverse(
+            "shuup:order_process_payment", kwargs={"pk": order.pk, "key": order.key}
+        )
+        process_payment_return_path = reverse(
+            "shuup:order_complete", kwargs={"pk": order.pk, "key": order.key}
+        )
         response = c.get(process_payment_path)
         assert response.status_code == 302, "Payment page should redirect back"
         assert response.url.endswith(process_payment_return_path)
@@ -240,14 +287,21 @@ def test_order_flow_with_phases(get_shipping_method, shipping_data, get_payment_
         assert order.payment_data.get("input_value")
         assert order.payment_status == PaymentStatus.NOT_PAID
         # Resolve order specific paths (payment and complete)
-        process_payment_path = reverse("shuup:order_process_payment", kwargs={"pk": order.pk, "key": order.key})
-        process_payment_return_path = reverse(
-            "shuup:order_process_payment_return", kwargs={"pk": order.pk, "key": order.key}
+        process_payment_path = reverse(
+            "shuup:order_process_payment", kwargs={"pk": order.pk, "key": order.key}
         )
-        order_complete_path = reverse("shuup:order_complete", kwargs={"pk": order.pk, "key": order.key})
+        process_payment_return_path = reverse(
+            "shuup:order_process_payment_return",
+            kwargs={"pk": order.pk, "key": order.key},
+        )
+        order_complete_path = reverse(
+            "shuup:order_complete", kwargs={"pk": order.pk, "key": order.key}
+        )
 
         # Check confirm redirection to payment page
-        assert response.url.endswith(process_payment_path), "Confirm should have redirected to payment page"
+        assert response.url.endswith(process_payment_path), (
+            "Confirm should have redirected to payment page"
+        )
 
         # Visit payment page
         response = c.get(process_payment_path)

@@ -19,10 +19,15 @@ def get_theme_context(shop):
         if not theme.identifier:
             continue
 
-        theme_settings = ThemeSettings.objects.get_or_create(theme_identifier=theme.identifier, shop=shop)[0]
+        theme_settings = ThemeSettings.objects.get_or_create(
+            theme_identifier=theme.identifier, shop=shop
+        )[0]
         themes.append(theme)
 
         if theme_settings.active:
             active_theme = theme
 
-    return {"theme_classes": sorted(themes, key=lambda t: (t.name or t.identifier)), "current_theme": active_theme}
+    return {
+        "theme_classes": sorted(themes, key=lambda t: (t.name or t.identifier)),
+        "current_theme": active_theme,
+    }

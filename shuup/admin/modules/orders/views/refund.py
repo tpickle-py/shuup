@@ -15,7 +15,11 @@ from django.views.generic import UpdateView
 from shuup.admin.supplier_provider import get_supplier
 from shuup.admin.toolbar import PostActionButton, Toolbar, URLActionButton
 from shuup.admin.utils.urls import get_model_url
-from shuup.core.excs import InvalidRefundAmountException, NoRefundToCreateException, RefundExceedsAmountException
+from shuup.core.excs import (
+    InvalidRefundAmountException,
+    NoRefundToCreateException,
+    RefundExceedsAmountException,
+)
 from shuup.core.models import Order, OrderLineType, Shop
 from shuup.utils.django_compat import reverse
 from shuup.utils.money import Money
@@ -26,26 +30,38 @@ class RefundForm(forms.Form):
         label=_("Line"),
         required=False,
         help_text=_(
-            "The line to refund. " "To refund an amount not associated with any line, select 'Refund arbitrary amount'."
+            "The line to refund. "
+            "To refund an amount not associated with any line, select 'Refund arbitrary amount'."
         ),
     )
     quantity = forms.DecimalField(
-        required=False, min_value=0, initial=0, label=_("Quantity"), help_text=_("The number of units to refund.")
+        required=False,
+        min_value=0,
+        initial=0,
+        label=_("Quantity"),
+        help_text=_("The number of units to refund."),
     )
     text = forms.CharField(
         max_length=255,
         label=_("Line Text/Comment"),
         required=False,
-        help_text=_("The text describing the nature of the refund and/or the reason for the refund."),
+        help_text=_(
+            "The text describing the nature of the refund and/or the reason for the refund."
+        ),
     )
     amount = forms.DecimalField(
-        required=False, initial=0, label=_("Amount"), help_text=_("The amount including tax to refund.")
+        required=False,
+        initial=0,
+        label=_("Amount"),
+        help_text=_("The amount including tax to refund."),
     )
     restock_products = forms.BooleanField(
         required=False,
         initial=True,
         label=_("Restock products"),
-        help_text=_("If checked, the quantity is adding back into the sellable product inventory."),
+        help_text=_(
+            "If checked, the quantity is adding back into the sellable product inventory."
+        ),
     )
 
     def clean_line_number(self):
@@ -68,7 +84,9 @@ class OrderCreateRefundView(UpdateView):
     form_class = forms.formset_factory(RefundForm, extra=1)
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
+            "id", flat=True
+        )
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_context_data(self, **kwargs):
@@ -92,11 +110,16 @@ class OrderCreateRefundView(UpdateView):
         if not supplier:
             context["toolbar"].append(
                 URLActionButton(
-                    url=reverse("shuup_admin:order.create-full-refund", kwargs={"pk": self.object.pk}),
+                    url=reverse(
+                        "shuup_admin:order.create-full-refund",
+                        kwargs={"pk": self.object.pk},
+                    ),
                     icon="fa fa-dollar",
                     text=_("Refund Entire Order"),
                     extra_css_class="btn-info",
-                    disable_reason=_("This order already has existing refunds") if self.object.has_refunds() else None,
+                    disable_reason=_("This order already has existing refunds")
+                    if self.object.has_refunds()
+                    else None,
                 )
             )
 
@@ -107,12 +130,18 @@ class OrderCreateRefundView(UpdateView):
         lines = lines = self.object.lines.all()
         if supplier:
             lines = lines.filter(supplier=supplier)
-        context["json_line_data"] = {line.ordering: self._get_line_data(self.object, line) for line in lines}
+        context["json_line_data"] = {
+            line.ordering: self._get_line_data(self.object, line) for line in lines
+        }
         return context
 
     def _get_line_data(self, order, line):
         shop = order.shop
-        total_price = line.taxful_price.value if shop.prices_include_tax else line.taxless_price.value
+        total_price = (
+            line.taxful_price.value
+            if shop.prices_include_tax
+            else line.taxless_price.value
+        )
         base_data = {
             "id": line.id,
             "type": "other" if line.quantity else "text",
@@ -129,7 +158,9 @@ class OrderCreateRefundView(UpdateView):
         if line.product:
             shop_product = line.product.get_shop_instance(shop)
             supplier = line.supplier
-            stock_status = supplier.get_stock_status(line.product.pk) if supplier else None
+            stock_status = (
+                supplier.get_stock_status(line.product.pk) if supplier else None
+            )
             base_data.update(
                 {
                     "type": "product",
@@ -137,8 +168,12 @@ class OrderCreateRefundView(UpdateView):
                     "step": shop_product.purchase_multiple,
                     "logicalCount": stock_status.logical_count if stock_status else 0,
                     "physicalCount": stock_status.physical_count if stock_status else 0,
-                    "salesDecimals": line.product.sales_unit.decimals if line.product.sales_unit else 0,
-                    "salesUnit": line.product.sales_unit.symbol if line.product.sales_unit else "",
+                    "salesDecimals": line.product.sales_unit.decimals
+                    if line.product.sales_unit
+                    else 0,
+                    "salesUnit": line.product.sales_unit.symbol
+                    if line.product.sales_unit
+                    else "",
                 }
             )
         return base_data
@@ -160,14 +195,20 @@ class OrderCreateRefundView(UpdateView):
             lines = lines.filter(supplier=supplier)
 
         line_number_choices = [("", "---")]
-        if settings.SHUUP_ALLOW_ARBITRARY_REFUNDS and self.object.get_total_unrefunded_amount(supplier).value > 0:
+        if (
+            settings.SHUUP_ALLOW_ARBITRARY_REFUNDS
+            and self.object.get_total_unrefunded_amount(supplier).value > 0
+        ):
             line_number_choices += [("amount", _("Refund arbitrary amount"))]
         return line_number_choices + [
             (line.ordering, self._get_line_text(line))
             for line in lines
             if (
                 (
-                    (line.type == OrderLineType.PRODUCT and line.max_refundable_quantity > 0)
+                    (
+                        line.type == OrderLineType.PRODUCT
+                        and line.max_refundable_quantity > 0
+                    )
                     or (
                         line.type != OrderLineType.PRODUCT
                         and line.max_refundable_amount.value > 0
@@ -226,19 +267,25 @@ class OrderCreateRefundView(UpdateView):
                 refund_lines.append(line)
 
         try:
-            order.create_refund(refund_lines, created_by=self.request.user, supplier=supplier)
+            order.create_refund(
+                refund_lines, created_by=self.request.user, supplier=supplier
+            )
         except RefundExceedsAmountException:
             messages.error(self.request, _("Refund amount exceeds order amount."))
             return self.form_invalid(form)
         except InvalidRefundAmountException:
-            messages.error(self.request, _("Refund amounts should match sign on parent line."))
+            messages.error(
+                self.request, _("Refund amounts should match sign on parent line.")
+            )
             return self.form_invalid(form)
         messages.success(self.request, _("Refund created."))
         return HttpResponseRedirect(get_model_url(order))
 
 
 class FullRefundConfirmationForm(forms.Form):
-    restock_products = forms.BooleanField(required=False, initial=True, label=_("Restock products"))
+    restock_products = forms.BooleanField(
+        required=False, initial=True, label=_("Restock products")
+    )
 
 
 class OrderCreateFullRefundView(UpdateView):
@@ -248,7 +295,9 @@ class OrderCreateFullRefundView(UpdateView):
     form_class = FullRefundConfirmationForm
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
+            "id", flat=True
+        )
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_context_data(self, **kwargs):
@@ -257,7 +306,9 @@ class OrderCreateFullRefundView(UpdateView):
         context["toolbar"] = Toolbar(
             [
                 URLActionButton(
-                    url=reverse("shuup_admin:order.create-refund", kwargs={"pk": self.object.pk}),
+                    url=reverse(
+                        "shuup_admin:order.create-refund", kwargs={"pk": self.object.pk}
+                    ),
                     icon="fa fa-check-circle",
                     text=_("Cancel"),
                     extra_css_class="btn-danger",

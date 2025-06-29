@@ -11,8 +11,15 @@ from django.http.response import Http404
 from django.test.utils import override_settings
 
 from shuup.admin.forms.fields import ObjectSelect2MultipleField
-from shuup.admin.modules.contacts.forms import CompanyContactBaseForm, PersonContactBaseForm
-from shuup.admin.modules.contacts.views import ContactDetailView, ContactEditView, ContactListView
+from shuup.admin.modules.contacts.forms import (
+    CompanyContactBaseForm,
+    PersonContactBaseForm,
+)
+from shuup.admin.modules.contacts.views import (
+    ContactDetailView,
+    ContactEditView,
+    ContactListView,
+)
 from shuup.core.models import CompanyContact, Gender, PersonContact, get_person_contact
 from shuup.testing.factories import (
     create_random_company,
@@ -39,7 +46,11 @@ def test_person_contact_create_form(rf, admin_user):
     request = apply_request_middleware(rf.post("/"), user=admin_user, shop=shop)
     contact_base_form = PersonContactBaseForm(
         request=request,
-        data={"first_name": test_first_name, "last_name": test_last_name, "gender": Gender.UNDISCLOSED.value},
+        data={
+            "first_name": test_first_name,
+            "last_name": test_last_name,
+            "gender": Gender.UNDISCLOSED.value,
+        },
         user=user,
     )
 
@@ -70,7 +81,11 @@ def test_person_contact_edit_form(rf, admin_user):
     contact_base_form = PersonContactBaseForm(
         request=request,
         instance=person,
-        data={"first_name": "test first name", "last_name": person.last_name, "gender": person.gender.value},
+        data={
+            "first_name": "test first name",
+            "last_name": person.last_name,
+            "gender": person.gender.value,
+        },
     )
     assert contact_base_form.is_valid(), contact_base_form.errors
     contact = contact_base_form.save()
@@ -95,7 +110,11 @@ def test_person_contact_edit_form_2(rf, admin_user):
     contact_base_form = PersonContactBaseForm(
         request=request,
         instance=person,
-        data={"first_name": "test first name", "last_name": person.last_name, "gender": person.gender.value},
+        data={
+            "first_name": "test first name",
+            "last_name": person.last_name,
+            "gender": person.gender.value,
+        },
     )
     assert contact_base_form.is_valid(), contact_base_form.errors
     contact = contact_base_form.save()
@@ -181,7 +200,9 @@ def test_company_contact_edit_form_2(rf, admin_user):
 
 @pytest.mark.django_db
 def test_contact_edit_multishop(rf):
-    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
+    with override_settings(
+        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
+    ):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -190,7 +211,9 @@ def test_contact_edit_multishop(rf):
         shop1.staff_members.add(staff_user)
         shop2.staff_members.add(staff_user)
 
-        contact = create_random_person(locale="en_US", minimum_name_comp_len=5, shop=shop2)
+        contact = create_random_person(
+            locale="en_US", minimum_name_comp_len=5, shop=shop2
+        )
         # only available in shop2
         assert contact.registered_in(shop2)
         assert contact.in_shop(shop2)
@@ -214,7 +237,9 @@ def test_contact_edit_multishop(rf):
 
 @pytest.mark.django_db
 def test_contact_company_edit_multishop(rf):
-    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
+    with override_settings(
+        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
+    ):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -224,7 +249,9 @@ def test_contact_company_edit_multishop(rf):
         shop2.staff_members.add(staff_user)
 
         # only available in shop2
-        contact = create_random_person(locale="en_US", minimum_name_comp_len=5, shop=shop2)
+        contact = create_random_person(
+            locale="en_US", minimum_name_comp_len=5, shop=shop2
+        )
 
         # only available in shop1
         company = create_random_company(shop1)
@@ -266,7 +293,11 @@ def test_contact_company_edit_multishop(rf):
         contact_base_form = PersonContactBaseForm(
             request=request,
             instance=contact,
-            data={"first_name": "test first name", "last_name": contact.last_name, "gender": contact.gender.value},
+            data={
+                "first_name": "test first name",
+                "last_name": contact.last_name,
+                "gender": contact.gender.value,
+            },
         )
         assert contact_base_form.is_valid(), contact_base_form.errors
         contact_base_form.save()
@@ -298,7 +329,9 @@ def test_contact_company_edit_multishop(rf):
 
 @pytest.mark.django_db
 def test_contact_detail_multishop(rf):
-    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
+    with override_settings(
+        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
+    ):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -307,7 +340,9 @@ def test_contact_detail_multishop(rf):
         shop1.staff_members.add(staff_user)
         shop2.staff_members.add(staff_user)
 
-        contact = create_random_person(locale="en_US", minimum_name_comp_len=5, shop=shop2)
+        contact = create_random_person(
+            locale="en_US", minimum_name_comp_len=5, shop=shop2
+        )
 
         view = ContactDetailView.as_view()
 
@@ -323,7 +358,9 @@ def test_contact_detail_multishop(rf):
 
 @pytest.mark.django_db
 def test_company_contact_detail_multishop(rf):
-    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
+    with override_settings(
+        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
+    ):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -350,7 +387,9 @@ def test_company_contact_detail_multishop(rf):
 
 @pytest.mark.django_db
 def test_contact_company_list_multishop(rf):
-    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
+    with override_settings(
+        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
+    ):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -360,7 +399,9 @@ def test_contact_company_list_multishop(rf):
         shop2.staff_members.add(staff_user)
 
         # only available in shop2
-        contact = create_random_person(locale="en_US", minimum_name_comp_len=5, shop=shop2)
+        contact = create_random_person(
+            locale="en_US", minimum_name_comp_len=5, shop=shop2
+        )
 
         # only available in shop1
         company = create_random_company()

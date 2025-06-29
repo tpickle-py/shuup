@@ -5,20 +5,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0096_create_encryptedconfigurationitem'),
+        ("shuup", "0096_create_encryptedconfigurationitem"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='paymentmethod',
-            name='payment_processor',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='shuup.PaymentProcessor', verbose_name='payment processor'),
+            model_name="paymentmethod",
+            name="payment_processor",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="shuup.PaymentProcessor",
+                verbose_name="payment processor",
+            ),
         ),
         migrations.AlterField(
-            model_name='shippingmethod',
-            name='carrier',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='shuup.Carrier', verbose_name='carrier'),
+            model_name="shippingmethod",
+            name="carrier",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="shuup.Carrier",
+                verbose_name="carrier",
+            ),
         ),
     ]

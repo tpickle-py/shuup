@@ -84,8 +84,12 @@ def test_basket_with_custom_shop(rf):
         basket = basket_class(request, "basket", shop=shop2)
         assert basket.shop == shop2
 
-        product_shop2 = factories.create_product("product_shop2", shop2, factories.get_default_supplier(), 10)
-        line = basket.add_product(factories.get_default_supplier(), shop2, product_shop2, 1)
+        product_shop2 = factories.create_product(
+            "product_shop2", shop2, factories.get_default_supplier(), 10
+        )
+        line = basket.add_product(
+            factories.get_default_supplier(), shop2, product_shop2, 1
+        )
         assert line.shop == shop2
 
 
@@ -102,13 +106,17 @@ def test_basket_whit_package_products(rf):
         supplier.stock_managed = True
         supplier.save()
 
-        package_product = factories.create_package_product("product", shop, supplier, default_price=10, children=4)
+        package_product = factories.create_package_product(
+            "product", shop, supplier, default_price=10, children=4
+        )
         product_stock = supplier.get_stock_status(package_product.id)
         stock = product_stock.physical_count
         supplier.adjust_stock(package_product.id, -(stock - 6))
         product_stock = supplier.get_stock_status(package_product.id)
 
-        for index, child_product in enumerate(list(package_product.get_package_child_to_quantity_map().keys()), 1):
+        for index, child_product in enumerate(
+            list(package_product.get_package_child_to_quantity_map().keys()), 1
+        ):
             child_product_stock = supplier.get_stock_status(child_product.id)
             stock = child_product_stock.physical_count
             supplier.adjust_stock(child_product.id, -(stock - 10 * index))

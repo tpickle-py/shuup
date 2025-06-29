@@ -101,5 +101,11 @@ def test_custom_status(language):
     assert frm.instance.role == test_new_role
     assert frm.instance.ordering == test_new_ordering
     assert frm.instance.is_active == test_new_is_active
-    assert OrderStatus.objects.get_default_initial() in frm.instance.allowed_next_statuses.all()
-    assert OrderStatus.objects.get_default_processing() in frm.instance.allowed_next_statuses.all()
+    assert (
+        OrderStatus.objects.get_default_initial()
+        in frm.instance.allowed_next_statuses.all()
+    )
+    assert (
+        OrderStatus.objects.get_default_processing()
+        in frm.instance.allowed_next_statuses.all()
+    )

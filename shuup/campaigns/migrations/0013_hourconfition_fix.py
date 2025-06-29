@@ -9,40 +9,49 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('campaigns', '0012_basket_campaign_undiscounted'),
+        ("campaigns", "0012_basket_campaign_undiscounted"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='hourbasketcondition',
-            name='days',
+            model_name="hourbasketcondition",
+            name="days",
             field=models.CharField(
-                verbose_name='days',
+                verbose_name="days",
                 max_length=255,
                 validators=[
                     django.core.validators.RegexValidator(
-                        re.compile('^[\\d,]+\\Z' if django.VERSION < (1, 9) else '^\\d+(?:\\,\\d+)*\\Z', 32),
-                        code='invalid',
-                        message='Enter only digits separated by commas.'
+                        re.compile(
+                            "^[\\d,]+\\Z"
+                            if django.VERSION < (1, 9)
+                            else "^\\d+(?:\\,\\d+)*\\Z",
+                            32,
+                        ),
+                        code="invalid",
+                        message="Enter only digits separated by commas.",
                     )
-                ]
+                ],
             ),
         ),
         migrations.AlterField(
-            model_name='hourcondition',
-            name='days',
+            model_name="hourcondition",
+            name="days",
             field=models.CharField(
-                verbose_name='days',
+                verbose_name="days",
                 max_length=255,
                 validators=[
                     django.core.validators.RegexValidator(
-                        re.compile('^[\\d,]+\\Z' if django.VERSION < (1, 9) else '^\\d+(?:\\,\\d+)*\\Z', 32),
-                        code='invalid',
-                        message='Enter only digits separated by commas.'
+                        re.compile(
+                            "^[\\d,]+\\Z"
+                            if django.VERSION < (1, 9)
+                            else "^\\d+(?:\\,\\d+)*\\Z",
+                            32,
+                        ),
+                        code="invalid",
+                        message="Enter only digits separated by commas.",
                     )
-                ]
+                ],
             ),
         ),
     ]

@@ -23,7 +23,9 @@ if TYPE_CHECKING:  # pragma: no cover
 
 class XthemeAdminTemplateInjector(AdminTemplateInjector):
     @classmethod
-    def get_admin_template_snippet(cls, place: str, shop: "Shop", user: "User", supplier: "Optional[Supplier]"):
+    def get_admin_template_snippet(
+        cls, place: str, shop: "Shop", user: "User", supplier: "Optional[Supplier]"
+    ):
         if place == "head_end":
             admin_theme = AdminThemeSettings.objects.filter(shop=shop).first()
             if admin_theme and admin_theme.active:

@@ -22,4 +22,7 @@ def get_name_map(category_key):
 
 
 def get_enum_choices_dict(enum_class):
-    return dict((force_text(op.value), force_text(getattr(op, "label", op.name))) for op in enum_class)
+    return dict(
+        (force_text(op.value), force_text(getattr(op, "label", op.name)))
+        for op in enum_class
+    )

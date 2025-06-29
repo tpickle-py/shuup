@@ -6,15 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0066_contact-picture'),
+        ("shuup", "0066_contact-picture"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='supplier',
-            name='name',
-            field=models.CharField(db_index=True, help_text='The product suppliers name. Suppliers can be used manage the inventory of stocked products.', max_length=128, verbose_name='name'),
+            model_name="supplier",
+            name="name",
+            field=models.CharField(
+                db_index=True,
+                help_text="The product suppliers name. Suppliers can be used manage the inventory of stocked products.",
+                max_length=128,
+                verbose_name="name",
+            ),
         ),
     ]

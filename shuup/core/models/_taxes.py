@@ -23,18 +23,25 @@ from ._base import ChangeProtected, TranslatableShuupModel
 class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
     identifier_attr = "code"
 
-    change_protect_message = _("Can't change the business critical fields of the Tax that is in use.")
+    change_protect_message = _(
+        "Can't change the business critical fields of the Tax that is in use."
+    )
     unprotected_fields = ["enabled"]
 
     code = InternalIdentifierField(
-        unique=True, editable=True, verbose_name=_("code"), help_text=_("The abbreviated tax code name.")
+        unique=True,
+        editable=True,
+        verbose_name=_("code"),
+        help_text=_("The abbreviated tax code name."),
     )
 
     translations = TranslatedFields(
         name=models.CharField(
             max_length=124,
             verbose_name=_("name"),
-            help_text=_("The name of the tax. It is shown in order lines, in order invoices and confirmations."),
+            help_text=_(
+                "The name of the tax. It is shown in order lines, in order invoices and confirmations."
+            ),
         ),
     )
 
@@ -56,12 +63,21 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
         blank=True,
         null=True,
         verbose_name=_("tax amount value"),
-        help_text=_("The flat amount of the tax. " "Mutually exclusive with percentage rates tax."),
+        help_text=_(
+            "The flat amount of the tax. Mutually exclusive with percentage rates tax."
+        ),
     )
-    currency = CurrencyField(default=None, blank=True, null=True, verbose_name=_("currency of the amount tax"))
+    currency = CurrencyField(
+        default=None,
+        blank=True,
+        null=True,
+        verbose_name=_("currency of the amount tax"),
+    )
 
     enabled = models.BooleanField(
-        default=True, verbose_name=_("enabled"), help_text=_("Enable if this tax is valid and should be active.")
+        default=True,
+        verbose_name=_("enabled"),
+        help_text=_("Enable if this tax is valid and should be active."),
     )
 
     def clean(self):
@@ -69,9 +85,13 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
         if self.rate is None and self.amount is None:
             raise ValidationError(_("Either rate or amount tax is required."))
         if self.amount is not None and self.rate is not None:
-            raise ValidationError(_("Can't have both rate and amount taxes. They are mutually exclusive."))
+            raise ValidationError(
+                _("Can't have both rate and amount taxes. They are mutually exclusive.")
+            )
         if self.amount is not None and not self.currency:
-            raise ValidationError(_("Currency is required if the amount tax value is specified."))
+            raise ValidationError(
+                _("Currency is required if the amount tax value is specified.")
+            )
 
     def calculate_amount(self, base_amount):
         """
@@ -84,7 +104,10 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
             return self.amount
         if self.rate is not None:
             return self.rate * base_amount
-        raise ValueError("Error! Calculations of the tax amount failed. Improperly configured tax: %s." % self)
+        raise ValueError(
+            "Error! Calculations of the tax amount failed. Improperly configured tax: %s."
+            % self
+        )
 
     def __str__(self):
         text = super(Tax, self).__str__()
@@ -109,12 +132,15 @@ class TaxClass(TranslatableShuupModel):
             max_length=100,
             verbose_name=_("name"),
             help_text=_(
-                "The tax class name. " "Tax classes are used to control how taxes are applied to the products."
+                "The tax class name. "
+                "Tax classes are used to control how taxes are applied to the products."
             ),
         ),
     )
     enabled = models.BooleanField(
-        default=True, verbose_name=_("enabled"), help_text=_("Enable if this tax class is valid and should be active.")
+        default=True,
+        verbose_name=_("enabled"),
+        help_text=_("Enable if this tax class is valid and should be active."),
     )
 
     class Meta:
@@ -143,14 +169,16 @@ class CustomerTaxGroup(TranslatableShuupModel):
     @classmethod
     def get_default_person_group(cls):
         obj, c = CustomerTaxGroup.objects.get_or_create(
-            identifier="default_person_customers", defaults={"name": _("Retail Customers")}
+            identifier="default_person_customers",
+            defaults={"name": _("Retail Customers")},
         )
         return obj
 
     @classmethod
     def get_default_company_group(cls):
         obj, c = CustomerTaxGroup.objects.get_or_create(
-            identifier="default_company_customers", defaults={"name": _("Company Customers")}
+            identifier="default_company_customers",
+            defaults={"name": _("Company Customers")},
         )
         return obj
 

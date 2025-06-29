@@ -32,7 +32,10 @@ class ModelCachingDescriptor(object):
             if current_cached and current_cached.pk != self.get_id(instance):
                 setattr(instance, self.object_name, None)
         else:
-            raise TypeError("Error! Can't assign ID `%r` in a `ModelCachingDescriptor(%s)`." % (value, self.name))
+            raise TypeError(
+                "Error! Can't assign ID `%r` in a `ModelCachingDescriptor(%s)`."
+                % (value, self.name)
+            )
 
     def get_id(self, instance):
         return getattr(instance, self.id_name, None)
@@ -43,12 +46,16 @@ class ModelCachingDescriptor(object):
         elif isinstance(value, self.queryset.model):
             if not value.pk:
                 raise ValueError(
-                    "Error! Can't assign unsaved model `%r` in a `ModelCachingDescriptor(%s)`." % (value, self.name)
+                    "Error! Can't assign unsaved model `%r` in a `ModelCachingDescriptor(%s)`."
+                    % (value, self.name)
                 )
             setattr(instance, self.id_name, value.pk)
             setattr(instance, self.object_name, value)
         else:
-            raise TypeError("Error! Can't assign object `%r` in a `ModelCachingDescriptor(%s)`." % (value, self.name))
+            raise TypeError(
+                "Error! Can't assign object `%r` in a `ModelCachingDescriptor(%s)`."
+                % (value, self.name)
+            )
 
     def get_object(self, instance):
         if not self.get_id(instance):

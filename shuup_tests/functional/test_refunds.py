@@ -13,7 +13,13 @@ from shuup.campaigns.models.basket_effects import BasketDiscountAmount
 from shuup.campaigns.models.campaigns import BasketCampaign, CatalogCampaign
 from shuup.campaigns.models.catalog_filters import CategoryFilter
 from shuup.campaigns.models.product_effects import ProductDiscountAmount
-from shuup.core.models import AnonymousContact, OrderLineType, PaymentStatus, ShipmentStatus, ShippingStatus
+from shuup.core.models import (
+    AnonymousContact,
+    OrderLineType,
+    PaymentStatus,
+    ShipmentStatus,
+    ShippingStatus,
+)
 from shuup.core.order_creator import OrderCreator
 from shuup.core.pricing import get_pricing_module
 from shuup.testing.factories import (
@@ -33,7 +39,9 @@ INITIAL_PRODUCT_QUANTITY = 10
 
 
 def check_stock_counts(supplier, product, physical, logical):
-    physical_count = supplier.get_stock_statuses([product.id])[product.id].physical_count
+    physical_count = supplier.get_stock_statuses([product.id])[
+        product.id
+    ].physical_count
     logical_count = supplier.get_stock_statuses([product.id])[product.id].logical_count
     assert physical_count == physical
     assert logical_count == logical
@@ -41,9 +49,21 @@ def check_stock_counts(supplier, product, physical, logical):
 
 def _get_product_data():
     return [
-        {"sku": "sku1234", "default_price": decimal.Decimal("14.756"), "quantity": decimal.Decimal("1")},
-        {"sku": "sku12345", "default_price": decimal.Decimal("10"), "quantity": decimal.Decimal("2")},
-        {"sku": "sku123456", "default_price": decimal.Decimal("14.756"), "quantity": decimal.Decimal("2")},
+        {
+            "sku": "sku1234",
+            "default_price": decimal.Decimal("14.756"),
+            "quantity": decimal.Decimal("1"),
+        },
+        {
+            "sku": "sku12345",
+            "default_price": decimal.Decimal("10"),
+            "quantity": decimal.Decimal("2"),
+        },
+        {
+            "sku": "sku123456",
+            "default_price": decimal.Decimal("14.756"),
+            "quantity": decimal.Decimal("2"),
+        },
     ]
 
 
@@ -65,15 +85,21 @@ def _get_other_line_data():
 
 
 def _add_basket_campaign(shop):
-    campaign = BasketCampaign.objects.create(shop=shop, name="test", public_name="test", active=True)
-    BasketDiscountAmount.objects.create(discount_amount=shop.create_price("10"), campaign=campaign)
+    campaign = BasketCampaign.objects.create(
+        shop=shop, name="test", public_name="test", active=True
+    )
+    BasketDiscountAmount.objects.create(
+        discount_amount=shop.create_price("10"), campaign=campaign
+    )
     rule = BasketTotalProductAmountCondition.objects.create(value=1)
     campaign.conditions.add(rule)
     campaign.save()
 
 
 def _add_catalog_campaign(shop):
-    campaign = CatalogCampaign.objects.create(shop=shop, name="test", public_name="test", active=True)
+    campaign = CatalogCampaign.objects.create(
+        shop=shop, name="test", public_name="test", active=True
+    )
     category_filter = CategoryFilter.objects.create()
     category_filter.categories.add(get_default_category())
     category_filter.save()
@@ -81,13 +107,17 @@ def _add_catalog_campaign(shop):
 
 
 def _add_taxes():
-    tax = get_tax(code=u"test_code", name=u"default", rate=0.24)
-    tax2 = get_tax(code=u"test_code2", name=u"default", rate=0.11)
+    tax = get_tax(code="test_code", name="default", rate=0.24)
+    tax2 = get_tax(code="test_code2", name="default", rate=0.11)
     create_default_tax_rule(tax)
     create_default_tax_rule(tax2)
 
 
-def _get_order(prices_include_tax=False, include_basket_campaign=False, include_catalog_campaign=False):
+def _get_order(
+    prices_include_tax=False,
+    include_basket_campaign=False,
+    include_catalog_campaign=False,
+):
     shop = get_shop(prices_include_tax=prices_include_tax)
     supplier = get_simple_supplier(shop=shop)
 
@@ -104,7 +134,11 @@ def _get_order(prices_include_tax=False, include_basket_campaign=False, include_
     for product_data in _get_product_data():
         quantity = product_data.pop("quantity")
         product = create_product(
-            sku=product_data.pop("sku"), shop=shop, supplier=supplier, tax_class=get_default_tax_class(), **product_data
+            sku=product_data.pop("sku"),
+            shop=shop,
+            supplier=supplier,
+            tax_class=get_default_tax_class(),
+            **product_data,
         )
         shop_product = product.get_shop_instance(shop)
         shop_product.categories.add(get_default_category())
@@ -139,7 +173,9 @@ def test_create_full_refund(prices_include_tax):
     order.create_full_refund(restock_products=True)
 
     for line in order.lines.products():
-        check_stock_counts(supplier, line.product, INITIAL_PRODUCT_QUANTITY, INITIAL_PRODUCT_QUANTITY)
+        check_stock_counts(
+            supplier, line.product, INITIAL_PRODUCT_QUANTITY, INITIAL_PRODUCT_QUANTITY
+        )
 
     assert order.has_refunds()
     assert not order.can_create_refund()
@@ -161,23 +197,45 @@ def test_create_refund_line_by_line(prices_include_tax):
     order = _get_order(prices_include_tax, True, True)
 
     for line in order.lines.products():
-        check_stock_counts(supplier, line.product, INITIAL_PRODUCT_QUANTITY, INITIAL_PRODUCT_QUANTITY - line.quantity)
+        check_stock_counts(
+            supplier,
+            line.product,
+            INITIAL_PRODUCT_QUANTITY,
+            INITIAL_PRODUCT_QUANTITY - line.quantity,
+        )
 
     original_order_total = order.taxful_total_price
     num_order_lines = order.lines.count()
 
     # refund the discount lines first
     for line in order.lines.discounts():
-        order.create_refund([{"line": line, "quantity": line.quantity, "amount": line.taxful_price.amount}])
+        order.create_refund(
+            [
+                {
+                    "line": line,
+                    "quantity": line.quantity,
+                    "amount": line.taxful_price.amount,
+                }
+            ]
+        )
 
     # refund each line 1 by 1
     for line in order.lines.products():
         order.create_refund(
-            [{"line": line, "quantity": line.quantity, "amount": line.taxful_price.amount, "restock_products": True}]
+            [
+                {
+                    "line": line,
+                    "quantity": line.quantity,
+                    "amount": line.taxful_price.amount,
+                    "restock_products": True,
+                }
+            ]
         )
 
     for line in order.lines.products():
-        check_stock_counts(supplier, line.product, INITIAL_PRODUCT_QUANTITY, INITIAL_PRODUCT_QUANTITY)
+        check_stock_counts(
+            supplier, line.product, INITIAL_PRODUCT_QUANTITY, INITIAL_PRODUCT_QUANTITY
+        )
 
     assert order.has_refunds()
     assert not order.can_create_refund()
@@ -200,12 +258,27 @@ def test_create_refund_amount(prices_include_tax):
 
     # refund the discount lines first
     for line in order.lines.discounts():
-        order.create_refund([{"line": "amount", "quantity": line.quantity, "amount": line.taxful_price.amount}])
+        order.create_refund(
+            [
+                {
+                    "line": "amount",
+                    "quantity": line.quantity,
+                    "amount": line.taxful_price.amount,
+                }
+            ]
+        )
 
     # refund each line 1 by 1
     for line in order.lines.products():
         order.create_refund(
-            [{"line": "amount", "quantity": 1, "amount": line.taxful_price.amount, "restock_products": True}]
+            [
+                {
+                    "line": "amount",
+                    "quantity": 1,
+                    "amount": line.taxful_price.amount,
+                    "restock_products": True,
+                }
+            ]
         )
 
     assert order.has_refunds()
@@ -220,7 +293,14 @@ def test_create_refund_amount(prices_include_tax):
 
     for line in order.lines.products():
         order.create_refund(
-            [{"line": line, "quantity": line.quantity, "amount": Money(0, "EUR"), "restock_products": True}]
+            [
+                {
+                    "line": line,
+                    "quantity": line.quantity,
+                    "amount": Money(0, "EUR"),
+                    "restock_products": True,
+                }
+            ]
         )
 
     # nothing changes

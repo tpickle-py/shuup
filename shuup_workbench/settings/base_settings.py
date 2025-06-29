@@ -8,7 +8,9 @@ import os
 
 from shuup.addons import add_enabled_addons
 
-BASE_DIR = os.getenv("SHUUP_WORKBENCH_BASE_DIR") or (os.path.dirname(os.path.dirname(__file__)))
+BASE_DIR = os.getenv("SHUUP_WORKBENCH_BASE_DIR") or (
+    os.path.dirname(os.path.dirname(__file__))
+)
 SECRET_KEY = "Shhhhh"
 MIRAGE_SECRET_KEY = "Shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
 DEBUG = True
@@ -18,7 +20,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "var", "media")
 STATIC_ROOT = os.path.join(BASE_DIR, "var", "static")
 MEDIA_URL = "/media/"
 
-SHUUP_ENABLED_ADDONS_FILE = os.getenv("SHUUP_ENABLED_ADDONS_FILE") or (os.path.join(BASE_DIR, "var", "enabled_addons"))
+SHUUP_ENABLED_ADDONS_FILE = os.getenv("SHUUP_ENABLED_ADDONS_FILE") or (
+    os.path.join(BASE_DIR, "var", "enabled_addons")
+)
 
 INSTALLED_APPS = add_enabled_addons(
     SHUUP_ENABLED_ADDONS_FILE,
@@ -122,7 +126,11 @@ LOGGING = {
         "verbose": {"format": "[%(asctime)s] (%(name)s:%(levelname)s): %(message)s"},
     },
     "handlers": {
-        "console": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "verbose"},
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
     },
     "loggers": {
         "shuup": {"handlers": ["console"], "level": "DEBUG", "propagate": True},

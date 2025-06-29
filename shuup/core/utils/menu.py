@@ -8,7 +8,6 @@
 
 
 class MainMenuUpdater(object):
-
     """
     To update items add for example
     updates = {

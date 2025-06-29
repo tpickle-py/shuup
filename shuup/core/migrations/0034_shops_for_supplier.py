@@ -6,19 +6,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0033_order_modified_date'),
+        ("shuup", "0033_order_modified_date"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='shop',
-            options={'permissions': (('view_shop', 'Can view shops'),), 'verbose_name': 'shop', 'verbose_name_plural': 'shops'},
+            name="shop",
+            options={
+                "permissions": (("view_shop", "Can view shops"),),
+                "verbose_name": "shop",
+                "verbose_name_plural": "shops",
+            },
         ),
         migrations.AddField(
-            model_name='supplier',
-            name='shops',
-            field=models.ManyToManyField(blank=True, related_name='suppliers', to='shuup.Shop'),
+            model_name="supplier",
+            name="shops",
+            field=models.ManyToManyField(
+                blank=True, related_name="suppliers", to="shuup.Shop"
+            ),
         ),
     ]

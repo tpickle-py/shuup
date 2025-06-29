@@ -29,7 +29,10 @@ class ProductDeleteView(DetailView):
         qs = (
             super()
             .get_queryset()
-            .filter(shop=get_shop(self.request), product__kind__in=self.get_listing_product_kinds_values())
+            .filter(
+                shop=get_shop(self.request),
+                product__kind__in=self.get_listing_product_kinds_values(),
+            )
         )
 
         supplier = get_supplier(self.request)

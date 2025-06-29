@@ -4,16 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('auth', '0011_update_proxy_permissions'),
-        ('shuup_simple_cms', '0016_apply_missing_translation_changes'),
+        ("auth", "0011_update_proxy_permissions"),
+        ("shuup_simple_cms", "0016_apply_missing_translation_changes"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='page',
-            name='available_permission_groups',
-            field=models.ManyToManyField(blank=True, help_text='Select the permission groups that can have access to this page.', to='auth.Group', verbose_name='Available for permission groups'),
+            model_name="page",
+            name="available_permission_groups",
+            field=models.ManyToManyField(
+                blank=True,
+                help_text="Select the permission groups that can have access to this page.",
+                to="auth.Group",
+                verbose_name="Available for permission groups",
+            ),
         ),
     ]

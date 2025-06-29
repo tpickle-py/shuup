@@ -6,25 +6,39 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0064_orderline_modified_on_and_contactgroup_name_length'),
+        ("shuup", "0064_orderline_modified_on_and_contactgroup_name_length"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='categorytranslation',
-            name='name',
-            field=models.CharField(db_index=True, help_text='Enter a descriptive name for your product category. Products can be found in menus and in search in your store under the category name.', max_length=128, verbose_name='name'),
+            model_name="categorytranslation",
+            name="name",
+            field=models.CharField(
+                db_index=True,
+                help_text="Enter a descriptive name for your product category. Products can be found in menus and in search in your store under the category name.",
+                max_length=128,
+                verbose_name="name",
+            ),
         ),
         migrations.AlterField(
-            model_name='producttranslation',
-            name='name',
-            field=models.CharField(db_index=True, help_text='Enter a descriptive name for your product. This will be its title in your store.', max_length=256, verbose_name='name'),
+            model_name="producttranslation",
+            name="name",
+            field=models.CharField(
+                db_index=True,
+                help_text="Enter a descriptive name for your product. This will be its title in your store.",
+                max_length=256,
+                verbose_name="name",
+            ),
         ),
         migrations.AlterField(
-            model_name='supplier',
-            name='name',
-            field=models.CharField(db_index=True, help_text='The product suppliers name. Suppliers can be used manage the inventory of stocked products.', max_length=64, verbose_name='name'),
+            model_name="supplier",
+            name="name",
+            field=models.CharField(
+                db_index=True,
+                help_text="The product suppliers name. Suppliers can be used manage the inventory of stocked products.",
+                max_length=64,
+                verbose_name="name",
+            ),
         ),
     ]

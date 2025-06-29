@@ -37,8 +37,12 @@ from shuup_tests.utils.basketish_order_source import BasketishOrderSource
 
 def get_default_campaign(coupon, discount="20"):
     shop = get_default_shop()
-    campaign = BasketCampaign.objects.create(shop=shop, public_name="test", name="test", coupon=coupon, active=True)
-    BasketDiscountAmount.objects.create(discount_amount=shop.create_price(discount), campaign=campaign)
+    campaign = BasketCampaign.objects.create(
+        shop=shop, public_name="test", name="test", coupon=coupon, active=True
+    )
+    BasketDiscountAmount.objects.create(
+        discount_amount=shop.create_price(discount), campaign=campaign
+    )
     return campaign
 
 
@@ -115,11 +119,15 @@ def test_coupons_usage_report(rf):
 
         expected_data.append(
             {
-                "date": format_date(order.order_date, locale=get_current_babel_locale()),
+                "date": format_date(
+                    order.order_date, locale=get_current_babel_locale()
+                ),
                 "coupon": order.codes[0],
                 "order": str(order),
                 "taxful_total": float(order.taxful_total_price.as_rounded().value),
-                "taxful_subtotal": float((order.taxful_total_price - discount).as_rounded().value),
+                "taxful_subtotal": float(
+                    (order.taxful_total_price - discount).as_rounded().value
+                ),
                 "total_discount": float(discount.as_rounded().value),
             }
         )

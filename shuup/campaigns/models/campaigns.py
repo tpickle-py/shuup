@@ -23,8 +23,14 @@ from shuup.campaigns.consts import (
     CATALOG_FILTER_CACHE_NAMESPACE,
     CONTEXT_CONDITION_CACHE_NAMESPACE,
 )
-from shuup.campaigns.models.basket_conditions import CategoryProductsBasketCondition, ProductsInBasketCondition
-from shuup.campaigns.utils.campaigns import get_lines_suppliers, get_product_ids_and_quantities
+from shuup.campaigns.models.basket_conditions import (
+    CategoryProductsBasketCondition,
+    ProductsInBasketCondition,
+)
+from shuup.campaigns.utils.campaigns import (
+    get_lines_suppliers,
+    get_product_ids_and_quantities,
+)
 from shuup.campaigns.utils.matcher import get_matching_for_product
 from shuup.core import cache
 from shuup.core.fields import InternalIdentifierField
@@ -55,9 +61,16 @@ class Campaign(MoneyPropped, TranslatableModel):
     admin_url_suffix = None
 
     shop = models.ForeignKey(
-        on_delete=models.CASCADE, to=Shop, verbose_name=_("shop"), help_text=_("The shop where the campaign is active.")
+        on_delete=models.CASCADE,
+        to=Shop,
+        verbose_name=_("shop"),
+        help_text=_("The shop where the campaign is active."),
     )
-    name = models.CharField(max_length=120, verbose_name=_("name"), help_text=_("The name for this campaign."))
+    name = models.CharField(
+        max_length=120,
+        verbose_name=_("name"),
+        help_text=_("The name for this campaign."),
+    )
 
     # translations in subclass
     identifier = InternalIdentifierField(unique=True)
@@ -65,7 +78,9 @@ class Campaign(MoneyPropped, TranslatableModel):
     active = models.BooleanField(
         default=False,
         verbose_name=_("active"),
-        help_text=_("Enable this if the campaign is currently active. Please also set a start and an end date."),
+        help_text=_(
+            "Enable this if the campaign is currently active. Please also set a start and an end date."
+        ),
     )
     start_datetime = models.DateTimeField(
         null=True,
@@ -99,8 +114,12 @@ class Campaign(MoneyPropped, TranslatableModel):
         on_delete=models.SET_NULL,
         verbose_name=_("modified by"),
     )
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
-    modified_on = models.DateTimeField(auto_now=True, editable=False, verbose_name=_("modified on"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, verbose_name=_("created on")
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True, editable=False, verbose_name=_("modified on")
+    )
 
     objects = CampaignQueryset.as_manager()
 
@@ -132,19 +151,29 @@ class Campaign(MoneyPropped, TranslatableModel):
 
     @property
     def type(self):
-        return CampaignType.BASKET if isinstance(self, BasketCampaign) else CampaignType.CATALOG
+        return (
+            CampaignType.BASKET
+            if isinstance(self, BasketCampaign)
+            else CampaignType.CATALOG
+        )
 
 
 class CatalogCampaign(Campaign):
     _queryset = None
 
     admin_url_suffix = "catalog_campaign"
-    conditions = models.ManyToManyField("ContextCondition", blank=True, related_name="campaign")
-    filters = models.ManyToManyField("CatalogFilter", blank=True, related_name="campaign")
+    conditions = models.ManyToManyField(
+        "ContextCondition", blank=True, related_name="campaign"
+    )
+    filters = models.ManyToManyField(
+        "CatalogFilter", blank=True, related_name="campaign"
+    )
 
     translations = TranslatedFields(
         public_name=models.CharField(
-            max_length=120, blank=True, help_text=_("The campaign name to show in the store front.")
+            max_length=120,
+            blank=True,
+            help_text=_("The campaign name to show in the store front."),
         )
     )
 
@@ -152,7 +181,10 @@ class CatalogCampaign(Campaign):
         return force_text(_("Catalog Campaign: {name}").format(name=self.name))
 
     def save(self, *args, **kwargs):
-        warnings.warn("The CatalogCampaign discount module will be removed on next major version.", DeprecationWarning)
+        warnings.warn(
+            "The CatalogCampaign discount module will be removed on next major version.",
+            DeprecationWarning,
+        )
         super(CatalogCampaign, self).save(*args, **kwargs)
         self.filters.update(active=self.active)
         for f in self.filters.all():
@@ -160,7 +192,13 @@ class CatalogCampaign(Campaign):
                 context_cache.bump_cache_for_shop_product(matching_product)
         self.conditions.update(active=self.active)
 
-    def rules_match(self, context, shop_product, matching_catalog_filters, matching_context_conditions):
+    def rules_match(
+        self,
+        context,
+        shop_product,
+        matching_catalog_filters,
+        matching_context_conditions,
+    ):
         if not self.is_available():
             return False
 
@@ -177,24 +215,44 @@ class CatalogCampaign(Campaign):
 
     @classmethod
     def get_for_product(cls, shop_product):
-        matching_filters = get_matching_for_product(shop_product, provide_category="campaign_catalog_filter")
-        matching_conditions = get_matching_for_product(shop_product, provide_category="campaign_context_condition")
-        query_filter = Q(Q(filters__in=matching_filters) | Q(conditions__in=matching_conditions))
-        return cls.objects.available(shop=shop_product.shop).filter(query_filter).distinct()
+        matching_filters = get_matching_for_product(
+            shop_product, provide_category="campaign_catalog_filter"
+        )
+        matching_conditions = get_matching_for_product(
+            shop_product, provide_category="campaign_context_condition"
+        )
+        query_filter = Q(
+            Q(filters__in=matching_filters) | Q(conditions__in=matching_conditions)
+        )
+        return (
+            cls.objects.available(shop=shop_product.shop)
+            .filter(query_filter)
+            .distinct()
+        )
 
     @classmethod
     def get_matching(cls, context, shop_product):
         prod_ctx_cache_elements = dict(
-            customer=context.customer.pk or 0, shop=context.shop.pk, product_id=shop_product.pk
+            customer=context.customer.pk or 0,
+            shop=context.shop.pk,
+            product_id=shop_product.pk,
         )
         namespace = CAMPAIGNS_CACHE_NAMESPACE
-        sorted_items = dict(sorted(prod_ctx_cache_elements.items(), key=lambda item: item[0]))
-        key = "%s:%s" % (namespace, hashlib.sha1(str(sorted_items).encode("utf-8")).hexdigest())
+        sorted_items = dict(
+            sorted(prod_ctx_cache_elements.items(), key=lambda item: item[0])
+        )
+        key = "%s:%s" % (
+            namespace,
+            hashlib.sha1(str(sorted_items).encode("utf-8")).hexdigest(),
+        )
         cached_matching = cache.get(key, None)
         if cached_matching is not None:
             return cached_matching
 
-        from shuup.campaigns.models.matching import get_matching_catalog_filters, get_matching_context_conditions
+        from shuup.campaigns.models.matching import (
+            get_matching_catalog_filters,
+            get_matching_context_conditions,
+        )
 
         matching_context_conditions = get_matching_context_conditions(context)
         matching_catalog_filters = get_matching_catalog_filters(shop_product)
@@ -205,7 +263,9 @@ class CatalogCampaign(Campaign):
         # Get all possible campaign id's for matching context_conditions
         campaigns_based_on_conditions = set(
             cls.objects.filter(
-                active=True, shop=context.shop, conditions__id__in=matching_context_conditions
+                active=True,
+                shop=context.shop,
+                conditions__id__in=matching_context_conditions,
             ).values_list("pk", flat=True)
         )
 
@@ -214,14 +274,23 @@ class CatalogCampaign(Campaign):
             # Get all possible campaigns for matching catalog_filters
             campaigns_based_on_catalog_filters = set(
                 cls.objects.filter(
-                    active=True, shop=context.shop, filters__id__in=matching_catalog_filters
+                    active=True,
+                    shop=context.shop,
+                    filters__id__in=matching_catalog_filters,
                 ).values_list("pk", flat=True)
             )
 
-        all_possible_campaigns_ids = campaigns_based_on_conditions | campaigns_based_on_catalog_filters
+        all_possible_campaigns_ids = (
+            campaigns_based_on_conditions | campaigns_based_on_catalog_filters
+        )
         matching = []
         for campaign in cls.objects.filter(id__in=all_possible_campaigns_ids):
-            if campaign.rules_match(context, shop_product, matching_catalog_filters, matching_context_conditions):
+            if campaign.rules_match(
+                context,
+                shop_product,
+                matching_catalog_filters,
+                matching_context_conditions,
+            ):
                 matching.append(campaign)
         cache.set(key, matching, timeout=None)
         return matching
@@ -231,12 +300,21 @@ class BasketCampaign(Campaign):
     admin_url_suffix = "basket_campaign"
 
     basket_line_text = models.CharField(
-        max_length=120, verbose_name=_("basket line text"), help_text=_("This text will be shown in a basket.")
+        max_length=120,
+        verbose_name=_("basket line text"),
+        help_text=_("This text will be shown in a basket."),
     )
 
-    conditions = models.ManyToManyField("BasketCondition", blank=True, related_name="campaign")
+    conditions = models.ManyToManyField(
+        "BasketCondition", blank=True, related_name="campaign"
+    )
     coupon = models.OneToOneField(
-        "Coupon", null=True, blank=True, related_name="campaign", verbose_name=_("coupon"), on_delete=models.CASCADE
+        "Coupon",
+        null=True,
+        blank=True,
+        related_name="campaign",
+        verbose_name=_("coupon"),
+        on_delete=models.CASCADE,
     )
     supplier = models.ForeignKey(
         "shuup.Supplier",
@@ -253,7 +331,9 @@ class BasketCampaign(Campaign):
 
     translations = TranslatedFields(
         public_name=models.CharField(
-            max_length=120, verbose_name=_("public name"), help_text=_("The campaign name to show in the store front.")
+            max_length=120,
+            verbose_name=_("public name"),
+            help_text=_("The campaign name to show in the store front."),
         )
     )
 
@@ -266,26 +346,40 @@ class BasketCampaign(Campaign):
                 active=True, shop_id=self.shop.id, coupon__code=self.coupon.code
             )
             if not self.id and code_count_for_shop.exists():
-                raise ValidationError(_("Can't have multiple active campaigns with same code."))
+                raise ValidationError(
+                    _("Can't have multiple active campaigns with same code.")
+                )
 
-            if self.id and code_count_for_shop.exclude(coupon_id=self.coupon.id).exists():
-                raise ValidationError(_("Can't have multiple active campaigns with same code."))
+            if (
+                self.id
+                and code_count_for_shop.exclude(coupon_id=self.coupon.id).exists()
+            ):
+                raise ValidationError(
+                    _("Can't have multiple active campaigns with same code.")
+                )
 
         super(BasketCampaign, self).save(*args, **kwargs)
         self.conditions.update(active=self.active)
 
     @classmethod
     def get_for_product(cls, shop_product):
-        matching_conditions = get_matching_for_product(shop_product, provide_category="campaign_basket_condition")
+        matching_conditions = get_matching_for_product(
+            shop_product, provide_category="campaign_basket_condition"
+        )
         matching_effects = get_matching_for_product(
             shop_product, provide_category="campaign_basket_discount_effect_form"
         )
         matching_line_effects = get_matching_for_product(
             shop_product, provide_category="campaign_basket_line_effect_form"
         )
-        effects_q = Q(Q(line_effects__id__in=matching_line_effects) | Q(discount_effects__id__in=matching_effects))
+        effects_q = Q(
+            Q(line_effects__id__in=matching_line_effects)
+            | Q(discount_effects__id__in=matching_effects)
+        )
         matching_q = Q(Q(conditions__in=matching_conditions) | effects_q)
-        return cls.objects.available(shop=shop_product.shop).filter(matching_q).distinct()
+        return (
+            cls.objects.available(shop=shop_product.shop).filter(matching_q).distinct()
+        )
 
     @classmethod
     def get_matching(cls, basket, lines):
@@ -296,27 +390,31 @@ class BasketCampaign(Campaign):
 
         # Get ProductsInBasketCondition's that can't match with the basket
         products_in_basket_conditions_to_check = set(
-            ProductsInBasketCondition.objects.filter(products__id__in=product_id_to_qty.keys()).values_list(
-                "id", flat=True
-            )
+            ProductsInBasketCondition.objects.filter(
+                products__id__in=product_id_to_qty.keys()
+            ).values_list("id", flat=True)
         )
         exclude_condition_ids |= set(
-            ProductsInBasketCondition.objects.exclude(id__in=products_in_basket_conditions_to_check).values_list(
-                "id", flat=True
-            )
+            ProductsInBasketCondition.objects.exclude(
+                id__in=products_in_basket_conditions_to_check
+            ).values_list("id", flat=True)
         )
 
         # Get CategoryProductsBasketCondition's that can't match with the basket
         categories = set(
-            Category.objects.filter(shop_products__product_id__in=product_id_to_qty.keys()).values_list("id", flat=True)
+            Category.objects.filter(
+                shop_products__product_id__in=product_id_to_qty.keys()
+            ).values_list("id", flat=True)
         )
         category_products_in_basket_to_check = set(
-            CategoryProductsBasketCondition.objects.filter(categories__in=categories).values_list("id", flat=True)
+            CategoryProductsBasketCondition.objects.filter(
+                categories__in=categories
+            ).values_list("id", flat=True)
         )
         exclude_condition_ids |= set(
-            CategoryProductsBasketCondition.objects.exclude(id__in=category_products_in_basket_to_check).values_list(
-                "id", flat=True
-            )
+            CategoryProductsBasketCondition.objects.exclude(
+                id__in=category_products_in_basket_to_check
+            ).values_list("id", flat=True)
         )
 
         queryset = cls.objects.filter(active=True, shop=basket.shop)
@@ -326,7 +424,9 @@ class BasketCampaign(Campaign):
 
         # exclude the campaigns that have supplier set and are not included the supplier list
         if lines_suppliers:
-            queryset = queryset.filter(Q(supplier__isnull=True) | Q(supplier__in=lines_suppliers))
+            queryset = queryset.filter(
+                Q(supplier__isnull=True) | Q(supplier__in=lines_suppliers)
+            )
 
         for campaign in queryset.prefetch_related("conditions").distinct():
             if campaign.rules_match(basket, lines):
@@ -347,7 +447,10 @@ class BasketCampaign(Campaign):
         if not self.is_available():
             return False
 
-        if self.coupon and not (self.coupon.active and self.coupon.code.upper() in [c.upper() for c in basket.codes]):
+        if self.coupon and not (
+            self.coupon.active
+            and self.coupon.code.upper() in [c.upper() for c in basket.codes]
+        ):
             return False
 
         for rule in self.conditions.all():
@@ -357,8 +460,12 @@ class BasketCampaign(Campaign):
 
 
 class CouponUsage(models.Model):
-    coupon = models.ForeignKey(on_delete=models.CASCADE, to="Coupon", related_name="usages")
-    order = models.ForeignKey(on_delete=models.CASCADE, to=Order, related_name="coupon_usages")
+    coupon = models.ForeignKey(
+        on_delete=models.CASCADE, to="Coupon", related_name="usages"
+    )
+    order = models.ForeignKey(
+        on_delete=models.CASCADE, to=Order, related_name="coupon_usages"
+    )
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -377,8 +484,12 @@ class CouponUsage(models.Model):
         verbose_name=_("modified by"),
     )
 
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
-    modified_on = models.DateTimeField(auto_now=True, editable=False, verbose_name=_("modified on"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, verbose_name=_("created on")
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True, editable=False, verbose_name=_("modified on")
+    )
 
     @classmethod
     def add_usage(cls, order, coupon):
@@ -388,7 +499,9 @@ class CouponUsage(models.Model):
 class Coupon(models.Model):
     admin_url_suffix = "coupon"
     name_field = "code"  # TODO: Document me
-    search_fields = ["code"]  # used by Select2Multiple to know which fields use to search by
+    search_fields = [
+        "code"
+    ]  # used by Select2Multiple to know which fields use to search by
 
     code = models.CharField(max_length=12)
 
@@ -403,7 +516,8 @@ class Coupon(models.Model):
         null=True,
         verbose_name=_("usage limit"),
         help_text=_(
-            "Set the absolute limit of usages for this coupon. " "If the limit is zero (0), coupon can't be used."
+            "Set the absolute limit of usages for this coupon. "
+            "If the limit is zero (0), coupon can't be used."
         ),
     )
 
@@ -442,18 +556,26 @@ class Coupon(models.Model):
         verbose_name=_("modified by"),
     )
 
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
-    modified_on = models.DateTimeField(auto_now=True, editable=False, verbose_name=_("modified on"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, verbose_name=_("created on")
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True, editable=False, verbose_name=_("modified on")
+    )
 
     def save(self, **kwargs):
         campaign = BasketCampaign.objects.filter(active=True, coupon_id=self.id).first()
         if (
             campaign
-            and BasketCampaign.objects.filter(active=True, shop_id=campaign.shop.id, coupon__code=self.code)
+            and BasketCampaign.objects.filter(
+                active=True, shop_id=campaign.shop.id, coupon__code=self.code
+            )
             .exclude(id=campaign.id)
             .exists()
         ):
-            raise ValidationError(_("Can not have multiple active campaigns with the same code."))
+            raise ValidationError(
+                _("Can not have multiple active campaigns with the same code.")
+            )
 
         return super(Coupon, self).save(**kwargs)
 
@@ -461,7 +583,9 @@ class Coupon(models.Model):
     def generate_code(cls, length=6):
         if length > 12:
             length = 12
-        return "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+        return "".join(
+            random.choice(string.ascii_uppercase + string.digits) for _ in range(length)
+        )
 
     @property
     def exhausted(self):
@@ -501,7 +625,10 @@ class Coupon(models.Model):
         if self.usage_limit_customer:
             if not customer or customer.is_anonymous:
                 return False
-            if self.usages.filter(order__customer=customer, coupon=self).count() >= self.usage_limit_customer:
+            if (
+                self.usages.filter(order__customer=customer, coupon=self).count()
+                >= self.usage_limit_customer
+            ):
                 return False
 
         return not self.exhausted
@@ -517,10 +644,14 @@ class Coupon(models.Model):
         self.usage_limit_customer = new_limit
 
     def increase_usage_limit_by(self, amount):
-        self.usage_limit = self.usage_limit + amount if self.usage_limit else (self.usages.count() + amount)
+        self.usage_limit = (
+            self.usage_limit + amount
+            if self.usage_limit
+            else (self.usages.count() + amount)
+        )
 
     def has_been_used(self, usage_count=1):
-        """ See if code was already used the number of maximum times given """
+        """See if code was already used the number of maximum times given"""
         return CouponUsage.objects.filter(coupon=self).count() >= usage_count
 
     def __str__(self):

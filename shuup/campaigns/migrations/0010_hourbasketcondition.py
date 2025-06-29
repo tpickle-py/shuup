@@ -9,23 +9,44 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('campaigns', '0009_hourcondition'),
+        ("campaigns", "0009_hourcondition"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HourBasketCondition',
+            name="HourBasketCondition",
             fields=[
-                ('basketcondition_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='campaigns.BasketCondition')),
-                ('hour_start', models.TimeField()),
-                ('hour_end', models.TimeField()),
-                ('days', models.CharField(max_length=255, validators=[django.core.validators.RegexValidator(re.compile('^\\d+(?:\\,\\d+)*\\Z'), code='invalid', message='Enter only digits separated by commas.')])),
+                (
+                    "basketcondition_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="campaigns.BasketCondition",
+                    ),
+                ),
+                ("hour_start", models.TimeField()),
+                ("hour_end", models.TimeField()),
+                (
+                    "days",
+                    models.CharField(
+                        max_length=255,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                re.compile("^\\d+(?:\\,\\d+)*\\Z"),
+                                code="invalid",
+                                message="Enter only digits separated by commas.",
+                            )
+                        ],
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('campaigns.basketcondition',),
+            bases=("campaigns.basketcondition",),
         ),
     ]

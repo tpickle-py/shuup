@@ -13,7 +13,14 @@ import pytest
 from django.core import serializers
 from django.utils.translation import activate
 
-from shuup.core.models import CustomPaymentProcessor, PaymentMethod, RoundingMode, ShopProductVisibility, Tax, TaxClass
+from shuup.core.models import (
+    CustomPaymentProcessor,
+    PaymentMethod,
+    RoundingMode,
+    ShopProductVisibility,
+    Tax,
+    TaxClass,
+)
 from shuup.default_tax.models import TaxRule
 from shuup.testing.factories import (
     create_product,
@@ -40,7 +47,9 @@ def get_frontend_order_state(contact, payment_method, product_price, valid_lines
     """
     activate("en")
     shop = get_default_shop()
-    tax = Tax.objects.create(code="test_code", rate=decimal.Decimal("0.20"), name="Default")
+    tax = Tax.objects.create(
+        code="test_code", rate=decimal.Decimal("0.20"), name="Default"
+    )
     tax_class = TaxClass.objects.create(identifier="test_tax_class", name="Default")
     rule = TaxRule.objects.create(tax=tax)
     rule.tax_classes.add(tax_class)
@@ -63,12 +72,18 @@ def get_frontend_order_state(contact, payment_method, product_price, valid_lines
         ]
     else:
         unshopped_product = create_product(sku=printable_gibberish(), supplier=supplier)
-        not_visible_product = create_product(sku=printable_gibberish(), supplier=supplier, shop=shop)
+        not_visible_product = create_product(
+            sku=printable_gibberish(), supplier=supplier, shop=shop
+        )
         not_visible_shop_product = not_visible_product.get_shop_instance(shop)
         not_visible_shop_product.visibility = ShopProductVisibility.NOT_VISIBLE
         not_visible_shop_product.save()
         lines = [
-            {"id": "x", "type": "product", "supplier": {"name": supplier.name, "id": supplier.id}},  # no product?
+            {
+                "id": "x",
+                "type": "product",
+                "supplier": {"name": supplier.name, "id": supplier.id},
+            },  # no product?
             {
                 "id": "x",
                 "type": "product",
@@ -95,14 +110,22 @@ def get_frontend_order_state(contact, payment_method, product_price, valid_lines
                 "product": {"id": not_visible_product.id},
                 "supplier": {"name": supplier.name, "id": supplier.id},
             },  # not visible
-            {"id": "y", "type": "product", "product": {"id": product.id}},  # no supplier
+            {
+                "id": "y",
+                "type": "product",
+                "product": {"id": product.id},
+            },  # no supplier
         ]
 
     state = {
         "customer": {
             "id": contact.id if contact else None,
-            "billingAddress": encode_address(contact.default_billing_address) if contact else {},
-            "shippingAddress": encode_address(contact.default_shipping_address) if contact else {},
+            "billingAddress": encode_address(contact.default_billing_address)
+            if contact
+            else {},
+            "shippingAddress": encode_address(contact.default_shipping_address)
+            if contact
+            else {},
         },
         "lines": lines,
         "methods": {
@@ -147,13 +170,19 @@ def test_admin_cash_order(rf, admin_user, price, target, mode):
 
     processor = CustomPaymentProcessor.objects.create(rounding_mode=mode)
     cash_method = PaymentMethod.objects.create(
-        shop=shop, payment_processor=processor, choice_identifier="cash", tax_class=get_default_tax_class(), name="Cash"
+        shop=shop,
+        payment_processor=processor,
+        choice_identifier="cash",
+        tax_class=get_default_tax_class(),
+        name="Cash",
     )
 
     state = get_frontend_order_state(contact, cash_method, price)
     order = get_order_from_state(state, admin_user)
     assert order.payment_method == cash_method
-    assert order.lines.count() == 5  # 2 submitted, two for the shipping and payment method, and a rounding line
+    assert (
+        order.lines.count() == 5
+    )  # 2 submitted, two for the shipping and payment method, and a rounding line
     assert order.creator == admin_user
     assert order.customer == contact
     assert order.taxful_total_price == shop.create_price(target)

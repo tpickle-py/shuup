@@ -96,11 +96,15 @@ def test_gdpr_admin_download_data(client, admin_user):
     admin_user.set_password("admin")
     admin_user.save()
     client.login(username=admin_user.username, password="admin")
-    admin_download_url = reverse("shuup_admin:gdpr.download_data", kwargs=dict(pk=customer.pk))
+    admin_download_url = reverse(
+        "shuup_admin:gdpr.download_data", kwargs=dict(pk=customer.pk)
+    )
     response = client.post(admin_download_url)
     assert response.status_code == 200
     assert response._headers["content-disposition"][0] == "Content-Disposition"
-    assert response._headers["content-disposition"][1].startswith("attachment; filename=user_data_")
+    assert response._headers["content-disposition"][1].startswith(
+        "attachment; filename=user_data_"
+    )
 
 
 @pytest.mark.django_db
@@ -118,10 +122,14 @@ def test_gdpr_admin_anonymize(client, admin_user):
     admin_user.set_password("admin")
     admin_user.save()
     client.login(username=admin_user.username, password="admin")
-    admin_anonymize_url = reverse("shuup_admin:gdpr.anonymize", kwargs=dict(pk=person.pk))
+    admin_anonymize_url = reverse(
+        "shuup_admin:gdpr.anonymize", kwargs=dict(pk=person.pk)
+    )
     response = client.post(admin_anonymize_url)
     assert response.status_code == 302
-    assert response.url.endswith(reverse("shuup_admin:contact.detail", kwargs=dict(pk=person.pk)))
+    assert response.url.endswith(
+        reverse("shuup_admin:contact.detail", kwargs=dict(pk=person.pk))
+    )
 
     anonymized_person = PersonContact.objects.get(id=person.id)
     assert anonymized_person.name != person.name

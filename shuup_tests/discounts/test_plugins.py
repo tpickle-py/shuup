@@ -123,7 +123,9 @@ def test_product_selection_plugin(rf, reindex_catalog):
     reindex_catalog()
 
     # test both discount1 and discount2
-    plugin = DiscountedProductsPlugin({"discounts": [discount1.pk, discount2.pk], "count": 10})
+    plugin = DiscountedProductsPlugin(
+        {"discounts": [discount1.pk, discount2.pk], "count": 10}
+    )
     context_products = plugin.get_context_data(context)["products"]
     assert p1 in context_products
     assert p2 in context_products
@@ -135,7 +137,9 @@ def test_product_selection_plugin(rf, reindex_catalog):
     with override_current_theme_class(None):
         theme = get_current_theme(shop)
         cell = LayoutCell(theme, DiscountedProductsPlugin.identifier, sizes={"md": 8})
-        lcfg = LayoutCellFormGroup(layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/")))
+        lcfg = LayoutCellFormGroup(
+            layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/"))
+        )
         # not valid, products are required
         assert not lcfg.is_valid()
 

@@ -15,7 +15,12 @@ from shuup.admin.base import AdminModule, MenuEntry, SearchResult
 from shuup.admin.menu import STOREFRONT_MENU_CATEGORY
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.utils.object_selector import get_object_selector_permission_name
-from shuup.admin.utils.urls import admin_url, derive_model_url, get_edit_and_list_urls, get_model_url
+from shuup.admin.utils.urls import (
+    admin_url,
+    derive_model_url,
+    get_edit_and_list_urls,
+    get_model_url,
+)
 from shuup.admin.views.home import SimpleHelpBlock
 from shuup.core.models import Shop, ShopStatus
 from shuup.utils.django_compat import reverse
@@ -28,13 +33,19 @@ class ShopModule(AdminModule):
     def get_urls(self):
         return [
             admin_url(
-                r"^shops/(?P<pk>\d+)/enable/$", "shuup.admin.modules.shops.views.ShopEnablerView", name="shop.enable"
+                r"^shops/(?P<pk>\d+)/enable/$",
+                "shuup.admin.modules.shops.views.ShopEnablerView",
+                name="shop.enable",
             ),
             admin_url(
-                r"^shops/(?P<pk>\d+)/select/$", "shuup.admin.modules.shops.views.ShopSelectView", name="shop.select"
+                r"^shops/(?P<pk>\d+)/select/$",
+                "shuup.admin.modules.shops.views.ShopSelectView",
+                name="shop.select",
             ),
         ] + get_edit_and_list_urls(
-            url_prefix="^shops", view_template="shuup.admin.modules.shops.views.Shop%sView", name_template="shop.%s"
+            url_prefix="^shops",
+            view_template="shuup.admin.modules.shops.views.Shop%sView",
+            name_template="shop.%s",
         )
 
     def get_menu_entries(self, request):
@@ -54,7 +65,11 @@ class ShopModule(AdminModule):
             yield SimpleHelpBlock(
                 text=_("Add a logo to make your store stand out"),
                 actions=[
-                    {"text": _("Add logo"), "url": self.get_model_url(shop, "edit"), "hash": "#shop-images-section"}
+                    {
+                        "text": _("Add logo"),
+                        "url": self.get_model_url(shop, "edit"),
+                        "hash": "#shop-images-section",
+                    }
                 ],
                 icon_url="shuup_admin/img/logo_icon.svg",
                 done=shop.logo,
@@ -71,8 +86,13 @@ class ShopModule(AdminModule):
                     {
                         "method": "POST",
                         "text": _("Publish shop"),
-                        "url": reverse("shuup_admin:shop.enable", kwargs={"pk": shop.pk}),
-                        "data": {"enable": True, "redirect": reverse("shuup_admin:dashboard")},
+                        "url": reverse(
+                            "shuup_admin:shop.enable", kwargs={"pk": shop.pk}
+                        ),
+                        "data": {
+                            "enable": True,
+                            "redirect": reverse("shuup_admin:dashboard"),
+                        },
                     }
                 ],
                 icon_url="shuup_admin/img/publish.png",
@@ -97,7 +117,9 @@ class ShopModule(AdminModule):
                 yield SearchResult(
                     text=(_('Set "{}" as the active shop')).format(shop.name),
                     url=get_model_url(shop, "select"),
-                    category=(_("Available Shops [currently active: {}]")).format(request.shop.name),
+                    category=(_("Available Shops [currently active: {}]")).format(
+                        request.shop.name
+                    ),
                     relevance=relevance,
                 )
 
@@ -105,4 +127,8 @@ class ShopModule(AdminModule):
         return [get_object_selector_permission_name(Shop)]
 
     def get_permissions_help_texts(self) -> Iterable[str]:
-        return {get_object_selector_permission_name(Shop): _("Allow the user to select shops in admin.")}
+        return {
+            get_object_selector_permission_name(Shop): _(
+                "Allow the user to select shops in admin."
+            )
+        }

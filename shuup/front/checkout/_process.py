@@ -43,11 +43,17 @@ class CheckoutProcess(object):
 
     def instantiate_phase_class(self, phase_class, **extra_kwargs):
         if not phase_class.identifier:  # pragma: no cover
-            raise ImproperlyConfigured("Error! Phase `%r` has no identifier." % phase_class)
+            raise ImproperlyConfigured(
+                "Error! Phase `%r` has no identifier." % phase_class
+            )
         kwargs = {}
         kwargs.update(self.phase_kwargs)
         kwargs.update(extra_kwargs)
-        phase = phase_class(checkout_process=self, horizontal_template=self.horizontal_template, **kwargs)
+        phase = phase_class(
+            checkout_process=self,
+            horizontal_template=self.horizontal_template,
+            **kwargs,
+        )
         return phase
 
     def _load_phases(self):
@@ -70,13 +76,22 @@ class CheckoutProcess(object):
         for phase in self.phases:
             if phase.is_valid():
                 phase.process()
-            if found or not requested_phase_identifier or requested_phase_identifier == phase.identifier:
+            if (
+                found
+                or not requested_phase_identifier
+                or requested_phase_identifier == phase.identifier
+            ):
                 found = True  # We're at or past the requested phase
                 if not phase.should_skip():
                     return phase
-            if not phase.should_skip() and not phase.is_valid():  # A past phase is not valid, that's the current one
+            if (
+                not phase.should_skip() and not phase.is_valid()
+            ):  # A past phase is not valid, that's the current one
                 return phase
-        raise Http404("Error! Phase with identifier `%s` not found." % escape(requested_phase_identifier))
+        raise Http404(
+            "Error! Phase with identifier `%s` not found."
+            % escape(requested_phase_identifier)
+        )
 
     def _get_next_phase(self, phases, current_phase, target_phase):
         found = False
@@ -114,7 +129,9 @@ class CheckoutProcess(object):
         initialization and dispatching, such as method phases.
         """
         current_phase = current_phase or target_phase
-        target_phase.previous_phase = self.get_previous_phase(current_phase, target_phase)
+        target_phase.previous_phase = self.get_previous_phase(
+            current_phase, target_phase
+        )
         target_phase.next_phase = self.get_next_phase(current_phase, target_phase)
         target_phase.phases = self.phases
         if current_phase in self.phases:

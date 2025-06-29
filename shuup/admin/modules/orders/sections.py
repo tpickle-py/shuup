@@ -32,7 +32,9 @@ class BasicDetailsOrderSection(Section):
     @classmethod
     def get_context_data(cls, order, request=None):
         provided_information = []
-        for provided_info in sorted(get_provide_objects("admin_order_information"), key=lambda x: x.order):
+        for provided_info in sorted(
+            get_provide_objects("admin_order_information"), key=lambda x: x.order
+        ):
             info = provided_info(order)
             if info.provides_info():
                 provided_information.append((info.title, info.information))
@@ -71,7 +73,10 @@ class ShipmentSection(Section):
     def visible_for_object(order, request=None):
         if not order.shipping_method:
             return False
-        if order.shipping_method.carrier and not order.shipping_method.carrier.uses_default_shipments_manager:
+        if (
+            order.shipping_method.carrier
+            and not order.shipping_method.carrier.uses_default_shipments_manager
+        ):
             return False
         return (
             order.has_products_requiring_shipment()
@@ -94,14 +99,21 @@ class ShipmentSection(Section):
         if create_permission not in missing_permissions:
             for supplier in suppliers:
                 create_urls[supplier.pk] = reverse(
-                    "shuup_admin:order.create-shipment", kwargs={"pk": order.pk, "supplier_pk": supplier.pk}
+                    "shuup_admin:order.create-shipment",
+                    kwargs={"pk": order.pk, "supplier_pk": supplier.pk},
                 )
 
-        for shipment_id in order.shipments.all_except_deleted().values_list("id", flat=True):
+        for shipment_id in order.shipments.all_except_deleted().values_list(
+            "id", flat=True
+        ):
             if delete_permission not in missing_permissions:
-                delete_urls[shipment_id] = reverse("shuup_admin:order.delete-shipment", kwargs={"pk": shipment_id})
+                delete_urls[shipment_id] = reverse(
+                    "shuup_admin:order.delete-shipment", kwargs={"pk": shipment_id}
+                )
             if set_sent_permission not in missing_permissions:
-                set_sent_urls[shipment_id] = reverse("shuup_admin:order.set-shipment-sent", kwargs={"pk": shipment_id})
+                set_sent_urls[shipment_id] = reverse(
+                    "shuup_admin:order.set-shipment-sent", kwargs={"pk": shipment_id}
+                )
 
         return {
             "suppliers": suppliers,
@@ -125,7 +137,11 @@ class LogEntriesOrderSection(Section):
 
     @classmethod
     def get_context_data(cls, order, request=None):
-        return OrderLogEntry.objects.filter(target=order).order_by("-created_on").all()[:12]
+        return (
+            OrderLogEntry.objects.filter(target=order)
+            .order_by("-created_on")
+            .all()[:12]
+        )
         # TODO: We're currently trimming to 12 entries, probably need pagination
 
 

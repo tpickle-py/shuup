@@ -10,20 +10,28 @@ import shuup.core.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0014_order_status'),
+        ("shuup", "0014_order_status"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='shipment',
-            name='type',
-            field=enumfields.fields.EnumIntegerField(default=0, enum=shuup.core.models.ShipmentType, verbose_name='type'),
+            model_name="shipment",
+            name="type",
+            field=enumfields.fields.EnumIntegerField(
+                default=0, enum=shuup.core.models.ShipmentType, verbose_name="type"
+            ),
         ),
         migrations.AlterField(
-            model_name='shipment',
-            name='order',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='shipments', to='shuup.Order', verbose_name='order'),
+            model_name="shipment",
+            name="order",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="shipments",
+                to="shuup.Order",
+                verbose_name="order",
+            ),
         ),
     ]

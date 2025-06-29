@@ -30,7 +30,9 @@ class BaseExportCSVMassAction(PicotableFileMassAction):
     def process(self, request, ids):
         view_instance = self.view_class()
         view_instance.request = request
-        view_settings = ViewSettings(self.model, self.view_class.default_columns, view_instance)
+        view_settings = ViewSettings(
+            self.model, self.view_class.default_columns, view_instance
+        )
         queryset = self.get_queryset(request, view_instance, ids)
 
         response = HttpResponse(content_type="text/csv")
@@ -42,7 +44,11 @@ class BaseExportCSVMassAction(PicotableFileMassAction):
             row = []
             for dr in view_settings.columns:
                 if dr.get_display_value(view_settings.view_context, item):
-                    row.append(strip_tags(dr.get_display_value(view_settings.view_context, item)))
+                    row.append(
+                        strip_tags(
+                            dr.get_display_value(view_settings.view_context, item)
+                        )
+                    )
                 else:
                     row.append(None)
             writer.writerow(row)

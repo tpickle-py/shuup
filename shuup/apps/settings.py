@@ -24,7 +24,7 @@ def collect_settings_from_app(app_config):
 
 
 def collect_settings(app_name, settings_module):
-    for (name, value) in vars(settings_module).items():
+    for name, value in vars(settings_module).items():
         if _is_valid_setting_name(name):
             _declare_setting(app_name, settings_module, name, value)
             if not hasattr(django.conf.settings, name):
@@ -35,7 +35,8 @@ def _declare_setting(app_name, module, name, default):
     if name in _KNOWN_SETTINGS:
         other_app = _KNOWN_SETTINGS[name].app_name
         raise ImproperlyConfigured(
-            "Error! Apps `%s` and `%s` define the same setting `%s`." % (other_app, app_name, name)
+            "Error! Apps `%s` and `%s` define the same setting `%s`."
+            % (other_app, app_name, name)
         )
     _KNOWN_SETTINGS[name] = Setting(
         name=name,

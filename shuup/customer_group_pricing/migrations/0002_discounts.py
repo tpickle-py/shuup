@@ -10,30 +10,64 @@ import shuup.utils.properties
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_customer_group_pricing', '0001_initial'),
+        ("shuup_customer_group_pricing", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CgpDiscount',
+            name="CgpDiscount",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('discount_amount_value', shuup.core.fields.MoneyValueField(decimal_places=9, max_digits=36, verbose_name='discount amount')),
-                ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shuup.ContactGroup', verbose_name='contact group')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='shuup.Product', verbose_name='product')),
-                ('shop', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shuup.Shop', verbose_name='shop')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "discount_amount_value",
+                    shuup.core.fields.MoneyValueField(
+                        decimal_places=9, max_digits=36, verbose_name="discount amount"
+                    ),
+                ),
+                (
+                    "group",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="shuup.ContactGroup",
+                        verbose_name="contact group",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="shuup.Product",
+                        verbose_name="product",
+                    ),
+                ),
+                (
+                    "shop",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="shuup.Shop",
+                        verbose_name="shop",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'product discount',
-                'verbose_name_plural': 'product discounts',
-                'abstract': False,
+                "verbose_name": "product discount",
+                "verbose_name_plural": "product discounts",
+                "abstract": False,
             },
             bases=(shuup.utils.properties.MoneyPropped, models.Model),
         ),
         migrations.AlterUniqueTogether(
-            name='cgpdiscount',
-            unique_together=set([('product', 'shop', 'group')]),
+            name="cgpdiscount",
+            unique_together=set([("product", "shop", "group")]),
         ),
     ]

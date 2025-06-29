@@ -8,7 +8,9 @@
 from shuup.core.models import OrderLineType
 
 
-def update_order_line_from_product(pricing_context, order_line, product, quantity=1, supplier=None):
+def update_order_line_from_product(
+    pricing_context, order_line, product, quantity=1, supplier=None
+):
     """
     Update OrderLine data from a product.
 
@@ -37,7 +39,9 @@ def update_order_line_from_product(pricing_context, order_line, product, quantit
     order_line.sku = product.sku
     order_line.text = product.safe_translation_getter("name") or product.sku
     order_line.accounting_identifier = product.accounting_identifier
-    order_line.require_verification = bool(getattr(product, "require_verification", False))
+    order_line.require_verification = bool(
+        getattr(product, "require_verification", False)
+    )
     order_line.verified = False
     if pricing_context:
         price_info = product.get_price_info(pricing_context, quantity=quantity)

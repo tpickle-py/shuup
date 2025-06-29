@@ -8,7 +8,17 @@
 
 from __future__ import unicode_literals
 
-SIMPLE_INPUT_TYPES = ("text", "hidden", "password", "submit", "image", "search", "number", "email", "url")
+SIMPLE_INPUT_TYPES = (
+    "text",
+    "hidden",
+    "password",
+    "submit",
+    "image",
+    "search",
+    "number",
+    "email",
+    "url",
+)
 
 
 def extract_form_fields(soup):  # pragma: no cover  # noqa (C901)

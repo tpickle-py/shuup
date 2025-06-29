@@ -33,7 +33,15 @@ class PackageInstaller(object):
         self._log_buffer = b""
 
     def install_package(self, package_path):
-        cmd = [get_pip_path(), "install", "--upgrade", "--verbose", "--require-venv", "--no-cache-dir", package_path]
+        cmd = [
+            get_pip_path(),
+            "install",
+            "--upgrade",
+            "--verbose",
+            "--require-venv",
+            "--no-cache-dir",
+            package_path,
+        ]
         pipe = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,

@@ -33,7 +33,7 @@ class Mockers(object):
     """
 
     def mock_order(self, **kwargs):
-        """ Create a random order (randomly completed)."""
+        """Create a random order (randomly completed)."""
         shop = kwargs.pop("shop")
 
         try:
@@ -42,7 +42,7 @@ class Mockers(object):
             pass
 
     def mock_order_6h(self, **kwargs):
-        """ Create a random order for past 6h (20% chance for completion)."""
+        """Create a random order for past 6h (20% chance for completion)."""
         shop = kwargs.pop("shop")
 
         try:
@@ -51,52 +51,60 @@ class Mockers(object):
             pass
 
     def mock_fully_paid_order(self, **kwargs):
-        """ Create a random order (complete and fully paid)."""
+        """Create a random order (complete and fully paid)."""
         shop = kwargs.pop("shop")
 
         try:
-            return create_random_order(completion_probability=1, shop=shop, create_payment_for_order_total=True)
+            return create_random_order(
+                completion_probability=1, shop=shop, create_payment_for_order_total=True
+            )
         except Exception:
             pass
 
     def mock_fully_paid_order_6h(self, **kwargs):
-        """ Create a random order for past 6h (complete and fully paid)."""
+        """Create a random order for past 6h (complete and fully paid)."""
         shop = kwargs.pop("shop")
         order_date = now() - datetime.timedelta(minutes=random.uniform(0, 360))
         try:
             return create_random_order(
-                completion_probability=1, shop=shop, create_payment_for_order_total=True, order_date=order_date
+                completion_probability=1,
+                shop=shop,
+                create_payment_for_order_total=True,
+                order_date=order_date,
             )
         except Exception:
             pass
 
     def mock_fully_paid_order_30d(self, **kwargs):
-        """ Create a random order for past 30 days (complete and fully paid)."""
+        """Create a random order for past 30 days (complete and fully paid)."""
         shop = kwargs.pop("shop")
         order_date = now() - datetime.timedelta(hours=random.uniform(0, 720))
         try:
             return create_random_order(
-                completion_probability=1, shop=shop, create_payment_for_order_total=True, order_date=order_date
+                completion_probability=1,
+                shop=shop,
+                create_payment_for_order_total=True,
+                order_date=order_date,
             )
         except Exception:
             pass
 
     def mock_person(self, **kwargs):
-        """ Create a random person. """
+        """Create a random person."""
         shop = kwargs.pop("shop")
         return create_random_person(shop=shop)
 
     def mock_company(self, **kwargs):
-        """ Create a random company. """
+        """Create a random company."""
         shop = kwargs.pop("shop")
         return create_random_company(shop=shop)
 
     def mock_customer_group(self, **kwargs):
-        """ Create a random contact group. """
+        """Create a random contact group."""
         return create_random_contact_group()
 
     def mock_product_attribute(self, **kwargs):
-        """ Create a random product attribute. """
+        """Create a random product attribute."""
         return create_random_product_attribute()
 
 
@@ -112,7 +120,12 @@ class MockerView(FormView):
 
     def get_mockers(self):
         return [
-            (name, force_text(getattr(getattr(self.mockers, name, None), "__doc__") or name).strip())
+            (
+                name,
+                force_text(
+                    getattr(getattr(self.mockers, name, None), "__doc__") or name
+                ).strip(),
+            )
             for name in dir(self.mockers)
             if name.startswith("mock_")
         ]

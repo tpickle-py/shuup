@@ -9,13 +9,22 @@ from __future__ import unicode_literals
 
 import json
 import six
-from django.forms import HiddenInput, Textarea, TextInput, TimeInput as DjangoTimeInput, Widget
+from django.forms import (
+    HiddenInput,
+    Textarea,
+    TextInput,
+    TimeInput as DjangoTimeInput,
+    Widget,
+)
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from filer.models import File
 
-from shuup.admin.forms.quick_select import QuickAddRelatedObjectMultiSelect, QuickAddRelatedObjectSelect
+from shuup.admin.forms.quick_select import (
+    QuickAddRelatedObjectMultiSelect,
+    QuickAddRelatedObjectSelect,
+)
 from shuup.admin.utils.forms import flatatt_filter
 from shuup.admin.utils.urls import NoModelUrl, get_model_url
 from shuup.core.models import Contact, PersonContact, Product, ProductMode, ShopProduct
@@ -44,9 +53,10 @@ class BasePopupChoiceWidget(Widget):
         }
 
     def get_clear_markup(self):
-        return "<button class='clear-btn btn btn-danger btn-sm' type='button'><i class='%(icon)s'></i></button>" % {
-            "icon": self.clear_icon
-        }
+        return (
+            "<button class='clear-btn btn btn-danger btn-sm' type='button'><i class='%(icon)s'></i></button>"
+            % {"icon": self.clear_icon}
+        )
 
     def render_text(self, obj):
         url = getattr(obj, "url", None)
@@ -84,7 +94,9 @@ class BasePopupChoiceWidget(Widget):
         )
 
     def get_object(self, value):
-        raise NotImplementedError("Error! Not implemented: `BasePopupChoiceWidget` -> `get_object()`.")
+        raise NotImplementedError(
+            "Error! Not implemented: `BasePopupChoiceWidget` -> `get_object()`."
+        )
 
     def render(self, name, value, attrs=None, renderer=None):
         if value:
@@ -103,7 +115,8 @@ class BasePopupChoiceWidget(Widget):
             % {
                 "attrs": flatatt_filter(
                     {
-                        "class": "browse-widget %s-browse-widget d-flex mr-auto align-items-center" % self.browse_kind,
+                        "class": "browse-widget %s-browse-widget d-flex mr-auto align-items-center"
+                        % self.browse_kind,
                         "data-browse-kind": self.browse_kind,
                         "data-clearable": self.clearable,
                         "data-empty-text": self.empty_text,
@@ -142,7 +155,12 @@ class FileDnDUploaderWidget(Widget):
             return []
         try:
             thumbnail = file.easy_thumbnails_thumbnailer.get_thumbnail(
-                {"size": (120, 120), "crop": True, "upscale": True, "subject_location": file.subject_location}
+                {
+                    "size": (120, 120),
+                    "crop": True,
+                    "upscale": True,
+                    "subject_location": file.subject_location,
+                }
             )
         except Exception:
             thumbnail = None
@@ -154,7 +172,11 @@ class FileDnDUploaderWidget(Widget):
             "thumbnail": (thumbnail.url if thumbnail else None),
             "date": file.uploaded_at.isoformat(),
         }
-        return ["data-%s='%s'" % (key, val) for key, val in six.iteritems(data) if val is not None]
+        return [
+            "data-%s='%s'" % (key, val)
+            for key, val in six.iteritems(data)
+            if val is not None
+        ]
 
     def render(self, name, value, attrs={}, renderer=None):
         pk_input = HiddenInput().render(name, value, attrs)
@@ -172,14 +194,24 @@ class FileDnDUploaderWidget(Widget):
         if self.dropzone_attrs:
             # attributes passed here will be converted into keys with dz_ prefix
             # `{max-filesize: 1}` will be converted into `data-dz_max-filesize="1"`
-            file_attrs.extend(['data-dz_{}="{}"'.format(k, force_text(v)) for k, v in self.dropzone_attrs.items()])
+            file_attrs.extend(
+                [
+                    'data-dz_{}="{}"'.format(k, force_text(v))
+                    for k, v in self.dropzone_attrs.items()
+                ]
+            )
 
         if value:
             file = File.objects.filter(pk=value).first()
             file_attrs += self._get_file_attrs(file)
         return mark_safe(
             "<div id='%s-dropzone' class='dropzone %s' %s>%s</div>"
-            % (attrs.get("id", "dropzone"), "has-file" if value else "", " ".join(file_attrs), pk_input)
+            % (
+                attrs.get("id", "dropzone"),
+                "has-file" if value else "",
+                " ".join(file_attrs),
+                pk_input,
+            )
         )
 
 
@@ -234,10 +266,13 @@ class ContactChoiceWidget(BasePopupChoiceWidget):
 
     def get_browse_markup(self):
         icon = "<i class='fa fa-user'></i>"
-        return "<button class='browse-btn btn btn-primary btn-sm' type='button'>%(icon)s %(text)s</button>" % {
-            "icon": icon,
-            "text": self.browse_text,
-        }
+        return (
+            "<button class='browse-btn btn btn-primary btn-sm' type='button'>%(icon)s %(text)s</button>"
+            % {
+                "icon": icon,
+                "text": self.browse_text,
+            }
+        )
 
 
 class HexColorWidget(TextInput):
@@ -272,7 +307,9 @@ class PersonContactChoiceWidget(ContactChoiceWidget):
 
 
 class PackageProductChoiceWidget(ProductChoiceWidget):
-    filter = json.dumps({"modes": [ProductMode.NORMAL.value, ProductMode.VARIATION_CHILD.value]})
+    filter = json.dumps(
+        {"modes": [ProductMode.NORMAL.value, ProductMode.VARIATION_CHILD.value]}
+    )
 
 
 class QuickAddSupplierMultiSelect(QuickAddRelatedObjectMultiSelect):

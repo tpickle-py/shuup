@@ -6,7 +6,6 @@ from shuup_mirage_field.fields import EncryptedCharField
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("shuup", "0095_reindex_catalog"),
     ]
@@ -15,7 +14,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="EncryptedConfigurationItem",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("key", models.CharField(max_length=100, verbose_name="key")),
                 ("value", EncryptedCharField(max_length=255, verbose_name="value")),
                 (

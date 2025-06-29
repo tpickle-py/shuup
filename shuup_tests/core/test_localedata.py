@@ -27,7 +27,11 @@ from shuup.utils.money import Money
 )
 def test_year_and_month(locale_name, expected):
     locale = babel.Locale.parse(locale_name)
-    formatted = format_date(datetime.date(1980, 3, 1), format=get_year_and_month_format(locale), locale=locale)
+    formatted = format_date(
+        datetime.date(1980, 3, 1),
+        format=get_year_and_month_format(locale),
+        locale=locale,
+    )
     assert formatted == expected
 
 

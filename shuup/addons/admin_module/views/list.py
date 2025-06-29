@@ -15,8 +15,17 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import FormView
 
-from shuup.addons.manager import get_addons_from_entry_points, get_enabled_addons, set_enabled_addons
-from shuup.admin.toolbar import NewActionButton, PostActionButton, Toolbar, URLActionButton
+from shuup.addons.manager import (
+    get_addons_from_entry_points,
+    get_enabled_addons,
+    set_enabled_addons,
+)
+from shuup.admin.toolbar import (
+    NewActionButton,
+    PostActionButton,
+    Toolbar,
+    URLActionButton,
+)
 from shuup.utils.django_compat import reverse
 from shuup.utils.http import get_client_ip
 
@@ -31,7 +40,9 @@ class AddonEnableDisableForm(forms.Form):
         enabled_addons = get_enabled_addons(settings.SHUUP_ENABLED_ADDONS_FILE)
         for addon in sorted(self.addons):
             self.fields[addon] = forms.BooleanField(
-                required=False, initial=(addon in enabled_addons), label=_("Enable %s") % addon
+                required=False,
+                initial=(addon in enabled_addons),
+                label=_("Enable %s") % addon,
             )
 
     def get_enabled_addons(self):
@@ -57,7 +68,11 @@ class AddonListView(FormView):
                 settings.SHUUP_ENABLED_ADDONS_FILE,
                 new_enabled_addons,
                 comment="Written via Shuup admin (user %s; IP %s; time %s)"
-                % (self.request.user.pk, get_client_ip(self.request), now().isoformat()),
+                % (
+                    self.request.user.pk,
+                    get_client_ip(self.request),
+                    now().isoformat(),
+                ),
             )
             messages.success(self.request, " ".join(changes))
             return HttpResponseRedirect(self.request.path + "?reload=1")

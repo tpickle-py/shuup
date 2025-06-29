@@ -57,7 +57,10 @@ class ImagePlugin(TemplatedPlugin):
         (
             "full_width",
             forms.BooleanField(
-                label=_("Full width"), required=False, initial=True, help_text=_("Set image to the full width of cell.")
+                label=_("Full width"),
+                required=False,
+                initial=True,
+                help_text=_("Set image to the full width of cell."),
             ),
         ),
         (

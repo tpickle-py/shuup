@@ -37,12 +37,22 @@ class ProductCatalogPriceRule(models.Model):
     Store rules for catalog prices
     """
 
-    module_identifier = models.CharField(max_length=100, verbose_name=_("Pricing module identifier"))
+    module_identifier = models.CharField(
+        max_length=100, verbose_name=_("Pricing module identifier")
+    )
     contact_group = models.ForeignKey(
-        "shuup.ContactGroup", related_name="catalog_prices", on_delete=models.CASCADE, null=True, editable=False
+        "shuup.ContactGroup",
+        related_name="catalog_prices",
+        on_delete=models.CASCADE,
+        null=True,
+        editable=False,
     )
     contact = models.ForeignKey(
-        "shuup.Contact", related_name="catalog_prices", on_delete=models.CASCADE, null=True, editable=False
+        "shuup.Contact",
+        related_name="catalog_prices",
+        on_delete=models.CASCADE,
+        null=True,
+        editable=False,
     )
 
     class Meta:
@@ -57,20 +67,37 @@ class ProductCatalogPrice(MoneyPropped, models.Model):
 
     id = models.BigAutoField(primary_key=True)
     product = models.ForeignKey(
-        "shuup.Product", related_name="catalog_prices", on_delete=models.CASCADE, editable=False
+        "shuup.Product",
+        related_name="catalog_prices",
+        on_delete=models.CASCADE,
+        editable=False,
     )
-    shop = models.ForeignKey("shuup.Shop", related_name="catalog_prices", on_delete=models.CASCADE, editable=False)
+    shop = models.ForeignKey(
+        "shuup.Shop",
+        related_name="catalog_prices",
+        on_delete=models.CASCADE,
+        editable=False,
+    )
     supplier = models.ForeignKey(
-        "shuup.Supplier", related_name="catalog_prices", on_delete=models.CASCADE, editable=False
+        "shuup.Supplier",
+        related_name="catalog_prices",
+        on_delete=models.CASCADE,
+        editable=False,
     )
     price = PriceProperty("price_value", "shop.currency", "shop.prices_include_tax")
-    price_value = MoneyValueField(editable=False, verbose_name=_("price"), help_text=_("The indexed product price"))
+    price_value = MoneyValueField(
+        editable=False,
+        verbose_name=_("price"),
+        help_text=_("The indexed product price"),
+    )
     is_available = models.BooleanField(
         verbose_name=_("is available"),
         default=False,
         db_index=True,
         editable=False,
-        help_text=_("Whether the product is available for purchasing. This status is managed by the supplier module."),
+        help_text=_(
+            "Whether the product is available for purchasing. This status is managed by the supplier module."
+        ),
     )
     catalog_rule = models.ForeignKey(
         ProductCatalogPriceRule,
@@ -93,7 +120,9 @@ class ProductCatalogDiscountedPriceRule(models.Model):
     Store rules for discounted prices
     """
 
-    module_identifier = models.CharField(max_length=100, verbose_name=_("Discount module identifier"))
+    module_identifier = models.CharField(
+        max_length=100, verbose_name=_("Discount module identifier")
+    )
     contact_group = models.ForeignKey(
         "shuup.ContactGroup",
         related_name="catalog_discounted_prices",
@@ -102,19 +131,39 @@ class ProductCatalogDiscountedPriceRule(models.Model):
         editable=False,
     )
     contact = models.ForeignKey(
-        "shuup.Contact", related_name="catalog_discounted_prices", on_delete=models.CASCADE, null=True, editable=False
+        "shuup.Contact",
+        related_name="catalog_discounted_prices",
+        on_delete=models.CASCADE,
+        null=True,
+        editable=False,
     )
-    valid_start_date = models.DateTimeField(verbose_name=_("Valid start date and time"), null=True, blank=True)
-    valid_end_date = models.DateTimeField(verbose_name=_("Valid end date and time"), null=True, blank=True)
-    valid_start_hour = models.TimeField(verbose_name=_("Valid start hour"), null=True, blank=True)
-    valid_end_hour = models.TimeField(verbose_name=_("Valid end hour"), null=True, blank=True)
-    valid_weekday = EnumIntegerField(WeekDay, verbose_name=_("Valid weekday"), null=True, blank=True)
+    valid_start_date = models.DateTimeField(
+        verbose_name=_("Valid start date and time"), null=True, blank=True
+    )
+    valid_end_date = models.DateTimeField(
+        verbose_name=_("Valid end date and time"), null=True, blank=True
+    )
+    valid_start_hour = models.TimeField(
+        verbose_name=_("Valid start hour"), null=True, blank=True
+    )
+    valid_end_hour = models.TimeField(
+        verbose_name=_("Valid end hour"), null=True, blank=True
+    )
+    valid_weekday = EnumIntegerField(
+        WeekDay, verbose_name=_("Valid weekday"), null=True, blank=True
+    )
 
     class Meta:
         indexes = [
             models.Index(fields=["module_identifier", "contact_group", "contact"]),
             models.Index(
-                fields=["valid_start_date", "valid_end_date", "valid_start_hour", "valid_end_hour", "valid_weekday"]
+                fields=[
+                    "valid_start_date",
+                    "valid_end_date",
+                    "valid_start_hour",
+                    "valid_end_hour",
+                    "valid_weekday",
+                ]
             ),
         ]
 
@@ -127,15 +176,26 @@ class ProductCatalogDiscountedPrice(MoneyPropped, models.Model):
 
     id = models.BigAutoField(primary_key=True)
     product = models.ForeignKey(
-        "shuup.Product", related_name="catalog_discounted_prices", on_delete=models.CASCADE, editable=False
+        "shuup.Product",
+        related_name="catalog_discounted_prices",
+        on_delete=models.CASCADE,
+        editable=False,
     )
     shop = models.ForeignKey(
-        "shuup.Shop", related_name="catalog_discounted_prices", on_delete=models.CASCADE, editable=False
+        "shuup.Shop",
+        related_name="catalog_discounted_prices",
+        on_delete=models.CASCADE,
+        editable=False,
     )
     supplier = models.ForeignKey(
-        "shuup.Supplier", related_name="catalog_discounted_prices", on_delete=models.CASCADE, editable=False
+        "shuup.Supplier",
+        related_name="catalog_discounted_prices",
+        on_delete=models.CASCADE,
+        editable=False,
     )
-    discounted_price = PriceProperty("discounted_price_value", "shop.currency", "shop.prices_include_tax")
+    discounted_price = PriceProperty(
+        "discounted_price_value", "shop.currency", "shop.prices_include_tax"
+    )
     discounted_price_value = MoneyValueField(
         editable=False,
         verbose_name=_("discounted price"),
@@ -150,7 +210,9 @@ class ProductCatalogDiscountedPrice(MoneyPropped, models.Model):
     )
 
     def __str__(self):
-        return f"{self.product} ({self.shop}, {self.supplier}) = {self.discounted_price}"
+        return (
+            f"{self.product} ({self.shop}, {self.supplier}) = {self.discounted_price}"
+        )
 
     class Meta:
         unique_together = ("product", "shop", "supplier", "catalog_rule")

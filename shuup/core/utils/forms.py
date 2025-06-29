@@ -50,30 +50,41 @@ class MutableAddressForm(forms.ModelForm):
 
     def save(self, commit=True):
         if self.instance.pk:
-            if isinstance(self.instance, ImmutableAddress) or _is_assigned_multiple_times(self.instance):
+            if isinstance(
+                self.instance, ImmutableAddress
+            ) or _is_assigned_multiple_times(self.instance):
                 self.instance.pk = None  # Force resave
         return super(MutableAddressForm, self).save(commit)
 
 
 def _is_assigned_multiple_times(address):
     contacts_assigned_to_count = Contact.objects.filter(
-        Q(default_billing_address_id=address.id) | Q(default_shipping_address_id=address.id)
+        Q(default_billing_address_id=address.id)
+        | Q(default_shipping_address_id=address.id)
     ).count()
     if contacts_assigned_to_count != 1:
         return bool(contacts_assigned_to_count)
     contact_assigned_to = Contact.objects.filter(
-        Q(default_billing_address_id=address.id) | Q(default_shipping_address_id=address.id)
+        Q(default_billing_address_id=address.id)
+        | Q(default_shipping_address_id=address.id)
     ).first()
-    return bool(contact_assigned_to.default_billing_address_id == contact_assigned_to.default_shipping_address_id)
+    return bool(
+        contact_assigned_to.default_billing_address_id
+        == contact_assigned_to.default_shipping_address_id
+    )
 
 
 class FormInfoMap(OrderedDict):
     def __init__(self, form_classes):
         form_infos = (FormInfo(formcls) for formcls in form_classes)
-        super(FormInfoMap, self).__init__((form_info.choice_value, form_info) for form_info in form_infos)
+        super(FormInfoMap, self).__init__(
+            (form_info.choice_value, form_info) for form_info in form_infos
+        )
 
     def get_by_object(self, obj):
-        return first(form_info for form_info in self.values() if isinstance(obj, form_info.model))
+        return first(
+            form_info for form_info in self.values() if isinstance(obj, form_info.model)
+        )
 
     def get_by_choice_value(self, choice_value):
         return self.get(choice_value)
@@ -125,7 +136,9 @@ class RecoverPasswordForm(forms.Form):
 
         username_filter = {"{0}__iexact".format(user_model.USERNAME_FIELD): username}
 
-        active_users = user_model.objects.filter(Q(**username_filter) | Q(email__iexact=email), Q(is_active=True))
+        active_users = user_model.objects.filter(
+            Q(**username_filter) | Q(email__iexact=email), Q(is_active=True)
+        )
 
         for user in active_users:
             self.process_user(user, request)

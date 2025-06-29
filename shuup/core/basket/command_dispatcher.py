@@ -70,7 +70,9 @@ class BasketCommandDispatcher(object):
             handler = self.get_command_handler(command)
             if not handler or not callable(handler):
                 raise Problem(_("Error! Invalid command `%s`.") % escape(command))
-            kwargs.pop("csrfmiddlewaretoken", None)  # The CSRF token should never be passed as a kwarg
+            kwargs.pop(
+                "csrfmiddlewaretoken", None
+            )  # The CSRF token should never be passed as a kwarg
             kwargs.pop("command", None)  # Nor the command
             kwargs.update(request=self.request, basket=self.basket)
             kwargs = self.preprocess_kwargs(command, kwargs)
@@ -107,14 +109,19 @@ class BasketCommandDispatcher(object):
         :return: dict of arguments.
         """
 
-        for basket_command_middleware in get_provide_objects("basket_command_middleware"):
+        for basket_command_middleware in get_provide_objects(
+            "basket_command_middleware"
+        ):
             if not issubclass(basket_command_middleware, BaseBasketCommandMiddleware):
                 continue
 
             # create a copy
             kwargs = dict(
                 basket_command_middleware().preprocess_kwargs(
-                    basket=self.basket, request=self.request, command=command, kwargs=kwargs
+                    basket=self.basket,
+                    request=self.request,
+                    command=command,
+                    kwargs=kwargs,
                 )
             )
 
@@ -131,13 +138,19 @@ class BasketCommandDispatcher(object):
         :return: The response to be processed and sent to the client.
         """
 
-        for basket_command_middleware in get_provide_objects("basket_command_middleware"):
+        for basket_command_middleware in get_provide_objects(
+            "basket_command_middleware"
+        ):
             if not issubclass(basket_command_middleware, BaseBasketCommandMiddleware):
                 continue
 
             response = dict(
                 basket_command_middleware().postprocess_response(
-                    basket=self.basket, request=self.request, command=command, kwargs=kwargs, response=response
+                    basket=self.basket,
+                    request=self.request,
+                    command=command,
+                    kwargs=kwargs,
+                    response=response,
                 )
             )
 

@@ -11,13 +11,18 @@ from django.core.exceptions import ValidationError
 from django.test import override_settings
 from django.utils.translation import override
 
-from shuup.core.models import ImmutableAddress, MutableAddress, SavedAddress, get_person_contact
+from shuup.core.models import (
+    ImmutableAddress,
+    MutableAddress,
+    SavedAddress,
+    get_person_contact,
+)
 from shuup.testing.factories import get_address
 from shuup.utils.models import get_data_dict
 
 
 def test_partial_address_fails():
-    address = MutableAddress(name=u"Dog Hello")
+    address = MutableAddress(name="Dog Hello")
     with pytest.raises(ValidationError):
         address.full_clean()
 
@@ -28,13 +33,20 @@ def test_basic_address():
     address.full_clean()
     string_repr = str(address)
     for field, value in get_data_dict(address).items():
-        if field == "country":  # We can't test this right now, it's formatted in the repr
+        if (
+            field == "country"
+        ):  # We can't test this right now, it's formatted in the repr
             continue
         if not value:
             continue
-        assert value in string_repr, "Field %s is not represented in %r" % (field, string_repr)
+        assert value in string_repr, "Field %s is not represented in %r" % (
+            field,
+            string_repr,
+        )
 
-    assert address.is_european_union, "Dog Fort, UK is not in the EU, France actually is"
+    assert address.is_european_union, (
+        "Dog Fort, UK is not in the EU, France actually is"
+    )
     assert list(address.split_name) == ["Dog", "Hello"], "Names split correctly"
     assert address.first_name == "Dog", "Names split correctly"
     assert address.last_name == "Hello", "Names split correctly"
@@ -53,13 +65,13 @@ def test_address_saving_retrieving_and_immutability():
     address = get_address()
     address.save()
     # mutate it...
-    address.name = u"Dog Hi"
+    address.name = "Dog Hi"
     # Then set it as immutable...
     immutable_address = address.to_immutable()
     immutable_address.save()
 
     # And when we try to save it again, it fails...
-    immutable_address.name = u"Dog Yo"
+    immutable_address.name = "Dog Yo"
     with pytest.raises(ValidationError):
         immutable_address.save()
 
@@ -76,27 +88,39 @@ def test_address_ownership(admin_user):
     address.save()
     saved = SavedAddress(address=address)
     saved.owner = get_person_contact(admin_user)
-    assert saved.get_title(), u"get_title does what it should even if there is no explicit title"
-    saved.title = u"My favorite address"
-    assert saved.get_title() == saved.title, u"get_title does what it should when there is an explicit title"
-    assert six.text_type(saved) == saved.get_title(), u"str() is an alias for .get_title()"
+    assert saved.get_title(), (
+        "get_title does what it should even if there is no explicit title"
+    )
+    saved.title = "My favorite address"
+    assert saved.get_title() == saved.title, (
+        "get_title does what it should when there is an explicit title"
+    )
+    assert six.text_type(saved) == saved.get_title(), (
+        "str() is an alias for .get_title()"
+    )
     saved.full_clean()
     saved.save()
     assert (
-        SavedAddress.objects.for_owner(get_person_contact(admin_user)).filter(address=address).exists()
+        SavedAddress.objects.for_owner(get_person_contact(admin_user))
+        .filter(address=address)
+        .exists()
     ), "contacts can save addresses"
-    assert SavedAddress.objects.for_owner(None).count() == 0, "Ownerless saved addresses aren't a real thing"
+    assert SavedAddress.objects.for_owner(None).count() == 0, (
+        "Ownerless saved addresses aren't a real thing"
+    )
 
 
 def test_home_country_in_address():
     with override("fi"):
         finnish_address = MutableAddress(country="FI")
         with override_settings(SHUUP_ADDRESS_HOME_COUNTRY="US"):
-            assert "Suomi" in str(finnish_address), "When home is not Finland, Finland appears in address string"
+            assert "Suomi" in str(finnish_address), (
+                "When home is not Finland, Finland appears in address string"
+            )
         with override_settings(SHUUP_ADDRESS_HOME_COUNTRY="FI"):
-            assert "Suomi" not in str(
-                finnish_address
-            ), "When home is Finland, Finland does not appear in address string"
+            assert "Suomi" not in str(finnish_address), (
+                "When home is Finland, Finland does not appear in address string"
+            )
 
 
 @pytest.mark.django_db

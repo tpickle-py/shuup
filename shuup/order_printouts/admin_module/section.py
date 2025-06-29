@@ -46,7 +46,11 @@ class PrintoutsSection(Section):
             recipient = obj.billing_address.email
         data = {
             "to": recipient,
-            "subject": _("%(shop)s: Order %(pk)s") % {"shop": obj.shop.name, "pk": obj.pk},
+            "subject": _("%(shop)s: Order %(pk)s")
+            % {"shop": obj.shop.name, "pk": obj.pk},
             "body": (EMAIL_DEFAULT_BODY % {"shop": obj.shop.name}).strip(),
         }
-        return {"email_form": PrintoutsEmailForm(initial=data), "can_create_pdf": bool(weasyprint)}
+        return {
+            "email_form": PrintoutsEmailForm(initial=data),
+            "can_create_pdf": bool(weasyprint),
+        }

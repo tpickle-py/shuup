@@ -215,7 +215,9 @@ def test_rule_min_max():
     assert rule._postal_codes_min == "99501"
     assert rule._postal_codes_max == "99590"
 
-    TaxRule.objects.create(postal_codes_pattern="12345,45600,80008,99999,10011", tax=tax)
+    TaxRule.objects.create(
+        postal_codes_pattern="12345,45600,80008,99999,10011", tax=tax
+    )
     TaxRule.objects.create(postal_codes_pattern="10000-99999", tax=tax)
     TaxRule.objects.create(postal_codes_pattern="99506-99999", tax=tax)
     TaxRule.objects.create(postal_codes_pattern="99000-99001", tax=tax)
@@ -227,7 +229,9 @@ def test_rule_min_max():
     rule.save()
     assert not rule._postal_codes_min
     assert not rule._postal_codes_max
-    assert TaxRule.objects.may_match_postal_code(postal_code).count() == 4  # it still may match
+    assert (
+        TaxRule.objects.may_match_postal_code(postal_code).count() == 4
+    )  # it still may match
 
     postal_code = None
     assert TaxRule.objects.may_match_postal_code(postal_code).count() == 1
@@ -258,7 +262,9 @@ def test_rule_admin(rf, admin_user):
 
     tax_class = TaxClass.objects.create(name="test")
 
-    view = TaxRuleEditView(request=apply_request_middleware(rf.get("/"), user=admin_user))
+    view = TaxRuleEditView(
+        request=apply_request_middleware(rf.get("/"), user=admin_user)
+    )
     form_class = view.get_form_class()
     form_kwargs = view.get_form_kwargs()
     form = form_class(**form_kwargs)
@@ -307,8 +313,12 @@ def test_rules_with_anonymous():
 
     # create taxes
     # When customer is company, it should pay additional taxes
-    tax_for_anyone = Tax.objects.create(code="any", rate=0.1, name="Tax for any customer")
-    tax_for_companies = Tax.objects.create(code="companies", rate=0.3, name="Additional tax for companies")
+    tax_for_anyone = Tax.objects.create(
+        code="any", rate=0.1, name="Tax for any customer"
+    )
+    tax_for_companies = Tax.objects.create(
+        code="companies", rate=0.3, name="Additional tax for companies"
+    )
 
     # create tax group for companies
     companies_tax_group = CustomerTaxGroup.get_default_company_group()
@@ -358,7 +368,9 @@ def test_rules_with_disabled_tax():
     price = product.get_shop_instance(shop).default_price
 
     # create disabled tax
-    tax = Tax.objects.create(code="any", rate=0.1, name="Tax for any customer", enabled=False)
+    tax = Tax.objects.create(
+        code="any", rate=0.1, name="Tax for any customer", enabled=False
+    )
     tax_rule = TaxRule.objects.create(tax=tax)
     tax_rule.tax_classes.add(tax_class)
 

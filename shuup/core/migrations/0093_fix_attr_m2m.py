@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0092_order_status_history'),
+        ("shuup", "0092_order_status_history"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='productattribute',
-            name='chosen_options',
-            field=models.ManyToManyField(blank=True, to='shuup.AttributeChoiceOption', verbose_name='chosen options'),
+            model_name="productattribute",
+            name="chosen_options",
+            field=models.ManyToManyField(
+                blank=True,
+                to="shuup.AttributeChoiceOption",
+                verbose_name="chosen options",
+            ),
         ),
     ]

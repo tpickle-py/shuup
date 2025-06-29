@@ -13,7 +13,11 @@ from django.utils.translation import ugettext_lazy as _
 from typing import Any, Optional, Tuple, Union
 from uuid import uuid4
 
-from shuup.core.models import BackgroundTask, BackgroundTaskExecution, BackgroundTaskExecutionStatus
+from shuup.core.models import (
+    BackgroundTask,
+    BackgroundTaskExecution,
+    BackgroundTaskExecutionStatus,
+)
 from shuup.utils.importing import cached_load, load
 
 LOGGER = logging.getLogger(__name__)
@@ -36,7 +40,9 @@ class TaskResult:
             try:
                 json.dumps(result)
             except TypeError:
-                raise TaskNotSerializableError("Task result is not serializable as JSON.")
+                raise TaskNotSerializableError(
+                    "Task result is not serializable as JSON."
+                )
 
         self.result = result
         self.error_log = error_log
@@ -49,7 +55,9 @@ class Task:
     queue = "default"  # str
     kwargs = None  # Optional[Dict[str, Any]]
 
-    def __init__(self, function, identifier=None, stored=False, queue="default", **kwargs):
+    def __init__(
+        self, function, identifier=None, stored=False, queue="default", **kwargs
+    ):
         """
         :param function: A string that represents the function specification.
             It will be locaded dynamically and executed passing the given kwargs.
@@ -106,11 +114,18 @@ class DefaultTaskRunner(TaskRunner):
     This task runner will execute the tasks received synchronously.
     """
 
-    def create_task(self, function, stored=False, queue="default", task_identifier=None, **kwargs) -> Task:
+    def create_task(
+        self, function, stored=False, queue="default", task_identifier=None, **kwargs
+    ) -> Task:
         task_identifier = task_identifier or f"{queue}_{uuid4().hex}"
 
         if stored:
-            background_data = dict(queue=queue, identifier=task_identifier, function=function, arguments=kwargs)
+            background_data = dict(
+                queue=queue,
+                identifier=task_identifier,
+                function=function,
+                arguments=kwargs,
+            )
 
             if kwargs.get("shop_id"):
                 background_data["shop_id"] = kwargs["shop_id"]
@@ -127,9 +142,13 @@ class DefaultTaskRunner(TaskRunner):
         task_identifier = task.identifier
         background_task_execution = None
 
-        background_task = BackgroundTask.objects.filter(identifier=task_identifier).first()
+        background_task = BackgroundTask.objects.filter(
+            identifier=task_identifier
+        ).first()
         if background_task:
-            background_task_execution = BackgroundTaskExecution.objects.create(task=background_task)
+            background_task_execution = BackgroundTaskExecution.objects.create(
+                task=background_task
+            )
 
         function = load(task.function)
         task_result = None

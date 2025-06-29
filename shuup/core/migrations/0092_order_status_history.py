@@ -14,7 +14,6 @@ def ensure_allowed_next_statuses(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("shuup", "0091_background_tasks"),
@@ -24,7 +23,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="orderstatus",
             name="allowed_next_statuses",
-            field=models.ManyToManyField(blank=True, to="shuup.OrderStatus", verbose_name="allowed next statuses"),
+            field=models.ManyToManyField(
+                blank=True, to="shuup.OrderStatus", verbose_name="allowed next statuses"
+            ),
         ),
         migrations.AddField(
             model_name="orderstatus",
@@ -38,9 +39,23 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="OrderStatusHistory",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("created_on", models.DateTimeField(auto_now_add=True, verbose_name="created on")),
-                ("description", models.TextField(blank=True, null=True, verbose_name="description")),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_on",
+                    models.DateTimeField(auto_now_add=True, verbose_name="created on"),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, null=True, verbose_name="description"),
+                ),
                 (
                     "creator",
                     shuup.core.fields.UnsavedForeignKey(

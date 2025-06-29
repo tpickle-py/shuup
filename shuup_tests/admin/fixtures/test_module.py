@@ -10,8 +10,19 @@ from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import View
 
-from shuup.admin.base import Activity, AdminModule, MenuEntry, Notification, SearchResult
-from shuup.admin.dashboard import DashboardContentBlock, DashboardMoneyBlock, DashboardNumberBlock, DashboardValueBlock
+from shuup.admin.base import (
+    Activity,
+    AdminModule,
+    MenuEntry,
+    Notification,
+    SearchResult,
+)
+from shuup.admin.dashboard import (
+    DashboardContentBlock,
+    DashboardMoneyBlock,
+    DashboardNumberBlock,
+    DashboardValueBlock,
+)
 from shuup.admin.utils.urls import admin_url
 
 
@@ -25,7 +36,13 @@ class ATestModule(AdminModule):
 
     def get_urls(self):
         return [
-            admin_url("test/$", OkAction, name="test-auth", require_authentication=True, permissions=()),
+            admin_url(
+                "test/$",
+                OkAction,
+                name="test-auth",
+                require_authentication=True,
+                permissions=(),
+            ),
             admin_url(
                 "test2/$",
                 "shuup_tests.admin.fixtures.test_module.OkAction",
@@ -72,4 +89,8 @@ class ARestrictedTestModule(ATestModule):
     name = _("RestrictedTest")
 
     def get_menu_entries(self, request):
-        return [MenuEntry(text="OK", url="/OK", category="RestrictedTest", aliases=("spooky",))]
+        return [
+            MenuEntry(
+                text="OK", url="/OK", category="RestrictedTest", aliases=("spooky",)
+            )
+        ]

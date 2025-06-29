@@ -26,7 +26,11 @@ class ExceptionMiddleware(MiddlewareMixin):
             status_code = 400
             if request.is_ajax():
                 return JsonResponse(
-                    {"error": force_text(exception), "code": getattr(exception, "code", None)}, status=status_code
+                    {
+                        "error": force_text(exception),
+                        "code": getattr(exception, "code", None),
+                    },
+                    status=status_code,
                 )
             return render(
                 request,

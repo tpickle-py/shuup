@@ -74,7 +74,9 @@ def test_coupon_creation_for_supplier(rf, admin_user):
             assert new_coupon
 
             # Another superuser shouldn't see this campaign
-            request = apply_request_middleware(rf.post("/", data=data), user=another_superuser)
+            request = apply_request_middleware(
+                rf.post("/", data=data), user=another_superuser
+            )
             assert get_supplier(request) == supplier2
             with pytest.raises(Http404):
                 response = view(request, pk=new_coupon.pk)
@@ -96,8 +98,12 @@ def test_coupon_list_for_suppliers(rf, admin_user):
     supplier_provider = "shuup.testing.supplier_provider.UsernameSupplierProvider"
     with override_settings(LANGUAGES=[("en", "en")]):
         with override_settings(SHUUP_ADMIN_SUPPLIER_PROVIDER_SPEC=supplier_provider):
-            code1 = Coupon.objects.create(code="1", active=True, shop=shop, supplier=supplier1)
-            code2 = Coupon.objects.create(code="2", active=True, shop=shop, supplier=supplier2)
+            code1 = Coupon.objects.create(
+                code="1", active=True, shop=shop, supplier=supplier1
+            )
+            code2 = Coupon.objects.create(
+                code="2", active=True, shop=shop, supplier=supplier2
+            )
 
             view = CouponListView()
             request = apply_request_middleware(rf.get("/"), user=superuser1, shop=shop)
@@ -133,7 +139,9 @@ def test_coupon_with_supplier_filter(rf, admin_user):
 
     supplier_provider = "shuup.testing.supplier_provider.UsernameSupplierProvider"
     with override_settings(SHUUP_ADMIN_SUPPLIER_PROVIDER_SPEC=supplier_provider):
-        code = Coupon.objects.create(code="LEAFS", active=True, shop=shop, supplier=supplier1)
+        code = Coupon.objects.create(
+            code="LEAFS", active=True, shop=shop, supplier=supplier1
+        )
         results = _get_search_results(rf, view, "campaigns.Coupon", "LEAFS", superuser1)
         assert len(results) == 1
         assert results[0].get("id") == code.id
@@ -143,7 +151,16 @@ def test_coupon_with_supplier_filter(rf, admin_user):
         assert len(results) == 0
 
 
-def _get_search_results(rf, view, model_name, search_str, user, search_mode=None, sales_units=None, shop=None):
+def _get_search_results(
+    rf,
+    view,
+    model_name,
+    search_str,
+    user,
+    search_mode=None,
+    sales_units=None,
+    shop=None,
+):
     data = {"model": model_name, "search": search_str}
     if search_mode:
         data.update({"searchMode": search_mode})

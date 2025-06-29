@@ -137,7 +137,7 @@ def test_taxless_and_taxful_price_properties():
 
 class Base(object):
     def __init__(self, **kwargs):
-        for (k, v) in kwargs.items():
+        for k, v in kwargs.items():
             setattr(self, k, v)
 
 

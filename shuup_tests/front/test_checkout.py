@@ -58,7 +58,10 @@ class AddressesOnlyCheckoutView(BaseCheckoutView):
 @pytest.mark.django_db
 def test_address_phase_authorized_user(rf, admin_user):
     request = apply_request_middleware(
-        rf.get("/"), shop=get_default_shop(), customer=get_person_contact(admin_user), user=admin_user
+        rf.get("/"),
+        shop=get_default_shop(),
+        customer=get_person_contact(admin_user),
+        user=admin_user,
     )
     view_func = AddressesPhase.as_view()
     resp = view_func(request)
@@ -73,7 +76,10 @@ def test_address_phase_anonymous_user(rf, allow_company_registration):
     request = apply_request_middleware(rf.get("/"), shop=shop)
     view_func = AddressesOnlyCheckoutView.as_view()
     resp = view_func(request, phase="addresses")
-    assert bool("company" in resp.context_data["form"].form_defs) == allow_company_registration
+    assert (
+        bool("company" in resp.context_data["form"].form_defs)
+        == allow_company_registration
+    )
 
 
 @pytest.mark.django_db
@@ -97,7 +103,10 @@ def test_confirm_form_field_overrides(rf):
 
 @pytest.mark.django_db
 def test_confirm_form_field_provides(rf):
-    with override_provides("checkout_confirm_form_field_provider", ["shuup_tests.front.utils.FieldTestProvider"]):
+    with override_provides(
+        "checkout_confirm_form_field_provider",
+        ["shuup_tests.front.utils.FieldTestProvider"],
+    ):
         request = apply_request_middleware(rf.post("/"), shop=get_default_shop())
         payload = {}  # make form invalid
         form = ConfirmForm(request=request, data=payload)
@@ -112,7 +121,9 @@ def test_save_marketing_check(rf, admin_user):
     shop = get_default_shop()
 
     with override_settings(SHUUP_CHECKOUT_CONFIRM_FORM_PROPERTIES={}):
-        request = apply_request_middleware(rf.get("/"), shop=shop, user=admin_user, customer=admin_contact)
+        request = apply_request_middleware(
+            rf.get("/"), shop=shop, user=admin_user, customer=admin_contact
+        )
         form = ConfirmForm(request=request)
         assert form.fields["marketing"].initial is False
         assert form.fields["marketing"].widget.__class__ == forms.CheckboxInput
@@ -132,7 +143,9 @@ def test_save_marketing_check(rf, admin_user):
         assert form.fields["marketing"].widget.__class__ == forms.HiddenInput
 
         # test with anonymous
-        request = apply_request_middleware(rf.get("/"), shop=shop, user=admin_user, customer=AnonymousContact())
+        request = apply_request_middleware(
+            rf.get("/"), shop=shop, user=admin_user, customer=AnonymousContact()
+        )
         form = ConfirmForm(request=request)
         assert form.fields["marketing"].initial is False
         assert form.fields["marketing"].widget.__class__ == forms.CheckboxInput

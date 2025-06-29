@@ -22,7 +22,12 @@ from uuid import uuid4
 from shuup.core.fields import InternalIdentifierField
 from shuup.core.pricing import PriceInfo
 
-from ._base import PolymorphicShuupModel, PolymorphicTranslatableShuupModel, PolyTransModelBase, TranslatableShuupModel
+from ._base import (
+    PolymorphicShuupModel,
+    PolymorphicTranslatableShuupModel,
+    PolyTransModelBase,
+    TranslatableShuupModel,
+)
 from ._product_shops import ShopProduct
 from ._shops import Shop
 
@@ -47,13 +52,21 @@ class ServiceProvider(PolymorphicTranslatableShuupModel):
     enabled = models.BooleanField(
         default=True,
         verbose_name=_("enabled"),
-        help_text=_("Enable this if this service provider can be used when placing orders."),
+        help_text=_(
+            "Enable this if this service provider can be used when placing orders."
+        ),
     )
     name = TranslatedField(any_language=True)
-    logo = FilerImageField(blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("logo"))
+    logo = FilerImageField(
+        blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("logo")
+    )
 
     base_translations = TranslatedFields(
-        name=models.CharField(max_length=100, verbose_name=_("name"), help_text=_("The service provider name.")),
+        name=models.CharField(
+            max_length=100,
+            verbose_name=_("name"),
+            help_text=_("The service provider name."),
+        ),
     )
 
     shops = models.ManyToManyField(
@@ -186,12 +199,18 @@ class ServiceQuerySet(TranslatableQuerySet):
         shop_product_m2m = self.model.shop_product_m2m
         shop_product_limiter_attr = "limit_%s" % self.model.shop_product_m2m
 
-        limiting_products_query = {"shop": shop, "product__in": products, shop_product_limiter_attr: True}
+        limiting_products_query = {
+            "shop": shop,
+            "product__in": products,
+            shop_product_limiter_attr: True,
+        }
         enabled_for_shop = self.enabled().for_shop(shop)
         available_ids = set(enabled_for_shop.values_list("pk", flat=True))
 
         for shop_product in ShopProduct.objects.filter(**limiting_products_query):
-            available_ids &= set(getattr(shop_product, shop_product_m2m).values_list("pk", flat=True))
+            available_ids &= set(
+                getattr(shop_product, shop_product_m2m).values_list("pk", flat=True)
+            )
             if not available_ids:  # Out of IDs, better just fail fast
                 break
 
@@ -219,7 +238,10 @@ class Service(TranslatableShuupModel):
         help_text=_("Enable this if this service should be selectable on checkout."),
     )
     shop = models.ForeignKey(
-        on_delete=models.CASCADE, to=Shop, verbose_name=_("shop"), help_text=_("The shop for this service.")
+        on_delete=models.CASCADE,
+        to=Shop,
+        verbose_name=_("shop"),
+        help_text=_("The shop for this service."),
     )
     supplier = models.ForeignKey(
         "shuup.Supplier",
@@ -232,7 +254,9 @@ class Service(TranslatableShuupModel):
         null=True,
         blank=True,
     )
-    choice_identifier = models.CharField(blank=True, max_length=64, verbose_name=_("choice identifier"))
+    choice_identifier = models.CharField(
+        blank=True, max_length=64, verbose_name=_("choice identifier")
+    )
 
     # These are for migrating old methods to new architecture
     old_module_identifier = models.CharField(max_length=64, blank=True)
@@ -240,15 +264,21 @@ class Service(TranslatableShuupModel):
 
     name = TranslatedField(any_language=True)
     description = TranslatedField()
-    logo = FilerImageField(blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("logo"))
+    logo = FilerImageField(
+        blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("logo")
+    )
     tax_class = models.ForeignKey(
         "TaxClass",
         on_delete=models.PROTECT,
         verbose_name=_("tax class"),
-        help_text=_("The tax class to use for this service. Define by searching for `Tax Classes`."),
+        help_text=_(
+            "The tax class to use for this service. Define by searching for `Tax Classes`."
+        ),
     )
 
-    behavior_components = models.ManyToManyField("ServiceBehaviorComponent", verbose_name=_("behavior components"))
+    behavior_components = models.ManyToManyField(
+        "ServiceBehaviorComponent", verbose_name=_("behavior components")
+    )
     labels = models.ManyToManyField("Label", blank=True, verbose_name=_("labels"))
 
     objects = ServiceQuerySet.as_manager()
@@ -285,7 +315,9 @@ class Service(TranslatableShuupModel):
         """
         return not any(self.get_unavailability_reasons(source))
 
-    def get_unavailability_reasons(self, source: Union["OrderSource", "Order"]) -> Iterable[ValidationError]:
+    def get_unavailability_reasons(
+        self, source: Union["OrderSource", "Order"]
+    ) -> Iterable[ValidationError]:
         """
         Get reasons of being unavailable for a given source or order.
         """
@@ -293,7 +325,9 @@ class Service(TranslatableShuupModel):
             yield ValidationError(_("%s is disabled.") % self, code="disabled")
 
         if source.shop.id != self.shop_id:
-            yield ValidationError(_("%s is for different shop.") % self, code="wrong_shop")
+            yield ValidationError(
+                _("%s is for different shop.") % self, code="wrong_shop"
+            )
 
         for component in self.behavior_components.all():
             for reason in component.get_unavailability_reasons(self, source):
@@ -326,7 +360,7 @@ class Service(TranslatableShuupModel):
         :type source: shuup.core.order_creator.OrderSource
         :rtype: Iterable[shuup.core.order_creator.SourceLine]
         """
-        for (num, line_data) in enumerate(self._get_line_data(source), 1):
+        for num, line_data in enumerate(self._get_line_data(source), 1):
             (price_info, tax_class, text) = line_data
             yield self._create_line(source, num, price_info, tax_class, text)
 
@@ -382,7 +416,9 @@ class Service(TranslatableShuupModel):
         if not self.enabled:
             raise ValueError("Error! %r is disabled." % (self,))
         if not self.provider.enabled:
-            raise ValueError("Error! %s of %r is disabled." % (self.provider_attr, self))
+            raise ValueError(
+                "Error! %s of %r is disabled." % (self.provider_attr, self)
+            )
 
 
 def _sum_costs(costs, source):
@@ -426,7 +462,9 @@ class ServiceCost(object):
         :type base_price: shuup.core.pricing.Price|None
         """
         if tax_class and not description:
-            raise ValueError("Error! Service cost with a defined tax class must also have a description.")
+            raise ValueError(
+                "Error! Service cost with a defined tax class must also have a description."
+            )
         self.price = price
         self.description = description
         self.tax_class = tax_class
@@ -473,11 +511,17 @@ class ServiceBehaviorComponent(PolymorphicShuupModel):
         return None
 
 
-_translatable_model = PolymorphicTranslatableShuupModel if django.VERSION >= (1, 11) else TranslatableShuupModel
+_translatable_model = (
+    PolymorphicTranslatableShuupModel
+    if django.VERSION >= (1, 11)
+    else TranslatableShuupModel
+)
 
 
 class TranslatableServiceBehaviorComponent(
-    six.with_metaclass(PolyTransModelBase, ServiceBehaviorComponent, _translatable_model)
+    six.with_metaclass(
+        PolyTransModelBase, ServiceBehaviorComponent, _translatable_model
+    )
 ):
     class Meta:
         abstract = True

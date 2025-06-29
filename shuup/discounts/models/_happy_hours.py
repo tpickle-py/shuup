@@ -15,11 +15,15 @@ from django.utils.translation import ugettext_lazy as _
 
 @python_2_unicode_compatible
 class HappyHour(models.Model):
-    shop = models.ForeignKey("shuup.Shop", verbose_name=_("shop"), on_delete=models.CASCADE)
+    shop = models.ForeignKey(
+        "shuup.Shop", verbose_name=_("shop"), on_delete=models.CASCADE
+    )
     name = models.CharField(
         max_length=120,
         verbose_name=_("name"),
-        help_text=_("The name for this HappyHour. Used internally with exception lists for filtering."),
+        help_text=_(
+            "The name for this HappyHour. Used internally with exception lists for filtering."
+        ),
     )
 
     def __str__(self):
@@ -33,10 +37,18 @@ class HappyHour(models.Model):
 @python_2_unicode_compatible
 class TimeRange(models.Model):
     happy_hour = models.ForeignKey(
-        on_delete=models.CASCADE, to="discounts.HappyHour", related_name="time_ranges", verbose_name=_("happy hour")
+        on_delete=models.CASCADE,
+        to="discounts.HappyHour",
+        related_name="time_ranges",
+        verbose_name=_("happy hour"),
     )
     parent = models.ForeignKey(
-        "self", blank=True, null=True, related_name="children", on_delete=models.CASCADE, verbose_name=_("parent")
+        "self",
+        blank=True,
+        null=True,
+        related_name="children",
+        on_delete=models.CASCADE,
+        verbose_name=_("parent"),
     )
     from_hour = models.TimeField(verbose_name=_("from hour"), db_index=True)
     to_hour = models.TimeField(verbose_name=_("to hour"), db_index=True)
@@ -53,7 +65,10 @@ class TimeRange(models.Model):
     def save(self, **kwargs):
         if self.to_hour < self.from_hour:
             raise ValidationError(
-                _("The value of the field `to hour` has to be later than that of `from hour`."), code="time_range_error"
+                _(
+                    "The value of the field `to hour` has to be later than that of `from hour`."
+                ),
+                code="time_range_error",
             )
 
         return super(TimeRange, self).save(**kwargs)

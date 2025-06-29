@@ -91,7 +91,10 @@ class CampaignAdminModule(AdminModule):
             yield SimpleHelpBlock(
                 text=_("Set up a sales campaign"),
                 actions=[
-                    {"text": _("New basket campaign"), "url": self.get_model_url(BasketCampaign, "new")},
+                    {
+                        "text": _("New basket campaign"),
+                        "url": self.get_model_url(BasketCampaign, "new"),
+                    },
                     {"text": _("New coupon"), "url": self.get_model_url(Coupon, "new")},
                 ],
                 priority=1,
@@ -112,7 +115,9 @@ class CampaignAdminModule(AdminModule):
 
     def get_permissions_help_texts(self) -> Iterable[str]:
         return {
-            get_object_selector_permission_name(Coupon): _("Allow the user to select coupons in admin."),
+            get_object_selector_permission_name(Coupon): _(
+                "Allow the user to select coupons in admin."
+            ),
         }
 
 

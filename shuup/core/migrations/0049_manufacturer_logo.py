@@ -9,16 +9,22 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.FILER_IMAGE_MODEL),
-        ('shuup', '0048_contactgroup_pricedisplay'),
+        ("shuup", "0048_contactgroup_pricedisplay"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='manufacturer',
-            name='logo',
-            field=filer.fields.image.FilerImageField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='manufacturer_logos', to=settings.FILER_IMAGE_MODEL, verbose_name='logo'),
+            model_name="manufacturer",
+            name="logo",
+            field=filer.fields.image.FilerImageField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="manufacturer_logos",
+                to=settings.FILER_IMAGE_MODEL,
+                verbose_name="logo",
+            ),
         ),
     ]

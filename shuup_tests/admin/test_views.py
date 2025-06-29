@@ -18,7 +18,14 @@ from mock import patch
 from shuup.admin.modules.products.views import ProductEditView
 from shuup.admin.utils.tour import is_tour_complete
 from shuup.apps.provides import override_provides
-from shuup.core.models import Product, ProductCatalogPrice, Shop, ShopProduct, ShopProductVisibility, ShopStatus
+from shuup.core.models import (
+    Product,
+    ProductCatalogPrice,
+    Shop,
+    ShopProduct,
+    ShopProductVisibility,
+    ShopStatus,
+)
 from shuup.testing.factories import (
     CategoryFactory,
     create_product,
@@ -64,7 +71,9 @@ def test_list_view(rf, class_spec, admin_user):
     assert response.status_code == 200
 
     # picotable request
-    request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user
+    )
     response = view(request)
     assert 200 <= response.status_code < 300
 
@@ -120,7 +129,9 @@ def test_detail_view(rf, admin_user, model_and_class):
     ],
 )
 @pytest.mark.django_db
-def test_iframe_mode(rf, admin_user, extra_query_param, extra_query_value, expected_script):
+def test_iframe_mode(
+    rf, admin_user, extra_query_param, extra_query_value, expected_script
+):
     get_default_shop()
     view = load("shuup.admin.modules.categories.views:CategoryEditView").as_view()
 
@@ -187,10 +198,14 @@ def test_edit_view_adding_messages_to_form_group(rf, admin_user):
 def test_product_edit_view(rf, admin_user, settings):
     shop = get_default_shop()  # obvious prerequisite
     shop.staff_members.add(admin_user)
-    parent = create_product("ComplexVarParent", shop=shop, supplier=get_default_supplier())
+    parent = create_product(
+        "ComplexVarParent", shop=shop, supplier=get_default_supplier()
+    )
     sizes = [("%sL" % ("X" * x)) for x in range(4)]
     for size in sizes:
-        child = create_product("ComplexVarChild-%s" % size, shop=shop, supplier=get_default_supplier())
+        child = create_product(
+            "ComplexVarChild-%s" % size, shop=shop, supplier=get_default_supplier()
+        )
         child.link_to_parent(parent, variables={"size": size})
     shop_product = parent.get_shop_instance(shop)
     cat = CategoryFactory()
@@ -230,7 +245,11 @@ def test_product_edit_view(rf, admin_user, settings):
     assert not shop_product.categories.exists()
     assert not shop_product.primary_category
 
-    post_data = {"shop1-default_price_value": 12, "shop1-primary_category": cat.pk, "shop1-categories": []}
+    post_data = {
+        "shop1-default_price_value": 12,
+        "shop1-primary_category": cat.pk,
+        "shop1-categories": [],
+    }
     post.update(post_data)
     usable_post = {}
     for k, v in six.iteritems(post):
@@ -248,7 +267,9 @@ def test_product_edit_view(rf, admin_user, settings):
     assert shop_product.primary_category
 
     # the catalog price was indexed
-    catalog_price = ProductCatalogPrice.objects.filter(shop=shop_product.shop, product=shop_product.product).first()
+    catalog_price = ProductCatalogPrice.objects.filter(
+        shop=shop_product.shop, product=shop_product.product
+    ).first()
     assert catalog_price.price_value == shop_product.default_price_value
 
     if settings.SHUUP_AUTO_SHOP_PRODUCT_CATEGORIES:
@@ -321,11 +342,15 @@ def test_product_edit_view(rf, admin_user, settings):
         response.render()
         content = force_text(response.content)
         soup = BeautifulSoup(content, "lxml")
-        alert = soup.find_all("div", {"class": "validation-issues-alert alert alert-danger"})
+        alert = soup.find_all(
+            "div", {"class": "validation-issues-alert alert alert-danger"}
+        )
         assert alert
         alert_danger = soup.find_all("div", {"class": "alert-danger"})
         assert alert_danger
-        alert = soup.find_all("div", {"class": "validation-issues-alert alert alert-warning"})
+        alert = soup.find_all(
+            "div", {"class": "validation-issues-alert alert alert-warning"}
+        )
         alert_div = alert[0]
         strong = alert_div.find_all("strong")
         assert strong
@@ -342,16 +367,24 @@ def test_product_edit_view_multishop(rf, admin_user):
 
         for i in range(5):
             shop_name = "test%d" % i
-            shop = Shop.objects.create(name=shop_name, domain=shop_name, status=ShopStatus.ENABLED)
+            shop = Shop.objects.create(
+                name=shop_name, domain=shop_name, status=ShopStatus.ENABLED
+            )
             shop_products.append(
-                ShopProduct.objects.create(product=product, shop=shop, visibility=ShopProductVisibility.ALWAYS_VISIBLE)
+                ShopProduct.objects.create(
+                    product=product,
+                    shop=shop,
+                    visibility=ShopProductVisibility.ALWAYS_VISIBLE,
+                )
             )
 
         assert Product.objects.count() == 1
 
         view = ProductEditView.as_view()
         for shop_product in shop_products:
-            request = apply_request_middleware(rf.get("/", HTTP_HOST=shop_product.shop.domain), user=admin_user)
+            request = apply_request_middleware(
+                rf.get("/", HTTP_HOST=shop_product.shop.domain), user=admin_user
+            )
             response = view(request, pk=shop_product.pk)
             assert response.status_code == 200
             response.render()
@@ -383,6 +416,8 @@ def test_tour_view(rf, admin_user):
     shop = get_default_shop()
     assert is_tour_complete(shop, "home", admin_user) is False
     view = load("shuup.admin.views.tour:TourView").as_view()
-    request = apply_request_middleware(rf.post("/", data={"tourKey": "home"}), user=admin_user)
+    request = apply_request_middleware(
+        rf.post("/", data={"tourKey": "home"}), user=admin_user
+    )
     view(request)
     assert is_tour_complete(shop, "home", admin_user)

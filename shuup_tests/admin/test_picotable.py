@@ -48,7 +48,11 @@ class CustomProductDataColumn(object):
         return "product-data-%d" % shop_product.pk
 
     def get_column(self, model, known_names, identifier):
-        return Column("custom_product_info", u"CustomProductInfo", display="get_custom_product_info_display")
+        return Column(
+            "custom_product_info",
+            "CustomProductInfo",
+            display="get_custom_product_info_display",
+        )
 
 
 def instance_id(instance):  # Test direct `display` callable
@@ -68,7 +72,9 @@ def get_pico(rf, admin_user, model=None, columns=None):
             "username",
             "Username",
             sortable=False,
-            filter_config=MultiFieldTextFilter(filter_fields=("username", "email"), operator="iregex"),
+            filter_config=MultiFieldTextFilter(
+                filter_fields=("username", "email"), operator="iregex"
+            ),
         ),
         Column("email", "Email", sortable=False, filter_config=TextFilter()),
         Column(
@@ -77,7 +83,11 @@ def get_pico(rf, admin_user, model=None, columns=None):
             display="superuser_display",
             filter_config=ChoicesFilter(choices=false_and_true()),
         ),
-        Column("is_active", "Is Active", filter_config=ChoicesFilter(choices=false_and_true)),  # `choices` callable
+        Column(
+            "is_active",
+            "Is Active",
+            filter_config=ChoicesFilter(choices=false_and_true),
+        ),  # `choices` callable
         Column("date_joined", "Date Joined", filter_config=DateRangeFilter()),
     ]
     admin_user.is_staff = True
@@ -85,7 +95,11 @@ def get_pico(rf, admin_user, model=None, columns=None):
     shop.staff_members.add(admin_user)
     request = apply_request_middleware(rf.get("/"), user=admin_user)
     return Picotable(
-        request=request, columns=columns, mass_actions=[], queryset=model.objects.all(), context=PicoContext(request)
+        request=request,
+        columns=columns,
+        mass_actions=[],
+        queryset=model.objects.all(),
+        context=PicoContext(request),
     )
 
 
@@ -168,15 +182,21 @@ def test_picotable_invalid_sort(rf, admin_user, regular_user):
 def test_picotable_choice_filter(rf, admin_user, regular_user):
     pico = get_pico(rf, admin_user)
     data = pico.get_data({"perPage": 100, "page": 1, "filters": {"is_superuser": True}})
-    assert len(data["items"]) == get_user_model().objects.filter(is_superuser=True).count()
+    assert (
+        len(data["items"]) == get_user_model().objects.filter(is_superuser=True).count()
+    )
 
 
 @pytest.mark.django_db
 @pytest.mark.usefixtures("regular_user")
 def test_picotable_text_filter(rf, admin_user, regular_user):
     pico = get_pico(rf, admin_user)
-    data = pico.get_data({"perPage": 100, "page": 1, "filters": {"email": admin_user.email}})
-    assert len(data["items"]) == get_user_model().objects.filter(is_superuser=True).count()
+    data = pico.get_data(
+        {"perPage": 100, "page": 1, "filters": {"email": admin_user.email}}
+    )
+    assert (
+        len(data["items"]) == get_user_model().objects.filter(is_superuser=True).count()
+    )
 
 
 @pytest.mark.django_db
@@ -194,12 +214,20 @@ def test_picotable_range_filter(rf, admin_user, regular_user):
     one_day = datetime.timedelta(days=1)
     assert not empty_iterable(
         pico.get_data(
-            {"perPage": 100, "page": 1, "filters": {"date_joined": {"min": regular_user.date_joined - one_day}}}
+            {
+                "perPage": 100,
+                "page": 1,
+                "filters": {"date_joined": {"min": regular_user.date_joined - one_day}},
+            }
         )["items"]
     )
     assert not empty_iterable(
         pico.get_data(
-            {"perPage": 100, "page": 1, "filters": {"date_joined": {"max": regular_user.date_joined + one_day}}}
+            {
+                "perPage": 100,
+                "page": 1,
+                "filters": {"date_joined": {"max": regular_user.date_joined + one_day}},
+            }
         )["items"]
     )
     # TODO: a false test for this
@@ -242,7 +270,9 @@ def test_choice_filter_with_default(rf, admin_user, regular_user):
             "username",
             "Username",
             sortable=False,
-            filter_config=MultiFieldTextFilter(filter_fields=("username", "email"), operator="iregex"),
+            filter_config=MultiFieldTextFilter(
+                filter_fields=("username", "email"), operator="iregex"
+            ),
         ),
         Column("email", "Email", sortable=False, filter_config=TextFilter()),
         Column(
@@ -254,9 +284,19 @@ def test_choice_filter_with_default(rf, admin_user, regular_user):
         Column("date_joined", "Date Joined", filter_config=DateRangeFilter()),
     ]
 
-    is_active = [Column("is_active", "Is Active", filter_config=ChoicesFilter(choices=false_and_true))]
+    is_active = [
+        Column(
+            "is_active",
+            "Is Active",
+            filter_config=ChoicesFilter(choices=false_and_true),
+        )
+    ]
     is_active_with_default = [
-        Column("is_active", "Is Active", filter_config=ChoicesFilter(choices=false_and_true, default=True))
+        Column(
+            "is_active",
+            "Is Active",
+            filter_config=ChoicesFilter(choices=false_and_true, default=True),
+        )
     ]
 
     query = {"perPage": 100, "page": 1, "sort": "+id"}
@@ -268,13 +308,18 @@ def test_choice_filter_with_default(rf, admin_user, regular_user):
     assert superuser_field["id"] == "is_superuser"
     assert len(superuser_field["filter"]["choices"]) == 3
     assert superuser_field["filter"]["defaultChoice"] == "_all"
-    assert superuser_field["filter"]["choices"][0][0] == superuser_field["filter"]["defaultChoice"]
+    assert (
+        superuser_field["filter"]["choices"][0][0]
+        == superuser_field["filter"]["defaultChoice"]
+    )
 
     user_data = data["items"][0]
     user = get_user_model().objects.get(id=user_data["id"])
     assert user.is_active
 
-    pico_with_defaults = get_pico(rf, admin_user, columns=(columns + is_active_with_default))
+    pico_with_defaults = get_pico(
+        rf, admin_user, columns=(columns + is_active_with_default)
+    )
     data = pico_with_defaults.get_data(query)
     user_data = data["items"][0]
     user_with_defaults = get_user_model().objects.get(id=user_data["id"])
@@ -305,7 +350,10 @@ def test_picotable_correctly_sorts_translated_fields(rf, admin_user, regular_use
     columns = [
         Column("id", "Id", filter_config=Filter(), display=instance_id),
         Column(
-            "name", "Name", sort_field="translations__name", filter_config=TextFilter(filter_field="translations__name")
+            "name",
+            "Name",
+            sort_field="translations__name",
+            filter_config=TextFilter(filter_field="translations__name"),
         ),
     ]
 
@@ -327,22 +375,37 @@ def test_mptt_filter(rf, admin_user):
     parent_category = Category.objects.create(name="parent")
     child_category = Category.objects.create(name="child")
     parent_category.children.add(child_category)
-    columns = [Column("name", "name", filter_config=MPTTFilter(choices=Category.objects.all(), filter_field="id"))]
+    columns = [
+        Column(
+            "name",
+            "name",
+            filter_config=MPTTFilter(choices=Category.objects.all(), filter_field="id"),
+        )
+    ]
     pico = get_pico(rf, admin_user, model=Category, columns=columns)
-    data = pico.get_data({"perPage": 100, "page": 1, "filters": {"id": parent_category.id}})
+    data = pico.get_data(
+        {"perPage": 100, "page": 1, "filters": {"id": parent_category.id}}
+    )
     assert len(data["items"]) == 2
 
-    data = pico.get_data({"perPage": 100, "page": 1, "filters": {"name": child_category.id}})
+    data = pico.get_data(
+        {"perPage": 100, "page": 1, "filters": {"name": child_category.id}}
+    )
     assert len(data["items"]) == 1
 
 
 @pytest.mark.django_db
 def test_provide_columns():
     with override_provides(
-        "provided_columns_ShopProduct", ["shuup_tests.admin.test_picotable:CustomProductDataColumn"]
+        "provided_columns_ShopProduct",
+        ["shuup_tests.admin.test_picotable:CustomProductDataColumn"],
     ):
-        view_settings = ViewSettings(ShopProduct, ProductListView.default_columns, ProductListView)
-        column_ids = [col.id for col in view_settings.inactive_columns]  # provided column is not set active yet
+        view_settings = ViewSettings(
+            ShopProduct, ProductListView.default_columns, ProductListView
+        )
+        column_ids = [
+            col.id for col in view_settings.inactive_columns
+        ]  # provided column is not set active yet
         assert "custom_product_info" in column_ids
 
 
@@ -362,7 +425,9 @@ def test_picotable_queryset_default_ordering(rf, admin_user):
         request=request,
         columns=columns,
         mass_actions=[],
-        queryset=get_user_model().objects.exclude(is_superuser=True).order_by("-username"),
+        queryset=get_user_model()
+        .objects.exclude(is_superuser=True)
+        .order_by("-username"),
         context=PicoContext(request),
     )
     users = pico.get_data({"perPage": 100, "page": 1})
@@ -371,11 +436,15 @@ def test_picotable_queryset_default_ordering(rf, admin_user):
     some_users.sort(key=lambda x: x.username, reverse=True)
     assert len(users["items"]) == len(some_users)
     assert len(users["items"]) == 5
-    assert [item["username"] for item in users["items"]] == [user.username for user in some_users]
+    assert [item["username"] for item in users["items"]] == [
+        user.username for user in some_users
+    ]
 
     # Let's still double check that the regular sort works
     users = pico.get_data({"perPage": 100, "page": 1, "sort": "+username"})
     some_users.sort(key=lambda x: x.username)
     assert len(users["items"]) == len(some_users)
     assert len(users["items"]) == 5
-    assert [item["username"] for item in users["items"]] == [user.username for user in some_users]
+    assert [item["username"] for item in users["items"]] == [
+        user.username for user in some_users
+    ]

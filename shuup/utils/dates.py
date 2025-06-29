@@ -15,7 +15,13 @@ import time
 from django.utils import timezone
 from django.utils.translation import ugettext as _, ungettext
 
-__all__ = ("parse_date", "parse_time", "try_parse_date", "try_parse_time", "try_parse_datetime")
+__all__ = (
+    "parse_date",
+    "parse_time",
+    "try_parse_date",
+    "try_parse_time",
+    "try_parse_datetime",
+)
 
 _date_formats = (
     "%Y-%m-%d",
@@ -34,7 +40,10 @@ _time_formats = (
 
 _datetime_formats = list(
     itertools.chain.from_iterable(
-        [["{} %H:%M:%S".format(fmt) for fmt in _date_formats], ["{} %H:%M".format(fmt) for fmt in _date_formats]]
+        [
+            ["{} %H:%M:%S".format(fmt) for fmt in _date_formats],
+            ["{} %H:%M".format(fmt) for fmt in _date_formats],
+        ]
     )
 )
 
@@ -320,11 +329,19 @@ def to_timestamp(date):
 def to_datetime_range(start, end):
     for value in [start, end]:
         if not isinstance(value, datetime.date):
-            raise TypeError("Error! Provided value `{!r}` is neither date nor datetime.".format(value))
+            raise TypeError(
+                "Error! Provided value `{!r}` is neither date nor datetime.".format(
+                    value
+                )
+            )
     start_is_datetime = isinstance(start, datetime.datetime)
     end_is_datetime = isinstance(end, datetime.datetime)
     if start_is_datetime != end_is_datetime:
-        raise TypeError("Error! Start and end must be of the same type: `{!r}` - `{!r}`.".format(start, end))
+        raise TypeError(
+            "Error! Start and end must be of the same type: `{!r}` - `{!r}`.".format(
+                start, end
+            )
+        )
     # Add +1 day to end if it's a date to make the range inclusive
     end_delta = datetime.timedelta(days=(1 if not end_is_datetime else 0))
     return (to_aware(start), to_aware(end) + end_delta)
@@ -345,11 +362,15 @@ class DurationRange(object):
     @classmethod
     def from_days(cls, min_days, max_days=None):
         return cls(
-            datetime.timedelta(days=min_days), (datetime.timedelta(days=max_days) if max_days is not None else None)
+            datetime.timedelta(days=min_days),
+            (datetime.timedelta(days=max_days) if max_days is not None else None),
         )
 
     def __str__(self):
         if self.min_duration == self.max_duration:
             days = self.max_duration.days
             return ungettext("%s day", "%s days", days) % (days,)
-        return _("%(min)s--%(max)s days") % {"min": self.min_duration.days, "max": self.max_duration.days}
+        return _("%(min)s--%(max)s days") % {
+            "min": self.min_duration.days,
+            "max": self.max_duration.days,
+        }

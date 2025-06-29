@@ -8,7 +8,11 @@
 import decimal
 import pytest
 
-from shuup.core.models import OrderLineType, OrderTotalLimitBehaviorComponent, get_person_contact
+from shuup.core.models import (
+    OrderLineType,
+    OrderTotalLimitBehaviorComponent,
+    get_person_contact,
+)
 from shuup.testing.factories import (
     create_product,
     get_address,
@@ -38,7 +42,9 @@ from shuup_tests.utils.basketish_order_source import BasketishOrderSource
 def test_order_total_behavior_available(admin_user, min, max, price):
     source, shipping_method = _get_source(admin_user, True, price)
     assert shipping_method.behavior_components.count() == 0
-    component = OrderTotalLimitBehaviorComponent.objects.create(min_price_value=min, max_price_value=max)
+    component = OrderTotalLimitBehaviorComponent.objects.create(
+        min_price_value=min, max_price_value=max
+    )
     shipping_method.behavior_components.add(component)
 
     assert shipping_method.behavior_components.count() == 1
@@ -60,7 +66,9 @@ def test_order_total_behavior_available(admin_user, min, max, price):
 def test_order_total_behavior_unavailable(admin_user, min, max, price):
     source, shipping_method = _get_source(admin_user, False, price)
     assert shipping_method.behavior_components.count() == 0
-    component = OrderTotalLimitBehaviorComponent.objects.create(min_price_value=min, max_price_value=max)
+    component = OrderTotalLimitBehaviorComponent.objects.create(
+        min_price_value=min, max_price_value=max
+    )
     shipping_method.behavior_components.add(component)
 
     assert shipping_method.behavior_components.count() == 1
@@ -71,19 +79,25 @@ def test_order_total_behavior_unavailable(admin_user, min, max, price):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("prices_include_tax", [True, False])
-def test_order_total_behavior_unavailable_multiple_suppliers(admin_user, prices_include_tax):
+def test_order_total_behavior_unavailable_multiple_suppliers(
+    admin_user, prices_include_tax
+):
     shop = get_shop(prices_include_tax)
     supplier_1 = get_supplier("simple_supplier", shop=shop)
     supplier_2 = get_supplier("simple_supplier", shop=shop)
 
     # create one source with a product for supplier_1
-    source, shipping_method = _get_source(admin_user, prices_include_tax, decimal.Decimal(5), supplier=supplier_1)
+    source, shipping_method = _get_source(
+        admin_user, prices_include_tax, decimal.Decimal(5), supplier=supplier_1
+    )
 
     # set the supplier_2 for the shipping method
     shipping_method.supplier = supplier_2
     shipping_method.save()
 
-    component = OrderTotalLimitBehaviorComponent.objects.create(min_price_value=10, max_price_value=20)
+    component = OrderTotalLimitBehaviorComponent.objects.create(
+        min_price_value=10, max_price_value=20
+    )
     shipping_method.behavior_components.add(component)
 
     # nothing raised

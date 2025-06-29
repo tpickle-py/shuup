@@ -37,7 +37,9 @@ def get_service_providers_filters(request, payment_method=None):
     shop_filter = Q(Q(shops__isnull=True) | Q(shops=get_shop(request)))
     if payment_method and payment_method.pk and payment_method.supplier:
         return shop_filter & Q(
-            Q(supplier__isnull=True) | Q(supplier=get_supplier(request)) | Q(supplier=payment_method.supplier)
+            Q(supplier__isnull=True)
+            | Q(supplier=get_supplier(request))
+            | Q(supplier=payment_method.supplier)
         )
 
     return shop_filter & Q(Q(supplier__isnull=True) | Q(supplier=get_supplier(request)))
@@ -46,8 +48,23 @@ def get_service_providers_filters(request, payment_method=None):
 class BaseMethodForm(ShuupAdminForm):
     class Meta:
         model = None
-        exclude = ["identifier", "behavior_components", "old_module_identifier", "old_module_data", "shop"]
-        base_fields = ["choice_identifier", "name", "description", "enabled", "logo", "tax_class", "labels", "supplier"]
+        exclude = [
+            "identifier",
+            "behavior_components",
+            "old_module_identifier",
+            "old_module_data",
+            "shop",
+        ]
+        base_fields = [
+            "choice_identifier",
+            "name",
+            "description",
+            "enabled",
+            "logo",
+            "tax_class",
+            "labels",
+            "supplier",
+        ]
         widgets = {
             "description": TextEditorWidget(),
             "labels": QuickAddLabelMultiSelect(),
@@ -72,14 +89,20 @@ class BaseMethodForm(ShuupAdminForm):
         if not id:
             return
         return (
-            ServiceProvider.objects.filter(get_service_providers_filters(self.request, self.instance))
+            ServiceProvider.objects.filter(
+                get_service_providers_filters(self.request, self.instance)
+            )
             .filter(pk=id)
             .first()
         )
 
     @property
     def service_provider(self):
-        return getattr(self.instance, self.service_provider_attr) if self.instance else None
+        return (
+            getattr(self.instance, self.service_provider_attr)
+            if self.instance
+            else None
+        )
 
     @service_provider.setter
     def service_provider(self, value):
@@ -123,7 +146,8 @@ class ShippingMethodForm(BaseMethodForm):
         fields = ["carrier"] + BaseMethodForm.Meta.base_fields
         help_texts = {
             "carrier": _(
-                "The carrier to use for this shipping method. " "Select a carrier before filling other fields."
+                "The carrier to use for this shipping method. "
+                "Select a carrier before filling other fields."
             )
         }
 
@@ -207,13 +231,23 @@ class CountryLimitBehaviorComponentForm(forms.ModelForm):
         exclude = ["identifier"]
         help_texts = {
             "available_in_countries": _("Select accepted countries for this service."),
-            "available_in_european_countries": _("Select this to accept all countries in EU."),
-            "unavailable_in_countries": _("Select restricted countries for this service."),
-            "unavailable_in_european_countries": _("Select this to restrict this service for countries in EU"),
+            "available_in_european_countries": _(
+                "Select this to accept all countries in EU."
+            ),
+            "unavailable_in_countries": _(
+                "Select restricted countries for this service."
+            ),
+            "unavailable_in_european_countries": _(
+                "Select this to restrict this service for countries in EU"
+            ),
         }
 
     def __init__(self, **kwargs):
         super(CountryLimitBehaviorComponentForm, self).__init__(**kwargs)
         if self.instance and self.instance.pk:
-            self.initial["available_in_countries"] = self.instance.available_in_countries
-            self.initial["unavailable_in_countries"] = self.instance.unavailable_in_countries
+            self.initial["available_in_countries"] = (
+                self.instance.available_in_countries
+            )
+            self.initial["unavailable_in_countries"] = (
+                self.instance.unavailable_in_countries
+            )

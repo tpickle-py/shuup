@@ -23,7 +23,9 @@ class OrderSourceMinTotalValidator(object):
     @classmethod
     def get_validation_errors(cls, order_source):
         # check for the minimum sum of order total
-        min_total = configuration.get(order_source.shop, ORDER_MIN_TOTAL_CONFIG_KEY, Decimal(0))
+        min_total = configuration.get(
+            order_source.shop, ORDER_MIN_TOTAL_CONFIG_KEY, Decimal(0)
+        )
 
         if order_source.shop.prices_include_tax:
             total = order_source.taxful_total_price.value
@@ -32,7 +34,9 @@ class OrderSourceMinTotalValidator(object):
 
         if total < min_total:
             min_total_price = format_money(order_source.shop.create_price(min_total))
-            msg = _("The total price should be greater than {} to be ordered.").format(min_total_price)
+            msg = _("The total price should be greater than {} to be ordered.").format(
+                min_total_price
+            )
             yield ValidationError(msg, code="order_total_too_low")
 
 
@@ -43,7 +47,9 @@ class OrderSourceMethodsUnavailabilityReasonsValidator(object):
         payment_method = order_source.payment_method
 
         if shipping_method:
-            for error in shipping_method.get_unavailability_reasons(source=order_source):
+            for error in shipping_method.get_unavailability_reasons(
+                source=order_source
+            ):
                 yield error
 
         if payment_method:
@@ -55,7 +61,9 @@ class OrderSourceSupplierValidator(object):
     @classmethod
     def get_validation_errors(cls, order_source):
         for supplier in order_source._get_suppliers():
-            for product, quantity in iteritems(order_source._get_products_and_quantities(supplier)):
+            for product, quantity in iteritems(
+                order_source._get_products_and_quantities(supplier)
+            ):
                 try:
                     shop_product = product.get_shop_instance(shop=order_source.shop)
                 except ShopProduct.DoesNotExist:

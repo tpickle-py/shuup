@@ -41,13 +41,26 @@ class UserModule(AdminModule):
                 "shuup.admin.modules.users.views.UserChangePermissionsView",
                 name="user.change-permissions",
             ),
-            admin_url(r"^users/(?P<pk>\d+)/$", "shuup.admin.modules.users.views.UserDetailView", name="user.detail"),
             admin_url(
-                r"^users/new/$", "shuup.admin.modules.users.views.UserDetailView", kwargs={"pk": None}, name="user.new"
+                r"^users/(?P<pk>\d+)/$",
+                "shuup.admin.modules.users.views.UserDetailView",
+                name="user.detail",
             ),
-            admin_url(r"^users/$", "shuup.admin.modules.users.views.UserListView", name="user.list"),
             admin_url(
-                r"^users/(?P<pk>\d+)/login/$", "shuup.admin.modules.users.views.LoginAsUserView", name="user.login-as"
+                r"^users/new/$",
+                "shuup.admin.modules.users.views.UserDetailView",
+                kwargs={"pk": None},
+                name="user.new",
+            ),
+            admin_url(
+                r"^users/$",
+                "shuup.admin.modules.users.views.UserListView",
+                name="user.list",
+            ),
+            admin_url(
+                r"^users/(?P<pk>\d+)/login/$",
+                "shuup.admin.modules.users.views.LoginAsUserView",
+                name="user.login-as",
             ),
             admin_url(
                 r"^users/(?P<pk>\d+)/login/staff/$",
@@ -63,16 +76,22 @@ class UserModule(AdminModule):
 
     def get_permissions_help_texts(self) -> Dict[str, str]:
         return {
-            "user.change-password": _("Allow the user to change the passwords of other users."),
+            "user.change-password": _(
+                "Allow the user to change the passwords of other users."
+            ),
             "user.reset-password": _("Allow the user send the reset password email."),
-            "user.change-permissions": _("Allow the user to change the permission groups of other users."),
+            "user.change-permissions": _(
+                "Allow the user to change the permission groups of other users."
+            ),
             "user.detail": _("Allow the user to see a user detail."),
             "user.new": _("Allow the user to create a new user."),
             "user.list": _("Allow the user to list the users."),
             "user.login-as": _("Allow the user to impersonate a different user."),
             "user.login-as-staff": _("Allow the user to impersonate a staff user."),
             "user.list_settings": _("Allow the user to change the user list columns."),
-            get_object_selector_permission_name(User): _("Allow the user to select users in admin."),
+            get_object_selector_permission_name(User): _(
+                "Allow the user to select users in admin."
+            ),
         }
 
     def get_menu_entries(self, request):
@@ -93,7 +112,10 @@ class UserModule(AdminModule):
             for i, user in enumerate(users[:10]):
                 relevance = 100 - i
                 yield SearchResult(
-                    text=six.text_type(user), url=get_model_url(user), category=_("Contacts"), relevance=relevance
+                    text=six.text_type(user),
+                    url=get_model_url(user),
+                    category=_("Contacts"),
+                    relevance=relevance,
                 )
 
     def get_help_blocks(self, request, kind):
@@ -103,7 +125,9 @@ class UserModule(AdminModule):
             priority=3,
             category=HelpBlockCategory.CONTACTS,
             icon_url="shuup_admin/img/users.png",
-            done=request.shop.staff_members.exclude(id=request.user.id).exists() if kind == "setup" else False,
+            done=request.shop.staff_members.exclude(id=request.user.id).exists()
+            if kind == "setup"
+            else False,
             required=False,
         )
 

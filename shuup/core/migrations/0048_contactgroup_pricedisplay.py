@@ -7,49 +7,78 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0047_contactgroup_shop'),
+        ("shuup", "0047_contactgroup_shop"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ContactGroupPriceDisplay',
+            name="ContactGroupPriceDisplay",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('show_pricing', models.BooleanField(default=True, verbose_name='show as pricing option')),
-                ('show_prices_including_taxes', models.NullBooleanField(default=None, verbose_name='show prices including taxes')),
-                ('hide_prices', models.NullBooleanField(default=None, verbose_name='hide prices')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "show_pricing",
+                    models.BooleanField(
+                        default=True, verbose_name="show as pricing option"
+                    ),
+                ),
+                (
+                    "show_prices_including_taxes",
+                    models.NullBooleanField(
+                        default=None, verbose_name="show prices including taxes"
+                    ),
+                ),
+                (
+                    "hide_prices",
+                    models.NullBooleanField(default=None, verbose_name="hide prices"),
+                ),
             ],
             options={
-                'verbose_name': 'contact group price display',
-                'verbose_name_plural': 'contact group price displays',
+                "verbose_name": "contact group price display",
+                "verbose_name_plural": "contact group price displays",
             },
         ),
         migrations.RemoveField(
-            model_name='contactgroup',
-            name='hide_prices',
+            model_name="contactgroup",
+            name="hide_prices",
         ),
         migrations.RemoveField(
-            model_name='contactgroup',
-            name='show_prices_including_taxes',
+            model_name="contactgroup",
+            name="show_prices_including_taxes",
         ),
         migrations.RemoveField(
-            model_name='contactgroup',
-            name='show_pricing',
+            model_name="contactgroup",
+            name="show_pricing",
         ),
         migrations.AddField(
-            model_name='contactgrouppricedisplay',
-            name='group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='price_display_options', to='shuup.ContactGroup'),
+            model_name="contactgrouppricedisplay",
+            name="group",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="price_display_options",
+                to="shuup.ContactGroup",
+            ),
         ),
         migrations.AddField(
-            model_name='contactgrouppricedisplay',
-            name='shop',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='price_display_options', to='shuup.Shop'),
+            model_name="contactgrouppricedisplay",
+            name="shop",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="price_display_options",
+                to="shuup.Shop",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='contactgrouppricedisplay',
-            unique_together=set([('shop', 'group')]),
+            name="contactgrouppricedisplay",
+            unique_together=set([("shop", "group")]),
         ),
     ]

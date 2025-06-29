@@ -11,17 +11,29 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from enumfields import Enum
 
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
-from shuup.core.models import Product, ProductCrossSell, ProductCrossSellType, ProductMode, ShopProductVisibility
+from shuup.core.models import (
+    Product,
+    ProductCrossSell,
+    ProductCrossSellType,
+    ProductMode,
+    ShopProductVisibility,
+)
 from shuup.front.template_helpers.general import (
     get_best_selling_products,
     get_newest_products,
     get_products_for_categories,
     get_random_products,
 )
-from shuup.front.template_helpers.product import get_product_cross_sells, map_relation_type
+from shuup.front.template_helpers.product import (
+    get_product_cross_sells,
+    map_relation_type,
+)
 from shuup.xtheme import TemplatedPlugin
 from shuup.xtheme.plugins.forms import GenericPluginForm, TranslatableField
-from shuup.xtheme.plugins.widgets import XThemeSelect2ModelChoiceField, XThemeSelect2ModelMultipleChoiceField
+from shuup.xtheme.plugins.widgets import (
+    XThemeSelect2ModelChoiceField,
+    XThemeSelect2ModelMultipleChoiceField,
+)
 
 
 class HighlightType(Enum):
@@ -44,11 +56,23 @@ class ProductHighlightPlugin(TemplatedPlugin):
         ("title", TranslatableField(label=_("Title"), required=False, initial="")),
         (
             "type",
-            forms.ChoiceField(label=_("Type"), choices=HighlightType.choices(), initial=HighlightType.NEWEST.value),
+            forms.ChoiceField(
+                label=_("Type"),
+                choices=HighlightType.choices(),
+                initial=HighlightType.NEWEST.value,
+            ),
         ),
         ("count", forms.IntegerField(label=_("Count"), min_value=1, initial=5)),
-        ("cutoff_days", forms.IntegerField(label=_("Cutoff days"), min_value=1, initial=30)),
-        ("cache_timeout", forms.IntegerField(label=_("Cache timeout (seconds)"), min_value=0, initial=120)),
+        (
+            "cutoff_days",
+            forms.IntegerField(label=_("Cutoff days"), min_value=1, initial=30),
+        ),
+        (
+            "cache_timeout",
+            forms.IntegerField(
+                label=_("Cache timeout (seconds)"), min_value=0, initial=120
+            ),
+        ),
         (
             "orderable_only",
             forms.BooleanField(
@@ -96,7 +120,9 @@ class ProductHighlightPlugin(TemplatedPlugin):
             if plugin_type == HighlightType.NEWEST.value:
                 products = get_newest_products(context, count, orderable_only)
             elif plugin_type == HighlightType.BEST_SELLING.value:
-                products = get_best_selling_products(context, count, cutoff_days, orderable_only)
+                products = get_best_selling_products(
+                    context, count, cutoff_days, orderable_only
+                )
             elif plugin_type == HighlightType.RANDOM.value:
                 products = get_random_products(context, count, orderable_only)
 
@@ -107,7 +133,12 @@ class ProductHighlightPlugin(TemplatedPlugin):
             "orderable_only": self.config.get("orderable_only", False),
             "data_url": reverse(
                 "shuup:xtheme-product-highlight",
-                kwargs=dict(plugin_type=plugin_type, cutoff_days=cutoff_days, count=count, cache_timeout=cache_timeout),
+                kwargs=dict(
+                    plugin_type=plugin_type,
+                    cutoff_days=cutoff_days,
+                    count=count,
+                    cache_timeout=cache_timeout,
+                ),
             ),
         }
 
@@ -130,7 +161,12 @@ class ProductCrossSellsPlugin(TemplatedPlugin):
                 required=False,
             ),
         ),
-        ("cache_timeout", forms.IntegerField(label=_("Cache timeout (seconds)"), min_value=0, initial=120)),
+        (
+            "cache_timeout",
+            forms.IntegerField(
+                label=_("Cache timeout (seconds)"), min_value=0, initial=120
+            ),
+        ),
         (
             "orderable_only",
             forms.BooleanField(
@@ -163,7 +199,15 @@ class ProductCrossSellsPlugin(TemplatedPlugin):
         cache_timeout = self.config.get("cache_timeout")
         orderable_only = self.config.get("orderable_only", False)
         return str(
-            (get_language(), title, relation_type, count, cache_timeout, orderable_only, context["request"].is_ajax())
+            (
+                get_language(),
+                title,
+                relation_type,
+                count,
+                cache_timeout,
+                orderable_only,
+                context["request"].is_ajax(),
+            )
         )
 
     def get_context_data(self, context):
@@ -239,7 +283,12 @@ class ProductsFromCategoryPlugin(TemplatedPlugin):
     fields = [
         ("title", TranslatableField(label=_("Title"), required=False, initial="")),
         ("count", forms.IntegerField(label=_("Count"), min_value=1, initial=5)),
-        ("cache_timeout", forms.IntegerField(label=_("Cache timeout (seconds)"), min_value=0, initial=120)),
+        (
+            "cache_timeout",
+            forms.IntegerField(
+                label=_("Cache timeout (seconds)"), min_value=0, initial=120
+            ),
+        ),
         (
             "orderable_only",
             forms.BooleanField(
@@ -259,7 +308,16 @@ class ProductsFromCategoryPlugin(TemplatedPlugin):
         count = self.config.get("count")
         cache_timeout = self.config.get("cache_timeout")
         orderable_only = self.config.get("orderable_only", False)
-        return str((get_language(), title, count, cache_timeout, orderable_only, context["request"].is_ajax()))
+        return str(
+            (
+                get_language(),
+                title,
+                count,
+                cache_timeout,
+                orderable_only,
+                context["request"].is_ajax(),
+            )
+        )
 
     def get_context_data(self, context):
         request = context["request"]
@@ -281,7 +339,9 @@ class ProductsFromCategoryPlugin(TemplatedPlugin):
             "orderable_only": orderable_only,
             "data_url": reverse(
                 "shuup:xtheme-category-products-highlight",
-                kwargs=dict(category_id=category_id, count=count, cache_timeout=cache_timeout),
+                kwargs=dict(
+                    category_id=category_id, count=count, cache_timeout=cache_timeout
+                ),
             ),
         }
 
@@ -322,7 +382,12 @@ class ProductSelectionPlugin(TemplatedPlugin):
     editor_form_class = ProductSelectionConfigForm
     fields = [
         ("title", TranslatableField(label=_("Title"), required=False, initial="")),
-        ("cache_timeout", forms.IntegerField(label=_("Cache timeout (seconds)"), min_value=0, initial=120)),
+        (
+            "cache_timeout",
+            forms.IntegerField(
+                label=_("Cache timeout (seconds)"), min_value=0, initial=120
+            ),
+        ),
     ]
 
     def get_cache_key(self, context, **kwargs) -> str:
@@ -357,7 +422,12 @@ class ProductSelectionPlugin(TemplatedPlugin):
             "data_url": reverse(
                 "shuup:xtheme-product-selections-highlight",
                 kwargs=dict(
-                    product_ids=",".join([(str(prod.pk) if hasattr(prod, "pk") else str(prod)) for prod in products]),
+                    product_ids=",".join(
+                        [
+                            (str(prod.pk) if hasattr(prod, "pk") else str(prod))
+                            for prod in products
+                        ]
+                    ),
                     cache_timeout=cache_timeout,
                 ),
             ),

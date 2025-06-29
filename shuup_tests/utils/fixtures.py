@@ -20,6 +20,10 @@ def regular_user(db, django_user_model, django_username_field):
     try:
         return UserModel._default_manager.get(**{username_field: REGULAR_USER_USERNAME})
     except UserModel.DoesNotExist:
-        kwargs = {"email": REGULAR_USER_EMAIL, "password": REGULAR_USER_PASSWORD, username_field: REGULAR_USER_USERNAME}
+        kwargs = {
+            "email": REGULAR_USER_EMAIL,
+            "password": REGULAR_USER_PASSWORD,
+            username_field: REGULAR_USER_USERNAME,
+        }
 
         return UserModel._default_manager.create_user(**kwargs)

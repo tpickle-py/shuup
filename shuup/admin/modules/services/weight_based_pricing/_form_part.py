@@ -51,7 +51,9 @@ class WeightBasedPricingFormPart(FormPart):
     )
 
     def __init__(self, request, object):
-        self.component = object.behavior_components.instance_of(WeightBasedPricingBehaviorComponent).first()
+        self.component = object.behavior_components.instance_of(
+            WeightBasedPricingBehaviorComponent
+        ).first()
         if not self.component:
             self.component = WeightBasedPricingBehaviorComponent()
         super(WeightBasedPricingFormPart, self).__init__(request, object)

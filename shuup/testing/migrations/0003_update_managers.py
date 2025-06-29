@@ -8,22 +8,21 @@ import shuup.utils.migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_testing', '0002_add_filters'),
+        ("shuup_testing", "0002_add_filters"),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name='carrierwithcheckoutphase',
+            name="carrierwithcheckoutphase",
             managers=(shuup.utils.migrations.get_managers_for_migration()),
         ),
         migrations.AlterModelManagers(
-            name='paymentwithcheckoutphase',
+            name="paymentwithcheckoutphase",
             managers=(shuup.utils.migrations.get_managers_for_migration()),
         ),
         migrations.AlterModelManagers(
-            name='pseudopaymentprocessor',
+            name="pseudopaymentprocessor",
             managers=(shuup.utils.migrations.get_managers_for_migration()),
         ),
     ]

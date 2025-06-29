@@ -11,11 +11,21 @@ from django.utils.translation import activate
 
 from shuup.core import cache
 from shuup.core.models import Product
-from shuup.testing.browser_utils import click_element, initialize_front_browser_test, wait_until_condition
-from shuup.testing.factories import create_product, get_default_shop, get_default_supplier
+from shuup.testing.browser_utils import (
+    click_element,
+    initialize_front_browser_test,
+    wait_until_condition,
+)
+from shuup.testing.factories import (
+    create_product,
+    get_default_shop,
+    get_default_supplier,
+)
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
+pytestmark = pytest.mark.skipif(
+    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
+)
 
 
 PRODUCT_DATA = [
@@ -36,7 +46,9 @@ PRODUCT_DATA = [
 def create_orderable_product(name, sku, price):
     supplier = get_default_supplier()
     shop = get_default_shop()
-    product = create_product(sku=sku, shop=shop, supplier=supplier, default_price=price, name=name)
+    product = create_product(
+        sku=sku, shop=shop, supplier=supplier, default_price=price, name=name
+    )
     return product
 
 
@@ -69,53 +81,116 @@ def test_search_product_list(browser, live_server, settings, reindex_catalog):
 
 def check_default_ordering(browser):
     # default order is by -ID
-    expected_first_prod_id = "product-%s" % Product.objects.filter(sku="sku-11").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id)
+    expected_first_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-11").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id,
+    )
 
-    expected_second_prod_id = "product-%s" % Product.objects.filter(sku="sku-10").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card")[1]["id"] == expected_second_prod_id)
+    expected_second_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-10").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card")[1]["id"] == expected_second_prod_id,
+    )
 
-    expected_third_prod_id = "product-%s" % Product.objects.filter(sku="sku-8").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card")[2]["id"] == expected_third_prod_id)
+    expected_third_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-8").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card")[2]["id"] == expected_third_prod_id,
+    )
 
 
 def basic_sorting_test(browser):
     # Sort from Z to A
     click_element(browser, "button[data-id='id_sort']")
-    click_element(browser, "button[data-id='id_sort'] + .dropdown-menu li:nth-child(2) a")
-    expected_first_prod_id = "product-%s" % Product.objects.filter(sku="sku-3").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id)
+    click_element(
+        browser, "button[data-id='id_sort'] + .dropdown-menu li:nth-child(2) a"
+    )
+    expected_first_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-3").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id,
+    )
 
     # Sort by price (highest first)
     click_element(browser, "button[data-id='id_sort']")
-    click_element(browser, "button[data-id='id_sort'] + .dropdown-menu li:nth-child(4) a")
-    expected_first_prod_id = "product-%s" % Product.objects.filter(sku="sku-8").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id)
+    click_element(
+        browser, "button[data-id='id_sort'] + .dropdown-menu li:nth-child(4) a"
+    )
+    expected_first_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-8").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id,
+    )
 
     # Sort by price (lowest first)
     click_element(browser, "button[data-id='id_sort']")
-    click_element(browser, "button[data-id='id_sort'] + .dropdown-menu li:nth-child(3) a")
-    expected_first_prod_id = "product-%s" % Product.objects.filter(sku="sku-3").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id)
+    click_element(
+        browser, "button[data-id='id_sort'] + .dropdown-menu li:nth-child(3) a"
+    )
+    expected_first_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-3").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id,
+    )
 
     # Sort from A to Z
     click_element(browser, "button[data-id='id_sort']")
-    click_element(browser, "button[data-id='id_sort'] + .dropdown-menu li:nth-child(1) a")
-    expected_first_prod_id = "product-%s" % Product.objects.filter(sku="sku-2").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id)
+    click_element(
+        browser, "button[data-id='id_sort'] + .dropdown-menu li:nth-child(1) a"
+    )
+    expected_first_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-2").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id,
+    )
 
 
 def second_test_query(browser, live_server, url):
     browser.visit("%s%s?q=Test" % (live_server, url))
     wait_until_condition(browser, lambda x: len(x.find_by_css(".product-card")) == 7)
-    expected_first_prod_id = "product-%s" % Product.objects.filter(sku="sku-10").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id)
+    expected_first_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-10").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card").first["id"] == expected_first_prod_id,
+    )
 
-    expected_second_prod_id = "product-%s" % Product.objects.filter(sku="sku-8").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card")[1]["id"] == expected_second_prod_id)
+    expected_second_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-8").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card")[1]["id"] == expected_second_prod_id,
+    )
 
-    expected_third_prod_id = "product-%s" % Product.objects.filter(sku="sku-6").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card")[2]["id"] == expected_third_prod_id)
+    expected_third_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-6").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card")[2]["id"] == expected_third_prod_id,
+    )
 
-    expected_last_prod_id = "product-%s" % Product.objects.filter(sku="sku-1").first().id
-    wait_until_condition(browser, lambda x: x.find_by_css(".product-card").last["id"] == expected_last_prod_id)
+    expected_last_prod_id = (
+        "product-%s" % Product.objects.filter(sku="sku-1").first().id
+    )
+    wait_until_condition(
+        browser,
+        lambda x: x.find_by_css(".product-card").last["id"] == expected_last_prod_id,
+    )

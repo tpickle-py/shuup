@@ -50,11 +50,15 @@ class ContentWizardPane(WizardPane):
 
     @property
     def text(self):
-        cms_xtheme_installed = djangoenv.has_installed("shuup.simple_cms") or djangoenv.has_installed("shuup.xtheme")
+        cms_xtheme_installed = djangoenv.has_installed(
+            "shuup.simple_cms"
+        ) or djangoenv.has_installed("shuup.xtheme")
         notify_installed = djangoenv.has_installed("shuup.notify")
 
         if cms_xtheme_installed and notify_installed:
-            return _("Add the initial content and configure the customer notifications for your shop")
+            return _(
+                "Add the initial content and configure the customer notifications for your shop"
+            )
         elif notify_installed:
             return _("Configure notifications for your shop")
         else:
@@ -63,7 +67,9 @@ class ContentWizardPane(WizardPane):
     def get_form_defs(self):
         form_defs = []
 
-        if djangoenv.has_installed("shuup.simple_cms") or djangoenv.has_installed("shuup.xtheme"):
+        if djangoenv.has_installed("shuup.simple_cms") or djangoenv.has_installed(
+            "shuup.xtheme"
+        ):
             form_defs.append(
                 TemplatedWizardFormDef(
                     name="content",
@@ -74,7 +80,9 @@ class ContentWizardPane(WizardPane):
                 )
             )
 
-        if djangoenv.has_installed("shuup.notify") and djangoenv.has_installed("shuup.front"):
+        if djangoenv.has_installed("shuup.notify") and djangoenv.has_installed(
+            "shuup.front"
+        ):
             form_defs.append(
                 TemplatedWizardFormDef(
                     name="behaviors",
@@ -88,7 +96,9 @@ class ContentWizardPane(WizardPane):
         return form_defs
 
     def form_valid(self, form):
-        if djangoenv.has_installed("shuup.simple_cms") or djangoenv.has_installed("shuup.xtheme"):
+        if djangoenv.has_installed("shuup.simple_cms") or djangoenv.has_installed(
+            "shuup.xtheme"
+        ):
             content_form = form["content"]
             content_form.save()
 

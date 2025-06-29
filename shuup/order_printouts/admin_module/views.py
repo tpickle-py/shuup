@@ -23,7 +23,9 @@ from .forms import PrintoutsEmailForm
 def validate_shop_for_order(request, order):
     if get_shop(request) != order.shop:
         raise Problem(
-            _("The current shop doesn't match the order shop. Please change to the shop that is currently active.")
+            _(
+                "The current shop doesn't match the order shop. Please change to the shop that is currently active."
+            )
         )
 
 
@@ -80,7 +82,11 @@ def send_confirmation_email(request, order_pk):
     if form.is_valid():
         data = form.cleaned_data
         _send_printouts_email(
-            [data["to"]], data["subject"], data["body"], _get_confirmation_html(request, order), "confirmation.pdf"
+            [data["to"]],
+            data["subject"],
+            data["body"],
+            _get_confirmation_html(request, order),
+            "confirmation.pdf",
         )
     return JsonResponse({"success": "Success!"})
 
@@ -93,30 +99,42 @@ def _get_delivery_html(request, order, shipment, html_mode=False):
             order_id=order.id, type__in=[OrderLineType.PAYMENT, OrderLineType.SHIPPING]
         ).order_by("ordering"),
         "today": datetime.date.today(),
-        "header": "%s | %s | %s %s" % (_("Delivery slip"), order.shop.name, _("Order"), order.pk),
+        "header": "%s | %s | %s %s"
+        % (_("Delivery slip"), order.shop.name, _("Order"), order.pk),
         "footer": _get_footer_information(order.shop),
         "html_mode": html_mode,
     }
 
     provided_information = {}
-    for provided_info in sorted(get_provide_objects("order_printouts_delivery_extra_fields")):
+    for provided_info in sorted(
+        get_provide_objects("order_printouts_delivery_extra_fields")
+    ):
         info = provided_info(order, shipment)
         if info.provides_extra_fields():
             provided_information.update(info.extra_fields)
     context["extra_fields"] = provided_information
 
-    return render_to_string("shuup/order_printouts/admin/delivery_pdf.jinja", context=context, request=request)
+    return render_to_string(
+        "shuup/order_printouts/admin/delivery_pdf.jinja",
+        context=context,
+        request=request,
+    )
 
 
 def _get_confirmation_html(request, order, html_mode=False):
     context = {
         "order": order,
         "today": datetime.date.today(),
-        "header": "%s | %s | %s %s" % (_("Order confirmation"), order.shop.name, _("Order"), order.pk),
+        "header": "%s | %s | %s %s"
+        % (_("Order confirmation"), order.shop.name, _("Order"), order.pk),
         "footer": _get_footer_information(order.shop),
         "html_mode": html_mode,
     }
-    return render_to_string("shuup/order_printouts/admin/confirmation_pdf.jinja", context=context, request=request)
+    return render_to_string(
+        "shuup/order_printouts/admin/confirmation_pdf.jinja",
+        context=context,
+        request=request,
+    )
 
 
 def _get_footer_information(shop):

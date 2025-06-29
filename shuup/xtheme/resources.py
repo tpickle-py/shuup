@@ -29,12 +29,36 @@ if TYPE_CHECKING:  # pragma: no cover
 LOGGER = getLogger(__name__)
 
 LOCATION_INFO = {
-    "head_end": {"name": _("End of head"), "regex": re.compile(r"</head>", re.I), "placement": "pre"},
-    "head_start": {"name": _("Start of head"), "regex": re.compile(r"<head[^>]*>", re.I), "placement": "post"},
-    "body_end": {"name": _("End of body"), "regex": re.compile(r"</body>", re.I), "placement": "pre"},
-    "body_start": {"name": _("Start of body"), "regex": re.compile(r"<body[^>]*>", re.I), "placement": "post"},
-    "content_start": {"name": _("Content start"), "regex": re.compile(r"^.*", re.I), "placement": "pre"},
-    "content_end": {"name": _("Content end"), "regex": re.compile(r".*$", re.I), "placement": "post"},
+    "head_end": {
+        "name": _("End of head"),
+        "regex": re.compile(r"</head>", re.I),
+        "placement": "pre",
+    },
+    "head_start": {
+        "name": _("Start of head"),
+        "regex": re.compile(r"<head[^>]*>", re.I),
+        "placement": "post",
+    },
+    "body_end": {
+        "name": _("End of body"),
+        "regex": re.compile(r"</body>", re.I),
+        "placement": "pre",
+    },
+    "body_start": {
+        "name": _("Start of body"),
+        "regex": re.compile(r"<body[^>]*>", re.I),
+        "placement": "post",
+    },
+    "content_start": {
+        "name": _("Content start"),
+        "regex": re.compile(r"^.*", re.I),
+        "placement": "pre",
+    },
+    "content_end": {
+        "name": _("Content end"),
+        "regex": re.compile(r".*$", re.I),
+        "placement": "post",
+    },
 }
 
 KNOWN_LOCATIONS = set(LOCATION_INFO.keys())
@@ -91,7 +115,9 @@ class JinjaMarkupResource(object):
             try:
                 return engine.env.from_string(template).render(self.context)
             except Exception:
-                LOGGER.exception("Error! Failed to render Jinja string in Snippet plugin.")
+                LOGGER.exception(
+                    "Error! Failed to render Jinja string in Snippet plugin."
+                )
                 return force_text(_("(Error while rendering.)"))
 
     def __eq__(self, other):
@@ -140,7 +166,9 @@ class ResourceContainer(object):
         if not resource:
             return False
         if location not in KNOWN_LOCATIONS:
-            raise ValueError("Error! `%r` is not a known xtheme resource location." % location)
+            raise ValueError(
+                "Error! `%r` is not a known xtheme resource location." % location
+            )
         lst = self.resources.setdefault(location, [])
         if resource not in lst:
             lst.append(resource)
@@ -284,7 +312,9 @@ def valid_view(context):
     """
     Prevent adding the global snippet in admin views and in editor view.
     """
-    view_class = getattr(context["view"], "__class__", None) if context.get("view") else None
+    view_class = (
+        getattr(context["view"], "__class__", None) if context.get("view") else None
+    )
     request = context.get("request")
     if not (view_class and request):
         return False
@@ -303,7 +333,9 @@ def valid_view(context):
 
 class SnippetBlocker:
     @classmethod
-    def should_block_global_snippet_injection(cls, snippet: "Snippet", context: dict) -> bool:
+    def should_block_global_snippet_injection(
+        cls, snippet: "Snippet", context: dict
+    ) -> bool:
         raise NotImplementedError
 
 

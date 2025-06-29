@@ -8,7 +8,11 @@
 
 import pytest
 
-from shuup.core.models import ProductMode, ProductVariationVariable, ProductVariationVariableValue
+from shuup.core.models import (
+    ProductMode,
+    ProductVariationVariable,
+    ProductVariationVariableValue,
+)
 from shuup.testing.factories import create_product, get_default_shop
 from shuup.utils.django_compat import reverse
 from shuup_tests.utils import printable_gibberish

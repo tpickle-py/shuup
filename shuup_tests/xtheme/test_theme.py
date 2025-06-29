@@ -21,7 +21,10 @@ def test_theme_activation():
     cache.init_cache()
     shop = get_default_shop()
 
-    with override_provides("xtheme", ["shuup_tests.xtheme.utils:FauxTheme", "shuup_tests.xtheme.utils:FauxTheme2"]):
+    with override_provides(
+        "xtheme",
+        ["shuup_tests.xtheme.utils:FauxTheme", "shuup_tests.xtheme.utils:FauxTheme2"],
+    ):
         set_current_theme(FauxTheme.identifier, shop)
         assert isinstance(get_current_theme(shop), FauxTheme)
         set_current_theme(FauxTheme2.identifier, shop)
@@ -34,7 +37,10 @@ def test_theme_activation():
 def test_theme_settings_api():
     cache.init_cache()
     shop = get_default_shop()
-    with override_provides("xtheme", ["shuup_tests.xtheme.utils:FauxTheme", "shuup_tests.xtheme.utils:FauxTheme2"]):
+    with override_provides(
+        "xtheme",
+        ["shuup_tests.xtheme.utils:FauxTheme", "shuup_tests.xtheme.utils:FauxTheme2"],
+    ):
         ThemeSettings.objects.all().delete()
         theme = get_theme_by_identifier(FauxTheme2.identifier, shop)
         theme.set_setting("foo", "bar")

@@ -8,7 +8,11 @@
 from django.utils.translation import ugettext_lazy as _
 from uuid import uuid4
 
-from shuup.campaigns.models.campaigns import BasketCampaign, CatalogCampaign, CouponUsage
+from shuup.campaigns.models.campaigns import (
+    BasketCampaign,
+    CatalogCampaign,
+    CouponUsage,
+)
 from shuup.core.models import OrderLineType, ShopProduct
 from shuup.core.order_creator import OrderSourceModifierModule
 from shuup.core.order_creator._source import LineSource
@@ -29,7 +33,9 @@ class CatalogCampaignModule(DiscountModule):
         Minimum price will be selected if the cheapest price is under that.
         """
         create_price = context.shop.create_price
-        shop_product = ShopProduct.objects.filter(shop=context.shop, product=product).first()
+        shop_product = ShopProduct.objects.filter(
+            shop=context.shop, product=product
+        ).first()
         if not shop_product:
             return price_info
 
@@ -39,7 +45,9 @@ class CatalogCampaignModule(DiscountModule):
 
             # get first matching effect
             for effect in campaign.effects.all():
-                price -= effect.apply_for_product(context=context, product=product, price_info=price_info)
+                price -= effect.apply_for_product(
+                    context=context, product=product, price_info=price_info
+                )
 
             if best_discount is None:
                 best_discount = price
@@ -75,7 +83,9 @@ class BasketCampaignModule(OrderSourceModifierModule):
             yield line
 
         # total discounts must be run after line effects since lines can be changed in place
-        for line in self._handle_total_discount_effects(matching_campaigns, order_source, lines):
+        for line in self._handle_total_discount_effects(
+            matching_campaigns, order_source, lines
+        ):
             yield line
 
     def _get_campaign_line(self, campaign, highest_discount, order_source, supplier):
@@ -96,7 +106,10 @@ class BasketCampaignModule(OrderSourceModifierModule):
 
     def can_use_code(self, order_source, code):
         campaigns = BasketCampaign.objects.filter(
-            active=True, shop=order_source.shop, coupon__code__iexact=code, coupon__active=True
+            active=True,
+            shop=order_source.shop,
+            coupon__code__iexact=code,
+            coupon__active=True,
         )
 
         for campaign in campaigns:
@@ -104,7 +117,13 @@ class BasketCampaignModule(OrderSourceModifierModule):
                 continue
 
             coupon_code = campaign.coupon
-            suppliers = set([supplier for supplier in (campaign.supplier, coupon_code.supplier) if supplier])
+            suppliers = set(
+                [
+                    supplier
+                    for supplier in (campaign.supplier, coupon_code.supplier)
+                    if supplier
+                ]
+            )
             if suppliers:
                 has_supplier = False
 
@@ -132,7 +151,9 @@ class BasketCampaignModule(OrderSourceModifierModule):
     def clear_codes(self, order):
         CouponUsage.objects.filter(order=order).delete()
 
-    def _handle_total_discount_effects(self, matching_campaigns, order_source, original_lines):
+    def _handle_total_discount_effects(
+        self, matching_campaigns, order_source, original_lines
+    ):
         price_so_far = sum((x.price for x in original_lines), order_source.zero_price)
 
         def get_discount_line(campaign, amount, price_so_far, supplier):
@@ -146,16 +167,25 @@ class BasketCampaignModule(OrderSourceModifierModule):
             campaign_supplier = getattr(campaign, "supplier", None)
 
             for effect in campaign.discount_effects.all():
-                discount_amount = min(price_so_far, effect.apply_for_basket(order_source=order_source))
+                discount_amount = min(
+                    price_so_far, effect.apply_for_basket(order_source=order_source)
+                )
 
                 # if campaign has coupon, match it to order_source.codes
                 if campaign.coupon:
                     # campaign was found because discount code matched. This line is always added
-                    lines.append(get_discount_line(campaign, discount_amount, price_so_far, campaign_supplier))
+                    lines.append(
+                        get_discount_line(
+                            campaign, discount_amount, price_so_far, campaign_supplier
+                        )
+                    )
 
                 else:
                     best_discount = best_discount_for_supplier.get(campaign_supplier)
-                    if not best_discount or discount_amount > best_discount["discount_amount"]:
+                    if (
+                        not best_discount
+                        or discount_amount > best_discount["discount_amount"]
+                    ):
                         best_discount_for_supplier[campaign_supplier] = dict(
                             discount_amount=discount_amount, campaign=campaign
                         )
@@ -163,7 +193,10 @@ class BasketCampaignModule(OrderSourceModifierModule):
         for supplier, best_discount_info in best_discount_for_supplier.items():
             lines.append(
                 get_discount_line(
-                    best_discount_info["campaign"], best_discount_info["discount_amount"], price_so_far, supplier
+                    best_discount_info["campaign"],
+                    best_discount_info["discount_amount"],
+                    price_so_far,
+                    supplier,
                 )
             )
         return lines
@@ -174,6 +207,8 @@ class BasketCampaignModule(OrderSourceModifierModule):
             campaign_supplier = getattr(campaign, "supplier", None)
             for effect in campaign.line_effects.all():
                 lines += effect.get_discount_lines(
-                    order_source=order_source, original_lines=original_lines, supplier=campaign_supplier
+                    order_source=order_source,
+                    original_lines=original_lines,
+                    supplier=campaign_supplier,
                 )
         return lines

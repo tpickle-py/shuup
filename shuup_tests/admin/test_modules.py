@@ -26,7 +26,12 @@ from shuup.testing.utils import apply_request_middleware
 from shuup.utils.excs import Problem
 from shuup_tests.admin.fixtures.test_module import ARestrictedTestModule, ATestModule
 from shuup_tests.utils import empty_iterable
-from shuup_tests.utils.faux_users import AnonymousUser, AuthenticatedUser, StaffUser, SuperUser
+from shuup_tests.utils.faux_users import (
+    AnonymousUser,
+    AuthenticatedUser,
+    StaffUser,
+    SuperUser,
+)
 from shuup_tests.utils.templates import get_templates_setting_for_specific_directories
 
 TEMPLATES_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "templates"))
@@ -44,7 +49,9 @@ def test_admin_module_base(rf, admin_user):
 
 
 def test_module_loading_and_urls():
-    with replace_modules([ATestModule, "shuup_tests.admin.fixtures.test_module:ATestModule"]):
+    with replace_modules(
+        [ATestModule, "shuup_tests.admin.fixtures.test_module:ATestModule"]
+    ):
         assert all(u.name.startswith("test") for u in get_module_urls())
 
 
@@ -61,15 +68,22 @@ def test_modules_in_core_admin_work(rf, admin_user):
 def test_search(rf, admin_user):
     request = apply_request_middleware(rf.get("/"), user=admin_user)
     with replace_modules([ATestModule]):
-        assert any(sr.to_json()["text"] == "yes" for sr in get_search_results(request, "yes"))
-        assert any(sr.url == "/OK" for sr in get_search_results(request, "spooky"))  # Test aliases
+        assert any(
+            sr.to_json()["text"] == "yes" for sr in get_search_results(request, "yes")
+        )
+        assert any(
+            sr.url == "/OK" for sr in get_search_results(request, "spooky")
+        )  # Test aliases
         assert any(sr.target == "_blank" for sr in get_search_results(request, "yes"))
 
 
 def test_notifications(rf):
     request = rf.get("/")
     with replace_modules([ATestModule]):
-        assert any(n.text == "OK" for n in chain(*(m.get_notifications(request) for m in get_modules())))
+        assert any(
+            n.text == "OK"
+            for n in chain(*(m.get_notifications(request) for m in get_modules()))
+        )
 
 
 def test_dashboard_blocks(rf):
@@ -85,7 +99,9 @@ def test_dashboard_blocks(rf):
 def test_dashboard_blocks_permissions(rf, client):
     with replace_modules([ARestrictedTestModule]):
         request = rf.get("/")
-        request.user = get_default_staff_user(get_default_shop())  # Dashboard permission is added by default
+        request.user = get_default_staff_user(
+            get_default_shop()
+        )  # Dashboard permission is added by default
         request.session = client.session
         view = DashboardView(request=request)
         assert not view.get_context_data()["blocks"]
@@ -94,7 +110,8 @@ def test_dashboard_blocks_permissions(rf, client):
         # able to see some blocks permission to some admin module
         # providing dashboard bocks needed.
         set_permissions_for_group(
-            request.user.groups.first(), set("dashboard") | set(ARestrictedTestModule().get_required_permissions())
+            request.user.groups.first(),
+            set("dashboard") | set(ARestrictedTestModule().get_required_permissions()),
         )
         view = DashboardView(request=request)
         assert view.get_context_data()["blocks"]
@@ -107,15 +124,21 @@ def test_menu_entries(rf, admin_user):
         categories = get_menu_entry_categories(request)
         assert categories
 
-        test_category_menu_entries = [cat for cat in categories if cat.name == "Test"][0]
+        test_category_menu_entries = [cat for cat in categories if cat.name == "Test"][
+            0
+        ]
         assert any(me.text == "OK" for me in test_category_menu_entries)
 
 
 def test_content_block_template(rf):
-    TEMPLATES = get_templates_setting_for_specific_directories(settings.TEMPLATES, [TEMPLATES_DIR])
+    TEMPLATES = get_templates_setting_for_specific_directories(
+        settings.TEMPLATES, [TEMPLATES_DIR]
+    )
     with override_settings(TEMPLATES=TEMPLATES):
         request = rf.get("/")
-        dcb = DashboardContentBlock.by_rendering_template("foo", request, "module_template.jinja", {"name": "world"})
+        dcb = DashboardContentBlock.by_rendering_template(
+            "foo", request, "module_template.jinja", {"name": "world"}
+        )
         assert dcb.content == "Hello world"
 
 

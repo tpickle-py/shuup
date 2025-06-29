@@ -84,12 +84,16 @@ def test_resource_injection(client):
     assert cookie_category.cookies in response_content
     assert cookie_category.name in response_content
     assert cookie_category.how_is_used in response_content
-    default_active_input = soup.find("input", {"name": "cookie_category_%d" % default_active_cookie_category.pk})
+    default_active_input = soup.find(
+        "input", {"name": "cookie_category_%d" % default_active_cookie_category.pk}
+    )
     assert default_active_input.has_attr("checked")
 
     # make sure no other shop has this
     with override_settings(SHUUP_ENABLE_MULTIPLE_SHOPS=True):
-        shop2 = factories.get_shop(identifier="shop2", status=ShopStatus.DISABLED, domain="shop2")
+        shop2 = factories.get_shop(
+            identifier="shop2", status=ShopStatus.DISABLED, domain="shop2"
+        )
         response = client.get(index_url, HTTP_HOST=shop2.domain)
         response_content = response.content.decode("utf-8")
         assert "gdpr-consent-warn-bar" not in response_content
@@ -107,7 +111,9 @@ def test_update_injection():
     shop_gdpr.privacy_policy = page
     shop_gdpr.save()
 
-    assert_update(client, index_url, False)  # nothing consented in past, should not show
+    assert_update(
+        client, index_url, False
+    )  # nothing consented in past, should not show
 
     user = factories.create_random_user("en")
     password = "test"
@@ -191,7 +197,9 @@ def test_consent_cookies(rf):
         )
 
         assert settings.SHUUP_GDPR_CONSENT_COOKIE_NAME in response.cookies
-        cookies_data = json.loads(response.cookies[settings.SHUUP_GDPR_CONSENT_COOKIE_NAME].value)
+        cookies_data = json.loads(
+            response.cookies[settings.SHUUP_GDPR_CONSENT_COOKIE_NAME].value
+        )
         assert privacy_policy.id == cookies_data["documents"][0]["id"]
         assert privacy_policy.url == cookies_data["documents"][0]["url"]
 
@@ -217,7 +225,9 @@ def test_consent_cookies(rf):
         }
         context = {"request": request}
         rendered_cookies = set(json.loads(template.render(context)))
-        assert rendered_cookies == set(["_opt2", "cookie1", "_cookie3", "_opt3", "_analytics", "cookir2", "_opt1"])
+        assert rendered_cookies == set(
+            ["_opt2", "cookie1", "_cookie3", "_opt3", "_analytics", "cookir2", "_opt1"]
+        )
 
 
 @pytest.mark.django_db
@@ -296,7 +306,9 @@ def test_consent_block_snippet_injection(rf):
     )
 
     assert settings.SHUUP_GDPR_CONSENT_COOKIE_NAME in response.cookies
-    cookies_data = json.loads(response.cookies[settings.SHUUP_GDPR_CONSENT_COOKIE_NAME].value)
+    cookies_data = json.loads(
+        response.cookies[settings.SHUUP_GDPR_CONSENT_COOKIE_NAME].value
+    )
 
     for cookie in required_cookie_category.cookies.split(","):
         assert cookie in cookies_data["cookies"]

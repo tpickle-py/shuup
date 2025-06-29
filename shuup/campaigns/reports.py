@@ -19,7 +19,10 @@ from shuup.utils.i18n import get_current_babel_locale
 
 class CouponsUsageForm(OrderReportForm):
     coupon = ObjectSelect2MultipleField(
-        label=_("Coupon"), model=Coupon, required=False, help_text=_("Filter report results by coupon.")
+        label=_("Coupon"),
+        model=Coupon,
+        required=False,
+        help_text=_("Filter report results by coupon."),
     )
 
     def __init__(self, *args, **kwargs):
@@ -28,7 +31,9 @@ class CouponsUsageForm(OrderReportForm):
         if self.data and "coupon" in self.data:
             coupon = Coupon.objects.filter(pk__in=self.data.getlist("coupon"))
             self.fields["coupon"].initial = coupon
-            self.fields["coupon"].widget.choices = [(obj.pk, obj.code) for obj in coupon]
+            self.fields["coupon"].widget.choices = [
+                (obj.pk, obj.code) for obj in coupon
+            ]
 
 
 class CouponsUsageReport(OrderReportMixin, ShuupReportBase):
@@ -65,11 +70,15 @@ class CouponsUsageReport(OrderReportMixin, ShuupReportBase):
 
             data.append(
                 {
-                    "date": format_date(coupon_usage.order.order_date, locale=get_current_babel_locale()),
+                    "date": format_date(
+                        coupon_usage.order.order_date, locale=get_current_babel_locale()
+                    ),
                     "coupon": coupon_usage.coupon.code,
                     "order": coupon_usage.order,
                     "taxful_total": coupon_usage.order.taxful_total_price,
-                    "taxful_subtotal": (coupon_usage.order.taxful_total_price - total_discount),
+                    "taxful_subtotal": (
+                        coupon_usage.order.taxful_total_price - total_discount
+                    ),
                     "total_discount": total_discount,
                 }
             )

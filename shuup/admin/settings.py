@@ -44,7 +44,9 @@ SHUUP_ADMIN_MINIMUM_INPUT_LENGTH_SEARCH = 3
 
 #: Spec that defines the Supplier Provider for a given request.
 #:
-SHUUP_ADMIN_SUPPLIER_PROVIDER_SPEC = "shuup.admin.supplier_provider.DefaultSupplierProvider"
+SHUUP_ADMIN_SUPPLIER_PROVIDER_SPEC = (
+    "shuup.admin.supplier_provider.DefaultSupplierProvider"
+)
 
 #: The input format to be used in date pickers.
 #:

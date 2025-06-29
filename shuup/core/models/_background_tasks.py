@@ -13,14 +13,26 @@ from jsonfield import JSONField
 
 
 class BackgroundTask(models.Model):
-    queue = models.CharField(max_length=128, verbose_name=_("queue name"), db_index=True)
-    identifier = models.CharField(max_length=128, verbose_name=_("task identifier"), unique=True)
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
-    modified_on = models.DateTimeField(auto_now=True, editable=False, verbose_name=_("modified on"))
+    queue = models.CharField(
+        max_length=128, verbose_name=_("queue name"), db_index=True
+    )
+    identifier = models.CharField(
+        max_length=128, verbose_name=_("task identifier"), unique=True
+    )
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, verbose_name=_("created on")
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True, editable=False, verbose_name=_("modified on")
+    )
     function = models.TextField(verbose_name=_("task function"))
     arguments = JSONField(blank=True, null=True, verbose_name=_("task arguments"))
     shop = models.ForeignKey(
-        on_delete=models.SET_NULL, to="shuup.Shop", verbose_name=_("shop"), related_name="background_tasks", null=True
+        on_delete=models.SET_NULL,
+        to="shuup.Shop",
+        verbose_name=_("shop"),
+        related_name="background_tasks",
+        null=True,
     )
     supplier = models.ForeignKey(
         on_delete=models.SET_NULL,
@@ -63,7 +75,9 @@ class BackgroundTaskExecution(models.Model):
     started_on = models.DateTimeField(verbose_name=_("started on"), auto_now_add=True)
     finished_on = models.DateTimeField(verbose_name=_("finished on"), null=True)
     status = EnumIntegerField(
-        BackgroundTaskExecutionStatus, default=BackgroundTaskExecutionStatus.RUNNING, verbose_name=_("status")
+        BackgroundTaskExecutionStatus,
+        default=BackgroundTaskExecutionStatus.RUNNING,
+        verbose_name=_("status"),
     )
     result = JSONField(blank=True, null=True, verbose_name=_("results"))
     error_log = models.TextField(verbose_name=_("error log"), blank=True, null=True)

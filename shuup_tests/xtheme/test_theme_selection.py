@@ -41,8 +41,15 @@ def test_theme_selection():
         for theme in get_provide_objects("xtheme"):
             set_current_theme(theme.identifier, shop)
             je = get_jinja2_engine()
-            wrapper = noop() if theme.identifier == "h2g2" else pytest.raises(TemplateDoesNotExist)
+            wrapper = (
+                noop()
+                if theme.identifier == "h2g2"
+                else pytest.raises(TemplateDoesNotExist)
+            )
             with wrapper:
                 t = je.get_template("42.jinja")
                 content = t.render().strip()
-                assert "a slice of lemon wrapped around a large gold brick" in content.replace("\n", " ")
+                assert (
+                    "a slice of lemon wrapped around a large gold brick"
+                    in content.replace("\n", " ")
+                )

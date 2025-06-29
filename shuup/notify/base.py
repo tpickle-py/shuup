@@ -85,7 +85,9 @@ class Variable(object):
         if callable(type):
             type = type()
         assert isinstance(type, Type), "`type` must be a Type instance"
-        assert isinstance(required, bool), "`required` must be a bool (it's %r)" % required
+        assert isinstance(required, bool), (
+            "`required` must be a bool (it's %r)" % required
+        )
         self.name = name
         self.type = type
         self.required = bool(required)
@@ -94,15 +96,25 @@ class Variable(object):
 
     def get_matching_types(self, variable_dict):
         return set(
-            name for name, variable in six.iteritems(variable_dict) if self.type.is_coercible_from(variable.type)
+            name
+            for name, variable in six.iteritems(variable_dict)
+            if self.type.is_coercible_from(variable.type)
         )
 
 
 class Binding(Variable):
     def __init__(
-        self, name, type=Type, required=False, help_text="", constant_use=ConstantUse.VARIABLE_ONLY, default=None
+        self,
+        name,
+        type=Type,
+        required=False,
+        help_text="",
+        constant_use=ConstantUse.VARIABLE_ONLY,
+        default=None,
     ):
-        super(Binding, self).__init__(name=name, type=type, required=required, help_text=help_text)
+        super(Binding, self).__init__(
+            name=name, type=type, required=required, help_text=help_text
+        )
         self.constant_use = constant_use
         self.default = default
 
@@ -112,11 +124,17 @@ class Binding(Variable):
 
     @property
     def allow_constant(self):
-        return self.constant_use in (ConstantUse.CONSTANT_ONLY, ConstantUse.VARIABLE_OR_CONSTANT)
+        return self.constant_use in (
+            ConstantUse.CONSTANT_ONLY,
+            ConstantUse.VARIABLE_OR_CONSTANT,
+        )
 
     @property
     def allow_variable(self):
-        return self.constant_use in (ConstantUse.VARIABLE_ONLY, ConstantUse.VARIABLE_OR_CONSTANT)
+        return self.constant_use in (
+            ConstantUse.VARIABLE_ONLY,
+            ConstantUse.VARIABLE_OR_CONSTANT,
+        )
 
     def get_value(self, context, bind_data):
         if bind_data:
@@ -133,7 +151,9 @@ class TemplatedBinding(Binding):
     def __init__(self, *args, **kwargs):
         super(TemplatedBinding, self).__init__(*args, **kwargs)
         if self.allow_variable:
-            raise ValueError("Error! TemplatedBindings may not allow variable binding for security reasons.")
+            raise ValueError(
+                "Error! TemplatedBindings may not allow variable binding for security reasons."
+            )
 
     def get_value(self, context, bind_data):
         value = super(TemplatedBinding, self).get_value(context, bind_data)
@@ -180,12 +200,20 @@ class Event(Base):
         for key in sorted(variable_values.keys()):
             variable = self.variables.get(key)
             if not variable:
-                raise ValueError("Error! Unknown variable `%r` for the event `%s`." % (key, self.identifier))
-            self.variable_values[key] = variable.type.unserialize(variable_values.pop(key))
+                raise ValueError(
+                    "Error! Unknown variable `%r` for the event `%s`."
+                    % (key, self.identifier)
+                )
+            self.variable_values[key] = variable.type.unserialize(
+                variable_values.pop(key)
+            )
 
         for name, variable in six.iteritems(self.variables):
             if variable.required and name not in self.variable_values:
-                raise ValueError("Error! Required variable `%r` missing for the event `%s`" % (name, self.identifier))
+                raise ValueError(
+                    "Error! Required variable `%r` missing for the event `%s`"
+                    % (name, self.identifier)
+                )
 
     def run(self, shop):
         run_event = cached_load("SHUUP_NOTIFY_SCRIPT_RUNNER")
@@ -198,7 +226,8 @@ class ScriptItem(Base):
     def __init__(self, data, validate=True):
         if not self.identifier:  # pragma: no cover
             raise ValueError(
-                "Error! Attempting to initialize %s without an identifier: %r." % (self.__class__.__name__, self)
+                "Error! Attempting to initialize %s without an identifier: %r."
+                % (self.__class__.__name__, self)
             )
         self.data = data
         if validate:
@@ -210,7 +239,9 @@ class ScriptItem(Base):
             if binding.required and name not in self.data:
                 unbound.add(name)
         if unbound:
-            raise ValueError("Error! Bindings unbound for %r: %r." % (self.identifier, unbound))
+            raise ValueError(
+                "Error! Bindings unbound for %r: %r." % (self.identifier, unbound)
+            )
 
     def get_value(self, context, binding_name):
         """
@@ -235,7 +266,10 @@ class ScriptItem(Base):
         :return: Dict of binding name -> value
         :rtype: dict[name, value]
         """
-        return dict((binding_name, self.get_value(context, binding_name)) for binding_name in self.bindings)
+        return dict(
+            (binding_name, self.get_value(context, binding_name))
+            for binding_name in self.bindings
+        )
 
     @classmethod
     def unserialize(cls, data, validate=True):
@@ -258,7 +292,9 @@ class ScriptItem(Base):
     @classmethod
     def get_ui_info_map(cls):
         map = {}
-        for identifier, object in six.iteritems(get_identifier_to_object_map(cls.provide_category)):
+        for identifier, object in six.iteritems(
+            get_identifier_to_object_map(cls.provide_category)
+        ):
             map[identifier] = {
                 "identifier": str(identifier),
                 "name": force_text(object.name),
@@ -317,7 +353,9 @@ class Action(ScriptItem):
         """
 
         if self.template_use == TemplateUse.NONE:
-            raise ValueError("Error! Attempting to `get_template_values` on an action with no template use.")
+            raise ValueError(
+                "Error! Attempting to `get_template_values` on an action with no template use."
+            )
 
         template = self.get_template(context)
         fields = self.template_fields

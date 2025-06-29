@@ -68,7 +68,12 @@ class ProductCrossSellEditView(UpdateView):
     form_class = ProductCrossSellFormSet
 
     def get_breadcrumb_parents(self):
-        return [MenuEntry(text="%s" % self.object, url=get_model_url(self.object, shop=self.request.shop))]
+        return [
+            MenuEntry(
+                text="%s" % self.object,
+                url=get_model_url(self.object, shop=self.request.shop),
+            )
+        ]
 
     def get_context_data(self, **kwargs):
         context = super(ProductCrossSellEditView, self).get_context_data(**kwargs)

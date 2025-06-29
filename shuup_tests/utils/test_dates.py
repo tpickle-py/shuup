@@ -8,7 +8,14 @@
 import pytz
 from datetime import date, datetime, time
 
-from shuup.utils.dates import parse_date, parse_datetime, to_aware, try_parse_date, try_parse_datetime, try_parse_time
+from shuup.utils.dates import (
+    parse_date,
+    parse_datetime,
+    to_aware,
+    try_parse_date,
+    try_parse_datetime,
+    try_parse_time,
+)
 
 
 def test_parse_date():

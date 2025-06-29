@@ -17,7 +17,15 @@ from shuup.simple_cms.models import PageOpenGraph
 class CMSOpenGraphForm(ShuupAdminForm):
     class Meta:
         model = PageOpenGraph
-        fields = ("og_type", "title", "description", "section", "tags", "article_author", "image")
+        fields = (
+            "og_type",
+            "title",
+            "description",
+            "section",
+            "tags",
+            "article_author",
+            "image",
+        )
 
     def __init__(self, *args, **kwargs):
         super(CMSOpenGraphForm, self).__init__(*args, **kwargs)

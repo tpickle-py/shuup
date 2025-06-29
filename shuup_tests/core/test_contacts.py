@@ -25,7 +25,12 @@ from shuup.core.models import (
     get_price_display_options_for_group_and_shop,
 )
 from shuup.core.pricing import PriceDisplayOptions
-from shuup.testing.factories import create_random_company, get_all_seeing_key, get_default_shop, get_shop
+from shuup.testing.factories import (
+    create_random_company,
+    get_all_seeing_key,
+    get_default_shop,
+    get_shop,
+)
 from shuup_tests.utils.fixtures import regular_user
 
 
@@ -91,7 +96,10 @@ def test_anonymous_contact():
         a1.delete()
 
     assert isinstance(a1.groups, QuerySet)
-    assert a1.groups.first().identifier == AnonymousContact.default_contact_group_identifier
+    assert (
+        a1.groups.first().identifier
+        == AnonymousContact.default_contact_group_identifier
+    )
     assert a1.groups.count() == 1
     assert len(a1.groups.all()) == 1
 
@@ -219,10 +227,18 @@ def test_default_person_contact_group_repr_and_str():
 def test_contact_group_price_display_options_filtering():
     shop = get_default_shop()
     cg0 = ContactGroup.objects.create(shop=shop)
-    cg1 = ContactGroup.objects.create(shop=shop).set_price_display_options(hide_prices=True)
-    cg2 = ContactGroup.objects.create(shop=shop).set_price_display_options(hide_prices=False)
-    cg3 = ContactGroup.objects.create(shop=shop).set_price_display_options(show_prices_including_taxes=True)
-    cg4 = ContactGroup.objects.create(shop=shop).set_price_display_options(show_prices_including_taxes=False)
+    cg1 = ContactGroup.objects.create(shop=shop).set_price_display_options(
+        hide_prices=True
+    )
+    cg2 = ContactGroup.objects.create(shop=shop).set_price_display_options(
+        hide_prices=False
+    )
+    cg3 = ContactGroup.objects.create(shop=shop).set_price_display_options(
+        show_prices_including_taxes=True
+    )
+    cg4 = ContactGroup.objects.create(shop=shop).set_price_display_options(
+        show_prices_including_taxes=False
+    )
     groups_qs = ContactGroup.objects.with_price_display_options(shop)
     assert isinstance(groups_qs, QuerySet)
     groups = list(groups_qs)
@@ -246,7 +262,9 @@ def test_contact_group_price_display_options_defined(taxes, hide_prices):
     shop = get_default_shop()
     options = (
         ContactGroup.objects.create(shop=shop)
-        .set_price_display_options(show_prices_including_taxes=taxes, hide_prices=hide_prices)
+        .set_price_display_options(
+            show_prices_including_taxes=taxes, hide_prices=hide_prices
+        )
         .get_price_display_options()
     )
     assert isinstance(options, PriceDisplayOptions)
@@ -258,7 +276,9 @@ def test_contact_group_price_display_options_defined(taxes, hide_prices):
 @pytest.mark.django_db
 def test_contact_group_price_display_for_contact(regular_user):
     shop = get_default_shop()
-    group = ContactGroup.objects.create(shop=shop).set_price_display_options(hide_prices=True)
+    group = ContactGroup.objects.create(shop=shop).set_price_display_options(
+        hide_prices=True
+    )
     person = get_person_contact(regular_user)
     person.groups.add(group)
 
@@ -301,7 +321,9 @@ def test_contact_group_price_display_for_contact(regular_user):
     assert options.include_taxes is None
 
     # this will create options as well
-    options = default_group.price_display_options.for_group_and_shop(default_group, shop)
+    options = default_group.price_display_options.for_group_and_shop(
+        default_group, shop
+    )
     assert options
     options.show_prices_including_taxes = True
     options.save()
@@ -415,7 +437,9 @@ def test_cannot_add_shop(regular_user):
 @pytest.mark.django_db
 def test_price_displays(regular_user):
     shop = get_default_shop()
-    cg = ContactGroup.objects.create(shop=shop).set_price_display_options(hide_prices=True)
+    cg = ContactGroup.objects.create(shop=shop).set_price_display_options(
+        hide_prices=True
+    )
     assert isinstance(cg, ContactGroup)
 
     assert ContactGroupPriceDisplay.objects.count() == 1

@@ -6,20 +6,27 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_gdpr', '0004_controllable_consent'),
+        ("shuup_gdpr", "0004_controllable_consent"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='gdprsettings',
-            name='skip_consent_on_auth',
-            field=models.BooleanField(default=False, help_text='Do not require consent on login when GDPR is activated.', verbose_name='skip consent on login'),
+            model_name="gdprsettings",
+            name="skip_consent_on_auth",
+            field=models.BooleanField(
+                default=False,
+                help_text="Do not require consent on login when GDPR is activated.",
+                verbose_name="skip consent on login",
+            ),
         ),
         migrations.AddField(
-            model_name='gdprsettingstranslation',
-            name='auth_consent_text',
-            field=models.TextField(blank=True, help_text='Shown in login page between the form and the button. Optional but should be considered when the consent on login is disabled.', verbose_name='login consent text'),
+            model_name="gdprsettingstranslation",
+            name="auth_consent_text",
+            field=models.TextField(
+                blank=True,
+                help_text="Shown in login page between the form and the button. Optional but should be considered when the consent on login is disabled.",
+                verbose_name="login consent text",
+            ),
         ),
     ]

@@ -11,7 +11,10 @@ from django.db.transaction import atomic
 from shuup.admin.form_part import FormPartsViewMixin, SaveFormPartsMixin
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.toolbar import get_default_edit_toolbar
-from shuup.admin.utils.views import CreateOrUpdateView, check_and_raise_if_only_one_allowed
+from shuup.admin.utils.views import (
+    CreateOrUpdateView,
+    check_and_raise_if_only_one_allowed,
+)
 from shuup.core.models import Supplier
 from shuup.utils.django_compat import reverse
 
@@ -28,7 +31,9 @@ class SupplierEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
         delete_url = None
         supplier = self.get_object()
         if supplier and supplier.pk:
-            delete_url = reverse("shuup_admin:supplier.delete", kwargs={"pk": supplier.pk})
+            delete_url = reverse(
+                "shuup_admin:supplier.delete", kwargs={"pk": supplier.pk}
+            )
         return get_default_edit_toolbar(self, save_form_id, delete_url=delete_url)
 
     def get_object(self, queryset=None):
@@ -39,7 +44,9 @@ class SupplierEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
     def get_queryset(self):
         if getattr(self.request.user, "is_superuser", False):
             return Supplier.objects.not_deleted()
-        return Supplier.objects.filter(Q(shops=get_shop(self.request)) | Q(shops__isnull=True)).not_deleted()
+        return Supplier.objects.filter(
+            Q(shops=get_shop(self.request)) | Q(shops__isnull=True)
+        ).not_deleted()
 
     @atomic
     def form_valid(self, form):

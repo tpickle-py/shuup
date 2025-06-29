@@ -44,7 +44,9 @@ def test_category_detail(client, reindex_catalog):
     product_data = [("laptop", 1500), ("keyboard", 150), ("mouse", 150)]
     products = []
     for sku, price_value in product_data:
-        products.append(factories.create_product(sku, shop=shop, default_price=price_value))
+        products.append(
+            factories.create_product(sku, shop=shop, default_price=price_value)
+        )
 
     supplier_data = [
         ("Johnny Inc", 0.5),
@@ -61,13 +63,24 @@ def test_category_detail(client, reindex_catalog):
             shop_product.save()
 
             supplier_price = (
-                percentage_from_original_price * [price for sku, price in product_data if product.sku == sku][0]
+                percentage_from_original_price
+                * [price for sku, price in product_data if product.sku == sku][0]
             )
-            SupplierPrice.objects.create(supplier=supplier, shop=shop, product=product, amount_value=supplier_price)
+            SupplierPrice.objects.create(
+                supplier=supplier,
+                shop=shop,
+                product=product,
+                amount_value=supplier_price,
+            )
 
     strategy = "shuup.testing.supplier_pricing.supplier_strategy:CheapestSupplierPriceSupplierStrategy"
-    with override_settings(SHUUP_PRICING_MODULE="supplier_pricing", SHUUP_SHOP_PRODUCT_SUPPLIERS_STRATEGY=strategy):
-        with override_current_theme_class(ClassicGrayTheme, shop):  # Ensure settings is refreshed from DB
+    with override_settings(
+        SHUUP_PRICING_MODULE="supplier_pricing",
+        SHUUP_SHOP_PRODUCT_SUPPLIERS_STRATEGY=strategy,
+    ):
+        with override_current_theme_class(
+            ClassicGrayTheme, shop
+        ):  # Ensure settings is refreshed from DB
             reindex_catalog()
 
             soup = _get_category_detail_soup(client, category)
@@ -93,7 +106,9 @@ def test_category_detail(client, reindex_catalog):
 
             # Let's say Mike has the cheapest laptop
             mike_supplier = Supplier.objects.get(name="Mike Inc")
-            SupplierPrice.objects.filter(supplier=mike_supplier, shop=shop, product=laptop).update(amount_value=333)
+            SupplierPrice.objects.filter(
+                supplier=mike_supplier, shop=shop, product=laptop
+            ).update(amount_value=333)
             reindex_catalog()
 
             soup = _get_category_detail_soup(client, category)
@@ -103,7 +118,9 @@ def test_category_detail(client, reindex_catalog):
 
             # Just to make sure Simon takes over the mouse biz
             simon_supplier = Supplier.objects.get(name="Simon Inc")
-            SupplierPrice.objects.filter(supplier=simon_supplier, shop=shop, product=mouse).update(amount_value=1)
+            SupplierPrice.objects.filter(
+                supplier=simon_supplier, shop=shop, product=mouse
+            ).update(amount_value=1)
             reindex_catalog()
 
             soup = _get_category_detail_soup(client, category)

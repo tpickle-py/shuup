@@ -60,22 +60,39 @@ class OrderStatusEditView(CreateOrUpdateView):
 class OrderStatusListView(PicotableListView):
     model = OrderStatus
     default_columns = [
-        Column("identifier", _("Identifier"), linked=True, filter_config=TextFilter(operator="startswith")),
+        Column(
+            "identifier",
+            _("Identifier"),
+            linked=True,
+            filter_config=TextFilter(operator="startswith"),
+        ),
         Column(
             "name",
             _("Name"),
             linked=True,
-            filter_config=TextFilter(operator="startswith", filter_field="translations__name"),
+            filter_config=TextFilter(
+                operator="startswith", filter_field="translations__name"
+            ),
         ),
         Column(
             "public_name",
             _("Public Name"),
             linked=False,
-            filter_config=TextFilter(operator="startswith", filter_field="translations__name"),
+            filter_config=TextFilter(
+                operator="startswith", filter_field="translations__name"
+            ),
         ),
-        Column("role", _("Role"), linked=False, filter_config=ChoicesFilter(choices=OrderStatusRole.choices)),
         Column(
-            "default", _("Default"), linked=False, filter_config=ChoicesFilter([(False, _("yes")), (True, _("no"))])
+            "role",
+            _("Role"),
+            linked=False,
+            filter_config=ChoicesFilter(choices=OrderStatusRole.choices),
+        ),
+        Column(
+            "default",
+            _("Default"),
+            linked=False,
+            filter_config=ChoicesFilter([(False, _("yes")), (True, _("no"))]),
         ),
         Column(
             "allowed_next_statuses",
@@ -90,10 +107,19 @@ class OrderStatusListView(PicotableListView):
             filter_config=ChoicesFilter([(False, _("yes")), (True, _("no"))]),
         ),
         Column(
-            "is_active", _("Active"), linked=False, filter_config=ChoicesFilter([(False, _("yes")), (True, _("no"))])
+            "is_active",
+            _("Active"),
+            linked=False,
+            filter_config=ChoicesFilter([(False, _("yes")), (True, _("no"))]),
         ),
     ]
 
     def get_allowed_next_statuses_display(self, instance):
-        order_status_names = [order_status.name for order_status in instance.allowed_next_statuses.all()]
-        return ", ".join(order_status_names) if order_status_names else _("No allowed next status.")
+        order_status_names = [
+            order_status.name for order_status in instance.allowed_next_statuses.all()
+        ]
+        return (
+            ", ".join(order_status_names)
+            if order_status_names
+            else _("No allowed next status.")
+        )

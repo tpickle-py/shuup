@@ -23,7 +23,11 @@ from shuup.core.models import (
     TaxClass,
 )
 from shuup.core.telemetry import is_opt_out
-from shuup.testing.factories import get_currency, get_default_shop, get_default_tax_class
+from shuup.testing.factories import (
+    get_currency,
+    get_default_shop,
+    get_default_tax_class,
+)
 from shuup.testing.soup_utils import extract_form_fields
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse
@@ -56,14 +60,20 @@ def test_get_wizard_no_panes(rf, settings, admin_user):
 
 @pytest.mark.django_db
 def test_shop_wizard_pane(rf, admin_user, settings):
-    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = ["shuup.admin.modules.shops.views:ShopWizardPane"]
+    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = [
+        "shuup.admin.modules.shops.views:ShopWizardPane"
+    ]
     shop = Shop.objects.create()
     get_currency("USD")
     assert not shop.contact_address
     assert not TaxClass.objects.exists()
     fields = _extract_fields(rf, admin_user)
-    fields["shop-logo"] = ""  # Correct init value for this is not None, but empty string
-    request = apply_request_middleware(rf.post("/", data=fields), user=admin_user, shop=shop)
+    fields["shop-logo"] = (
+        ""  # Correct init value for this is not None, but empty string
+    )
+    request = apply_request_middleware(
+        rf.post("/", data=fields), user=admin_user, shop=shop
+    )
     response = WizardView.as_view()(request)
     # fields are missing
     assert response.status_code == 400
@@ -78,7 +88,9 @@ def test_shop_wizard_pane(rf, admin_user, settings):
     fields["address-street"] = "test"
     fields["address-country"] = "US"
 
-    request = apply_request_middleware(rf.post("/", data=fields), user=admin_user, shop=shop)
+    request = apply_request_middleware(
+        rf.post("/", data=fields), user=admin_user, shop=shop
+    )
     response = WizardView.as_view()(request)
     assert response.status_code == 200
     shop.refresh_from_db()
@@ -94,14 +106,18 @@ def test_shop_wizard_pane(rf, admin_user, settings):
 
 @pytest.mark.django_db
 def test_shipping_method_wizard_pane(rf, admin_user, settings):
-    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = ["shuup.admin.modules.service_providers.views.CarrierWizardPane"]
+    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = [
+        "shuup.admin.modules.service_providers.views.CarrierWizardPane"
+    ]
     shop = get_default_shop()
     get_default_tax_class()
     fields = _extract_fields(rf, admin_user)
     fields["shipping_method_base-providers"] = "manual_shipping"
     fields["manual_shipping-service_name"] = "test"
 
-    request = apply_request_middleware(rf.post("/", data=fields), user=admin_user, shop=shop)
+    request = apply_request_middleware(
+        rf.post("/", data=fields), user=admin_user, shop=shop
+    )
     response = WizardView.as_view()(request)
     assert response.status_code == 200
     assert ServiceProvider.objects.count() == 1
@@ -114,7 +130,9 @@ def test_shipping_method_wizard_pane(rf, admin_user, settings):
 
 @pytest.mark.django_db
 def test_payment_method_wizard_pane(rf, admin_user, settings):
-    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = ["shuup.admin.modules.service_providers.views.PaymentWizardPane"]
+    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = [
+        "shuup.admin.modules.service_providers.views.PaymentWizardPane"
+    ]
     shop = get_default_shop()
     get_default_tax_class()
     fields = _extract_fields(rf, admin_user)
@@ -135,7 +153,9 @@ def test_payment_method_wizard_pane(rf, admin_user, settings):
 @pytest.mark.django_db
 def test_xtheme_wizard_pane(rf, admin_user):
     with override_settings(
-        SHUUP_SETUP_WIZARD_PANE_SPEC=["shuup.xtheme.admin_module.views.ThemeWizardPane"],
+        SHUUP_SETUP_WIZARD_PANE_SPEC=[
+            "shuup.xtheme.admin_module.views.ThemeWizardPane"
+        ],
         CACHES={
             "default": {
                 "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
@@ -151,7 +171,9 @@ def test_xtheme_wizard_pane(rf, admin_user):
             assert get_current_theme(shop) is None
             fields = _extract_fields(rf, admin_user)
             fields["theme-activate"] = FauxTheme.identifier
-            request = apply_request_middleware(rf.post("/", data=fields), user=admin_user)
+            request = apply_request_middleware(
+                rf.post("/", data=fields), user=admin_user
+            )
             response = WizardView.as_view()(request)
             assert isinstance(get_current_theme(shop), FauxTheme)
             assert_redirect_to_dashboard(rf, admin_user, shop)
@@ -159,7 +181,11 @@ def test_xtheme_wizard_pane(rf, admin_user):
 
 @pytest.mark.django_db
 def test_telemetry_wizard_pane(rf, admin_user):
-    with override_settings(SHUUP_SETUP_WIZARD_PANE_SPEC=["shuup.admin.modules.system.views.TelemetryWizardPane"]):
+    with override_settings(
+        SHUUP_SETUP_WIZARD_PANE_SPEC=[
+            "shuup.admin.modules.system.views.TelemetryWizardPane"
+        ]
+    ):
         shop = get_default_shop()
         request = apply_request_middleware(rf.get("/"), user=admin_user, shop=shop)
         response = WizardView.as_view()(request)

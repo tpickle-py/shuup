@@ -10,7 +10,10 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.form_part import FormPart, TemplatedFormDef
-from shuup.admin.modules.contacts.forms import CompanyContactBaseForm, PersonContactBaseForm
+from shuup.admin.modules.contacts.forms import (
+    CompanyContactBaseForm,
+    PersonContactBaseForm,
+)
 from shuup.core.models import PersonContact
 from shuup.utils.excs import Problem
 from shuup.utils.form_group import FormDef
@@ -26,12 +29,17 @@ class CompanyContactBaseFormPart(FormPart):
             CompanyContactBaseForm,
             template_name="shuup/admin/contacts/_edit_base_form.jinja",
             required=True,
-            kwargs={"instance": self.object if self.object.pk else None, "request": self.request},
+            kwargs={
+                "instance": self.object if self.object.pk else None,
+                "request": self.request,
+            },
         )
 
     def form_valid(self, form):
         self.object = form["base"].save()
-        return self.object  # Identity may have changed (not the original object we put in)
+        return (
+            self.object
+        )  # Identity may have changed (not the original object we put in)
 
 
 class PersonContactBaseFormPart(FormPart):
@@ -42,7 +50,12 @@ class PersonContactBaseFormPart(FormPart):
         if bind_user_id:
             bind_user = get_user_model().objects.get(pk=bind_user_id)
             if PersonContact.objects.filter(user=bind_user).exists():
-                raise Problem(_("User `%(bind_user)s` already has a contact.", bind_user=bind_user))
+                raise Problem(
+                    _(
+                        "User `%(bind_user)s` already has a contact.",
+                        bind_user=bind_user,
+                    )
+                )
         else:
             bind_user = None
         return bind_user
@@ -62,7 +75,9 @@ class PersonContactBaseFormPart(FormPart):
 
     def form_valid(self, form):
         self.object = form["base"].save()
-        return self.object  # Identity may have changed (not the original object we put in)
+        return (
+            self.object
+        )  # Identity may have changed (not the original object we put in)
 
 
 class ContactAddressesFormPart(FormPart):
@@ -75,13 +90,19 @@ class ContactAddressesFormPart(FormPart):
             name="shipping_address",
             form_class=address_form_class,
             required=False,
-            kwargs={"instance": self.object.default_shipping_address, "initial": initial},
+            kwargs={
+                "instance": self.object.default_shipping_address,
+                "initial": initial,
+            },
         )
         yield FormDef(
             name="billing_address",
             form_class=address_form_class,
             required=False,
-            kwargs={"instance": self.object.default_billing_address, "initial": initial},
+            kwargs={
+                "instance": self.object.default_billing_address,
+                "initial": initial,
+            },
         )
         # Using a pseudo formdef to group the two actual formdefs...
         yield TemplatedFormDef(

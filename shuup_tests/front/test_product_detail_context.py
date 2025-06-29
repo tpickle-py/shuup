@@ -14,7 +14,12 @@ from decimal import Decimal
 from shuup.core.models import Product, ShopProduct, Supplier
 from shuup.front.themes.views._product_price import ProductPriceView
 from shuup.front.utils.product import get_product_context
-from shuup.testing.factories import create_product, get_default_product, get_default_shop, get_default_supplier
+from shuup.testing.factories import (
+    create_product,
+    get_default_product,
+    get_default_shop,
+    get_default_supplier,
+)
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse
 from shuup_tests import supplier_prices
@@ -48,7 +53,9 @@ def test_variation_product_price_more_complex(rf):
                     shop_product.suppliers.add(supplier)
                 else:
                     child = create_product(sku, shop=shop, supplier=supplier)
-                    child.link_to_parent(parent, variables={"size": size, "color": color})
+                    child.link_to_parent(
+                        parent, variables={"size": size, "color": color}
+                    )
 
     assert parent.variation_children.count() == 5
     # We have 6 different combinations but only 5 combinations
@@ -63,7 +70,9 @@ def test_variation_product_price_more_complex(rf):
     for x in range(0, 1):
         context = get_product_context(request, parent, supplier=supplier1)
         assert len(context["orderable_variation_children"]) == 2
-        for variation_variable, variable_values in six.iteritems(context["orderable_variation_children"]):
+        for variation_variable, variable_values in six.iteritems(
+            context["orderable_variation_children"]
+        ):
             assert len(variable_values) == 2
 
     supplier2 = Supplier.objects.get(identifier="supplier-2")
@@ -71,5 +80,7 @@ def test_variation_product_price_more_complex(rf):
     for x in range(0, 1):
         context = get_product_context(request, parent, supplier=supplier2)
         assert len(context["orderable_variation_children"]) == 2
-        for variation_variable, variable_values in six.iteritems(context["orderable_variation_children"]):
+        for variation_variable, variable_values in six.iteritems(
+            context["orderable_variation_children"]
+        ):
             assert len(variable_values) == 1

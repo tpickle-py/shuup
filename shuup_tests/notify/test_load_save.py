@@ -16,7 +16,11 @@ from shuup_tests.notify.fixtures import TEST_STEP_DATA, ATestEvent
 
 @pytest.mark.django_db
 def test_load_save():
-    sc = Script(event_identifier=ATestEvent.identifier, name="Test Script", shop=factories.get_default_shop())
+    sc = Script(
+        event_identifier=ATestEvent.identifier,
+        name="Test Script",
+        shop=factories.get_default_shop(),
+    )
     assert force_text(sc) == "Test Script"
     sc.set_serialized_steps(TEST_STEP_DATA)
     sc.save()

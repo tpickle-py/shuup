@@ -4,7 +4,10 @@ from __future__ import unicode_literals
 import pytest
 from decimal import Decimal
 from django.utils import translation
-from django.utils.translation.trans_real import DjangoTranslation, translation as get_trans
+from django.utils.translation.trans_real import (
+    DjangoTranslation,
+    translation as get_trans,
+)
 
 from shuup.core.models import DisplayUnit, PiecesSalesUnit, SalesUnit, UnitInterface
 from shuup.core.models._units import SalesUnitAsDisplayUnit
@@ -54,10 +57,16 @@ def test_unit_interface_init_from_display_unit():
 def test_unit_interface_init_with_non_default_display_unit():
     sales_unit = SalesUnit.objects.create(name="Test", symbol="tst")
     default_du = DisplayUnit.objects.create(
-        name="Default Display Unit", symbol="ddu", internal_unit=sales_unit, default=True
+        name="Default Display Unit",
+        symbol="ddu",
+        internal_unit=sales_unit,
+        default=True,
     )
     non_default_du = DisplayUnit.objects.create(
-        name="Non-default Display Unit", symbol="ndu", internal_unit=sales_unit, default=False
+        name="Non-default Display Unit",
+        symbol="ndu",
+        internal_unit=sales_unit,
+        default=False,
     )
     assert sales_unit.display_unit == default_du
     unit = UnitInterface(sales_unit, non_default_du)
@@ -73,23 +82,25 @@ def test_unit_interface_init_unit_compatibility_check():
     UnitInterface(su1, du)  # OK
     with pytest.raises(AssertionError) as exc_info:
         UnitInterface(su2, du)
-    assert str(exc_info.value) == ("Incompatible units: <SalesUnit:None-SU2>, <DisplayUnit:None>")
+    assert str(exc_info.value) == (
+        "Incompatible units: <SalesUnit:None-SU2>, <DisplayUnit:None>"
+    )
 
 
 def test_unit_interface_display_precision():
     sales_unit = SalesUnit(symbol="t")
-    assert UnitInterface(display_unit=DisplayUnit(internal_unit=sales_unit, decimals=9)).display_precision == Decimal(
-        "0.000000001"
-    )
-    assert UnitInterface(display_unit=DisplayUnit(internal_unit=sales_unit, decimals=4)).display_precision == Decimal(
-        "0.0001"
-    )
-    assert UnitInterface(display_unit=DisplayUnit(internal_unit=sales_unit, decimals=2)).display_precision == Decimal(
-        "0.01"
-    )
-    assert UnitInterface(display_unit=DisplayUnit(internal_unit=sales_unit, decimals=0)).display_precision == Decimal(
-        "1"
-    )
+    assert UnitInterface(
+        display_unit=DisplayUnit(internal_unit=sales_unit, decimals=9)
+    ).display_precision == Decimal("0.000000001")
+    assert UnitInterface(
+        display_unit=DisplayUnit(internal_unit=sales_unit, decimals=4)
+    ).display_precision == Decimal("0.0001")
+    assert UnitInterface(
+        display_unit=DisplayUnit(internal_unit=sales_unit, decimals=2)
+    ).display_precision == Decimal("0.01")
+    assert UnitInterface(
+        display_unit=DisplayUnit(internal_unit=sales_unit, decimals=0)
+    ).display_precision == Decimal("1")
 
 
 def test_unit_interface_to_display():
@@ -202,8 +213,10 @@ def test_unit_interface_render_quantity_translations():
 
 
 trans_key = (
-    "Display value with unit symbol (with or without space)" "\x04" "{value}{symbol}"  # Gettext context separator
-)
+    "Display value with unit symbol (with or without space)"
+    "\x04"
+    "{value}{symbol}"
+)  # Gettext context separator
 
 
 class ValueSymbolTranslationWithSpace(object):
@@ -315,7 +328,10 @@ def test_pieces_sales_unit():
 def test_kg_in_oz():
     kg_oz = UnitInterface(
         display_unit=DisplayUnit(
-            internal_unit=get_kilogram_sales_unit(decimals=9), ratio=Decimal("0.028349523"), decimals=3, symbol="oz"
+            internal_unit=get_kilogram_sales_unit(decimals=9),
+            ratio=Decimal("0.028349523"),
+            decimals=3,
+            symbol="oz",
         )
     )
     assert kg_oz.comparison_quantity == Decimal("0.028349523")

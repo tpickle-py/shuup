@@ -9,7 +9,10 @@ import pytest
 from decimal import Decimal
 
 from shuup.apps.provides import override_provides
-from shuup.core.utils.product_subscription import ProductSubscriptionContext, get_product_subscription_options
+from shuup.core.utils.product_subscription import (
+    ProductSubscriptionContext,
+    get_product_subscription_options,
+)
 from shuup.testing import factories
 
 

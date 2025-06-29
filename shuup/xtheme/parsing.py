@@ -211,7 +211,9 @@ class PlaceholderExtension(_PlaceholderManagingExtension):
             next(parser.stream)
             next(parser.stream)
         else:
-            placeholder_name = six.text_type(parse_constantlike(self.environment, parser))
+            placeholder_name = six.text_type(
+                parse_constantlike(self.environment, parser)
+            )
         self._new_layout(parser, placeholder_name)
         parser.parse_statements(["name:endplaceholder"], drop_needle=True)
         # Body parsing will have, as a side effect, populated the current layout
@@ -222,10 +224,14 @@ class PlaceholderExtension(_PlaceholderManagingExtension):
             Const(parser.name),
             Const(global_type),
         ]
-        return Output([self.call_method("_render_placeholder", args)]).set_lineno(lineno)
+        return Output([self.call_method("_render_placeholder", args)]).set_lineno(
+            lineno
+        )
 
     @contextfunction
-    def _render_placeholder(self, context, placeholder_name, layout, template_name, global_type):
+    def _render_placeholder(
+        self, context, placeholder_name, layout, template_name, global_type
+    ):
         return render_placeholder(
             context,
             placeholder_name=placeholder_name,
@@ -283,7 +289,9 @@ class LayoutPartExtension(_PlaceholderManagingExtension):
 
     def _begin_row(self, cfg, arg):
         if arg is not None:
-            raise ValueError("Error! `row`s do not take arguments at present time (got `%r`)." % arg)
+            raise ValueError(
+                "Error! `row`s do not take arguments at present time (got `%r`)." % arg
+            )
         cfg.begin_row()
 
     def _begin_column(self, cfg, arg):
@@ -294,7 +302,9 @@ class LayoutPartExtension(_PlaceholderManagingExtension):
             except Impossible:
                 raise ValueError("Error! Invalid argument for `column`: `%r`." % arg)
             if not isinstance(sizes, dict):
-                raise ValueError("Error! Argument for `column` must be a dict: `%r`." % arg)
+                raise ValueError(
+                    "Error! Argument for `column` must be a dict: `%r`." % arg
+                )
         cfg.begin_column(sizes)
 
 
@@ -338,7 +348,10 @@ class PluginExtension(_PlaceholderManagingExtension):
             try:
                 config = flatten_const_node_list(self.environment, body)
             except Unflattenable as uf:
-                raise NonConstant("Error! A `plugin` block may only contain static layout (found: `%r`)." % uf.args[0])
+                raise NonConstant(
+                    "Error! A `plugin` block may only contain static layout (found: `%r`)."
+                    % uf.args[0]
+                )
             config = toml.loads(config)
         layout.add_plugin(name, config)
         return noop_node(lineno)

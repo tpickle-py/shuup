@@ -26,10 +26,18 @@ def test_reorder_view():
     assert supplier1.pk != supplier2.pk
 
     product_supplier1 = factories.create_product(
-        "product_supplier1", shop=shop, supplier=supplier1, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED
+        "product_supplier1",
+        shop=shop,
+        supplier=supplier1,
+        default_price=10,
+        shipping_mode=ShippingMode.NOT_SHIPPED,
     )
     product_supplier2 = factories.create_product(
-        "product_supplier2", shop=shop, supplier=supplier2, default_price=20, shipping_mode=ShippingMode.NOT_SHIPPED
+        "product_supplier2",
+        shop=shop,
+        supplier=supplier2,
+        default_price=20,
+        shipping_mode=ShippingMode.NOT_SHIPPED,
     )
 
     user = factories.create_random_user("en")

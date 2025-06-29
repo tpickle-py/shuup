@@ -43,7 +43,9 @@ class MethodWidget(forms.Widget):
                 "shuup/front/checkout/method_choice.jinja",
                 {
                     "field_name": self.field_name,
-                    "grouped_methods": _get_methods_grouped_by_service_provider(self.choices),
+                    "grouped_methods": _get_methods_grouped_by_service_provider(
+                        self.choices
+                    ),
                     "current_value": value,
                     "basket": self.basket,
                     "request": self.request,
@@ -75,13 +77,17 @@ class MethodsForm(forms.Form):
             queryset=ShippingMethod.objects.all(),
             widget=MethodWidget(),
             label=_("shipping method"),
-            required=configuration.get(self.shop, SHIPPING_METHOD_REQUIRED_CONFIG_KEY, True),
+            required=configuration.get(
+                self.shop, SHIPPING_METHOD_REQUIRED_CONFIG_KEY, True
+            ),
         )
         self.fields["payment_method"] = forms.ModelChoiceField(
             queryset=PaymentMethod.objects.all(),
             widget=MethodWidget(),
             label=_("payment method"),
-            required=configuration.get(self.shop, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, True),
+            required=configuration.get(
+                self.shop, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, True
+            ),
         )
         self.limit_method_fields()
 
@@ -108,8 +114,12 @@ class MethodsPhase(CheckoutPhaseViewMixin, FormView):
     form_class = MethodsForm
 
     def is_valid(self):
-        shipping_required = configuration.get(self.request.shop, SHIPPING_METHOD_REQUIRED_CONFIG_KEY, True)
-        payment_required = configuration.get(self.request.shop, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, True)
+        shipping_required = configuration.get(
+            self.request.shop, SHIPPING_METHOD_REQUIRED_CONFIG_KEY, True
+        )
+        payment_required = configuration.get(
+            self.request.shop, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, True
+        )
 
         if shipping_required and not self.storage.get("shipping_method_id"):
             return False
@@ -119,8 +129,12 @@ class MethodsPhase(CheckoutPhaseViewMixin, FormView):
         return True
 
     def process(self):
-        shipping_method = ShippingMethod.objects.filter(pk=self.storage.get("shipping_method_id")).first()
-        payment_method = PaymentMethod.objects.filter(pk=self.storage.get("payment_method_id")).first()
+        shipping_method = ShippingMethod.objects.filter(
+            pk=self.storage.get("shipping_method_id")
+        ).first()
+        payment_method = PaymentMethod.objects.filter(
+            pk=self.storage.get("payment_method_id")
+        ).first()
 
         self.basket.shipping_method = shipping_method if shipping_method else None
         self.basket.payment_method = payment_method if payment_method else None
@@ -177,7 +191,9 @@ class _MethodDependentCheckoutPhase(CheckoutPhaseViewMixin):
         """
         :rtype: shuup.core.models.Service
         """
-        raise NotImplementedError("Error! Not implemented: `_MethodDependentCheckoutPhase` -> `get_method()`.")
+        raise NotImplementedError(
+            "Error! Not implemented: `_MethodDependentCheckoutPhase` -> `get_method()`."
+        )
 
     def get_method_checkout_phase_object(self):
         """

@@ -11,7 +11,10 @@ from collections import defaultdict
 from decimal import Decimal
 from django.test import override_settings
 
-from shuup.core.excs import RefundArbitraryRefundsNotAllowedException, RefundExceedsAmountException
+from shuup.core.excs import (
+    RefundArbitraryRefundsNotAllowedException,
+    RefundExceedsAmountException,
+)
 from shuup.core.models import OrderLine, OrderLineType, ShippingMode, Supplier
 from shuup.testing.factories import (
     add_product_to_order,
@@ -25,8 +28,12 @@ from shuup.testing.factories import (
 @pytest.mark.django_db
 def test_order_refunds_with_multiple_suppliers():
     shop = get_default_shop()
-    supplier1 = get_supplier("simple_supplier", shop=shop, identifier="1", name="supplier1")
-    supplier2 = get_supplier("simple_supplier", shop=shop, identifier="2", name="supplier2")
+    supplier1 = get_supplier(
+        "simple_supplier", shop=shop, identifier="1", name="supplier1"
+    )
+    supplier2 = get_supplier(
+        "simple_supplier", shop=shop, identifier="2", name="supplier2"
+    )
     supplier3 = get_supplier("simple_supplier", shop=shop, identifier="3", name="s")
 
     product1 = create_product("sku1", shop=shop, default_price=10)
@@ -37,7 +44,9 @@ def test_order_refunds_with_multiple_suppliers():
     shop_product2 = product1.get_shop_instance(shop=shop)
     shop_product2.suppliers.set([supplier1, supplier2])
 
-    product3 = create_product("sku3", shop=shop, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED)
+    product3 = create_product(
+        "sku3", shop=shop, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED
+    )
     shop_product3 = product1.get_shop_instance(shop=shop)
     shop_product3.suppliers.set([supplier3])
 
@@ -60,7 +69,10 @@ def test_order_refunds_with_multiple_suppliers():
 
     # Lines without quantity shouldn't affect refunds
     other_line = OrderLine(
-        order=order, type=OrderLineType.OTHER, text="This random line for textual information", quantity=0
+        order=order,
+        type=OrderLineType.OTHER,
+        text="This random line for textual information",
+        quantity=0,
     )
     other_line.save()
     order.lines.add(other_line)
@@ -76,11 +88,14 @@ def test_order_refunds_with_multiple_suppliers():
     assert order.can_create_refund(supplier3)
 
     assert order.get_total_unrefunded_amount(supplier1).value == Decimal("55")  # 11 * 5
-    assert order.get_total_unrefunded_quantity(supplier1) == Decimal("11")  # 5 x product1 and 6 x product2
+    assert order.get_total_unrefunded_quantity(supplier1) == Decimal(
+        "11"
+    )  # 5 x product1 and 6 x product2
 
     with pytest.raises(RefundExceedsAmountException):
         order.create_refund(
-            [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(60)}], supplier=supplier1
+            [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(60)}],
+            supplier=supplier1,
         )
 
     # Supplier 1 refunds the order
@@ -94,11 +109,14 @@ def test_order_refunds_with_multiple_suppliers():
     assert order.can_create_refund(supplier3)
 
     assert order.get_total_unrefunded_amount(supplier2).value == Decimal("80")  # 16 * 5
-    assert order.get_total_unrefunded_quantity(supplier2) == Decimal("16")  # 3 x product1 and 13 x product2
+    assert order.get_total_unrefunded_quantity(supplier2) == Decimal(
+        "16"
+    )  # 3 x product1 and 13 x product2
 
     with pytest.raises(RefundExceedsAmountException):
         order.create_refund(
-            [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(81)}], supplier=supplier2
+            [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(81)}],
+            supplier=supplier2,
         )
 
     # Supplier 2 refunds the order
@@ -110,17 +128,33 @@ def test_order_refunds_with_multiple_suppliers():
     assert order.can_create_refund()
     assert order.can_create_refund(supplier3)
 
-    assert order.get_total_unrefunded_amount(supplier3).value == Decimal("255")  # 51 * 5
-    assert order.get_total_unrefunded_quantity(supplier3) == Decimal("51")  # 3 x product1 and 13 x product2
+    assert order.get_total_unrefunded_amount(supplier3).value == Decimal(
+        "255"
+    )  # 51 * 5
+    assert order.get_total_unrefunded_quantity(supplier3) == Decimal(
+        "51"
+    )  # 3 x product1 and 13 x product2
 
     with override_settings(SHUUP_ALLOW_ARBITRARY_REFUNDS=False):
         with pytest.raises(RefundArbitraryRefundsNotAllowedException):
             order.create_refund(
-                [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(200)}], supplier=supplier3
+                [
+                    {
+                        "line": "amount",
+                        "quantity": 1,
+                        "amount": order.shop.create_price(200),
+                    }
+                ],
+                supplier=supplier3,
             )
 
-    order.create_refund([{"line": "amount", "quantity": 1, "amount": order.shop.create_price(200)}], supplier=supplier3)
-    assert OrderLine.objects.filter(order=order, supplier=supplier3, type=OrderLineType.REFUND).exists()
+    order.create_refund(
+        [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(200)}],
+        supplier=supplier3,
+    )
+    assert OrderLine.objects.filter(
+        order=order, supplier=supplier3, type=OrderLineType.REFUND
+    ).exists()
 
     # Supplier 3 refunds the order
     order.create_refund(_get_refund_data(order, supplier3))
@@ -135,9 +169,15 @@ def test_order_refunds_with_multiple_suppliers():
 @pytest.mark.django_db
 def test_order_arbitrary_refunds_with_multiple_suppliers():
     shop = get_default_shop()
-    supplier1 = get_supplier("simple_supplier", identifier="1", name="supplier1", shop=shop)
-    supplier2 = get_supplier("simple_supplier", identifier="2", name="supplier2", shop=shop)
-    supplier3 = get_supplier("simple_supplier", identifier="3", name="supplier3", shop=shop)
+    supplier1 = get_supplier(
+        "simple_supplier", identifier="1", name="supplier1", shop=shop
+    )
+    supplier2 = get_supplier(
+        "simple_supplier", identifier="2", name="supplier2", shop=shop
+    )
+    supplier3 = get_supplier(
+        "simple_supplier", identifier="3", name="supplier3", shop=shop
+    )
 
     product1 = create_product("sku1", shop=shop, default_price=10)
     shop_product1 = product1.get_shop_instance(shop=shop)
@@ -147,7 +187,9 @@ def test_order_arbitrary_refunds_with_multiple_suppliers():
     shop_product2 = product1.get_shop_instance(shop=shop)
     shop_product2.suppliers.set([supplier1, supplier2])
 
-    product3 = create_product("sku3", shop=shop, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED)
+    product3 = create_product(
+        "sku3", shop=shop, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED
+    )
     shop_product3 = product1.get_shop_instance(shop=shop)
     shop_product3.suppliers.set([supplier3])
 
@@ -170,7 +212,10 @@ def test_order_arbitrary_refunds_with_multiple_suppliers():
 
     # Lines without quantity shouldn't affect refunds
     other_line = OrderLine(
-        order=order, type=OrderLineType.OTHER, text="This random line for textual information", quantity=0
+        order=order,
+        type=OrderLineType.OTHER,
+        text="This random line for textual information",
+        quantity=0,
     )
     other_line.save()
     order.lines.add(other_line)
@@ -189,7 +234,9 @@ def test_order_arbitrary_refunds_with_multiple_suppliers():
     assert order.can_create_refund()
     assert order.get_total_unrefunded_amount(supplier1).value == Decimal("55")  # 11 * 5
     assert order.get_total_unrefunded_amount().value == Decimal("390")  # 55 + 80 + 255
-    proudct1_line_for_supplier1 = order.lines.filter(supplier=supplier1, product=product1).first()
+    proudct1_line_for_supplier1 = order.lines.filter(
+        supplier=supplier1, product=product1
+    ).first()
     supplier1_refund_data = [
         {
             "line": proudct1_line_for_supplier1,
@@ -202,19 +249,35 @@ def test_order_arbitrary_refunds_with_multiple_suppliers():
     assert order.get_total_unrefunded_amount(supplier1).value == Decimal("35")
 
     order.create_refund(
-        [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(30).amount}], supplier=supplier1
+        [
+            {
+                "line": "amount",
+                "quantity": 1,
+                "amount": order.shop.create_price(30).amount,
+            }
+        ],
+        supplier=supplier1,
     )
 
     assert order.get_total_unrefunded_amount(supplier1).value == Decimal("5")
 
     order.create_refund(
-        [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(5).amount}], supplier=supplier1
+        [
+            {
+                "line": "amount",
+                "quantity": 1,
+                "amount": order.shop.create_price(5).amount,
+            }
+        ],
+        supplier=supplier1,
     )
 
     assert order.get_total_unrefunded_amount(supplier1).value == Decimal("0")
     assert order.can_create_refund(supplier1)  # Some quantity still left to refund
 
-    proudct2_line_for_supplier1 = order.lines.filter(supplier=supplier1, product=product2).first()
+    proudct2_line_for_supplier1 = order.lines.filter(
+        supplier=supplier1, product=product2
+    ).first()
     supplier1_restock_refund_data = [
         {
             "line": proudct2_line_for_supplier1,
@@ -230,7 +293,9 @@ def test_order_arbitrary_refunds_with_multiple_suppliers():
     assert order.can_create_refund()
     assert order.get_total_unrefunded_amount(supplier2).value == Decimal("80")  # 16 * 5
     assert order.get_total_unrefunded_amount().value == Decimal("335")  # 80 + 255
-    proudct2_line_for_supplier2 = order.lines.filter(supplier=supplier2, product=product2).first()
+    proudct2_line_for_supplier2 = order.lines.filter(
+        supplier=supplier2, product=product2
+    ).first()
     supplier2_refund_data = [
         {
             "line": proudct2_line_for_supplier2,
@@ -243,13 +308,27 @@ def test_order_arbitrary_refunds_with_multiple_suppliers():
     assert order.get_total_unrefunded_amount(supplier2).value == Decimal("30")
 
     order.create_refund(
-        [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(5).amount}], supplier=supplier2
+        [
+            {
+                "line": "amount",
+                "quantity": 1,
+                "amount": order.shop.create_price(5).amount,
+            }
+        ],
+        supplier=supplier2,
     )
 
     assert order.get_total_unrefunded_amount(supplier2).value == Decimal("25")
 
     order.create_refund(
-        [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(25).amount}], supplier=supplier2
+        [
+            {
+                "line": "amount",
+                "quantity": 1,
+                "amount": order.shop.create_price(25).amount,
+            }
+        ],
+        supplier=supplier2,
     )
 
     assert order.get_total_unrefunded_amount(supplier2).value == Decimal("0")
@@ -265,7 +344,9 @@ def test_order_arbitrary_refunds_with_multiple_suppliers():
     ]
     order.create_refund(supplier2_restock_refund_data)
 
-    proudct1_line_for_supplier2 = order.lines.filter(supplier=supplier2, product=product1).first()
+    proudct1_line_for_supplier2 = order.lines.filter(
+        supplier=supplier2, product=product1
+    ).first()
     supplier1_restock_refund_data = [
         {
             "line": proudct1_line_for_supplier2,
@@ -279,16 +360,27 @@ def test_order_arbitrary_refunds_with_multiple_suppliers():
 
     # Step by step refund lines for supplier3
     assert order.can_create_refund()
-    assert order.get_total_unrefunded_amount(supplier3).value == Decimal("255")  # 51 * 5
+    assert order.get_total_unrefunded_amount(supplier3).value == Decimal(
+        "255"
+    )  # 51 * 5
     assert order.get_total_unrefunded_amount().value == Decimal("255")  # 255
 
     order.create_refund(
-        [{"line": "amount", "quantity": 1, "amount": order.shop.create_price(55).amount}], supplier=supplier3
+        [
+            {
+                "line": "amount",
+                "quantity": 1,
+                "amount": order.shop.create_price(55).amount,
+            }
+        ],
+        supplier=supplier3,
     )
 
     assert order.get_total_unrefunded_amount(supplier3).value == Decimal("200")
 
-    proudct3_line_for_supplier3 = order.lines.filter(supplier=supplier3, product=product3).first()
+    proudct3_line_for_supplier3 = order.lines.filter(
+        supplier=supplier3, product=product3
+    ).first()
     supplier3_refund_data = [
         {
             "line": proudct3_line_for_supplier3,
@@ -302,7 +394,9 @@ def test_order_arbitrary_refunds_with_multiple_suppliers():
     assert order.get_total_unrefunded_amount().value == Decimal("0")
     assert order.can_create_refund(supplier3)  # Some quantity still left to refund
 
-    proudct1_line_for_supplier3 = order.lines.filter(supplier=supplier3, product=product1).first()
+    proudct1_line_for_supplier3 = order.lines.filter(
+        supplier=supplier3, product=product1
+    ).first()
     supplier3_restock_refund_data = [
         {
             "line": proudct1_line_for_supplier3,
@@ -334,14 +428,21 @@ def test_order_refunds_with_other_lines():
 
     # Lines without quantity shouldn't affect refunds
     other_line = OrderLine(
-        order=order, type=OrderLineType.OTHER, text="This random line for textual information", quantity=0
+        order=order,
+        type=OrderLineType.OTHER,
+        text="This random line for textual information",
+        quantity=0,
     )
     other_line.save()
     order.lines.add(other_line)
 
     # Lines with quantity again should be able to be refunded normally.
     other_line_with_quantity = OrderLine(
-        order=order, type=OrderLineType.OTHER, text="Special service 100$/h", quantity=1, base_unit_price_value=100
+        order=order,
+        type=OrderLineType.OTHER,
+        text="Special service 100$/h",
+        quantity=1,
+        base_unit_price_value=100,
     )
     other_line_with_quantity.save()
     order.lines.add(other_line_with_quantity)
@@ -360,6 +461,11 @@ def test_order_refunds_with_other_lines():
 
 def _get_refund_data(order, supplier):
     return [
-        {"line": line, "quantity": line.quantity, "amount": line.taxful_price.amount, "restock_products": True}
+        {
+            "line": line,
+            "quantity": line.quantity,
+            "amount": line.taxful_price.amount,
+            "restock_products": True,
+        }
         for line in order.lines.filter(supplier=supplier)
     ]

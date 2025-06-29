@@ -14,7 +14,11 @@ from django.test import RequestFactory
 from django.utils import translation
 from django.utils.encoding import force_text
 
-from shuup.admin.modules.orders.views.edit import OrderEditView, encode_address, encode_method
+from shuup.admin.modules.orders.views.edit import (
+    OrderEditView,
+    encode_address,
+    encode_method,
+)
 from shuup.core.models import Order, OrderLineType, ShopProductVisibility, Tax, TaxClass
 from shuup.default_tax.models import TaxRule
 from shuup.testing.factories import (
@@ -49,7 +53,9 @@ def get_frontend_order_state(contact, valid_lines=True):
     tax, created = Tax.objects.get_or_create(
         code="test_code", defaults={"rate": decimal.Decimal("0.20"), "name": "Default"}
     )
-    tax_class, created = TaxClass.objects.get_or_create(identifier="test_tax_class", defaults={"name": "Default"})
+    tax_class, created = TaxClass.objects.get_or_create(
+        identifier="test_tax_class", defaults={"name": "Default"}
+    )
     rule, created = TaxRule.objects.get_or_create(tax=tax)
     rule.tax_classes.add(tax_class)
     rule.save()
@@ -86,12 +92,18 @@ def get_frontend_order_state(contact, valid_lines=True):
         ]
     else:
         unshopped_product = create_product(sku=printable_gibberish(), supplier=supplier)
-        not_visible_product = create_product(sku=printable_gibberish(), supplier=supplier, shop=shop)
+        not_visible_product = create_product(
+            sku=printable_gibberish(), supplier=supplier, shop=shop
+        )
         not_visible_shop_product = not_visible_product.get_shop_instance(shop)
         not_visible_shop_product.visibility = ShopProductVisibility.NOT_VISIBLE
         not_visible_shop_product.save()
         lines = [
-            {"id": "x", "type": "product", "supplier": {"name": supplier.name, "id": supplier.id}},  # no product?
+            {
+                "id": "x",
+                "type": "product",
+                "supplier": {"name": supplier.name, "id": supplier.id},
+            },  # no product?
             {
                 "id": "x",
                 "type": "product",
@@ -118,13 +130,21 @@ def get_frontend_order_state(contact, valid_lines=True):
                 "product": {"id": not_visible_product.id},
                 "supplier": {"name": supplier.name, "id": supplier.id},
             },  # not visible
-            {"id": "y", "type": "product", "product": {"id": product.id}},  # no supplier
+            {
+                "id": "y",
+                "type": "product",
+                "product": {"id": product.id},
+            },  # no supplier
         ]
     state = {
         "customer": {
             "id": contact.id if contact else None,
-            "billingAddress": encode_address(contact.default_billing_address) if contact else {},
-            "shippingAddress": encode_address(contact.default_shipping_address) if contact else {},
+            "billingAddress": encode_address(contact.default_billing_address)
+            if contact
+            else {},
+            "shippingAddress": encode_address(contact.default_shipping_address)
+            if contact
+            else {},
         },
         "lines": lines,
         "methods": {
@@ -147,7 +167,10 @@ def get_frontend_request_for_command(state, command, user):
     json_data = json.dumps({"state": state})
     return apply_request_middleware(
         RequestFactory().post(
-            "/", data=json_data, content_type="application/json; charset=UTF-8", QUERY_STRING="command=%s" % command
+            "/",
+            data=json_data,
+            content_type="application/json; charset=UTF-8",
+            QUERY_STRING="command=%s" % command,
         ),
         user=user,
         skip_session=True,
@@ -157,7 +180,9 @@ def get_frontend_request_for_command(state, command, user):
 def get_order_from_state(state, admin_user):
     request = get_frontend_request_for_command(state, "finalize", admin_user)
     response = OrderEditView.as_view()(request)
-    assert_contains(response, "orderIdentifier")  # this checks for status codes as a side effect
+    assert_contains(
+        response, "orderIdentifier"
+    )  # this checks for status codes as a side effect
     data = json.loads(response.content.decode("utf8"))
     return Order.objects.get(identifier=data["orderIdentifier"])
 
@@ -167,7 +192,9 @@ def test_order_creator_valid(rf, admin_user):
     contact = create_random_person(locale="en_US", minimum_name_comp_len=5)
 
     order = get_order_from_state(get_frontend_order_state(contact), admin_user)
-    assert order.lines.count() == 5  # 3 submitted, two for the shipping and payment method
+    assert (
+        order.lines.count() == 5
+    )  # 3 submitted, two for the shipping and payment method
     assert order.creator == admin_user
     assert order.customer == contact
 
@@ -265,16 +292,29 @@ def test_order_creator_view_get(rf, admin_user):
 
 def test_order_creator_view_invalid_command(rf, admin_user):
     get_default_shop()
-    request = apply_request_middleware(rf.get("/", {"command": printable_gibberish()}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"command": printable_gibberish()}), user=admin_user
+    )
     response = OrderEditView.as_view()(request)
     assert_contains(response, "Unknown command", status_code=400)
 
 
 def test_order_creator_product_data(rf, admin_user):
     shop = get_default_shop()
-    product = create_product(sku=printable_gibberish(), supplier=get_default_supplier(), shop=shop)
+    product = create_product(
+        sku=printable_gibberish(), supplier=get_default_supplier(), shop=shop
+    )
     request = apply_request_middleware(
-        rf.get("/", {"command": "product_data", "shop_id": shop.id, "id": product.id, "quantity": 42}), user=admin_user
+        rf.get(
+            "/",
+            {
+                "command": "product_data",
+                "shop_id": shop.id,
+                "id": product.id,
+                "quantity": 42,
+            },
+        ),
+        user=admin_user,
     )
     response = OrderEditView.as_view()(request)
     assert_contains(response, "taxClass")
@@ -289,7 +329,9 @@ def test_order_creator_product_data(rf, admin_user):
 def test_order_creator_customer_data(rf, admin_user):
     get_default_shop()
     contact = create_random_person(locale="en_US", minimum_name_comp_len=5)
-    request = apply_request_middleware(rf.get("/", {"command": "customer_data", "id": contact.id}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"command": "customer_data", "id": contact.id}), user=admin_user
+    )
     response = OrderEditView.as_view()(request)
     assert_contains(response, "name")
     assert_contains(response, contact.name)
@@ -298,7 +340,9 @@ def test_order_creator_customer_data(rf, admin_user):
 def test_order_creator_source_data(rf, admin_user):
     get_initial_order_status()  # Needed for the API
     contact = create_random_person(locale="en_US", minimum_name_comp_len=5)
-    request = get_frontend_request_for_command(get_frontend_order_state(contact), "source_data", admin_user)
+    request = get_frontend_request_for_command(
+        get_frontend_order_state(contact), "source_data", admin_user
+    )
     response = OrderEditView.as_view()(request)
     data = json.loads(response.content.decode("utf8"))
     assert len(data.get("orderLines")) == 5
@@ -355,7 +399,9 @@ def test_company_contact_creation(rf, admin_user):
     assert order.customer.id != contact.id
     assert order.customer.name == contact.name
     assert order.customer.tax_number == test_tax_number
-    assert order.billing_address.tax_number == contact.default_billing_address.tax_number
+    assert (
+        order.billing_address.tax_number == contact.default_billing_address.tax_number
+    )
     assert order.billing_address.street == contact.default_billing_address.street
     assert order.billing_address.street == order.shipping_address.street
 
@@ -376,7 +422,9 @@ def test_editing_existing_order(rf, admin_user):
     assert order.modified_by == order.creator
     request = get_frontend_request_for_command(state, "finalize", modifier)
     response = OrderEditView.as_view()(request, pk=order.pk)
-    assert_contains(response, "orderIdentifier")  # this checks for status codes as a side effect
+    assert_contains(
+        response, "orderIdentifier"
+    )  # this checks for status codes as a side effect
     data = json.loads(response.content.decode("utf8"))
     edited_order = Order.objects.get(pk=order.pk)  # Re fetch the initial order
 
@@ -415,7 +463,9 @@ def test_editing_existing_order(rf, admin_user):
 def test_order_creator_view_for_customer(rf, admin_user):
     get_default_shop()
     contact = create_random_person(locale="en_US", minimum_name_comp_len=5)
-    request = apply_request_middleware(rf.get("/", {"contact_id": contact.id}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"contact_id": contact.id}), user=admin_user
+    )
     response = OrderEditView.as_view()(request)
     assert_contains(response, "customerData")  # in the config
     assert_contains(response, "isCompany")  # in the config
@@ -429,9 +479,13 @@ def test_order_creator_customer_details(rf, admin_user):
     contact.groups.add(group)
     contact.company_memberships.add(company)
     contact.save()
-    product = create_product(sku=printable_gibberish(), supplier=get_default_supplier(), shop=shop)
+    product = create_product(
+        sku=printable_gibberish(), supplier=get_default_supplier(), shop=shop
+    )
     order = create_random_order(contact, products=[product])
-    request = apply_request_middleware(rf.get("/", {"command": "customer_details", "id": contact.id}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"command": "customer_details", "id": contact.id}), user=admin_user
+    )
     response = OrderEditView.as_view()(request)
     data = json.loads(response.content.decode("utf8"))
 
@@ -450,8 +504,12 @@ def test_order_creator_customer_details(rf, admin_user):
     assert len(data["recent_orders"]) == 1
     assert data["recent_orders"][0]["status"] == order.get_status_display()
     assert data["recent_orders"][0]["total"] == format_money(order.taxful_total_price)
-    assert data["recent_orders"][0]["payment_status"] == force_text(order.payment_status.label)
-    assert data["recent_orders"][0]["shipment_status"] == force_text(order.shipping_status.label)
+    assert data["recent_orders"][0]["payment_status"] == force_text(
+        order.payment_status.label
+    )
+    assert data["recent_orders"][0]["shipment_status"] == force_text(
+        order.shipping_status.label
+    )
 
 
 def test_edit_view_with_anonymous_contact(rf, admin_user):

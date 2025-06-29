@@ -22,7 +22,16 @@ if TYPE_CHECKING:  # pragma: no cover
 LOGGER = logging.getLogger(__name__)
 
 
-def import_file(importer, import_mode, file_name, language, shop_id, supplier_id=None, user_id=None, mapping=None):
+def import_file(
+    importer,
+    import_mode,
+    file_name,
+    language,
+    shop_id,
+    supplier_id=None,
+    user_id=None,
+    mapping=None,
+):
     shop = Shop.objects.get(pk=shop_id)
     supplier = None
     user = None
@@ -37,7 +46,14 @@ def import_file(importer, import_mode, file_name, language, shop_id, supplier_id
     import_mode = ImportMode(import_mode)
 
     file_importer = FileImporter(
-        importer, import_mode, file_name, language, mapping=mapping, shop=shop, supplier=supplier, user=user
+        importer,
+        import_mode,
+        file_name,
+        language,
+        mapping=mapping,
+        shop=shop,
+        supplier=supplier,
+        user=user,
     )
 
     try:
@@ -48,7 +64,9 @@ def import_file(importer, import_mode, file_name, language, shop_id, supplier_id
 
             importer_instance = file_importer.importer  # type: DataImporter
             result = dict(
-                other_log_messages=[str(msg) for msg in importer_instance.other_log_messages],
+                other_log_messages=[
+                    str(msg) for msg in importer_instance.other_log_messages
+                ],
                 log_messages=[str(msg) for msg in importer_instance.log_messages],
             )
 
@@ -57,7 +75,10 @@ def import_file(importer, import_mode, file_name, language, shop_id, supplier_id
 
             for new_object in importer_instance.new_objects:
                 new_objects.append(
-                    {"model": f"{new_object._meta.app_label}.{new_object._meta.model_name}", "pk": new_object.pk}
+                    {
+                        "model": f"{new_object._meta.app_label}.{new_object._meta.model_name}",
+                        "pk": new_object.pk,
+                    }
                 )
             for updated_object in importer_instance.updated_objects:
                 updated_objects.append(
@@ -78,4 +99,6 @@ def import_file(importer, import_mode, file_name, language, shop_id, supplier_id
 
     except Exception:
         LOGGER.exception("Failed to import the file.")
-        return TaskResult(error_log=_("Unexpected error while trying to import the file."))
+        return TaskResult(
+            error_log=_("Unexpected error while trying to import the file.")
+        )

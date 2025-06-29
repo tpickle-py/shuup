@@ -18,7 +18,11 @@ from shuup.notify.script import Step
 from shuup.testing.factories import get_default_shop
 from shuup.utils.django_compat import reverse
 from shuup_tests.utils import SmartClient
-from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME, regular_user
+from shuup_tests.utils.fixtures import (
+    REGULAR_USER_PASSWORD,
+    REGULAR_USER_USERNAME,
+    regular_user,
+)
 
 
 @pytest.mark.django_db
@@ -43,7 +47,10 @@ def test_notify_on_company_created(regular_user, allow_company_registration):
         next=StepNext.STOP,
     )
     script = Script(
-        event_identifier=CompanyAccountCreated.identifier, name="Test Script", enabled=True, shop=get_default_shop()
+        event_identifier=CompanyAccountCreated.identifier,
+        name="Test Script",
+        enabled=True,
+        shop=get_default_shop(),
     )
     script.set_steps([step])
     script.save()

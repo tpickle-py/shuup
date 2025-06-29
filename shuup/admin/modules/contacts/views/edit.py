@@ -79,7 +79,9 @@ class ContactEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
 
     def get_toolbar(self):
         toolbar = get_default_edit_toolbar(
-            self, self.get_save_form_id(), discard_url=(get_model_url(self.object) if self.object.pk else None)
+            self,
+            self.get_save_form_id(),
+            discard_url=(get_model_url(self.object) if self.object.pk else None),
         )
 
         for button in get_provide_objects("admin_contact_edit_toolbar_button"):
@@ -92,5 +94,7 @@ class ContactEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
         contact_type = self.get_contact_type()
         context["contact_type"] = contact_type
         if not self.object.pk:
-            context["title"] = _("New Company") if contact_type == "company" else _("New Contact")
+            context["title"] = (
+                _("New Company") if contact_type == "company" else _("New Contact")
+            )
         return context

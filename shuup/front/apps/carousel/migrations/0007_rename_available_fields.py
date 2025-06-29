@@ -6,20 +6,29 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('carousel', '0006_improve_carousel_descriptions'),
+        ("carousel", "0006_improve_carousel_descriptions"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='slide',
-            name='available_from',
-            field=models.DateTimeField(blank=True, help_text='Set the date and time, starting from which this slide should be visible in the carousel. This is useful to advertise sales campaigns or other time-sensitive marketing.', null=True, verbose_name='available since'),
+            model_name="slide",
+            name="available_from",
+            field=models.DateTimeField(
+                blank=True,
+                help_text="Set the date and time, starting from which this slide should be visible in the carousel. This is useful to advertise sales campaigns or other time-sensitive marketing.",
+                null=True,
+                verbose_name="available since",
+            ),
         ),
         migrations.AlterField(
-            model_name='slide',
-            name='available_to',
-            field=models.DateTimeField(blank=True, help_text='Set the date and time, until which this slide should be visible in the carousel. This is useful to advertise sales campaigns or other time-sensitive marketing.', null=True, verbose_name='available until'),
+            model_name="slide",
+            name="available_to",
+            field=models.DateTimeField(
+                blank=True,
+                help_text="Set the date and time, until which this slide should be visible in the carousel. This is useful to advertise sales campaigns or other time-sensitive marketing.",
+                null=True,
+                verbose_name="available until",
+            ),
         ),
     ]

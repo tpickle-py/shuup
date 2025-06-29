@@ -47,10 +47,18 @@ class SupplierPricingModule(PricingModule):
             supplier = supplier_strategy().get_supplier(**kwargs)
 
         # Like now in customer group pricing let's take default price from shop product
-        shop_product = ShopProduct.objects.filter(product_id=product_id, shop=shop).only("default_price_value").first()
+        shop_product = (
+            ShopProduct.objects.filter(product_id=product_id, shop=shop)
+            .only("default_price_value")
+            .first()
+        )
 
         if not shop_product:
-            return PriceInfo(price=shop.create_price(0), base_price=shop.create_price(0), quantity=quantity)
+            return PriceInfo(
+                price=shop.create_price(0),
+                base_price=shop.create_price(0),
+                quantity=quantity,
+            )
 
         default_price = shop_product.default_price_value
 
@@ -63,7 +71,9 @@ class SupplierPricingModule(PricingModule):
         price = None
         if supplier:
             result = (
-                SupplierPrice.objects.filter(shop=shop, product_id=product_id, supplier=supplier)
+                SupplierPrice.objects.filter(
+                    shop=shop, product_id=product_id, supplier=supplier
+                )
                 .order_by("amount_value")[:1]
                 .values_list("amount_value", flat=True)
             )
@@ -82,20 +92,28 @@ class SupplierPricingModule(PricingModule):
     def index_shop_product(self, shop_product, **kwargs):
         is_variation_parent = shop_product.product.is_variation_parent()
         if is_variation_parent:
-            children_shop_product = ShopProduct.objects.select_related("product", "shop").filter(
-                shop=shop_product.shop, product__variation_parent_id=shop_product.product_id
+            children_shop_product = ShopProduct.objects.select_related(
+                "product", "shop"
+            ).filter(
+                shop=shop_product.shop,
+                product__variation_parent_id=shop_product.product_id,
             )
             for child_shop_product in children_shop_product:
                 self.index_shop_product(child_shop_product)
         else:
             for supplier_id in shop_product.suppliers.values_list("pk", flat=True):
                 supplier_price = SupplierPrice.objects.filter(
-                    shop=shop_product.shop, product_id=shop_product.product, supplier_id=supplier_id
+                    shop=shop_product.shop,
+                    product_id=shop_product.product,
+                    supplier_id=supplier_id,
                 ).first()
                 ProductCatalogPrice.objects.update_or_create(
                     product_id=shop_product.product_id,
                     shop_id=shop_product.shop_id,
                     supplier_id=supplier_id,
                     catalog_rule=None,
-                    defaults=dict(price_value=supplier_price.amount_value or shop_product.default_price_value),
+                    defaults=dict(
+                        price_value=supplier_price.amount_value
+                        or shop_product.default_price_value
+                    ),
                 )

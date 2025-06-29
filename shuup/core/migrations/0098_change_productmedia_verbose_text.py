@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0097_protect_service_provider'),
+        ("shuup", "0097_protect_service_provider"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='productmedia',
-            name='ordering',
-            field=models.IntegerField(default=0, help_text='You can assign numerical values to images to tell the order in which they shall be displayed on the product page.', verbose_name='display order'),
+            model_name="productmedia",
+            name="ordering",
+            field=models.IntegerField(
+                default=0,
+                help_text="You can assign numerical values to images to tell the order in which they shall be displayed on the product page.",
+                verbose_name="display order",
+            ),
         ),
     ]

@@ -12,7 +12,12 @@ from django.utils.module_loading import import_string
 from django.utils.translation import activate, get_language
 
 from shuup.admin import shop_provider
-from shuup.utils.django_compat import RegexPattern, URLResolver, get_middleware_classes, set_urlconf
+from shuup.utils.django_compat import (
+    RegexPattern,
+    URLResolver,
+    get_middleware_classes,
+    set_urlconf,
+)
 
 
 def apply_request_middleware(request, **attrs):

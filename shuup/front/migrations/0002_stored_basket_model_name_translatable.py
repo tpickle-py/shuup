@@ -6,14 +6,16 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_front', '0001_initial'),
+        ("shuup_front", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='storedbasket',
-            options={'verbose_name': 'stored basket', 'verbose_name_plural': 'stored baskets'},
+            name="storedbasket",
+            options={
+                "verbose_name": "stored basket",
+                "verbose_name_plural": "stored baskets",
+            },
         ),
     ]

@@ -25,13 +25,19 @@ def test_discounted_price(rf):
     assert request.shop == shop
 
     original_price = 10
-    product = factories.create_product("test1", shop=shop, supplier=supplier, default_price=original_price)
+    product = factories.create_product(
+        "test1", shop=shop, supplier=supplier, default_price=original_price
+    )
     shop_product = product.get_shop_instance(shop)
 
     # Set discount with discount amount for $2
     discount_amount = 2
     discount = Discount.objects.create(
-        active=True, product=product, supplier=supplier, discount_amount_value=discount_amount, shop=shop
+        active=True,
+        product=product,
+        supplier=supplier,
+        discount_amount_value=discount_amount,
+        shop=shop,
     )
 
     # Even though the supplier is matching with the product there is no discount

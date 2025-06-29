@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0036_shop_contacts'),
+        ("shuup", "0036_shop_contacts"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contact',
-            name='modified_on',
+            model_name="contact",
+            name="modified_on",
             field=models.DateTimeField(auto_now=True, db_index=True, null=True),
         )
     ]

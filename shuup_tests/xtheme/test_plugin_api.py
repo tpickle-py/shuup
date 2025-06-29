@@ -21,7 +21,9 @@ def test_plugin_choices():
         for identifier, data in theme.get_all_plugin_choices():
             for choice in data:
                 choice_identifiers.add(choice[0])
-        assert choice_identifiers == set(("inject", "text", HighlightTestPlugin.identifier))
+        assert choice_identifiers == set(
+            ("inject", "text", HighlightTestPlugin.identifier)
+        )
 
 
 def test_templated_plugin():

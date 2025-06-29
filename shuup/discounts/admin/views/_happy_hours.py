@@ -35,7 +35,9 @@ class HappyHourListView(PicotableListView):
             _("Happy Hour Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(filter_field="name", placeholder=_("Filter by name...")),
+            filter_config=TextFilter(
+                filter_field="name", placeholder=_("Filter by name...")
+            ),
         )
     ]
 
@@ -74,10 +76,19 @@ def _create_time_ranges_from_data(happy_hour, weekdays, from_hour, to_hour):
                 weekday=matching_day,
             )
             TimeRange.objects.create(
-                happy_hour=happy_hour, parent=parent, from_hour=datetime.time(hour=0), to_hour=to_hour, weekday=tomorrow
+                happy_hour=happy_hour,
+                parent=parent,
+                from_hour=datetime.time(hour=0),
+                to_hour=to_hour,
+                weekday=tomorrow,
             )
         else:
-            TimeRange.objects.create(happy_hour=happy_hour, from_hour=from_hour, to_hour=to_hour, weekday=int(weekday))
+            TimeRange.objects.create(
+                happy_hour=happy_hour,
+                from_hour=from_hour,
+                to_hour=to_hour,
+                weekday=int(weekday),
+            )
 
 
 class HappyHourForm(forms.ModelForm):
@@ -101,14 +112,18 @@ class HappyHourForm(forms.ModelForm):
                 model=Discount,
                 required=False,
             )
-            initial_discounts = self.instance.discounts.all() if self.instance.pk else []
+            initial_discounts = (
+                self.instance.discounts.all() if self.instance.pk else []
+            )
             self.fields["discounts"].initial = initial_discounts
             self.fields["discounts"].widget.choices = [
                 (discount.pk, force_text(discount)) for discount in initial_discounts
             ]
 
         if self.instance.pk:
-            weekdays, from_hour, to_hour = _get_initial_data_for_time_ranges(self.instance)
+            weekdays, from_hour, to_hour = _get_initial_data_for_time_ranges(
+                self.instance
+            )
             if weekdays and from_hour and to_hour:
                 self.fields["weekdays"].initial = weekdays
                 self.fields["from_hour"].initial = from_hour
@@ -119,8 +134,18 @@ class HappyHourForm(forms.ModelForm):
         self.fields["from_hour"].widget = TimeInput(attrs={"class": "time"})
         self.fields["to_hour"].widget = TimeInput(attrs={"class": "time"})
         help_texts = [
-            ("from_hour", _("12pm is considered noon and 12am as midnight. Start hour is included to the discount.")),
-            ("to_hour", _("12pm is considered noon and 12am as midnight. End hours is included to the discount.")),
+            (
+                "from_hour",
+                _(
+                    "12pm is considered noon and 12am as midnight. Start hour is included to the discount."
+                ),
+            ),
+            (
+                "to_hour",
+                _(
+                    "12pm is considered noon and 12am as midnight. End hours is included to the discount."
+                ),
+            ),
             ("weekdays", _("Weekdays the happy hour is active.")),
         ]
         for field, help_text in help_texts:
@@ -136,7 +161,9 @@ class HappyHourForm(forms.ModelForm):
             if "discounts" in self.fields:
                 data = self.cleaned_data
                 discount_ids = data.get("discounts", [])
-                instance.discounts.set(Discount.objects.filter(shop=self.shop, id__in=discount_ids))
+                instance.discounts.set(
+                    Discount.objects.filter(shop=self.shop, id__in=discount_ids)
+                )
 
             instance.time_ranges.all().delete()
 
@@ -160,9 +187,15 @@ class HappyHourEditView(CreateOrUpdateView):
     def get_toolbar(self):
         object = self.get_object()
         delete_url = (
-            reverse_lazy("shuup_admin:discounts_happy_hour.delete", kwargs={"pk": object.pk}) if object.pk else None
+            reverse_lazy(
+                "shuup_admin:discounts_happy_hour.delete", kwargs={"pk": object.pk}
+            )
+            if object.pk
+            else None
         )
-        return get_default_edit_toolbar(self, self.get_save_form_id(), delete_url=delete_url)
+        return get_default_edit_toolbar(
+            self, self.get_save_form_id(), delete_url=delete_url
+        )
 
     def get_form_kwargs(self):
         kwargs = super(HappyHourEditView, self).get_form_kwargs()
@@ -180,4 +213,6 @@ class HappyHourDeleteView(DetailView):
         happy_hour = self.get_object()
         happy_hour.delete()
         messages.success(request, _("%s has been deleted.") % happy_hour)
-        return HttpResponseRedirect(reverse_lazy("shuup_admin:discounts_happy_hour.list"))
+        return HttpResponseRedirect(
+            reverse_lazy("shuup_admin:discounts_happy_hour.list")
+        )

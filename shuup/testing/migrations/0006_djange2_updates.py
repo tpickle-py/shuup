@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_testing', '0005_supplierprice'),
+        ("shuup_testing", "0005_supplierprice"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='ultrafilter',
-            options={'base_manager_name': 'objects'},
+            name="ultrafilter",
+            options={"base_manager_name": "objects"},
         ),
     ]

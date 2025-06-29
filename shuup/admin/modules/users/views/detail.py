@@ -69,7 +69,11 @@ def get_admin_url():
 
 
 class BaseUserForm(forms.ModelForm):
-    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput, help_text=_("The user password."))
+    password = forms.CharField(
+        label=_("Password"),
+        widget=forms.PasswordInput,
+        help_text=_("The user password."),
+    )
     permission_info = forms.CharField(
         label=_("Main Permissions"),
         widget=forms.TextInput(attrs={"readonly": True, "disabled": True}),
@@ -97,7 +101,9 @@ class BaseUserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BaseUserForm, self).__init__(*args, **kwargs)
         if "email" in self.fields:
-            self.fields["email"].help_text = _("The user email address. Used for password resets.")
+            self.fields["email"].help_text = _(
+                "The user email address. Used for password resets."
+            )
         if "first_name" in self.fields:
             self.fields["first_name"].help_text = _("The first name of the user.")
         if "last_name" in self.fields:
@@ -105,25 +111,32 @@ class BaseUserForm(forms.ModelForm):
         if self.instance.pk:
             # Changing the password for an existing user requires more confirmation
             self.fields.pop("password")
-            self.initial["permission_info"] = (
-                ", ".join(
-                    force_text(perm)
-                    for perm in [
-                        _("Access to Admin Panel") if getattr(self.instance, "is_staff", None) else "",
-                        _("Superuser (Full rights)") if getattr(self.instance, "is_superuser", None) else "",
-                    ]
-                    if perm
-                )
-                or _("No Main Permissions selected.")
-            )
+            self.initial["permission_info"] = ", ".join(
+                force_text(perm)
+                for perm in [
+                    _("Access to Admin Panel")
+                    if getattr(self.instance, "is_staff", None)
+                    else "",
+                    _("Superuser (Full rights)")
+                    if getattr(self.instance, "is_superuser", None)
+                    else "",
+                ]
+                if perm
+            ) or _("No Main Permissions selected.")
             if hasattr(self.instance, "groups"):
-                group_names = [force_text(group) for group in self.instance.groups.all()]
+                group_names = [
+                    force_text(group) for group in self.instance.groups.all()
+                ]
                 if group_names:
                     self.initial["permission_groups"] = ", ".join(sorted(group_names))
                 else:
-                    self.initial["permission_groups"] = _("No Granular Permission Groups selected.")
+                    self.initial["permission_groups"] = _(
+                        "No Granular Permission Groups selected."
+                    )
             else:
-                self.initial["permission_groups"] = _("No Granular Permission Groups available.")
+                self.initial["permission_groups"] = _(
+                    "No Granular Permission Groups available."
+                )
         else:
             self.fields.pop("permission_info")
             self.fields.pop("permission_groups")
@@ -146,7 +159,9 @@ class BaseUserForm(forms.ModelForm):
             and cleaned_data.get("is_staff")
             and not self.cleaned_data.get("email")
         ):
-            raise forms.ValidationError({"email": _("Please enter an email to send a confirmation to.")})
+            raise forms.ValidationError(
+                {"email": _("Please enter an email to send a confirmation to.")}
+            )
 
     def save(self, commit=True):
         user = super(BaseUserForm, self).save(commit=False)
@@ -166,7 +181,9 @@ class UserDetailToolbar(Toolbar):
         self.request = view.request
         self.user = view.object
         super(UserDetailToolbar, self).__init__()
-        self.extend(get_default_edit_toolbar(self.view, "user_form", with_split_save=False))
+        self.extend(
+            get_default_edit_toolbar(self.view, "user_form", with_split_save=False)
+        )
         if self.user.pk:
             self._build_existing_user()
 
@@ -180,7 +197,11 @@ class UserDetailToolbar(Toolbar):
         )
         reset_password_button = DropdownItem(
             url=reverse("shuup_admin:user.reset-password", kwargs={"pk": user.pk}),
-            disable_reason=(_("User has no email address") if not getattr(user, "email", "") else None),
+            disable_reason=(
+                _("User has no email address")
+                if not getattr(user, "email", "")
+                else None
+            ),
             text=_("Send Password Reset Email"),
             icon="fa fa-envelope",
             required_permissions=["user.reset-password"],
@@ -191,11 +212,18 @@ class UserDetailToolbar(Toolbar):
             icon="fa fa-lock",
             required_permissions=["user.change-permissions"],
         )
-        menu_items = [change_password_button, reset_password_button, permissions_button, DropdownDivider()]
+        menu_items = [
+            change_password_button,
+            reset_password_button,
+            permissions_button,
+            DropdownDivider(),
+        ]
 
         person_contact = PersonContact.objects.filter(user=user).first()
         if person_contact:
-            contact_url = reverse("shuup_admin:contact.detail", kwargs={"pk": person_contact.pk})
+            contact_url = reverse(
+                "shuup_admin:contact.detail", kwargs={"pk": person_contact.pk}
+            )
             menu_items.append(
                 DropdownItem(
                     url=contact_url,
@@ -205,7 +233,9 @@ class UserDetailToolbar(Toolbar):
                 )
             )
         else:
-            contact_url = reverse("shuup_admin:contact.new") + "?type=person&user_id=%s" % user.pk
+            contact_url = (
+                reverse("shuup_admin:contact.new") + "?type=person&user_id=%s" % user.pk
+            )
             menu_items.append(
                 DropdownItem(
                     url=contact_url,
@@ -247,15 +277,21 @@ class UserDetailToolbar(Toolbar):
             )
 
         current_user = self.request.user
-        is_current_user_superuser_or_staff = getattr(current_user, "is_superuser", False) or getattr(
-            current_user, "is_staff", False
+        is_current_user_superuser_or_staff = getattr(
+            current_user, "is_superuser", False
+        ) or getattr(current_user, "is_staff", False)
+        can_impersonate = bool(
+            is_current_user_superuser_or_staff
+            and user.is_active
+            and not user.is_superuser
         )
-        can_impersonate = bool(is_current_user_superuser_or_staff and user.is_active and not user.is_superuser)
 
         if can_impersonate and get_front_url() and not user.is_staff:
             self.append(
                 PostActionButton(
-                    post_url=reverse("shuup_admin:user.login-as", kwargs={"pk": user.pk}),
+                    post_url=reverse(
+                        "shuup_admin:user.login-as", kwargs={"pk": user.pk}
+                    ),
                     text=_("Login as User"),
                     extra_css_class="btn-gray",
                 )
@@ -263,7 +299,9 @@ class UserDetailToolbar(Toolbar):
         elif can_impersonate and get_admin_url() and user.is_staff:
             self.append(
                 PostActionButton(
-                    post_url=reverse("shuup_admin:user.login-as-staff", kwargs={"pk": user.pk}),
+                    post_url=reverse(
+                        "shuup_admin:user.login-as-staff", kwargs={"pk": user.pk}
+                    ),
                     text=_("Login as Staff User"),
                     extra_css_class="btn-gray",
                 )
@@ -281,7 +319,11 @@ class UserDetailView(CreateOrUpdateView):
     def fields(self):
         # check whether these fields exists in the model or it has the attribute
         model_fields = [f.name for f in self.model._meta.get_fields()]
-        fields = [field for field in self._fields if field in model_fields or hasattr(self.model, field)]
+        fields = [
+            field
+            for field in self._fields
+            if field in model_fields or hasattr(self.model, field)
+        ]
         if not self.object.pk and getattr(self.request.user, "is_superuser", False):
             fields.append("is_staff")
             fields.append("is_superuser")
@@ -334,19 +376,26 @@ class UserDetailView(CreateOrUpdateView):
         if contact and not contact.user:
             contact.user = self.object
             contact.save()
-            messages.info(self.request, _("Info! User bound to contact %(contact)s.") % {"contact": contact})
+            messages.info(
+                self.request,
+                _("Info! User bound to contact %(contact)s.") % {"contact": contact},
+            )
 
-        if getattr(self.object, "is_staff", False) and form.cleaned_data.get("send_confirmation"):
+        if getattr(self.object, "is_staff", False) and form.cleaned_data.get(
+            "send_confirmation"
+        ):
             shop_url = "%s://%s/" % (self.request.scheme, self.request.get_host())
             admin_url = self.request.build_absolute_uri(reverse("shuup_admin:login"))
             send_mail(
                 subject=_("You've been added as an admin user to `%s`." % shop_url),
                 message=NEW_USER_EMAIL_CONFIRMATION_TEMPLATE
                 % {
-                    "first_name": getattr(self.object, "first_name") or getattr(self.object, "username", _("User")),
+                    "first_name": getattr(self.object, "first_name")
+                    or getattr(self.object, "username", _("User")),
                     "shop_url": shop_url,
                     "admin_url": admin_url,
-                    "username": getattr(self.object, "username") or getattr(self.object.email),
+                    "username": getattr(self.object, "username")
+                    or getattr(self.object.email),
                 },
                 from_email=django_settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[self.object.email],
@@ -355,13 +404,23 @@ class UserDetailView(CreateOrUpdateView):
     def _handle_set_is_active(self):
         state = bool(int(self.request.POST["set_is_active"]))
         if not state:
-            if getattr(self.object, "is_superuser", False) and not getattr(self.request.user, "is_superuser", False):
-                raise Problem(_("You can not deactivate a Superuser. Remove Superuser status first."))
+            if getattr(self.object, "is_superuser", False) and not getattr(
+                self.request.user, "is_superuser", False
+            ):
+                raise Problem(
+                    _(
+                        "You can not deactivate a Superuser. Remove Superuser status first."
+                    )
+                )
             if self.object == self.request.user:
-                raise Problem(_("You can not deactivate yourself. Use another account."))
+                raise Problem(
+                    _("You can not deactivate yourself. Use another account.")
+                )
 
         if not self.object.is_active and state:
-            user_reactivated.send(sender=self.__class__, user=self.object, request=self.request)
+            user_reactivated.send(
+                sender=self.__class__, user=self.object, request=self.request
+            )
 
         self.object.is_active = state
         self.object.save(update_fields=("is_active",))
@@ -372,7 +431,8 @@ class UserDetailView(CreateOrUpdateView):
 
         messages.success(
             self.request,
-            _("%(user)s is now %(state)s.") % {"user": self.object, "state": _("active") if state else _("inactive")},
+            _("%(user)s is now %(state)s.")
+            % {"user": self.object, "state": _("active") if state else _("inactive")},
         )
         return HttpResponseRedirect(self.request.path)
 
@@ -396,15 +456,21 @@ def _check_for_login_as_problems(redirect_url, impersonator_user, user):
         raise Problem(_("This user is not active."))
 
 
-def _check_for_login_as_permissions(shop, impersonator_user, user, permission_str, can_impersonate_staff=False):
+def _check_for_login_as_permissions(
+    shop, impersonator_user, user, permission_str, can_impersonate_staff=False
+):
     if getattr(user, "is_superuser", False):
         raise PermissionDenied
     if getattr(user, "is_staff", False) and not can_impersonate_staff:
         raise PermissionDenied
-    if not (getattr(impersonator_user, "is_superuser", False) or getattr(impersonator_user, "is_staff", False)):
+    if not (
+        getattr(impersonator_user, "is_superuser", False)
+        or getattr(impersonator_user, "is_staff", False)
+    ):
         raise PermissionDenied
     if not (
-        getattr(impersonator_user, "is_superuser", False) or shop.staff_members.filter(id=impersonator_user.pk).exists()
+        getattr(impersonator_user, "is_superuser", False)
+        or shop.staff_members.filter(id=impersonator_user.pk).exists()
     ):
         raise PermissionDenied
     if not has_permission(impersonator_user, permission_str):
@@ -428,7 +494,13 @@ class LoginAsUserView(DetailView):
         shop = get_shop(request)
 
         _check_for_login_as_problems(redirect_url, impersonator_user, user)
-        _check_for_login_as_permissions(shop, impersonator_user, user, self.permission_str, self.can_impersonate_staff)
+        _check_for_login_as_permissions(
+            shop,
+            impersonator_user,
+            user,
+            self.permission_str,
+            self.can_impersonate_staff,
+        )
 
         if not hasattr(user, "backend"):
             for backend in django_settings.AUTHENTICATION_BACKENDS:
@@ -438,7 +510,9 @@ class LoginAsUserView(DetailView):
 
         login(request, user)
         request.session["impersonator_user_id"] = impersonator_user_id
-        message = _("You're now logged in as `{username}`.").format(username=user.__dict__[username_field])
+        message = _("You're now logged in as `{username}`.").format(
+            username=user.__dict__[username_field]
+        )
         messages.success(request, message)
         return HttpResponseRedirect(redirect_url)
 

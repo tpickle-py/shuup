@@ -57,7 +57,11 @@ class ContactGroupBaseFormPart(FormPart):
             ContactGroupBaseForm,
             template_name="shuup/admin/contact_groups/_edit_base_contact_group_form.jinja",
             required=True,
-            kwargs={"instance": contact_group, "languages": settings.LANGUAGES, "request": self.request},
+            kwargs={
+                "instance": contact_group,
+                "languages": settings.LANGUAGES,
+                "request": self.request,
+            },
         )
 
     def form_valid(self, form):
@@ -66,7 +70,9 @@ class ContactGroupBaseFormPart(FormPart):
 
 class ContactGroupMembersForm(forms.Form):
     member = forms.ModelChoiceField(
-        queryset=Contact.objects.all(), widget=ContactChoiceWidget(empty_text=""), label=_("member")
+        queryset=Contact.objects.all(),
+        widget=ContactChoiceWidget(empty_text=""),
+        label=_("member"),
     )
 
 
@@ -99,12 +105,19 @@ class ContactGroupMembersFormSet(BaseFormSet):
         if members_to_add:
             add_count = len(members_to_add)
             message_parts.append(
-                ungettext("%(count)s member added", "%(count)s members added.", add_count) % {"count": add_count}
+                ungettext(
+                    "%(count)s member added", "%(count)s members added.", add_count
+                )
+                % {"count": add_count}
             )
         if members_to_remove:
             remove_count = len(members_to_remove)
             message_parts.append(
-                ungettext("%(count)s member removed", "%(count)s members removed.", remove_count)
+                ungettext(
+                    "%(count)s member removed",
+                    "%(count)s members removed.",
+                    remove_count,
+                )
                 % {"count": remove_count}
             )
         if message_parts and self.request:
@@ -130,7 +143,12 @@ class ContactGroupMembersFormPart(FormPart):
 
     def get_form_defs(self):
         contact_group = self.object
-        form = formset_factory(ContactGroupMembersForm, ContactGroupMembersFormSet, extra=1, can_delete=True)
+        form = formset_factory(
+            ContactGroupMembersForm,
+            ContactGroupMembersFormSet,
+            extra=1,
+            can_delete=True,
+        )
         template_name = "shuup/admin/contact_groups/_edit_members_form.jinja"
 
         if contact_group.pk:

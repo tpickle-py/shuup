@@ -12,7 +12,9 @@ from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from shuup.notify.script_template.factory import generic_send_email_script_template_factory
+from shuup.notify.script_template.factory import (
+    generic_send_email_script_template_factory,
+)
 
 from .notify_events import PasswordReset
 
@@ -49,5 +51,8 @@ PasswordResetTemplate = generic_send_email_script_template_factory(
         requested either by admin, staff or user.
     """
     ),
-    initial={"en-subject": "Password Recovery", "en-body": PASSWORD_RESET_EMAIL_TEMPLATE},
+    initial={
+        "en-subject": "Password Recovery",
+        "en-body": PASSWORD_RESET_EMAIL_TEMPLATE,
+    },
 )

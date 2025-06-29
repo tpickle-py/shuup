@@ -33,7 +33,9 @@ class StocksListView(PicotableListView):
             sort_field="product__sku",
             display="product__sku",
             linked=True,
-            filter_config=TextFilter(filter_field="product__sku", placeholder=_("Filter by SKU...")),
+            filter_config=TextFilter(
+                filter_field="product__sku", placeholder=_("Filter by SKU...")
+            ),
         ),
         Column(
             "name",
@@ -41,7 +43,10 @@ class StocksListView(PicotableListView):
             sort_field="product__translations__name",
             display="product__name",
             linked=True,
-            filter_config=TextFilter(filter_field="product__translations__name", placeholder=_("Filter by name...")),
+            filter_config=TextFilter(
+                filter_field="product__translations__name",
+                placeholder=_("Filter by name..."),
+            ),
         ),
         Column(
             "supplier",
@@ -49,7 +54,9 @@ class StocksListView(PicotableListView):
             display="supplier",
             linked=False,
             filter_config=ChoicesFilter(
-                Supplier.objects.enabled().filter(supplier_modules__module_identifier="simple_supplier")
+                Supplier.objects.enabled().filter(
+                    supplier_modules__module_identifier="simple_supplier"
+                )
             ),
         ),
         Column(
@@ -101,7 +108,9 @@ class StocksListView(PicotableListView):
         return get_stock_information_html(instance.supplier, instance.product)
 
     def get_stock_adjustment_form(self, instance):
-        return get_stock_adjustment_div(self.request, instance.supplier, instance.product)
+        return get_stock_adjustment_div(
+            self.request, instance.supplier, instance.product
+        )
 
 
 def get_adjustment_success_message(stock_adjustment):
@@ -113,12 +122,16 @@ def get_adjustment_success_message(stock_adjustment):
     }
     if stock_adjustment.delta > 0:
         return (
-            _("Success! Added %(delta)s `%(unit_symbol)s` for product `%(product_name)s` stock (%(supplier_name)s).")
+            _(
+                "Success! Added %(delta)s `%(unit_symbol)s` for product `%(product_name)s` stock (%(supplier_name)s)."
+            )
             % arguments
         )
     else:
         return (
-            _("Success! Removed %(delta)s `%(unit_symbol)s` from product `%(product_name)s` stock (%(supplier_name)s).")
+            _(
+                "Success! Removed %(delta)s `%(unit_symbol)s` from product `%(product_name)s` stock (%(supplier_name)s)."
+            )
             % arguments
         )
 
@@ -136,10 +149,16 @@ def _process_stock_adjustment(form, request, supplier_id, product_id):
     data = form.cleaned_data
     supplier = Supplier.objects.get(id=supplier_id)
     stock_adjustment = supplier.adjust_stock(
-        product_id, delta=data.get("delta"), purchase_price=data.get("purchase_price"), created_by=request.user
+        product_id,
+        delta=data.get("delta"),
+        purchase_price=data.get("purchase_price"),
+        created_by=request.user,
     )
     success_message = _get_success_message(
-        request, stock_adjustment.supplier, stock_adjustment.product, get_adjustment_success_message(stock_adjustment)
+        request,
+        stock_adjustment.supplier,
+        stock_adjustment.product,
+        get_adjustment_success_message(stock_adjustment),
     )
     return JsonResponse(success_message, status=200)
 
@@ -149,7 +168,9 @@ def process_stock_adjustment(request, supplier_id, product_id):
         if request.method != "POST":
             return JsonResponse({}, status=405)
 
-        product = Product.objects.select_related("sales_unit").filter(pk=product_id).first()
+        product = (
+            Product.objects.select_related("sales_unit").filter(pk=product_id).first()
+        )
         form = StockAdjustmentForm(data=request.POST, sales_unit=product.sales_unit)
 
         if form.is_valid():
@@ -160,10 +181,14 @@ def process_stock_adjustment(request, supplier_id, product_id):
             for field, field_errors in form.errors.items():
                 errors.append(f"{field}: {','.join(field_errors)}")
 
-        error_message = ugettext("Please check submitted values and try again ({}).").format(", ".join(errors))
+        error_message = ugettext(
+            "Please check submitted values and try again ({})."
+        ).format(", ".join(errors))
         return JsonResponse({"message": error_message}, status=400)
     except Exception as exc:
-        error_message = ugettext("Please check submitted values and try again (%(error)s).") % {"error": exc}
+        error_message = ugettext(
+            "Please check submitted values and try again (%(error)s)."
+        ) % {"error": exc}
         return JsonResponse({"message": error_message}, status=400)
 
 
@@ -187,7 +212,9 @@ def _process_alert_limit(form, request, supplier_id, product_id):
 
 
 def process_alert_limit(request, supplier_id, product_id):
-    return _process_and_catch_errors(_process_alert_limit, AlertLimitForm, request, supplier_id, product_id)
+    return _process_and_catch_errors(
+        _process_alert_limit, AlertLimitForm, request, supplier_id, product_id
+    )
 
 
 def _process_and_catch_errors(process, form_class, request, supplier_id, product_id):
@@ -195,7 +222,9 @@ def _process_and_catch_errors(process, form_class, request, supplier_id, product
         if request.method != "POST":
             return JsonResponse({}, status=405)
 
-        product = Product.objects.select_related("sales_unit").filter(pk=product_id).first()
+        product = (
+            Product.objects.select_related("sales_unit").filter(pk=product_id).first()
+        )
 
         form = form_class(data=request.POST, sales_unit=product.sales_unit)
         if form.is_valid():
@@ -206,11 +235,15 @@ def _process_and_catch_errors(process, form_class, request, supplier_id, product
             for field, field_errors in form.errors.items():
                 errors.append(f"{field}: {','.join(field_errors)}")
 
-        error_message = ugettext("Please check submitted values and try again ({}).").format(", ".join(errors))
+        error_message = ugettext(
+            "Please check submitted values and try again ({})."
+        ).format(", ".join(errors))
         return JsonResponse({"message": error_message}, status=400)
 
     except Exception as exc:
-        error_message = ugettext("Please check submitted values and try again (%(error)s).") % {"error": exc}
+        error_message = ugettext(
+            "Please check submitted values and try again (%(error)s)."
+        ) % {"error": exc}
         return JsonResponse({"message": error_message}, status=400)
 
 
@@ -221,7 +254,9 @@ def process_stock_managed(request, supplier_id, product_id):
     stock_managed = bool(request.POST.get("stock_managed") == "True")
     supplier = Supplier.objects.get(id=supplier_id)
     product = Product.objects.get(id=product_id)
-    stock_count = StockCount.objects.get_or_create(supplier=supplier, product=product)[0]
+    stock_count = StockCount.objects.get_or_create(supplier=supplier, product=product)[
+        0
+    ]
     stock_count.stock_managed = stock_managed
     stock_count.save(update_fields=["stock_managed"])
 
@@ -229,9 +264,13 @@ def process_stock_managed(request, supplier_id, product_id):
         context_cache.bump_cache_for_product(product, shop=shop)
 
     if stock_managed:
-        msg = _("Stock management is now enabled for {product}.").format(product=product)
+        msg = _("Stock management is now enabled for {product}.").format(
+            product=product
+        )
     else:
-        msg = _("Stock management is now disabled for {product}.").format(product=product)
+        msg = _("Stock management is now disabled for {product}.").format(
+            product=product
+        )
 
     success_message = _get_success_message(request, supplier, product, msg)
     return JsonResponse(success_message, status=200)

@@ -7,7 +7,11 @@
 # LICENSE file in the root directory of this source tree.
 import pytest
 
-from shuup.testing.factories import create_empty_order, create_random_company, create_random_person
+from shuup.testing.factories import (
+    create_empty_order,
+    create_random_company,
+    create_random_person,
+)
 
 
 @pytest.mark.django_db

@@ -22,13 +22,21 @@ class MediaModule(AdminModule):
 
     def get_urls(self):
         return [
-            admin_url("^media/$", "shuup.admin.modules.media.views.MediaBrowserView", name="media.browse"),
+            admin_url(
+                "^media/$",
+                "shuup.admin.modules.media.views.MediaBrowserView",
+                name="media.browse",
+            ),
             admin_url(
                 r"^media/folder/(?P<pk>\d+)/$",
                 "shuup.admin.modules.media.views.MediaFolderEditView",
                 name="media.edit-access",
             ),
-            admin_url("^media/upload/$", "shuup.admin.modules.media.views.media_upload", name="media.upload"),
+            admin_url(
+                "^media/upload/$",
+                "shuup.admin.modules.media.views.media_upload",
+                name="media.upload",
+            ),
         ]
 
     def get_extra_permissions(self):

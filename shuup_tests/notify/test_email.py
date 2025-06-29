@@ -28,7 +28,9 @@ def test_email_action():
 
     event = get_initialized_test_event()
     ctx = Context.from_event(event, shop=factories.get_default_shop())
-    ctx.set("name", "Luke Warm")  # This variable isn't published by the event, but it's used by the template
+    ctx.set(
+        "name", "Luke Warm"
+    )  # This variable isn't published by the event, but it's used by the template
     se = SendEmail(
         {
             "template_data": TEST_TEMPLATE_DATA,
@@ -44,7 +46,9 @@ def test_email_action():
     msg = mail.outbox[0]
     assert msg.to == ["someone@shuup.local"]
     assert msg.from_email == "from@shuup.local"
-    assert ctx.get("name").upper() in msg.subject  # The Japanese template upper-cases the name
+    assert (
+        ctx.get("name").upper() in msg.subject
+    )  # The Japanese template upper-cases the name
 
 
 @pytest.mark.django_db
@@ -56,7 +60,9 @@ def test_complete_email_action():
 
     event = get_initialized_test_event()
     ctx = Context.from_event(event, shop=factories.get_default_shop())
-    ctx.set("name", "Luke Warm")  # This variable isn't published by the event, but it's used by the template
+    ctx.set(
+        "name", "Luke Warm"
+    )  # This variable isn't published by the event, but it's used by the template
     se = SendEmail(
         {
             "template_data": TEST_TEMPLATE_DATA,
@@ -76,14 +82,17 @@ def test_complete_email_action():
     assert msg.cc == ["copied@shuup.local", "loop@shuup.local"]
     assert msg.bcc == ["hiddenone@shuup.local", "secret@shuup.local"]
     assert msg.from_email == "from@shuup.local"
-    assert ctx.get("name").upper() in msg.subject  # The Japanese template upper-cases the name
+    assert (
+        ctx.get("name").upper() in msg.subject
+    )  # The Japanese template upper-cases the name
 
 
 @pytest.mark.django_db
 def test_email_action_with_template_body():
     with override_settings(LANGUAGES=(("en", "en"))):
         email_template = EmailTemplate.objects.create(
-            name="template 1", template="<html><style>.dog-color { color: red; }</style><body>%html_body%</body></html>"
+            name="template 1",
+            template="<html><style>.dog-color { color: red; }</style><body>%html_body%</body></html>",
         )
         SUPER_TEST_TEMPLATE_DATA = {
             "en": {
@@ -100,10 +109,14 @@ def test_email_action_with_template_body():
 
         mail.outbox = []  # Clear the Django testing mail outbox
 
-        with mock.patch.object(notification_email_before_send, "send") as mocked_method_1:
+        with mock.patch.object(
+            notification_email_before_send, "send"
+        ) as mocked_method_1:
             event = get_initialized_test_event()
             ctx = Context.from_event(event, shop=factories.get_default_shop())
-            ctx.set("name", "John Smith")  # This variable isn't published by the event, but it's used by the template
+            ctx.set(
+                "name", "John Smith"
+            )  # This variable isn't published by the event, but it's used by the template
             se = SendEmail(
                 {
                     "template_data": SUPER_TEST_TEMPLATE_DATA,
@@ -123,7 +136,9 @@ def test_email_action_with_template_body():
         with mock.patch.object(notification_email_sent, "send") as mocked_method_2:
             event = get_initialized_test_event()
             ctx = Context.from_event(event, shop=factories.get_default_shop())
-            ctx.set("name", "Luke J. Warm")  # This variable isn't published by the event, but it's used by the template
+            ctx.set(
+                "name", "Luke J. Warm"
+            )  # This variable isn't published by the event, but it's used by the template
             se = SendEmail(
                 {
                     "template_data": SUPER_TEST_TEMPLATE_DATA,

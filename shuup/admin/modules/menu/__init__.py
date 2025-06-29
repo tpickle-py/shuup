@@ -20,9 +20,15 @@ class YourAdminMenuModule(AdminModule):
     def get_urls(self):
         return [
             admin_url(
-                r"^menu/your/$", "shuup.admin.modules.menu.views.arrange.AdminMenuArrangeView", name="menu.arrange"
+                r"^menu/your/$",
+                "shuup.admin.modules.menu.views.arrange.AdminMenuArrangeView",
+                name="menu.arrange",
             ),
-            admin_url(r"^menu/reset/$", "shuup.admin.modules.menu.views.arrange.AdminMenuResetView", name="menu.reset"),
+            admin_url(
+                r"^menu/reset/$",
+                "shuup.admin.modules.menu.views.arrange.AdminMenuResetView",
+                name="menu.reset",
+            ),
         ]
 
     def get_menu_entries(self, request):

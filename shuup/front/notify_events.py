@@ -72,8 +72,12 @@ class ShipmentCreated(Event):
     shipment = Variable(_("Shipment"), type=Model("shuup.Shipment"))
     shipping_status = Variable(_("Order Shipping Status"), type=Enum(ShippingStatus))
     shipment_status = Variable(_("Shipment Status"), type=Enum(ShipmentStatus))
-    shipment_tracking_code = Variable(_("Shipment Tracking Code"), type=Text, required=False)
-    shipment_tracking_url = Variable(_("Shipment Tracking URL"), type=URL, required=False)
+    shipment_tracking_code = Variable(
+        _("Shipment Tracking Code"), type=Text, required=False
+    )
+    shipment_tracking_url = Variable(
+        _("Shipment Tracking URL"), type=URL, required=False
+    )
 
 
 class ShipmentSent(ShipmentCreated):
@@ -131,7 +135,12 @@ def send_order_received_notification(order, **kwargs):
     )
 
     if order.shop.contact_address:
-        params.update(dict(shop_email=order.shop.contact_address.email, shop_phone=order.shop.contact_address.phone))
+        params.update(
+            dict(
+                shop_email=order.shop.contact_address.email,
+                shop_phone=order.shop.contact_address.phone,
+            )
+        )
 
     OrderReceived(**params).run(shop=order.shop)
 
@@ -222,6 +231,11 @@ def send_order_status_changed_notification(order, old_status, new_status, **kwar
     )
 
     if order.shop.contact_address:
-        params.update(dict(shop_email=order.shop.contact_address.email, shop_phone=order.shop.contact_address.phone))
+        params.update(
+            dict(
+                shop_email=order.shop.contact_address.email,
+                shop_phone=order.shop.contact_address.phone,
+            )
+        )
 
     OrderStatusChanged(**params).run(shop=order.shop)

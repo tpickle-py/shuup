@@ -11,7 +11,11 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import activate
 
-from shuup.admin.modules.products.mass_actions import ExportProductsCSVAction, InvisibleMassAction, VisibleMassAction
+from shuup.admin.modules.products.mass_actions import (
+    ExportProductsCSVAction,
+    InvisibleMassAction,
+    VisibleMassAction,
+)
 from shuup.admin.utils.picotable import PicotableMassAction
 from shuup.core.models import Shop, ShopProduct, ShopProductVisibility, ShopStatus
 from shuup.core.utils import context_cache
@@ -37,8 +41,12 @@ def test_mass_actions(rf, admin_user):
     activate("en")
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product1 = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
-    product2 = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
+    product1 = create_product(
+        printable_gibberish(), shop=shop, supplier=supplier, default_price=50
+    )
+    product2 = create_product(
+        printable_gibberish(), shop=shop, supplier=supplier, default_price=50
+    )
 
     shop_product1 = product1.get_shop_instance(shop)
     shop_product2 = product2.get_shop_instance(shop)
@@ -51,7 +59,10 @@ def test_mass_actions(rf, admin_user):
         assert shop_product.purchasable is False
 
     mass_action_response = ExportProductsCSVAction().process(request, ids)
-    assert mass_action_response["Content-disposition"] == 'attachment; filename="products.csv"'
+    assert (
+        mass_action_response["Content-disposition"]
+        == 'attachment; filename="products.csv"'
+    )
 
 
 @pytest.mark.django_db
@@ -89,12 +100,16 @@ def test_mass_actions_product_ids_mixup(rf, admin_user):
     assert shop_product2.pk != product2.pk
 
     view = load("shuup.admin.modules.products.views:ProductListView").as_view()
-    request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user
+    )
     response = view(request)
     assert 200 <= response.status_code < 300
     data = json.loads(response.content.decode("utf-8"))
 
-    shop_product1_id = [item["_id"] for item in data["items"] if item["product_sku"] == "sku1"][0]
+    shop_product1_id = [
+        item["_id"] for item in data["items"] if item["product_sku"] == "sku1"
+    ][0]
     assert shop_product1_id == shop_product1.pk
     InvisibleMassAction().process(request, [shop_product1_id])
     shop_product1.refresh_from_db()
@@ -111,14 +126,18 @@ def test_mass_action_cache(rf, admin_user):
     shop_product = product.get_shop_instance(shop)
     shop_product2 = product2.get_shop_instance(shop)
 
-    set_bump_cache_for_shop_product = mock.Mock(wraps=context_cache.bump_cache_for_shop_product)
+    set_bump_cache_for_shop_product = mock.Mock(
+        wraps=context_cache.bump_cache_for_shop_product
+    )
 
     def bump_cache_for_shop_product(item):
         return set_bump_cache_for_shop_product(item)
 
     request = apply_request_middleware(rf.get("/"), user=admin_user, shop=shop)
 
-    with mock.patch.object(context_cache, "bump_cache_for_shop_product", new=bump_cache_for_shop_product):
+    with mock.patch.object(
+        context_cache, "bump_cache_for_shop_product", new=bump_cache_for_shop_product
+    ):
         assert set_bump_cache_for_shop_product.call_count == 0
         InvisibleMassAction().process(request, [shop_product.id, shop_product2.id])
         assert set_bump_cache_for_shop_product.call_count == 2

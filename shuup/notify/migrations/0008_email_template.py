@@ -6,22 +6,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_notify', '0007_add-script-log-entry'),
+        ("shuup_notify", "0007_add-script-log-entry"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='EmailTemplate',
+            name="EmailTemplate",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=60, verbose_name='Name')),
-                ('template', models.TextField(help_text='Enter the base HTML template to be used in emails. Mark the place to inject the email content using the variable `%html_body%` inside the body.', verbose_name='Template')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=60, verbose_name="Name")),
+                (
+                    "template",
+                    models.TextField(
+                        help_text="Enter the base HTML template to be used in emails. Mark the place to inject the email content using the variable `%html_body%` inside the body.",
+                        verbose_name="Template",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Email Template',
-                'verbose_name_plural': 'Email Templates',
+                "verbose_name": "Email Template",
+                "verbose_name_plural": "Email Templates",
             },
         ),
     ]

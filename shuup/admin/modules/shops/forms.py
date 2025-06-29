@@ -23,11 +23,16 @@ from shuup.utils.i18n import get_current_babel_locale
 def get_currency_choices():
     locale = get_current_babel_locale()
     currencies = Currency.objects.all().order_by("code")
-    return [(currency.code, locale.currencies.get(currency.code, currency)) for currency in currencies]
+    return [
+        (currency.code, locale.currencies.get(currency.code, currency))
+        for currency in currencies
+    ]
 
 
 class ShopBaseForm(ProtectedFieldsMixin, ShuupAdminForm):
-    change_protect_field_text = _("This field cannot be changed since there are existing orders for this shop.")
+    change_protect_field_text = _(
+        "This field cannot be changed since there are existing orders for this shop."
+    )
 
     class Meta:
         model = Shop
@@ -42,7 +47,9 @@ class ShopBaseForm(ProtectedFieldsMixin, ShuupAdminForm):
             choices=get_currency_choices(),
             required=True,
             label=_("Currency"),
-            help_text=_("The primary shop currency. This is the currency used when selling your products."),
+            help_text=_(
+                "The primary shop currency. This is the currency used when selling your products."
+            ),
         )
 
         staff_members = ObjectSelect2MultipleField(
@@ -51,11 +58,17 @@ class ShopBaseForm(ProtectedFieldsMixin, ShuupAdminForm):
             model=get_user_model(),
             required=False,
         )
-        staff_members.widget = QuickAddUserMultiSelect(attrs={"data-model": "auth.User"})
+        staff_members.widget = QuickAddUserMultiSelect(
+            attrs={"data-model": "auth.User"}
+        )
         initial_members = self.instance.staff_members.all() if self.instance.pk else []
-        staff_members.widget.choices = [(member.pk, force_text(member)) for member in initial_members]
+        staff_members.widget.choices = [
+            (member.pk, force_text(member)) for member in initial_members
+        ]
         self.fields["staff_members"] = staff_members
-        self.fields["domain"].required = ShuupSettings.get_setting("SHUUP_ENABLE_MULTIPLE_SHOPS")
+        self.fields["domain"].required = ShuupSettings.get_setting(
+            "SHUUP_ENABLE_MULTIPLE_SHOPS"
+        )
         self.disable_protected_fields()
 
     def clean_domain(self):
@@ -63,7 +76,10 @@ class ShopBaseForm(ProtectedFieldsMixin, ShuupAdminForm):
         if not domain:
             return None
         if Shop.objects.filter(domain=domain).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError(_("Domain is unique. Please enter a unique value."), code="invalid_domain")
+            raise forms.ValidationError(
+                _("Domain is unique. Please enter a unique value."),
+                code="invalid_domain",
+            )
         return domain
 
 
@@ -103,7 +119,9 @@ class ShopWizardForm(ShuupAdminForm):
             choices=get_currency_choices(),
             required=True,
             label=_("Currency"),
-            help_text=_("The primary shop currency. This is the currency used when selling your products."),
+            help_text=_(
+                "The primary shop currency. This is the currency used when selling your products."
+            ),
         )
 
     def save(self):
@@ -142,7 +160,9 @@ class ShopAddressWizardForm(forms.ModelForm):
             "street2": _("Address (2)"),
         }
         help_texts = {
-            "street": _("The shop street address. This may be used to provide estimated shipping costs."),
+            "street": _(
+                "The shop street address. This may be used to provide estimated shipping costs."
+            ),
             "postal_code": _("The shop zip/postal code."),
             "city": _("The city in which your shop is located."),
             "country": _("The country in which your shop is located."),
@@ -169,6 +189,9 @@ class ShopAddressWizardForm(forms.ModelForm):
 
     def save(self):
         obj = super(ShopAddressWizardForm, self).save()
-        obj.name = "%s %s" % (self.cleaned_data.get("first_name"), self.cleaned_data.get("last_name"))
+        obj.name = "%s %s" % (
+            self.cleaned_data.get("first_name"),
+            self.cleaned_data.get("last_name"),
+        )
         obj.save()
         return obj

@@ -18,7 +18,6 @@ from shuup.front.signals import login_allowed
 
 
 class EmailAuthenticationForm(AuthenticationForm):
-
     error_messages = {
         "invalid_login": _(
             "Error! Please enter a correct %(username)s and password. "
@@ -61,7 +60,9 @@ class EmailAuthenticationForm(AuthenticationForm):
         password = self.cleaned_data.get("password")
 
         if username and password:
-            self.user_cache = authenticate(request=self.request, username=username, password=password)
+            self.user_cache = authenticate(
+                request=self.request, username=username, password=password
+            )
 
             # So here even with invalid login and user cache being None
             # we want to check whether the user we are trying to
@@ -92,11 +93,16 @@ class EmailAuthenticationForm(AuthenticationForm):
                 self.error_messages["inactive"],
                 code="inactive",
             )
-        if settings.SHUUP_ENABLE_MULTIPLE_SHOPS and settings.SHUUP_MANAGE_CONTACTS_PER_SHOP:
+        if (
+            settings.SHUUP_ENABLE_MULTIPLE_SHOPS
+            and settings.SHUUP_MANAGE_CONTACTS_PER_SHOP
+        ):
             if not user.is_superuser:
                 shop = self.request.shop
                 if shop not in user.contact.shops.all():
-                    raise forms.ValidationError(_("You are not allowed to log in to this shop."))
+                    raise forms.ValidationError(
+                        _("You are not allowed to log in to this shop.")
+                    )
 
         super(EmailAuthenticationForm, self).confirm_login_allowed(user)
 

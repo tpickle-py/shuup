@@ -6,15 +6,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_simple_cms', '0007_gdpr'),
+        ("shuup_simple_cms", "0007_gdpr"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='page',
-            name='show_child_timestamps',
-            field=models.BooleanField(default=True, help_text="Check this if you want to show timestamps on the child pages. Please note, that this requires the children to be listed on the page as well.", verbose_name='show child page timestamps'),
+            model_name="page",
+            name="show_child_timestamps",
+            field=models.BooleanField(
+                default=True,
+                help_text="Check this if you want to show timestamps on the child pages. Please note, that this requires the children to be listed on the page as well.",
+                verbose_name="show child page timestamps",
+            ),
         ),
     ]

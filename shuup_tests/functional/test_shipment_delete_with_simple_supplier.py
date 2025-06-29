@@ -9,7 +9,11 @@ import pytest
 import random
 
 from shuup.core.models import Shipment
-from shuup.testing.factories import create_order_with_product, create_product, get_default_shop
+from shuup.testing.factories import (
+    create_order_with_product,
+    create_product,
+    get_default_shop,
+)
 from shuup_tests.simple_supplier.utils import get_simple_supplier
 
 

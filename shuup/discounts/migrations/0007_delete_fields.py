@@ -6,79 +6,101 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('discounts', '0006_migrate_discounts'),
+        ("discounts", "0006_migrate_discounts"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='couponcode',
-            name='created_by',
+            model_name="couponcode",
+            name="created_by",
         ),
         migrations.RemoveField(
-            model_name='couponcode',
-            name='modified_by',
+            model_name="couponcode",
+            name="modified_by",
         ),
         migrations.RemoveField(
-            model_name='couponcode',
-            name='shops',
+            model_name="couponcode",
+            name="shops",
         ),
         migrations.RemoveField(
-            model_name='couponusage',
-            name='coupon',
+            model_name="couponusage",
+            name="coupon",
         ),
         migrations.RemoveField(
-            model_name='couponusage',
-            name='order',
+            model_name="couponusage",
+            name="order",
         ),
         migrations.RemoveField(
-            model_name='discount',
-            name='availability_exceptions',
+            model_name="discount",
+            name="availability_exceptions",
         ),
         migrations.RemoveField(
-            model_name='discount',
-            name='coupon_code',
+            model_name="discount",
+            name="coupon_code",
         ),
         migrations.RemoveField(
-            model_name='discount',
-            name='exclude_selected_contact_group',
+            model_name="discount",
+            name="exclude_selected_contact_group",
         ),
         migrations.RemoveField(
-            model_name='discount',
-            name='shops',
+            model_name="discount",
+            name="shops",
         ),
         migrations.RemoveField(
-            model_name='happyhour',
-            name='shops',
+            model_name="happyhour",
+            name="shops",
         ),
         migrations.AlterField(
-            model_name='discount',
-            name='created_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='discounts_created_by', to=settings.AUTH_USER_MODEL, verbose_name='created by'),
+            model_name="discount",
+            name="created_by",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="discounts_created_by",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="created by",
+            ),
         ),
         migrations.AlterField(
-            model_name='discount',
-            name='modified_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='discounts_modified_by', to=settings.AUTH_USER_MODEL, verbose_name='modified by'),
+            model_name="discount",
+            name="modified_by",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="discounts_modified_by",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="modified by",
+            ),
         ),
         migrations.AlterField(
-            model_name='discount',
-            name='shop',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='shop_discounts', to='shuup.Shop', verbose_name='shop'),
+            model_name="discount",
+            name="shop",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="shop_discounts",
+                to="shuup.Shop",
+                verbose_name="shop",
+            ),
         ),
         migrations.AlterField(
-            model_name='happyhour',
-            name='shop',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shuup.Shop', verbose_name='shop'),
+            model_name="happyhour",
+            name="shop",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="shuup.Shop",
+                verbose_name="shop",
+            ),
         ),
         migrations.DeleteModel(
-            name='AvailabilityException',
+            name="AvailabilityException",
         ),
         migrations.DeleteModel(
-            name='CouponCode',
+            name="CouponCode",
         ),
         migrations.DeleteModel(
-            name='CouponUsage',
+            name="CouponUsage",
         ),
     ]

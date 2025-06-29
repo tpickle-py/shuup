@@ -19,7 +19,9 @@ from shuup_tests.utils.forms import get_form_data
 
 
 @pytest.mark.django_db
-@override_settings(**{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "fi"})
+@override_settings(
+    **{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "fi"}
+)
 def test_default_language_finnish():
     activate("en")
     test_name_en = "Test shop"
@@ -52,7 +54,9 @@ def test_default_language_finnish():
 
 
 @pytest.mark.django_db
-@override_settings(**{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "en"})
+@override_settings(
+    **{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "en"}
+)
 def test_default_language_english():
     activate("en")
     test_name_en = "Test shop"
@@ -73,7 +77,10 @@ def test_default_language_english():
 @pytest.mark.django_db
 def test_model_form_partially_translated(rf, admin_user):
     with override_settings(
-        **{"LANGUAGES": (("en", "en"), ("fi", "fi"), ("ja", "ja")), "PARLER_DEFAULT_LANGUAGE_CODE": "en"}
+        **{
+            "LANGUAGES": (("en", "en"), ("fi", "fi"), ("ja", "ja")),
+            "PARLER_DEFAULT_LANGUAGE_CODE": "en",
+        }
     ):
         activate("en")
         get_default_shop()
@@ -83,11 +90,18 @@ def test_model_form_partially_translated(rf, admin_user):
         payment_method.name = test_name_en
         payment_method.save()
 
-        form = PaymentMethodForm(instance=payment_method, request=request, languages=settings.LANGUAGES)
+        form = PaymentMethodForm(
+            instance=payment_method, request=request, languages=settings.LANGUAGES
+        )
         data = get_form_data(form, prepared=True)
         assert data.get("name__en") == test_name_en
         assert not data.get("name__fi")
-        form = PaymentMethodForm(data=data, instance=payment_method, request=request, languages=settings.LANGUAGES)
+        form = PaymentMethodForm(
+            data=data,
+            instance=payment_method,
+            request=request,
+            languages=settings.LANGUAGES,
+        )
         form.full_clean()
         assert form.is_valid() and not form.errors
         payment_method = form.save()
@@ -95,13 +109,23 @@ def test_model_form_partially_translated(rf, admin_user):
         # Add description for Finnish and and name in Finnish should be required
         with override_settings(**{"PARLER_DEFAULT_LANGUAGE_CODE": "fi"}):
             data["description__fi"] = "Some description"
-            form = PaymentMethodForm(data=data, instance=payment_method, request=request, languages=settings.LANGUAGES)
+            form = PaymentMethodForm(
+                data=data,
+                instance=payment_method,
+                request=request,
+                languages=settings.LANGUAGES,
+            )
             form.full_clean()
             assert not form.is_valid() and form.errors
 
         test_name_fi = "Some method name in finnish"
         data["name__fi"] = test_name_fi
-        form = PaymentMethodForm(data=data, instance=payment_method, request=request, languages=settings.LANGUAGES)
+        form = PaymentMethodForm(
+            data=data,
+            instance=payment_method,
+            request=request,
+            languages=settings.LANGUAGES,
+        )
         form.full_clean()
         assert form.is_valid() and not form.errors
         payment_method = form.save()
@@ -123,7 +147,12 @@ def test_model_form_partially_translated(rf, admin_user):
 
         # Empty finnish translations and see if Finnish starts fallbacks too
         data["name__fi"] = data["description__fi"] = ""
-        form = PaymentMethodForm(data=data, instance=payment_method, request=request, languages=settings.LANGUAGES)
+        form = PaymentMethodForm(
+            data=data,
+            instance=payment_method,
+            request=request,
+            languages=settings.LANGUAGES,
+        )
         form.full_clean()
         assert form.is_valid() and not form.errors
         form.save()

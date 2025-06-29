@@ -9,7 +9,11 @@ import pytest
 from shuup.admin.modules.products.issues import ProductValidationIssue
 from shuup.admin.modules.products.validators import AdminProductValidator
 from shuup.testing.admin_product_validator import TestAdminProductValidator
-from shuup.testing.factories import create_product, get_default_shop, get_default_supplier
+from shuup.testing.factories import (
+    create_product,
+    get_default_shop,
+    get_default_supplier,
+)
 from shuup_tests.utils import printable_gibberish
 
 
@@ -20,15 +24,21 @@ def test_product_validation(rf, admin_user):
     """
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
+    product = create_product(
+        printable_gibberish(), shop=shop, supplier=supplier, default_price=50
+    )
     shop_product = product.get_shop_instance(shop)
 
     validator = TestAdminProductValidator
     validation_issues = []
-    for issue in validator.get_validation_issues(shop_product, shop, admin_user, supplier):
+    for issue in validator.get_validation_issues(
+        shop_product, shop, admin_user, supplier
+    ):
         validation_issues.append(issue)
 
-    validation_issues = sorted(validation_issues, key=lambda x: x.get_issue_type_priority())
+    validation_issues = sorted(
+        validation_issues, key=lambda x: x.get_issue_type_priority()
+    )
     error_issue = validation_issues[0]
     assert error_issue.issue_type == "error"
     assert error_issue.code == "1200"
@@ -41,5 +51,7 @@ def test_product_validation(rf, admin_user):
         issue = ProductValidationIssue("Test message", "invalid", "1000", False)
 
     base_validator = AdminProductValidator
-    for issue in base_validator.get_validation_issues(shop_product, shop, admin_user, supplier):
+    for issue in base_validator.get_validation_issues(
+        shop_product, shop, admin_user, supplier
+    ):
         assert issue is None

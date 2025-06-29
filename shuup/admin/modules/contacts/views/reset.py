@@ -24,7 +24,7 @@ class ContactResetPasswordView(UserResetPasswordView):
         contact = self.get_contact()
         user = getattr(contact, "user", None)
         if not user:
-            raise Problem(_(u"The contact does not have an associated user."))
+            raise Problem(_("The contact does not have an associated user."))
         return user
 
     def get_success_url(self):

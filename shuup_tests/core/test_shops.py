@@ -9,7 +9,12 @@ import pytest
 from filer.models import Folder, Image
 
 from shuup.core.models import Shop, ShopStatus
-from shuup.testing.factories import DEFAULT_IDENTIFIER, DEFAULT_NAME, create_random_user, get_shop
+from shuup.testing.factories import (
+    DEFAULT_IDENTIFIER,
+    DEFAULT_NAME,
+    create_random_user,
+    get_shop,
+)
 
 caching_was_enabled = None
 
@@ -29,7 +34,10 @@ def teardown_module(module):
 @pytest.mark.django_db
 def test_shop_wont_be_deleted():
     shop = Shop.objects.create(
-        name=DEFAULT_NAME, identifier="zoombie", status=ShopStatus.ENABLED, public_name=DEFAULT_NAME
+        name=DEFAULT_NAME,
+        identifier="zoombie",
+        status=ShopStatus.ENABLED,
+        public_name=DEFAULT_NAME,
     )
 
     folder = Folder.objects.create(name="Root")

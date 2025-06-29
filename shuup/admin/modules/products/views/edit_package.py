@@ -19,7 +19,11 @@ from shuup.core.models import ProductMode
 from shuup.utils.django_compat import reverse
 from shuup.utils.excs import Problem
 
-from .edit_parent import ProductChildrenBaseFormPart, ProductParentBaseToolbar, ProductParentBaseView
+from .edit_parent import (
+    ProductChildrenBaseFormPart,
+    ProductParentBaseToolbar,
+    ProductParentBaseView,
+)
 
 
 class ProductChildrenFormPart(ProductChildrenBaseFormPart):
@@ -35,10 +39,14 @@ class ProductChildrenFormPart(ProductChildrenBaseFormPart):
         if product.mode in self.invalid_modes:
             raise ValueError("Error! Invalid mode.")
         else:
-            form = formset_factory(PackageChildForm, PackageChildFormSet, extra=5, can_delete=True)
+            form = formset_factory(
+                PackageChildForm, PackageChildFormSet, extra=5, can_delete=True
+            )
             template_name = "shuup/admin/products/package/_package_children.jinja"
 
-        form_defs = super(ProductChildrenFormPart, self).get_form_defs(form, template_name)
+        form_defs = super(ProductChildrenFormPart, self).get_form_defs(
+            form, template_name
+        )
         for form_def in form_defs:
             yield form_def
 
@@ -73,7 +81,11 @@ class ProductPackageView(ProductParentBaseView):
         parent = self.object.get_all_package_parents().first()
         if parent:
             # By default, redirect to the first parent
-            return HttpResponseRedirect(reverse("shuup_admin:shop_product.edit_package", kwargs={"pk": parent.id}))
+            return HttpResponseRedirect(
+                reverse(
+                    "shuup_admin:shop_product.edit_package", kwargs={"pk": parent.id}
+                )
+            )
         return super(ProductPackageView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

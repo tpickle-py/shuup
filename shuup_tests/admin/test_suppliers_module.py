@@ -11,7 +11,11 @@ from decimal import Decimal
 from django.test.utils import override_settings
 from django.utils.text import slugify
 
-from shuup.admin.modules.suppliers.views import SupplierDeleteView, SupplierEditView, SupplierListView
+from shuup.admin.modules.suppliers.views import (
+    SupplierDeleteView,
+    SupplierEditView,
+    SupplierListView,
+)
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
 from shuup.core.models import Supplier, SupplierType
 from shuup.testing import factories
@@ -38,7 +42,9 @@ def test_suppliers_list(rf, admin_user):
     shop.staff_members.add(staff_user)
 
     for user in [admin_user, staff_user]:
-        request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=user)
+        request = apply_request_middleware(
+            rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=user
+        )
         response = list_view(request)
         data = json.loads(response.content.decode("utf-8"))
         ids = [sup["_id"] for sup in data["items"]]
@@ -82,7 +88,8 @@ def test_suppliers_edit(rf, admin_user, manage_stock, stock_module):
                 response = edit_view(request)
                 response.render()
                 assert bool(
-                    "It is not possible to manage inventory when no module is selected." in response.content.decode()
+                    "It is not possible to manage inventory when no module is selected."
+                    in response.content.decode()
                 )
                 assert response.status_code == 200
             else:
@@ -91,7 +98,9 @@ def test_suppliers_edit(rf, admin_user, manage_stock, stock_module):
                 assert response.status_code == 302
 
                 supplier = Supplier.objects.last()
-                assert response.url == reverse("shuup_admin:supplier.edit", kwargs=dict(pk=supplier.pk))
+                assert response.url == reverse(
+                    "shuup_admin:supplier.edit", kwargs=dict(pk=supplier.pk)
+                )
                 assert supplier.name == payload["base-name"]
                 assert supplier.slug == slugify(supplier.name)
                 assert supplier.description == payload["base-description__en"]
@@ -128,7 +137,9 @@ def test_suppliers_delete(rf, admin_user):
     supplier.save()
 
     request_supplier = apply_request_middleware(rf.post("/"), user=admin_user)
-    with override_settings(SHUUP_ADMIN_SUPPLIER_PROVIDER_SPEC="shuup.testing.supplier_provider.FirstSupplierProvider"):
+    with override_settings(
+        SHUUP_ADMIN_SUPPLIER_PROVIDER_SPEC="shuup.testing.supplier_provider.FirstSupplierProvider"
+    ):
         response = delete_view(request_supplier, **{"pk": supplier.pk})
         assert response.status_code == 302
         assert response.url == reverse("shuup_admin:supplier.list")
@@ -140,7 +151,9 @@ def test_suppliers_ensure_deleted_inlist(rf, admin_user):
     supplier = get_default_supplier()
 
     list_view = SupplierListView.as_view()
-    request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user
+    )
 
     response = list_view(request)
     data = json.loads(response.content.decode("utf-8"))
@@ -158,7 +171,9 @@ def test_supplier_changed_reindex_catalog(rf, admin_user):
     supplier = factories.get_default_supplier(shop)
     supplier.stock_managed = True
     supplier.save()
-    product = factories.create_product("p1", shop, supplier, default_price=Decimal("10"))
+    product = factories.create_product(
+        "p1", shop, supplier, default_price=Decimal("10")
+    )
     supplier.adjust_stock(product.pk, 40)  # add 40 to the stock
     ProductCatalog.index_product(product)
 

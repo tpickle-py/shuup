@@ -13,7 +13,12 @@ from decimal import Decimal
 
 from shuup.core.models import Product, ShopProduct, Supplier
 from shuup.front.themes.views._product_price import ProductPriceView
-from shuup.testing.factories import create_product, get_default_product, get_default_shop, get_default_supplier
+from shuup.testing.factories import (
+    create_product,
+    get_default_product,
+    get_default_shop,
+    get_default_supplier,
+)
 from shuup.utils.django_compat import reverse
 
 
@@ -22,7 +27,8 @@ def test_product_price(client):
     shop = get_default_shop()
     product = get_default_product()
     response = client.get(
-        reverse("shuup:xtheme_extra_view", kwargs={"view": "product_price"}) + "?id=%s&quantity=%s" % (product.pk, 1)
+        reverse("shuup:xtheme_extra_view", kwargs={"view": "product_price"})
+        + "?id=%s&quantity=%s" % (product.pk, 1)
     )
     assert response.context_data["product"] == product
     assert b"form" in response.content
@@ -33,7 +39,8 @@ def test_product_price_without_shop_product(client):
     shop = get_default_shop()
     product = get_default_product()
     response = client.get(
-        reverse("shuup:xtheme_extra_view", kwargs={"view": "product_price"}) + "?id=%s" % (product.pk)
+        reverse("shuup:xtheme_extra_view", kwargs={"view": "product_price"})
+        + "?id=%s" % (product.pk)
     )
     assert response.context_data["product"] == product
     assert "Combination not available" in response.content.decode("utf-8")
@@ -44,7 +51,9 @@ def test_variation_product_price_simple(client):
     shop = get_default_shop()
     supplier = get_default_supplier()
     product = create_product("Parent", supplier=supplier, shop=shop, default_price="10")
-    child = create_product("SimpleVarChild", supplier=supplier, shop=shop, default_price="5")
+    child = create_product(
+        "SimpleVarChild", supplier=supplier, shop=shop, default_price="5"
+    )
     child.link_to_parent(product, variables={"size": "S"})
     response = client.get(
         reverse("shuup:xtheme_extra_view", kwargs={"view": "product_price"})
@@ -75,7 +84,11 @@ def test_variation_product_price_more_complex(client):
             "colors": ["Black", "Yellow", "Blue"],
             "material": ["leather", "cotton"],
         },
-        "supplier-2": {"sizes": ["S", "XL", "XS", "XXL", "M"], "colors": ["Yellow", "Red"], "material": ["cotton"]},
+        "supplier-2": {
+            "sizes": ["S", "XL", "XS", "XXL", "M"],
+            "colors": ["Yellow", "Red"],
+            "material": ["cotton"],
+        },
     }
     parent = create_product("ComplexVarParent", shop=shop)
     shop_parent_product = parent.get_shop_instance(shop)
@@ -91,7 +104,14 @@ def test_variation_product_price_more_complex(client):
                         shop_product.suppliers.add(supplier)
                     else:
                         child = create_product(sku, shop=shop, supplier=supplier)
-                        child.link_to_parent(parent, variables={"size": size, "color": color, "material": material})
+                        child.link_to_parent(
+                            parent,
+                            variables={
+                                "size": size,
+                                "color": color,
+                                "material": material,
+                            },
+                        )
 
     assert parent.variation_children.count() == 25
     # We have 6 different combinations but only 5 combinations
@@ -105,7 +125,9 @@ def test_variation_product_price_more_complex(client):
         for size in data["sizes"]:
             for color in data["colors"]:
                 for material in data["material"]:
-                    available_combinations.add("color: %s, material: %s, size: %s" % (color, material, size))
+                    available_combinations.add(
+                        "color: %s, material: %s, size: %s" % (color, material, size)
+                    )
 
         expected_orderable_count = len(available_combinations)
         actual_orderable_count = 0
@@ -122,11 +144,15 @@ def test_variation_product_price_more_complex(client):
 
             response = client.get(
                 reverse("shuup:xtheme_extra_view", kwargs={"view": "product_price"})
-                + "?id=%s&quantity=%s&%ssupplier=%s" % (parent.pk, 1, variable_string, supplier_id)
+                + "?id=%s&quantity=%s&%ssupplier=%s"
+                % (parent.pk, 1, variable_string, supplier_id)
             )
             assert response.status_code == status_code
             if not status_code == 404:
-                assert response.context_data["product"] == Product.objects.filter(id=product_result_pk).first()
+                assert (
+                    response.context_data["product"]
+                    == Product.objects.filter(id=product_result_pk).first()
+                )
                 content = response.content.decode("utf-8")
 
                 is_orderable = combination["text_description"] in available_combinations
@@ -201,7 +227,9 @@ def test_product_price_get_quantity_with_display_unit(rf, decimals):
     assert "quantity" not in view.request.GET
 
     def check(shop_product, input_value, expected_output):
-        view.request.GET = dict(view.request.GET, quantity=input_value, unitType="not internal")
+        view.request.GET = dict(
+            view.request.GET, quantity=input_value, unitType="not internal"
+        )
         result = view._get_quantity(shop_product)
         assert result == expected_output
 

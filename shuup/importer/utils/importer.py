@@ -64,7 +64,7 @@ class FileImporter:
         shop=None,
         supplier=None,
         user=None,
-        **kwargs
+        **kwargs,
     ):
         self.importer = None
         self.importer_cls = get_importer(importer)
@@ -83,7 +83,11 @@ class FileImporter:
             raise ImporterError(_("The file doesn't contain data."))
 
         context = self.importer_cls.get_importer_context(
-            request=None, shop=self.shop, language=self.language, supplier=self.supplier, user=self.user
+            request=None,
+            shop=self.shop,
+            language=self.language,
+            supplier=self.supplier,
+            user=self.user,
         )
         self.importer = self.importer_cls(self.data, context)
         self.importer.process_data()
@@ -113,7 +117,11 @@ class FileImporter:
         try:
             filename = get_import_file_path(self.file_name)
             if not os.path.isfile(filename):
-                raise ImporterError(_("{file_name} is not a valid file.").format(file_name=self.file_name))
+                raise ImporterError(
+                    _("{file_name} is not a valid file.").format(
+                        file_name=self.file_name
+                    )
+                )
         except Exception:
             raise ImporterError(_("The file is missing."))
         try:

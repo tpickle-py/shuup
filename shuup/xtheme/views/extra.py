@@ -19,7 +19,9 @@ def clear_view_cache(**kwargs):
     _VIEW_CACHE.clear()
 
 
-setting_changed.connect(clear_view_cache, dispatch_uid="shuup.xtheme.views.extra.clear_view_cache")
+setting_changed.connect(
+    clear_view_cache, dispatch_uid="shuup.xtheme.views.extra.clear_view_cache"
+)
 
 
 def _get_view_by_name(theme, view_name):
@@ -57,6 +59,9 @@ def extra_view_dispatch(request, view):
     theme = getattr(request, "theme", None) or get_current_theme(request.shop)
     view_func = get_view_by_name(theme, view)
     if not view_func:
-        msg = "Error! %s/%s: Not found." % (getattr(theme, "identifier", None), escape(view))
+        msg = "Error! %s/%s: Not found." % (
+            getattr(theme, "identifier", None),
+            escape(view),
+        )
         return HttpResponseNotFound(msg)
     return view_func(request)

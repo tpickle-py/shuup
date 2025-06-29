@@ -11,12 +11,20 @@ from django.conf import settings
 from django.forms import BaseModelFormSet, ModelForm
 from django.utils.timezone import now
 
-from shuup.admin.forms.widgets import FileDnDUploaderWidget, HexColorWidget, ProductChoiceWidget, QuickAddCategorySelect
+from shuup.admin.forms.widgets import (
+    FileDnDUploaderWidget,
+    HexColorWidget,
+    ProductChoiceWidget,
+    QuickAddCategorySelect,
+)
 from shuup.admin.shop_provider import get_shop
 from shuup.core.models import Category
 from shuup.front.apps.carousel.models import Carousel, Slide
 from shuup.simple_cms.models import Page
-from shuup.utils.multilanguage_model_form import MultiLanguageModelForm, to_language_codes
+from shuup.utils.multilanguage_model_form import (
+    MultiLanguageModelForm,
+    to_language_codes,
+)
 
 
 class CarouselForm(ModelForm):
@@ -80,9 +88,13 @@ class SlideFormSet(BaseModelFormSet):
     extra = 0
 
     def __init__(self, *args, **kwargs):
-        self.default_language = kwargs.pop("default_language", getattr(settings, "PARLER_DEFAULT_LANGUAGE_CODE"))
+        self.default_language = kwargs.pop(
+            "default_language", getattr(settings, "PARLER_DEFAULT_LANGUAGE_CODE")
+        )
         self.carousel = kwargs.pop("carousel")
-        self.languages = to_language_codes(kwargs.pop("languages", ()), self.default_language)
+        self.languages = to_language_codes(
+            kwargs.pop("languages", ()), self.default_language
+        )
         self.request = kwargs.pop("request")
         super(SlideFormSet, self).__init__(*args, **kwargs)
 

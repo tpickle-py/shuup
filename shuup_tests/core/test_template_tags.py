@@ -124,7 +124,9 @@ def test_money_formatter_en():
         assert money(Money("29.99", "CAD")) == "CA$29.99"
         assert money(Money("29.99", "JPY")) == "¥30"  # No such thing as a decimal yen!
         assert money(Money("29.99", "CNY")) == "CN¥29.99"
-        assert money(Money("29.99", "KRW")) == "₩30"  # the 1/100 subunit "jeon" is theoretical and not in use
+        assert (
+            money(Money("29.99", "KRW")) == "₩30"
+        )  # the 1/100 subunit "jeon" is theoretical and not in use
         assert money(Money("29.99", "SEK")) == "kr29.99"
 
 
@@ -134,9 +136,13 @@ def test_money_formatter_fi():
         assert money(Money("29.99", "EUR")) == nbsp("29,99 €")
         assert money(Money("29.99", "GBP")) == nbsp("29,99 £")
         assert money(Money("29.99", "CAD")) == nbsp("29,99 CAD")
-        assert money(Money("29.99", "JPY")) == nbsp("30 ¥")  # No such thing as a decimal yen!
+        assert money(Money("29.99", "JPY")) == nbsp(
+            "30 ¥"
+        )  # No such thing as a decimal yen!
         assert money(Money("29.99", "CNY")) == nbsp("29,99 CNY")
-        assert money(Money("29.99", "KRW")) == nbsp("30 KRW")  # the 1/100 subunit "jeon" is theoretical and not in use
+        assert money(Money("29.99", "KRW")) == nbsp(
+            "30 KRW"
+        )  # the 1/100 subunit "jeon" is theoretical and not in use
         assert money(Money("29.99", "SEK")) == nbsp("29,99 SEK")
 
 
@@ -233,7 +239,10 @@ def test_safe_product_description():
         assert safe_product_description(text) == text
 
     with override_settings(SHUUP_ADMIN_ALLOW_HTML_IN_PRODUCT_DESCRIPTION=False):
-        assert safe_product_description(text) == "<p>product description<br>Some text here.</p>"
+        assert (
+            safe_product_description(text)
+            == "<p>product description<br>Some text here.</p>"
+        )
 
 
 def test_safe_vendor_description():
@@ -244,7 +253,8 @@ def test_safe_vendor_description():
 
     with override_settings(SHUUP_ADMIN_ALLOW_HTML_IN_VENDOR_DESCRIPTION=False):
         assert (
-            safe_vendor_description(text) == "<p>&lt;strong&gt;vendor description&lt;/strong&gt;<br>Some text here.</p>"
+            safe_vendor_description(text)
+            == "<p>&lt;strong&gt;vendor description&lt;/strong&gt;<br>Some text here.</p>"
         )
 
 
@@ -252,5 +262,7 @@ def test_get_shuup_static_url():
     assert "test.js?v=%s" % get_shuup_version() in get_shuup_static_url("test.js")
     assert get_shuup_static_url("test.js") == shuup_static("test.js")
     assert "test.css?v=" in get_shuup_static_url("test.css", "django")
-    assert get_shuup_static_url("test2.js", "django") == shuup_static("test2.js", "django")
+    assert get_shuup_static_url("test2.js", "django") == shuup_static(
+        "test2.js", "django"
+    )
     assert shuup_static("test3.js") != shuup_static("test3.js", "django")

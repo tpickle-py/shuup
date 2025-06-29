@@ -45,7 +45,9 @@ def test_notify_item_admin_form(rf, admin_user):
         "t_ja_body": "Bye",
         "t_en_content_type": "html",
     }
-    form = ScriptItemEditForm(event_class=event_class, script_item=script_item, data=send_data)
+    form = ScriptItemEditForm(
+        event_class=event_class, script_item=script_item, data=send_data
+    )
     initial = form.get_initial()
     assert initial["b_send_identifier_c"] == "hello"
     assert not form.is_valid()  # Missing template body for default language
@@ -53,7 +55,9 @@ def test_notify_item_admin_form(rf, admin_user):
         form.save()
 
     send_data.update({"t_en_body": "ok now this should pass"})
-    form = ScriptItemEditForm(event_class=event_class, script_item=script_item, data=send_data)
+    form = ScriptItemEditForm(
+        event_class=event_class, script_item=script_item, data=send_data
+    )
     initial = form.get_initial()
     assert initial["b_send_identifier_c"] == "hello"
     assert form.is_valid()
@@ -64,7 +68,11 @@ def test_notify_item_admin_form(rf, admin_user):
     assert script_item.data["recipient"] == {"constant": "konnichiwa@jp.shuup.local"}
     send_data["b_recipient_c"] = admin_user.pk
     send_data["init_data"] = json.dumps(
-        {"eventIdentifier": "order_received", "itemType": "action", "data": {"identifier": "add_notification"}}
+        {
+            "eventIdentifier": "order_received",
+            "itemType": "action",
+            "data": {"identifier": "add_notification"},
+        }
     )
     view = script_item_editor
     request = apply_request_middleware(rf.post("/", data=send_data), user=admin_user)
@@ -81,8 +89,12 @@ def test_admin_script_list(rf, admin_user):
         shop1.staff_members.add(admin_user)
         shop2.staff_members.add(admin_user)
 
-        script_shop1 = Script.objects.create(shop=shop1, event_identifier="order_received", name="SHOP 1", enabled=True)
-        script_shop2 = Script.objects.create(shop=shop2, event_identifier="order_received", name="SHOP 2", enabled=True)
+        script_shop1 = Script.objects.create(
+            shop=shop1, event_identifier="order_received", name="SHOP 1", enabled=True
+        )
+        script_shop2 = Script.objects.create(
+            shop=shop2, event_identifier="order_received", name="SHOP 2", enabled=True
+        )
 
         view = ScriptEditView.as_view()
         request = apply_request_middleware(rf.get("/"), user=admin_user)
@@ -99,7 +111,9 @@ def test_admin_script_list(rf, admin_user):
 def test_deleting_script(rf, admin_user):
     shop = factories.get_default_shop()
     request = apply_request_middleware(rf.get("/"), user=admin_user)
-    script = Script.objects.create(shop=shop, event_identifier="order_received", name="Script 1", enabled=True)
+    script = Script.objects.create(
+        shop=shop, event_identifier="order_received", name="Script 1", enabled=True
+    )
 
     delete_url = reverse("shuup_admin:notify.script.delete", kwargs={"pk": script.pk})
     view = ScriptEditView.as_view()

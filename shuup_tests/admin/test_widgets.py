@@ -55,7 +55,10 @@ def test_bound_file_dnd_uploader_widget():
     assert soup.select("[data-id]")[0]["data-id"] == str(f.pk)
     assert soup.select("[data-name]")[0]["data-name"] == f.name
     assert soup.select("[data-dz_max-filesize]")[0]["data-dz_max-filesize"] == "10"
-    assert soup.select("[data-dz_retry-chunks-limit]")[0]["data-dz_retry-chunks-limit"] == "100"
+    assert (
+        soup.select("[data-dz_retry-chunks-limit]")[0]["data-dz_retry-chunks-limit"]
+        == "100"
+    )
     assert soup.select("[data-dz_clickable]")[0]["data-dz_clickable"] == "false"
     assert not soup.select("[data-thumbnail]")
 

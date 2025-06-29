@@ -11,7 +11,9 @@ from ast import BinOp, Mod, parse
 from sanity_utils import XNodeVisitor, find_files
 from six import text_type
 
-encoding_comment_regexp = re.compile(r"^#.+coding[=:]\s*([-\w.]+).+$", re.MULTILINE | re.I)
+encoding_comment_regexp = re.compile(
+    r"^#.+coding[=:]\s*([-\w.]+).+$", re.MULTILINE | re.I
+)
 
 
 class StringVisitor(XNodeVisitor):
@@ -21,13 +23,21 @@ class StringVisitor(XNodeVisitor):
 
     def visit_Str(self, node, parents):  # noqa (N802)
         s = text_type(node.s)
-        is_being_formatted = parents and isinstance(parents[-1], BinOp) and isinstance(parents[-1].op, Mod)
+        is_being_formatted = (
+            parents
+            and isinstance(parents[-1], BinOp)
+            and isinstance(parents[-1].op, Mod)
+        )
         if is_being_formatted:
             self.formattees.add(s)
             return
-        if not ("\n" in s or s.islower() or s.isupper()):  # Doesn't look like a constant or docstring
+        if not (
+            "\n" in s or s.islower() or s.isupper()
+        ):  # Doesn't look like a constant or docstring
             if " " in s.strip():  # Has spaces, that's texty
-                if "%" in s or not all(32 <= ord(c) < 127 for c in s):  # Has a formatting character or is non-ascii
+                if "%" in s or not all(
+                    32 <= ord(c) < 127 for c in s
+                ):  # Has a formatting character or is non-ascii
                     self.texts.add(s)
 
     def get_stats(self):
@@ -68,7 +78,9 @@ def fix_file(path):
             break
 
     if "from __future__ import unicode_literals" not in source:
-        source_lines.insert(first_non_comment_line_index, "from __future__ import unicode_literals")
+        source_lines.insert(
+            first_non_comment_line_index, "from __future__ import unicode_literals"
+        )
 
     source = "\n".join(source_lines)
     if need_encoding_comment:
@@ -81,14 +93,28 @@ def fix_file(path):
 
 def gather_files(dirnames, filenames):
     files_to_process = []
-    files_to_process.extend(filename for filename in filenames if filename.endswith(".py"))
+    files_to_process.extend(
+        filename for filename in filenames if filename.endswith(".py")
+    )
     files_to_process.extend(find_files(dirnames, allowed_extensions=(".py",)))
     return files_to_process
 
 
 @click.command()
-@click.option("-f", "--file", "filenames", type=click.Path(exists=True, dir_okay=False), multiple=True)
-@click.option("-d", "--dir", "dirnames", type=click.Path(exists=True, file_okay=False), multiple=True)
+@click.option(
+    "-f",
+    "--file",
+    "filenames",
+    type=click.Path(exists=True, dir_okay=False),
+    multiple=True,
+)
+@click.option(
+    "-d",
+    "--dir",
+    "dirnames",
+    type=click.Path(exists=True, file_okay=False),
+    multiple=True,
+)
 @click.option("--fix/--no-fix", default=False)
 def command(filenames, dirnames, fix):
     for filename in gather_files(dirnames, filenames):

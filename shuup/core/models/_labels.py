@@ -21,10 +21,16 @@ from ._base import TranslatableShuupModel
 @python_2_unicode_compatible
 class Label(TranslatableShuupModel):
     identifier = InternalIdentifierField(unique=True, max_length=128, editable=True)
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
-    modified_on = models.DateTimeField(auto_now=True, editable=False, db_index=True, verbose_name=_("modified on"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, verbose_name=_("created on")
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True, editable=False, db_index=True, verbose_name=_("modified on")
+    )
 
-    translations = TranslatedFields(name=models.CharField(max_length=64, verbose_name=_("name")))
+    translations = TranslatedFields(
+        name=models.CharField(max_length=64, verbose_name=_("name"))
+    )
 
     class Meta:
         verbose_name = _("label")

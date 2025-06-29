@@ -25,7 +25,9 @@ class TelemetryView(TemplateView):
                 "opt_in": not telemetry.is_opt_out(),
                 "is_grace": telemetry.is_in_grace_period(),
                 "last_submission_time": telemetry.get_last_submission_time(),
-                "submission_data": telemetry.get_telemetry_data(request=self.request, indent=2),
+                "submission_data": telemetry.get_telemetry_data(
+                    request=self.request, indent=2
+                ),
                 "title": _("Telemetry"),
             }
         )
@@ -33,7 +35,10 @@ class TelemetryView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         if "last" in request.GET:
-            return HttpResponse(telemetry.get_last_submission_data(), content_type="text/plain; charset=UTF-8")
+            return HttpResponse(
+                telemetry.get_last_submission_data(),
+                content_type="text/plain; charset=UTF-8",
+            )
         return super(TelemetryView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -87,7 +92,9 @@ class TelemetryWizardPane(WizardPane):
             "opt_in": not telemetry.is_opt_out(),
             "is_grace": telemetry.is_in_grace_period(),
             "last_submission_time": telemetry.get_last_submission_time(),
-            "submission_data": telemetry.get_telemetry_data(request=self.request, indent=2),
+            "submission_data": telemetry.get_telemetry_data(
+                request=self.request, indent=2
+            ),
             "title": _("Telemetry"),
         }
         form_defs.append(

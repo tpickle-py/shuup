@@ -18,11 +18,21 @@ class AppConfig(shuup.apps.AppConfig):
             "shuup.gdpr.admin_module.toolbar:AnonymizeContactToolbarButton",
             "shuup.gdpr.admin_module.toolbar:DownloadDataToolbarButton",
         ],
-        "xtheme_resource_injection": ["shuup.gdpr.resources:add_gdpr_consent_resources"],
-        "front_registration_field_provider": ["shuup.gdpr.providers:GDPRRegistrationFieldProvider"],
-        "front_auth_form_field_provider": ["shuup.gdpr.providers:GDPRAuthFieldProvider"],
-        "checkout_confirm_form_field_provider": ["shuup.gdpr.providers:GDPRCheckoutFieldProvider"],
-        "front_company_registration_form_provider": ["shuup.gdpr.providers:GDPRFormDefProvider"],
+        "xtheme_resource_injection": [
+            "shuup.gdpr.resources:add_gdpr_consent_resources"
+        ],
+        "front_registration_field_provider": [
+            "shuup.gdpr.providers:GDPRRegistrationFieldProvider"
+        ],
+        "front_auth_form_field_provider": [
+            "shuup.gdpr.providers:GDPRAuthFieldProvider"
+        ],
+        "checkout_confirm_form_field_provider": [
+            "shuup.gdpr.providers:GDPRCheckoutFieldProvider"
+        ],
+        "front_company_registration_form_provider": [
+            "shuup.gdpr.providers:GDPRFormDefProvider"
+        ],
         "xtheme_snippet_blocker": ["shuup.gdpr.snippet_blocker.GDPRSnippetBlocker"],
         "notify_event": [
             "shuup.tasks.notify_events:TaskCreated",

@@ -7,20 +7,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0063_add_related_name_for_staff_members'),
+        ("shuup", "0063_add_related_name_for_staff_members"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='contactgrouptranslation',
-            name='name',
-            field=models.CharField(help_text='The contact group name. Contact groups can be used to target sales and campaigns to specific set of users.', max_length=256, verbose_name='name'),
+            model_name="contactgrouptranslation",
+            name="name",
+            field=models.CharField(
+                help_text="The contact group name. Contact groups can be used to target sales and campaigns to specific set of users.",
+                max_length=256,
+                verbose_name="name",
+            ),
         ),
         migrations.AlterField(
-            model_name='orderline',
-            name='modified_on',
-            field=models.DateTimeField(db_index=True, default=django.utils.timezone.now, editable=False, verbose_name='modified on'),
+            model_name="orderline",
+            name="modified_on",
+            field=models.DateTimeField(
+                db_index=True,
+                default=django.utils.timezone.now,
+                editable=False,
+                verbose_name="modified on",
+            ),
         ),
     ]

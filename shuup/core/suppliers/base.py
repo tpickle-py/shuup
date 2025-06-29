@@ -24,7 +24,9 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 @lru_cache()
-def get_supported_product_kinds_for_module(module_identifier: str) -> Iterable[ProductKindSpec]:
+def get_supported_product_kinds_for_module(
+    module_identifier: str,
+) -> Iterable[ProductKindSpec]:
     specs = []
     for product_kind_spec in get_provide_objects("product_kind_specs"):
         supported_modules = product_kind_spec.supported_supplier_modules
@@ -34,8 +36,15 @@ def get_supported_product_kinds_for_module(module_identifier: str) -> Iterable[P
 
 
 @lru_cache()
-def get_supported_product_kinds_values_for_module(module_identifier: str) -> Iterable[int]:
-    return list([spec.value for spec in get_supported_product_kinds_for_module(module_identifier)])
+def get_supported_product_kinds_values_for_module(
+    module_identifier: str,
+) -> Iterable[int]:
+    return list(
+        [
+            spec.value
+            for spec in get_supported_product_kinds_for_module(module_identifier)
+        ]
+    )
 
 
 class SupplierModuleInterface:
@@ -46,14 +55,18 @@ class SupplierModuleInterface:
     identifier = None  # type: str
     name = None  # type: str
 
-    def get_stock_statuses(self, product_ids, *args, **kwargs) -> Dict[int, ProductStockStatus]:
+    def get_stock_statuses(
+        self, product_ids, *args, **kwargs
+    ) -> Dict[int, ProductStockStatus]:
         """
         :param product_ids: Iterable of product IDs.
         :return: Dict of {product_id: ProductStockStatus}.
         """
         return {}
 
-    def get_stock_status(self, product_id: int, *args, **kwargs) -> Optional[ProductStockStatus]:
+    def get_stock_status(
+        self, product_id: int, *args, **kwargs
+    ) -> Optional[ProductStockStatus]:
         """
         :param product_id: Product ID.
         :type product_id: int
@@ -80,7 +93,7 @@ class SupplierModuleInterface:
         created_by: USER_MODEL = None,
         type: StockAdjustmentType = StockAdjustmentType.INVENTORY,
         *args,
-        **kwargs
+        **kwargs,
     ) -> None:
         """
         Adjusts the stock for the given `product_id`.
@@ -96,7 +109,13 @@ class SupplierModuleInterface:
     def update_stocks(self, product_ids: Iterable[int], *args, **kwargs) -> None:
         pass
 
-    def ship_products(self, shipment: "Shipment", product_quantities: Dict["Product", Decimal], *args, **kwargs):
+    def ship_products(
+        self,
+        shipment: "Shipment",
+        product_quantities: Dict["Product", Decimal],
+        *args,
+        **kwargs,
+    ):
         pass
 
     @classmethod

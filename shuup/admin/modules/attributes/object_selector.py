@@ -19,7 +19,7 @@ class AttributeAdminObjectSelector(BaseAdminObjectSelector):
         """
         Returns an iterable of tuples of (id, text)
         """
-        qs = Attribute.objects.translated(name__icontains=search_term).values_list("id", "translations__name")[
-            : self.search_limit
-        ]
+        qs = Attribute.objects.translated(name__icontains=search_term).values_list(
+            "id", "translations__name"
+        )[: self.search_limit]
         return [{"id": id, "name": name} for id, name in list(qs)]

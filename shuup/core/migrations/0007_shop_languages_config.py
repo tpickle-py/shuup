@@ -14,11 +14,8 @@ def create_default_shop_languages_config(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0006_logmodels'),
+        ("shuup", "0006_logmodels"),
     ]
 
-    operations = [
-        migrations.RunPython(create_default_shop_languages_config)
-    ]
+    operations = [migrations.RunPython(create_default_shop_languages_config)]

@@ -143,7 +143,9 @@ class Anonymizer(object):
 
         if order.shipping_address:
             self._anonymize_object(order.shipping_address, save=False)
-            Address.save(order.shipping_address)  # bypass Protected model save() invoking super directly
+            Address.save(
+                order.shipping_address
+            )  # bypass Protected model save() invoking super directly
 
         if order.billing_address:
             self._anonymize_object(order.billing_address, save=False)

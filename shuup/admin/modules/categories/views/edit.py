@@ -6,7 +6,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 from shuup.admin.form_part import FormPartsViewMixin, SaveFormPartsMixin
-from shuup.admin.modules.categories.form_parts import CategoryBaseFormPart, CategoryProductFormPart
+from shuup.admin.modules.categories.form_parts import (
+    CategoryBaseFormPart,
+    CategoryProductFormPart,
+)
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.toolbar import get_default_edit_toolbar
 from shuup.admin.utils.tour import is_tour_complete
@@ -25,13 +28,19 @@ class CategoryEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
         object = self.get_object()
-        delete_url = reverse_lazy("shuup_admin:category.delete", kwargs={"pk": object.pk}) if object.pk else None
+        delete_url = (
+            reverse_lazy("shuup_admin:category.delete", kwargs={"pk": object.pk})
+            if object.pk
+            else None
+        )
         return get_default_edit_toolbar(self, save_form_id, delete_url=delete_url)
 
     def get_context_data(self, **kwargs):
         context = super(CategoryEditView, self).get_context_data(**kwargs)
         context["tour_key"] = "category"
-        context["tour_complete"] = is_tour_complete(get_shop(self.request), "category", user=self.request.user)
+        context["tour_complete"] = is_tour_complete(
+            get_shop(self.request), "category", user=self.request.user
+        )
         if self.object.pk:
             context["title"] = self.object.name
 

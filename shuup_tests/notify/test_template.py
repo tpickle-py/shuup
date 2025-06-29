@@ -37,7 +37,10 @@ def test_template_render(template=None):
 def test_some_fields_language_fallback():
     template = get_test_template()
     fields = {"body": None}
-    assert template.render_first_match(TEST_TEMPLATE_LANGUAGES, fields)["_language"] == "sw"
+    assert (
+        template.render_first_match(TEST_TEMPLATE_LANGUAGES, fields)["_language"]
+        == "sw"
+    )
 
 
 def test_no_language_matches():
@@ -57,5 +60,7 @@ def test_template_in_action():
     japanese_render = ac.get_template_values(context, ("ja",))
     name = template.context.get("name")
     assert name.upper() in japanese_render["body"]
-    ac = ATestUnilingualTemplateUsingAction(data={"template_data": TEST_UNI_TEMPLATE_DATA})
+    ac = ATestUnilingualTemplateUsingAction(
+        data={"template_data": TEST_UNI_TEMPLATE_DATA}
+    )
     assert name in ac.get_template_values(context)["subject"]

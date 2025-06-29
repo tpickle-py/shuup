@@ -23,12 +23,16 @@ class LineProperty:
 
 class BaseLinePropertiesDescriptor:
     @classmethod
-    def get_line_properties(cls, line: Union[OrderLine, SourceLine], **kwargs) -> Iterable[LineProperty]:
+    def get_line_properties(
+        cls, line: Union[OrderLine, SourceLine], **kwargs
+    ) -> Iterable[LineProperty]:
         raise NotImplementedError()
 
 
 def get_line_properties(line: Union[OrderLine, SourceLine]) -> Iterable[LineProperty]:
-    line_properties_descriptors = get_provide_objects("front_line_properties_descriptor")
+    line_properties_descriptors = get_provide_objects(
+        "front_line_properties_descriptor"
+    )
 
     for line_properties_descriptor in line_properties_descriptors:  # type: Iterable[BaseLinePropertiesDescriptor]
         if not issubclass(line_properties_descriptor, BaseLinePropertiesDescriptor):

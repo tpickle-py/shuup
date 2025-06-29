@@ -10,7 +10,10 @@ from __future__ import unicode_literals
 from django.db.transaction import atomic
 
 from shuup.admin.form_part import FormPartsViewMixin, SaveFormPartsMixin
-from shuup.admin.modules.services.base_form_part import PaymentMethodBaseFormPart, ShippingMethodBaseFormPart
+from shuup.admin.modules.services.base_form_part import (
+    PaymentMethodBaseFormPart,
+    ShippingMethodBaseFormPart,
+)
 from shuup.admin.modules.services.behavior_form_part import BehaviorComponentFormPart
 from shuup.admin.toolbar import get_default_edit_toolbar
 from shuup.admin.utils.urls import get_model_url
@@ -42,13 +45,17 @@ class ServiceEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
         return form_parts
 
     def _get_behavior_form_part(self, form, object):
-        return BehaviorComponentFormPart(self.request, form, form._meta.model.__name__.lower(), object)
+        return BehaviorComponentFormPart(
+            self.request, form, form._meta.model.__name__.lower(), object
+        )
 
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
         object = self.get_object()
         delete_url = get_model_url(object, "delete") if object.pk else None
-        return get_default_edit_toolbar(self, save_form_id, delete_url=(delete_url if object.can_delete() else None))
+        return get_default_edit_toolbar(
+            self, save_form_id, delete_url=(delete_url if object.can_delete() else None)
+        )
 
 
 class ShippingMethodEditView(ServiceEditView):

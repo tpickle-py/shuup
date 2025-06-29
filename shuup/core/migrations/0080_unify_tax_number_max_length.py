@@ -4,30 +4,40 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0079_longer_log_entry_fields'),
+        ("shuup", "0079_longer_log_entry_fields"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='companycontact',
-            name='tax_number',
-            field=models.CharField(blank=True, help_text='e.g. EIN in US or VAT code in Europe', max_length=64, verbose_name='tax number'),
+            model_name="companycontact",
+            name="tax_number",
+            field=models.CharField(
+                blank=True,
+                help_text="e.g. EIN in US or VAT code in Europe",
+                max_length=64,
+                verbose_name="tax number",
+            ),
         ),
         migrations.AlterField(
-            model_name='countrylimitbehaviorcomponent',
-            name='available_in_european_countries',
-            field=models.BooleanField(default=False, verbose_name='available in european union'),
+            model_name="countrylimitbehaviorcomponent",
+            name="available_in_european_countries",
+            field=models.BooleanField(
+                default=False, verbose_name="available in european union"
+            ),
         ),
         migrations.AlterField(
-            model_name='countrylimitbehaviorcomponent',
-            name='unavailable_in_european_countries',
-            field=models.BooleanField(default=False, verbose_name='unavailable in european union'),
+            model_name="countrylimitbehaviorcomponent",
+            name="unavailable_in_european_countries",
+            field=models.BooleanField(
+                default=False, verbose_name="unavailable in european union"
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='tax_number',
-            field=models.CharField(blank=True, max_length=64, verbose_name='tax number'),
+            model_name="order",
+            name="tax_number",
+            field=models.CharField(
+                blank=True, max_length=64, verbose_name="tax number"
+            ),
         ),
     ]

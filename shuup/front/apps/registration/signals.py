@@ -9,7 +9,9 @@ from django.conf import settings
 from django.dispatch import Signal
 from registration.signals import login_user
 
-company_contact_activated = Signal(providing_args=["instance", "request"], use_caching=True)
+company_contact_activated = Signal(
+    providing_args=["instance", "request"], use_caching=True
+)
 
 # Used when admin reactivates an account
 user_reactivated = Signal(providing_args=["user", "request"])

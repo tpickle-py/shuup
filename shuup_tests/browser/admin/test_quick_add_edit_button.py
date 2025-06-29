@@ -32,7 +32,9 @@ from shuup.testing.factories import (
 )
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
+pytestmark = pytest.mark.skipif(
+    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
+)
 
 
 @pytest.mark.django_db
@@ -55,33 +57,49 @@ def test_quick_add(browser, admin_user, live_server, settings):
     browser.fill("base-short_description__en", short_description)
     browser.fill("shop%s-default_price_value" % shop.pk, price_value)
 
-    wait_until_appeared(browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id)
-    click_element(browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id)
+    wait_until_appeared(
+        browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id
+    )
+    click_element(
+        browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id
+    )
     wait_until_appeared(browser, "#create-object-iframe")
 
     with browser.get_iframe("create-object-iframe") as iframe:
         assert Category.objects.count() == 0
         wait_until_appeared(iframe, "input[name='base-name__en']")
         iframe.fill("base-name__en", "Test Category")
-        time.sleep(3)  # Let's just wait here to the iFrame to open fully (for Chrome and headless)
+        time.sleep(
+            3
+        )  # Let's just wait here to the iFrame to open fully (for Chrome and headless)
         wait_until_appeared(iframe, "button[form='category_form']")
         click_element(browser, "button[form='category_form']")
-        wait_until_condition(browser, condition=lambda x: Category.objects.count() == 1, timeout=20)
+        wait_until_condition(
+            browser, condition=lambda x: Category.objects.count() == 1, timeout=20
+        )
 
     assert Category.objects.first().name == "Test Category"
 
     # click to edit the button
-    click_element(browser, "#id_shop%d-primary_category ~ .edit-object-btn a.btn" % shop.id)
+    click_element(
+        browser, "#id_shop%d-primary_category ~ .edit-object-btn a.btn" % shop.id
+    )
 
     with browser.get_iframe("create-object-iframe") as iframe:
         wait_until_appeared(iframe, "input[name='base-name__en']")
         new_cat_name = "Changed Name"
         iframe.fill("base-name__en", new_cat_name)
-        time.sleep(3)  # Let's just wait here to the iFrame to open fully (for Chrome and headless)
+        time.sleep(
+            3
+        )  # Let's just wait here to the iFrame to open fully (for Chrome and headless)
         wait_until_appeared(iframe, "button[form='category_form']")
         click_element(iframe, "button[form='category_form']")
 
-    wait_until_condition(browser, condition=lambda x: Category.objects.first().name == new_cat_name, timeout=20)
+    wait_until_condition(
+        browser,
+        condition=lambda x: Category.objects.first().name == new_cat_name,
+        timeout=20,
+    )
 
     click_element(browser, "button[form='product_form']")
     wait_until_appeared(browser, "div[class='message success']")
@@ -107,7 +125,9 @@ def test_edit_button_no_permission(browser, admin_user, live_server, settings):
     get_default_product_type()
     get_default_sales_unit()
     get_default_tax_class()
-    initialize_admin_browser_test(browser, live_server, settings, username=manager.username)
+    initialize_admin_browser_test(
+        browser, live_server, settings, username=manager.username
+    )
 
     url = reverse("shuup_admin:shop_product.new")
     browser.visit("%s%s" % (live_server, url))
@@ -122,8 +142,12 @@ def test_edit_button_no_permission(browser, admin_user, live_server, settings):
     browser.fill("base-short_description__en", short_description)
     browser.fill("shop%s-default_price_value" % shop.pk, price_value)
 
-    wait_until_appeared(browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id)
-    click_element(browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id)
+    wait_until_appeared(
+        browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id
+    )
+    click_element(
+        browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id
+    )
     wait_until_appeared(browser, "#create-object-iframe")
 
     # no permission to add category
@@ -140,7 +164,9 @@ def test_edit_button_no_permission(browser, admin_user, live_server, settings):
     set_permissions_for_group(manager_group, manager_permissions)
 
     # click to add category again
-    click_element(browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id)
+    click_element(
+        browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id
+    )
     wait_until_appeared(browser, "#create-object-iframe")
 
     # add the category
@@ -148,10 +174,14 @@ def test_edit_button_no_permission(browser, admin_user, live_server, settings):
         assert Category.objects.count() == 0
         wait_until_appeared(iframe, "input[name='base-name__en']")
         iframe.fill("base-name__en", "Test Category")
-        time.sleep(3)  # Let's just wait here to the iFrame to open fully (for Chrome and headless)
+        time.sleep(
+            3
+        )  # Let's just wait here to the iFrame to open fully (for Chrome and headless)
         wait_until_appeared(iframe, "button[form='category_form']")
         click_element(browser, "button[form='category_form']")
-        wait_until_condition(browser, condition=lambda x: Category.objects.count() == 1, timeout=20)
+        wait_until_condition(
+            browser, condition=lambda x: Category.objects.count() == 1, timeout=20
+        )
 
     assert Category.objects.first().name == "Test Category"
 
@@ -161,7 +191,9 @@ def test_edit_button_no_permission(browser, admin_user, live_server, settings):
     set_permissions_for_group(manager_group, manager_permissions)
 
     # click to edit the button
-    click_element(browser, "#id_shop%d-primary_category ~ .edit-object-btn a.btn" % shop.id)
+    click_element(
+        browser, "#id_shop%d-primary_category ~ .edit-object-btn a.btn" % shop.id
+    )
 
     # no permission to edit category
     with browser.get_iframe("create-object-iframe") as iframe:
@@ -174,15 +206,23 @@ def test_edit_button_no_permission(browser, admin_user, live_server, settings):
     manager_permissions.add("category.edit")
     set_permissions_for_group(manager_group, manager_permissions)
 
-    click_element(browser, "#id_shop%d-primary_category ~ .edit-object-btn a.btn" % shop.id)
+    click_element(
+        browser, "#id_shop%d-primary_category ~ .edit-object-btn a.btn" % shop.id
+    )
     wait_until_appeared(browser, "#create-object-iframe")
 
     new_cat_name = "Changed Name"
     with browser.get_iframe("create-object-iframe") as iframe:
         wait_until_appeared(iframe, "input[name='base-name__en']")
         iframe.fill("base-name__en", new_cat_name)
-        time.sleep(3)  # Let's just wait here to the iFrame to open fully (for Chrome and headless)
+        time.sleep(
+            3
+        )  # Let's just wait here to the iFrame to open fully (for Chrome and headless)
         wait_until_appeared(iframe, "button[form='category_form']")
         click_element(browser, "button[form='category_form']")
 
-    wait_until_condition(browser, condition=lambda x: Category.objects.first().name == new_cat_name, timeout=20)
+    wait_until_condition(
+        browser,
+        condition=lambda x: Category.objects.first().name == new_cat_name,
+        timeout=20,
+    )

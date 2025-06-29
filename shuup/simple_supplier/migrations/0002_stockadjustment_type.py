@@ -8,15 +8,19 @@ import shuup.core.suppliers.enums
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('simple_supplier', '0001_initial'),
+        ("simple_supplier", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='stockadjustment',
-            name='type',
-            field=enumfields.fields.EnumIntegerField(default=1, db_index=True, verbose_name='type', enum=shuup.core.suppliers.enums.StockAdjustmentType),
+            model_name="stockadjustment",
+            name="type",
+            field=enumfields.fields.EnumIntegerField(
+                default=1,
+                db_index=True,
+                verbose_name="type",
+                enum=shuup.core.suppliers.enums.StockAdjustmentType,
+            ),
         ),
     ]

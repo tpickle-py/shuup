@@ -6,20 +6,25 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0044_add_media'),
+        ("shuup", "0044_add_media"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='contact',
-            name='marketing_permission',
-            field=models.BooleanField(default=False, help_text='Check this if the contact can receive marketing and promotional materials.', verbose_name='marketing permission'),
+            model_name="contact",
+            name="marketing_permission",
+            field=models.BooleanField(
+                default=False,
+                help_text="Check this if the contact can receive marketing and promotional materials.",
+                verbose_name="marketing permission",
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='marketing_permission',
-            field=models.BooleanField(default=False, verbose_name='marketing permission'),
+            model_name="order",
+            name="marketing_permission",
+            field=models.BooleanField(
+                default=False, verbose_name="marketing permission"
+            ),
         ),
     ]

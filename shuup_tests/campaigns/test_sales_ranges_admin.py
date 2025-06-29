@@ -13,7 +13,12 @@ from shuup.admin.modules.contact_groups.views import ContactGroupEditView
 from shuup.admin.modules.contact_groups.views.forms import ContactGroupBaseFormPart
 from shuup.campaigns.models import ContactGroupSalesRange
 from shuup.core.models import Shop, ShopStatus
-from shuup.testing.factories import create_random_company, get_default_customer_group, get_default_shop, get_shop
+from shuup.testing.factories import (
+    create_random_company,
+    get_default_customer_group,
+    get_default_shop,
+    get_shop,
+)
 from shuup.testing.utils import apply_request_middleware
 
 
@@ -26,7 +31,11 @@ def test_form_part_for_new_group(rf, admin_user):
     form_def_values = initialized_view.get_form().form_defs.values()
     assert [form_def for form_def in form_def_values if form_def.name == "base"]
     # contact_group_sales_ranges should not be in form defs
-    assert not [form_def for form_def in form_def_values if "contact_group_sales_ranges" in form_def.name]
+    assert not [
+        form_def
+        for form_def in form_def_values
+        if "contact_group_sales_ranges" in form_def.name
+    ]
 
 
 @pytest.mark.django_db
@@ -40,7 +49,11 @@ def test_form_part_for_default_group(rf, admin_user):
     form_def_values = initialized_view.get_form().form_defs.values()
     assert [form_def for form_def in form_def_values if form_def.name == "base"]
     # contact_group_sales_ranges should not be in form defs
-    assert not [form_def for form_def in form_def_values if "contact_group_sales_ranges" in form_def.name]
+    assert not [
+        form_def
+        for form_def in form_def_values
+        if "contact_group_sales_ranges" in form_def.name
+    ]
 
 
 @pytest.mark.django_db
@@ -53,7 +66,11 @@ def test_form_part_for_random_group(rf, admin_user):
     form_def_values = initialized_view.get_form().form_defs.values()
     assert [form_def for form_def in form_def_values if form_def.name == "base"]
     # contact_group_sales_ranges should be in form defs
-    assert [form_def for form_def in form_def_values if "contact_group_sales_ranges" in form_def.name]
+    assert [
+        form_def
+        for form_def in form_def_values
+        if "contact_group_sales_ranges" in form_def.name
+    ]
 
 
 def get_edit_view_data(shop, group, min_value, max_value):
@@ -76,7 +93,9 @@ def test_editing_sales_ranges(rf, admin_user):
     assert ContactGroupSalesRange.objects.count() == 0
     # To make this test work we need to mock members form_part since the
     # extra forms does not render correctly
-    with patch.object(ContactGroupEditView, "base_form_part_classes", [ContactGroupBaseFormPart]):
+    with patch.object(
+        ContactGroupEditView, "base_form_part_classes", [ContactGroupBaseFormPart]
+    ):
         request = apply_request_middleware(rf.post("/", data=data), user=admin_user)
         view = ContactGroupEditView.as_view()
         response = view(request=request, pk=group.pk)
@@ -103,7 +122,9 @@ def test_editing_sales_ranges_multi_shop(rf, admin_user):
     assert ContactGroupSalesRange.objects.count() == 0
     # To make this test work we need to mock members form_part since the extra
     # forms does not render correctly
-    with patch.object(ContactGroupEditView, "base_form_part_classes", [ContactGroupBaseFormPart]):
+    with patch.object(
+        ContactGroupEditView, "base_form_part_classes", [ContactGroupBaseFormPart]
+    ):
         request = apply_request_middleware(rf.post("/", data=data), user=admin_user)
         view = ContactGroupEditView.as_view()
         response = view(request=request, pk=group.pk)
@@ -115,6 +136,8 @@ def test_editing_sales_ranges_multi_shop(rf, admin_user):
     # effect. From admin sales ranges can be only defined for the current
     # shop.
     assert ContactGroupSalesRange.objects.count() == 1
-    sales_range = ContactGroupSalesRange.objects.filter(group=group, shop=default_shop).first()
+    sales_range = ContactGroupSalesRange.objects.filter(
+        group=group, shop=default_shop
+    ).first()
     assert sales_range.min_value == 0
     assert sales_range.max_value == 50

@@ -12,7 +12,7 @@ from shuup.utils.django_compat import force_text
 
 
 class Problem(Exception):
-    """ User-visible exception. """
+    """User-visible exception."""
 
     message = property(lambda self: self.args[0] if self.args else None)
 

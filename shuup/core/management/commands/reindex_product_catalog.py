@@ -14,5 +14,7 @@ class Command(BaseCommand):
     help = "Reindex the prices and availability of all products of the catalog"
 
     def handle(self, *args, **options):
-        for shop_product in ShopProduct.objects.exclude(product__mode=ProductMode.VARIATION_CHILD):
+        for shop_product in ShopProduct.objects.exclude(
+            product__mode=ProductMode.VARIATION_CHILD
+        ):
             ProductCatalog.index_shop_product(shop_product)

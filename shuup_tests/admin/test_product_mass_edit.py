@@ -11,7 +11,12 @@ import pytest
 from shuup.admin.modules.products.mass_actions import InvisibleMassAction
 from shuup.admin.modules.products.views import ProductListView, ProductMassEditView
 from shuup.core.models import Product, ShopProductVisibility
-from shuup.testing.factories import create_product, get_default_category, get_default_shop, get_default_supplier
+from shuup.testing.factories import (
+    create_product,
+    get_default_category,
+    get_default_shop,
+    get_default_supplier,
+)
 from shuup.testing.utils import apply_request_middleware
 from shuup_tests.utils import printable_gibberish
 
@@ -20,8 +25,12 @@ from shuup_tests.utils import printable_gibberish
 def test_mass_edit_products(rf, admin_user):
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product1 = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price="50")
-    product2 = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price="501")
+    product1 = create_product(
+        printable_gibberish(), shop=shop, supplier=supplier, default_price="50"
+    )
+    product2 = create_product(
+        printable_gibberish(), shop=shop, supplier=supplier, default_price="501"
+    )
 
     category = get_default_category()
     shop_product1 = product1.get_shop_instance(shop)
@@ -32,7 +41,10 @@ def test_mass_edit_products(rf, admin_user):
     assert shop_product2.primary_category is None
 
     request = apply_request_middleware(
-        rf.post("/", data={"primary_category": category.pk, "categories": [category.pk]}), user=admin_user
+        rf.post(
+            "/", data={"primary_category": category.pk, "categories": [category.pk]}
+        ),
+        user=admin_user,
     )
     request.session["mass_action_ids"] = [shop_product1.pk, shop_product2.pk]
 
@@ -48,8 +60,12 @@ def test_mass_edit_products(rf, admin_user):
 def test_mass_edit_products2(rf, admin_user):
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product1 = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price="50")
-    product2 = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price="501")
+    product1 = create_product(
+        printable_gibberish(), shop=shop, supplier=supplier, default_price="50"
+    )
+    product2 = create_product(
+        printable_gibberish(), shop=shop, supplier=supplier, default_price="501"
+    )
 
     shop_product1 = product1.get_shop_instance(shop)
     shop_product2 = product2.get_shop_instance(shop)
@@ -57,11 +73,17 @@ def test_mass_edit_products2(rf, admin_user):
     # ensure no categories set
     assert shop_product1.primary_category is None
     assert shop_product2.primary_category is None
-    payload = {"action": InvisibleMassAction().identifier, "values": [shop_product1.pk, shop_product2.pk]}
+    payload = {
+        "action": InvisibleMassAction().identifier,
+        "values": [shop_product1.pk, shop_product2.pk],
+    }
     request = apply_request_middleware(rf.post("/"), user=admin_user)
     request._body = json.dumps(payload).encode("UTF-8")
     view = ProductListView.as_view()
     response = view(request=request)
     assert response.status_code == 200
     for product in Product.objects.all():
-        assert product.get_shop_instance(shop).visibility == ShopProductVisibility.NOT_VISIBLE
+        assert (
+            product.get_shop_instance(shop).visibility
+            == ShopProductVisibility.NOT_VISIBLE
+        )

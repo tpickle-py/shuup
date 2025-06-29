@@ -42,10 +42,14 @@ def test_prefixes():
 
 
 def test_prefix_and_suffix():
-    ahnuld = Ahnuld(first_name="Ahnuld", last_name="Strong", prefix="mr.", suffix="the oak")
+    ahnuld = Ahnuld(
+        first_name="Ahnuld", last_name="Strong", prefix="mr.", suffix="the oak"
+    )
     assert ahnuld.first_name == ahnuld.first_name_str
     assert ahnuld.last_name == ahnuld.last_name_str
-    assert ahnuld.full_name == ("%s %s %s" % (ahnuld.prefix, ahnuld.get_fullname(), ahnuld.suffix))
+    assert ahnuld.full_name == (
+        "%s %s %s" % (ahnuld.prefix, ahnuld.get_fullname(), ahnuld.suffix)
+    )
 
 
 def test_awkward_names():

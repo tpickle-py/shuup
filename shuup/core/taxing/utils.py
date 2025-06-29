@@ -46,7 +46,10 @@ def get_tax_class_proportions(lines):
         # Can't calculate proportions, if total is zero
         return []
 
-    return [(tax_class, tax_class_total / total) for (tax_class, tax_class_total) in total_by_tax_class.items()]
+    return [
+        (tax_class, tax_class_total / total)
+        for (tax_class, tax_class_total) in total_by_tax_class.items()
+    ]
 
 
 def stacked_value_added_taxes(price, taxes):
@@ -78,7 +81,9 @@ def stacked_value_added_taxes(price, taxes):
         taxful = None  # will be calculated below
         taxless = price
 
-    line_taxes = [SourceLineTax.from_tax(tax=tax, base_amount=taxless.amount) for tax in taxes]
+    line_taxes = [
+        SourceLineTax.from_tax(tax=tax, base_amount=taxless.amount) for tax in taxes
+    ]
 
     if taxful is None:
         total_tax_amount = money_sum(x.amount for x in line_taxes)
@@ -117,7 +122,9 @@ def _calc_compounded_added_taxes_from_taxful(amount, tax_groups):
         base_price = TaxfulPrice(taxed_price.taxless)
         reversed_line_taxes.extend(reversed(taxed_price.taxes))
     line_taxes = list(reversed(reversed_line_taxes))
-    return TaxedPrice(taxful=TaxfulPrice(amount), taxless=TaxlessPrice(base_price), taxes=line_taxes)
+    return TaxedPrice(
+        taxful=TaxfulPrice(amount), taxless=TaxlessPrice(base_price), taxes=line_taxes
+    )
 
 
 def _calc_compounded_added_taxes_from_taxless(amount, tax_groups):
@@ -127,4 +134,6 @@ def _calc_compounded_added_taxes_from_taxless(amount, tax_groups):
         taxed_price = stacked_value_added_taxes(base_price, taxes)
         base_price = TaxlessPrice(taxed_price.taxful)
         line_taxes.extend(taxed_price.taxes)
-    return TaxedPrice(taxful=TaxfulPrice(base_price), taxless=TaxlessPrice(amount), taxes=line_taxes)
+    return TaxedPrice(
+        taxful=TaxfulPrice(base_price), taxless=TaxlessPrice(amount), taxes=line_taxes
+    )

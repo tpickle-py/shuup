@@ -12,10 +12,6 @@ def add_shop_to_pages(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-    dependencies = [
-        ('shuup_simple_cms', '0004_add_shop')
-    ]
+    dependencies = [("shuup_simple_cms", "0004_add_shop")]
 
-    operations = [
-        migrations.RunPython(add_shop_to_pages, migrations.RunPython.noop)
-    ]
+    operations = [migrations.RunPython(add_shop_to_pages, migrations.RunPython.noop)]

@@ -6,21 +6,27 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0023_category_menu_visibility'),
-        ('campaigns', '0006_basket_cond_category_to_categories'),
+        ("shuup", "0023_category_menu_visibility"),
+        ("campaigns", "0006_basket_cond_category_to_categories"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='categoryproductsbasketcondition',
-            name='excluded_categories',
-            field=models.ManyToManyField(blank=True, related_name='_categoryproductsbasketcondition_excluded_categories_+', to='shuup.Category'),
+            model_name="categoryproductsbasketcondition",
+            name="excluded_categories",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="_categoryproductsbasketcondition_excluded_categories_+",
+                to="shuup.Category",
+            ),
         ),
         migrations.AlterField(
-            model_name='categoryproductsbasketcondition',
-            name='categories',
-            field=models.ManyToManyField(related_name='_categoryproductsbasketcondition_categories_+', to='shuup.Category'),
+            model_name="categoryproductsbasketcondition",
+            name="categories",
+            field=models.ManyToManyField(
+                related_name="_categoryproductsbasketcondition_categories_+",
+                to="shuup.Category",
+            ),
         ),
     ]

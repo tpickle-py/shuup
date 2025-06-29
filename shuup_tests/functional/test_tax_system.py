@@ -17,7 +17,12 @@ from shuup.core.order_creator import OrderSource, SourceLine
 from shuup.core.pricing import TaxfulPrice, TaxlessPrice
 from shuup.core.taxing import TaxModule
 from shuup.core.taxing.utils import stacked_value_added_taxes
-from shuup.testing.factories import get_default_product, get_default_supplier, get_shop, get_tax
+from shuup.testing.factories import (
+    get_default_product,
+    get_default_supplier,
+    get_shop,
+    get_tax,
+)
 
 TAX_MODULE_SPEC = [__name__ + ":IrvineCaliforniaTaxation"]
 

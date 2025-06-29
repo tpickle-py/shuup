@@ -14,7 +14,12 @@ from django.utils.translation import ugettext_lazy as _
 from shuup.admin.base import AdminModule, MenuEntry, Notification, SearchResult
 from shuup.admin.menu import ORDERS_MENU_CATEGORY, STOREFRONT_MENU_CATEGORY
 from shuup.admin.shop_provider import get_shop
-from shuup.admin.utils.urls import admin_url, derive_model_url, get_edit_and_list_urls, get_model_url
+from shuup.admin.utils.urls import (
+    admin_url,
+    derive_model_url,
+    get_edit_and_list_urls,
+    get_model_url,
+)
 from shuup.admin.views.home import HelpBlockCategory, SimpleHelpBlock
 from shuup.core.models import Order, OrderStatus, OrderStatusRole
 
@@ -59,7 +64,9 @@ class OrderModule(AdminModule):
                 name="order.set-shipment-sent",
             ),
             admin_url(
-                r"^shipments/$", "shuup.admin.modules.orders.views.ShipmentListView", name="order.shipments.list"
+                r"^shipments/$",
+                "shuup.admin.modules.orders.views.ShipmentListView",
+                name="order.shipments.list",
             ),
             admin_url(
                 r"^orders/(?P<pk>\d+)/create-payment/$",
@@ -102,13 +109,25 @@ class OrderModule(AdminModule):
                 name="order.create-full-refund",
             ),
             admin_url(
-                r"^orders/(?P<pk>\d+)/$", "shuup.admin.modules.orders.views.OrderDetailView", name="order.detail"
+                r"^orders/(?P<pk>\d+)/$",
+                "shuup.admin.modules.orders.views.OrderDetailView",
+                name="order.detail",
             ),
-            admin_url(r"^orders/new/$", "shuup.admin.modules.orders.views.OrderEditView", name="order.new"),
             admin_url(
-                r"^orders/(?P<pk>\d+)/edit/$", "shuup.admin.modules.orders.views.OrderEditView", name="order.edit"
+                r"^orders/new/$",
+                "shuup.admin.modules.orders.views.OrderEditView",
+                name="order.new",
             ),
-            admin_url(r"^orders/$", "shuup.admin.modules.orders.views.OrderListView", name="order.list"),
+            admin_url(
+                r"^orders/(?P<pk>\d+)/edit/$",
+                "shuup.admin.modules.orders.views.OrderEditView",
+                name="order.edit",
+            ),
+            admin_url(
+                r"^orders/$",
+                "shuup.admin.modules.orders.views.OrderListView",
+                name="order.list",
+            ),
             admin_url(
                 r"^orders/list-settings/",
                 "shuup.admin.modules.settings.views.ListSettingsView",
@@ -154,18 +173,25 @@ class OrderModule(AdminModule):
             for i, order in enumerate(orders):
                 relevance = 100 - i
                 yield SearchResult(
-                    text=six.text_type(order), url=get_model_url(order), category=_("Orders"), relevance=relevance
+                    text=six.text_type(order),
+                    url=get_model_url(order),
+                    category=_("Orders"),
+                    relevance=relevance,
                 )
 
     def get_notifications(self, request):
         shop = request.shop
         old_open_orders = Order.objects.filter(
-            shop=shop, status__role=OrderStatusRole.INITIAL, order_date__lt=now() - timedelta(days=4)
+            shop=shop,
+            status__role=OrderStatusRole.INITIAL,
+            order_date__lt=now() - timedelta(days=4),
         ).count()
 
         if old_open_orders:
             yield Notification(
-                title=_("Outstanding Orders"), text=_("%d outstanding orders") % old_open_orders, kind="danger"
+                title=_("Outstanding Orders"),
+                text=_("%d outstanding orders") % old_open_orders,
+                kind="danger",
             )
 
     def get_model_url(self, object, kind, shop=None):
@@ -175,7 +201,9 @@ class OrderModule(AdminModule):
         from shuup.admin.utils.permissions import has_permission
 
         if kind == "quicklink" and has_permission(request.user, "order.new"):
-            actions = [{"text": _("New order"), "url": self.get_model_url(Order, "new")}]
+            actions = [
+                {"text": _("New order"), "url": self.get_model_url(Order, "new")}
+            ]
 
             yield SimpleHelpBlock(
                 text=_("New order"),
@@ -183,7 +211,9 @@ class OrderModule(AdminModule):
                 icon_url="shuup_admin/img/product.png",
                 priority=0,
                 category=HelpBlockCategory.ORDERS,
-                done=Order.objects.filter(shop=request.shop).exists() if kind == "setup" else False,
+                done=Order.objects.filter(shop=request.shop).exists()
+                if kind == "setup"
+                else False,
             )
 
 

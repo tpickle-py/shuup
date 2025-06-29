@@ -26,7 +26,9 @@ def test_get_shop(rf, get_shop_fn):
         normal_user = factories.create_random_user()
         staff_user = factories.create_random_user(is_staff=True)
 
-        request = apply_request_middleware(rf.post("/"), user=normal_user, skip_session=True)
+        request = apply_request_middleware(
+            rf.post("/"), user=normal_user, skip_session=True
+        )
         # user not staff
         assert get_shop_fn(request) is None
 
@@ -40,7 +42,9 @@ def test_get_shop(rf, get_shop_fn):
 
         # adds the user to a shop
         shop1.staff_members.add(staff_user)
-        request = apply_request_middleware(rf.post("/"), user=staff_user, skip_session=True)
+        request = apply_request_middleware(
+            rf.post("/"), user=staff_user, skip_session=True
+        )
         assert get_shop_fn(request) == shop1
 
         # adds the user to another shop
@@ -56,7 +60,11 @@ def test_get_shop(rf, get_shop_fn):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "set_shop_fn,get_shop_fn", [(set_shop, get_shop), (AdminShopProvider().set_shop, AdminShopProvider().get_shop)]
+    "set_shop_fn,get_shop_fn",
+    [
+        (set_shop, get_shop),
+        (AdminShopProvider().set_shop, AdminShopProvider().get_shop),
+    ],
 )
 def test_set_shop(rf, set_shop_fn, get_shop_fn):
     with override_settings(SHUUP_ENABLE_MULTIPLE_SHOPS=True):
@@ -68,7 +76,9 @@ def test_set_shop(rf, set_shop_fn, get_shop_fn):
         normal_user = factories.create_random_user()
         staff_user = factories.create_random_user(is_staff=True)
 
-        request = apply_request_middleware(rf.post("/"), user=normal_user, skip_session=True)
+        request = apply_request_middleware(
+            rf.post("/"), user=normal_user, skip_session=True
+        )
         # user not staff
         with pytest.raises(PermissionDenied) as exc:
             set_shop_fn(request, shop1)
@@ -87,7 +97,9 @@ def test_set_shop(rf, set_shop_fn, get_shop_fn):
 
         # user is member of the shop staff
         shop1.staff_members.add(staff_user)
-        request = apply_request_middleware(rf.post("/"), user=staff_user, skip_session=True)
+        request = apply_request_middleware(
+            rf.post("/"), user=staff_user, skip_session=True
+        )
         set_shop_fn(request, shop1)
         assert get_shop_fn(request) == shop1
 
@@ -108,7 +120,11 @@ def test_set_shop(rf, set_shop_fn, get_shop_fn):
     "set_shop_fn,get_shop_fn,unset_shop_fn",
     [
         (set_shop, get_shop, unset_shop),
-        (AdminShopProvider().set_shop, AdminShopProvider().get_shop, AdminShopProvider().unset_shop),
+        (
+            AdminShopProvider().set_shop,
+            AdminShopProvider().get_shop,
+            AdminShopProvider().unset_shop,
+        ),
     ],
 )
 def test_unset_shop(rf, set_shop_fn, get_shop_fn, unset_shop_fn):

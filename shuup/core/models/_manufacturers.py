@@ -44,7 +44,11 @@ class Manufacturer(models.Model):
     )
 
     logo = FilerImageField(
-        verbose_name=_("logo"), blank=True, null=True, on_delete=models.SET_NULL, related_name="manufacturer_logos"
+        verbose_name=_("logo"),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="manufacturer_logos",
     )
 
     class Meta:

@@ -23,6 +23,7 @@ configuration and a shop specific configuration for each shop.  Values
 in shop specific configuration override the values in global
 configuration.
 """
+
 from __future__ import unicode_literals
 
 from shuup.core import cache
@@ -45,9 +46,13 @@ def set(shop, key, value, encrypted=False):
     :type value: Any
     """
     if not encrypted:
-        ConfigurationItem.objects.update_or_create(shop=shop, key=key, defaults={"value": value})
+        ConfigurationItem.objects.update_or_create(
+            shop=shop, key=key, defaults={"value": value}
+        )
     else:
-        EncryptedConfigurationItem.objects.update_or_create(shop=shop, key=key, defaults={"value": value})
+        EncryptedConfigurationItem.objects.update_or_create(
+            shop=shop, key=key, defaults={"value": value}
+        )
     if shop:
         cache.set(_get_cache_key(shop), None)
     else:

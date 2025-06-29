@@ -18,7 +18,10 @@ class ProductDiscountEffect(PolymorphicShuupModel):
     admin_form_class = None
 
     campaign = models.ForeignKey(
-        on_delete=models.CASCADE, to="CatalogCampaign", related_name="effects", verbose_name=_("campaign")
+        on_delete=models.CASCADE,
+        to="CatalogCampaign",
+        related_name="effects",
+        verbose_name=_("campaign"),
     )
 
     def apply_for_product(self, context, product, price_info):
@@ -29,7 +32,9 @@ class ProductDiscountEffect(PolymorphicShuupModel):
         :return: amount of discount to accumulate for the product
         :rtype: Price
         """
-        raise NotImplementedError("Error! Not implemented: `ProductDiscountEffect` -> `apply_for_product()`")
+        raise NotImplementedError(
+            "Error! Not implemented: `ProductDiscountEffect` -> `apply_for_product()`"
+        )
 
 
 class ProductDiscountAmount(ProductDiscountEffect):
@@ -37,7 +42,11 @@ class ProductDiscountAmount(ProductDiscountEffect):
     name = _("Discount amount value")
 
     discount_amount = MoneyValueField(
-        default=None, blank=True, null=True, verbose_name=_("discount amount"), help_text=_("Flat amount of discount.")
+        default=None,
+        blank=True,
+        null=True,
+        verbose_name=_("discount amount"),
+        help_text=_("Flat amount of discount."),
     )
 
     @property

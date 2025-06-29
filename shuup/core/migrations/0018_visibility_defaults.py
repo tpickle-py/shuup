@@ -9,20 +9,23 @@ import shuup.core.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0017_ensure_currencies_exists'),
+        ("shuup", "0017_ensure_currencies_exists"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='category',
-            name='status',
-            field=enumfields.fields.EnumIntegerField(db_index=True, default=1, enum=shuup.core.models.CategoryStatus),
+            model_name="category",
+            name="status",
+            field=enumfields.fields.EnumIntegerField(
+                db_index=True, default=1, enum=shuup.core.models.CategoryStatus
+            ),
         ),
         migrations.AlterField(
-            model_name='shopproduct',
-            name='visibility',
-            field=enumfields.fields.EnumIntegerField(db_index=True, default=3, enum=shuup.core.models.ShopProductVisibility),
+            model_name="shopproduct",
+            name="visibility",
+            field=enumfields.fields.EnumIntegerField(
+                db_index=True, default=3, enum=shuup.core.models.ShopProductVisibility
+            ),
         ),
     ]

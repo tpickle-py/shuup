@@ -12,10 +12,11 @@ from shuup.xtheme.models import SavedViewConfig, ThemeSettings
 @atomic
 def convert_shop_themes(*args):
     for theme_setting in ThemeSettings.objects.filter(shop__isnull=True):
-
-        for (index, shop) in enumerate(Shop.objects.all()):
+        for index, shop in enumerate(Shop.objects.all()):
             # already exists.. ignore
-            if ThemeSettings.objects.filter(shop=shop, theme_identifier=theme_setting.theme_identifier).exists():
+            if ThemeSettings.objects.filter(
+                shop=shop, theme_identifier=theme_setting.theme_identifier
+            ).exists():
                 continue
 
             # the first shop received the original object, the other, are just copies
@@ -25,11 +26,12 @@ def convert_shop_themes(*args):
             theme_setting.shop = shop
             theme_setting.save()
 
-
     for saved_config in SavedViewConfig.objects.filter(shop__isnull=True):
-        for (index, shop) in enumerate(Shop.objects.all()):
+        for index, shop in enumerate(Shop.objects.all()):
             # already exists.. ignore
-            if SavedViewConfig.objects.filter(shop=shop, theme_identifier=saved_config.theme_identifier).exists():
+            if SavedViewConfig.objects.filter(
+                shop=shop, theme_identifier=saved_config.theme_identifier
+            ).exists():
                 continue
 
             # the first shop received the original object, the other, are just copies
@@ -41,11 +43,8 @@ def convert_shop_themes(*args):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_xtheme', '0003_shop_theme'),
+        ("shuup_xtheme", "0003_shop_theme"),
     ]
 
-    operations = [
-        migrations.RunPython(convert_shop_themes, migrations.RunPython.noop)
-    ]
+    operations = [migrations.RunPython(convert_shop_themes, migrations.RunPython.noop)]

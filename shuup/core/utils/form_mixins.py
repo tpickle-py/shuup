@@ -18,7 +18,9 @@ class ProtectedFieldsMixin(object):
         The fields are set in model level when model has `ChangeProtected`
         """
         if self.instance and self.instance.pk:
-            are_changes_protected = getattr(self.instance, "_are_changes_protected", None)
+            are_changes_protected = getattr(
+                self.instance, "_are_changes_protected", None
+            )
             if are_changes_protected:  # Supports the `_are_changes_protected` protocol?
                 if not are_changes_protected():  # Not protected though?
                     return ()  # Nothing protected, then.

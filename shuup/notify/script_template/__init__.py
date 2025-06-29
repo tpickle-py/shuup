@@ -28,14 +28,19 @@ class BaseScriptTemplate(ScriptTemplate):
         return []
 
     def create_script(self, shop, form=None):
-        """ Creates the script based on the event and the steps """
-        script = Script(event_identifier=self.event.identifier, name=self.name, enabled=True, shop=shop)
+        """Creates the script based on the event and the steps"""
+        script = Script(
+            event_identifier=self.event.identifier,
+            name=self.name,
+            enabled=True,
+            shop=shop,
+        )
         script.set_steps(self.get_script_steps(form))
         script.save()
         return script
 
     def update_script(self, form):
-        """ Change the steps and save the script """
+        """Change the steps and save the script"""
         self.script_instance.set_steps(self.get_script_steps(form))
         self.script_instance.save()
         return self.script_instance

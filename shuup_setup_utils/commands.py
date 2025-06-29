@@ -53,7 +53,11 @@ class BuildResourcesCommand(distutils.core.Command):
         ("clean", "c", "clean intermediate files before building"),
         ("force", "f", "force rebuild even if cached result exists"),
         ("no-install", "n", "do not install npm packages before building"),
-        ("ci", "t", "indicates that this build is running inside a Continuous Integration environment"),
+        (
+            "ci",
+            "t",
+            "indicates that this build is running inside a Continuous Integration environment",
+        ),
         ("directory=", "d", "directory to build in, or '.' for all (default)"),
     ]
     boolean_options = ["clean", "force", "no-install"]
@@ -67,7 +71,9 @@ class BuildResourcesCommand(distutils.core.Command):
             if self.mode and mode.startswith(self.mode):
                 self.mode = mode
         if self.mode not in ["development", "production"]:
-            raise distutils.errors.DistutilsArgError("Mode must be 'development' or 'production'")
+            raise distutils.errors.DistutilsArgError(
+                "Mode must be 'development' or 'production'"
+            )
 
     def run(self):
         opts = resource_building.Options()
@@ -101,7 +107,7 @@ class BuildMessagesCommand(distutils.core.Command):
     def run(self):
         appdirs = set()
         rootdir = os.getcwd()
-        for (dirpath, dirnames, filenames) in os.walk(rootdir):
+        for dirpath, dirnames, filenames in os.walk(rootdir):
             # Filter out hidden directories (.git, .svn, .tox, etc.)
             for dirname in list(dirnames):
                 if dirname.startswith("."):

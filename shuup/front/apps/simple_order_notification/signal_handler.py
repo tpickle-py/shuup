@@ -28,7 +28,9 @@ def send_simple_order_notification(sender, order, request, **kwargs):
     :type order: shuup.core.models.Order
     """
 
-    if order.log_entries.filter(identifier=NOTIFICATION_SUCCESS_LOG_IDENTIFIER).exists():
+    if order.log_entries.filter(
+        identifier=NOTIFICATION_SUCCESS_LOG_IDENTIFIER
+    ).exists():
         return
 
     try:

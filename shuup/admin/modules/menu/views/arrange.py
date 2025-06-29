@@ -66,7 +66,9 @@ class AdminMenuResetView(RedirectView):
     url = reverse_lazy("shuup_admin:menu.arrange")
 
     def reset_configuration(self, request):
-        configuration.set(None, CUSTOM_ADMIN_MENU_USER_PREFIX.format(request.user.pk), None)
+        configuration.set(
+            None, CUSTOM_ADMIN_MENU_USER_PREFIX.format(request.user.pk), None
+        )
 
     def get(self, request, *args, **kwargs):
         self.reset_configuration(request)
@@ -79,7 +81,9 @@ class SuperUserMenuArrangeView(AdminMenuArrangeView):
     reset_url = reverse_lazy("shuup_admin:menu.reset_superuser")
 
     def set_configuration(self, request, menus):
-        configuration_object = configuration.get(None, CUSTOM_ADMIN_MENU_SUPERUSER_KEY, {}) or {}
+        configuration_object = (
+            configuration.get(None, CUSTOM_ADMIN_MENU_SUPERUSER_KEY, {}) or {}
+        )
         configuration_object.update({get_language(): menus})
         configuration.set(None, CUSTOM_ADMIN_MENU_SUPERUSER_KEY, configuration_object)
 
@@ -96,7 +100,9 @@ class StaffMenuArrangeView(AdminMenuArrangeView):
     reset_url = reverse_lazy("shuup_admin:menu.reset_staff")
 
     def set_configuration(self, request, menus):
-        configuration_object = configuration.get(None, CUSTOM_ADMIN_MENU_STAFF_KEY, {}) or {}
+        configuration_object = (
+            configuration.get(None, CUSTOM_ADMIN_MENU_STAFF_KEY, {}) or {}
+        )
         configuration_object.update({get_language(): menus})
         configuration.set(None, CUSTOM_ADMIN_MENU_STAFF_KEY, configuration_object)
 
@@ -113,7 +119,9 @@ class SupplierMenuArrangeView(AdminMenuArrangeView):
     reset_url = reverse_lazy("shuup_admin:menu.reset_supplier")
 
     def set_configuration(self, request, menus):
-        configuration_object = configuration.get(None, CUSTOM_ADMIN_MENU_SUPPLIER_KEY, {}) or {}
+        configuration_object = (
+            configuration.get(None, CUSTOM_ADMIN_MENU_SUPPLIER_KEY, {}) or {}
+        )
         configuration_object.update({get_language(): menus})
         configuration.set(None, CUSTOM_ADMIN_MENU_SUPPLIER_KEY, configuration_object)
 

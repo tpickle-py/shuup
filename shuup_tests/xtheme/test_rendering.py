@@ -9,7 +9,13 @@ import mock
 import pytest
 
 from shuup.xtheme.testing import override_current_theme_class
-from shuup_tests.xtheme.utils import FauxTheme, FauxView, get_jinja2_engine, get_request, plugin_override
+from shuup_tests.xtheme.utils import (
+    FauxTheme,
+    FauxView,
+    get_jinja2_engine,
+    get_request,
+    plugin_override,
+)
 
 
 @pytest.mark.django_db
@@ -31,7 +37,9 @@ def test_rendering(edit, injectable, theme_class, global_type):
                 template = jeng.get_template("complex.jinja")
             view = FauxView()
             view.xtheme_injection = bool(injectable)
-            output = template.render(context={"view": view, "request": request}, request=request)
+            output = template.render(
+                context={"view": view, "request": request}, request=request
+            )
 
             # From now on we render placholders in views that
             # actually can be edited.

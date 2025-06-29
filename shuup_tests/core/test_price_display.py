@@ -78,8 +78,11 @@ class DummyPricingModule(PricingModule):
 
         # index the price of all children shop products
         if is_variation_parent:
-            children_shop_product = ShopProduct.objects.select_related("product", "shop").filter(
-                shop=shop_product.shop, product__variation_parent_id=shop_product.product_id
+            children_shop_product = ShopProduct.objects.select_related(
+                "product", "shop"
+            ).filter(
+                shop=shop_product.shop,
+                product__variation_parent_id=shop_product.product_id,
             )
             for child_shop_product in children_shop_product:
                 self.index_shop_product(child_shop_product)
@@ -90,7 +93,9 @@ class DummyPricingModule(PricingModule):
                     shop_id=shop_product.shop_id,
                     supplier_id=supplier_id,
                     catalog_rule=None,
-                    defaults=dict(price_value=shop_product.default_price_value or Decimal()),
+                    defaults=dict(
+                        price_value=shop_product.default_price_value or Decimal()
+                    ),
                 )
 
 
@@ -238,13 +243,18 @@ def test_filter_parameter_contact_groups():
     anonymous_price = 14.6
 
     def get_price_info_mock(context, product, quantity=1):
-        if context.customer.get_default_group() == AnonymousContact().get_default_group():
+        if (
+            context.customer.get_default_group()
+            == AnonymousContact().get_default_group()
+        ):
             price = context.shop.create_price(anonymous_price)
         else:
             price = context.shop.create_price(customer_price)
         return PriceInfo(quantity * price, quantity * price, quantity)
 
-    with patch.object(DummyPricingModule, "get_price_info", side_effect=get_price_info_mock):
+    with patch.object(
+        DummyPricingModule, "get_price_info", side_effect=get_price_info_mock
+    ):
         (engine, context) = _get_template_engine_and_context(product_sku="123")
         # test with anonymous
         context["request"].customer = AnonymousContact()
@@ -286,10 +296,18 @@ def _get_template_engine_and_context(product_sku="6.0745", create_var_product=Fa
     if create_var_product:
         var_product = create_product(sku="32.9", shop=shop, tax_class=tax_class)
         child_product_1 = create_product(
-            sku="4.50", shop=shop, tax_class=tax_class, supplier=supplier, default_price="4.5"
+            sku="4.50",
+            shop=shop,
+            tax_class=tax_class,
+            supplier=supplier,
+            default_price="4.5",
         )
         child_product_2 = create_product(
-            sku="12.00", shop=shop, tax_class=tax_class, supplier=supplier, default_price="12"
+            sku="12.00",
+            shop=shop,
+            tax_class=tax_class,
+            supplier=supplier,
+            default_price="12",
         )
         child_product_1.link_to_parent(var_product, variables={"color": "red"})
         child_product_2.link_to_parent(var_product, variables={"color": "blue"})

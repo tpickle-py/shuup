@@ -43,7 +43,9 @@ def _get_cached_thumbnail_url(source, **kwargs):
     cache_key = None
 
     if isinstance(source, (File, ProductMedia)) and source.pk:
-        cache_key = "thumbnail_{}_{}:_cached_thumbnail_{}".format(source.pk, source.__class__.__name__, kwargs_hash)
+        cache_key = "thumbnail_{}_{}:_cached_thumbnail_{}".format(
+            source.pk, source.__class__.__name__, kwargs_hash
+        )
 
     elif isinstance(source, six.string_types):
         cache_key = "_cached_thumbnail_url_{}".format(kwargs_hash)
@@ -61,7 +63,9 @@ def thumbnail(source, alias=None, generate=True, **kwargs):
     if not source:
         return None
 
-    cache_key, cached_thumbnail_url = _get_cached_thumbnail_url(source, alias=alias, generate=generate, **kwargs)
+    cache_key, cached_thumbnail_url = _get_cached_thumbnail_url(
+        source, alias=alias, generate=generate, **kwargs
+    )
 
     if cached_thumbnail_url is not None:
         return cached_thumbnail_url
@@ -81,7 +85,9 @@ def thumbnail(source, alias=None, generate=True, **kwargs):
         options = process_thumbnailer_options(kwargs)
 
     try:
-        thumbnail_instance = thumbnailer_instance.get_thumbnail(options, generate=generate)
+        thumbnail_instance = thumbnailer_instance.get_thumbnail(
+            options, generate=generate
+        )
         thumbnail_url = thumbnail_instance.url
         if cache_key:
             cache.set(cache_key, thumbnail_url)

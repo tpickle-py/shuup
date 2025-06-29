@@ -45,7 +45,11 @@ def test_suppliers_filter_get_fields(rf):
     assert form_field is not None
     assert form_field.label == "Suppliers"
 
-    with override_settings(SHUUP_FRONT_OVERRIDE_SORTS_AND_FILTERS_LABELS_LOGIC={"supplier": "Filter by suppliers"}):
+    with override_settings(
+        SHUUP_FRONT_OVERRIDE_SORTS_AND_FILTERS_LABELS_LOGIC={
+            "supplier": "Filter by suppliers"
+        }
+    ):
         form_field = SupplierProductListFilter().get_fields(request, category)[0][1]
         assert form_field is not None
         assert form_field.label == "Filter by suppliers"

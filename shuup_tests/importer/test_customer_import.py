@@ -10,7 +10,10 @@ import six
 from django.utils.translation import activate
 
 from shuup.core.models._addresses import MutableAddress
-from shuup.default_importer.importers.contact import CompanyContactImporter, PersonContactImporter
+from shuup.default_importer.importers.contact import (
+    CompanyContactImporter,
+    PersonContactImporter,
+)
 from shuup.importer.transforms import transform_file
 from shuup.importer.utils.importer import ImportMode
 from shuup.testing.factories import get_default_shop
@@ -26,7 +29,10 @@ def test_customer_sample(rf):
     transformed_data = transform_file(filename.split(".")[1], path)
 
     importer = PersonContactImporter(
-        transformed_data, CompanyContactImporter.get_importer_context(rf.get("/"), shop=shop, language="en")
+        transformed_data,
+        CompanyContactImporter.get_importer_context(
+            rf.get("/"), shop=shop, language="en"
+        ),
     )
     importer.process_data()
     assert len(importer.unmatched_fields) == 0
@@ -78,7 +84,10 @@ def test_company_sample(rf):
     transformed_data = transform_file(filename.split(".")[1], path)
 
     importer = CompanyContactImporter(
-        transformed_data, CompanyContactImporter.get_importer_context(rf.get("/"), shop=shop, language="en")
+        transformed_data,
+        CompanyContactImporter.get_importer_context(
+            rf.get("/"), shop=shop, language="en"
+        ),
     )
     importer.process_data()
     assert len(importer.unmatched_fields) == 0

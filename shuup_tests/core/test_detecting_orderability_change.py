@@ -8,7 +8,12 @@
 import pytest
 
 from shuup.core.signals import stocks_updated
-from shuup.testing.factories import create_product, create_random_person, get_default_shop, get_default_supplier
+from shuup.testing.factories import (
+    create_product,
+    create_random_person,
+    get_default_shop,
+    get_default_supplier,
+)
 from shuup.testing.receivers import shop_product_orderability_check
 
 
@@ -21,7 +26,10 @@ def test_product_visibility_change_basic(hide_unorderable_product):
     """
     if hide_unorderable_product:
         # Connect signal to hide products when they become unorderable
-        stocks_updated.connect(receiver=shop_product_orderability_check, dispatch_uid="shop_product_orderability_check")
+        stocks_updated.connect(
+            receiver=shop_product_orderability_check,
+            dispatch_uid="shop_product_orderability_check",
+        )
 
     shop = get_default_shop()
     contact = create_random_person()
@@ -43,9 +51,12 @@ def test_product_visibility_change_basic(hide_unorderable_product):
         assert not shop_product.is_orderable(supplier, contact, 1)
         # Disconnect signal just in case...
         stocks_updated.disconnect(
-            receiver=shop_product_orderability_check, dispatch_uid="shop_product_orderability_check"
+            receiver=shop_product_orderability_check,
+            dispatch_uid="shop_product_orderability_check",
         )
     else:
-        assert shop_product.is_visible(contact)  # Still visible in front but not purchasable or orderable
+        assert shop_product.is_visible(
+            contact
+        )  # Still visible in front but not purchasable or orderable
         assert not shop_product.is_purchasable(supplier, contact, 1)
         assert not shop_product.is_orderable(supplier, contact, 1)

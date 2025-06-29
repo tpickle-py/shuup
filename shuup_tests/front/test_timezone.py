@@ -40,7 +40,11 @@ def test_timezone_middleware(rf, admin_user):
     assert not contact.timezone
 
     resp = view(
-        apply_request_middleware(rf.post("/", data={"tz_name": "America/Sao_Paulo"}), person=contact, user=admin_user)
+        apply_request_middleware(
+            rf.post("/", data={"tz_name": "America/Sao_Paulo"}),
+            person=contact,
+            user=admin_user,
+        )
     )
     assert resp.status_code == 200
 

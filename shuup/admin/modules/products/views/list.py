@@ -14,7 +14,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.supplier_provider import get_supplier
-from shuup.admin.utils.picotable import ChoicesFilter, Column, Picotable, RangeFilter, TextFilter
+from shuup.admin.utils.picotable import (
+    ChoicesFilter,
+    Column,
+    Picotable,
+    RangeFilter,
+    TextFilter,
+)
 from shuup.admin.utils.views import PicotableListView
 from shuup.core.models import ProductMode, Shop, ShopProduct
 from shuup.core.specs.product_kind import DefaultProductKindSpec, get_product_kind_specs
@@ -52,7 +58,10 @@ class ProductListView(PicotableListView):
             _("Name"),
             sort_field="product__translations__name",
             display="product__name",
-            filter_config=TextFilter(filter_field="product__translations__name", placeholder=_("Filter by name...")),
+            filter_config=TextFilter(
+                filter_field="product__translations__name",
+                placeholder=_("Filter by name..."),
+            ),
             ordering=2,
         ),
         Column(
@@ -79,9 +88,14 @@ class ProductListView(PicotableListView):
         Column(
             "primary_category",
             _("Primary Category"),
-            display=(lambda instance: instance.primary_category.name if instance.primary_category else None),
+            display=(
+                lambda instance: instance.primary_category.name
+                if instance.primary_category
+                else None
+            ),
             filter_config=TextFilter(
-                filter_field="primary_category__translations__name", placeholder=_("Filter by category name...")
+                filter_field="primary_category__translations__name",
+                placeholder=_("Filter by category name..."),
             ),
             ordering=6,
         ),
@@ -90,7 +104,8 @@ class ProductListView(PicotableListView):
             _("Categories"),
             display="format_categories",
             filter_config=TextFilter(
-                filter_field="categories__translations__name", placeholder=_("Filter by category name...")
+                filter_field="categories__translations__name",
+                placeholder=_("Filter by category name..."),
             ),
             ordering=7,
         ),
@@ -111,12 +126,24 @@ class ProductListView(PicotableListView):
 
     def __init__(self):
         def get_suppliers_column(iterable):
-            return first([col for col in iterable if col.id in ["suppliers", "shopproduct_suppliers"]], default=None)
+            return first(
+                [
+                    col
+                    for col in iterable
+                    if col.id in ["suppliers", "shopproduct_suppliers"]
+                ],
+                default=None,
+            )
 
         def get_suppliers_filter():
-            return TextFilter(filter_field="suppliers__name", placeholder=_("Filter by supplier name..."))
+            return TextFilter(
+                filter_field="suppliers__name",
+                placeholder=_("Filter by supplier name..."),
+            )
 
-        if settings.SHUUP_ENABLE_MULTIPLE_SUPPLIERS and not get_suppliers_column(self.default_columns):
+        if settings.SHUUP_ENABLE_MULTIPLE_SUPPLIERS and not get_suppliers_column(
+            self.default_columns
+        ):
             self.default_columns.append(
                 Column(
                     "suppliers",
@@ -140,7 +167,9 @@ class ProductListView(PicotableListView):
     def get_columns(self):
         for column in self.columns:
             if column.id == "shop":
-                shops = Shop.objects.get_for_user(self.request.user).prefetch_related("translations")
+                shops = Shop.objects.get_for_user(self.request.user).prefetch_related(
+                    "translations"
+                )
                 column.filter_config = ChoicesFilter(choices=shops)
                 break
         return self.columns
@@ -163,7 +192,9 @@ class ProductListView(PicotableListView):
         filter = self.get_filter()
         shop = get_shop(self.request)
         qs = ShopProduct.objects.filter(
-            product__deleted=False, product__kind__in=self.get_listing_product_kinds_values(), shop=shop
+            product__deleted=False,
+            product__kind__in=self.get_listing_product_kinds_values(),
+            shop=shop,
         )
         q = Q()
         for mode in filter.get("modes", []):

@@ -6,20 +6,26 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0054_product_available_until'),
+        ("shuup", "0054_product_available_until"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='orderline',
-            name='labels',
-            field=models.ManyToManyField(blank=True, to='shuup.Label', verbose_name='labels'),
+            model_name="orderline",
+            name="labels",
+            field=models.ManyToManyField(
+                blank=True, to="shuup.Label", verbose_name="labels"
+            ),
         ),
         migrations.AlterField(
-            model_name='shopproducttranslation',
-            name='status_text',
-            field=models.CharField(blank=True, help_text='This text will be shown alongside the product in the shop. It is useful for informing customers of special stock numbers or preorders. (Ex.: Available in a month)', max_length=128, verbose_name='status text'),
+            model_name="shopproducttranslation",
+            name="status_text",
+            field=models.CharField(
+                blank=True,
+                help_text="This text will be shown alongside the product in the shop. It is useful for informing customers of special stock numbers or preorders. (Ex.: Available in a month)",
+                max_length=128,
+                verbose_name="status text",
+            ),
         ),
     ]

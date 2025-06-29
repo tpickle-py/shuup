@@ -56,10 +56,17 @@ def test_authenticate_form(client):
 
     # user didn't check the privacy policy agreement
     response = client.post(
-        reverse("shuup:login"), data={"username": user.email, "password": "1234", REDIRECT_FIELD_NAME: redirect_target}
+        reverse("shuup:login"),
+        data={
+            "username": user.email,
+            "password": "1234",
+            REDIRECT_FIELD_NAME: redirect_target,
+        },
     )
     assert response.status_code == 200
-    assert "You must accept this in order to authenticate." in response.content.decode("utf-8")
+    assert "You must accept this in order to authenticate." in response.content.decode(
+        "utf-8"
+    )
 
     response = client.post(
         reverse("shuup:login"),
@@ -106,7 +113,12 @@ def test_authenticate_form_without_consent_checkboxes(client):
 
     # user didn't check the privacy policy agreement
     response = client.post(
-        login_url, data={"username": user.email, "password": "1234", REDIRECT_FIELD_NAME: redirect_target}
+        login_url,
+        data={
+            "username": user.email,
+            "password": "1234",
+            REDIRECT_FIELD_NAME: redirect_target,
+        },
     )
     assert response.status_code == 302
 
@@ -138,7 +150,9 @@ def test_register_form(client):
         },
     )
     assert response.status_code == 200
-    assert "You must accept this in order to register." in response.content.decode("utf-8")
+    assert "You must accept this in order to register." in response.content.decode(
+        "utf-8"
+    )
 
     response = client.post(
         reverse("shuup:registration_register"),
@@ -171,7 +185,10 @@ def test_pageform_urls(rf, admin_user):
     activate("en")
     request = apply_request_middleware(rf.post("/"), user=admin_user, shop=shop)
     with override_settings(LANGUAGES=[("en", "en"), ("fi", "fi")]):
-        form = PageForm(request=request, data={"title__en": "test", "content__en": "test", "url__en": en_url})
+        form = PageForm(
+            request=request,
+            data={"title__en": "test", "content__en": "test", "url__en": en_url},
+        )
         assert form.is_valid()
         assert form.is_url_valid("en", "url__en", en_url)
         assert form.is_url_valid("fi", "url__fi", fi_url)
@@ -179,13 +196,24 @@ def test_pageform_urls(rf, admin_user):
         # create a page
         Page.objects.create(shop=shop, content="test", url=en_url, title="test")
         form = PageForm(
-            request=request, data={"title__en": "test", "content__en": "test", "url__en": en_url, "url__fi": fi_url}
+            request=request,
+            data={
+                "title__en": "test",
+                "content__en": "test",
+                "url__en": en_url,
+                "url__fi": fi_url,
+            },
         )
         assert not form.is_valid()
         assert not form.is_url_valid("en", "url__en", en_url)
-        assert form.is_url_valid("fi", "url__fi", fi_url)  # no changes in finnish, should be valid
+        assert form.is_url_valid(
+            "fi", "url__fi", fi_url
+        )  # no changes in finnish, should be valid
 
-        form = PageForm(request=request, data={"title__en": "test", "content__en": "test", "url__en": "new-url"})
+        form = PageForm(
+            request=request,
+            data={"title__en": "test", "content__en": "test", "url__en": "new-url"},
+        )
         assert form.is_valid()
         assert form.is_url_valid("en", "url__en", "new-url")
         assert form.is_url_valid("fi", "url__fi", fi_url)

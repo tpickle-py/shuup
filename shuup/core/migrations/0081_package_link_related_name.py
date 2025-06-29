@@ -5,20 +5,29 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0080_unify_tax_number_max_length'),
+        ("shuup", "0080_unify_tax_number_max_length"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='productpackagelink',
-            name='child',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='linked_packages_child', to='shuup.Product', verbose_name='child product'),
+            model_name="productpackagelink",
+            name="child",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="linked_packages_child",
+                to="shuup.Product",
+                verbose_name="child product",
+            ),
         ),
         migrations.AlterField(
-            model_name='productpackagelink',
-            name='parent',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='linked_packages_parent', to='shuup.Product', verbose_name='parent product'),
+            model_name="productpackagelink",
+            name="parent",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="linked_packages_parent",
+                to="shuup.Product",
+                verbose_name="parent product",
+            ),
         ),
     ]

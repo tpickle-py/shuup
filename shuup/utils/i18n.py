@@ -66,7 +66,10 @@ def get_current_babel_locale(fallback="en-US-POSIX"):
         if fallback:
             locale = get_babel_locale(fallback)
         if not locale:
-            raise ValueError("Error! Failed to get the current babel locale (lang=%s)." % (translation.get_language(),))
+            raise ValueError(
+                "Error! Failed to get the current babel locale (lang=%s)."
+                % (translation.get_language(),)
+            )
     return locale
 
 
@@ -117,8 +120,12 @@ def format_money(amount, digits=None, widen=0, locale=None):
     else:
         loc = get_babel_locale(locale)
 
-    if widen == 0 and digits is None:  # No special treatment required; format with the currency's digits.
-        return format_currency(amount.value, amount.currency, locale=loc, currency_digits=True)
+    if (
+        widen == 0 and digits is None
+    ):  # No special treatment required; format with the currency's digits.
+        return format_currency(
+            amount.value, amount.currency, locale=loc, currency_digits=True
+        )
 
     pattern = loc.currency_formats["standard"].pattern
 
@@ -130,7 +137,9 @@ def format_money(amount, digits=None, widen=0, locale=None):
     if widen:
         pattern = pattern.replace(".00", ".00" + (widen * "0"))
 
-    return format_currency(amount.value, amount.currency, pattern, loc, currency_digits=False)
+    return format_currency(
+        amount.value, amount.currency, pattern, loc, currency_digits=False
+    )
 
 
 @lang_lru_cache

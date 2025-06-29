@@ -7,20 +7,27 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_notify', '0005_shop_fill'),
+        ("shuup_notify", "0005_shop_fill"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='notification',
-            name='shop',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shuup.Shop', verbose_name='shop'),
+            model_name="notification",
+            name="shop",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="shuup.Shop",
+                verbose_name="shop",
+            ),
         ),
         migrations.AlterField(
-            model_name='script',
-            name='shop',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shuup.Shop', verbose_name='shop'),
+            model_name="script",
+            name="shop",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="shuup.Shop",
+                verbose_name="shop",
+            ),
         ),
     ]

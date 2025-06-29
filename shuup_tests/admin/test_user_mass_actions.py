@@ -40,7 +40,10 @@ def test_user_reset_pwd_mass_aation(rf, admin_user):
     # sent three emails, one for each user
     assert len(mail.outbox) == 3
 
-    payload = {"action": ResetPasswordAction().identifier, "values": [user.pk, staff.pk]}
+    payload = {
+        "action": ResetPasswordAction().identifier,
+        "values": [user.pk, staff.pk],
+    }
     request = apply_request_middleware(rf.post("/"), user=admin_user)
     request._body = json.dumps(payload).encode("UTF-8")
     response = view(request=request)

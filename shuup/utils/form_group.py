@@ -13,7 +13,7 @@ from django.forms import BaseFormSet
 
 
 class FormInstantiationAttributeError(Exception):
-    """ AttributeErrors occurring within the `forms` property are transmogrified into these. """
+    """AttributeErrors occurring within the `forms` property are transmogrified into these."""
 
 
 class FormDef(object):
@@ -40,7 +40,9 @@ class FormDef(object):
             prefix_with_dash = "%s-" % prefix
             # Only copy keys from initial that begin with this form's prefix
             new_initial = dict(
-                (k[len(prefix_with_dash) :], v) for (k, v) in group_initial.items() if k.startswith(prefix_with_dash)
+                (k[len(prefix_with_dash) :], v)
+                for (k, v) in group_initial.items()
+                if k.startswith(prefix_with_dash)
             )
             # But any explicitly passed kwargs shall be copied as-is
             new_initial.update(kwargs.get("initial", {}))
@@ -51,7 +53,9 @@ class FormDef(object):
 
 
 class FormGroup(object):
-    def __init__(self, data=None, files=None, auto_id="id_%s", prefix=None, initial=None):
+    def __init__(
+        self, data=None, files=None, auto_id="id_%s", prefix=None, initial=None
+    ):
         self.form_defs = OrderedDict()
         self.is_bound = data is not None or files is not None
         self.data = data
@@ -76,7 +80,10 @@ class FormGroup(object):
                 prefix = name
 
             self._forms[name] = form_def.instantiate(
-                prefix=prefix, data=self.data, files=self.files, group_initial=self.initial
+                prefix=prefix,
+                data=self.data,
+                files=self.files,
+                group_initial=self.initial,
             )
 
     @property

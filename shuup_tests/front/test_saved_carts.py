@@ -32,7 +32,9 @@ from shuup_tests.utils.fixtures import regular_user
 def _add_products_to_basket(basket):
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
+    product = create_product(
+        printable_gibberish(), shop=shop, supplier=supplier, default_price=50
+    )
     basket.add_product(supplier=supplier, shop=shop, product=product, quantity=2)
     assert basket.product_count, "basket has products"
     return basket
@@ -49,7 +51,9 @@ def _save_cart_with_products(rf, user):
     request.person = person
     request.customer = person
     basket = get_basket(request)
-    request = apply_request_middleware(request, user=user, person=person, customer=person, basket=basket)
+    request = apply_request_middleware(
+        request, user=user, person=person, customer=person, basket=basket
+    )
     basket = _add_products_to_basket(basket)
     basket.save()
     response = CartSaveView.as_view()(request)
@@ -69,13 +73,17 @@ def test_save_cart_errors(rf, regular_user):
     assert not data["ok"], "can't save cart without title"
 
     customer = get_person_contact(regular_user)
-    request = apply_request_middleware(rf.post("/", {"title": ""}), customer=customer, user=regular_user)
+    request = apply_request_middleware(
+        rf.post("/", {"title": ""}), customer=customer, user=regular_user
+    )
     response = CartSaveView.as_view()(request)
     data = json.loads(response.content.decode("utf8"))
     assert response.status_code == 400
     assert not data["ok"], "can't save cart without title"
 
-    request = apply_request_middleware(rf.post("/", {"title": "test"}), customer=customer, user=regular_user)
+    request = apply_request_middleware(
+        rf.post("/", {"title": "test"}), customer=customer, user=regular_user
+    )
     response = CartSaveView.as_view()(request)
     data = json.loads(response.content.decode("utf8"))
     assert response.status_code == 400
@@ -92,7 +100,9 @@ def test_save_cart(rf, regular_user):
 @pytest.mark.django_db
 def test_cart_list(rf, regular_user):
     _save_cart_with_products(rf, regular_user)
-    request = apply_request_middleware(rf.get("/"), customer=get_person_contact(regular_user), user=regular_user)
+    request = apply_request_middleware(
+        rf.get("/"), customer=get_person_contact(regular_user), user=regular_user
+    )
     response = CartListView.as_view()(request)
     assert response.status_code == 200
     assert "carts" in response.context_data
@@ -102,7 +112,9 @@ def test_cart_list(rf, regular_user):
 @pytest.mark.django_db
 def test_cart_detail(rf, regular_user):
     cart = _save_cart_with_products(rf, regular_user)
-    request = apply_request_middleware(rf.get("/"), customer=get_person_contact(regular_user), user=regular_user)
+    request = apply_request_middleware(
+        rf.get("/"), customer=get_person_contact(regular_user), user=regular_user
+    )
     response = CartDetailView.as_view()(request, pk=cart.pk)
     assert response.status_code == 200
     assert "cart" in response.context_data
@@ -114,7 +126,9 @@ def test_cart_detail(rf, regular_user):
 @pytest.mark.django_db
 def test_cart_delete(rf, regular_user):
     cart = _save_cart_with_products(rf, regular_user)
-    request = apply_request_middleware(rf.post("/"), customer=get_person_contact(regular_user), user=regular_user)
+    request = apply_request_middleware(
+        rf.post("/"), customer=get_person_contact(regular_user), user=regular_user
+    )
     response = CartDeleteView.as_view()(request, pk=cart.pk)
     cart.refresh_from_db()
     assert response.status_code == 200
@@ -124,7 +138,9 @@ def test_cart_delete(rf, regular_user):
 @pytest.mark.django_db
 def test_cart_add_all(rf, regular_user):
     cart = _save_cart_with_products(rf, regular_user)
-    request = apply_request_middleware(rf.post("/"), customer=get_person_contact(regular_user), user=regular_user)
+    request = apply_request_middleware(
+        rf.post("/"), customer=get_person_contact(regular_user), user=regular_user
+    )
     assert not request.basket.product_count, "cart is empty"
     response = CartAddAllProductsView.as_view()(request, pk=cart.pk)
     assert response.status_code == 200
@@ -137,7 +153,9 @@ def test_cart_add_all_with_errors(rf, regular_user):
     for product in cart.products.all():
         product.deleted = True
         product.save()
-    request = apply_request_middleware(rf.post("/"), customer=get_person_contact(regular_user), user=regular_user)
+    request = apply_request_middleware(
+        rf.post("/"), customer=get_person_contact(regular_user), user=regular_user
+    )
     assert not request.basket.product_count, "cart is empty"
     response = CartAddAllProductsView.as_view()(request, pk=cart.pk)
     data = json.loads(response.content.decode("utf8"))

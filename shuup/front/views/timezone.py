@@ -26,7 +26,11 @@ class SetTimezoneView(View):
 
         request.session["tz"] = tz_name
 
-        if hasattr(request, "person") and request.person and str(request.person.timezone) != tz_name:
+        if (
+            hasattr(request, "person")
+            and request.person
+            and str(request.person.timezone) != tz_name
+        ):
             request.person.timezone = tz_name
             request.person.save(update_fields=["timezone"])
 

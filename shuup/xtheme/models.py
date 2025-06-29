@@ -58,7 +58,9 @@ class SavedViewConfigQuerySet(models.QuerySet):  # doccov: ignore
         :return: SavedViewConfig (possibly not saved).
         :rtype: SavedViewConfig
         """
-        svc_kwargs = dict(theme_identifier=theme.identifier, shop=shop, view_name=view_name)
+        svc_kwargs = dict(
+            theme_identifier=theme.identifier, shop=shop, view_name=view_name
+        )
         svc_qs = SavedViewConfig.objects.filter(**svc_kwargs).order_by("-id")
         if draft:  # In draft mode? Try loading drafts first
             model = svc_qs.filter(status=SavedViewConfigStatus.CURRENT_DRAFT).first()
@@ -71,7 +73,9 @@ class SavedViewConfigQuerySet(models.QuerySet):  # doccov: ignore
             model = svc_qs.filter(status=SavedViewConfigStatus.PUBLIC).first()
 
         if not model:  # Nothing loaded? Put ourselves in draft mode.
-            model = SavedViewConfig(status=SavedViewConfigStatus.CURRENT_DRAFT, **svc_kwargs)
+            model = SavedViewConfig(
+                status=SavedViewConfigStatus.CURRENT_DRAFT, **svc_kwargs
+            )
         return model
 
 
@@ -104,13 +108,28 @@ class SavedViewConfigStatus(Enum):
 
 
 class SavedViewConfig(models.Model):
-    theme_identifier = models.CharField(max_length=64, db_index=True, verbose_name=_("theme identifier"))
-    shop = models.ForeignKey(on_delete=models.CASCADE, to="shuup.Shop", related_name="saved_views_config", null=True)
-    view_name = models.CharField(max_length=64, db_index=True, verbose_name=_("view name"))
+    theme_identifier = models.CharField(
+        max_length=64, db_index=True, verbose_name=_("theme identifier")
+    )
+    shop = models.ForeignKey(
+        on_delete=models.CASCADE,
+        to="shuup.Shop",
+        related_name="saved_views_config",
+        null=True,
+    )
+    view_name = models.CharField(
+        max_length=64, db_index=True, verbose_name=_("view name")
+    )
     created_on = models.DateTimeField(auto_now_add=True, verbose_name=_("created on"))
-    modified_on = models.DateTimeField(auto_now=True, editable=False, verbose_name=_("modified on"))
-    status = EnumIntegerField(SavedViewConfigStatus, db_index=True, verbose_name=_("status"))
-    _data = TaggedJSONField(db_column="data", default=dict, verbose_name=_("internal data"))
+    modified_on = models.DateTimeField(
+        auto_now=True, editable=False, verbose_name=_("modified on")
+    )
+    status = EnumIntegerField(
+        SavedViewConfigStatus, db_index=True, verbose_name=_("status")
+    )
+    _data = TaggedJSONField(
+        db_column="data", default=dict, verbose_name=_("internal data")
+    )
     objects = SavedViewConfigQuerySet.as_manager()
 
     @property
@@ -121,7 +140,9 @@ class SavedViewConfig(models.Model):
         if not self.draft:
             raise ValueError("Error! Unable to publish a non-draft view configuration.")
         self.__class__.objects.filter(
-            shop=self.shop, theme_identifier=self.theme_identifier, view_name=self.view_name
+            shop=self.shop,
+            theme_identifier=self.theme_identifier,
+            view_name=self.view_name,
         ).update(status=SavedViewConfigStatus.OLD_VERSION)
         self.status = SavedViewConfigStatus.PUBLIC
         self.save()
@@ -153,8 +174,15 @@ class SavedViewConfig(models.Model):
 
 
 class ThemeSettings(models.Model):
-    theme_identifier = models.CharField(max_length=64, db_index=True, verbose_name=_("theme identifier"))
-    shop = models.ForeignKey(on_delete=models.CASCADE, to="shuup.Shop", related_name="themes_settings", null=True)
+    theme_identifier = models.CharField(
+        max_length=64, db_index=True, verbose_name=_("theme identifier")
+    )
+    shop = models.ForeignKey(
+        on_delete=models.CASCADE,
+        to="shuup.Shop",
+        related_name="themes_settings",
+        null=True,
+    )
     active = models.BooleanField(db_index=True, default=False, verbose_name=_("active"))
     data = TaggedJSONField(db_column="data", default=dict, verbose_name=_("data"))
 
@@ -182,13 +210,22 @@ class ThemeSettings(models.Model):
 
 @python_2_unicode_compatible
 class Font(models.Model):
-    shop = models.ForeignKey("shuup.Shop", verbose_name=_("Shop"), related_name="admin_fonts", on_delete=models.CASCADE)
-    name = models.CharField(max_length=128, verbose_name=_("name"), help_text=_("Font family name"))
+    shop = models.ForeignKey(
+        "shuup.Shop",
+        verbose_name=_("Shop"),
+        related_name="admin_fonts",
+        on_delete=models.CASCADE,
+    )
+    name = models.CharField(
+        max_length=128, verbose_name=_("name"), help_text=_("Font family name")
+    )
     css_value = models.CharField(
         max_length=128,
         blank=True,
         verbose_name=_("Font Family CSS Property"),
-        help_text=_("(Optional) Input css font family property directly. Ex: font-family: Roboto;"),
+        help_text=_(
+            "(Optional) Input css font family property directly. Ex: font-family: Roboto;"
+        ),
     )
 
     woff = FilerFileField(
@@ -239,7 +276,9 @@ class Font(models.Model):
         font_sources = []
 
         if self.eot:
-            font_sources.append("url('%s?#iefix') format('embedded-opentype')" % self.eot.url)
+            font_sources.append(
+                "url('%s?#iefix') format('embedded-opentype')" % self.eot.url
+            )
         if self.woff:
             font_sources.append("url('%s') format('woff')" % self.woff.url)
         if self.woff2:
@@ -253,9 +292,15 @@ class Font(models.Model):
 
 
 class AdminThemeSettings(models.Model):
-    shop = models.OneToOneField(on_delete=models.CASCADE, to="shuup.Shop", related_name="admin_theme_settings")
+    shop = models.OneToOneField(
+        on_delete=models.CASCADE, to="shuup.Shop", related_name="admin_theme_settings"
+    )
     primary_color = models.CharField(
-        max_length=7, default="#07B0F2", verbose_name=_("primary color"), validators=[MinLengthValidator(7)], blank=True
+        max_length=7,
+        default="#07B0F2",
+        verbose_name=_("primary color"),
+        validators=[MinLengthValidator(7)],
+        blank=True,
     )
     secondary_color = models.CharField(
         max_length=7,
@@ -265,21 +310,43 @@ class AdminThemeSettings(models.Model):
         blank=True,
     )
     text_color = models.CharField(
-        max_length=7, default="#384850", verbose_name=_("text color"), validators=[MinLengthValidator(7)], blank=True
+        max_length=7,
+        default="#384850",
+        verbose_name=_("text color"),
+        validators=[MinLengthValidator(7)],
+        blank=True,
     )
     success_color = models.CharField(
-        max_length=7, default="#27ae60", verbose_name=_("success color"), validators=[MinLengthValidator(7)], blank=True
+        max_length=7,
+        default="#27ae60",
+        verbose_name=_("success color"),
+        validators=[MinLengthValidator(7)],
+        blank=True,
     )
     danger_color = models.CharField(
-        max_length=7, default="#e74c3c", verbose_name=_("danger color"), validators=[MinLengthValidator(7)], blank=True
+        max_length=7,
+        default="#e74c3c",
+        verbose_name=_("danger color"),
+        validators=[MinLengthValidator(7)],
+        blank=True,
     )
     admin_header_font = models.ForeignKey(
-        Font, null=True, blank=True, related_name="admin_header_font", on_delete=models.SET_NULL
+        Font,
+        null=True,
+        blank=True,
+        related_name="admin_header_font",
+        on_delete=models.SET_NULL,
     )
     admin_body_font = models.ForeignKey(
-        Font, null=True, blank=True, related_name="admin_body_font", on_delete=models.SET_NULL
+        Font,
+        null=True,
+        blank=True,
+        related_name="admin_body_font",
+        on_delete=models.SET_NULL,
     )
-    base_font_size = models.CharField(max_length=10, default="0.9rem", verbose_name=_("base font size"), blank=True)
+    base_font_size = models.CharField(
+        max_length=10, default="0.9rem", verbose_name=_("base font size"), blank=True
+    )
     active = models.BooleanField(db_index=True, default=False, verbose_name=_("active"))
 
     def __str__(self):
@@ -305,10 +372,16 @@ class Snippet(models.Model):
     Inject snippet code globally filtering by themes if configured.
     """
 
-    name = models.CharField(max_length=50, verbose_name=_("snippet name"), default=_("Untitled"))
-    shop = models.ForeignKey(on_delete=models.CASCADE, to="shuup.Shop", related_name="snippets")
+    name = models.CharField(
+        max_length=50, verbose_name=_("snippet name"), default=_("Untitled")
+    )
+    shop = models.ForeignKey(
+        on_delete=models.CASCADE, to="shuup.Shop", related_name="snippets"
+    )
     location = models.CharField(max_length=64, verbose_name=_("location"))
-    snippet_type = models.CharField(max_length=20, verbose_name=_("snippet type"), choices=SnippetTypeChoices)
+    snippet_type = models.CharField(
+        max_length=20, verbose_name=_("snippet type"), choices=SnippetTypeChoices
+    )
     snippet = models.TextField(verbose_name=_("snippet"))
     # list of theme identifiers that will be have this sniipet injected, if None, it means all themes
     themes = SeparatedValuesField(

@@ -76,11 +76,22 @@ class _ContextFunction(_ContextObject):
 def _get_item_price_info(request, item, quantity, supplier=None):
     # the item has a catalog price annotate, use it
     # this speeds up when using querysets coming from ProductCatalog
-    if hasattr(item, "catalog_price") and hasattr(item, "catalog_discounted_price") and item.catalog_price is not None:
+    if (
+        hasattr(item, "catalog_price")
+        and hasattr(item, "catalog_discounted_price")
+        and item.catalog_price is not None
+    ):
         shop = request.shop
-        discounted_price = item.catalog_discounted_price if item.catalog_discounted_price is not None else None
+        discounted_price = (
+            item.catalog_discounted_price
+            if item.catalog_discounted_price is not None
+            else None
+        )
         return PriceInfo(
-            price=shop.create_price((discounted_price if discounted_price else item.catalog_price) * quantity),
+            price=shop.create_price(
+                (discounted_price if discounted_price else item.catalog_price)
+                * quantity
+            ),
             base_price=shop.create_price(item.catalog_price * quantity),
             quantity=quantity,
         )
@@ -89,7 +100,15 @@ def _get_item_price_info(request, item, quantity, supplier=None):
 
 
 class PriceDisplayFilter(_ContextFilter):
-    def __call__(self, context, item, quantity=1, include_taxes=None, allow_cache=True, supplier=None):
+    def __call__(
+        self,
+        context,
+        item,
+        quantity=1,
+        include_taxes=None,
+        allow_cache=True,
+        supplier=None,
+    ):
         options = PriceDisplayOptions.from_context(context)
         if options.hide_prices:
             return ""
@@ -100,7 +119,9 @@ class PriceDisplayFilter(_ContextFilter):
         request = context.get("request")
 
         price_info = (
-            get_cached_price_info(request, item, quantity, include_taxes=include_taxes, supplier=supplier)
+            get_cached_price_info(
+                request, item, quantity, include_taxes=include_taxes, supplier=supplier
+            )
             if allow_cache
             else None
         )
@@ -113,7 +134,14 @@ class PriceDisplayFilter(_ContextFilter):
 
             price_info = convert_taxness(request, item, price_info, include_taxes)
             if allow_cache:
-                cache_price_info(request, item, quantity, price_info, include_taxes=include_taxes, supplier=supplier)
+                cache_price_info(
+                    request,
+                    item,
+                    quantity,
+                    price_info,
+                    include_taxes=include_taxes,
+                    supplier=supplier,
+                )
 
         return money(getattr(price_info, self.property_name))
 
@@ -121,7 +149,11 @@ class PriceDisplayFilter(_ContextFilter):
 class PricePropertyFilter(_ContextFilter):
     def __call__(self, context, item, quantity=1, allow_cache=True, supplier=None):
         request = context.get("request")
-        price_info = get_cached_price_info(request, item, quantity, supplier=supplier) if allow_cache else None
+        price_info = (
+            get_cached_price_info(request, item, quantity, supplier=supplier)
+            if allow_cache
+            else None
+        )
 
         if not price_info:
             price_info = _get_item_price_info(request, item, quantity, supplier)
@@ -137,7 +169,11 @@ class PricePropertyFilter(_ContextFilter):
 class PricePercentPropertyFilter(_ContextFilter):
     def __call__(self, context, item, quantity=1, allow_cache=True, supplier=None):
         request = context.get("request")
-        price_info = get_cached_price_info(request, item, quantity, supplier=supplier) if allow_cache else None
+        price_info = (
+            get_cached_price_info(request, item, quantity, supplier=supplier)
+            if allow_cache
+            else None
+        )
 
         if not price_info:
             price_info = _get_item_price_info(request, item, quantity, supplier)
@@ -215,7 +251,11 @@ class PriceRangeDisplayFilter(_ContextFilter):
         request = context.get("request")
         priced_products = (
             get_many_cached_price_info(
-                request, product, quantity, include_taxes=options.include_taxes, supplier=supplier
+                request,
+                product,
+                quantity,
+                include_taxes=options.include_taxes,
+                supplier=supplier,
             )
             if allow_cache
             else None
@@ -228,8 +268,13 @@ class PriceRangeDisplayFilter(_ContextFilter):
             if hasattr(request, priced_children_key):
                 priced_children = getattr(request, priced_children_key)
             else:
-                priced_children = get_priced_children_for_price_range(request, product, quantity, supplier) or [
-                    (product, _get_item_price_info(request, product, quantity, supplier))
+                priced_children = get_priced_children_for_price_range(
+                    request, product, quantity, supplier
+                ) or [
+                    (
+                        product,
+                        _get_item_price_info(request, product, quantity, supplier),
+                    )
                 ]
                 setattr(request, priced_children_key, priced_children)
 
@@ -237,12 +282,19 @@ class PriceRangeDisplayFilter(_ContextFilter):
                 if not price_info:
                     continue
 
-                priceful = convert_taxness(request, child_product, price_info, options.include_taxes)
+                priceful = convert_taxness(
+                    request, child_product, price_info, options.include_taxes
+                )
                 priced_products.append(priceful)
 
             if priced_products and allow_cache:
                 cache_many_price_info(
-                    request, product, quantity, priced_products, include_taxes=options.include_taxes, supplier=supplier
+                    request,
+                    product,
+                    quantity,
+                    priced_products,
+                    include_taxes=options.include_taxes,
+                    supplier=supplier,
                 )
 
         if not priced_products:

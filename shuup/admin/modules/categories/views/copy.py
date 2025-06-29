@@ -10,7 +10,12 @@ from django.http.response import JsonResponse
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import View
 
-from shuup.core.models import Category, CategoryStatus, ShopProduct, ShopProductVisibility
+from shuup.core.models import (
+    Category,
+    CategoryStatus,
+    ShopProduct,
+    ShopProductVisibility,
+)
 
 
 class CategoryCopyVisibilityView(View):
@@ -21,7 +26,9 @@ class CategoryCopyVisibilityView(View):
     @atomic
     def post(self, request, *args, **kwargs):
         try:
-            category = Category.objects.prefetch_related("visibility_groups", "shops").get(pk=self.kwargs.get("pk"))
+            category = Category.objects.prefetch_related(
+                "visibility_groups", "shops"
+            ).get(pk=self.kwargs.get("pk"))
         except Category.DoesNotExist:
             return JsonResponse({"message": _("Invalid category")}, status=400)
 
@@ -29,12 +36,18 @@ class CategoryCopyVisibilityView(View):
         is_visible = category.status == CategoryStatus.VISIBLE
         category_shops = category.shops.all()
         category_visibility_groups = category.visibility_groups.all()
-        for product in ShopProduct.objects.filter(shop__in=category_shops, primary_category__pk=category.pk):
+        for product in ShopProduct.objects.filter(
+            shop__in=category_shops, primary_category__pk=category.pk
+        ):
             product.visibility = (
-                ShopProductVisibility.ALWAYS_VISIBLE if is_visible else ShopProductVisibility.NOT_VISIBLE
+                ShopProductVisibility.ALWAYS_VISIBLE
+                if is_visible
+                else ShopProductVisibility.NOT_VISIBLE
             )
             product.visibility_limit = category.visibility.value
             product.visibility_groups.set(category_visibility_groups)
             product.save()
             count += 1
-        return JsonResponse({"message": _("Visibility settings copied to %d product(s)") % count})
+        return JsonResponse(
+            {"message": _("Visibility settings copied to %d product(s)") % count}
+        )

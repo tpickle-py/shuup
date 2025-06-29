@@ -9,7 +9,14 @@ from django.db import transaction
 from django.db.transaction import atomic
 
 from shuup.admin.signals import product_copied
-from shuup.core.models import Product, ProductAttribute, ProductMedia, Shop, ShopProduct, Supplier
+from shuup.core.models import (
+    Product,
+    ProductAttribute,
+    ProductMedia,
+    Shop,
+    ShopProduct,
+    Supplier,
+)
 from shuup.core.tasks import run_task
 from shuup.utils.models import copy_model_instance, get_data_dict
 
@@ -31,10 +38,12 @@ class ProductCloner:
         for trans in product.translations.all():
             trans_product_data = get_data_dict(trans)
             trans_product_data["master"] = new_product
-            new_trans = Product._parler_meta.get_model_by_related_name("translations").objects.get_or_create(
+            new_trans = Product._parler_meta.get_model_by_related_name(
+                "translations"
+            ).objects.get_or_create(
                 language_code=trans.language_code, master=new_product
             )[0]
-            for (key, value) in trans_product_data.items():
+            for key, value in trans_product_data.items():
                 setattr(new_trans, key, value)
 
             new_trans.save()
@@ -47,9 +56,9 @@ class ProductCloner:
         for trans in shop_product.translations.all():
             trans_shop_product_data = get_data_dict(trans)
             trans_shop_product_data["master"] = new_shop_product
-            ShopProduct._parler_meta.get_model_by_related_name("translations").objects.get_or_create(
-                **trans_shop_product_data
-            )
+            ShopProduct._parler_meta.get_model_by_related_name(
+                "translations"
+            ).objects.get_or_create(**trans_shop_product_data)
 
         # clone suppliers
         if self.current_supplier:
@@ -80,17 +89,24 @@ class ProductCloner:
             for trans in media.translations.all():
                 trans_product_media_data = get_data_dict(trans)
                 trans_product_media_data["master"] = new_shop_product
-                ProductMedia._parler_meta.get_model_by_related_name("translations").objects.create(
-                    **trans_product_media_data
-                )
+                ProductMedia._parler_meta.get_model_by_related_name(
+                    "translations"
+                ).objects.create(**trans_product_media_data)
             media_copy.save()
 
         product_copied.send(
-            sender=type(self), shop=shop_product.shop, supplier=self.current_supplier, copied=product, copy=new_product
+            sender=type(self),
+            shop=shop_product.shop,
+            supplier=self.current_supplier,
+            copied=product,
+            copy=new_product,
         )
 
         transaction.on_commit(
-            lambda: run_task("shuup.core.catalog.tasks.index_shop_product", shop_product_id=new_product.pk)
+            lambda: run_task(
+                "shuup.core.catalog.tasks.index_shop_product",
+                shop_product_id=new_product.pk,
+            )
         )
 
         return new_shop_product

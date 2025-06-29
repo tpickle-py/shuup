@@ -6,15 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0023_category_menu_visibility'),
+        ("shuup", "0023_category_menu_visibility"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='producttranslation',
-            name='short_description',
-            field=models.CharField(blank=True, help_text='Enter a short description of your product. This will be used to grab attention of your customer without flooding him with all details of the product.', max_length=150, verbose_name='short description'),
+            model_name="producttranslation",
+            name="short_description",
+            field=models.CharField(
+                blank=True,
+                help_text="Enter a short description of your product. This will be used to grab attention of your customer without flooding him with all details of the product.",
+                max_length=150,
+                verbose_name="short description",
+            ),
         )
     ]

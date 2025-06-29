@@ -21,7 +21,7 @@ class CampaignListView(PicotableListView):
     default_columns = [
         Column(
             "name",
-            _(u"Title"),
+            _("Title"),
             sort_field="name",
             display="name",
             linked=True,
@@ -29,7 +29,11 @@ class CampaignListView(PicotableListView):
         ),
         Column("start_datetime", _("Starts")),
         Column("end_datetime", _("Ends")),
-        Column("active", _("Active"), filter_config=ChoicesFilter(choices=[(0, _("No")), (1, _("Yes"))])),
+        Column(
+            "active",
+            _("Active"),
+            filter_config=ChoicesFilter(choices=[(0, _("No")), (1, _("Yes"))]),
+        ),
     ]
     toolbar_buttons_provider_key = "campaign_list_toolbar_provider"
     mass_actions_provider_key = "campaign_list_actions_provider"
@@ -62,12 +66,17 @@ class CatalogCampaignListView(CampaignListView):
     def get_context_data(self, **kwargs):
         context = super(CampaignListView, self).get_context_data(**kwargs)
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(self.model, return_url="catalog_campaign")
+            settings_button = SettingsActionButton.for_model(
+                self.model, return_url="catalog_campaign"
+            )
         else:
             settings_button = None
         context["toolbar"] = Toolbar(
             [
-                NewActionButton("shuup_admin:catalog_campaign.new", text=_("Create new Catalog Campaign")),
+                NewActionButton(
+                    "shuup_admin:catalog_campaign.new",
+                    text=_("Create new Catalog Campaign"),
+                ),
                 settings_button,
             ],
             view=self,
@@ -81,11 +90,19 @@ class BasketCampaignListView(CampaignListView):
     def get_context_data(self, **kwargs):
         context = super(CampaignListView, self).get_context_data(**kwargs)
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(self.model, return_url="basket_campaign")
+            settings_button = SettingsActionButton.for_model(
+                self.model, return_url="basket_campaign"
+            )
         else:
             settings_button = None
         context["toolbar"] = Toolbar(
-            [NewActionButton("shuup_admin:basket_campaign.new", text=_("Create new Basket Campaign")), settings_button],
+            [
+                NewActionButton(
+                    "shuup_admin:basket_campaign.new",
+                    text=_("Create new Basket Campaign"),
+                ),
+                settings_button,
+            ],
             view=self,
         )
         return context
@@ -103,7 +120,7 @@ class CouponListView(PicotableListView):
     default_columns = [
         Column(
             "code",
-            _(u"Code"),
+            _("Code"),
             sort_field="code",
             display="code",
             linked=True,
@@ -113,8 +130,8 @@ class CouponListView(PicotableListView):
         Column("usage_limit_customer", _("Usages Limit per contact")),
         Column("usage_limit", _("Usage Limit")),
         Column("active", _("Active")),
-        Column("created_by", _(u"Created by")),
-        Column("created_on", _(u"Date created")),
+        Column("created_by", _("Created by")),
+        Column("created_on", _("Date created")),
     ]
 
     def get_usages(self, instance, *args, **kwargs):
@@ -123,11 +140,17 @@ class CouponListView(PicotableListView):
     def get_context_data(self, **kwargs):
         context = super(CouponListView, self).get_context_data(**kwargs)
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(self.model, return_url="coupon")
+            settings_button = SettingsActionButton.for_model(
+                self.model, return_url="coupon"
+            )
         else:
             settings_button = None
         context["toolbar"] = Toolbar(
-            [NewActionButton("shuup_admin:coupon.new", text=_("Create new Coupon")), settings_button], view=self
+            [
+                NewActionButton("shuup_admin:coupon.new", text=_("Create new Coupon")),
+                settings_button,
+            ],
+            view=self,
         )
         return context
 

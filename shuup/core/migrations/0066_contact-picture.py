@@ -9,16 +9,23 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.FILER_IMAGE_MODEL),
-        ('shuup', '0065_add_db_indexes_to_prod_cat_and_supplier_texts'),
+        ("shuup", "0065_add_db_indexes_to_prod_cat_and_supplier_texts"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contact',
-            name='picture',
-            field=filer.fields.image.FilerImageField(blank=True, help_text='Contact picture. Can be used alongside contact profile, reviews and messages for example.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='picture', to=settings.FILER_IMAGE_MODEL, verbose_name='picture'),
+            model_name="contact",
+            name="picture",
+            field=filer.fields.image.FilerImageField(
+                blank=True,
+                help_text="Contact picture. Can be used alongside contact profile, reviews and messages for example.",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="picture",
+                to=settings.FILER_IMAGE_MODEL,
+                verbose_name="picture",
+            ),
         ),
     ]

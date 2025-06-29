@@ -24,13 +24,16 @@ def main():
 
     # Generate a list of migration dirs to exclude
     migration_excludes = []
-    for (root, dirnames, filenames) in os.walk("shuup"):
+    for root, dirnames, filenames in os.walk("shuup"):
         if "migrations" in dirnames:
             migration_excludes.append(os.path.join(root, "migrations"))
 
     # Generate new
     retcode = subprocess.call(
-        ["sphinx-apidoc", "-o", "doc/api", "shuup"] + APIDOC_EXCLUDES + migration_excludes + sys.argv
+        ["sphinx-apidoc", "-o", "doc/api", "shuup"]
+        + APIDOC_EXCLUDES
+        + migration_excludes
+        + sys.argv
     )
     raise SystemExit(retcode)
 

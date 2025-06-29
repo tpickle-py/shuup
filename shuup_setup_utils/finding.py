@@ -25,7 +25,7 @@ if hasattr(setuptools, "PackageFinder"):
             (looking at you, Windows, when `node_modules` exists).
             """
             items = excludes.walk_excl(base_path, followlinks=True)
-            for (root, dirs, files) in items:
+            for root, dirs, files in items:
                 dirs[:] = [x for x in dirs if "." not in x]
                 for dir in dirs:
                     yield os.path.relpath(os.path.join(root, dir), base_path)

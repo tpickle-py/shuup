@@ -85,20 +85,28 @@ class ProductMetaBase(ImportMetaBase):
             return
 
         parent_product = Product.objects.filter(
-            sku=parent_sku, variation_parent__isnull=True  # prevent linking to another child
+            sku=parent_sku,
+            variation_parent__isnull=True,  # prevent linking to another child
         )
         if product.pk:
             parent_product = parent_product.exclude(pk=product.pk)
 
         parent_product = parent_product.first()
         if not parent_product:
-            msg = _("Parent SKU set for the row, but couldn't find product to match with the given SKU.")
+            msg = _(
+                "Parent SKU set for the row, but couldn't find product to match with the given SKU."
+            )
             sess.log_messages.append(msg)
             return
 
         variables = {}
         value_names = []
-        for field_key in ["variation_value_1", "variation_value_2", "variation_value_3", "variation_value 4"]:
+        for field_key in [
+            "variation_value_1",
+            "variation_value_2",
+            "variation_value_3",
+            "variation_value 4",
+        ]:
             field_value = None
             if field_key not in self.aliases:
                 continue
@@ -113,11 +121,19 @@ class ProductMetaBase(ImportMetaBase):
             if not (variable_name and value_name):
                 continue
 
-            variable, variable_created = ProductVariationVariable.objects.update_or_create(
-                product=parent_product, identifier=slugify(variable_name), defaults=dict(name=variable_name)
+            variable, variable_created = (
+                ProductVariationVariable.objects.update_or_create(
+                    product=parent_product,
+                    identifier=slugify(variable_name),
+                    defaults=dict(name=variable_name),
+                )
             )
-            value, value_created = ProductVariationVariableValue.objects.update_or_create(
-                variable=variable, identifier=slugify(value_name), defaults=dict(value=value_name)
+            value, value_created = (
+                ProductVariationVariableValue.objects.update_or_create(
+                    variable=variable,
+                    identifier=slugify(value_name),
+                    defaults=dict(value=value_name),
+                )
             )
             value_names.append(value_name)
             variables[variable.identifier] = value.identifier
@@ -132,7 +148,9 @@ class ProductMetaBase(ImportMetaBase):
             ProductVariationVariable.objects.filter(product=product).delete()
 
             if product.name == product.sku or product.name.lower().strip() == "x":
-                product.name = " - ".join([parent_product.name] + value_names)  # Variable linking does the save
+                product.name = " - ".join(
+                    [parent_product.name] + value_names
+                )  # Variable linking does the save
 
             product.mode = ProductMode.VARIATION_CHILD
             product.link_to_parent(parent_product, variables)
@@ -147,7 +165,9 @@ class ProductMetaBase(ImportMetaBase):
         # fetch all images that are candidates using the file name
         images_candidate = list(
             MediaFile.objects.filter(
-                Q(shops=shop), Q(file__original_filename__iexact=img_name) | Q(file__name__iexact=img_name)
+                Q(shops=shop),
+                Q(file__original_filename__iexact=img_name)
+                | Q(file__name__iexact=img_name),
             ).distinct()
         )
 
@@ -171,10 +191,16 @@ class ProductMetaBase(ImportMetaBase):
             image = images_candidate[0]
 
         if image:
-            product_media = ProductMedia.objects.filter(product=product, file=image.file, shops=shop).first()
+            product_media = ProductMedia.objects.filter(
+                product=product, file=image.file, shops=shop
+            ).first()
             if not product_media:
                 product_media = ProductMedia(
-                    product=product, kind=ProductMediaKind.IMAGE, enabled=True, public=True, file=image.file
+                    product=product,
+                    kind=ProductMediaKind.IMAGE,
+                    enabled=True,
+                    public=True,
+                    file=image.file,
                 )
 
         if product_media:
@@ -198,8 +224,15 @@ class ProductMetaBase(ImportMetaBase):
 
         for image_field in self.aliases["image"]:
             image = row.get(image_field)
-            if image and not self._handle_image(sess.shop, product, row[image_field], is_primary=True):
-                msg = _("Image '%s' was not found, please check whether the image exists.") % row[image_field]
+            if image and not self._handle_image(
+                sess.shop, product, row[image_field], is_primary=True
+            ):
+                msg = (
+                    _(
+                        "Image '%s' was not found, please check whether the image exists."
+                    )
+                    % row[image_field]
+                )
                 sess.log_messages.append(msg)
 
         for image_field in self.aliases["media"]:
@@ -207,7 +240,12 @@ class ProductMetaBase(ImportMetaBase):
             if images:
                 for image_source in images.split(","):
                     if not self._handle_image(sess.shop, product, image_source):
-                        msg = _("Image '%s' was not found, please check whether the image exists.") % image_source
+                        msg = (
+                            _(
+                                "Image '%s' was not found, please check whether the image exists."
+                            )
+                            % image_source
+                        )
                         sess.log_messages.append(msg)
 
         # check whether the product has media but doesn't have a primary image
@@ -238,7 +276,9 @@ class ProductMetaBase(ImportMetaBase):
 
         supplier = row.get("supplier")
         if not supplier:
-            msg = _("Please add supplier to the row, before importing stock quantities.")
+            msg = _(
+                "Please add supplier to the row, before importing stock quantities."
+            )
             sess.log_messages.append(msg)
             return
 
@@ -265,13 +305,19 @@ class ProductMetaBase(ImportMetaBase):
             supplier.stock_managed = True
             supplier_changed = True
 
-        if not supplier.supplier_modules.all().exists() and has_installed("shuup.simple_supplier"):
-            supplier_module = SupplierModule.objects.get_or_create(module_identifier=SimpleSupplierModule.identifier)[0]
+        if not supplier.supplier_modules.all().exists() and has_installed(
+            "shuup.simple_supplier"
+        ):
+            supplier_module = SupplierModule.objects.get_or_create(
+                module_identifier=SimpleSupplierModule.identifier
+            )[0]
             supplier.supplier_modules.add(supplier_module)
             supplier_changed = True
 
         if not supplier.supplier_modules:
-            msg = _("No supplier module set, please check that the supplier module is set.")
+            msg = _(
+                "No supplier module set, please check that the supplier module is set."
+            )
             sess.log_messages.append(msg)
             return
 
@@ -299,7 +345,9 @@ class ProductMetaBase(ImportMetaBase):
 
     def postsave_hook(self, sess):  # noqa (C901)
         # get all the special values
-        shop_product = ShopProduct.objects.get_or_create(product=sess.instance, shop=sess.shop)[0]
+        shop_product = ShopProduct.objects.get_or_create(
+            product=sess.instance, shop=sess.shop
+        )[0]
 
         matched_fields = []
         for k, v in six.iteritems(sess.importer.extra_matches):
@@ -368,7 +416,9 @@ class ProductMetaBase(ImportMetaBase):
                 value = relmapper.fk_cache.get(str(value))
                 break
             else:
-                value = sess.importer.relation_map_cache.get(field_mapping.get("field")).map_cache[value]
+                value = sess.importer.relation_map_cache.get(
+                    field_mapping.get("field")
+                ).map_cache[value]
                 break
 
         if field_mapping.get("is_enum_field"):
@@ -403,12 +453,17 @@ class ProductImporter(DataImporter):
         return [Product, ShopProduct]
 
     example_files = [
-        ImporterExampleFile("product_sample_import.xls", ("application/vnd.ms-excel", "application/excel")),
         ImporterExampleFile(
-            "product_sample_import.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            "product_sample_import.xls",
+            ("application/vnd.ms-excel", "application/excel"),
         ),
         ImporterExampleFile(
-            "product_sample_complex_import.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            "product_sample_import.xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        ),
+        ImporterExampleFile(
+            "product_sample_complex_import.xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         ),
         ImporterExampleFile(
             "product_sample_import_with_images.xlsx",
@@ -434,5 +489,6 @@ class ProductImporter(DataImporter):
 
         return {
             "has_media_browse_permission": has_permission(request.user, "media.browse"),
-            "supplier": get_supplier(request) or Supplier.objects.enabled(shop=get_shop(request)).first(),
+            "supplier": get_supplier(request)
+            or Supplier.objects.enabled(shop=get_shop(request)).first(),
         }

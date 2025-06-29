@@ -20,20 +20,44 @@ class SnippetsPlugin(Plugin):
     identifier = "snippets"
     name = _("Snippets")
     fields = [
-        ("in_place", forms.CharField(label=_("In-Place Snippet"), widget=forms.Textarea, required=False)),
+        (
+            "in_place",
+            forms.CharField(
+                label=_("In-Place Snippet"), widget=forms.Textarea, required=False
+            ),
+        ),
         (
             "head_start",
-            forms.CharField(label=_("Resource snippet for start of head"), widget=forms.Textarea, required=False),
+            forms.CharField(
+                label=_("Resource snippet for start of head"),
+                widget=forms.Textarea,
+                required=False,
+            ),
         ),
         (
             "head_end",
-            forms.CharField(label=_("Resource snippet for end of head"), widget=forms.Textarea, required=False),
+            forms.CharField(
+                label=_("Resource snippet for end of head"),
+                widget=forms.Textarea,
+                required=False,
+            ),
         ),
         (
             "body_start",
-            forms.CharField(label=_("Resource snippet for beginning of body"), widget=forms.Textarea, required=False),
+            forms.CharField(
+                label=_("Resource snippet for beginning of body"),
+                widget=forms.Textarea,
+                required=False,
+            ),
         ),
-        ("body_end", forms.CharField(label=_("Resource for end of body"), widget=forms.Textarea, required=False)),
+        (
+            "body_end",
+            forms.CharField(
+                label=_("Resource for end of body"),
+                widget=forms.Textarea,
+                required=False,
+            ),
+        ),
     ]
 
     def render(self, context):

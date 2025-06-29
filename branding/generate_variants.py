@@ -35,7 +35,9 @@ class VariantProcessor:
             os.makedirs(self.output_directory)
 
     def generate_png(self, info, png_filename, svg_data):
-        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", suffix=".svg", delete=False) as tmpfile:
+        with tempfile.NamedTemporaryFile(
+            "w+", encoding="utf-8", suffix=".svg", delete=False
+        ) as tmpfile:
             tmpfile.write(svg_data)
             tmpfile.flush()
             command = [
@@ -78,7 +80,14 @@ class VariantProcessor:
         for input_spec in input_files:
             for format in formats:
                 info = update(
-                    {}, {"base": os.path.splitext(os.path.basename(input_spec["input"]))[0]}, format, input_spec
+                    {},
+                    {
+                        "base": os.path.splitext(os.path.basename(input_spec["input"]))[
+                            0
+                        ]
+                    },
+                    format,
+                    input_spec,
                 )
                 self.process_single_info(info)
 
@@ -92,18 +101,36 @@ formats = [
     {"output": "%(base)s"},
     {"output": "%(base)s_dark", "replacements": [("#505050", "#ffffff")]},
     {"output": "%(base)s_white_bg", "format": "jpg", "background": "#ffffff"},
-    {"output": "%(base)s_black_bg", "format": "jpg", "background": "#000000", "replacements": [("#505050", "#ffffff")]},
+    {
+        "output": "%(base)s_black_bg",
+        "format": "jpg",
+        "background": "#000000",
+        "replacements": [("#505050", "#ffffff")],
+    },
 ]
 
 
 def cmdline():
     ap = argparse.ArgumentParser(usage="Generate variant images of SVGs.")
     ap.add_argument(
-        "--inkscape", dest="inkscape", default="inkscape", help="Path to Inkscape executable", metavar="BIN"
+        "--inkscape",
+        dest="inkscape",
+        default="inkscape",
+        help="Path to Inkscape executable",
+        metavar="BIN",
     )
-    ap.add_argument("-d", "--dir", dest="output_directory", default="variants", help="Output directory", metavar="DIR")
+    ap.add_argument(
+        "-d",
+        "--dir",
+        dest="output_directory",
+        default="variants",
+        help="Output directory",
+        metavar="DIR",
+    )
     args = ap.parse_args()
-    vp = VariantProcessor(output_directory=args.output_directory, inkscape=args.inkscape)
+    vp = VariantProcessor(
+        output_directory=args.output_directory, inkscape=args.inkscape
+    )
     vp.process(input_files, formats)
 
 

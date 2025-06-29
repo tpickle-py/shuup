@@ -29,20 +29,29 @@ from shuup.testing.utils import apply_request_middleware
 @pytest.mark.django_db
 def test_order_shipments(rf, admin_user):
     shop = get_default_shop()
-    supplier1 = get_supplier(module_identifier="simple_supplier", identifier="1", name="supplier1")
+    supplier1 = get_supplier(
+        module_identifier="simple_supplier", identifier="1", name="supplier1"
+    )
     supplier1.shops.add(shop)
-    supplier2 = get_supplier(module_identifier="simple_supplier", identifier="2", name="supplier1")
+    supplier2 = get_supplier(
+        module_identifier="simple_supplier", identifier="2", name="supplier1"
+    )
     supplier2.shops.add(shop)
 
     product1 = create_product("sku1", shop=shop, default_price=10)
     shop_product1 = product1.get_shop_instance(shop=shop)
     shop_product1.suppliers.set([supplier1])
 
-    product2 = create_product("sku3", shop=shop, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED)
+    product2 = create_product(
+        "sku3", shop=shop, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED
+    )
     shop_product2 = product1.get_shop_instance(shop=shop)
     shop_product2.suppliers.set([supplier2])
 
-    product_quantities = {supplier1.pk: {product1.pk: 20}, supplier2.pk: {product2.pk: 10}}
+    product_quantities = {
+        supplier1.pk: {product1.pk: 20},
+        supplier2.pk: {product2.pk: 10},
+    }
 
     def get_quantity(supplier, product):
         return product_quantities[supplier.pk][product.pk]
@@ -55,13 +64,17 @@ def test_order_shipments(rf, admin_user):
     request = apply_request_middleware(rf.get("/"), user=admin_user, shop=shop)
 
     # Add product 3 to order for supplier 2
-    add_product_to_order(order, supplier2, product2, get_quantity(supplier2, product2), 8)
+    add_product_to_order(
+        order, supplier2, product2, get_quantity(supplier2, product2), 8
+    )
 
     # Product is not shippable so order section should not be available
     assert not ShipmentSection.visible_for_object(order, request)
 
     # Add product 2 to order for supplier 1
-    add_product_to_order(order, supplier1, product1, get_quantity(supplier1, product1), 7)
+    add_product_to_order(
+        order, supplier1, product1, get_quantity(supplier1, product1), 7
+    )
 
     # Now we should see the shipment section
     assert ShipmentSection.visible_for_object(order, request)
@@ -110,7 +123,10 @@ def test_order_shipments(rf, admin_user):
     assert len(context["delete_urls"].keys()) == 0
     assert len(context["set_sent_urls"].keys()) == 0
 
-    set_permissions_for_group(group, ["order.create-shipment", "order.delete-shipment", "order.set-shipment-sent"])
+    set_permissions_for_group(
+        group,
+        ["order.create-shipment", "order.delete-shipment", "order.set-shipment-sent"],
+    )
     request = apply_request_middleware(rf.get("/"), user=staff_user, shop=shop)
     context = ShipmentSection.get_context_data(order, request)
     assert len(context["suppliers"]) == 2
@@ -157,7 +173,10 @@ def test_order_shipments(rf, admin_user):
 
     # list all shipments in shipments list view
     response = client.get(
-        "{}?jq={}".format(reverse("shuup_admin:order.shipments.list"), json.dumps({"perPage": 10, "page": 1}))
+        "{}?jq={}".format(
+            reverse("shuup_admin:order.shipments.list"),
+            json.dumps({"perPage": 10, "page": 1}),
+        )
     )
     assert response.status_code == 200
     data = json.loads(response.content)

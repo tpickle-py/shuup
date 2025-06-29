@@ -6,15 +6,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_notify', '0001_initial'),
+        ("shuup_notify", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='script',
-            name='template',
-            field=models.CharField(blank=True, default=None, max_length=64, null=True, verbose_name='template identifier'),
+            model_name="script",
+            name="template",
+            field=models.CharField(
+                blank=True,
+                default=None,
+                max_length=64,
+                null=True,
+                verbose_name="template identifier",
+            ),
         ),
     ]

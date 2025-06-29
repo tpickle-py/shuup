@@ -34,7 +34,9 @@ def create_orders_for_dates(dates, as_paid=False):
         sp = product.get_shop_instance(shop)
 
         quantity = random.randint(0, 10)
-        order = create_order_with_product(product, supplier, quantity, sp.default_price, shop=shop)
+        order = create_order_with_product(
+            product, supplier, quantity, sp.default_price, shop=shop
+        )
         order.order_date = date
         order.customer = customer
         order.save()

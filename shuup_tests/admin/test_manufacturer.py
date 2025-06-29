@@ -7,7 +7,11 @@
 import pytest
 from django.test.utils import override_settings
 
-from shuup.admin.modules.manufacturers.views import ManufacturerDeleteView, ManufacturerEditView, ManufacturerListView
+from shuup.admin.modules.manufacturers.views import (
+    ManufacturerDeleteView,
+    ManufacturerEditView,
+    ManufacturerListView,
+)
 from shuup.admin.shop_provider import set_shop
 from shuup.core.models import Manufacturer
 from shuup.testing import factories
@@ -25,14 +29,18 @@ def test_manufacturer_admin_simple_shop(rf, staff_user, admin_user):
         assert Manufacturer.objects.count() == 0
 
         # staff user
-        request = apply_request_middleware(rf.post("/", data=dict(name="Manuf 1")), user=staff_user)
+        request = apply_request_middleware(
+            rf.post("/", data=dict(name="Manuf 1")), user=staff_user
+        )
         view_func = ManufacturerEditView.as_view()
         response = view_func(request)
         assert response.status_code == 302
         assert Manufacturer.objects.first().shops.first() == shop1
 
         # superuser
-        request = apply_request_middleware(rf.post("/", data=dict(name="Manuf 2")), user=admin_user)
+        request = apply_request_middleware(
+            rf.post("/", data=dict(name="Manuf 2")), user=admin_user
+        )
         view_func = ManufacturerEditView.as_view()
         response = view_func(request)
         assert response.status_code == 302
@@ -69,7 +77,9 @@ def test_manufacturer_admin_multishop_shop(rf, staff_user, admin_user, superuser
         assert Manufacturer.objects.count() == 0
         user = admin_user if superuser else staff_user
 
-        request = apply_request_middleware(rf.post("/", data=dict(name="Manuf shop2")), user=user, shop=shop2)
+        request = apply_request_middleware(
+            rf.post("/", data=dict(name="Manuf shop2")), user=user, shop=shop2
+        )
         set_shop(request, shop2)
         view_func = ManufacturerEditView.as_view()
         response = view_func(request)
@@ -91,7 +101,9 @@ def test_manufacturer_admin_multishop_shop(rf, staff_user, admin_user, superuser
                 assert view_instance.get_queryset().first().shops.count() == 1
                 assert view_instance.get_queryset().first().shops.first() == shop2
 
-        request = apply_request_middleware(rf.post("/", data=dict(name="Manuf shop1")), user=user, shop=shop1)
+        request = apply_request_middleware(
+            rf.post("/", data=dict(name="Manuf shop1")), user=user, shop=shop1
+        )
         set_shop(request, shop1)
         view_func = ManufacturerEditView.as_view()
         response = view_func(request)

@@ -67,14 +67,14 @@ class Builder(object):
 
     def _find_package_json_dirs(self):
         items = excludes.walk_excl(self.root_directory)
-        for (dirpath, dirnames, filenames) in items:
+        for dirpath, dirnames, filenames in items:
             if "package.json" in filenames:
                 package = json.load(open(os.path.join(dirpath, "package.json")))
                 if package.get("shuup", {}).get("static_build"):
                     yield dirpath
 
     def build_dirs(self, directories):
-        for (i, dir) in enumerate(directories, 1):
+        for i, dir in enumerate(directories, 1):
             print("*** (%d/%d) Building: %s" % (i, len(directories), dir))  # noqa
             self.build(dir)
 
@@ -87,7 +87,9 @@ class Builder(object):
 
         node_modules_exists = os.path.exists(os.path.join(dir, "node_modules"))
         if not self.opts.no_install or not node_modules_exists or self.opts.production:
-            subprocess.check_call(self.install_command, cwd=dir, env=self.env, shell=shell)
+            subprocess.check_call(
+                self.install_command, cwd=dir, env=self.env, shell=shell
+            )
 
         command = self.build_command
         if self.opts.force:
@@ -97,7 +99,7 @@ class Builder(object):
 
 
 def remove_all_subdirs(root, subdir_name):
-    for (dirpath, dirnames, filenames) in os.walk(root):
+    for dirpath, dirnames, filenames in os.walk(root):
         if subdir_name in dirnames:
             dir_to_remove = os.path.join(dirpath, subdir_name)
             dirnames[:] = [dn for dn in dirnames if dn != subdir_name]

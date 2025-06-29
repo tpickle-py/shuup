@@ -14,7 +14,13 @@ class ProductValidationIssue:
     completed.
     """
 
-    def __init__(self, message: str, issue_type: str, code: Optional[str] = None, is_html: bool = False):
+    def __init__(
+        self,
+        message: str,
+        issue_type: str,
+        code: Optional[str] = None,
+        is_html: bool = False,
+    ):
         """
         :param code: The issue's error code.
         :type code: str

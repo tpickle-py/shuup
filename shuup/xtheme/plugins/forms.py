@@ -42,7 +42,9 @@ class PluginForm(forms.Form):
                 for language_code in languages:
                     key = "%s_%s" % (name, language_code)
                     new_fields[key] = deepcopy(field)
-                    new_fields[key].initial = self.plugin.get_translated_value(name, language=language_code)
+                    new_fields[key].initial = self.plugin.get_translated_value(
+                        name, language=language_code
+                    )
                     new_fields[key].required = False
             elif field:
                 self.monolingual_field_names.append(name)

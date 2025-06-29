@@ -46,8 +46,14 @@ class LabelEditView(CreateOrUpdateView):
 
     def get_toolbar(self):
         object = self.get_object()
-        delete_url = reverse_lazy("shuup_admin:label.delete", kwargs={"pk": object.pk}) if object.pk else None
-        return get_default_edit_toolbar(self, self.get_save_form_id(), delete_url=delete_url)
+        delete_url = (
+            reverse_lazy("shuup_admin:label.delete", kwargs={"pk": object.pk})
+            if object.pk
+            else None
+        )
+        return get_default_edit_toolbar(
+            self, self.get_save_form_id(), delete_url=delete_url
+        )
 
 
 class LabelDeleteView(DetailView):

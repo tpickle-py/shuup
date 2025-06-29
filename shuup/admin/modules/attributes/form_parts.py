@@ -47,7 +47,11 @@ class AttributeChoiceOptionsFormPart(FormPart):
             self.formset,
             template_name="shuup/admin/attributes/_edit_choice_option_form.jinja",
             required=False,
-            kwargs={"attribute": self.object, "languages": settings.LANGUAGES, "request": self.request},
+            kwargs={
+                "attribute": self.object,
+                "languages": settings.LANGUAGES,
+                "request": self.request,
+            },
         )
 
     def form_valid(self, form):

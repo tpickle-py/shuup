@@ -15,7 +15,17 @@ from shuup.xtheme.plugins.forms import GenericPluginForm, TranslatableField
 
 
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
-    def __init__(self, queryset, required=True, widget=None, label=None, initial=None, help_text="", *args, **kwargs):
+    def __init__(
+        self,
+        queryset,
+        required=True,
+        widget=None,
+        label=None,
+        initial=None,
+        help_text="",
+        *args,
+        **kwargs,
+    ):
         super().__init__(
             queryset,
             required=required,
@@ -24,7 +34,7 @@ class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
             initial=initial,
             help_text=help_text,
             *args,
-            **kwargs
+            **kwargs,
         )
 
         if initial:  # To show current choice order in plugin
@@ -106,7 +116,9 @@ class PageLinksPlugin(TemplatedPlugin):
         selected_pages = self.config.get("pages", [])
         show_all_pages = self.config.get("show_all_pages", True)
         hide_expired = self.config.get("hide_expired", False)
-        return str((get_language(), title, selected_pages, show_all_pages, hide_expired))
+        return str(
+            (get_language(), title, selected_pages, show_all_pages, hide_expired)
+        )
 
     def get_context_data(self, context):
         """
@@ -120,9 +132,13 @@ class PageLinksPlugin(TemplatedPlugin):
         pages_qs = Page.objects.prefetch_related("translations").not_deleted()
 
         if hide_expired:
-            pages_qs = pages_qs.visible(context["request"].shop, user=context["request"].user)
+            pages_qs = pages_qs.visible(
+                context["request"].shop, user=context["request"].user
+            )
         else:
-            pages_qs = pages_qs.for_shop(context["request"].shop).for_user(user=context["request"].user)
+            pages_qs = pages_qs.for_shop(context["request"].shop).for_user(
+                user=context["request"].user
+            )
 
         if not show_all_pages:
             pages_qs = pages_qs.filter(id__in=selected_pages)

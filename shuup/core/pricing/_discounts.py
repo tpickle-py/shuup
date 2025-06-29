@@ -27,7 +27,10 @@ def get_discount_modules():
 class DiscountModule(six.with_metaclass(abc.ABCMeta)):
     @abc.abstractmethod
     def discount_price(
-        self, context: "PricingContext", product: "Union[Product, int]", price_info: "PriceInfo"
+        self,
+        context: "PricingContext",
+        product: "Union[Product, int]",
+        price_info: "PriceInfo",
     ) -> "PriceInfo":
         """
         Discount given price of given product.
@@ -39,7 +42,10 @@ class DiscountModule(six.with_metaclass(abc.ABCMeta)):
         return price_info
 
     def get_pricing_steps(
-        self, context: "PricingContext", product: "Union[Product, int]", steps: "Iterable[PriceInfo]"
+        self,
+        context: "PricingContext",
+        product: "Union[Product, int]",
+        steps: "Iterable[PriceInfo]",
     ) -> "Iterable[PriceInfo]":
         """
         Get discounted pricing steps for given product.
@@ -55,10 +61,15 @@ class DiscountModule(six.with_metaclass(abc.ABCMeta)):
         :type steps: list[PriceInfo]
         :rtype: list[PriceInfo]
         """
-        return [self.discount_price(context, product, price_info) for price_info in steps]
+        return [
+            self.discount_price(context, product, price_info) for price_info in steps
+        ]
 
     def discount_prices(
-        self, context: "PricingContext", products: "Iterable[Union[Product, int]]", price_infos: "Dict[int, PriceInfo]"
+        self,
+        context: "PricingContext",
+        products: "Iterable[Union[Product, int]]",
+        price_infos: "Dict[int, PriceInfo]",
     ) -> "Dict[int, PriceInfo]":
         """
         Discount a bunch of prices.
@@ -77,7 +88,10 @@ class DiscountModule(six.with_metaclass(abc.ABCMeta)):
         }
 
     def get_pricing_steps_for_products(
-        self, context: "PricingContext", products: "Iterable[Union[Product, int]]", steps: "Iterable[PriceInfo]"
+        self,
+        context: "PricingContext",
+        products: "Iterable[Union[Product, int]]",
+        steps: "Iterable[PriceInfo]",
     ) -> "Dict[int, Iterable[PriceInfo]]":
         """
         Get discounted pricing steps for a bunch of products.
@@ -90,7 +104,10 @@ class DiscountModule(six.with_metaclass(abc.ABCMeta)):
         :rtype: dict[int,list[PriceInfo]]
         """
         pks_and_products = ((getattr(x, "pk", x), x) for x in products)
-        return {pk: self.get_pricing_steps(context, product, steps[pk]) for (pk, product) in pks_and_products}
+        return {
+            pk: self.get_pricing_steps(context, product, steps[pk])
+            for (pk, product) in pks_and_products
+        }
 
     def index_shop_product(self, shop_product: Union["ShopProduct", int], **kwargs):
         """

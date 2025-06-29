@@ -43,7 +43,14 @@ migrated_permissions = {
 
 
 def test_default_model_permissions():
-    permissions = set(["shuup.add_product", "shuup.delete_product", "shuup.change_product", "shuup.view_product"])
+    permissions = set(
+        [
+            "shuup.add_product",
+            "shuup.delete_product",
+            "shuup.change_product",
+            "shuup.view_product",
+        ]
+    )
     assert get_default_model_permissions(Product) == permissions
 
 
@@ -52,7 +59,8 @@ def test_permissions_for_menu_entries(rf, admin_user):
     request.user = factories.get_default_staff_user()
     permission_group = request.user.groups.first()
     set_permissions_for_group(
-        permission_group, set("dashboard") | set(ARestrictedTestModule().get_required_permissions())
+        permission_group,
+        set("dashboard") | set(ARestrictedTestModule().get_required_permissions()),
     )
 
     with replace_modules([ARestrictedTestModule]):
@@ -60,7 +68,9 @@ def test_permissions_for_menu_entries(rf, admin_user):
         assert categories
 
         # Make sure category is displayed if user has correct permissions
-        test_category_menu_entries = [cat for cat in categories if cat.name == "RestrictedTest"][0]
+        test_category_menu_entries = [
+            cat for cat in categories if cat.name == "RestrictedTest"
+        ][0]
         assert any(me.text == "OK" for me in test_category_menu_entries)
 
         # No menu items should be displayed if user has no permissions
@@ -99,7 +109,9 @@ def test_valid_permissions_for_all_modules():
     ],
 )
 def test_toolbar_button_permissions(rf, button_class, kwargs):
-    permissions = set(["shuup.add_product", "shuup.delete_product", "shuup.change_product"])
+    permissions = set(
+        ["shuup.add_product", "shuup.delete_product", "shuup.change_product"]
+    )
 
     request = rf.get("/")
     request.user = factories.get_default_staff_user()
@@ -116,13 +128,29 @@ def test_toolbar_button_permissions(rf, button_class, kwargs):
 @pytest.mark.parametrize(
     "button, permission, instance",
     [
-        (URLActionButton(url=reverse("shuup_admin:shop_product.new")), "shop_product.new", URLActionButton),
-        (URLActionButton(url=reverse_lazy("shuup_admin:shop_product.new")), "shop_product.new", URLActionButton),
+        (
+            URLActionButton(url=reverse("shuup_admin:shop_product.new")),
+            "shop_product.new",
+            URLActionButton,
+        ),
+        (
+            URLActionButton(url=reverse_lazy("shuup_admin:shop_product.new")),
+            "shop_product.new",
+            URLActionButton,
+        ),
         (NewActionButton.for_model(ShopProduct), "shop_product.new", URLActionButton),
-        (SettingsActionButton.for_model(ShopProduct, return_url="/"), "shop_product.list_settings", URLActionButton),
+        (
+            SettingsActionButton.for_model(ShopProduct, return_url="/"),
+            "shop_product.list_settings",
+            URLActionButton,
+        ),
         # for_model without shuup_admin url returns None
         (NewActionButton.for_model(AbstractUser), "abstract_user.new", type(None)),
-        (SettingsActionButton.for_model(AbstractUser), "abstract_user.list_settings", type(None)),
+        (
+            SettingsActionButton.for_model(AbstractUser),
+            "abstract_user.list_settings",
+            type(None),
+        ),
     ],
 )
 def test_url_buttons_permission(rf, button, permission, instance):

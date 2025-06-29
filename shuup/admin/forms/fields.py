@@ -6,7 +6,13 @@
 # LICENSE file in the root directory of this source tree.
 from decimal import Decimal
 from django.core.exceptions import ValidationError
-from django.forms import DecimalField, Field, MultipleChoiceField, Select, SelectMultiple
+from django.forms import (
+    DecimalField,
+    Field,
+    MultipleChoiceField,
+    Select,
+    SelectMultiple,
+)
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from numbers import Number
@@ -87,7 +93,8 @@ class Select2MultipleField(Field):
             from django.utils.encoding import force_text
 
             self.widget.choices = [
-                (instance.pk, force_text(instance)) for instance in self.model.objects.filter(pk__in=values)
+                (instance.pk, force_text(instance))
+                for instance in self.model.objects.filter(pk__in=values)
             ]
         return values
 
@@ -168,7 +175,17 @@ class WeekdayField(MultipleChoiceField):
         (6, _("Sunday")),
     ]
 
-    def __init__(self, choices=(), required=True, widget=None, label=None, initial=None, help_text="", *args, **kwargs):
+    def __init__(
+        self,
+        choices=(),
+        required=True,
+        widget=None,
+        label=None,
+        initial=None,
+        help_text="",
+        *args,
+        **kwargs,
+    ):
         if not choices:
             choices = self.DAYS_OF_THE_WEEK
 
@@ -179,7 +196,7 @@ class WeekdayField(MultipleChoiceField):
             label=label,
             initial=initial,
             help_text=help_text,
-            **kwargs
+            **kwargs,
         )
 
     def clean(self, value):
@@ -240,7 +257,9 @@ class ObjectSelect2MultipleField(Select2MultipleField):
         if not value:
             return []
         elif not isinstance(value, (list, tuple)):
-            raise ValidationError(self.error_messages["invalid_list"], code="invalid_list")
+            raise ValidationError(
+                self.error_messages["invalid_list"], code="invalid_list"
+            )
         return [str(val) for val in value]
 
     def widget_attrs(self, widget):
@@ -300,12 +319,16 @@ class ObjectSelect2MultipleMainProductField(Select2MultipleMainProductField):
     """
 
     def __init__(self, model, selector=None, search_mode=None, *args, **kwargs):
-        super(ObjectSelect2MultipleMainProductField, self).__init__(model, *args, **kwargs)
+        super(ObjectSelect2MultipleMainProductField, self).__init__(
+            model, *args, **kwargs
+        )
         self.selector = selector
 
     def prepare_value(self, value):
         if self.model:
-            return super(ObjectSelect2MultipleMainProductField, self).prepare_value(value)
+            return super(ObjectSelect2MultipleMainProductField, self).prepare_value(
+                value
+            )
         return [v for v in value or []]
 
     def to_python(self, value):
@@ -317,7 +340,9 @@ class ObjectSelect2MultipleMainProductField(Select2MultipleMainProductField):
 
     def widget_attrs(self, widget):
         if self.model:
-            attrs = super(ObjectSelect2MultipleMainProductField, self).widget_attrs(widget)
+            attrs = super(ObjectSelect2MultipleMainProductField, self).widget_attrs(
+                widget
+            )
         else:
             attrs = super(Select2MultipleField, self).widget_attrs(widget)
             attrs["data-model"] = self.selector

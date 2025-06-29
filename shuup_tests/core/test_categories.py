@@ -70,7 +70,7 @@ def test_category_visibility(admin_user, regular_user):
 
     configuration.set(None, get_all_seeing_key(admin_contact), True)
 
-    for (customer, category, expect) in [
+    for customer, category, expect in [
         (anon_contact, visible_public_category, True),
         (anon_contact, hidden_public_category, False),
         (anon_contact, deleted_public_category, False),
@@ -87,15 +87,27 @@ def test_category_visibility(admin_user, regular_user):
         (admin_contact, logged_in_category, True),
         (admin_contact, group_visible_category, True),
     ]:
-        result = Category.objects.all_visible(customer=customer).filter(pk=category.pk).exists()
-        assert result == expect, "Queryset visibility of %s for %s as expected" % (category.identifier, customer)
-        assert category.is_visible(customer) == expect, "Direct visibility of %s for %s as expected" % (
+        result = (
+            Category.objects.all_visible(customer=customer)
+            .filter(pk=category.pk)
+            .exists()
+        )
+        assert result == expect, "Queryset visibility of %s for %s as expected" % (
             category.identifier,
             customer,
         )
+        assert category.is_visible(customer) == expect, (
+            "Direct visibility of %s for %s as expected"
+            % (
+                category.identifier,
+                customer,
+            )
+        )
 
     assert (
-        not Category.objects.all_except_deleted().filter(pk=deleted_public_category.pk).exists()
+        not Category.objects.all_except_deleted()
+        .filter(pk=deleted_public_category.pk)
+        .exists()
     ), "Deleted category does not show up in 'all_except_deleted'"
     configuration.set(None, get_all_seeing_key(admin_contact), False)
 

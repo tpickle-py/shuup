@@ -18,17 +18,21 @@ def ensure_registration_shops(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0045_disable_default_marketing_permission'),
+        ("shuup", "0045_disable_default_marketing_permission"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contact',
-            name='registration_shop',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='registrations', to='shuup.Shop', verbose_name='registration shop'),
+            model_name="contact",
+            name="registration_shop",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="registrations",
+                to="shuup.Shop",
+                verbose_name="registration shop",
+            ),
         ),
-
         migrations.RunPython(ensure_registration_shops, migrations.RunPython.noop),
     ]

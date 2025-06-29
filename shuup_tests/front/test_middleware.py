@@ -178,7 +178,10 @@ def test_maintenance_mode(rf, regular_user, admin_user):
     maintenance_response = mw.process_view(request, IndexView)
     assert maintenance_response is not None
     assert maintenance_response.status_code == 503
-    assert mw._get_maintenance_response(request, IndexView).content == maintenance_response.content
+    assert (
+        mw._get_maintenance_response(request, IndexView).content
+        == maintenance_response.content
+    )
 
     login_response = mw.process_view(request, login)
     assert login_response is None

@@ -21,7 +21,9 @@ class RecentlyViewedProductsPlugin(TemplatedPlugin):
     def get_context_data(self, context):
         context = super().get_context_data(context)
         request = context["request"]
-        product_ids = [int(pid) for pid in request.COOKIES.get("rvp", "").split(",") if pid != ""]
+        product_ids = [
+            int(pid) for pid in request.COOKIES.get("rvp", "").split(",") if pid != ""
+        ]
 
         catalog = ProductCatalog(
             ProductCatalogContext(
@@ -33,16 +35,24 @@ class RecentlyViewedProductsPlugin(TemplatedPlugin):
             )
         )
         context["products"] = sorted(
-            catalog.get_products_queryset().filter(id__in=product_ids, mode__in=ProductMode.get_parent_modes()),
+            catalog.get_products_queryset().filter(
+                id__in=product_ids, mode__in=ProductMode.get_parent_modes()
+            ),
             key=lambda p: product_ids.index(p.pk),
         )
         return context
 
 
 def add_resources(context, content):
-    view_class = getattr(context["view"], "__class__", None) if context.get("view") else None
+    view_class = (
+        getattr(context["view"], "__class__", None) if context.get("view") else None
+    )
     if not view_class:
         return
     view_name = getattr(view_class, "__name__", "")
     if view_name == "ProductDetailView":
-        add_resource(context, "body_end", get_shuup_static_url("shuup/recently_viewed_products/lib.js"))
+        add_resource(
+            context,
+            "body_end",
+            get_shuup_static_url("shuup/recently_viewed_products/lib.js"),
+        )

@@ -1,6 +1,7 @@
 """
 Sphinx plugins for Django documentation.
 """
+
 import json
 import os
 import re
@@ -23,8 +24,16 @@ def setup(app):
         rolename="setting",
         indextemplate="pair: %s; setting",
     )
-    app.add_crossref_type(directivename="templatetag", rolename="ttag", indextemplate="pair: %s; template tag")
-    app.add_crossref_type(directivename="templatefilter", rolename="tfilter", indextemplate="pair: %s; template filter")
+    app.add_crossref_type(
+        directivename="templatetag",
+        rolename="ttag",
+        indextemplate="pair: %s; template tag",
+    )
+    app.add_crossref_type(
+        directivename="templatefilter",
+        rolename="tfilter",
+        indextemplate="pair: %s; template filter",
+    )
     app.add_crossref_type(
         directivename="fieldlookup",
         rolename="lookup",
@@ -101,10 +110,12 @@ def visit_snippet(self, node):
     def warner(msg):
         self.builder.warn(msg, (self.builder.current_docname, node.line))
 
-    highlighted = self.highlighter.highlight_block(node.rawsource, lang, warn=warner, linenos=linenos, **highlight_args)
+    highlighted = self.highlighter.highlight_block(
+        node.rawsource, lang, warn=warner, linenos=linenos, **highlight_args
+    )
     starttag = self.starttag(node, "div", suffix="", CLASS="highlight-%s" % lang)
     self.body.append(starttag)
-    self.body.append('<div class="snippet-filename">%s</div>\n' "" % (fname,))
+    self.body.append('<div class="snippet-filename">%s</div>\n' % (fname,))
     self.body.append(highlighted)
     self.body.append("</div>\n")
     raise nodes.SkipNode
@@ -136,10 +147,14 @@ def depart_snippet_latex(self, node):
     def warner(msg):
         self.builder.warn(msg, (self.curfilestack[-1], node.line))
 
-    hlcode = self.highlighter.highlight_block(code, lang, warn=warner, linenos=linenos, **highlight_args)
+    hlcode = self.highlighter.highlight_block(
+        code, lang, warn=warner, linenos=linenos, **highlight_args
+    )
 
     self.body.append(
-        "\n{\\colorbox[rgb]{0.9,0.9,0.9}" "{\\makebox[\\textwidth][l]" "{\\small\\texttt{%s}}}}\n" % (fname,)
+        "\n{\\colorbox[rgb]{0.9,0.9,0.9}"
+        "{\\makebox[\\textwidth][l]"
+        "{\\small\\texttt{%s}}}}\n" % (fname,)
     )
 
     if self.table:
@@ -149,7 +164,9 @@ def depart_snippet_latex(self, node):
 
     hlcode = hlcode.rstrip()[:-14]  # strip \end{Verbatim}
     hlcode = hlcode.rstrip() + "\n"
-    self.body.append("\n" + hlcode + "\\end{%sVerbatim}\n" % (self.table and "Original" or ""))
+    self.body.append(
+        "\n" + hlcode + "\\end{%sVerbatim}\n" % (self.table and "Original" or "")
+    )
     self.verbatim = None
 
 
@@ -185,9 +202,7 @@ class VersionDirective(Directive):
         if len(self.arguments) > 1:
             msg = """Error! Only one argument accepted for directive '{directive_name}::'.
             Comments should be provided as content,
-            not as an extra argument.""".format(
-                directive_name=self.name
-            )
+            not as an extra argument.""".format(directive_name=self.name)
             raise self.error(msg)
 
         env = self.state.document.settings.env
@@ -228,7 +243,9 @@ class DjangoHTMLTranslator(SmartyPantsHTMLTranslator):
         self.first_param = 1
         self.optional_param_level = 0
         self.param_separator = node.child_text_separator
-        self.required_params_left = sum([isinstance(c, addnodes.desc_parameter) for c in node.children])
+        self.required_params_left = sum(
+            [isinstance(c, addnodes.desc_parameter) for c in node.children]
+        )
 
     def depart_desc_parameterlist(self, node):
         self.body.append(")")
@@ -329,10 +346,14 @@ class DjangoStandaloneHTMLBuilder(StandaloneHTMLBuilder):
         xrefs = self.env.domaindata["std"]["objects"]
         templatebuiltins = {
             "ttags": [
-                n for ((t, n), (loc, a)) in xrefs.items() if t == "templatetag" and loc == "ref/templates/builtins"
+                n
+                for ((t, n), (loc, a)) in xrefs.items()
+                if t == "templatetag" and loc == "ref/templates/builtins"
             ],
             "tfilters": [
-                n for ((t, n), (loc, a)) in xrefs.items() if t == "templatefilter" and loc == "ref/templates/builtins"
+                n
+                for ((t, n), (loc, a)) in xrefs.items()
+                if t == "templatefilter" and loc == "ref/templates/builtins"
             ],
         }
         outfilename = os.path.join(self.outdir, "templatebuiltins.js")

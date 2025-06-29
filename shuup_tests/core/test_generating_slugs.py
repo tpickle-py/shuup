@@ -15,7 +15,9 @@ from shuup.testing.factories import create_product, get_default_category
 
 
 @pytest.mark.django_db
-@override_settings(**{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "fi"})
+@override_settings(
+    **{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "fi"}
+)
 def test_generate_slugs_for_product():
     activate("en")
     product_name = "Some name"
@@ -38,7 +40,9 @@ def test_generate_slugs_for_product():
 
 
 @pytest.mark.django_db
-@override_settings(**{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "fi"})
+@override_settings(
+    **{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "fi"}
+)
 def test_generate_slugs_for_category():
     activate("en")
     category = get_default_category()
@@ -61,7 +65,12 @@ def test_generate_slugs_for_category():
 
 
 @pytest.mark.django_db
-@override_settings(**{"LANGUAGES": (("en", "en"), ("fi", "fi"), ("ja", "ja")), "PARLER_DEFAULT_LANGUAGE_CODE": "fi"})
+@override_settings(
+    **{
+        "LANGUAGES": (("en", "en"), ("fi", "fi"), ("ja", "ja")),
+        "PARLER_DEFAULT_LANGUAGE_CODE": "fi",
+    }
+)
 def test_slug_is_generate_from_translation():
     activate("en")
     category = get_default_category()

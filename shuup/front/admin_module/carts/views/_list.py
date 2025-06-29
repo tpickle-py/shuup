@@ -28,19 +28,38 @@ class CartListView(PicotableListView):
     model = StoredBasket
     default_columns = [
         Column("key", _("Key"), filter_config=TextFilter(filter_field="key")),
-        Column("updated_on", _("Last updated on"), display="format_updated_date", filter_config=DateRangeFilter()),
+        Column(
+            "updated_on",
+            _("Last updated on"),
+            display="format_updated_date",
+            filter_config=DateRangeFilter(),
+        ),
         Column(
             "finished",
             _("Completed"),
             display="format_finished_status",
-            filter_config=ChoicesFilter([(True, _("yes")), (False, _("no"))], filter_field="finished", default=False),
+            filter_config=ChoicesFilter(
+                [(True, _("yes")), (False, _("no"))],
+                filter_field="finished",
+                default=False,
+            ),
         ),
-        Column("shop", _("Shop"), filter_config=TextFilter(filter_field="shop__translations__public_name")),
-        Column("supplier", _("Supplier"), filter_config=TextFilter(filter_field="supplier__name")),
+        Column(
+            "shop",
+            _("Shop"),
+            filter_config=TextFilter(filter_field="shop__translations__public_name"),
+        ),
+        Column(
+            "supplier",
+            _("Supplier"),
+            filter_config=TextFilter(filter_field="supplier__name"),
+        ),
         Column(
             "customer",
             _("Customer"),
-            filter_config=MultiFieldTextFilter(filter_fields=("customer__email", "customer__name")),
+            filter_config=MultiFieldTextFilter(
+                filter_fields=("customer__email", "customer__name")
+            ),
         ),
         Column("product_count", _("Product count"), filter_config=RangeFilter()),
         Column(
@@ -49,7 +68,9 @@ class CartListView(PicotableListView):
             sort_field="taxful_total_price_value",
             display="format_taxful_total_price",
             class_name="text-right",
-            filter_config=RangeFilter(field_type="number", filter_field="taxful_total_price_value"),
+            filter_config=RangeFilter(
+                field_type="number", filter_field="taxful_total_price_value"
+            ),
         ),
     ]
     toolbar_buttons_provider_key = "cart_list_toolbar_provider"

@@ -7,21 +7,30 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0040_order_created_index'),
-        ('shuup_notify', '0001_squashed_0003_alter_names'),
+        ("shuup", "0040_order_created_index"),
+        ("shuup_notify", "0001_squashed_0003_alter_names"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='notification',
-            name='shop',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='shuup.Shop', verbose_name='shop'),
+            model_name="notification",
+            name="shop",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="shuup.Shop",
+                verbose_name="shop",
+            ),
         ),
         migrations.AddField(
-            model_name='script',
-            name='shop',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='shuup.Shop', verbose_name='shop'),
+            model_name="script",
+            name="shop",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="shuup.Shop",
+                verbose_name="shop",
+            ),
         ),
     ]

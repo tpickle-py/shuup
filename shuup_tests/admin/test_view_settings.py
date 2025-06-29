@@ -22,7 +22,9 @@ def test_view_default_columns(rf, admin_user):
 
     view = ProductListView.as_view()
 
-    request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user
+    )
     response = view(request)
     assert 200 <= response.status_code < 300
 
@@ -30,29 +32,43 @@ def test_view_default_columns(rf, admin_user):
     assert listview.settings.default_columns == listview.default_columns
 
     column_names = [c.id for c in sorted(listview.columns, key=lambda x: x.id)]
-    default_column_names = [c.id for c in sorted(listview.default_columns, key=lambda x: x.id)]
+    default_column_names = [
+        c.id for c in sorted(listview.default_columns, key=lambda x: x.id)
+    ]
     assert column_names == default_column_names
-    assert configuration.get(None, "view_configuration_shopproduct_product_name")  # name is configured
+    assert configuration.get(
+        None, "view_configuration_shopproduct_product_name"
+    )  # name is configured
     assert listview.settings.view_configured()
     assert (
-        listview.settings.get_settings_key("product_name") == "view_configuration_shopproduct_product_name"
+        listview.settings.get_settings_key("product_name")
+        == "view_configuration_shopproduct_product_name"
     )  # we are attached to product view
 
     settings_view = ListSettingsView.as_view()
-    view_data = {"model": "ShopProduct", "module": "shuup.core.models", "return_url": "shop_product"}
+    view_data = {
+        "model": "ShopProduct",
+        "module": "shuup.core.models",
+        "return_url": "shop_product",
+    }
     request = rf.get("/", view_data)
     response = settings_view(request)
     assert 200 <= response.status_code < 300
 
     # Change configuration by posting form
-    request = rf.post("/?" + urlencode(view_data), {"view_configuration_shopproduct_product_name": False})
+    request = rf.post(
+        "/?" + urlencode(view_data),
+        {"view_configuration_shopproduct_product_name": False},
+    )
     response = settings_view(request)
     assert response.status_code == 302
 
     assert listview.settings.get_config("product_name") == configuration.get(
         None, "view_configuration_shopproduct_product_name"
     )
-    assert not configuration.get(None, "view_configuration_shopproduct_product_name").get("active")
+    assert not configuration.get(
+        None, "view_configuration_shopproduct_product_name"
+    ).get("active")
 
 
 @pytest.mark.django_db
@@ -61,7 +77,11 @@ def test_view_saved_columns(rf):
     visible_fields = sorted(["shopproduct_id", "product_name", "select"])
     configuration.set(None, "view_configuration_shopproduct_saved", True)
     for field in visible_fields:
-        configuration.set(None, "view_configuration_shopproduct_%s" % field, {"active": True, "ordering": 999})
+        configuration.set(
+            None,
+            "view_configuration_shopproduct_%s" % field,
+            {"active": True, "ordering": 999},
+        )
 
     listview = ProductListView()
     column_names = [c.id for c in sorted(listview.columns, key=lambda x: x.id)]

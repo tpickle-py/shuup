@@ -23,7 +23,11 @@ def test_pluginless_lcfg(rf):
             theme = get_current_theme(get_default_shop())
             cell = LayoutCell(theme, None)
             assert not cell.instantiate_plugin()
-            lcfg = LayoutCellFormGroup(layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/")))
+            lcfg = LayoutCellFormGroup(
+                layout_cell=cell,
+                theme=theme,
+                request=apply_request_middleware(rf.get("/")),
+            )
             assert "plugin" not in lcfg.forms
 
 
@@ -51,7 +55,9 @@ def test_formless_plugin_in_lcfg(rf):
             assert lcfg.is_valid()
             lcfg.save()
             assert cell.extra_classes == "newClass"
-            assert cell.sizes["md"] == two_thirds  # Something got saved even if the plugin doesn't need config
+            assert (
+                cell.sizes["md"] == two_thirds
+            )  # Something got saved even if the plugin doesn't need config
 
 
 @pytest.mark.django_db
@@ -62,7 +68,11 @@ def test_lcfg(rf):
             theme = get_current_theme(get_default_shop())
 
             cell = LayoutCell(theme, "text", sizes={"md": two_thirds, "sm": two_thirds})
-            lcfg = LayoutCellFormGroup(layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/")))
+            lcfg = LayoutCellFormGroup(
+                layout_cell=cell,
+                theme=theme,
+                request=apply_request_middleware(rf.get("/")),
+            )
             assert "general" in lcfg.forms
             assert "plugin" in lcfg.forms
             assert not lcfg.is_valid()  # Oh, we must've forgotten the text...

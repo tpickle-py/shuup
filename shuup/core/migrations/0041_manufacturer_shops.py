@@ -6,15 +6,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0040_order_created_index'),
+        ("shuup", "0040_order_created_index"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='manufacturer',
-            name='shops',
-            field=models.ManyToManyField(blank=True, to='shuup.Shop', verbose_name='shops'),
+            model_name="manufacturer",
+            name="shops",
+            field=models.ManyToManyField(
+                blank=True, to="shuup.Shop", verbose_name="shops"
+            ),
         ),
     ]

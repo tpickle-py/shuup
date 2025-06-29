@@ -42,7 +42,10 @@ def is_in_time_range(date, hour_start, hour_end, valid_weekdays):
             valid_date_ranges.append((start_datetime, end_datetime))
         else:
             valid_date_ranges.append(
-                (start_datetime - datetime.timedelta(days=1), end_datetime - datetime.timedelta(days=1))
+                (
+                    start_datetime - datetime.timedelta(days=1),
+                    end_datetime - datetime.timedelta(days=1),
+                )
             )
             valid_weekdays.append(current_local_weekday)
     else:
@@ -51,4 +54,6 @@ def is_in_time_range(date, hour_start, hour_end, valid_weekdays):
     if current_local_weekday not in valid_weekdays:
         return False
 
-    return any([(start <= current_local_dt < end) for (start, end) in valid_date_ranges])
+    return any(
+        [(start <= current_local_dt < end) for (start, end) in valid_date_ranges]
+    )

@@ -8,7 +8,10 @@
 import pytest
 from django.utils.translation import activate
 
-from shuup.admin.modules.contacts.views import ContactGroupMassEditView, ContactMassEditView
+from shuup.admin.modules.contacts.views import (
+    ContactGroupMassEditView,
+    ContactMassEditView,
+)
 from shuup.core.models import Contact, ContactGroup, Gender
 from shuup.testing.factories import create_random_person, get_default_shop
 from shuup.testing.utils import apply_request_middleware
@@ -24,7 +27,9 @@ def test_mass_edit_contacts(rf, admin_user):
     contact2.gender = Gender.FEMALE
     contact2.save()
     contact_ids = [contact1.pk, contact2.pk]
-    request = apply_request_middleware(rf.post("/", data={"gender": Gender.MALE.value}), user=admin_user)
+    request = apply_request_middleware(
+        rf.post("/", data={"gender": Gender.MALE.value}), user=admin_user
+    )
     request.session["mass_action_ids"] = contact_ids
 
     view = ContactMassEditView.as_view()

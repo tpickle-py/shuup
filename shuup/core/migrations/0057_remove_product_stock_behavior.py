@@ -6,14 +6,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0056_attributes_index'),
+        ("shuup", "0056_attributes_index"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='product',
-            name='stock_behavior',
+            model_name="product",
+            name="stock_behavior",
         ),
     ]

@@ -19,7 +19,9 @@ class AppConfig(shuup.apps.AppConfig):
     provides = {
         "front_urls_post": ["shuup.simple_cms.urls:urlpatterns"],
         "admin_module": ["shuup.simple_cms.admin_module:SimpleCMSAdminModule"],
-        "front_template_helper_namespace": ["shuup.simple_cms.template_helpers:SimpleCMSTemplateHelpers"],
+        "front_template_helper_namespace": [
+            "shuup.simple_cms.template_helpers:SimpleCMSTemplateHelpers"
+        ],
         "xtheme_layout": [
             "shuup.simple_cms.layout:PageLayout",
         ],
@@ -28,7 +30,9 @@ class AppConfig(shuup.apps.AppConfig):
             "shuup.simple_cms.templates:SimpleCMSDefaultTemplate",
             "shuup.simple_cms.templates:SimpleCMSTemplateSidebar",
         ],
-        "admin_page_form_part": ["shuup.simple_cms.admin_module.form_parts:CMSOpenGraphFormPart"],
+        "admin_page_form_part": [
+            "shuup.simple_cms.admin_module.form_parts:CMSOpenGraphFormPart"
+        ],
     }
 
     def ready(self):

@@ -47,7 +47,9 @@ class DiscountModule(AdminModule):
 
     def get_permissions_help_texts(self) -> Iterable[str]:
         return {
-            get_object_selector_permission_name(Discount): _("Allow the user to select discounts in admin."),
+            get_object_selector_permission_name(Discount): _(
+                "Allow the user to select discounts in admin."
+            ),
         }
 
 
@@ -58,7 +60,9 @@ class DiscountArchiveModule(AdminModule):
     def get_urls(self):
         return [
             admin_url(
-                "^archived_discounts", "shuup.discounts.admin.views.ArchivedDiscountListView", name="discounts.archive"
+                "^archived_discounts",
+                "shuup.discounts.admin.views.ArchivedDiscountListView",
+                name="discounts.archive",
             ),
             admin_url(
                 r"^discounts/(?P<pk>\d+)/delete/$",

@@ -17,16 +17,26 @@ from django.utils.translation import ugettext_lazy as _
 from functools import lru_cache
 
 from shuup.core.middleware import ExceptionMiddleware
-from shuup.core.models import AnonymousContact, Contact, get_company_contact, get_person_contact
+from shuup.core.models import (
+    AnonymousContact,
+    Contact,
+    get_company_contact,
+    get_person_contact,
+)
 from shuup.core.shop_provider import get_shop
-from shuup.core.utils.users import should_force_anonymous_contact, should_force_person_contact
+from shuup.core.utils.users import (
+    should_force_anonymous_contact,
+    should_force_person_contact,
+)
 from shuup.front.basket import get_basket
 from shuup.front.utils.user import is_admin_user
 from shuup.utils.django_compat import MiddlewareMixin, get_middleware_classes
 
 __all__ = ["ProblemMiddleware", "ShuupFrontMiddleware"]
 
-ProblemMiddleware = ExceptionMiddleware  # This class is only an alias for ExceptionMiddleware.
+ProblemMiddleware = (
+    ExceptionMiddleware  # This class is only an alias for ExceptionMiddleware.
+)
 
 
 class ShuupFrontMiddleware(MiddlewareMixin):
@@ -66,7 +76,8 @@ class ShuupFrontMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         if settings.DEBUG and (
-            request.path.startswith(settings.MEDIA_URL) or request.path.startswith(settings.STATIC_URL)
+            request.path.startswith(settings.MEDIA_URL)
+            or request.path.startswith(settings.STATIC_URL)
         ):
             return None
 
@@ -90,7 +101,11 @@ class ShuupFrontMiddleware(MiddlewareMixin):
         else:
             request.person = get_person_contact(request.user)
             if not request.person.is_active:
-                messages.add_message(request, messages.INFO, _("Logged out since this account is inactive."))
+                messages.add_message(
+                    request,
+                    messages.INFO,
+                    _("Logged out since this account is inactive."),
+                )
                 logout(request)
                 # Usually logout is connected to the `refresh_on_logout`
                 # method via a signal and that already sets request.person
@@ -186,7 +201,9 @@ class ShuupFrontMiddleware(MiddlewareMixin):
         from shuup.front.utils.translation import get_language_choices
 
         current_language = translation.get_language()
-        available_languages = [code for (code, name, local_name) in get_language_choices(request.shop)]
+        available_languages = [
+            code for (code, name, local_name) in get_language_choices(request.shop)
+        ]
         if current_language not in available_languages:
             if available_languages:
                 translation.activate(available_languages[0])
@@ -198,7 +215,8 @@ class ShuupFrontMiddleware(MiddlewareMixin):
     def _get_maintenance_response(self, request, view_func):
         # Allow media and static accesses in debug mode
         if settings.DEBUG and (
-            request.path.startswith(settings.MEDIA_URL) or request.path.startswith(settings.STATIC_URL)
+            request.path.startswith(settings.MEDIA_URL)
+            or request.path.startswith(settings.STATIC_URL)
         ):
             return None
 
@@ -211,12 +229,23 @@ class ShuupFrontMiddleware(MiddlewareMixin):
             return None
 
         if request.shop.maintenance_mode and not is_admin_user(request):
-            return HttpResponse(loader.render_to_string("shuup/front/maintenance.jinja", request=request), status=503)
+            return HttpResponse(
+                loader.render_to_string(
+                    "shuup/front/maintenance.jinja", request=request
+                ),
+                status=503,
+            )
 
 
 if (
     "django.contrib.auth" in settings.INSTALLED_APPS
     and "shuup.front.middleware.ShuupFrontMiddleware" in get_middleware_classes()
 ):
-    user_logged_in.connect(ShuupFrontMiddleware.refresh_on_user_change, dispatch_uid="shuup_front_refresh_on_login")
-    user_logged_out.connect(ShuupFrontMiddleware.refresh_on_logout, dispatch_uid="shuup_front_refresh_on_logout")
+    user_logged_in.connect(
+        ShuupFrontMiddleware.refresh_on_user_change,
+        dispatch_uid="shuup_front_refresh_on_login",
+    )
+    user_logged_out.connect(
+        ShuupFrontMiddleware.refresh_on_logout,
+        dispatch_uid="shuup_front_refresh_on_logout",
+    )

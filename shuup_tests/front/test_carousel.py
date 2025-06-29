@@ -16,7 +16,12 @@ from filer.models import Image
 from shuup.front.apps.carousel.admin_module.forms import SlideForm
 from shuup.front.apps.carousel.models import Carousel, LinkTargetType, Slide
 from shuup.front.apps.carousel.plugins import BannerBoxPlugin, CarouselPlugin
-from shuup.testing.factories import get_default_category, get_default_product, get_default_shop, get_shop
+from shuup.testing.factories import (
+    get_default_category,
+    get_default_product,
+    get_default_shop,
+    get_shop,
+)
 from shuup.testing.utils import apply_request_middleware
 from shuup_tests.front.fixtures import get_jinja_context
 from shuup_tests.simple_cms.utils import create_page
@@ -30,7 +35,10 @@ def test_carousel_plugin_form(rf):
 
     checks = [
         ({}, {"carousel": None, "active": False, "render_image_text": False}),
-        ({"carousel": test_carousel.pk}, {"carousel": test_carousel.pk, "active": False, "render_image_text": False}),
+        (
+            {"carousel": test_carousel.pk},
+            {"carousel": test_carousel.pk, "active": False, "render_image_text": False},
+        ),
         (
             {"carousel": test_carousel.pk, "active": False},
             {"carousel": test_carousel.pk, "active": False, "render_image_text": False},
@@ -46,7 +54,9 @@ def test_carousel_plugin_form(rf):
     ]
 
     for data, expected in checks:
-        form = form_class(data=data, plugin=plugin, request=apply_request_middleware(rf.get("/")))
+        form = form_class(
+            data=data, plugin=plugin, request=apply_request_middleware(rf.get("/"))
+        )
         assert form.is_valid()
         assert form.get_config() == expected
 
@@ -82,9 +92,13 @@ def test_image_translations():
     test_image_2 = Image.objects.create(original_filename="slide2.jpg")
 
     with translation.override("en"):
-        test_slide = Slide.objects.create(carousel=test_carousel, name="test", image=test_image_1)
+        test_slide = Slide.objects.create(
+            carousel=test_carousel, name="test", image=test_image_1
+        )
         assert len(test_carousel.slides.all()) == 1
-        assert test_slide.get_translated_field("image").original_filename == "slide1.jpg"
+        assert (
+            test_slide.get_translated_field("image").original_filename == "slide1.jpg"
+        )
 
     test_slide.set_current_language("fi")
     assert test_slide.get_translated_field("image").original_filename == "slide1.jpg"
@@ -104,7 +118,9 @@ def test_slide_links():
     test_carousel = Carousel.objects.create(name="test")
     test_image_1 = Image.objects.create(original_filename="slide1.jpg")
     with translation.override("en"):
-        test_slide = Slide.objects.create(carousel=test_carousel, name="test", image=test_image_1)
+        test_slide = Slide.objects.create(
+            carousel=test_carousel, name="test", image=test_image_1
+        )
 
     # Test external link
     assert len(test_carousel.slides.all()) == 1
@@ -154,7 +170,9 @@ def test_visible_manager():
     test_carousel = Carousel.objects.create(name="test")
     test_image = Image.objects.create(original_filename="slide.jpg")
 
-    test_slide = Slide.objects.create(carousel=test_carousel, name="test", image=test_image)
+    test_slide = Slide.objects.create(
+        carousel=test_carousel, name="test", image=test_image
+    )
     assert not list(test_carousel.slides.visible(dt=test_dt))
 
     # Available since last week
@@ -184,7 +202,9 @@ def test_is_visible():
     test_dt = datetime(2016, 3, 18, 20, 34, 1, 922791)
     test_carousel = Carousel.objects.create(name="test")
     test_image = Image.objects.create(original_filename="slide.jpg")
-    test_slide = Slide.objects.create(carousel=test_carousel, name="test", image=test_image)
+    test_slide = Slide.objects.create(
+        carousel=test_carousel, name="test", image=test_image
+    )
     assert not test_slide.is_visible(dt=test_dt)
 
     # Available since last week
@@ -220,7 +240,9 @@ def test_is_visible():
 def test_get_link_target(target_type, expected_target):
     test_carousel = Carousel.objects.create(name="test")
     test_image = Image.objects.create(original_filename="slide.jpg")
-    test_slide = Slide.objects.create(carousel=test_carousel, name="test", image=test_image, target=target_type)
+    test_slide = Slide.objects.create(
+        carousel=test_carousel, name="test", image=test_image, target=target_type
+    )
     assert test_slide.get_link_target() == expected_target
 
 
@@ -307,7 +329,10 @@ def test_carousel_custom_colors(rf):
     layout.begin_column({"md": 12})
     layout.add_plugin(CarouselPlugin.identifier, {"carousel": carousel.pk})
     svc = SavedViewConfig(
-        theme_identifier=theme.identifier, shop=shop, view_name="IndexView", status=SavedViewConfigStatus.CURRENT_DRAFT
+        theme_identifier=theme.identifier,
+        shop=shop,
+        view_name="IndexView",
+        status=SavedViewConfigStatus.CURRENT_DRAFT,
     )
     svc.set_layout_data(layout.placeholder_name, layout)
     svc.save()

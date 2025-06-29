@@ -53,7 +53,9 @@ class SupplierQueryset(TranslatableQuerySet):
 
         `shop` can be either a Shop instance or the shop's PK
         """
-        queryset = self.filter(enabled=True, supplier_shops__is_approved=True).not_deleted()
+        queryset = self.filter(
+            enabled=True, supplier_shops__is_approved=True
+        ).not_deleted()
 
         if shop:
             from shuup.core.models import Shop
@@ -68,15 +70,20 @@ class SupplierQueryset(TranslatableQuerySet):
 class Supplier(ModuleInterface, TranslatableShuupModel):
     module_provides_key = "supplier_module"
 
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on"))
-    modified_on = models.DateTimeField(auto_now=True, editable=False, db_index=True, verbose_name=_("modified on"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on")
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True, editable=False, db_index=True, verbose_name=_("modified on")
+    )
     identifier = InternalIdentifierField(unique=True)
     name = models.CharField(
         verbose_name=_("name"),
         max_length=128,
         db_index=True,
         help_text=_(
-            "The product supplier's name. " "You can enable suppliers to manage the inventory of stocked products."
+            "The product supplier's name. "
+            "You can enable suppliers to manage the inventory of stocked products."
         ),
     )
     type = EnumIntegerField(
@@ -115,7 +122,9 @@ class Supplier(ModuleInterface, TranslatableShuupModel):
         blank=True,
         related_name="suppliers",
         verbose_name=_("shops"),
-        help_text=_("You can select which particular shops fronts the supplier should be available in."),
+        help_text=_(
+            "You can select which particular shops fronts the supplier should be available in."
+        ),
         through="SupplierShop",
     )
     enabled = models.BooleanField(
@@ -127,7 +136,11 @@ class Supplier(ModuleInterface, TranslatableShuupModel):
         ),
     )
     logo = FilerImageField(
-        verbose_name=_("logo"), blank=True, null=True, on_delete=models.SET_NULL, related_name="supplier_logos"
+        verbose_name=_("logo"),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="supplier_logos",
     )
     contact_address = models.ForeignKey(
         "MutableAddress",
@@ -138,7 +151,9 @@ class Supplier(ModuleInterface, TranslatableShuupModel):
         on_delete=models.SET_NULL,
     )
     options = JSONField(blank=True, null=True, verbose_name=_("options"))
-    translations = TranslatedFields(description=models.TextField(blank=True, verbose_name=_("description")))
+    translations = TranslatedFields(
+        description=models.TextField(blank=True, verbose_name=_("description"))
+    )
     slug = models.SlugField(
         verbose_name=_("slug"),
         max_length=255,
@@ -164,7 +179,9 @@ class Supplier(ModuleInterface, TranslatableShuupModel):
             self.slug = slugify(self.name)
         return super(Supplier, self).save(*args, **kwargs)
 
-    def get_orderability_errors(self, shop_product, quantity, customer, *args, **kwargs):
+    def get_orderability_errors(
+        self, shop_product, quantity, customer, *args, **kwargs
+    ):
         """
         :param shop_product: Shop Product.
         :type shop_product: shuup.core.models.ShopProduct
@@ -176,7 +193,11 @@ class Supplier(ModuleInterface, TranslatableShuupModel):
         """
         for module in self.modules:
             yield from module.get_orderability_errors(
-                shop_product=shop_product, quantity=quantity, customer=customer, *args, **kwargs
+                shop_product=shop_product,
+                quantity=quantity,
+                customer=customer,
+                *args,
+                **kwargs,
             )
 
     def get_stock_statuses(self, product_ids, *args, **kwargs):
@@ -209,15 +230,26 @@ class Supplier(ModuleInterface, TranslatableShuupModel):
         return [
             shop_product.pk
             for shop_product in self.shop_products.filter(shop=shop)
-            if shop_product.is_orderable(self, customer, shop_product.minimum_purchase_quantity)
+            if shop_product.is_orderable(
+                self, customer, shop_product.minimum_purchase_quantity
+            )
         ]
 
-    def adjust_stock(self, product_id, delta, created_by=None, type=None, *args, **kwargs):
+    def adjust_stock(
+        self, product_id, delta, created_by=None, type=None, *args, **kwargs
+    ):
         from shuup.core.suppliers.base import StockAdjustmentType
 
         adjustment_type = type or StockAdjustmentType.INVENTORY
         for module in self.modules:
-            stock = module.adjust_stock(product_id, delta, created_by=created_by, type=adjustment_type, *args, **kwargs)
+            stock = module.adjust_stock(
+                product_id,
+                delta,
+                created_by=created_by,
+                type=adjustment_type,
+                *args,
+                **kwargs,
+            )
             if stock:
                 return stock
 
@@ -244,8 +276,12 @@ class Supplier(ModuleInterface, TranslatableShuupModel):
 
 
 class SupplierShop(models.Model):
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name="supplier_shops")
-    shop = models.ForeignKey("shuup.Shop", on_delete=models.CASCADE, related_name="supplier_shops")
+    supplier = models.ForeignKey(
+        Supplier, on_delete=models.CASCADE, related_name="supplier_shops"
+    )
+    shop = models.ForeignKey(
+        "shuup.Shop", on_delete=models.CASCADE, related_name="supplier_shops"
+    )
     is_approved = models.BooleanField(
         default=True,
         verbose_name=_("Approved"),
@@ -280,7 +316,9 @@ class SupplierModule(models.Model):
         from shuup.apps.provides import get_provide_objects
 
         for module in get_provide_objects(Supplier.module_provides_key):
-            cls.objects.update_or_create(module_identifier=module.identifier, defaults={"name": module.name})
+            cls.objects.update_or_create(
+                module_identifier=module.identifier, defaults={"name": module.name}
+            )
 
 
 SupplierLogEntry = define_log_model(Supplier)

@@ -62,25 +62,43 @@ class ShipmentQueryset(models.QuerySet):
 
 class Shipment(ShuupModel):
     order = models.ForeignKey(
-        "Order", blank=True, null=True, related_name="shipments", on_delete=models.PROTECT, verbose_name=_("order")
+        "Order",
+        blank=True,
+        null=True,
+        related_name="shipments",
+        on_delete=models.PROTECT,
+        verbose_name=_("order"),
     )
     supplier = models.ForeignKey(
-        "Supplier", related_name="shipments", on_delete=models.PROTECT, verbose_name=_("supplier")
+        "Supplier",
+        related_name="shipments",
+        on_delete=models.PROTECT,
+        verbose_name=_("supplier"),
     )
 
     created_on = models.DateTimeField(auto_now_add=True, verbose_name=_("created on"))
-    status = EnumIntegerField(ShipmentStatus, default=ShipmentStatus.NOT_SENT, verbose_name=_("status"))
-    tracking_code = models.CharField(max_length=64, blank=True, verbose_name=_("tracking code"))
+    status = EnumIntegerField(
+        ShipmentStatus, default=ShipmentStatus.NOT_SENT, verbose_name=_("status")
+    )
+    tracking_code = models.CharField(
+        max_length=64, blank=True, verbose_name=_("tracking code")
+    )
     tracking_url = models.URLField(blank=True, verbose_name=_("tracking url"))
-    description = models.CharField(max_length=255, blank=True, verbose_name=_("description"))
+    description = models.CharField(
+        max_length=255, blank=True, verbose_name=_("description")
+    )
     volume = MeasurementField(
-        unit=get_shuup_volume_unit(), verbose_name=format_lazy(_("volume ({})"), get_shuup_volume_unit())
+        unit=get_shuup_volume_unit(),
+        verbose_name=format_lazy(_("volume ({})"), get_shuup_volume_unit()),
     )
     weight = MeasurementField(
-        unit=settings.SHUUP_MASS_UNIT, verbose_name=format_lazy(_("weight ({})"), settings.SHUUP_MASS_UNIT)
+        unit=settings.SHUUP_MASS_UNIT,
+        verbose_name=format_lazy(_("weight ({})"), settings.SHUUP_MASS_UNIT),
     )
     identifier = InternalIdentifierField(unique=True)
-    type = EnumIntegerField(ShipmentType, default=ShipmentType.OUT, verbose_name=_("type"))
+    type = EnumIntegerField(
+        ShipmentType, default=ShipmentType.OUT, verbose_name=_("type")
+    )
 
     objects = ShipmentQueryset.as_manager()
 
@@ -98,7 +116,11 @@ class Shipment(ShuupModel):
             self.identifier = prefix + get_random_string(32)
 
     def __repr__(self):  # pragma: no cover
-        return "<Shipment %s (tracking %r, created %s)>" % (self.pk, self.tracking_code, self.created_on)
+        return "<Shipment %s (tracking %r, created %s)>" % (
+            self.pk,
+            self.tracking_code,
+            self.created_on,
+        )
 
     def save(self, *args, **kwargs):
         super(Shipment, self).save(*args, **kwargs)
@@ -106,7 +128,9 @@ class Shipment(ShuupModel):
             self.supplier.update_stock(product_id=product_id)
 
     def delete(self, using=None):
-        raise NotImplementedError("Error! Not implemented: `Shipment` -> `delete()`. Use `soft_delete()` instead.")
+        raise NotImplementedError(
+            "Error! Not implemented: `Shipment` -> `delete()`. Use `soft_delete()` instead."
+        )
 
     @atomic
     def soft_delete(self, user=None):
@@ -132,7 +156,9 @@ class Shipment(ShuupModel):
         """
         total_volume = 0
         total_weight = 0
-        for quantity, volume, weight in self.products.values_list("quantity", "unit_volume", "unit_weight"):
+        for quantity, volume, weight in self.products.values_list(
+            "quantity", "unit_volume", "unit_weight"
+        ):
             total_volume += quantity * volume
             total_weight += quantity * weight
         self.volume = total_volume
@@ -172,28 +198,43 @@ class Shipment(ShuupModel):
         if self.order:
             self.order.update_shipping_status()
         if self.type == ShipmentType.IN:
-            for product_id, quantity in self.products.values_list("product_id", "quantity"):
-                purchase_price = purchase_prices.get(product_id, None) if purchase_prices else None
+            for product_id, quantity in self.products.values_list(
+                "product_id", "quantity"
+            ):
+                purchase_price = (
+                    purchase_prices.get(product_id, None) if purchase_prices else None
+                )
                 self.supplier.adjust_stock(
-                    product_id=product_id, delta=quantity, purchase_price=purchase_price or 0, created_by=created_by
+                    product_id=product_id,
+                    delta=quantity,
+                    purchase_price=purchase_price or 0,
+                    created_by=created_by,
                 )
 
 
 @python_2_unicode_compatible
 class ShipmentProduct(ShuupModel):
     shipment = models.ForeignKey(
-        Shipment, related_name="products", on_delete=models.PROTECT, verbose_name=_("shipment")
+        Shipment,
+        related_name="products",
+        on_delete=models.PROTECT,
+        verbose_name=_("shipment"),
     )
     product = models.ForeignKey(
-        "Product", related_name="shipments", on_delete=models.CASCADE, verbose_name=_("product")
+        "Product",
+        related_name="shipments",
+        on_delete=models.CASCADE,
+        verbose_name=_("product"),
     )
     quantity = QuantityField(verbose_name=_("quantity"))
 
     unit_volume = MeasurementField(
-        unit=get_shuup_volume_unit(), verbose_name=format_lazy(_("unit volume ({})"), get_shuup_volume_unit())
+        unit=get_shuup_volume_unit(),
+        verbose_name=format_lazy(_("unit volume ({})"), get_shuup_volume_unit()),
     )
     unit_weight = MeasurementField(
-        unit=settings.SHUUP_MASS_UNIT, verbose_name=format_lazy(_("unit weight ({})"), settings.SHUUP_MASS_UNIT)
+        unit=settings.SHUUP_MASS_UNIT,
+        verbose_name=format_lazy(_("unit weight ({})"), settings.SHUUP_MASS_UNIT),
     )
 
     class Meta:

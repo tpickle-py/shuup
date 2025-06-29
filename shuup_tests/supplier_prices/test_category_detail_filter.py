@@ -99,7 +99,9 @@ def test_category_detail_filters(client, reindex_catalog):
     product_data = [("laptop", 1500), ("keyboard", 150), ("mouse", 150)]
     products = []
     for sku, price_value in product_data:
-        products.append(factories.create_product(sku, shop=shop, default_price=price_value))
+        products.append(
+            factories.create_product(sku, shop=shop, default_price=price_value)
+        )
 
     supplier_data = [
         ("Johnny Inc", 0.5),
@@ -117,13 +119,24 @@ def test_category_detail_filters(client, reindex_catalog):
             shop_product.save()
 
             supplier_price = (
-                percentage_from_original_price * [price for sku, price in product_data if product.sku == sku][0]
+                percentage_from_original_price
+                * [price for sku, price in product_data if product.sku == sku][0]
             )
-            SupplierPrice.objects.create(supplier=supplier, shop=shop, product=product, amount_value=supplier_price)
+            SupplierPrice.objects.create(
+                supplier=supplier,
+                shop=shop,
+                product=product,
+                amount_value=supplier_price,
+            )
 
     strategy = "shuup.testing.supplier_pricing.supplier_strategy:CheapestSupplierPriceSupplierStrategy"
-    with override_settings(SHUUP_PRICING_MODULE="supplier_pricing", SHUUP_SHOP_PRODUCT_SUPPLIERS_STRATEGY=strategy):
-        with override_current_theme_class(ClassicGrayTheme, shop):  # Ensure settings is refreshed from DB
+    with override_settings(
+        SHUUP_PRICING_MODULE="supplier_pricing",
+        SHUUP_SHOP_PRODUCT_SUPPLIERS_STRATEGY=strategy,
+    ):
+        with override_current_theme_class(
+            ClassicGrayTheme, shop
+        ):  # Ensure settings is refreshed from DB
             reindex_catalog()
 
             laptop = [product for product in products if product.sku == "laptop"][0]
@@ -202,25 +215,38 @@ def test_category_detail_multiselect_supplier_filters(client, reindex_catalog):
         shop_product.save()
 
         supplier_price = percentage_from_original_price * price_value
-        SupplierPrice.objects.create(supplier=supplier, shop=shop, product=product, amount_value=supplier_price)
+        SupplierPrice.objects.create(
+            supplier=supplier, shop=shop, product=product, amount_value=supplier_price
+        )
 
     reindex_catalog()
 
     strategy = "shuup.testing.supplier_pricing.supplier_strategy:CheapestSupplierPriceSupplierStrategy"
-    with override_settings(SHUUP_PRICING_MODULE="supplier_pricing", SHUUP_SHOP_PRODUCT_SUPPLIERS_STRATEGY=strategy):
-        with override_current_theme_class(ClassicGrayTheme, shop):  # Ensure settings is refreshed from DB
+    with override_settings(
+        SHUUP_PRICING_MODULE="supplier_pricing",
+        SHUUP_SHOP_PRODUCT_SUPPLIERS_STRATEGY=strategy,
+    ):
+        with override_current_theme_class(
+            ClassicGrayTheme, shop
+        ):  # Ensure settings is refreshed from DB
             johnny_supplier = Supplier.objects.filter(name="Johnny Inc").first()
             mike_supplier = Supplier.objects.filter(name="Mike Inc").first()
             simon_supplier = Supplier.objects.filter(name="Simon Inc").first()
 
-            soup = _get_category_detail_soup_multiselect(client, category, [johnny_supplier.pk])
+            soup = _get_category_detail_soup_multiselect(
+                client, category, [johnny_supplier.pk]
+            )
             assert len(soup.findAll("div", {"class": "single-product"})) == 1
 
-            soup = _get_category_detail_soup_multiselect(client, category, [johnny_supplier.pk, mike_supplier.pk])
+            soup = _get_category_detail_soup_multiselect(
+                client, category, [johnny_supplier.pk, mike_supplier.pk]
+            )
             assert len(soup.findAll("div", {"class": "single-product"})) == 2
 
             soup = _get_category_detail_soup_multiselect(
-                client, category, [johnny_supplier.pk, mike_supplier.pk, simon_supplier.pk]
+                client,
+                category,
+                [johnny_supplier.pk, mike_supplier.pk, simon_supplier.pk],
             )
             assert len(soup.findAll("div", {"class": "single-product"})) == 3
 
@@ -233,7 +259,9 @@ def _get_category_detail_soup(client, category, supplier_id):
 
 def _get_category_detail_soup_multiselect(client, category, supplier_ids):
     url = reverse("shuup:category", kwargs={"pk": category.pk, "slug": category.slug})
-    response = client.get(url, data={"suppliers": ",".join(["%s" % sid for sid in supplier_ids])})
+    response = client.get(
+        url, data={"suppliers": ",".join(["%s" % sid for sid in supplier_ids])}
+    )
     return BeautifulSoup(response.content, "lxml")
 
 
@@ -249,7 +277,8 @@ def _assert_product_price(box_soup, expected_price_value):
 
 def _assert_product_url(box_soup, supplier, product):
     expected_url = reverse(
-        "shuup:supplier-product", kwargs={"supplier_pk": supplier.pk, "pk": product.pk, "slug": product.slug}
+        "shuup:supplier-product",
+        kwargs={"supplier_pk": supplier.pk, "pk": product.pk, "slug": product.slug},
     )
 
     link = box_soup.find("a", {"rel": "product-detail"})

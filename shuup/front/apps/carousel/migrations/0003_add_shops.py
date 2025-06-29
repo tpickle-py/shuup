@@ -14,16 +14,20 @@ def add_shop_for_carousels(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('carousel', '0002_alter_names'),
+        ("carousel", "0002_alter_names"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='carousel',
-            name='shops',
-            field=models.ManyToManyField(help_text='Select which shops you would like the carousel to be visible in.', related_name='carousels', to='shuup.Shop', verbose_name='shops'),
+            model_name="carousel",
+            name="shops",
+            field=models.ManyToManyField(
+                help_text="Select which shops you would like the carousel to be visible in.",
+                related_name="carousels",
+                to="shuup.Shop",
+                verbose_name="shops",
+            ),
         ),
-        migrations.RunPython(add_shop_for_carousels, migrations.RunPython.noop)
+        migrations.RunPython(add_shop_for_carousels, migrations.RunPython.noop),
     ]

@@ -8,21 +8,32 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('filer', '0002_auto_20150606_2003'),
-        ('shuup', '0021_country_limit_behavior_component'),
+        ("filer", "0002_auto_20150606_2003"),
+        ("shuup", "0021_country_limit_behavior_component"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='shop',
-            name='favicon',
-            field=filer.fields.image.FilerImageField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='shop_favicons', to='filer.Image'),
+            model_name="shop",
+            name="favicon",
+            field=filer.fields.image.FilerImageField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="shop_favicons",
+                to="filer.Image",
+            ),
         ),
         migrations.AlterField(
-            model_name='shop',
-            name='logo',
-            field=filer.fields.image.FilerImageField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='shop_logos', to='filer.Image'),
+            model_name="shop",
+            name="logo",
+            field=filer.fields.image.FilerImageField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="shop_logos",
+                to="filer.Image",
+            ),
         ),
     ]

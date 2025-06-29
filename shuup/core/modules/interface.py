@@ -32,10 +32,14 @@ class ModuleInterface(object):
             impls = self.get_module_implementation_map()
             if supplier_module.module_identifier not in impls:
                 raise ModuleNotFound(
-                    "Invalid module identifier %r in %s" % (supplier_module.name, force_ascii(repr(self)))
+                    "Invalid module identifier %r in %s"
+                    % (supplier_module.name, force_ascii(repr(self)))
                 )
             spec = impls[supplier_module.module_identifier]
-            module = load(spec, context_explanation="Loading module for %s" % force_ascii(repr(self)))
+            module = load(
+                spec,
+                context_explanation="Loading module for %s" % force_ascii(repr(self)),
+            )
             loaded_modules.append(module(self, options))
 
         return loaded_modules
@@ -58,7 +62,9 @@ class ModuleInterface(object):
         :rtype: dict[str, str]
         """
         identifier_to_spec = {}
-        for spec, module in six.iteritems(get_provide_specs_and_objects(cls.module_provides_key)):
+        for spec, module in six.iteritems(
+            get_provide_specs_and_objects(cls.module_provides_key)
+        ):
             if module.identifier:
                 identifier_to_spec[module.identifier] = spec
         return identifier_to_spec

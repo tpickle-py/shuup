@@ -7,15 +7,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_simple_cms', '0005_set_shop'),
+        ("shuup_simple_cms", "0005_set_shop"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='page',
-            name='shop',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shuup.Shop', verbose_name='shop'),
+            model_name="page",
+            name="shop",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="shuup.Shop",
+                verbose_name="shop",
+            ),
         ),
     ]

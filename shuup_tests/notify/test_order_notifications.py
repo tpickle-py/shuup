@@ -13,7 +13,13 @@ from django.utils.translation import activate
 
 from shuup.core import cache
 from shuup.core.defaults.order_statuses import create_default_order_statuses
-from shuup.core.models import MutableAddress, Order, OrderLineType, Product, get_person_contact
+from shuup.core.models import (
+    MutableAddress,
+    Order,
+    OrderLineType,
+    Product,
+    get_person_contact,
+)
 from shuup.core.order_creator import OrderCreator
 from shuup.core.pricing import get_pricing_module
 from shuup.notify.models import Script
@@ -32,8 +38,14 @@ from shuup.testing.factories import (
 from shuup.testing.mock_population import populate_if_required
 from shuup.testing.soup_utils import extract_form_fields
 from shuup.utils.django_compat import reverse
-from shuup_tests.admin.test_order_creator import get_frontend_order_state, get_order_from_state
-from shuup_tests.front.test_checkout_flow import _populate_client_basket, fill_address_inputs
+from shuup_tests.admin.test_order_creator import (
+    get_frontend_order_state,
+    get_order_from_state,
+)
+from shuup_tests.front.test_checkout_flow import (
+    _populate_client_basket,
+    fill_address_inputs,
+)
 from shuup_tests.functional.test_refunds import (
     INITIAL_PRODUCT_QUANTITY,
     _add_basket_campaign,
@@ -44,7 +56,11 @@ from shuup_tests.functional.test_refunds import (
 from shuup_tests.simple_supplier.utils import get_simple_supplier
 from shuup_tests.utils import SmartClient
 from shuup_tests.utils.basketish_order_source import BasketishOrderSource
-from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME, regular_user
+from shuup_tests.utils.fixtures import (
+    REGULAR_USER_PASSWORD,
+    REGULAR_USER_USERNAME,
+    regular_user,
+)
 
 STEP_DATA = [
     {
@@ -63,12 +79,36 @@ STEP_DATA = [
             {
                 "fallback_language": {"constant": "FI"},
                 "template_data": {
-                    "en": {"body": "english", "content_type": "plain", "subject": "english"},
-                    "fi": {"body": "finnish", "content_type": "plain", "subject": "finnish"},
-                    "ja": {"body": "japan", "content_type": "plain", "subject": "japan"},
-                    "zh-hans": {"body": "china", "content_type": "plain", "subject": "china"},
-                    "pt-br": {"body": "brazil", "content_type": "plain", "subject": "brazil"},
-                    "it": {"body": "italia", "content_type": "plain", "subject": "italia"},
+                    "en": {
+                        "body": "english",
+                        "content_type": "plain",
+                        "subject": "english",
+                    },
+                    "fi": {
+                        "body": "finnish",
+                        "content_type": "plain",
+                        "subject": "finnish",
+                    },
+                    "ja": {
+                        "body": "japan",
+                        "content_type": "plain",
+                        "subject": "japan",
+                    },
+                    "zh-hans": {
+                        "body": "china",
+                        "content_type": "plain",
+                        "subject": "china",
+                    },
+                    "pt-br": {
+                        "body": "brazil",
+                        "content_type": "plain",
+                        "subject": "brazil",
+                    },
+                    "it": {
+                        "body": "italia",
+                        "content_type": "plain",
+                        "subject": "italia",
+                    },
                 },
                 "identifier": "send_email",
                 "language": {"variable": "language"},
@@ -80,7 +120,7 @@ STEP_DATA = [
 
 DEFAULT_ADDRESS_DATA = dict(
     prefix="Sir",
-    name=u"Dog Hello",
+    name="Dog Hello",
     suffix=", Esq.",
     postal_code="K9N",
     street="Woof Ave.",
@@ -91,7 +131,7 @@ DEFAULT_ADDRESS_DATA = dict(
 )
 
 SHOP_ADDRESS_DATA = dict(
-    name=u"Shop Default",
+    name="Shop Default",
     postal_code="90014",
     street="Frog Ave.",
     city="Cat Fort",
@@ -107,7 +147,9 @@ def get_address(**overrides):
 
 
 def get_test_script(name, identifier):
-    sc = Script.objects.create(name=name, event_identifier=identifier, enabled=True, shop=get_default_shop())
+    sc = Script.objects.create(
+        name=name, event_identifier=identifier, enabled=True, shop=get_default_shop()
+    )
     sc.set_serialized_steps(STEP_DATA)
     sc.save()
     return sc
@@ -137,7 +179,11 @@ def _get_custom_order(regular_user, **kwargs):
     for product_data in _get_product_data():
         quantity = product_data.pop("quantity")
         product = create_product(
-            sku=product_data.pop("sku"), shop=shop, supplier=supplier, tax_class=get_default_tax_class(), **product_data
+            sku=product_data.pop("sku"),
+            shop=shop,
+            supplier=supplier,
+            tax_class=get_default_tax_class(),
+            **product_data,
         )
         shop_product = product.get_shop_instance(shop)
         shop_product.categories.add(get_default_category())
@@ -177,7 +223,9 @@ def fill_address_inputs(soup, address, with_company=False):
         inputs["company-tax_number"] = "FI1234567-1"
         inputs["company-company_name"] = "Example Oy"
     else:
-        inputs = dict((k, v) for (k, v) in inputs.items() if not k.startswith("company-"))
+        inputs = dict(
+            (k, v) for (k, v) in inputs.items() if not k.startswith("company-")
+        )
 
     return inputs
 
@@ -197,7 +245,9 @@ def test_order_received(rf, regular_user):
         create_random_order(customer)
         assert len(mail.outbox) == n_outbox_pre + 1, "Sending email failed"
         latest_mail = mail.outbox[-1]
-        assert latest_mail.subject == template_data[lang]["subject"], "Subject doesn't match"
+        assert latest_mail.subject == template_data[lang]["subject"], (
+            "Subject doesn't match"
+        )
         assert latest_mail.body == template_data[lang]["body"], "Body doesn't match"
 
 
@@ -213,7 +263,9 @@ def test_order_received_admin(rf, admin_user):
         get_order_from_state(get_frontend_order_state(contact), admin_user)
         assert len(mail.outbox) == n_outbox_pre + 1, "Sending email failed"
         latest_mail = mail.outbox[-1]
-        assert latest_mail.subject == template_data[lang]["subject"], "Subject doesn't match"
+        assert latest_mail.subject == template_data[lang]["subject"], (
+            "Subject doesn't match"
+        )
         assert latest_mail.body == template_data[lang]["body"], "Body doesn't match"
 
 
@@ -248,17 +300,23 @@ def test_basic_order_flow_not_registered(with_company):
         assert response.status_code == 302  # Should redirect forth
 
         methods_soup = c.soup(methods_path)
-        assert c.post(methods_path, data=extract_form_fields(methods_soup)).status_code == 302  # Should redirect forth
+        assert (
+            c.post(methods_path, data=extract_form_fields(methods_soup)).status_code
+            == 302
+        )  # Should redirect forth
 
         confirm_soup = c.soup(confirm_path)
         Product.objects.get(pk=product_ids[0]).soft_delete()
         assert (
-            c.post(confirm_path, data=extract_form_fields(confirm_soup)).status_code == 200
+            c.post(confirm_path, data=extract_form_fields(confirm_soup)).status_code
+            == 200
         )  # user needs to reconfirm
         data = extract_form_fields(confirm_soup)
         data["accept_terms"] = True
         data["product_ids"] = ",".join(product_ids[1:])
-        assert c.post(confirm_path, data=data).status_code == 302  # Should redirect forth
+        assert (
+            c.post(confirm_path, data=data).status_code == 302
+        )  # Should redirect forth
 
         n_orders_post = Order.objects.count()
         assert n_orders_post > n_orders_pre, "order was created"
@@ -266,7 +324,9 @@ def test_basic_order_flow_not_registered(with_company):
         latest_mail = mail.outbox[-1]
 
         # mail is always sent in fallback language since user is not registered
-        assert latest_mail.subject == template_data["en"]["subject"], "Subject doesn't match"
+        assert latest_mail.subject == template_data["en"]["subject"], (
+            "Subject doesn't match"
+        )
         assert latest_mail.body == template_data["en"]["body"], "Body doesn't match"
 
 
@@ -306,17 +366,23 @@ def test_basic_order_flow_registered(regular_user):
         assert response.status_code == 302  # Should redirect forth
 
         methods_soup = c.soup(methods_path)
-        assert c.post(methods_path, data=extract_form_fields(methods_soup)).status_code == 302  # Should redirect forth
+        assert (
+            c.post(methods_path, data=extract_form_fields(methods_soup)).status_code
+            == 302
+        )  # Should redirect forth
 
         confirm_soup = c.soup(confirm_path)
         Product.objects.get(pk=product_ids[0]).soft_delete()
         assert (
-            c.post(confirm_path, data=extract_form_fields(confirm_soup)).status_code == 200
+            c.post(confirm_path, data=extract_form_fields(confirm_soup)).status_code
+            == 200
         )  # user needs to reconfirm
         data = extract_form_fields(confirm_soup)
         data["accept_terms"] = True
         data["product_ids"] = ",".join(product_ids[1:])
-        assert c.post(confirm_path, data=data).status_code == 302  # Should redirect forth
+        assert (
+            c.post(confirm_path, data=data).status_code == 302
+        )  # Should redirect forth
 
         n_orders_post = Order.objects.count()
         assert n_orders_post > n_orders_pre, "order was created"
@@ -324,7 +390,9 @@ def test_basic_order_flow_registered(regular_user):
         latest_mail = mail.outbox[-1]
 
         # mail is always sent in fallback language since user is not registered
-        assert latest_mail.subject == template_data[lang]["subject"], "Subject doesn't match"
+        assert latest_mail.subject == template_data[lang]["subject"], (
+            "Subject doesn't match"
+        )
         assert latest_mail.body == template_data[lang]["body"], "Body doesn't match"
 
 
@@ -368,7 +436,11 @@ def test_order_received_variables(rf, with_shop_contact):
             0,
             {
                 "template_data": {
-                    "en": {"body": "{{ shop_email }}", "content_type": "plain", "subject": "{{ shop_phone }}"}
+                    "en": {
+                        "body": "{{ shop_email }}",
+                        "content_type": "plain",
+                        "subject": "{{ shop_phone }}",
+                    }
                 },
                 "identifier": "send_email",
                 "language": {"constant": "en"},
@@ -376,7 +448,12 @@ def test_order_received_variables(rf, with_shop_contact):
             },
         )
 
-    sc = Script.objects.create(name="variables script", event_identifier="order_received", enabled=True, shop=shop)
+    sc = Script.objects.create(
+        name="variables script",
+        event_identifier="order_received",
+        enabled=True,
+        shop=shop,
+    )
     sc.set_serialized_steps(STEP_DATA)
     sc.save()
 
@@ -388,7 +465,9 @@ def test_order_received_variables(rf, with_shop_contact):
     customer.save()
 
     order = create_random_order(customer, shop=shop)
-    assert len(mail.outbox) == n_outbox_pre + (2 if with_shop_contact else 1), "Sending email failed"
+    assert len(mail.outbox) == n_outbox_pre + (2 if with_shop_contact else 1), (
+        "Sending email failed"
+    )
 
     latest_mail = mail.outbox[-1]
     assert latest_mail.subject == customer.default_shipping_address.phone

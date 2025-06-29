@@ -7,16 +7,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0057_remove_product_stock_behavior'),
-        ('discounts', '0001_initial'),
+        ("shuup", "0057_remove_product_stock_behavior"),
+        ("discounts", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='discount',
-            name='supplier',
-            field=models.ForeignKey(blank=True, help_text='Select supplier for this discount.', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='supplier_discounts', to='shuup.Supplier', verbose_name='supplier'),
+            model_name="discount",
+            name="supplier",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Select supplier for this discount.",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="supplier_discounts",
+                to="shuup.Supplier",
+                verbose_name="supplier",
+            ),
         ),
     ]

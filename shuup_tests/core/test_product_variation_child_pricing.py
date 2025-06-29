@@ -6,8 +6,18 @@
 # LICENSE file in the root directory of this source tree.
 import pytest
 
-from shuup.core.models import AnonymousContact, ContactGroup, ProductVisibility, get_person_contact
-from shuup.testing.factories import create_product, get_default_product, get_default_shop, get_default_supplier
+from shuup.core.models import (
+    AnonymousContact,
+    ContactGroup,
+    ProductVisibility,
+    get_person_contact,
+)
+from shuup.testing.factories import (
+    create_product,
+    get_default_product,
+    get_default_shop,
+    get_default_supplier,
+)
 from shuup.testing.utils import apply_request_middleware
 
 
@@ -16,7 +26,10 @@ def init_test(request, shop, prices):
     parent = create_product("parent_product", shop=shop)
     supplier = get_default_supplier(shop)
     children = [
-        create_product("child-%d" % price, shop=shop, supplier=supplier, default_price=price) for price in prices
+        create_product(
+            "child-%d" % price, shop=shop, supplier=supplier, default_price=price
+        )
+        for price in prices
     ]
     for child in children:
         child.link_to_parent(parent)
@@ -59,7 +72,10 @@ def test_correct_range_found(rf):
     parent = init_test(request, shop, prices)
 
     price = shop.create_price
-    assert parent.get_child_price_range(request) == (price(min(prices)), price(max(prices)))
+    assert parent.get_child_price_range(request) == (
+        price(min(prices)),
+        price(max(prices)),
+    )
 
 
 @pytest.mark.django_db
@@ -76,7 +92,10 @@ def test_only_one_variation_child(rf):
     price = shop.create_price
 
     assert parent.get_cheapest_child_price(request) == price(min(prices))
-    assert parent.get_child_price_range(request) == (price(min(prices)), price(max(prices)))
+    assert parent.get_child_price_range(request) == (
+        price(min(prices)),
+        price(max(prices)),
+    )
     assert price_info.price == price(min(prices))
 
 
@@ -96,7 +115,12 @@ def test_cheapest_price_per_customer(rf, regular_user):
 
     # Let's create extra children available only for certain group
     custom_price_for_gold_club = 3.5
-    super_child = create_product("child-super", shop=shop, supplier=supplier, default_price=custom_price_for_gold_club)
+    super_child = create_product(
+        "child-super",
+        shop=shop,
+        supplier=supplier,
+        default_price=custom_price_for_gold_club,
+    )
     super_child_shop_product = super_child.get_shop_instance(shop)
     super_child_shop_product.visibility_limit = ProductVisibility.VISIBLE_TO_GROUPS
     super_child_shop_product.save()

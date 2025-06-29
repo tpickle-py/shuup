@@ -19,7 +19,13 @@ class SettingsModule(AdminModule):
     breadcrumbs_menu_entry = MenuEntry(name, url="shuup_admin:settings.list")
 
     def get_urls(self):
-        return [admin_url("^settings/$", "shuup.admin.modules.settings.views.SystemSettingsView", name="settings.list")]
+        return [
+            admin_url(
+                "^settings/$",
+                "shuup.admin.modules.settings.views.SystemSettingsView",
+                name="settings.list",
+            )
+        ]
 
     def get_menu_entries(self, request):
         return [

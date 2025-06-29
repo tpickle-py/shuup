@@ -23,11 +23,15 @@ class LabelsModule(AdminModule):
         from shuup.admin.urls import admin_url
 
         delete = admin_url(
-            r"^labels/(?P<pk>\d+)/delete/$", "shuup.admin.modules.labels.views.LabelDeleteView", name="label.delete"
+            r"^labels/(?P<pk>\d+)/delete/$",
+            "shuup.admin.modules.labels.views.LabelDeleteView",
+            name="label.delete",
         )
 
         return [delete] + get_edit_and_list_urls(
-            url_prefix="^labels", view_template="shuup.admin.modules.labels.views.Label%sView", name_template="label.%s"
+            url_prefix="^labels",
+            view_template="shuup.admin.modules.labels.views.Label%sView",
+            name_template="label.%s",
         )
 
     def get_menu_entries(self, request):

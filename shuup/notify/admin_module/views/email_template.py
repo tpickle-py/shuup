@@ -35,9 +35,15 @@ class EmailTemplateEditView(CreateOrUpdateView):
     def get_toolbar(self):
         object = self.get_object()
         delete_url = (
-            reverse_lazy("shuup_admin:notify.email_template.delete", kwargs={"pk": object.pk}) if object.pk else None
+            reverse_lazy(
+                "shuup_admin:notify.email_template.delete", kwargs={"pk": object.pk}
+            )
+            if object.pk
+            else None
         )
-        return get_default_edit_toolbar(self, self.get_save_form_id(), delete_url=delete_url)
+        return get_default_edit_toolbar(
+            self, self.get_save_form_id(), delete_url=delete_url
+        )
 
 
 class EmailTemplateDeleteView(DetailView):
@@ -48,7 +54,9 @@ class EmailTemplateDeleteView(DetailView):
         email_template_name = email_template.name
         email_template.delete()
         messages.success(request, _("%s has been deleted.") % email_template_name)
-        return HttpResponseRedirect(reverse_lazy("shuup_admin:notify.email_template.list"))
+        return HttpResponseRedirect(
+            reverse_lazy("shuup_admin:notify.email_template.list")
+        )
 
 
 class EmailTemplateListView(PicotableListView):

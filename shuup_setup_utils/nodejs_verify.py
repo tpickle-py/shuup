@@ -40,7 +40,9 @@ DIVIDER = "\n\n%s\n\n" % ("@" * 80)
 
 
 def snarf(cmd):
-    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen(
+        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
     stdout, stderr = proc.communicate()
     if proc.returncode:
         return ""

@@ -76,5 +76,10 @@ class ListSettingsView(FormView):
             ],
             view=self,
         )
-        context["defaults"] = "|".join([self.settings.get_settings_key(c.id) for c in self.settings.default_columns])
+        context["defaults"] = "|".join(
+            [
+                self.settings.get_settings_key(c.id)
+                for c in self.settings.default_columns
+            ]
+        )
         return context

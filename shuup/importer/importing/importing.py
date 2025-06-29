@@ -57,7 +57,14 @@ class ImporterContext:
     supplier = None  # type: Supplier
     user = None  # type: User
 
-    def __init__(self, shop: "Shop", language: str, supplier: "Supplier" = None, user: User = None, **kwargs):
+    def __init__(
+        self,
+        shop: "Shop",
+        language: str,
+        supplier: "Supplier" = None,
+        user: User = None,
+        **kwargs,
+    ):
         self.shop = shop
         self.language = language
         self.supplier = supplier
@@ -89,7 +96,7 @@ class DataImporter(object):
         language: str = None,
         supplier: "Supplier" = None,
         user: User = None,
-        **kwargs
+        **kwargs,
     ):
         """
         Returns a context object for the given `request`
@@ -105,7 +112,9 @@ class DataImporter(object):
                 DeprecationWarning,
             )
 
-        return ImporterContext(shop=shop, language=language, supplier=supplier, user=user, **kwargs)
+        return ImporterContext(
+            shop=shop, language=language, supplier=supplier, user=user, **kwargs
+        )
 
     def __init__(self, data, context):
         """
@@ -180,7 +189,10 @@ class DataImporter(object):
                     else:
                         mapping[name] = map_base
 
-        mapping = dict((fold_mapping_name(mname), mdata) for (mname, mdata) in six.iteritems(mapping))
+        mapping = dict(
+            (fold_mapping_name(mname), mdata)
+            for (mname, mdata) in six.iteritems(mapping)
+        )
         self.mapping = mapping
         return mapping
 
@@ -268,7 +280,10 @@ class DataImporter(object):
             query = Q()
 
             for field in name_fields:
-                if hasattr(cls, "_parler_meta") and field in cls._parler_meta.get_translated_fields():
+                if (
+                    hasattr(cls, "_parler_meta")
+                    and field in cls._parler_meta.get_translated_fields()
+                ):
                     field = "%s__%s" % (cls._parler_meta.root_rel_name, field)
                 else:
                     from django.core.exceptions import FieldDoesNotExist
@@ -287,7 +302,9 @@ class DataImporter(object):
         obj = self._find_matching_object(row, self.shop)
         if not obj:
             if self.import_mode == ImportMode.UPDATE:
-                self.other_log_messages.append(_("Row ignored (no existing item and creating new is not allowed)."))
+                self.other_log_messages.append(
+                    _("Row ignored (no existing item and creating new is not allowed).")
+                )
                 return (None, True)
 
             self.target_model = self.find_matching_model(row)
@@ -297,7 +314,9 @@ class DataImporter(object):
             new = False
             if self.import_mode == ImportMode.CREATE:
                 self.other_log_messages.append(
-                    _("Row ignored (object already exists (%(object_name)s with id: %(object_id)s).")
+                    _(
+                        "Row ignored (object already exists (%(object_name)s with id: %(object_id)s)."
+                    )
                     % {"object_name": str(obj), "object_id": obj.pk}
                 )
                 return (None, False)
@@ -334,7 +353,9 @@ class DataImporter(object):
             return
 
         row_session = DataImporterRowSession(self, row, obj, self.shop)
-        for fname, mapping in sorted(six.iteritems(self.data_map), key=lambda x: (x[1].get("priority"), x[0])):
+        for fname, mapping in sorted(
+            six.iteritems(self.data_map), key=lambda x: (x[1].get("priority"), x[0])
+        ):
             field = mapping.get("field")
             if not field:
                 continue
@@ -348,11 +369,15 @@ class DataImporter(object):
             value = self._handle_special_row_values(mapping, value)
             setter = mapping.get("setter")
             if setter:
-                value, has_related = self._handle_related_value(field, mapping, orig_value, row_session, obj, value)
+                value, has_related = self._handle_related_value(
+                    field, mapping, orig_value, row_session, obj, value
+                )
                 setter(row_session, value, mapping)
                 continue
 
-            value, has_related = self._handle_related_value(field, mapping, orig_value, row_session, obj, value)
+            value, has_related = self._handle_related_value(
+                field, mapping, orig_value, row_session, obj, value
+            )
             if has_related:
                 continue
 
@@ -363,7 +388,9 @@ class DataImporter(object):
 
         self.save_row(new, row_session)
 
-    def _handle_related_value(self, field, mapping, orig_value, row_session, obj, value):
+    def _handle_related_value(
+        self, field, mapping, orig_value, row_session, obj, value
+    ):
         has_related = False
         if mapping.get("fk"):
             value = self._handle_row_fk_value(field, orig_value, row_session, value)
@@ -382,7 +409,9 @@ class DataImporter(object):
     def _handle_special_row_values(self, mapping, value):
         if mapping.get("datatype") in ["datetime", "date"]:
             if isinstance(value, float):  # Sort of terrible
-                value = datetime.datetime(*xlrd.xldate_as_tuple(value, self.data.meta["xls_datemode"]))
+                value = datetime.datetime(
+                    *xlrd.xldate_as_tuple(value, self.data.meta["xls_datemode"])
+                )
         if isinstance(value, float):
             if int(value) == value:
                 value = int(value)
@@ -404,16 +433,23 @@ class DataImporter(object):
                 LOGGER.exception("Failed to convert field")
 
                 row_session.log(
-                    _("Failed while setting value for field %(field_name)s. (%(exception)s)")
-                    % {"field_name": (field.verbose_name or field.name), "exception": exc}
+                    _(
+                        "Failed while setting value for field %(field_name)s. (%(exception)s)"
+                    )
+                    % {
+                        "field_name": (field.verbose_name or field.name),
+                        "exception": exc,
+                    }
                 )
             else:
-                value = self._meta.mutate_normal_field_set(row_session, field, value, original=orig_value)
+                value = self._meta.mutate_normal_field_set(
+                    row_session, field, value, original=orig_value
+                )
             setattr(target, field.name, value)
 
     def _get_field_choices_value(self, field, value):
         if field.choices:
-            for (ck, cv) in field.choices:
+            for ck, cv in field.choices:
                 if value in (ck, cv):
                     value = ck
                     break
@@ -424,7 +460,10 @@ class DataImporter(object):
         if orig_value and not value:
             row_session.log(
                 _("Couldn't set value %(original_value)s for field %(field_name)s.")
-                % {"original_value": orig_value, "field_name": (field.verbose_name or field.name)}
+                % {
+                    "original_value": orig_value,
+                    "field_name": (field.verbose_name or field.name),
+                }
             )
 
         row_session.defer("m2m_%s" % field.name, target, {field.name: value})
@@ -434,7 +473,10 @@ class DataImporter(object):
         if orig_value and not value:
             row_session.log(
                 _("Couldn't set value %(original_value)s for field %(field_name)s.")
-                % {"original_value": orig_value, "field_name": (field.verbose_name or field.name)}
+                % {
+                    "original_value": orig_value,
+                    "field_name": (field.verbose_name or field.name),
+                }
             )
         return value
 
@@ -444,15 +486,24 @@ class DataImporter(object):
             row_session.instance.full_clean()
             row_session.save()
             self._meta.postsave_hook(row_session)
-            (self.new_objects if new else self.updated_objects).append(row_session.instance)
+            (self.new_objects if new else self.updated_objects).append(
+                row_session.instance
+            )
 
-            for post_save_handler, fields in six.iteritems(self._meta.post_save_handlers):
+            for post_save_handler, fields in six.iteritems(
+                self._meta.post_save_handlers
+            ):
                 if hasattr(self._meta, post_save_handler):
                     func = getattr(self._meta, post_save_handler)
                     func(fields, row_session)
 
             if row_session.log_messages:
-                self.log_messages.append({"instance": row_session.instance, "messages": row_session.log_messages})
+                self.log_messages.append(
+                    {
+                        "instance": row_session.instance,
+                        "messages": row_session.log_messages,
+                    }
+                )
         except ImporterError as e:
             LOGGER.exception(e.message)
             self.other_log_messages.append(e.message)
@@ -505,8 +556,15 @@ class DataImporter(object):
 
         :return: Found object or ``None``
         """
-        field_map_values = [(fname, mapping, row.get(fname)) for (fname, mapping) in six.iteritems(self.unique_fields)]
-        row_keys = dict((mapping["field"].name, value) for (fname, mapping, value) in field_map_values if value)
+        field_map_values = [
+            (fname, mapping, row.get(fname))
+            for (fname, mapping) in six.iteritems(self.unique_fields)
+        ]
+        row_keys = dict(
+            (mapping["field"].name, value)
+            for (fname, mapping, value) in field_map_values
+            if value
+        )
         if row_keys:
             qs = [Q(**{fname: value}) for (fname, value) in six.iteritems(row_keys)]
             fields = [field.name for field in self.model._meta.local_fields]
@@ -520,14 +578,16 @@ class DataImporter(object):
 
             try:
                 return self.model.objects.get(and_query)
-            except (ObjectDoesNotExist, MultipleObjectsReturned):  # Found multiple or zero -- not okay
+            except (
+                ObjectDoesNotExist,
+                MultipleObjectsReturned,
+            ):  # Found multiple or zero -- not okay
                 pass
 
             return self.model.objects.filter(or_query).first()
         return None
 
     def _get_fields_with_modes(self, model):
-
         return itertools.chain(
             zip(model._meta.local_fields, itertools.repeat(0)),
             zip(model._meta.local_many_to_many, itertools.repeat(1)),
@@ -588,7 +648,9 @@ class DataImporter(object):
         mapper = self.relation_map_cache.get(to)
 
         if not mapper:
-            self.relation_map_cache[field] = mapper = RelatedMapper(handler=self, row_session=row_session, field=field)
+            self.relation_map_cache[field] = mapper = RelatedMapper(
+                handler=self, row_session=row_session, field=field
+            )
         if reverse:
             if multi:
                 return mapper.map_instances(value)
@@ -635,6 +697,10 @@ class DataImporter(object):
 
             file_content = StringIO()
             file_content.write(
-                loader.render_to_string(template_name=example_file.template_name, context={}, request=request)
+                loader.render_to_string(
+                    template_name=example_file.template_name,
+                    context={},
+                    request=request,
+                )
             )
             return file_content

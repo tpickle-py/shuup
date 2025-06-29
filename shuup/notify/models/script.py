@@ -20,12 +20,20 @@ from shuup.utils.analog import define_log_model
 
 @python_2_unicode_compatible
 class Script(models.Model):
-    shop = models.ForeignKey(on_delete=models.CASCADE, to="shuup.Shop", verbose_name=_("shop"))
-    event_identifier = models.CharField(max_length=64, blank=False, db_index=True, verbose_name=_("event identifier"))
+    shop = models.ForeignKey(
+        on_delete=models.CASCADE, to="shuup.Shop", verbose_name=_("shop")
+    )
+    event_identifier = models.CharField(
+        max_length=64, blank=False, db_index=True, verbose_name=_("event identifier")
+    )
     identifier = InternalIdentifierField(unique=True)
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, verbose_name=_("created on")
+    )
     name = models.CharField(max_length=64, verbose_name=_("name"))
-    enabled = models.BooleanField(default=False, db_index=True, verbose_name=_("enabled"))
+    enabled = models.BooleanField(
+        default=False, db_index=True, verbose_name=_("enabled")
+    )
     _step_data = JSONField(default=[], db_column="step_data")
     template = models.CharField(
         max_length=64,

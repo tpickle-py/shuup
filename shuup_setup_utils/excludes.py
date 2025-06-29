@@ -34,7 +34,7 @@ def walk_excl(path, **kwargs):
     """
     Do os.walk dropping our excluded directories on the way.
     """
-    for (dirpath, dirnames, filenames) in os.walk(path, **kwargs):
+    for dirpath, dirnames, filenames in os.walk(path, **kwargs):
         dirnames[:] = [dn for dn in dirnames if not is_excluded_filename(dn)]
         yield (dirpath, dirnames, filenames)
 

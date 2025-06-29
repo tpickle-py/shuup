@@ -6,15 +6,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0039_alter_names'),
+        ("shuup", "0039_alter_names"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='created_on',
-            field=models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='created on'),
+            model_name="order",
+            name="created_on",
+            field=models.DateTimeField(
+                auto_now_add=True, db_index=True, verbose_name="created on"
+            ),
         ),
     ]

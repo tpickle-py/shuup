@@ -26,7 +26,10 @@ from shuup.testing.modules.sample_data.factories import (
     create_sample_category,
     create_sample_product,
 )
-from shuup.testing.modules.sample_data.forms import ConsolidateObjectsForm, SampleObjectsWizardForm
+from shuup.testing.modules.sample_data.forms import (
+    ConsolidateObjectsForm,
+    SampleObjectsWizardForm,
+)
 from shuup.utils.django_compat import reverse
 
 
@@ -46,16 +49,23 @@ class ConsolidateSampleObjectsView(FormView):
 
         # uninstall products
         if form.cleaned_data.get("products", False):
-            for product in Product.objects.filter(pk__in=sample_manager.get_installed_products(shop)):
+            for product in Product.objects.filter(
+                pk__in=sample_manager.get_installed_products(shop)
+            ):
                 product.soft_delete()
 
         # uninstall categories
         if form.cleaned_data.get("categories", False):
-            for category in Category.objects.filter(pk__in=sample_manager.get_installed_categories(shop)):
+            for category in Category.objects.filter(
+                pk__in=sample_manager.get_installed_categories(shop)
+            ):
                 category.soft_delete()
 
         # uninstall carousel
-        if "shuup.front.apps.carousel" in settings.INSTALLED_APPS and form.cleaned_data.get("carousel", False):
+        if (
+            "shuup.front.apps.carousel" in settings.INSTALLED_APPS
+            and form.cleaned_data.get("carousel", False)
+        ):
             carousel = sample_manager.get_installed_carousel(shop)
             if carousel:
                 from shuup.front.apps.carousel.models import Carousel
@@ -83,7 +93,9 @@ class SampleObjectsWizardPane(WizardPane):
     identifier = "sample"
     icon = "shuup_admin/img/configure.png"
     title = _("Sample Data")
-    text = _("To start shopping right now, please install some sample data into your shop")
+    text = _(
+        "To start shopping right now, please install some sample data into your shop"
+    )
 
     def visible(self):
         return not configuration.get(None, "sample_data_wizard_completed", False)
@@ -167,7 +179,11 @@ class SampleObjectsWizardPane(WizardPane):
 
         for category_data in BUSINESS_SEGMENTS[business_segment]["categories"]:
             category = create_sample_category(
-                category_data["name"], category_data["description"], business_segment, category_data["image"], shop
+                category_data["name"],
+                category_data["description"],
+                business_segment,
+                category_data["image"],
+                shop,
             )
             categories.append(category.pk)
 
@@ -185,7 +201,11 @@ class SampleObjectsWizardPane(WizardPane):
 
         for product_data in BUSINESS_SEGMENTS[business_segment]["products"]:
             product = create_sample_product(
-                product_data["name"], product_data["description"], business_segment, product_data["image"], shop
+                product_data["name"],
+                product_data["description"],
+                business_segment,
+                product_data["image"],
+                shop,
             )
             products.append(product.pk)
 

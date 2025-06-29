@@ -27,7 +27,9 @@ def test_list_view(rf, admin_user):
     child_category.shops.add(shop)
 
     view = load("shuup.admin.modules.categories.views:CategoryListView").as_view()
-    request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user
+    )
     response = view(request)
     assert 200 <= response.status_code < 300
 
@@ -44,4 +46,6 @@ def _get_item_data(data, item):
 
 
 def _get_abstract_header(item_data):
-    return [item for item in item_data["_abstract"] if item.get("class", "") == "header"][0]["text"]
+    return [
+        item for item in item_data["_abstract"] if item.get("class", "") == "header"
+    ][0]["text"]

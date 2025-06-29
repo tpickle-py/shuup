@@ -6,20 +6,25 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('discounts', '0003_help-text-improvements'),
+        ("discounts", "0003_help-text-improvements"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='availabilityexception',
-            name='end_datetime',
-            field=models.DateTimeField(help_text='Set to restrict the availability exception to be available only until a certain date and time.', verbose_name='end until'),
+            model_name="availabilityexception",
+            name="end_datetime",
+            field=models.DateTimeField(
+                help_text="Set to restrict the availability exception to be available only until a certain date and time.",
+                verbose_name="end until",
+            ),
         ),
         migrations.AlterField(
-            model_name='availabilityexception',
-            name='start_datetime',
-            field=models.DateTimeField(help_text='Set to restrict the availability exception to be available only after a certain date and time.', verbose_name='start since'),
+            model_name="availabilityexception",
+            name="start_datetime",
+            field=models.DateTimeField(
+                help_text="Set to restrict the availability exception to be available only after a certain date and time.",
+                verbose_name="start since",
+            ),
         ),
     ]

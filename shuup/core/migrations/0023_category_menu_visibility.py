@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0022_add_favicon'),
+        ("shuup", "0022_add_favicon"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='category',
-            name='visible_in_menu',
+            model_name="category",
+            name="visible_in_menu",
             field=models.BooleanField(default=True),
         ),
     ]

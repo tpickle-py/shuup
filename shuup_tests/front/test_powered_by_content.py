@@ -19,7 +19,9 @@ def test_edit_in_admin_url(rf):
     get_default_shop()
     soup = _get_front_soup(rf)
     _check_powered_by_href(soup, "https://shuup.com")
-    with override_settings(SHUUP_FRONT_POWERED_BY_CONTENT='<p class="powered"><a href="123">456</a></p>'):
+    with override_settings(
+        SHUUP_FRONT_POWERED_BY_CONTENT='<p class="powered"><a href="123">456</a></p>'
+    ):
         soup = _get_front_soup(rf)
         _check_powered_by_href(soup, "123")
 

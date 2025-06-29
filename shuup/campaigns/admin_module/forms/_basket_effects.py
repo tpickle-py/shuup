@@ -71,7 +71,9 @@ class FreeProductLineForm(BaseEffectModelForm):
                     _("Product %(product)s is not available in the %(shop)s shop.")
                     % {"product": product.name, "shop": campaign.shop.name}
                 )
-            for error in shop_product.get_quantity_errors(self.cleaned_data["quantity"], False):
+            for error in shop_product.get_quantity_errors(
+                self.cleaned_data["quantity"], False
+            ):
                 raise ValidationError({"quantity": error.message})
 
 

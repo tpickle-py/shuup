@@ -25,13 +25,17 @@ from shuup.testing.factories import (
     get_default_supplier,
 )
 
-pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
+pytestmark = pytest.mark.skipif(
+    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
+)
 
 
 def create_orderable_product(name, sku, price):
     supplier = get_default_supplier()
     shop = get_default_shop()
-    product = create_product(sku=sku, shop=shop, supplier=supplier, default_price=price, name=name)
+    product = create_product(
+        sku=sku, shop=shop, supplier=supplier, default_price=price, name=name
+    )
     return product
 
 
@@ -44,7 +48,9 @@ def test_browser_checkout_addresses_horizontal(browser, live_server, reindex_cat
     sm = get_default_shipping_method()
     product = create_orderable_product(product_name, "test-123", price=100)
     reindex_catalog()
-    OrderStatus.objects.create(identifier="initial", role=OrderStatusRole.INITIAL, name="initial", default=True)
+    OrderStatus.objects.create(
+        identifier="initial", role=OrderStatusRole.INITIAL, name="initial", default=True
+    )
 
     # initialize test and go to front page
     browser = initialize_front_browser_test(browser, live_server)
@@ -55,14 +61,22 @@ def test_browser_checkout_addresses_horizontal(browser, live_server, reindex_cat
     wait_until_condition(browser, lambda x: x.is_text_present(product_name))
 
     click_element(browser, "#product-%s" % product.pk)  # open product from product list
-    click_element(browser, "#add-to-cart-button-%s" % product.pk)  # add product to basket
+    click_element(
+        browser, "#add-to-cart-button-%s" % product.pk
+    )  # add product to basket
     wait_until_appeared(browser, ".cover-wrap")
     wait_until_disappeared(browser, ".cover-wrap")
 
-    click_element(browser, "#navigation-basket-partial")  # open upper basket navigation menu
+    click_element(
+        browser, "#navigation-basket-partial"
+    )  # open upper basket navigation menu
     click_element(browser, "a[href='/basket/']")  # click the link to basket in dropdown
-    wait_until_condition(browser, lambda x: x.is_text_present("Shopping cart"))  # we are in basket page
-    wait_until_condition(browser, lambda x: x.is_text_present(product_name))  # product is in basket
+    wait_until_condition(
+        browser, lambda x: x.is_text_present("Shopping cart")
+    )  # we are in basket page
+    wait_until_condition(
+        browser, lambda x: x.is_text_present(product_name)
+    )  # product is in basket
 
     click_element(browser, "a[href='/checkout/']")  # click link that leads to checkout
 
@@ -101,8 +115,12 @@ def test_browser_checkout_addresses_horizontal(browser, live_server, reindex_cat
     browser.find_by_css("label[for='same_as_billing']").first.click()
 
     # check whether fields are disable and the values are equals
-    wait_until_condition(browser, lambda x: x.find_by_name("shipping-region_code").has_class("disabled"))
-    wait_until_condition(browser, lambda x: x.find_by_name("shipping-country").has_class("disabled"))
+    wait_until_condition(
+        browser, lambda x: x.find_by_name("shipping-region_code").has_class("disabled")
+    )
+    wait_until_condition(
+        browser, lambda x: x.find_by_name("shipping-country").has_class("disabled")
+    )
     billing_country = browser.find_by_name("billing-country").first
     shipping_country = browser.find_by_name("shipping-country").first
     wait_until_appeared(browser, "select[name='billing-region_code']")
@@ -114,8 +132,13 @@ def test_browser_checkout_addresses_horizontal(browser, live_server, reindex_cat
 
     # Actually, send to Canada
     browser.find_by_css("label[for='same_as_billing']").first.click()
-    wait_until_condition(browser, lambda x: not x.find_by_name("shipping-region_code").has_class("disabled"))
-    wait_until_condition(browser, lambda x: not x.find_by_name("shipping-country").has_class("disabled"))
+    wait_until_condition(
+        browser,
+        lambda x: not x.find_by_name("shipping-region_code").has_class("disabled"),
+    )
+    wait_until_condition(
+        browser, lambda x: not x.find_by_name("shipping-country").has_class("disabled")
+    )
     browser.fill("shipping-city", customer_city3)
     browser.select("shipping-country", customer_country3)
     wait_until_appeared(browser, "select[name='shipping-region_code']")
@@ -124,9 +147,15 @@ def test_browser_checkout_addresses_horizontal(browser, live_server, reindex_cat
     # continue
     click_element(browser, "#addresses button[type='submit']")
 
-    wait_until_condition(browser, lambda x: x.is_text_present("Checkout: Shipping & Payment"))
-    wait_until_condition(browser, lambda x: x.is_text_present(sm.name))  # shipping method name is present
-    wait_until_condition(browser, lambda x: x.is_text_present(pm.name))  # payment method name is present
+    wait_until_condition(
+        browser, lambda x: x.is_text_present("Checkout: Shipping & Payment")
+    )
+    wait_until_condition(
+        browser, lambda x: x.is_text_present(sm.name)
+    )  # shipping method name is present
+    wait_until_condition(
+        browser, lambda x: x.is_text_present(pm.name)
+    )  # payment method name is present
 
     # back to address phase, we want to send to Brazil nstead
     address_link = browser.find_by_text("1. Addresses")
@@ -157,9 +186,13 @@ def test_browser_checkout_addresses_horizontal(browser, live_server, reindex_cat
 
     # continue
     click_element(browser, "#addresses button[type='submit']")
-    wait_until_condition(browser, lambda x: x.is_text_present("Checkout: Shipping & Payment"))
+    wait_until_condition(
+        browser, lambda x: x.is_text_present("Checkout: Shipping & Payment")
+    )
 
-    click_element(browser, ".btn.btn-primary.btn-lg.pull-right")  # click "continue" on methods page
+    click_element(
+        browser, ".btn.btn-primary.btn-lg.pull-right"
+    )  # click "continue" on methods page
     wait_until_condition(
         browser, lambda x: x.is_text_present("Checkout: Confirmation")
     )  # we are indeed in confirmation page
@@ -178,15 +211,21 @@ def test_browser_checkout_addresses_horizontal(browser, live_server, reindex_cat
     wait_until_condition(browser, lambda x: x.is_text_present("Canada"))
     wait_until_condition(browser, lambda x: x.is_text_present("Brazil"))
 
-    browser.execute_script('document.getElementById("id_accept_terms").checked=true')  # click accept terms
+    browser.execute_script(
+        'document.getElementById("id_accept_terms").checked=true'
+    )  # click accept terms
     click_element(browser, ".btn.btn-primary.btn-lg")
-    wait_until_condition(browser, lambda x: x.is_text_present("Thank you for your order!"))
+    wait_until_condition(
+        browser, lambda x: x.is_text_present("Thank you for your order!")
+    )
 
 
 @pytest.mark.urls("shuup.testing.single_page_checkout_test_urls")
 @pytest.mark.django_db
 def test_browser_checkout_addresses_vertical(browser, live_server, reindex_catalog):
-    with override_settings(SHUUP_CHECKOUT_VIEW_SPEC=("shuup.front.views.checkout:SinglePageCheckoutView")):
+    with override_settings(
+        SHUUP_CHECKOUT_VIEW_SPEC=("shuup.front.views.checkout:SinglePageCheckoutView")
+    ):
         # initialize
         product_name = "Test Product"
         get_default_shop()
@@ -194,27 +233,48 @@ def test_browser_checkout_addresses_vertical(browser, live_server, reindex_catal
         get_default_shipping_method()
         product = create_orderable_product(product_name, "test-123", price=100)
         reindex_catalog()
-        OrderStatus.objects.create(identifier="initial", role=OrderStatusRole.INITIAL, name="initial", default=True)
+        OrderStatus.objects.create(
+            identifier="initial",
+            role=OrderStatusRole.INITIAL,
+            name="initial",
+            default=True,
+        )
 
         # initialize test and go to front page
         browser = initialize_front_browser_test(browser, live_server)
         # check that front page actually loaded
-        wait_until_condition(browser, lambda x: x.is_text_present("Welcome to Default!"))
+        wait_until_condition(
+            browser, lambda x: x.is_text_present("Welcome to Default!")
+        )
         wait_until_condition(browser, lambda x: x.is_text_present("Newest Products"))
         wait_until_condition(browser, lambda x: x.is_text_present(product_name))
 
-        click_element(browser, "#product-%s" % product.pk)  # open product from product list
-        click_element(browser, "#add-to-cart-button-%s" % product.pk)  # add product to basket
+        click_element(
+            browser, "#product-%s" % product.pk
+        )  # open product from product list
+        click_element(
+            browser, "#add-to-cart-button-%s" % product.pk
+        )  # add product to basket
 
         wait_until_appeared(browser, ".cover-wrap")
         wait_until_disappeared(browser, ".cover-wrap")
 
-        click_element(browser, "#navigation-basket-partial")  # open upper basket navigation menu
-        click_element(browser, "a[href='/basket/']")  # click the link to basket in dropdown
-        wait_until_condition(browser, lambda x: x.is_text_present("Shopping cart"))  # we are in basket page
-        wait_until_condition(browser, lambda x: x.is_text_present(product_name))  # product is in basket
+        click_element(
+            browser, "#navigation-basket-partial"
+        )  # open upper basket navigation menu
+        click_element(
+            browser, "a[href='/basket/']"
+        )  # click the link to basket in dropdown
+        wait_until_condition(
+            browser, lambda x: x.is_text_present("Shopping cart")
+        )  # we are in basket page
+        wait_until_condition(
+            browser, lambda x: x.is_text_present(product_name)
+        )  # product is in basket
 
-        click_element(browser, "a[href='/checkout/']")  # click link that leads to checkout
+        click_element(
+            browser, "a[href='/checkout/']"
+        )  # click link that leads to checkout
         wait_until_appeared(browser, "h4.panel-title")
 
         customer_name = "Test Tester"
@@ -277,7 +337,10 @@ def test_browser_checkout_addresses_vertical(browser, live_server, reindex_catal
         browser.find_by_css("label[for='same_as_billing']").first.click()
 
         # region field should be enabled
-        wait_until_condition(browser, lambda x: not x.find_by_name("shipping-region_code").has_class("disabled"))
+        wait_until_condition(
+            browser,
+            lambda x: not x.find_by_name("shipping-region_code").has_class("disabled"),
+        )
 
         # Fill all shipping address fields - Argentina address
         browser.fill("shipping-name", customer_name)
@@ -302,7 +365,11 @@ def test_browser_checkout_addresses_vertical(browser, live_server, reindex_catal
         wait_until_condition(browser, lambda x: x.is_text_present("Argentina"))
         wait_until_condition(browser, lambda x: x.is_text_present("United States"))
 
-        browser.execute_script('document.getElementById("id_accept_terms").checked=true')  # click accept terms
+        browser.execute_script(
+            'document.getElementById("id_accept_terms").checked=true'
+        )  # click accept terms
         click_element(browser, ".btn.btn-primary.btn-lg")  # click "place order"
 
-        wait_until_condition(browser, lambda x: x.is_text_present("Thank you for your order!"))  # order succeeded
+        wait_until_condition(
+            browser, lambda x: x.is_text_present("Thank you for your order!")
+        )  # order succeeded

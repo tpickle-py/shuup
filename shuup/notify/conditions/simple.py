@@ -18,7 +18,9 @@ from shuup.utils.text import camel_case
 
 class NonEmpty(Condition):
     identifier = "non_empty"
-    description = _("Check whether the bound value `value` exists and is non-empty and non-zero.")
+    description = _(
+        "Check whether the bound value `value` exists and is non-empty and non-zero."
+    )
     name = _("Non-Empty")
     v = Binding("Value")
 
@@ -78,7 +80,11 @@ def construct_simple(base, var_type):
     class_ns = {
         "bindings": {
             "v1": Binding(suffixed_type_name("1"), type=var_type),
-            "v2": Binding(suffixed_type_name("2"), type=var_type, constant_use=ConstantUse.VARIABLE_OR_CONSTANT),
+            "v2": Binding(
+                suffixed_type_name("2"),
+                type=var_type,
+                constant_use=ConstantUse.VARIABLE_OR_CONSTANT,
+            ),
         },
         "identifier": identifier,
     }

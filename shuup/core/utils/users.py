@@ -74,20 +74,31 @@ def send_user_reset_password_email(
     email_template_name=None,
     from_email=None,
 ):
-
     # trigger the signal
     handlers = user_reset_password_requested.send(
-        sender=type(user), shop=shop, user=user, reset_domain_url=reset_domain_url, reset_url_name=reset_url_name
+        sender=type(user),
+        shop=shop,
+        user=user,
+        reset_domain_url=reset_domain_url,
+        reset_url_name=reset_url_name,
     )
     # from the registered handlers, check those which
     # properly handled the signal
     handlers_results = [handler[1] for handler in handlers]
 
     # no handler actually handled the signal, fallback to manual email template
-    if not any(handlers_results) and token_generator and subject_template_name and email_template_name:
+    if (
+        not any(handlers_results)
+        and token_generator
+        and subject_template_name
+        and email_template_name
+    ):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = token_generator.make_token(user)
-        recovery_url = urljoin(reset_domain_url, reverse(reset_url_name, kwargs=dict(uidb64=uid, token=token)))
+        recovery_url = urljoin(
+            reset_domain_url,
+            reverse(reset_url_name, kwargs=dict(uidb64=uid, token=token)),
+        )
         context = {
             "site_name": shop.public_name,
             "uid": uid,
@@ -96,8 +107,12 @@ def send_user_reset_password_email(
             "recovery_url": recovery_url,
         }
         subject = loader.render_to_string(subject_template_name, context)
-        subject = "".join(subject.splitlines())  # Email subject *must not* contain newlines
+        subject = "".join(
+            subject.splitlines()
+        )  # Email subject *must not* contain newlines
         body = loader.render_to_string(email_template_name, context)
-        email = EmailMessage(from_email=from_email, subject=subject, body=body, to=[user.email])
+        email = EmailMessage(
+            from_email=from_email, subject=subject, body=body, to=[user.email]
+        )
         email.content_subtype = settings.SHUUP_AUTH_EMAIL_CONTENT_SUBTYPE
         email.send()

@@ -23,7 +23,12 @@ from shuup.core.models import (
     ProductAttribute,
 )
 from shuup.core.models._attributes import NoSuchAttributeHere
-from shuup.testing.factories import ATTR_SPECS, create_product, get_default_attribute_set, get_default_product
+from shuup.testing.factories import (
+    ATTR_SPECS,
+    create_product,
+    get_default_attribute_set,
+    get_default_product,
+)
 
 
 def _populate_applied_attribute(aa):
@@ -31,11 +36,15 @@ def _populate_applied_attribute(aa):
         aa.value = True
         aa.save()
         assert aa.value is True, "Truth works"
-        assert aa.untranslated_string_value == "1", "Integer attributes save string representations"
+        assert aa.untranslated_string_value == "1", (
+            "Integer attributes save string representations"
+        )
         aa.value = not 42  # (but it could be something else)
         aa.save()
         assert aa.value is False, "Lies work"
-        assert aa.untranslated_string_value == "0", "Integer attributes save string representations"
+        assert aa.untranslated_string_value == "0", (
+            "Integer attributes save string representations"
+        )
         aa.value = None
         aa.save()
         assert aa.value is None, "None works"
@@ -46,26 +55,34 @@ def _populate_applied_attribute(aa):
         aa.value = 320.51
         aa.save()
         assert aa.value == 320, "Integer attributes get rounded down"
-        assert aa.untranslated_string_value == "320", "Integer attributes save string representations"
+        assert aa.untranslated_string_value == "320", (
+            "Integer attributes save string representations"
+        )
         return
 
     if aa.attribute.type == AttributeType.DECIMAL:
         aa.value = Decimal("0.636")  # Surface pressure of Mars
         aa.save()
         assert aa.value * 1000 == 636, "Decimals work like they should"
-        assert aa.untranslated_string_value == "0.636", "Decimal attributes save string representations"
+        assert aa.untranslated_string_value == "0.636", (
+            "Decimal attributes save string representations"
+        )
         return
 
     if aa.attribute.type == AttributeType.TIMEDELTA:
         aa.value = 86400
         aa.save()
         assert aa.value.days == 1, "86,400 seconds is one day"
-        assert aa.untranslated_string_value == "86400", "Timedeltas are seconds as strings"
+        assert aa.untranslated_string_value == "86400", (
+            "Timedeltas are seconds as strings"
+        )
 
         aa.value = datetime.timedelta(days=4)
         aa.save()
         assert aa.value.days == 4, "4 days remain as 4 days"
-        assert aa.untranslated_string_value == "345600", "Timedeltas are still seconds as strings"
+        assert aa.untranslated_string_value == "345600", (
+            "Timedeltas are still seconds as strings"
+        )
         return
 
     if aa.attribute.type == AttributeType.UNTRANSLATED_STRING:
@@ -90,9 +107,12 @@ def _populate_applied_attribute(aa):
                 aa.save()
                 assert aa.value == text, "Translated strings work"
             for language_code, text in versions.items():
-                assert aa.safe_translation_getter("translated_string_value", language_code=language_code) == text, (
-                    "%s translation is safe" % language_code
-                )
+                assert (
+                    aa.safe_translation_getter(
+                        "translated_string_value", language_code=language_code
+                    )
+                    == text
+                ), "%s translation is safe" % language_code
 
             aa.set_current_language("xx")
             assert aa.value == "", "untranslated version yields an empty string"
@@ -102,7 +122,9 @@ def _populate_applied_attribute(aa):
     if aa.attribute.type == AttributeType.DATE:
         aa.value = "2014-01-01"
         assert aa.value == datetime.date(2014, 1, 1), "Date parsing works"
-        assert aa.untranslated_string_value == "2014-01-01", "Dates are saved as strings"
+        assert aa.untranslated_string_value == "2014-01-01", (
+            "Dates are saved as strings"
+        )
         return
 
     if aa.attribute.type == AttributeType.DATETIME:
@@ -112,19 +134,29 @@ def _populate_applied_attribute(aa):
         aa.value = dt
         assert aa.value.toordinal() == 729248, "Date assignment works"
         assert aa.value.time().hour == 14, "The clock still works"
-        assert aa.untranslated_string_value == dt.isoformat(), "Datetimes are saved as strings too"
+        assert aa.untranslated_string_value == dt.isoformat(), (
+            "Datetimes are saved as strings too"
+        )
         return
 
     if aa.attribute.type == AttributeType.CHOICES:
-        option_a = AttributeChoiceOption.objects.create(attribute=aa.attribute, name="Option A")
-        option_b = AttributeChoiceOption.objects.create(attribute=aa.attribute, name="Option B")
-        option_c = AttributeChoiceOption.objects.create(attribute=aa.attribute, name="Option C")
+        option_a = AttributeChoiceOption.objects.create(
+            attribute=aa.attribute, name="Option A"
+        )
+        option_b = AttributeChoiceOption.objects.create(
+            attribute=aa.attribute, name="Option B"
+        )
+        option_c = AttributeChoiceOption.objects.create(
+            attribute=aa.attribute, name="Option C"
+        )
         aa.value = [option_a, option_b.pk, option_c.name]
         aa.save()
         assert aa.value == "Option A; Option B; Option C"
         return
 
-    raise NotImplementedError("Error! Not implemented: populating %s" % aa.attribute.type)  # pragma: no cover
+    raise NotImplementedError(
+        "Error! Not implemented: populating %s" % aa.attribute.type
+    )  # pragma: no cover
 
 
 @pytest.mark.django_db
@@ -138,9 +170,13 @@ def test_applied_attributes():
         if not attr.is_translated:
             product.set_attribute_value(attr.identifier, pa.value)
 
-    assert product.get_attribute_value("bogomips") == 320, "integer attribute loaded neatly"
+    assert product.get_attribute_value("bogomips") == 320, (
+        "integer attribute loaded neatly"
+    )
     product.set_attribute_value("bogomips", 480)
-    assert product.get_attribute_value("bogomips") == 480, "integer attribute updated neatly"
+    assert product.get_attribute_value("bogomips") == 480, (
+        "integer attribute updated neatly"
+    )
     Product.cache_attributes_for_targets(
         applied_attr_cls=ProductAttribute,
         targets=[product],
@@ -151,17 +187,22 @@ def test_applied_attributes():
         get_language(),
         "bogomips",
     ) in product._attr_cache, "integer attribute in cache"
-    assert product.get_attribute_value("bogomips") == 480, "integer attribute value in cache"
-    assert (
-        product.get_attribute_value("ba:gelmips", default="Britta") == "Britta"
-    ), "non-existent attributes return default value"
-    assert product._attr_cache[(get_language(), "ba:gelmips")] is NoSuchAttributeHere, "cache miss saved"
-    attr_info = product.get_all_attribute_info(
-        language=get_language(), visibility_mode=AttributeVisibility.SHOW_ON_PRODUCT_PAGE
+    assert product.get_attribute_value("bogomips") == 480, (
+        "integer attribute value in cache"
     )
-    assert set(attr_info.keys()) <= set(
-        a["identifier"] for a in ATTR_SPECS
-    ), "get_all_attribute_info gets all attribute info"
+    assert product.get_attribute_value("ba:gelmips", default="Britta") == "Britta", (
+        "non-existent attributes return default value"
+    )
+    assert product._attr_cache[(get_language(), "ba:gelmips")] is NoSuchAttributeHere, (
+        "cache miss saved"
+    )
+    attr_info = product.get_all_attribute_info(
+        language=get_language(),
+        visibility_mode=AttributeVisibility.SHOW_ON_PRODUCT_PAGE,
+    )
+    assert set(attr_info.keys()) <= set(a["identifier"] for a in ATTR_SPECS), (
+        "get_all_attribute_info gets all attribute info"
+    )
 
 
 @pytest.mark.django_db
@@ -191,7 +232,11 @@ def test_get_set_attribute():
 def test_get_choice_attribute():
     product = create_product("ATTR_TEST")
     attribute = Attribute.objects.create(
-        identifier="choices", type=AttributeType.CHOICES, min_choices=1, max_choices=10, name="Options"
+        identifier="choices",
+        type=AttributeType.CHOICES,
+        min_choices=1,
+        max_choices=10,
+        name="Options",
     )
     product.type.attributes.add(attribute)
     option1 = AttributeChoiceOption.objects.create(attribute=attribute, name="Option 1")

@@ -10,7 +10,11 @@ def move_to_multiple_modules(apps, schema_editor):
     SupplierModuleModel = apps.get_model("shuup", "SupplierModule")
 
     for supplier in Supplier.objects.exclude(module_identifier=""):
-        supplier.supplier_modules.add(SupplierModuleModel.objects.get(module_identifier=supplier.module_identifier))
+        supplier.supplier_modules.add(
+            SupplierModuleModel.objects.get(
+                module_identifier=supplier.module_identifier
+            )
+        )
 
 
 def move_to_single_module(apps, schema_editor):
@@ -22,11 +26,8 @@ def move_to_single_module(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0088_add_multiple_supplier_modules'),
+        ("shuup", "0088_add_multiple_supplier_modules"),
     ]
 
-    operations = [
-        migrations.RunPython(move_to_multiple_modules, move_to_single_module)
-    ]
+    operations = [migrations.RunPython(move_to_multiple_modules, move_to_single_module)]

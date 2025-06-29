@@ -37,7 +37,9 @@ def test_get_placeholder_layouts():
 
     provides = []
     with override_provides("xtheme_layout", provides):
-        assert len(vc.get_placeholder_layouts(context, placeholder_name)) == 1  # Default layout
+        assert (
+            len(vc.get_placeholder_layouts(context, placeholder_name)) == 1
+        )  # Default layout
 
     provides.append("shuup.xtheme.layout.ProductLayout")
     with override_provides("xtheme_layout", provides):
@@ -70,7 +72,9 @@ def test_default_layout():
 @pytest.mark.django_db
 def test_product_layout():
     vc = _get_basic_view_config()
-    product = factories.create_product("test", shop=factories.get_default_shop(), name="Test product name")
+    product = factories.create_product(
+        "test", shop=factories.get_default_shop(), name="Test product name"
+    )
 
     placeholder_name = "wow"
     # Context doesn't validate with the product layout
@@ -95,8 +99,12 @@ def test_product_layout():
 @pytest.mark.django_db
 def test_product_detail_view():
     vc = _get_basic_view_config(view_name="ProductDetailView")
-    product = factories.create_product("test", shop=factories.get_default_shop(), name="Test product name")
-    product2 = factories.create_product("test2", shop=factories.get_default_shop(), name="Test product name 2")
+    product = factories.create_product(
+        "test", shop=factories.get_default_shop(), name="Test product name"
+    )
+    product2 = factories.create_product(
+        "test2", shop=factories.get_default_shop(), name="Test product name 2"
+    )
     placeholder_name = "product_extra_1"
     context = {"product": product}
     layout = vc.get_placeholder_layout(ProductLayout, placeholder_name, context=context)
@@ -105,12 +113,16 @@ def test_product_detail_view():
 
     # Also let's confirm that the plugin visibility works with smart client
     c = SmartClient()
-    soup = c.soup(reverse("shuup:product", kwargs={"pk": product.id, "slug": product.slug}))
+    soup = c.soup(
+        reverse("shuup:product", kwargs={"pk": product.id, "slug": product.slug})
+    )
     product_details = soup.find("div", {"class": "product-basic-details"})
     assert plugin_text in product_details.text
 
     c = SmartClient()
-    soup = c.soup(reverse("shuup:product", kwargs={"pk": product2.id, "slug": product2.slug}))
+    soup = c.soup(
+        reverse("shuup:product", kwargs={"pk": product2.id, "slug": product2.slug})
+    )
     product_details = soup.find("div", {"class": "product-basic-details"})
     assert plugin_text not in product_details.text
 
@@ -122,7 +134,9 @@ def test_category_layout():
 
     placeholder_name = "japanese"
     context = {"category": category}
-    layout = vc.get_placeholder_layout(CategoryLayout, placeholder_name, context=context)
+    layout = vc.get_placeholder_layout(
+        CategoryLayout, placeholder_name, context=context
+    )
     assert isinstance(layout, CategoryLayout)
     assert layout.get_help_text({}) == ""  # Invalid context for help text
     assert category.name in layout.get_help_text(context)
@@ -137,15 +151,30 @@ def test_anon_layout():
 
     placeholder_name = "hip hop"
     context = {"request": get_request()}  # By default user is anonymous
-    layout = vc.get_placeholder_layout(AnonymousContactLayout, placeholder_name, context=context)
+    layout = vc.get_placeholder_layout(
+        AnonymousContactLayout, placeholder_name, context=context
+    )
     assert isinstance(layout, AnonymousContactLayout)
     help_text = layout.get_help_text({})  # Same help text with or without the context
     assert layout.get_help_text(context) == help_text
 
     # Invalid contexts for rest of the contact group layouts
-    assert vc.get_placeholder_layout(ContactLayout, placeholder_name, context=context) is None
-    assert vc.get_placeholder_layout(PersonContactLayout, placeholder_name, context=context) is None
-    assert vc.get_placeholder_layout(CompanyContactLayout, placeholder_name, context=context) is None
+    assert (
+        vc.get_placeholder_layout(ContactLayout, placeholder_name, context=context)
+        is None
+    )
+    assert (
+        vc.get_placeholder_layout(
+            PersonContactLayout, placeholder_name, context=context
+        )
+        is None
+    )
+    assert (
+        vc.get_placeholder_layout(
+            CompanyContactLayout, placeholder_name, context=context
+        )
+        is None
+    )
 
     _add_plugin_and_test_save(vc, layout, placeholder_name, context)
 
@@ -165,17 +194,34 @@ def test_contact_layout():
     assert layout.get_help_text(context) == help_text
 
     # Invalid context for anon and company layouts
-    assert vc.get_placeholder_layout(AnonymousContactLayout, placeholder_name, context=context) is None
-    assert vc.get_placeholder_layout(CompanyContactLayout, placeholder_name, context=context) is None
+    assert (
+        vc.get_placeholder_layout(
+            AnonymousContactLayout, placeholder_name, context=context
+        )
+        is None
+    )
+    assert (
+        vc.get_placeholder_layout(
+            CompanyContactLayout, placeholder_name, context=context
+        )
+        is None
+    )
 
     # Valid contexts for anon and person contact layout
-    assert vc.get_placeholder_layout(PersonContactLayout, placeholder_name, context=context) is not None
+    assert (
+        vc.get_placeholder_layout(
+            PersonContactLayout, placeholder_name, context=context
+        )
+        is not None
+    )
 
     _add_plugin_and_test_save(vc, layout, placeholder_name, context)
 
     # Ok here we want to check that the plugin doesn't end up to the
     # person contact placeholders
-    person_layout = vc.get_placeholder_layout(PersonContactLayout, placeholder_name, context=context)
+    person_layout = vc.get_placeholder_layout(
+        PersonContactLayout, placeholder_name, context=context
+    )
     _assert_empty_layout(person_layout, placeholder_name)
 
 
@@ -188,23 +234,40 @@ def test_person_contact_layout():
     request = get_request()
     request.customer = person
     context = {"request": request}
-    layout = vc.get_placeholder_layout(PersonContactLayout, placeholder_name, context=context)
+    layout = vc.get_placeholder_layout(
+        PersonContactLayout, placeholder_name, context=context
+    )
     assert isinstance(layout, PersonContactLayout)
     help_text = layout.get_help_text({})  # Same help text with or without the context
     assert layout.get_help_text(context) == help_text
 
     # Invalid contexts for anon and company layouts
-    assert vc.get_placeholder_layout(AnonymousContactLayout, placeholder_name, context=context) is None
-    assert vc.get_placeholder_layout(CompanyContactLayout, placeholder_name, context=context) is None
+    assert (
+        vc.get_placeholder_layout(
+            AnonymousContactLayout, placeholder_name, context=context
+        )
+        is None
+    )
+    assert (
+        vc.get_placeholder_layout(
+            CompanyContactLayout, placeholder_name, context=context
+        )
+        is None
+    )
 
     # Valid contexts for contact layout
-    assert vc.get_placeholder_layout(ContactLayout, placeholder_name, context=context) is not None
+    assert (
+        vc.get_placeholder_layout(ContactLayout, placeholder_name, context=context)
+        is not None
+    )
 
     _add_plugin_and_test_save(vc, layout, placeholder_name, context)
 
     # Ok here we want to check that the plugin doesn't end up to the
     # contact placeholders
-    contact_layout = vc.get_placeholder_layout(ContactLayout, placeholder_name, context=context)
+    contact_layout = vc.get_placeholder_layout(
+        ContactLayout, placeholder_name, context=context
+    )
     _assert_empty_layout(contact_layout, placeholder_name)
 
 
@@ -217,23 +280,40 @@ def test_company_contact_layout():
     request = get_request()
     request.customer = company
     context = {"request": request}
-    layout = vc.get_placeholder_layout(CompanyContactLayout, placeholder_name, context=context)
+    layout = vc.get_placeholder_layout(
+        CompanyContactLayout, placeholder_name, context=context
+    )
     assert isinstance(layout, CompanyContactLayout)
     help_text = layout.get_help_text({})  # Same help text with or without the context
     assert layout.get_help_text(context) == help_text
 
     # Invalid contexts for anon and person contact layouts
-    assert vc.get_placeholder_layout(AnonymousContactLayout, placeholder_name, context=context) is None
-    assert vc.get_placeholder_layout(PersonContactLayout, placeholder_name, context=context) is None
+    assert (
+        vc.get_placeholder_layout(
+            AnonymousContactLayout, placeholder_name, context=context
+        )
+        is None
+    )
+    assert (
+        vc.get_placeholder_layout(
+            PersonContactLayout, placeholder_name, context=context
+        )
+        is None
+    )
 
     # Valid contexts for contact layout
-    assert vc.get_placeholder_layout(ContactLayout, placeholder_name, context=context) is not None
+    assert (
+        vc.get_placeholder_layout(ContactLayout, placeholder_name, context=context)
+        is not None
+    )
 
     _add_plugin_and_test_save(vc, layout, placeholder_name, context)
 
     # Ok here we want to check that the plugin doesn't end up to the
     # contact placeholders
-    contact_layout = vc.get_placeholder_layout(ContactLayout, placeholder_name, context=context)
+    contact_layout = vc.get_placeholder_layout(
+        ContactLayout, placeholder_name, context=context
+    )
     _assert_empty_layout(contact_layout, placeholder_name)
 
 
@@ -265,7 +345,9 @@ def test_index_view_with_contact_limitatons():
     # Add plugin for anons
     vc = _get_basic_view_config(view_name="IndexView")
     anon_plugin_text = "This content is only for guests"
-    layout = vc.get_placeholder_layout(AnonymousContactLayout, placeholder_name, context=context)
+    layout = vc.get_placeholder_layout(
+        AnonymousContactLayout, placeholder_name, context=context
+    )
     _add_plugin_and_test_save(vc, layout, placeholder_name, context, anon_plugin_text)
 
     # Add plugin for contact
@@ -273,20 +355,30 @@ def test_index_view_with_contact_limitatons():
     context["request"].customer = person1
     contact_plugin_text = "This content is only for users logged in"
     layout = vc.get_placeholder_layout(ContactLayout, placeholder_name, context=context)
-    _add_plugin_and_test_save(vc, layout, placeholder_name, context, contact_plugin_text)
+    _add_plugin_and_test_save(
+        vc, layout, placeholder_name, context, contact_plugin_text
+    )
 
     # Add plugin for person contacts
     vc = _get_basic_view_config(view_name="IndexView")
     person_contact_plugin_text = "This content is only for person contacts"
-    layout = vc.get_placeholder_layout(PersonContactLayout, placeholder_name, context=context)
-    _add_plugin_and_test_save(vc, layout, placeholder_name, context, person_contact_plugin_text)
+    layout = vc.get_placeholder_layout(
+        PersonContactLayout, placeholder_name, context=context
+    )
+    _add_plugin_and_test_save(
+        vc, layout, placeholder_name, context, person_contact_plugin_text
+    )
 
     # Add plugin for companies
     vc = _get_basic_view_config(view_name="IndexView")
     context["request"].customer = company
     company_plugin_text = "This content is only for companies"
-    layout = vc.get_placeholder_layout(CompanyContactLayout, placeholder_name, context=context)
-    _add_plugin_and_test_save(vc, layout, placeholder_name, context, company_plugin_text)
+    layout = vc.get_placeholder_layout(
+        CompanyContactLayout, placeholder_name, context=context
+    )
+    _add_plugin_and_test_save(
+        vc, layout, placeholder_name, context, company_plugin_text
+    )
 
     c = SmartClient()  # By default there is no user logged in
     soup = c.soup(reverse("shuup:index"))
@@ -326,15 +418,21 @@ def _get_basic_view_config(view_name="pow"):
     return ViewConfig(theme=theme, shop=shop, view_name=view_name, draft=True)
 
 
-def _add_plugin_and_test_save(view_config, layout, placeholder_name, context, plugin_text=None):
+def _add_plugin_and_test_save(
+    view_config, layout, placeholder_name, context, plugin_text=None
+):
     if not plugin_text:
         plugin_text = printable_gibberish()
     _add_basic_plugin(layout, plugin_text)
-    view_config.save_placeholder_layout(get_layout_data_key(placeholder_name, layout, context), layout)
+    view_config.save_placeholder_layout(
+        get_layout_data_key(placeholder_name, layout, context), layout
+    )
     view_config.publish()
 
     # Now refetching the layout we should get the plugin
-    layout = view_config.get_placeholder_layout(layout.__class__, placeholder_name, context=context)
+    layout = view_config.get_placeholder_layout(
+        layout.__class__, placeholder_name, context=context
+    )
     assert isinstance(layout, layout.__class__)
     _assert_layout_content_for_basic_plugin(layout, placeholder_name, plugin_text)
 
@@ -348,7 +446,17 @@ def _assert_layout_content_for_basic_plugin(layout, placeholder_name, plugin_tex
     serialized = layout.serialize()
     expected = {
         "name": placeholder_name,
-        "rows": [{"cells": [{"config": {"text": plugin_text}, "plugin": "text", "sizes": {"md": 8}}]}],
+        "rows": [
+            {
+                "cells": [
+                    {
+                        "config": {"text": plugin_text},
+                        "plugin": "text",
+                        "sizes": {"md": 8},
+                    }
+                ]
+            }
+        ],
     }
     assert bool(serialized == expected)
 

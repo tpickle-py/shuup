@@ -52,7 +52,9 @@ from shuup_tests.simple_supplier.utils import get_simple_supplier
 
 
 def check_stock_counts(supplier, product, physical, logical):
-    physical_count = supplier.get_stock_statuses([product.id])[product.id].physical_count
+    physical_count = supplier.get_stock_statuses([product.id])[
+        product.id
+    ].physical_count
     logical_count = supplier.get_stock_statuses([product.id])[product.id].logical_count
     assert physical_count == physical
     assert logical_count == logical
@@ -82,7 +84,9 @@ def test_broken_order_lines():
         OrderLine(type=OrderLineType.PRODUCT).save()
 
     with pytest.raises(ValidationError):
-        OrderLine(product=get_default_product(), type=OrderLineType.PRODUCT, supplier=None).save()
+        OrderLine(
+            product=get_default_product(), type=OrderLineType.PRODUCT, supplier=None
+        ).save()
 
     with pytest.raises(ValidationError):
         OrderLine(product=get_default_product(), type=OrderLineType.OTHER).save()
@@ -100,7 +104,9 @@ def test_line_discount():
     ol.discount_amount = order.shop.create_price(50)
     ol.base_unit_price = order.shop.create_price(40)
     ol.save()
-    order_line_tax = OrderLineTax.from_tax(get_default_tax(), ol.taxless_price.amount, order_line=ol)
+    order_line_tax = OrderLineTax.from_tax(
+        get_default_tax(), ol.taxless_price.amount, order_line=ol
+    )
     order_line_tax.save()
     ol.taxes.add(order_line_tax)
     assert ol.taxless_discount_amount == order.shop.create_price(50)
@@ -125,7 +131,9 @@ def test_line_discount_more():
     assert ol.taxless_base_unit_price == TaxlessPrice(30, currency)
     assert ol.taxless_discount_amount == TaxlessPrice(50, currency)
     assert ol.taxless_price == TaxlessPrice(5 * 30 - 50, currency)
-    order_line_tax = OrderLineTax.from_tax(get_default_tax(), ol.taxless_price.amount, order_line=ol)
+    order_line_tax = OrderLineTax.from_tax(
+        get_default_tax(), ol.taxless_price.amount, order_line=ol
+    )
     order_line_tax.save()
     ol.taxes.add(order_line_tax)
     assert ol.taxless_discount_amount == TaxlessPrice(50, currency)
@@ -142,7 +150,11 @@ def test_basic_order():
     product = get_default_product()
     supplier = get_default_supplier()
     order = create_order_with_product(
-        product, supplier=supplier, quantity=PRODUCTS_TO_SEND, taxless_base_unit_price=10, tax_rate=Decimal("0.5")
+        product,
+        supplier=supplier,
+        quantity=PRODUCTS_TO_SEND,
+        taxless_base_unit_price=10,
+        tax_rate=Decimal("0.5"),
     )
     assert order.shop.prices_include_tax is False
     price = order.shop.create_price
@@ -156,7 +168,9 @@ def test_basic_order():
     order.cache_prices()
     order.check_all_verified()
     order.save()
-    assert order.taxful_total_price == TaxfulPrice(PRODUCTS_TO_SEND * (10 + 5) - 30, currency)
+    assert order.taxful_total_price == TaxfulPrice(
+        PRODUCTS_TO_SEND * (10 + 5) - 30, currency
+    )
     shipment = order.create_shipment_of_all_products(supplier=supplier)
     assert shipment.total_products == PRODUCTS_TO_SEND, "All products were shipped"
     assert shipment.weight == product.gross_weight * PRODUCTS_TO_SEND, "Gravity works"
@@ -168,7 +182,9 @@ def test_basic_order():
         order.create_payment(Money(6, currency))
     assert order.is_paid(), "Order got paid"
     assert order.can_set_complete(), "Finalization is possible"
-    order.change_status(next_status=OrderStatus.objects.get_default_complete(), save=False)
+    order.change_status(
+        next_status=OrderStatus.objects.get_default_complete(), save=False
+    )
     assert order.is_complete(), "Finalization done"
 
     summary = order.get_tax_summary()
@@ -193,7 +209,11 @@ def test_cannot_ship_basic_order_without_supplier_module():
     supplier.stock_managed = False
     supplier.save()
     order = create_order_with_product(
-        product, supplier=supplier, quantity=PRODUCTS_TO_SEND, taxless_base_unit_price=10, tax_rate=Decimal("0.5")
+        product,
+        supplier=supplier,
+        quantity=PRODUCTS_TO_SEND,
+        taxless_base_unit_price=10,
+        tax_rate=Decimal("0.5"),
     )
     assert order.shop.prices_include_tax is False
     price = order.shop.create_price
@@ -207,7 +227,9 @@ def test_cannot_ship_basic_order_without_supplier_module():
     order.cache_prices()
     order.check_all_verified()
     order.save()
-    assert order.taxful_total_price == TaxfulPrice(PRODUCTS_TO_SEND * (10 + 5) - 30, currency)
+    assert order.taxful_total_price == TaxfulPrice(
+        PRODUCTS_TO_SEND * (10 + 5) - 30, currency
+    )
     with pytest.raises(SupplierHasNoSupplierModules):
         shipment = order.create_shipment_of_all_products(supplier=supplier)
 
@@ -237,7 +259,9 @@ def test_complex_order_tax(include_taxes):
 
     for quantity in quantities:
         total_price += quantity * price
-        add_product_to_order(order, supplier, product, quantity, price, tax.rate, pricing_context)
+        add_product_to_order(
+            order, supplier, product, quantity, price, tax.rate, pricing_context
+        )
     order.cache_prices()
     order.save()
 
@@ -255,11 +279,15 @@ def test_complex_order_tax(include_taxes):
 def test_order_verification():
     product = get_default_product()
     supplier = get_default_supplier()
-    order = create_order_with_product(product, supplier=supplier, quantity=3, n_lines=10, taxless_base_unit_price=10)
+    order = create_order_with_product(
+        product, supplier=supplier, quantity=3, n_lines=10, taxless_base_unit_price=10
+    )
     order.require_verification = True
     order.save()
     assert not order.check_all_verified(), "Nothing is verified by default"
-    order.lines.filter(pk=order.lines.filter(verified=False).first().pk).update(verified=True)
+    order.lines.filter(pk=order.lines.filter(verified=False).first().pk).update(
+        verified=True
+    )
     assert not order.check_all_verified(), "All is not verified even if something is"
     order.lines.all().update(verified=True)
     assert order.check_all_verified(), "All is now verified"
@@ -349,7 +377,9 @@ def test_refunds():
     )
     tax_rate = Decimal("0.1")
     taxless_base_unit_price = shop.create_price(200)
-    order = create_order_with_product(product, supplier, 3, taxless_base_unit_price, tax_rate, shop=shop)
+    order = create_order_with_product(
+        product, supplier, 3, taxless_base_unit_price, tax_rate, shop=shop
+    )
     order.payment_status = PaymentStatus.DEFERRED
     order.cache_prices()
     order.save()
@@ -365,28 +395,52 @@ def test_refunds():
     assert order.can_create_refund()
     assert not order.has_refunds()
 
-    order.create_refund([{"line": product_line, "quantity": 1, "amount": (product_line.taxful_price.amount / 3)}])
+    order.create_refund(
+        [
+            {
+                "line": product_line,
+                "quantity": 1,
+                "amount": (product_line.taxful_price.amount / 3),
+            }
+        ]
+    )
     assert len(order.lines.all()) == 2
     assert order.lines.last().ordering == 1
     assert order.has_refunds()
 
     # Confirm the value of the refund
     assert order.lines.last().taxful_price == -product_line.base_unit_price
-    assert order.lines.last().tax_amount == -(product_line.taxless_base_unit_price * tax_rate).amount
+    assert (
+        order.lines.last().tax_amount
+        == -(product_line.taxless_base_unit_price * tax_rate).amount
+    )
 
     # Create a refund with a parent line and amount
-    order.create_refund([{"line": product_line, "quantity": 1, "amount": product_line.taxful_price.amount / 3}])
+    order.create_refund(
+        [
+            {
+                "line": product_line,
+                "quantity": 1,
+                "amount": product_line.taxful_price.amount / 3,
+            }
+        ]
+    )
     assert len(order.lines.all()) == 3
     assert order.lines.last().ordering == 2
 
-    assert order.lines.last().taxful_price.amount == -taxless_base_unit_price.amount * (1 + tax_rate)
+    assert order.lines.last().taxful_price.amount == -taxless_base_unit_price.amount * (
+        1 + tax_rate
+    )
     assert order.lines.last().tax_amount == -taxless_base_unit_price.amount * tax_rate
 
     assert order.taxless_total_price.amount == taxless_base_unit_price.amount
-    assert order.taxful_total_price.amount == taxless_base_unit_price.amount * (1 + tax_rate)
+    assert order.taxful_total_price.amount == taxless_base_unit_price.amount * (
+        1 + tax_rate
+    )
     assert order.can_create_refund()
     assert order.get_total_tax_amount() == Money(
-        (order.taxful_total_price_value - order.taxless_total_price_value), order.currency
+        (order.taxful_total_price_value - order.taxless_total_price_value),
+        order.currency,
     )
 
     # Try to refunding remaining amount without a parent line
@@ -394,19 +448,38 @@ def test_refunds():
         order.create_refund([{"amount": taxless_base_unit_price}])
 
     # refund remaining amount
-    order.create_refund([{"line": product_line, "quantity": 1, "amount": product_line.taxful_price.amount / 3}])
+    order.create_refund(
+        [
+            {
+                "line": product_line,
+                "quantity": 1,
+                "amount": product_line.taxful_price.amount / 3,
+            }
+        ]
+    )
     assert len(order.lines.all()) == 4
     assert order.lines.last().ordering == 3
-    assert order.lines.last().taxful_price.amount == -taxless_base_unit_price.amount * (1 + tax_rate)
+    assert order.lines.last().taxful_price.amount == -taxless_base_unit_price.amount * (
+        1 + tax_rate
+    )
 
     assert not order.taxful_total_price.amount
     assert not order.can_create_refund()
     assert order.get_total_tax_amount() == Money(
-        (order.taxful_total_price_value - order.taxless_total_price_value), order.currency
+        (order.taxful_total_price_value - order.taxless_total_price_value),
+        order.currency,
     )
 
     with pytest.raises(RefundExceedsAmountException):
-        order.create_refund([{"line": product_line, "quantity": 1, "amount": taxless_base_unit_price.amount}])
+        order.create_refund(
+            [
+                {
+                    "line": product_line,
+                    "quantity": 1,
+                    "amount": taxless_base_unit_price.amount,
+                }
+            ]
+        )
 
 
 @pytest.mark.django_db
@@ -421,7 +494,9 @@ def test_refund_entire_order():
     supplier.adjust_stock(product.id, 5)
     check_stock_counts(supplier, product, 5, 5)
 
-    order = create_order_with_product(product, supplier, 2, 200, Decimal("0.24"), shop=shop)
+    order = create_order_with_product(
+        product, supplier, 2, 200, Decimal("0.24"), shop=shop
+    )
     order.cache_prices()
 
     original_total_price = order.taxful_total_price
@@ -503,7 +578,14 @@ def test_refund_with_shipment(restock):
     # Create a refund that refunds from unshipped quantity first, then shipped quantity, check stocks
     check_stock_counts(supplier, product, physical=8, logical=6)
     order.create_refund(
-        [{"line": product_line, "quantity": 3, "amount": Money(600, order.currency), "restock_products": restock}]
+        [
+            {
+                "line": product_line,
+                "quantity": 3,
+                "amount": Money(600, order.currency),
+                "restock_products": restock,
+            }
+        ]
     )
     assert product_line.refunded_quantity == 3
 
@@ -520,7 +602,14 @@ def test_refund_with_shipment(restock):
 
     # Create a second refund that refunds the last shipped quantity, check stocks
     order.create_refund(
-        [{"line": product_line, "quantity": 1, "amount": Money(200, order.currency), "restock_products": restock}]
+        [
+            {
+                "line": product_line,
+                "quantity": 1,
+                "amount": Money(200, order.currency),
+                "restock_products": restock,
+            }
+        ]
     )
     assert product_line.refunded_quantity == 4
     if restock:
@@ -574,7 +663,14 @@ def test_refund_without_shipment(restock):
     # Restock value shouldn't matter if we don't have any shipments
     product_line = order.lines.first()
     order.create_refund(
-        [{"line": product_line, "quantity": 2, "amount": Money(400, order.currency), "restock_products": restock}]
+        [
+            {
+                "line": product_line,
+                "quantity": 2,
+                "amount": Money(400, order.currency),
+                "restock_products": restock,
+            }
+        ]
     )
 
     if restock:
@@ -606,8 +702,12 @@ def test_max_refundable_amount():
     partial_refund_amount = Money(10, order.currency)
     assert partial_refund_amount.value > 0
 
-    order.create_refund([{"line": line, "quantity": 1, "amount": partial_refund_amount}])
-    assert line.max_refundable_amount == line.taxful_price.amount - partial_refund_amount
+    order.create_refund(
+        [{"line": line, "quantity": 1, "amount": partial_refund_amount}]
+    )
+    assert (
+        line.max_refundable_amount == line.taxful_price.amount - partial_refund_amount
+    )
     assert order.get_total_tax_amount() == Money(
         order.taxful_total_price_value - order.taxless_total_price_value, order.currency
     )
@@ -625,14 +725,20 @@ def test_refunds_for_discounted_order_lines():
 
     order = create_order_with_product(product, supplier, 2, 200, shop=shop)
     discount_line = OrderLine(
-        order_id=order.id, type=OrderLineType.DISCOUNT, quantity=1, discount_amount_value=Decimal("0.54321")
+        order_id=order.id,
+        type=OrderLineType.DISCOUNT,
+        quantity=1,
+        discount_amount_value=Decimal("0.54321"),
     )
     discount_line.save()
     order.lines.add(discount_line)
 
     # Lines without quantity shouldn't affect refunds
     other_line = OrderLine(
-        order=order, type=OrderLineType.OTHER, text="This random line for textual information", quantity=0
+        order=order,
+        type=OrderLineType.OTHER,
+        text="This random line for textual information",
+        quantity=0,
     )
     other_line.save()
     order.lines.add(other_line)
@@ -649,19 +755,51 @@ def test_refunds_for_discounted_order_lines():
 
     # try to refund only the product line - should fail since this would result in a negative total
     with pytest.raises(RefundExceedsAmountException):
-        order.create_refund([{"line": product_line, "quantity": 2, "amount": taxful_price_with_discount.amount}])
+        order.create_refund(
+            [
+                {
+                    "line": product_line,
+                    "quantity": 2,
+                    "amount": taxful_price_with_discount.amount,
+                }
+            ]
+        )
 
     # try to refund the product line with a negative amount
     with pytest.raises(InvalidRefundAmountException):
-        order.create_refund([{"line": product_line, "quantity": 1, "amount": -taxful_price_with_discount.amount}])
+        order.create_refund(
+            [
+                {
+                    "line": product_line,
+                    "quantity": 1,
+                    "amount": -taxful_price_with_discount.amount,
+                }
+            ]
+        )
     # try to refund the discount line with a positive amount
     with pytest.raises(InvalidRefundAmountException):
-        order.create_refund([{"line": discount_line, "quantity": 1, "amount": -discount_line.taxful_price.amount}])
+        order.create_refund(
+            [
+                {
+                    "line": discount_line,
+                    "quantity": 1,
+                    "amount": -discount_line.taxful_price.amount,
+                }
+            ]
+        )
 
     order.create_refund(
         [
-            {"line": discount_line, "quantity": 1, "amount": discount_line.taxful_price.amount},
-            {"line": product_line, "quantity": 2, "amount": taxful_price_with_discount.amount},
+            {
+                "line": discount_line,
+                "quantity": 1,
+                "amount": discount_line.taxful_price.amount,
+            },
+            {
+                "line": product_line,
+                "quantity": 2,
+                "amount": taxful_price_with_discount.amount,
+            },
         ]
     )
     assert product_line.max_refundable_amount.value == 0
@@ -670,7 +808,10 @@ def test_refunds_for_discounted_order_lines():
 
     order = create_order_with_product(product, supplier, 2, 200, shop=shop)
     discount_line = OrderLine(
-        order_id=order.id, type=OrderLineType.DISCOUNT, quantity=1, discount_amount_value=Decimal("0.54321")
+        order_id=order.id,
+        type=OrderLineType.DISCOUNT,
+        quantity=1,
+        discount_amount_value=Decimal("0.54321"),
     )
     discount_line.save()
     order.lines.add(discount_line)
@@ -680,7 +821,10 @@ def test_refunds_for_discounted_order_lines():
 
     # Lines without quantity shouldn't affect refunds
     other_line = OrderLine(
-        order=order, type=OrderLineType.OTHER, text="This random line for textual information", quantity=0
+        order=order,
+        type=OrderLineType.OTHER,
+        text="This random line for textual information",
+        quantity=0,
     )
     other_line.save()
     order.lines.add(other_line)
@@ -706,9 +850,13 @@ def test_refunds_rounding_multiple_partial_refund():
     assert len(order.lines.all()) == 1
 
     line = order.lines.first()
-    order.create_refund([{"line": line, "quantity": 1, "amount": Money("29.26", order.currency)}])
+    order.create_refund(
+        [{"line": line, "quantity": 1, "amount": Money("29.26", order.currency)}]
+    )
     assert order.taxful_total_price == order.shop.create_price("29.27")
-    order.create_refund([{"line": line, "quantity": 1, "amount": Money("29.27", order.currency)}])
+    order.create_refund(
+        [{"line": line, "quantity": 1, "amount": Money("29.27", order.currency)}]
+    )
     assert line.max_refundable_amount == Money("0", order.currency)
     assert order.taxful_total_price == order.shop.create_price(0)
 
@@ -737,7 +885,14 @@ def test_partial_refund_limits(restock):
 
     def create_refund():
         order.create_refund(
-            [{"line": product_line, "quantity": 1, "amount": Money(1, order.currency), "restock_products": restock}]
+            [
+                {
+                    "line": product_line,
+                    "quantity": 1,
+                    "amount": Money(1, order.currency),
+                    "restock_products": restock,
+                }
+            ]
         )
 
     # create more refunds than available
@@ -820,13 +975,27 @@ def test_can_create_payment():
 
     # Partially refunded orders can create payments
     order.create_refund(
-        [{"line": order.lines.first(), "quantity": 1, "amount": Money(200, order.currency), "restock": False}]
+        [
+            {
+                "line": order.lines.first(),
+                "quantity": 1,
+                "amount": Money(200, order.currency),
+                "restock": False,
+            }
+        ]
     )
     assert order.can_create_payment()
 
     # But fully refunded orders can't
     order.create_refund(
-        [{"line": order.lines.first(), "quantity": 1, "amount": Money(200, order.currency), "restock": False}]
+        [
+            {
+                "line": order.lines.first(),
+                "quantity": 1,
+                "amount": Money(200, order.currency),
+                "restock": False,
+            }
+        ]
     )
     assert not order.can_create_payment()
 
@@ -848,13 +1017,27 @@ def test_can_create_refund():
 
     # Partially refunded orders can create refunds
     order.create_refund(
-        [{"line": order.lines.first(), "quantity": 1, "amount": Money(200, order.currency), "restock": False}]
+        [
+            {
+                "line": order.lines.first(),
+                "quantity": 1,
+                "amount": Money(200, order.currency),
+                "restock": False,
+            }
+        ]
     )
     assert order.can_create_refund()
 
     # But fully refunded orders can't
     order.create_refund(
-        [{"line": order.lines.first(), "quantity": 1, "amount": Money(200, order.currency), "restock": False}]
+        [
+            {
+                "line": order.lines.first(),
+                "quantity": 1,
+                "amount": Money(200, order.currency),
+                "restock": False,
+            }
+        ]
     )
     assert not order.can_create_refund()
 
@@ -879,7 +1062,9 @@ def test_product_summary():
     order = create_order_with_product(product, supplier, 2, 200, shop=shop)
     order.cache_prices()
     product_line = order.lines.first()
-    shipping_line = order.lines.create(type=OrderLineType.SHIPPING, base_unit_price_value=5, quantity=1)
+    shipping_line = order.lines.create(
+        type=OrderLineType.SHIPPING, base_unit_price_value=5, quantity=1
+    )
 
     # Make sure no invalid entries and check product quantities
     product_summary = order.get_product_summary()
@@ -898,7 +1083,16 @@ def test_product_summary():
     order.update_shipping_status()
     assert order.shipping_status == ShippingStatus.PARTIALLY_SHIPPED
 
-    order.create_refund([{"line": shipping_line, "quantity": 1, "amount": Money(5, order.currency), "restock": False}])
+    order.create_refund(
+        [
+            {
+                "line": shipping_line,
+                "quantity": 1,
+                "amount": Money(5, order.currency),
+                "restock": False,
+            }
+        ]
+    )
 
     product_summary = order.get_product_summary()
     assert all(product_summary.keys())
@@ -906,7 +1100,16 @@ def test_product_summary():
     assert_defaultdict_values(summary, ordered=2, shipped=1, refunded=0, unshipped=1)
 
     # Create a refund for 2 items, we should get no negative values
-    order.create_refund([{"line": product_line, "quantity": 2, "amount": Money(200, order.currency), "restock": False}])
+    order.create_refund(
+        [
+            {
+                "line": product_line,
+                "quantity": 2,
+                "amount": Money(200, order.currency),
+                "restock": False,
+            }
+        ]
+    )
 
     product_summary = order.get_product_summary()
     assert all(product_summary.keys())

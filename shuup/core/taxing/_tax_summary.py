@@ -39,7 +39,9 @@ class TaxSummary(list):
             base_amount_by_tax[line_tax.tax] += line_tax.base_amount.as_rounded()
 
         lines = [
-            TaxSummaryLine.from_tax(tax, base_amount_by_tax[tax], raw_base_amount_by_tax[tax], tax_amount)
+            TaxSummaryLine.from_tax(
+                tax, base_amount_by_tax[tax], raw_base_amount_by_tax[tax], tax_amount
+            )
             for (tax, tax_amount) in tax_amount_by_tax.items()
         ]
         if untaxed:
@@ -62,7 +64,16 @@ class TaxSummary(list):
 
 
 class TaxSummaryLine(object):
-    _FIELDS = ["tax_id", "tax_code", "tax_name", "tax_rate", "raw_based_on", "based_on", "tax_amount", "taxful"]
+    _FIELDS = [
+        "tax_id",
+        "tax_code",
+        "tax_name",
+        "tax_rate",
+        "raw_based_on",
+        "based_on",
+        "tax_amount",
+        "taxful",
+    ]
     _MONEY_FIELDS = set(["tax_amount", "taxful", "based_on", "raw_based_on"])
 
     @classmethod
@@ -77,7 +88,9 @@ class TaxSummaryLine(object):
             tax_amount=tax_amount,
         )
 
-    def __init__(self, tax_id, tax_code, tax_name, tax_rate, based_on, raw_based_on, tax_amount):
+    def __init__(
+        self, tax_id, tax_code, tax_name, tax_rate, based_on, raw_based_on, tax_amount
+    ):
         self.tax_id = tax_id
         self.tax_code = tax_code
         self.tax_name = tax_name
@@ -92,7 +105,12 @@ class TaxSummaryLine(object):
 
     def __repr__(self):
         return "<{} {}/{}/{:.3%} based_on={} tax_amount={})>".format(
-            type(self).__name__, self.tax_id, self.tax_code, float(self.tax_rate or 0), self.based_on, self.tax_amount
+            type(self).__name__,
+            self.tax_id,
+            self.tax_code,
+            float(self.tax_rate or 0),
+            self.based_on,
+            self.tax_amount,
         )
 
     def to_dict(self):

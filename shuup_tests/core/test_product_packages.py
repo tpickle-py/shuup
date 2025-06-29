@@ -47,7 +47,11 @@ def test_package_orderability():
     shop = get_default_shop()
     sp = package_product.get_shop_instance(shop)
     supplier = sp.suppliers.get()
-    assert not list(sp.get_orderability_errors(supplier=supplier, quantity=1, customer=AnonymousContact()))
+    assert not list(
+        sp.get_orderability_errors(
+            supplier=supplier, quantity=1, customer=AnonymousContact()
+        )
+    )
 
 
 @pytest.mark.django_db

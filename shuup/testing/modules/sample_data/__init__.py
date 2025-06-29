@@ -34,7 +34,10 @@ class SampleDataAdminModule(AdminModule):
     def get_menu_entries(self, request):
         return [
             MenuEntry(
-                text="Sample Data", category=SETTINGS_MENU_CATEGORY, url="shuup_admin:sample_data", icon="fa fa-star"
+                text="Sample Data",
+                category=SETTINGS_MENU_CATEGORY,
+                url="shuup_admin:sample_data",
+                icon="fa fa-star",
             )
         ]
 
@@ -42,7 +45,7 @@ class SampleDataAdminModule(AdminModule):
         return ("Access sample data module",)
 
     def get_notifications(self, request):
-        """ Injects a message to the user and also a notification """
+        """Injects a message to the user and also a notification"""
         # multi-shop not supported
         if not ShuupSettings.get_setting("SHUUP_ENABLE_MULTIPLE_SHOPS"):
             from shuup.admin.shop_provider import get_shop
@@ -51,11 +54,17 @@ class SampleDataAdminModule(AdminModule):
 
             if sample_manager.has_installed_samples(shop):
                 messages.warning(
-                    request, _("There is a sample data installed. " "Search `Sample Data` for more information.")
+                    request,
+                    _(
+                        "There is a sample data installed. "
+                        "Search `Sample Data` for more information."
+                    ),
                 )
 
                 yield Notification(
-                    _("There is a sample data installed. Click here to consolidate or delete them."),
+                    _(
+                        "There is a sample data installed. Click here to consolidate or delete them."
+                    ),
                     title=_("Sample Data"),
                     kind="warning",
                     url="shuup_admin:sample_data",

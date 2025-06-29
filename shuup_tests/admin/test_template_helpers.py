@@ -19,7 +19,12 @@ def test_get_config(rf, admin_user):
     config = get_config(context)
     for key, url in DefaultBrowserConfigProvider.get_browser_urls(request).items():
         if isinstance(url, tuple):
-            assert config["browserUrls"][key] == reverse(url[0], args=url[1], kwargs=url[2])
+            assert config["browserUrls"][key] == reverse(
+                url[0], args=url[1], kwargs=url[2]
+            )
         else:
             assert config["browserUrls"][key] == reverse(url)
-    assert "minSearchInputLength" in DefaultBrowserConfigProvider.get_gettings(request).keys()
+    assert (
+        "minSearchInputLength"
+        in DefaultBrowserConfigProvider.get_gettings(request).keys()
+    )

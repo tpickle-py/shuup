@@ -50,10 +50,16 @@ class ShopStatus(Enum):
 @python_2_unicode_compatible
 class Shop(ChangeProtected, TranslatableShuupModel):
     protected_fields = ["currency", "prices_include_tax"]
-    change_protect_message = _("The following fields can't be changed because there are existing orders for this shop.")
+    change_protect_message = _(
+        "The following fields can't be changed because there are existing orders for this shop."
+    )
 
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
-    modified_on = models.DateTimeField(auto_now=True, editable=False, db_index=True, verbose_name=_("modified on"))
+    created_on = models.DateTimeField(
+        auto_now_add=True, editable=False, verbose_name=_("created on")
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True, editable=False, db_index=True, verbose_name=_("modified on")
+    )
     identifier = InternalIdentifierField(unique=True, max_length=128)
     domain = models.CharField(
         max_length=128,
@@ -75,12 +81,20 @@ class Shop(ChangeProtected, TranslatableShuupModel):
             "For temporary closing enable the maintenance mode, available in the `Maintenance Mode` tab on the left."
         ),
     )
-    owner = models.ForeignKey(to="Contact", blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("contact"))
+    owner = models.ForeignKey(
+        to="Contact",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("contact"),
+    )
     options = JSONField(blank=True, null=True, verbose_name=_("options"))
     currency = CurrencyField(
         default=_get_default_currency,
         verbose_name=_("currency"),
-        help_text=_("The primary shop currency. This is the currency used when selling the products."),
+        help_text=_(
+            "The primary shop currency. This is the currency used when selling the products."
+        ),
     )
     prices_include_tax = models.BooleanField(
         default=True,
@@ -123,18 +137,29 @@ class Shop(ChangeProtected, TranslatableShuupModel):
         ),
     )
     contact_address = models.ForeignKey(
-        "MutableAddress", verbose_name=_("contact address"), blank=True, null=True, on_delete=models.SET_NULL
+        "MutableAddress",
+        verbose_name=_("contact address"),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
     staff_members = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, blank=True, related_name="shops", verbose_name=_("staff members")
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="shops",
+        verbose_name=_("staff members"),
     )
-    labels = models.ManyToManyField("Label", blank=True, related_name="shops", verbose_name=_("labels"))
+    labels = models.ManyToManyField(
+        "Label", blank=True, related_name="shops", verbose_name=_("labels")
+    )
 
     translations = TranslatedFields(
         name=models.CharField(
             max_length=64,
             verbose_name=_("name"),
-            help_text=_("The shop name. This name is displayed throughout Admin Panel."),
+            help_text=_(
+                "The shop name. This name is displayed throughout Admin Panel."
+            ),
         ),
         public_name=models.CharField(
             max_length=64,
@@ -168,7 +193,9 @@ class Shop(ChangeProtected, TranslatableShuupModel):
             max_length=300,
             blank=True,
             verbose_name=_("maintenance message"),
-            help_text=_("The message to display to customers while your shop is in a maintenance mode."),
+            help_text=_(
+                "The message to display to customers while your shop is in a maintenance mode."
+            ),
         ),
     )
 
@@ -179,7 +206,9 @@ class Shop(ChangeProtected, TranslatableShuupModel):
         verbose_name_plural = _("shops")
 
     def __str__(self):
-        return force_text(self.safe_translation_getter("name", default="Shop %d" % self.pk))
+        return force_text(
+            self.safe_translation_getter("name", default="Shop %d" % self.pk)
+        )
 
     def create_price(self, value):
         """

@@ -5,15 +5,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0050_move_product_status_text'),
+        ("shuup", "0050_move_product_status_text"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='supplier',
-            name='enabled',
-            field=models.BooleanField(verbose_name='enabled', default=True, help_text='Indicates whether this supplier is currently enabled.'),
+            model_name="supplier",
+            name="enabled",
+            field=models.BooleanField(
+                verbose_name="enabled",
+                default=True,
+                help_text="Indicates whether this supplier is currently enabled.",
+            ),
         ),
     ]

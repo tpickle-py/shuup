@@ -26,7 +26,9 @@ def test_list_view(rf, admin_user):
     shop_product.categories.add(shop_product.primary_category)
 
     view = load("shuup.simple_supplier.admin_module.views:StocksListView").as_view()
-    request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user)
+    request = apply_request_middleware(
+        rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user
+    )
     response = view(request)
     assert 200 <= response.status_code < 300
 

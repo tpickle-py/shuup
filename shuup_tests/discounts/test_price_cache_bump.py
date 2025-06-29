@@ -7,6 +7,7 @@
 """
 Tests for utils.price_display and the price filters.
 """
+
 import pytest
 import pytz
 from datetime import datetime, timedelta
@@ -32,11 +33,17 @@ def test_bump_caches_signal(rf):
     shop2 = factories.get_shop(identifier="shop2", domain="shop2")
 
     product1 = factories.create_product(
-        "product", shop=shop1, supplier=factories.get_default_supplier(), default_price=initial_price
+        "product",
+        shop=shop1,
+        supplier=factories.get_default_supplier(),
+        default_price=initial_price,
     )
 
     product2 = factories.create_product(
-        "product2", shop=shop2, supplier=factories.get_default_supplier(), default_price=20
+        "product2",
+        shop=shop2,
+        supplier=factories.get_default_supplier(),
+        default_price=20,
     )
 
     now = datetime(2018, 1, 1, 9, 0, tzinfo=pytz.UTC)  # 01/01/2018 09:00 AM
@@ -57,9 +64,13 @@ def test_bump_caches_signal(rf):
         def assert_cache_product1(discounted=False):
             cache_price_info(request, product1, 1, product1.get_price_info(request))
             if discounted:
-                assert get_cached_price_info(request, product1, 1).price == shop1.create_price(discounted_price)
+                assert get_cached_price_info(
+                    request, product1, 1
+                ).price == shop1.create_price(discounted_price)
             else:
-                assert get_cached_price_info(request, product1, 1).price == shop1.create_price(initial_price)
+                assert get_cached_price_info(
+                    request, product1, 1
+                ).price == shop1.create_price(initial_price)
 
         def assert_product1_is_not_cached():
             assert get_cached_price_info(request, product1) is None
@@ -76,7 +87,9 @@ def test_bump_caches_signal(rf):
         assert_cache_product1(True)
 
         # cache product 2.. from now on, shop2 cache should never be bumped
-        cache_price_info(request_shop2, product2, 1, product2.get_price_info(request_shop2))
+        cache_price_info(
+            request_shop2, product2, 1, product2.get_price_info(request_shop2)
+        )
         assert_product2_is_cached()
 
         discount.product = product1

@@ -20,7 +20,13 @@ class ProductSubscriptionOption:
     price = None
     description = None
 
-    def __init__(self, label: str, value: str, price: Union[TaxfulPrice, TaxlessPrice], description: str = None):
+    def __init__(
+        self,
+        label: str,
+        value: str,
+        price: Union[TaxfulPrice, TaxlessPrice],
+        description: str = None,
+    ):
         self.label = label
         self.value = value
         self.price = price
@@ -33,7 +39,14 @@ class ProductSubscriptionContext:
     supplier = None
     user = None
 
-    def __init__(self, shop: Shop, product: Product, supplier: Supplier = None, user: UserModel = None, **kwargs):
+    def __init__(
+        self,
+        shop: Shop,
+        product: Product,
+        supplier: Supplier = None,
+        user: UserModel = None,
+        **kwargs,
+    ):
         self.shop = shop
         self.product = product
         self.supplier = supplier
@@ -42,15 +55,23 @@ class ProductSubscriptionContext:
 
 class BaseProductSubscriptionOptionProvider:
     @classmethod
-    def get_subscription_options(cls, context: ProductSubscriptionContext) -> Iterable[ProductSubscriptionOption]:
+    def get_subscription_options(
+        cls, context: ProductSubscriptionContext
+    ) -> Iterable[ProductSubscriptionOption]:
         raise NotImplementedError()
 
 
 def get_product_subscription_options(
     context: ProductSubscriptionContext, **kwargs
 ) -> Iterable[ProductSubscriptionOption]:
-    for product_subscription_option_provider in get_provide_objects("product_subscription_option_provider"):
-        if not issubclass(product_subscription_option_provider, BaseProductSubscriptionOptionProvider):
+    for product_subscription_option_provider in get_provide_objects(
+        "product_subscription_option_provider"
+    ):
+        if not issubclass(
+            product_subscription_option_provider, BaseProductSubscriptionOptionProvider
+        ):
             continue
 
-        yield from product_subscription_option_provider.get_subscription_options(context)
+        yield from product_subscription_option_provider.get_subscription_options(
+            context
+        )

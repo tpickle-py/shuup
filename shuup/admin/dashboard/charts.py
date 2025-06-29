@@ -16,14 +16,14 @@ from shuup.utils.serialization import ExtendedJSONEncoder
 
 
 class ChartType(object):
-    """ Type of a chart """
+    """Type of a chart"""
 
     BAR = "bar"
     LINE = "line"
 
 
 class ChartDataType(object):
-    """ Data type of datasets """
+    """Data type of datasets"""
 
     NUMBER = "number"
     CURRENCY = "currency"
@@ -33,7 +33,14 @@ class ChartDataType(object):
 class Chart(six.with_metaclass(abc.ABCMeta)):
     supported_chart_types = []  # list[ChartType]
 
-    def __init__(self, title, data_type=ChartDataType.NUMBER, locale=None, currency=None, options=None):
+    def __init__(
+        self,
+        title,
+        data_type=ChartDataType.NUMBER,
+        locale=None,
+        currency=None,
+        options=None,
+    ):
         """
         :param str title: the title of the chart
 
@@ -95,7 +102,9 @@ class Chart(six.with_metaclass(abc.ABCMeta)):
         # format value for each data point
         if self.data_type == ChartDataType.CURRENCY:
             for value in data:
-                formatted_data.append(format_money(Money(value, currency=self.currency).as_rounded()))
+                formatted_data.append(
+                    format_money(Money(value, currency=self.currency).as_rounded())
+                )
 
         elif self.data_type == ChartDataType.PERCENT:
             for value in data:
@@ -106,7 +115,14 @@ class Chart(six.with_metaclass(abc.ABCMeta)):
             for value in data:
                 formatted_data.append(format_decimal(value, locale=self.locale))
 
-        self.datasets.append({"type": chart_type, "label": name, "data": data, "formatted_data": formatted_data})
+        self.datasets.append(
+            {
+                "type": chart_type,
+                "label": name,
+                "data": data,
+                "formatted_data": formatted_data,
+            }
+        )
 
 
 class BarChart(Chart):
@@ -136,4 +152,9 @@ class MixedChart(Chart):
         self.labels = labels
 
     def get_config(self):
-        return {"type": "mixed", "labels": self.labels, "data": self.datasets, "options": self.options}
+        return {
+            "type": "mixed",
+            "labels": self.labels,
+            "data": self.datasets,
+            "options": self.options,
+        }

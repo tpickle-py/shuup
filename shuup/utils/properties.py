@@ -50,7 +50,9 @@ class MoneyProperty(object):
         return self._get_value_from(instance)
 
     def _get_value_from(self, instance, overrides={}):
-        data = {field: resolve(instance, path) for (field, path) in self._fields.items()}
+        data = {
+            field: resolve(instance, path) for (field, path) in self._fields.items()
+        }
         data.update(overrides)
         if data["value"] is None:
             return None
@@ -64,7 +66,9 @@ class MoneyProperty(object):
     def _check_unit(self, instance, value):
         value_template = self._get_value_from(instance, overrides={"value": 0})
         if not value_template.unit_matches_with(value):
-            msg = "Error! Can't set `%s` to value with non-matching unit." % (type(self).__name__,)
+            msg = "Error! Can't set `%s` to value with non-matching unit." % (
+                type(self).__name__,
+            )
             raise UnitMixupError(value_template, value, msg)
         assert isinstance(value, self.value_class)
 
@@ -146,9 +150,10 @@ def _transform_init_kwargs(cls, kwargs):
 def _transform_single_init_kwarg(prop, field, value, kwargs):
     if value is not None and not isinstance(value, prop.value_class):
         raise TypeError(
-            "Error! Expecting type `%s` for field `%s` (got `%r`)." % (prop.value_class.__name__, field, value)
+            "Error! Expecting type `%s` for field `%s` (got `%r`)."
+            % (prop.value_class.__name__, field, value)
         )
-    for (attr, path) in prop._fields.items():
+    for attr, path in prop._fields.items():
         if "." in path:
             continue  # Only set "local" fields
         if path in kwargs:
@@ -161,7 +166,7 @@ def _transform_single_init_kwarg(prop, field, value, kwargs):
 
 
 def _check_transformed_types(self, transformed):
-    for (field, orig_value) in transformed:
+    for field, orig_value in transformed:
         new_value = getattr(self, field)
         if new_value != orig_value:
             msg = "Error! Cannot set `%s` to `%r` (try `%r`)."

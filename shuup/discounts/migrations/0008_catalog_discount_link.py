@@ -5,18 +5,39 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('discounts', '0007_delete_fields'),
+        ("discounts", "0007_delete_fields"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ShopProductCatalogDiscountsLink',
+            name="ShopProductCatalogDiscountsLink",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('discounts', models.ManyToManyField(blank=True, related_name='shop_products_link', to='discounts.Discount')),
-                ('shop_product', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='discounts_link', to='shuup.ShopProduct')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "discounts",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="shop_products_link",
+                        to="discounts.Discount",
+                    ),
+                ),
+                (
+                    "shop_product",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="discounts_link",
+                        to="shuup.ShopProduct",
+                    ),
+                ),
             ],
         ),
     ]

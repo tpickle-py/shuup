@@ -6,20 +6,26 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0053_supplier_extra_info'),
+        ("shuup", "0053_supplier_extra_info"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='shopproduct',
-            name='available_until',
-            field=models.DateTimeField(blank=True, help_text='After this date the product will be invisible.', null=True, verbose_name='available until'),
+            model_name="shopproduct",
+            name="available_until",
+            field=models.DateTimeField(
+                blank=True,
+                help_text="After this date the product will be invisible.",
+                null=True,
+                verbose_name="available until",
+            ),
         ),
         migrations.AlterField(
-            model_name='supplier',
-            name='modified_on',
-            field=models.DateTimeField(auto_now=True, db_index=True, verbose_name='modified on'),
+            model_name="supplier",
+            name="modified_on",
+            field=models.DateTimeField(
+                auto_now=True, db_index=True, verbose_name="modified on"
+            ),
         ),
     ]

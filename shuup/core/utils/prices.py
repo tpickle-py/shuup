@@ -51,11 +51,17 @@ def _make_taxed(request, item, priceful, with_taxes):
     if tax_amount is not None:
         if with_taxes:
             return TaxedPriceInfo(
-                priceful.taxful_price, priceful.taxful_base_price, quantity=priceful.quantity, tax_amount=tax_amount
+                priceful.taxful_price,
+                priceful.taxful_base_price,
+                quantity=priceful.quantity,
+                tax_amount=tax_amount,
             )
         else:
             return TaxedPriceInfo(
-                priceful.taxless_price, priceful.taxless_base_price, quantity=priceful.quantity, tax_amount=tax_amount
+                priceful.taxless_price,
+                priceful.taxless_base_price,
+                quantity=priceful.quantity,
+                tax_amount=tax_amount,
             )
 
     if not should_calculate_taxes_automatically():
@@ -67,10 +73,18 @@ def _make_taxed(request, item, priceful, with_taxes):
     base_price = taxmod.get_taxed_price_for(taxctx, item, priceful.base_price)
 
     if with_taxes:
-        return TaxedPriceInfo(price.taxful, base_price.taxful, quantity=priceful.quantity, tax_amount=price.tax_amount)
+        return TaxedPriceInfo(
+            price.taxful,
+            base_price.taxful,
+            quantity=priceful.quantity,
+            tax_amount=price.tax_amount,
+        )
     else:
         return TaxedPriceInfo(
-            price.taxless, base_price.taxless, quantity=priceful.quantity, tax_amount=price.tax_amount
+            price.taxless,
+            base_price.taxless,
+            quantity=priceful.quantity,
+            tax_amount=price.tax_amount,
         )
 
 

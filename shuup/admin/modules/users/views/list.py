@@ -10,7 +10,13 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
 
-from shuup.admin.utils.picotable import ChoicesFilter, Column, Select2Filter, TextFilter, true_or_false_filter
+from shuup.admin.utils.picotable import (
+    ChoicesFilter,
+    Column,
+    Select2Filter,
+    TextFilter,
+    true_or_false_filter,
+)
 from shuup.admin.utils.views import PicotableListView
 from shuup.utils.django_compat import force_text
 
@@ -25,10 +31,19 @@ class UserListView(PicotableListView):
         Column(
             "is_active",
             _("Active"),
-            filter_config=ChoicesFilter([(False, _("no")), (True, _("yes"))], default=True),
+            filter_config=ChoicesFilter(
+                [(False, _("no")), (True, _("yes"))], default=True
+            ),
         ),
-        Column("groups", _("Groups"), filter_config=Select2Filter("get_groups"), display="get_groups_display"),
-        Column("is_staff", _("Access to Admin Panel"), filter_config=true_or_false_filter),
+        Column(
+            "groups",
+            _("Groups"),
+            filter_config=Select2Filter("get_groups"),
+            display="get_groups_display",
+        ),
+        Column(
+            "is_staff", _("Access to Admin Panel"), filter_config=true_or_false_filter
+        ),
     ]
     toolbar_buttons_provider_key = "user_list_toolbar_provider"
     mass_actions_provider_key = "user_list_mass_actions_provider"
@@ -58,7 +73,9 @@ class UserListView(PicotableListView):
 
     def get_context_data(self, **kwargs):
         context = super(UserListView, self).get_context_data(**kwargs)
-        context["title"] = force_text(self.get_model()._meta.verbose_name_plural).title()
+        context["title"] = force_text(
+            self.get_model()._meta.verbose_name_plural
+        ).title()
         return context
 
     def get_object_abstract(self, instance, item):

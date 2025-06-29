@@ -28,7 +28,9 @@ from shuup.utils.numbers import get_string_sort_order
 
 
 def get_product_context(request, product, language=None, supplier=None):
-    return cached_load("SHUUP_FRONT_PRODUCT_CONTEXT_SPEC")(request, product, language, supplier)
+    return cached_load("SHUUP_FRONT_PRODUCT_CONTEXT_SPEC")(
+        request, product, language, supplier
+    )
 
 
 def get_default_product_context(request, product, language=None, supplier=None):  # noqa (C901)
@@ -49,7 +51,10 @@ def get_default_product_context(request, product, language=None, supplier=None):
     context["category"] = shop_product.primary_category
     context["orderability_errors"] = list(
         shop_product.get_orderability_errors(
-            supplier=supplier, quantity=1, customer=request.customer, ignore_minimum=True
+            supplier=supplier,
+            quantity=1,
+            customer=request.customer,
+            ignore_minimum=True,
         )
     )
     context["variation_children"] = []
@@ -67,7 +72,9 @@ def get_default_product_context(request, product, language=None, supplier=None):
         context["variation_children"] = cache_product_things(
             request,
             sorted(
-                product.variation_children.language(language).visible(shop=request.shop, customer=request.customer),
+                product.variation_children.language(language).visible(
+                    shop=request.shop, customer=request.customer
+                ),
                 key=lambda p: get_string_sort_order(p.variation_name or p.name),
             ),
         )
@@ -82,7 +89,9 @@ def get_default_product_context(request, product, language=None, supplier=None):
                 pass
 
     elif product.mode == ProductMode.VARIABLE_VARIATION_PARENT:
-        variation_variables = product.variation_variables.all().prefetch_related("values")
+        variation_variables = product.variation_variables.all().prefetch_related(
+            "values"
+        )
         orderable_children, is_orderable = get_orderable_variation_children(
             product, request, variation_variables, supplier
         )
@@ -97,7 +106,11 @@ def get_default_product_context(request, product, language=None, supplier=None):
                     context["selected_variation_values"] = values
                     break
     elif product.is_container():
-        children = product.get_all_package_children().translated().order_by("translations__name")
+        children = (
+            product.get_all_package_children()
+            .translated()
+            .order_by("translations__name")
+        )
         context["package_children"] = cache_product_things(request, children)
 
     context["shop_product"] = shop_product
@@ -118,7 +131,11 @@ def get_default_product_context(request, product, language=None, supplier=None):
 
 
 def _get_order_form(request, context, product, language):
-    order_forms = sorted(get_provide_objects("front_product_order_form"), key=lambda form: form.priority, reverse=True)
+    order_forms = sorted(
+        get_provide_objects("front_product_order_form"),
+        key=lambda form: form.priority,
+        reverse=True,
+    )
     for obj in order_forms:
         product_order_form = obj(request, context, product, language)
         if product_order_form.is_compatible():
@@ -126,11 +143,15 @@ def _get_order_form(request, context, product, language):
     return None
 
 
-def _pack_orderable_variation_children_to_cache(orderable_variation_children, orderable):
+def _pack_orderable_variation_children_to_cache(
+    orderable_variation_children, orderable
+):
     orderable_variation_children_ids = OrderedDict()
 
     for variable, values in orderable_variation_children.items():
-        orderable_variation_children_ids[variable.id] = tuple(value.id for value in values)
+        orderable_variation_children_ids[variable.id] = tuple(
+            value.id for value in values
+        )
 
     return (orderable_variation_children_ids, orderable)
 
@@ -148,9 +169,13 @@ def _unpack_orderable_variation_children_from_cache(cached_value):
     return (orderable_variation_children, orderable)
 
 
-def get_orderable_variation_children(product, request, variation_variables, supplier=None):  # noqa (C901)
+def get_orderable_variation_children(
+    product, request, variation_variables, supplier=None
+):  # noqa (C901)
     if not variation_variables:
-        variation_variables = product.variation_variables.all().prefetch_related("values")
+        variation_variables = product.variation_variables.all().prefetch_related(
+            "values"
+        )
 
     key, val = context_cache.get_cached_value(
         identifier="orderable_variation_children",
@@ -166,9 +191,9 @@ def get_orderable_variation_children(product, request, variation_variables, supp
     orderable = 0
 
     shop = request.shop
-    product_queryset = product.variation_children.visible(shop=shop, customer=request.customer).values_list(
-        "pk", flat=True
-    )
+    product_queryset = product.variation_children.visible(
+        shop=shop, customer=request.customer
+    ).values_list("pk", flat=True)
     all_combinations = list(product.get_all_available_combinations())
     for shop_product in (
         ShopProduct.objects.filter(shop=shop, product__id__in=product_queryset)
@@ -176,7 +201,11 @@ def get_orderable_variation_children(product, request, variation_variables, supp
         .prefetch_related("suppliers")
     ):
         shop_product.shop = shop  # To avoid query on orderability checks
-        combo_data = first(combo for combo in all_combinations if combo["result_product_pk"] == shop_product.product.id)
+        combo_data = first(
+            combo
+            for combo in all_combinations
+            if combo["result_product_pk"] == shop_product.product.id
+        )
         if not combo_data:
             continue
 
@@ -186,7 +215,9 @@ def get_orderable_variation_children(product, request, variation_variables, supp
                 orderable_variation_children[variable] = []
 
         if shop_product.is_orderable(
-            supplier=supplier, customer=request.customer, quantity=shop_product.minimum_purchase_quantity
+            supplier=supplier,
+            customer=request.customer,
+            quantity=shop_product.minimum_purchase_quantity,
         ):
             orderable += 1
             for variable, value in six.iteritems(combo):
@@ -195,7 +226,9 @@ def get_orderable_variation_children(product, request, variation_variables, supp
 
     orderable = orderable > 0
     values = (orderable_variation_children, orderable)
-    context_cache.set_cached_value(key, _pack_orderable_variation_children_to_cache(*values))
+    context_cache.set_cached_value(
+        key, _pack_orderable_variation_children_to_cache(*values)
+    )
     return values
 
 

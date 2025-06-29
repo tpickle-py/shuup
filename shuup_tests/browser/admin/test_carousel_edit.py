@@ -18,11 +18,15 @@ from shuup.testing.browser_utils import (
     wait_until_condition,
 )
 
-pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
+pytestmark = pytest.mark.skipif(
+    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
+)
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
+@pytest.mark.skipif(
+    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
+)
 def test_carousel_create(browser, admin_user, live_server, settings):
     shop = factories.get_default_shop()
     filer_image = factories.get_random_filer_image()
@@ -54,10 +58,18 @@ def test_carousel_create(browser, admin_user, live_server, settings):
     wait_until_appeared(browser, "a[href='#collapse1']")
     click_element(browser, "a[href='#collapse1']")
 
-    browser.find_by_css("#slide_1-en [name='slides-__slide_prefix__-caption__en']").fill("New Slide")
+    browser.find_by_css(
+        "#slide_1-en [name='slides-__slide_prefix__-caption__en']"
+    ).fill("New Slide")
     click_element(browser, "[name='slides-__slide_prefix__-category_link'] + .select2")
-    wait_until_appeared(browser, ".select2-container #select2-id_slides-__slide_prefix__-category_link-results li")
-    click_element(browser, ".select2-container #select2-id_slides-__slide_prefix__-category_link-results li:last-child")
+    wait_until_appeared(
+        browser,
+        ".select2-container #select2-id_slides-__slide_prefix__-category_link-results li",
+    )
+    click_element(
+        browser,
+        ".select2-container #select2-id_slides-__slide_prefix__-category_link-results li:last-child",
+    )
 
     browser.find_by_css("#slide_1-en [data-dropzone='true']").click()
     wait_until_condition(browser, lambda b: len(b.windows) == 2)
@@ -76,7 +88,9 @@ def test_carousel_create(browser, admin_user, live_server, settings):
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
+@pytest.mark.skipif(
+    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
+)
 def test_carousel_multi_slide(browser, admin_user, live_server, settings):
     shop = factories.get_default_shop()
     filer_image = factories.get_random_filer_image()
@@ -126,9 +140,15 @@ def test_carousel_multi_slide(browser, admin_user, live_server, settings):
 
         browser.find_by_css("[name='slides-%d-caption__en']" % slide_id).fill("Slide")
         click_element(browser, "[name='slides-%d-category_link'] + .select2" % slide_id)
-        wait_until_appeared(browser, ".select2-container #select2-id_slides-%d-category_link-results li" % slide_id)
+        wait_until_appeared(
+            browser,
+            ".select2-container #select2-id_slides-%d-category_link-results li"
+            % slide_id,
+        )
         click_element(
-            browser, ".select2-container #select2-id_slides-%d-category_link-results li:last-child" % slide_id
+            browser,
+            ".select2-container #select2-id_slides-%d-category_link-results li:last-child"
+            % slide_id,
         )
 
         browser.find_by_css("#id_slides-%d-image__en-dropzone" % slide_id).click()

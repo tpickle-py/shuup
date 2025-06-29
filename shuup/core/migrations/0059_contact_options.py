@@ -8,15 +8,16 @@ import shuup.core.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0058_make_product_type_nullable'),
+        ("shuup", "0058_make_product_type_nullable"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contact',
-            name='options',
-            field=shuup.core.fields.PolymorphicJSONField(blank=True, null=True, verbose_name='options'),
+            model_name="contact",
+            name="options",
+            field=shuup.core.fields.PolymorphicJSONField(
+                blank=True, null=True, verbose_name="options"
+            ),
         ),
     ]

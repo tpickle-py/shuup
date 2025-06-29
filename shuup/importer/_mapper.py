@@ -29,7 +29,11 @@ class RelatedMapper(object):
         self.fk_cache = {}
         self.explicit_uk_fields = tuple(handler._meta.fk_matchers.get(field.name) or ())
         self.is_translated = hasattr(self.to, "_parler_meta")
-        self.translated_fields = self.to._parler_meta.root_model._meta.get_fields() if self.is_translated else []
+        self.translated_fields = (
+            self.to._parler_meta.root_model._meta.get_fields()
+            if self.is_translated
+            else []
+        )
         self.translated_field_names = [f.name for f in self.translated_fields]
 
         uk_fields = dict((f.name, f) for f in get_model_unique_fields(to))
@@ -40,7 +44,11 @@ class RelatedMapper(object):
 
         self.uk_fields = uk_fields
         self.reverse_fields = list(
-            itertools.chain(self.explicit_uk_fields, [f for f in uk_fields if f not in ("id", "pk")], ["pk"])
+            itertools.chain(
+                self.explicit_uk_fields,
+                [f for f in uk_fields if f not in ("id", "pk")],
+                ["pk"],
+            )
         )
         manager = to.objects
         if issubclass(to, TranslatableModel):

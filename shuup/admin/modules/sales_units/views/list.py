@@ -21,9 +21,13 @@ class UnitListView(PicotableListView):
             _("Name"),
             sort_field="translations__name",
             display="name",
-            filter_config=TextFilter(filter_field="translations__name", placeholder=_("Filter by name...")),
+            filter_config=TextFilter(
+                filter_field="translations__name", placeholder=_("Filter by name...")
+            ),
         ),
-        Column("symbol", _("Symbol"), sort_field="translations__symbol", display="symbol"),
+        Column(
+            "symbol", _("Symbol"), sort_field="translations__symbol", display="symbol"
+        ),
         Column("decimals", _("Allowed decimals")),
     ]
     toolbar_buttons_provider_key = "sales_unit_list_toolbar_provider"

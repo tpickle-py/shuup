@@ -77,7 +77,12 @@ def get_stock_statuses(product, shop_products):
             if supplier in stocks.keys():
                 continue
             stock_status = supplier.get_stock_status(product_id=product.id)
-            stocks[supplier] = (supplier, stock_status, sales_decimals, sales_unit_symbol)
+            stocks[supplier] = (
+                supplier,
+                stock_status,
+                sales_decimals,
+                sales_unit_symbol,
+            )
     return stocks
 
 
@@ -90,7 +95,9 @@ def get_orderability_errors(product, shop_products):
             [
                 "%s: %s" % (shop_product.shop.name, msg.message)
                 for msg in shop_product.get_orderability_errors(
-                    supplier=None, quantity=shop_product.minimum_purchase_quantity, customer=None
+                    supplier=None,
+                    quantity=shop_product.minimum_purchase_quantity,
+                    customer=None,
                 )
             ]
         )
@@ -99,7 +106,9 @@ def get_orderability_errors(product, shop_products):
                 [
                     "%s: %s" % (supplier.name, msg.message)
                     for msg in supplier.get_orderability_errors(
-                        shop_product=shop_product, quantity=shop_product.minimum_purchase_quantity, customer=None
+                        shop_product=shop_product,
+                        quantity=shop_product.minimum_purchase_quantity,
+                        customer=None,
                     )
                 ]
             )
@@ -116,14 +125,18 @@ class PackageChildFormSet(ProductChildBaseFormSet):
                 "child": product,
                 "quantity": quantity,
             }
-            for (product, quantity) in six.iteritems(self.parent_product.get_package_child_to_quantity_map())
+            for (product, quantity) in six.iteritems(
+                self.parent_product.get_package_child_to_quantity_map()
+            )
         ]
         super(PackageChildFormSet, self).__init__(**kwargs)
 
     def save(self):
         parent_product = self.parent_product
         current_products = set(parent_product.get_package_child_to_quantity_map())
-        selected_products, removed_products, selected_quantities = self.get_selected_and_removed()
+        selected_products, removed_products, selected_quantities = (
+            self.get_selected_and_removed()
+        )
 
         with atomic():
             try:
@@ -132,7 +145,8 @@ class PackageChildFormSet(ProductChildBaseFormSet):
             except ImpossibleProductModeException as ipme:
                 six.raise_from(
                     Problem(
-                        _("Unable to make package %(product)s: %(error)s.") % {"product": parent_product, "error": ipme}
+                        _("Unable to make package %(product)s: %(error)s.")
+                        % {"product": parent_product, "error": ipme}
                     ),
                     ipme,
                 )
@@ -162,7 +176,11 @@ class PackageChildFormSet(ProductChildBaseFormSet):
             elif child_product != self.parent_product:
                 selected_products.add(child_product)
             elif self.request and child_product == self.parent_product:
-                messages.error(self.request, _("Couldn't add product %s to its own package.") % str(child_product))
+                messages.error(
+                    self.request,
+                    _("Couldn't add product %s to its own package.")
+                    % str(child_product),
+                )
             quantity = child_form.cleaned_data.get("quantity")
             selected_product_quantities[child_product] = quantity
         selected_quantities = {

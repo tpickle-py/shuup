@@ -23,7 +23,9 @@ class TaxModule(AdminModule):
     def get_urls(self):
         # TODO: Add url for tax dashboard?
         tax_urls = get_edit_and_list_urls(
-            url_prefix="^taxes/tax", view_template="shuup.admin.modules.taxes.views.Tax%sView", name_template="tax.%s"
+            url_prefix="^taxes/tax",
+            view_template="shuup.admin.modules.taxes.views.Tax%sView",
+            name_template="tax.%s",
         )
         tax_group_urls = get_edit_and_list_urls(
             url_prefix="^taxes/customer-tax-group",
@@ -41,7 +43,11 @@ class TaxModule(AdminModule):
         category = SETTINGS_MENU_CATEGORY
         return [
             MenuEntry(
-                text=_("Taxes"), icon="fa fa-pie-chart", url="shuup_admin:tax.list", category=category, ordering=1
+                text=_("Taxes"),
+                icon="fa fa-pie-chart",
+                url="shuup_admin:tax.list",
+                category=category,
+                ordering=1,
             ),
             MenuEntry(
                 text=_("Customer Tax Groups"),
@@ -63,7 +69,9 @@ class TaxModule(AdminModule):
         return (
             derive_model_url(Tax, "shuup_admin:tax", object, kind)
             or derive_model_url(TaxClass, "shuup_admin:tax_class", object, kind)
-            or derive_model_url(CustomerTaxGroup, "shuup_admin:customer_tax_group", object, kind)
+            or derive_model_url(
+                CustomerTaxGroup, "shuup_admin:customer_tax_group", object, kind
+            )
         )
 
     def get_extra_permissions(self) -> Iterable[str]:
@@ -78,6 +86,10 @@ class TaxModule(AdminModule):
             get_object_selector_permission_name(CustomerTaxGroup): _(
                 "Allow the user to select customer tax groups in admin."
             ),
-            get_object_selector_permission_name(Tax): _("Allow the user to select taxes in admin."),
-            get_object_selector_permission_name(TaxClass): _("Allow the user to select tax classes in admin."),
+            get_object_selector_permission_name(Tax): _(
+                "Allow the user to select taxes in admin."
+            ),
+            get_object_selector_permission_name(TaxClass): _(
+                "Allow the user to select tax classes in admin."
+            ),
         }

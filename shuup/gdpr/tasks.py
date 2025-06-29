@@ -12,7 +12,6 @@ from shuup.gdpr.anonymizer import Anonymizer
 
 
 def anonymize(shop_id: int, contact_id: int = None, user_id: int = None):
-
     shop = Shop.objects.filter(
         pk=shop_id,
     ).first()

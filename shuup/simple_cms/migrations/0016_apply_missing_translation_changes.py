@@ -6,20 +6,31 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup_simple_cms', '0015_rename_visible_available_fields'),
+        ("shuup_simple_cms", "0015_rename_visible_available_fields"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pageopengraphtranslation',
-            name='master',
-            field=parler.fields.TranslationsForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='translations', to='shuup_simple_cms.PageOpenGraph'),
+            model_name="pageopengraphtranslation",
+            name="master",
+            field=parler.fields.TranslationsForeignKey(
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="translations",
+                to="shuup_simple_cms.PageOpenGraph",
+            ),
         ),
         migrations.AlterField(
-            model_name='pagetranslation',
-            name='master',
-            field=parler.fields.TranslationsForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='translations', to='shuup_simple_cms.Page'),
+            model_name="pagetranslation",
+            name="master",
+            field=parler.fields.TranslationsForeignKey(
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="translations",
+                to="shuup_simple_cms.Page",
+            ),
         ),
     ]

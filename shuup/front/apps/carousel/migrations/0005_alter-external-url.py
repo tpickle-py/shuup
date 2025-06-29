@@ -6,15 +6,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('carousel', '0004_custom_colors'),
+        ("carousel", "0004_custom_colors"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='slidetranslation',
-            name='external_link',
-            field=models.CharField(blank=True, help_text='Set the external site that should be shown when this slide is clicked, if any.', max_length=800, null=True, verbose_name='external link'),
+            model_name="slidetranslation",
+            name="external_link",
+            field=models.CharField(
+                blank=True,
+                help_text="Set the external site that should be shown when this slide is clicked, if any.",
+                max_length=800,
+                null=True,
+                verbose_name="external link",
+            ),
         ),
     ]

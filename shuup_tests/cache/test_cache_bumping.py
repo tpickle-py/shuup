@@ -7,6 +7,7 @@
 """
 Tests for utils.price_display and the price filters.
 """
+
 import pytest
 import pytz
 from datetime import datetime
@@ -37,7 +38,10 @@ def test_bump_caches_signal(rf):
                 item=sp,
                 context={"customer": contact},
                 supplier=factories.get_default_supplier(),
-                stock_managed=bool(factories.get_default_supplier() and factories.get_default_supplier().stock_managed),
+                stock_managed=bool(
+                    factories.get_default_supplier()
+                    and factories.get_default_supplier().stock_managed
+                ),
                 quantity=1,
                 allow_cache=True,
             )
@@ -46,11 +50,17 @@ def test_bump_caches_signal(rf):
 
     with patch("django.utils.timezone.now", new=lambda: now):
         product1 = factories.create_product(
-            "product", shop=shop1, supplier=factories.get_default_supplier(), default_price=initial_price
+            "product",
+            shop=shop1,
+            supplier=factories.get_default_supplier(),
+            default_price=initial_price,
         )
 
         product2 = factories.create_product(
-            "product2", shop=shop2, supplier=factories.get_default_supplier(), default_price=20
+            "product2",
+            shop=shop2,
+            supplier=factories.get_default_supplier(),
+            default_price=20,
         )
 
         user = factories.create_random_user()
@@ -59,8 +69,18 @@ def test_bump_caches_signal(rf):
         shop_product1 = product1.shop_products.filter(shop=shop1).first()
         shop_product2 = product2.shop_products.filter(shop=shop2).first()
 
-        assert shop_product1.is_orderable(factories.get_default_supplier(shop1), contact, 1) is True
-        assert shop_product2.is_orderable(factories.get_default_supplier(shop2), contact, 1) is True
+        assert (
+            shop_product1.is_orderable(
+                factories.get_default_supplier(shop1), contact, 1
+            )
+            is True
+        )
+        assert (
+            shop_product2.is_orderable(
+                factories.get_default_supplier(shop2), contact, 1
+            )
+            is True
+        )
 
         # Test single product id bumping
         context_cache.bump_cache_for_product(product2.id, shop=shop2)

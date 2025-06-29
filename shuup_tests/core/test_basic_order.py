@@ -8,7 +8,14 @@
 import pytest
 from django.utils.timezone import now
 
-from shuup.core.models import Order, OrderLine, OrderLineTax, OrderLineType, ShipmentStatus, get_person_contact
+from shuup.core.models import (
+    Order,
+    OrderLine,
+    OrderLineTax,
+    OrderLineType,
+    ShipmentStatus,
+    get_person_contact,
+)
 from shuup.core.shortcuts import update_order_line_from_product
 from shuup.default_tax.module import DefaultTaxModule
 from shuup.testing.factories import (
@@ -49,7 +56,11 @@ def create_order(request, creator, customer, product):
     supplier = get_default_supplier()
     product_order_line = OrderLine(order=order)
     update_order_line_from_product(
-        pricing_context=request, order_line=product_order_line, product=product, quantity=5, supplier=supplier
+        pricing_context=request,
+        order_line=product_order_line,
+        product=product,
+        quantity=5,
+        supplier=supplier,
     )
 
     assert product_order_line.text == product.safe_translation_getter("name")
@@ -87,7 +98,9 @@ def create_order(request, creator, customer, product):
         assert order.taxless_total_price.amount == base - discount
         assert order.taxful_total_price.amount == base + tax_value - discount
     else:
-        assert_almost_equal(order.taxless_total_price.amount, base - tax_value - discount)
+        assert_almost_equal(
+            order.taxless_total_price.amount, base - tax_value - discount
+        )
         assert_almost_equal(order.taxful_total_price.amount, base - discount)
 
     assert not order.is_fully_shipped()

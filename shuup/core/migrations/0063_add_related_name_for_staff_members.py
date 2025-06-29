@@ -7,15 +7,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0062_add-supplier-slug'),
+        ("shuup", "0062_add-supplier-slug"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='shop',
-            name='staff_members',
-            field=models.ManyToManyField(blank=True, related_name='shops', to=settings.AUTH_USER_MODEL, verbose_name='staff members'),
+            model_name="shop",
+            name="staff_members",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="shops",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="staff members",
+            ),
         ),
     ]

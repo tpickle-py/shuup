@@ -81,7 +81,9 @@ class WizardView(TemplateView):
             visible_only=self.request.method == "GET",
         )
         if not panes and pane_id:
-            pane = load_setup_wizard_pane(shop=shop, request=self.request, pane_id=pane_id)
+            pane = load_setup_wizard_pane(
+                shop=shop, request=self.request, pane_id=pane_id
+            )
             if pane:
                 panes.append(pane)
         return panes
@@ -111,7 +113,9 @@ class WizardView(TemplateView):
         kwargs = {}
         if self.request.method == "POST":
             kwargs.update({"data": self.request.POST, "files": self.request.FILES})
-        fg = _WizardFormGroup(pane.identifier, pane.title, pane.text, pane.icon, pane.can_skip, **kwargs)
+        fg = _WizardFormGroup(
+            pane.identifier, pane.title, pane.text, pane.icon, pane.can_skip, **kwargs
+        )
         for form_def in pane.get_form_defs():
             fg.form_defs[form_def.name] = form_def
         return fg

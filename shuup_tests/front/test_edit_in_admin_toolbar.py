@@ -12,13 +12,18 @@ from shuup.admin.utils.urls import get_model_url
 from shuup.front.views.category import CategoryView
 from shuup.front.views.product import ProductDetailView
 from shuup.simple_cms.views import PageView
-from shuup.testing.factories import get_default_category, get_default_product, get_default_shop
+from shuup.testing.factories import (
+    get_default_category,
+    get_default_product,
+    get_default_shop,
+)
 from shuup.testing.utils import apply_request_middleware
 from shuup_tests.simple_cms.utils import create_page
 
 
 @pytest.mark.parametrize(
-    "view, function", [(ProductDetailView, get_default_product), (CategoryView, get_default_category)]
+    "view, function",
+    [(ProductDetailView, get_default_product), (CategoryView, get_default_category)],
 )
 @pytest.mark.django_db
 def test_edit_in_admin_url(rf, view, function, admin_user):

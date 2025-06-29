@@ -21,7 +21,9 @@ class NewLogEntryView(View):
     """
 
     def post(self, request, *args, **kwargs):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
+            "id", flat=True
+        )
         order = Order.objects.filter(pk=kwargs["pk"], shop_id__in=shop_ids).first()
         if not order:
             raise Http404()
@@ -39,6 +41,8 @@ class NewLogEntryView(View):
                 "message": entry.message,
                 "kind": force_text(entry.kind.label),
                 "created_on": get_locally_formatted_datetime(entry.created_on),
-                "user": force_text(getattr(entry.user, get_user_model().USERNAME_FIELD)),
+                "user": force_text(
+                    getattr(entry.user, get_user_model().USERNAME_FIELD)
+                ),
             }
         )

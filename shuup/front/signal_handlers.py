@@ -10,7 +10,13 @@ from django.dispatch import receiver
 from filer.models import Image
 
 from shuup.core import cache
-from shuup.core.models import Manufacturer, ProductCrossSell, ProductMedia, Shop, ShopProduct
+from shuup.core.models import (
+    Manufacturer,
+    ProductCrossSell,
+    ProductMedia,
+    Shop,
+    ShopProduct,
+)
 from shuup.core.signals import context_cache_item_bumped  # noqa
 from shuup.core.utils import context_cache
 from shuup.front.utils import cache as cache_utils
@@ -20,11 +26,21 @@ from shuup.front.utils.sorts_and_filters import bump_product_queryset_cache
 @receiver(context_cache_item_bumped, dispatch_uid="context-cache-item-bumped")
 def handle_context_cache_item_bumped(sender, **kwargs):
     def bump_cache_for_shop_id(shop_id):
-        context_cache.bump_cache_for_item(cache_utils.get_listed_products_cache_item(shop_id))
-        context_cache.bump_cache_for_item(cache_utils.get_best_selling_products_cache_item(shop_id))
-        context_cache.bump_cache_for_item(cache_utils.get_newest_products_cache_item(shop_id))
-        context_cache.bump_cache_for_item(cache_utils.get_products_for_category_cache_item(shop_id))
-        context_cache.bump_cache_for_item(cache_utils.get_random_products_cache_item(shop_id))
+        context_cache.bump_cache_for_item(
+            cache_utils.get_listed_products_cache_item(shop_id)
+        )
+        context_cache.bump_cache_for_item(
+            cache_utils.get_best_selling_products_cache_item(shop_id)
+        )
+        context_cache.bump_cache_for_item(
+            cache_utils.get_newest_products_cache_item(shop_id)
+        )
+        context_cache.bump_cache_for_item(
+            cache_utils.get_products_for_category_cache_item(shop_id)
+        )
+        context_cache.bump_cache_for_item(
+            cache_utils.get_random_products_cache_item(shop_id)
+        )
 
     shop_id = kwargs.get("shop_id", None)
     if not shop_id:
@@ -41,11 +57,15 @@ def handle_manufacturer_post_save(sender, instance, **kwargs):
     """
     if instance.shops.exists():
         for shop in instance.shops.only("pk").all():
-            context_cache.bump_cache_for_item(cache_utils.get_all_manufacturers_cache_item(shop))
+            context_cache.bump_cache_for_item(
+                cache_utils.get_all_manufacturers_cache_item(shop)
+            )
     else:
         # worst scenario ever
         for shop in Shop.objects.only("pk").all():
-            context_cache.bump_cache_for_item(cache_utils.get_all_manufacturers_cache_item(shop))
+            context_cache.bump_cache_for_item(
+                cache_utils.get_all_manufacturers_cache_item(shop)
+            )
 
 
 def bump_instance_thumbnail_cache(sender, instance, **kwargs):
@@ -60,7 +80,9 @@ def handle_cross_sell_post_save(sender, instance, **kwargs):
         .distinct()
     )
     for shop_id in shop_ids:
-        context_cache.bump_cache_for_item(cache_utils.get_cross_sells_cache_item(shop_id))
+        context_cache.bump_cache_for_item(
+            cache_utils.get_cross_sells_cache_item(shop_id)
+        )
 
 
 post_save.connect(bump_instance_thumbnail_cache, sender=ProductMedia)

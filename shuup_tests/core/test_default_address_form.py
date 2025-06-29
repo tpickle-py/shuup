@@ -8,7 +8,11 @@
 import pytest
 
 from shuup.core.utils.forms import MutableAddressForm
-from shuup.testing.factories import create_random_address, create_random_company, create_random_person
+from shuup.testing.factories import (
+    create_random_address,
+    create_random_company,
+    create_random_person,
+)
 from shuup_tests.utils.forms import get_form_data
 
 

@@ -29,7 +29,9 @@ from shuup.testing.factories import (
 )
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
+pytestmark = pytest.mark.skipif(
+    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
+)
 OBJECT_CREATED_LOG_IDENTIFIER = "object_created_signal_handled"
 
 
@@ -41,7 +43,9 @@ def test_product_create(browser, admin_user, live_server, settings):
     get_default_sales_unit()
     get_default_tax_class()
     object_created.connect(
-        _add_custom_product_created_message, sender=Product, dispatch_uid="object_created_signal_test"
+        _add_custom_product_created_message,
+        sender=Product,
+        dispatch_uid="object_created_signal_test",
     )
     initialize_admin_browser_test(browser, live_server, settings)
     original_size = browser.driver.get_window_size()
@@ -49,7 +53,9 @@ def test_product_create(browser, admin_user, live_server, settings):
 
     url = reverse("shuup_admin:shop_product.new")
     browser.visit("%s%s" % (live_server, url))
-    wait_until_condition(browser, condition=lambda x: x.is_text_present("New shop product"))
+    wait_until_condition(
+        browser, condition=lambda x: x.is_text_present("New shop product")
+    )
 
     sku = "testsku"
     name = "Some product name"
@@ -76,7 +82,10 @@ def test_product_create(browser, admin_user, live_server, settings):
         click_element(browser, "button[form='product_form']")
         wait_until_appeared(browser, "div[class='message success']")
     product = Product.objects.filter(sku=sku).first()
-    assert product.log_entries.filter(identifier=OBJECT_CREATED_LOG_IDENTIFIER).count() == 1
+    assert (
+        product.log_entries.filter(identifier=OBJECT_CREATED_LOG_IDENTIFIER).count()
+        == 1
+    )
     object_created.disconnect(sender=Product, dispatch_uid="object_created_signal_test")
     shop_product = product.get_shop_instance(shop)
     assert shop_product.categories.count() == 2
@@ -85,7 +94,9 @@ def test_product_create(browser, admin_user, live_server, settings):
 
 def _add_custom_product_created_message(sender, object, **kwargs):
     assert sender == Product
-    object.add_log_entry("Custom object created signal handled", identifier=OBJECT_CREATED_LOG_IDENTIFIER)
+    object.add_log_entry(
+        "Custom object created signal handled", identifier=OBJECT_CREATED_LOG_IDENTIFIER
+    )
 
 
 def _add_primary_category(browser, shop):
@@ -94,17 +105,26 @@ def _add_primary_category(browser, shop):
     move_to_element(browser, "#%s" % select_id, header_height=100)
 
     # Quick add new primary category
-    wait_until_appeared(browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id)
-    click_element(browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id)
+    wait_until_appeared(
+        browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id
+    )
+    click_element(
+        browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id
+    )
     wait_until_appeared(browser, "#create-object-iframe")
     with browser.get_iframe("create-object-iframe") as iframe:
         wait_until_appeared(iframe, "input[name='base-name__en']")
         iframe.fill("base-name__en", "Test Category")
         _save_category(iframe)
 
-    wait_until_condition(browser, condition=lambda x: not x.is_element_present_by_id("create-object-overlay"))
+    wait_until_condition(
+        browser,
+        condition=lambda x: not x.is_element_present_by_id("create-object-overlay"),
+    )
     check_category_count(browser, 1)
-    wait_until_condition(browser, lambda x: len(x.find_by_css("#%s option" % select_id)) == 1)
+    wait_until_condition(
+        browser, lambda x: len(x.find_by_css("#%s option" % select_id)) == 1
+    )
 
 
 def _add_additional_category(browser, shop):
@@ -113,26 +133,43 @@ def _add_additional_category(browser, shop):
     move_to_element(browser, "#%s" % select_id, header_height=100)
 
     # Quick add new additional category
-    wait_until_condition(browser, lambda x: len(x.find_by_css("#%s option[selected='']" % select_id)) == 1)
-    wait_until_appeared(browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id)
-    click_element(browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id)
+    wait_until_condition(
+        browser,
+        lambda x: len(x.find_by_css("#%s option[selected='']" % select_id)) == 1,
+    )
+    wait_until_appeared(
+        browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id
+    )
+    click_element(
+        browser, "#id_shop%d-primary_category ~ .quick-add-btn a.btn" % shop.id
+    )
     wait_until_appeared(browser, "#create-object-iframe")
     with browser.get_iframe("create-object-iframe") as iframe:
         wait_until_appeared(iframe, "input[name='base-name__en']")
         iframe.fill("base-name__en", "Test Category 2")
         _save_category(iframe)
 
-    wait_until_condition(browser, condition=lambda x: not x.is_element_present_by_id("create-object-overlay"))
+    wait_until_condition(
+        browser,
+        condition=lambda x: not x.is_element_present_by_id("create-object-overlay"),
+    )
     check_category_count(browser, 2)
-    wait_until_condition(browser, lambda x: len(x.find_by_css("#%s option[selected='']" % select_id)) == 2)
+    wait_until_condition(
+        browser,
+        lambda x: len(x.find_by_css("#%s option[selected='']" % select_id)) == 2,
+    )
 
 
 def check_category_count(browser, target_count):
-    wait_until_condition(browser, condition=lambda x: Category.objects.count() == target_count)
+    wait_until_condition(
+        browser, condition=lambda x: Category.objects.count() == target_count
+    )
 
 
 def _save_category(iframe):  # TODO: Revise! It seems that iframes are hard for Travis
-    time.sleep(3)  # Let's just wait here to the iFrame to open fully (for Chrome and headless)
+    time.sleep(
+        3
+    )  # Let's just wait here to the iFrame to open fully (for Chrome and headless)
     wait_until_appeared(iframe, "button[form='category_form']")
     try:
         click_element(iframe, "button[form='category_form']")

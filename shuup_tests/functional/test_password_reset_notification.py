@@ -15,8 +15,13 @@ from shuup.utils.django_compat import reverse
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("request_recovery_view_url_name", ("shuup:recover_password", "shuup_admin:request_password"))
-def test_password_reset_script_with_password_reset_form(client, admin_user, request_recovery_view_url_name):
+@pytest.mark.parametrize(
+    "request_recovery_view_url_name",
+    ("shuup:recover_password", "shuup_admin:request_password"),
+)
+def test_password_reset_script_with_password_reset_form(
+    client, admin_user, request_recovery_view_url_name
+):
     activate("en")
 
     shop = get_default_shop()
@@ -39,7 +44,9 @@ def test_password_reset_script_with_password_reset_form(client, admin_user, requ
     assert script.enabled
 
     n_outbox_pre = len(mail.outbox)
-    client.post(reverse(request_recovery_view_url_name), data={"email": admin_user.email})
+    client.post(
+        reverse(request_recovery_view_url_name), data={"email": admin_user.email}
+    )
     assert len(mail.outbox) == n_outbox_pre + 1
     assert "something unique the default template" in mail.outbox[-1].body
 

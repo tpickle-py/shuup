@@ -31,7 +31,9 @@ class QuickAddRelatedObjectBaseMixin(object):
 
 
 class QuickAddRelatedObjectSelectMixin(QuickAddRelatedObjectBaseMixin):
-    def __init__(self, attrs=None, choices=(), editable_model=None, initial=None, model=None):
+    def __init__(
+        self, attrs=None, choices=(), editable_model=None, initial=None, model=None
+    ):
         """
         :param initial int: primary key of the object that is initially selected
         """
@@ -41,11 +43,15 @@ class QuickAddRelatedObjectSelectMixin(QuickAddRelatedObjectBaseMixin):
         if self.model and initial:
             choices = [(initial.pk, force_text(initial))]
 
-        super(QuickAddRelatedObjectSelectMixin, self).__init__(attrs, choices, editable_model)
+        super(QuickAddRelatedObjectSelectMixin, self).__init__(
+            attrs, choices, editable_model
+        )
 
 
 class QuickAddRelatedObjectMultipleSelectMixin(QuickAddRelatedObjectBaseMixin):
-    def __init__(self, attrs=None, choices=(), editable_model=None, initial=None, model=None):
+    def __init__(
+        self, attrs=None, choices=(), editable_model=None, initial=None, model=None
+    ):
         """
         :param initial list[int]: list of primary keys of the objects that
             are initially selected
@@ -56,32 +62,44 @@ class QuickAddRelatedObjectMultipleSelectMixin(QuickAddRelatedObjectBaseMixin):
         if self.model and initial:
             choices = [(instance.pk, force_text(instance)) for instance in initial]
 
-        super(QuickAddRelatedObjectMultipleSelectMixin, self).__init__(attrs, choices, editable_model)
+        super(QuickAddRelatedObjectMultipleSelectMixin, self).__init__(
+            attrs, choices, editable_model
+        )
 
 
 class QuickAddRelatedObjectSelect(QuickAddRelatedObjectSelectMixin, Select):
     template_name = "shuup/admin/forms/widgets/quick_add_select.jinja"
 
     def get_context(self, name, value, attrs):
-        context = super(QuickAddRelatedObjectSelect, self).get_context(name, value, attrs)
+        context = super(QuickAddRelatedObjectSelect, self).get_context(
+            name, value, attrs
+        )
         context["quick_add_model"] = self.model
         try:
-            context["quick_add_url"] = "{}?mode=iframe&quick_add_target={}".format(force_text(self.url), name)
+            context["quick_add_url"] = "{}?mode=iframe&quick_add_target={}".format(
+                force_text(self.url), name
+            )
         except NoReverseMatch:
             pass
         context["quick_add_btn_title"] = _("Create New")
         return context
 
 
-class QuickAddRelatedObjectMultiSelect(QuickAddRelatedObjectMultipleSelectMixin, SelectMultiple):
+class QuickAddRelatedObjectMultiSelect(
+    QuickAddRelatedObjectMultipleSelectMixin, SelectMultiple
+):
     template_name = "shuup/admin/forms/widgets/quick_add_select.jinja"
 
     def get_context(self, name, value, attrs):
         attrs["multiple"] = True
-        context = super(QuickAddRelatedObjectMultiSelect, self).get_context(name, value, attrs)
+        context = super(QuickAddRelatedObjectMultiSelect, self).get_context(
+            name, value, attrs
+        )
 
         try:
-            context["quick_add_url"] = "{}?mode=iframe&quick_add_target={}".format(force_text(self.url), name)
+            context["quick_add_url"] = "{}?mode=iframe&quick_add_target={}".format(
+                force_text(self.url), name
+            )
         except NoReverseMatch:
             pass
 

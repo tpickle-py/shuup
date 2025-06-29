@@ -23,7 +23,12 @@ class ScriptListView(PicotableListView):
 
     model = Script
     default_columns = [
-        Column("name", _("Name"), linked=True, filter_config=TextFilter(operator="startswith")),
+        Column(
+            "name",
+            _("Name"),
+            linked=True,
+            filter_config=TextFilter(operator="startswith"),
+        ),
         Column("event_identifier", _("Event"), display="get_event_identifier_text"),
         Column("enabled", _("Enabled"), filter_config=true_or_false_filter),
     ]
@@ -36,7 +41,9 @@ class ScriptListView(PicotableListView):
     def get_event_identifier_text(self, instance):
         if not hasattr(self, "_event_identifier_names"):
             self._event_identifier_names = dict(get_name_map("notify_event"))
-        return self._event_identifier_names.get(instance.event_identifier, instance.event_identifier)
+        return self._event_identifier_names.get(
+            instance.event_identifier, instance.event_identifier
+        )
 
     def get_toolbar(self):
         return Toolbar(
@@ -65,4 +72,8 @@ class ScriptListView(PicotableListView):
         ]
 
     def get_queryset(self):
-        return super(ScriptListView, self).get_queryset().filter(shop=get_shop(self.request))
+        return (
+            super(ScriptListView, self)
+            .get_queryset()
+            .filter(shop=get_shop(self.request))
+        )

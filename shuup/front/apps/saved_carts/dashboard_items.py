@@ -20,6 +20,9 @@ class SavedCartsItem(DashboardItem):
     def get_context(self):
         context = super(SavedCartsItem, self).get_context()
         context["carts"] = StoredBasket.objects.filter(
-            persistent=True, deleted=False, customer=self.request.customer, shop=self.request.shop
+            persistent=True,
+            deleted=False,
+            customer=self.request.customer,
+            shop=self.request.shop,
         )
         return context

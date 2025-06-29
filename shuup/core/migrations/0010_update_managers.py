@@ -8,30 +8,29 @@ import shuup.utils.migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0009_update_tax_name_max_length'),
+        ("shuup", "0009_update_tax_name_max_length"),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name='carrier',
+            name="carrier",
             managers=(shuup.utils.migrations.get_managers_for_migration()),
         ),
         migrations.AlterModelManagers(
-            name='customcarrier',
+            name="customcarrier",
             managers=(shuup.utils.migrations.get_managers_for_migration()),
         ),
         migrations.AlterModelManagers(
-            name='custompaymentprocessor',
+            name="custompaymentprocessor",
             managers=(shuup.utils.migrations.get_managers_for_migration()),
         ),
         migrations.AlterModelManagers(
-            name='paymentprocessor',
+            name="paymentprocessor",
             managers=(shuup.utils.migrations.get_managers_for_migration()),
         ),
         migrations.AlterModelManagers(
-            name='serviceprovider',
+            name="serviceprovider",
             managers=(shuup.utils.migrations.get_managers_for_migration()),
         ),
     ]

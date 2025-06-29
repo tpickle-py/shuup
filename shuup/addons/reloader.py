@@ -15,7 +15,9 @@ class ReloadMethod(object):
     title = None
 
     def execute(self):
-        raise NotImplementedError("Error! Not implemented: `ReloadMethod` -> `execute()`.")
+        raise NotImplementedError(
+            "Error! Not implemented: `ReloadMethod` -> `execute()`."
+        )
 
     def is_viable(self):
         return False

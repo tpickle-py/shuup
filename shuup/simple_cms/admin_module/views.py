@@ -14,7 +14,12 @@ from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from django_jinja.views.generic import DetailView
 
-from shuup.admin.form_part import FormPart, FormPartsViewMixin, SaveFormPartsMixin, TemplatedFormDef
+from shuup.admin.form_part import (
+    FormPart,
+    FormPartsViewMixin,
+    SaveFormPartsMixin,
+    TemplatedFormDef,
+)
 from shuup.admin.forms.widgets import TextEditorWidget
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.supplier_provider import get_supplier
@@ -29,8 +34,12 @@ from shuup.utils.multilanguage_model_form import MultiLanguageModelForm
 
 
 class PageForm(MultiLanguageModelForm):
-    available_from = DateTimeField(label=_("Available since"), required=False, localize=True)
-    available_to = DateTimeField(label=_("Available until"), required=False, localize=True)
+    available_from = DateTimeField(
+        label=_("Available since"), required=False, localize=True
+    )
+    available_to = DateTimeField(
+        label=_("Available until"), required=False, localize=True
+    )
 
     class Meta:
         model = Page
@@ -49,14 +58,20 @@ class PageForm(MultiLanguageModelForm):
             "render_title",
             "available_permission_groups",
         ]
-        widgets = {"content": TextEditorWidget(attrs={"data-height": 500, "data-noresize": "true"})}
+        widgets = {
+            "content": TextEditorWidget(
+                attrs={"data-height": 500, "data-noresize": "true"}
+            )
+        }
 
     def __init__(self, **kwargs):
         self.request = kwargs.pop("request")
         kwargs.setdefault("required_languages", ())  # No required languages here
         super(PageForm, self).__init__(**kwargs)
 
-        self.fields["parent"].queryset = Page.objects.filter(shop=get_shop(self.request))
+        self.fields["parent"].queryset = Page.objects.filter(
+            shop=get_shop(self.request)
+        )
         self.fields["template_name"] = ChoiceField(
             label=_("Template"),
             required=False,
@@ -89,17 +104,28 @@ class PageForm(MultiLanguageModelForm):
                 if value:  # No need to bother complaining about this field
                     if field_name.startswith("url__"):  # url needs a second look though
                         if not self.is_url_valid(language, field_name, value):
-                            self.add_error(field_name, ValidationError(_("URL already exists."), code="invalid_url"))
+                            self.add_error(
+                                field_name,
+                                ValidationError(
+                                    _("URL already exists."), code="invalid_url"
+                                ),
+                            )
                         if value in urls:
                             self.add_error(
-                                field_name, ValidationError(_("URL must be unique."), code="invalid_unique_url")
+                                field_name,
+                                ValidationError(
+                                    _("URL must be unique."), code="invalid_unique_url"
+                                ),
                             )
                         urls.append(value)
                     continue
                 self.add_error(
                     field_name,
                     _("%(label)s is required when any %(language)s field is filled.")
-                    % {"label": self.fields[field_name].label, "language": get_language_name(language)},
+                    % {
+                        "label": self.fields[field_name].label,
+                        "language": get_language_name(language),
+                    },
                 )
 
         if not something_filled:
@@ -135,8 +161,14 @@ class PageForm(MultiLanguageModelForm):
         1. URL (other than owned by existing page) exists
         2. URL exists in other languages of existing page
         """
-        pages_ids = Page.objects.for_shop(get_shop(self.request)).exclude(deleted=True).values_list("id", flat=True)
-        qs = self._get_translation_model().objects.filter(url=url, master_id__in=pages_ids)
+        pages_ids = (
+            Page.objects.for_shop(get_shop(self.request))
+            .exclude(deleted=True)
+            .values_list("id", flat=True)
+        )
+        qs = self._get_translation_model().objects.filter(
+            url=url, master_id__in=pages_ids
+        )
         if not self.instance.pk and qs.exists():
             return False
         other_qs = qs.exclude(master=self.instance)
@@ -165,7 +197,11 @@ class PageBaseFormPart(FormPart):
             PageForm,
             template_name="shuup/simple_cms/admin/_edit_base_page_form.jinja",
             required=True,
-            kwargs={"instance": self.object, "languages": settings.LANGUAGES, "request": self.request},
+            kwargs={
+                "instance": self.object,
+                "languages": settings.LANGUAGES,
+                "request": self.request,
+            },
         )
 
     def form_valid(self, form):
@@ -188,16 +224,25 @@ class PageEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView):
 
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
-        return get_default_edit_toolbar(self, save_form_id, delete_url=self.get_delete_url())
+        return get_default_edit_toolbar(
+            self, save_form_id, delete_url=self.get_delete_url()
+        )
 
     def get_delete_url(self):
         url = None
         if self.object.pk:
-            url = reverse_lazy("shuup_admin:simple_cms.page.delete", kwargs={"pk": self.object.pk})
+            url = reverse_lazy(
+                "shuup_admin:simple_cms.page.delete", kwargs={"pk": self.object.pk}
+            )
         return url
 
     def get_queryset(self):
-        return super(PageEditView, self).get_queryset().for_shop(get_shop(self.request)).not_deleted()
+        return (
+            super(PageEditView, self)
+            .get_queryset()
+            .for_shop(get_shop(self.request))
+            .not_deleted()
+        )
 
     def form_valid(self, form):
         return self.save_form_parts(form)
@@ -213,7 +258,9 @@ class PageListView(PicotableListView):
             sort_field="translations__title",
             display="title",
             linked=True,
-            filter_config=TextFilter(operator="startswith", filter_field="translations__title"),
+            filter_config=TextFilter(
+                operator="startswith", filter_field="translations__title"
+            ),
         ),
         Column("available_from", _("Available since")),
         Column("available_to", _("Available until")),
@@ -225,11 +272,18 @@ class PageListView(PicotableListView):
         return [
             {"text": "%s" % (instance or _("Page")), "class": "header"},
             {"title": _("Available since"), "text": item.get("available_from")},
-            {"title": _("Available until"), "text": item.get("available_to")} if instance.available_to else None,
+            {"title": _("Available until"), "text": item.get("available_to")}
+            if instance.available_to
+            else None,
         ]
 
     def get_queryset(self):
-        return super(PageListView, self).get_queryset().for_shop(get_shop(self.request)).not_deleted()
+        return (
+            super(PageListView, self)
+            .get_queryset()
+            .for_shop(get_shop(self.request))
+            .not_deleted()
+        )
 
 
 class PageDeleteView(DetailView):

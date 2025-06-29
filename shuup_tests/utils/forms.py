@@ -41,7 +41,9 @@ def get_form_data(form, prepared=False):
     data = {}
     for name, field in form.fields.items():
         prefixed_name = form.add_prefix(name)
-        data_value = field.widget.value_from_datadict(form.data, form.files, prefixed_name)
+        data_value = field.widget.value_from_datadict(
+            form.data, form.files, prefixed_name
+        )
 
         if data_value:
             value = data_value

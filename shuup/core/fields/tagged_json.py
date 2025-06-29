@@ -63,9 +63,13 @@ class TagRegistry(object):
             else:
                 decoder = classes
         if not callable(decoder):
-            raise ValueError("Error! Decoder `%r` for tag `%r` is not callable." % (decoder, tag))
+            raise ValueError(
+                "Error! Decoder `%r` for tag `%r` is not callable." % (decoder, tag)
+            )
         if not callable(encoder):
-            raise ValueError("Error! Encoder `%r` for tag `%r` is not callable." % (encoder, tag))
+            raise ValueError(
+                "Error! Encoder `%r` for tag `%r` is not callable." % (encoder, tag)
+            )
 
         self.tags[tag] = {"classes": classes, "encoder": encoder, "decoder": decoder}
 
@@ -86,9 +90,15 @@ class TagRegistry(object):
 
 #: The default tag registry.
 tag_registry = TagRegistry()
-tag_registry.register("$datetime", datetime.datetime, encoder=isoformat, decoder=dateparse.parse_datetime)
-tag_registry.register("$date", datetime.date, encoder=isoformat, decoder=dateparse.parse_date)
-tag_registry.register("$time", datetime.time, encoder=isoformat, decoder=dateparse.parse_time)
+tag_registry.register(
+    "$datetime", datetime.datetime, encoder=isoformat, decoder=dateparse.parse_datetime
+)
+tag_registry.register(
+    "$date", datetime.date, encoder=isoformat, decoder=dateparse.parse_date
+)
+tag_registry.register(
+    "$time", datetime.time, encoder=isoformat, decoder=dateparse.parse_time
+)
 tag_registry.register("$dec", decimal.Decimal)
 tag_registry.register("$enum", Enum, encoder=encode_enum, decoder=decode_enum)
 

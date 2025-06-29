@@ -27,19 +27,29 @@ from shuup.testing.soup_utils import extract_form_fields
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse
 from shuup_tests.utils import SmartClient
-from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME, regular_user
+from shuup_tests.utils.fixtures import (
+    REGULAR_USER_PASSWORD,
+    REGULAR_USER_USERNAME,
+    regular_user,
+)
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("allow_image_uploads", (False, True))
 def test_uploads_allowed_setting(client, allow_image_uploads, regular_user):
     client.login(username=REGULAR_USER_USERNAME, password=REGULAR_USER_PASSWORD)
-    with override_settings(SHUUP_CUSTOMER_INFORMATION_ALLOW_PICTURE_UPLOAD=allow_image_uploads):
+    with override_settings(
+        SHUUP_CUSTOMER_INFORMATION_ALLOW_PICTURE_UPLOAD=allow_image_uploads
+    ):
         if allow_image_uploads:
             tmp_file = tempfile.NamedTemporaryFile(suffix=".jpg")
             generate_image(120, 120).save(tmp_file)
             with open(tmp_file.name, "rb") as data:
-                response = client.post(reverse("shuup:media-upload"), data=dict({"file": data}), format="multipart")
+                response = client.post(
+                    reverse("shuup:media-upload"),
+                    data=dict({"file": data}),
+                    format="multipart",
+                )
             assert response.status_code == 200
             data = json.loads(response.content.decode("utf-8"))
             assert data["file"]["id"]
@@ -47,7 +57,11 @@ def test_uploads_allowed_setting(client, allow_image_uploads, regular_user):
             tmp_file = tempfile.NamedTemporaryFile(suffix=".jpg")
             generate_image(120, 120).save(tmp_file)
             with open(tmp_file.name, "rb") as data:
-                response = client.post(reverse("shuup:media-upload"), data=dict({"file": data}), format="multipart")
+                response = client.post(
+                    reverse("shuup:media-upload"),
+                    data=dict({"file": data}),
+                    format="multipart",
+                )
             assert response.status_code == 403
 
 
@@ -57,7 +71,11 @@ def test_anon_uploads(client):
         tmp_file = tempfile.NamedTemporaryFile(suffix=".jpg")
         generate_image(120, 120).save(tmp_file)
         with open(tmp_file.name, "rb") as data:
-            response = client.post(reverse("shuup:media-upload"), data=dict({"file": data}), format="multipart")
+            response = client.post(
+                reverse("shuup:media-upload"),
+                data=dict({"file": data}),
+                format="multipart",
+            )
         assert response.status_code == 302  # Anon uploads not allowed
 
 
@@ -69,7 +87,11 @@ def test_with_invalid_image(client, regular_user):
         tmp_file.write(b"Hello world!")
         tmp_file.seek(0)
         with open(tmp_file.name, "rb") as data:
-            response = client.post(reverse("shuup:media-upload"), data=dict({"file": data}), format="multipart")
+            response = client.post(
+                reverse("shuup:media-upload"),
+                data=dict({"file": data}),
+                format="multipart",
+            )
         assert response.status_code == 400
         data = json.loads(response.content.decode("utf-8"))
         assert "not an image or a corrupted image" in data["error"]
@@ -83,7 +105,11 @@ def test_large_file(client, regular_user):
             tmp_file = tempfile.NamedTemporaryFile(suffix=".jpg")
             generate_image(120, 120).save(tmp_file)
             with open(tmp_file.name, "rb") as data:
-                response = client.post(reverse("shuup:media-upload"), data=dict({"file": data}), format="multipart")
+                response = client.post(
+                    reverse("shuup:media-upload"),
+                    data=dict({"file": data}),
+                    format="multipart",
+                )
             assert response.status_code == 400
             data = json.loads(response.content.decode("utf-8"))
             assert "Maximum file size reached" in data["error"]

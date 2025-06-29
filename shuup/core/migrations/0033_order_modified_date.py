@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0032_shop_product_fields'),
+        ("shuup", "0032_shop_product_fields"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='modified_on',
-            field=models.DateTimeField(auto_now=True, verbose_name='modified on'),
+            model_name="order",
+            name="modified_on",
+            field=models.DateTimeField(auto_now=True, verbose_name="modified on"),
         )
     ]

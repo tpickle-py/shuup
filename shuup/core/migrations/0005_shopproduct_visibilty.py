@@ -24,6 +24,7 @@ def shop_product_visibility(apps, schema_editor):
         shop_product.visibility = visibility
         shop_product.save()
 
+
 def reverse_shop_product_visibility(apps, schema_editor):
     ShopProduct = apps.get_model("shuup", "ShopProduct")
     for shop_product in ShopProduct.objects.all():
@@ -51,29 +52,34 @@ def reverse_shop_product_visibility(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0004_update_orderline_refunds'),
+        ("shuup", "0004_update_orderline_refunds"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='shopproduct',
-            name='visibility',
-            field=enumfields.fields.EnumIntegerField(enum=ShopProductVisibility, db_index=True, verbose_name='visibility', default=0),
+            model_name="shopproduct",
+            name="visibility",
+            field=enumfields.fields.EnumIntegerField(
+                enum=ShopProductVisibility,
+                db_index=True,
+                verbose_name="visibility",
+                default=0,
+            ),
         ),
-        migrations.RunPython(shop_product_visibility, reverse_code=reverse_shop_product_visibility),
+        migrations.RunPython(
+            shop_product_visibility, reverse_code=reverse_shop_product_visibility
+        ),
         migrations.RemoveField(
-            model_name='shopproduct',
-            name='visible',
+            model_name="shopproduct",
+            name="visible",
         ),
         migrations.RemoveField(
-            model_name='shopproduct',
-            name='listed',
+            model_name="shopproduct",
+            name="listed",
         ),
         migrations.RemoveField(
-            model_name='shopproduct',
-            name='searchable',
+            model_name="shopproduct",
+            name="searchable",
         ),
-
     ]

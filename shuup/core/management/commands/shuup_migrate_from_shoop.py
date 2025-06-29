@@ -152,9 +152,17 @@ class Command(BaseCommand):
             for app in APP_LABELS:
                 self.stdout.write("Updating migrations and content types for %s" % app)
                 new_app = app.replace("shoop", "shuup")
-                run("DELETE FROM django_migrations" " WHERE app=%s AND name != '0001_initial'", app)
-                run("UPDATE django_migrations" " SET app=%s WHERE app=%s", new_app, app)
-                run("UPDATE django_content_type" " SET app_label=%s WHERE app_label=%s", new_app, app)
+                run(
+                    "DELETE FROM django_migrations"
+                    " WHERE app=%s AND name != '0001_initial'",
+                    app,
+                )
+                run("UPDATE django_migrations SET app=%s WHERE app=%s", new_app, app)
+                run(
+                    "UPDATE django_content_type SET app_label=%s WHERE app_label=%s",
+                    new_app,
+                    app,
+                )
 
             for table in TABLES:
                 self.stdout.write("Renaming table %s" % table)

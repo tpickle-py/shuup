@@ -26,7 +26,11 @@ class ServiceBaseFormPart(FormPart):
             self.form,
             required=True,
             template_name="shuup/admin/services/_edit_base_form.jinja",
-            kwargs={"instance": self.object, "languages": settings.LANGUAGES, "request": self.request},
+            kwargs={
+                "instance": self.object,
+                "languages": settings.LANGUAGES,
+                "request": self.request,
+            },
         )
 
     def form_valid(self, form):

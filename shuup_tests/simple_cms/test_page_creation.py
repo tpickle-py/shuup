@@ -67,11 +67,21 @@ def test_page_form(rf, admin_user):
     form.full_clean()
     assert not form.errors
     page = form.save()
-    assert set(page.get_available_languages()) == {"fi"}  # The page should be only in Finnish
+    assert set(page.get_available_languages()) == {
+        "fi"
+    }  # The page should be only in Finnish
     # Let's edit that page
     original_url = "errrnglish"
-    data.update({"title__en": "englaish", "url__en": original_url, "content__en": "ennnn ennnn ennnnnnn-nn-n-n"})
-    form = form_class(**dict(request=request, languages=settings.LANGUAGES, data=data, instance=page))
+    data.update(
+        {
+            "title__en": "englaish",
+            "url__en": original_url,
+            "content__en": "ennnn ennnn ennnnnnn-nn-n-n",
+        }
+    )
+    form = form_class(
+        **dict(request=request, languages=settings.LANGUAGES, data=data, instance=page)
+    )
     form.full_clean()
     assert not form.errors
     page = form.save()
@@ -79,7 +89,9 @@ def test_page_form(rf, admin_user):
 
     # Try to make page a child of itself
     data.update({"parent": page.pk})
-    form = form_class(**dict(request=request, languages=settings.LANGUAGES, data=data, instance=page))
+    form = form_class(
+        **dict(request=request, languages=settings.LANGUAGES, data=data, instance=page)
+    )
     form.full_clean()
     assert form.errors
     del data["parent"]
@@ -88,8 +100,16 @@ def test_page_form(rf, admin_user):
     dummy = create_page(url="test", shop=get_default_shop())
 
     # edit page again and try to set duplicate url
-    data.update({"title__en": "englaish", "url__en": "test", "content__en": "ennnn ennnn ennnnnnn-nn-n-n"})
-    form = form_class(**dict(request=request, languages=settings.LANGUAGES, data=data, instance=page))
+    data.update(
+        {
+            "title__en": "englaish",
+            "url__en": "test",
+            "content__en": "ennnn ennnn ennnnnnn-nn-n-n",
+        }
+    )
+    form = form_class(
+        **dict(request=request, languages=settings.LANGUAGES, data=data, instance=page)
+    )
     form.full_clean()
 
     assert len(form.errors) == 1
@@ -97,18 +117,36 @@ def test_page_form(rf, admin_user):
     assert form.errors["url__en"].as_data()[0].code == "invalid_url"
 
     # it should be possible to change back to the original url
-    data.update({"title__en": "englaish", "url__en": original_url, "content__en": "ennnn ennnn ennnnnnn-nn-n-n"})
-    form = form_class(**dict(request=request, languages=settings.LANGUAGES, data=data, instance=page))
+    data.update(
+        {
+            "title__en": "englaish",
+            "url__en": original_url,
+            "content__en": "ennnn ennnn ennnnnnn-nn-n-n",
+        }
+    )
+    form = form_class(
+        **dict(request=request, languages=settings.LANGUAGES, data=data, instance=page)
+    )
     form.full_clean()
     assert not form.errors
     page = form.save()
 
     # add finnish urls, it should not be possible to enter original url
-    data.update({"title__fi": "englaish", "url__fi": original_url, "content__fi": "ennnn ennnn ennnnnnn-nn-n-n"})
+    data.update(
+        {
+            "title__fi": "englaish",
+            "url__fi": original_url,
+            "content__fi": "ennnn ennnn ennnnnnn-nn-n-n",
+        }
+    )
 
-    assert data["url__fi"] == data["url__en"]  # both urls are same, should raise two errors
+    assert (
+        data["url__fi"] == data["url__en"]
+    )  # both urls are same, should raise two errors
 
-    form = form_class(**dict(request=request, languages=settings.LANGUAGES, data=data, instance=page))
+    form = form_class(
+        **dict(request=request, languages=settings.LANGUAGES, data=data, instance=page)
+    )
     form.full_clean()
     assert len(form.errors) == 1
     assert "url__fi" in form.errors

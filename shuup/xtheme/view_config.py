@@ -39,7 +39,9 @@ class ViewConfig(object):
         """
         self.theme = theme
         self.shop = shop
-        self.view_name = XTHEME_GLOBAL_VIEW_NAME if global_type else force_text(view_name)
+        self.view_name = (
+            XTHEME_GLOBAL_VIEW_NAME if global_type else force_text(view_name)
+        )
         self.draft = bool(draft)
         self._saved_view_config = None
 
@@ -56,7 +58,10 @@ class ViewConfig(object):
 
         if self._saved_view_config is None:
             self._saved_view_config = SavedViewConfig.objects.appropriate(
-                theme=self.theme, shop=self.shop, view_name=self.view_name, draft=self.draft
+                theme=self.theme,
+                shop=self.shop,
+                view_name=self.view_name,
+                draft=self.draft,
             )
             self.draft = self._saved_view_config.draft
         return self._saved_view_config
@@ -75,18 +80,27 @@ class ViewConfig(object):
         :rtype: list
         """
         layouts = [
-            self.get_placeholder_layout(Layout, placeholder_name, default_layout=default_layout, context=context)
+            self.get_placeholder_layout(
+                Layout, placeholder_name, default_layout=default_layout, context=context
+            )
         ]
 
         for layout_cls in get_provided_layouts():
-            layout = self.get_placeholder_layout(layout_cls, placeholder_name, context=context)
+            layout = self.get_placeholder_layout(
+                layout_cls, placeholder_name, context=context
+            )
             if layout is not None:
                 layouts.append(layout)
 
         return layouts
 
     def get_placeholder_layout(
-        self, layout_cls, placeholder_name, default_layout={}, context=None, layout_data_key=None
+        self,
+        layout_cls,
+        placeholder_name,
+        default_layout={},
+        context=None,
+        layout_data_key=None,
     ):
         """
         Get a layout object for the given placeholder.
@@ -114,7 +128,9 @@ class ViewConfig(object):
         if svc:
             placeholder_data = svc.get_layout_data(layout_data_key)
             if placeholder_data:
-                return layout.unserialize(self.theme, placeholder_data, placeholder_name=placeholder_name)
+                return layout.unserialize(
+                    self.theme, placeholder_data, placeholder_name=placeholder_name
+                )
 
         if default_layout:
             if isinstance(default_layout, Layout):
@@ -137,8 +153,13 @@ class ViewConfig(object):
         """
         if not self.draft:
             return False
-        if self.saved_view_config and self.saved_view_config.get_layout_data(placeholder_name) is None:
-            self.save_placeholder_layout(get_layout_data_key(placeholder_name, layout, {}), layout)
+        if (
+            self.saved_view_config
+            and self.saved_view_config.get_layout_data(placeholder_name) is None
+        ):
+            self.save_placeholder_layout(
+                get_layout_data_key(placeholder_name, layout, {}), layout
+            )
             return True
         return False
 
@@ -151,7 +172,9 @@ class ViewConfig(object):
         """
         svc = self.saved_view_config
         if not svc:
-            raise ValueError("Error! Unable to publish view config. Is a theme set properly?")
+            raise ValueError(
+                "Error! Unable to publish view config. Is a theme set properly?"
+            )
         svc.publish()
         self.draft = svc.draft
         return True
@@ -165,7 +188,9 @@ class ViewConfig(object):
         """
         svc = self.saved_view_config
         if not svc:
-            raise ValueError("Error! Unable to revert view config. Is a theme set properly?")
+            raise ValueError(
+                "Error! Unable to revert view config. Is a theme set properly?"
+            )
         svc.revert()
         self.draft = True
         self._saved_view_config = None
@@ -182,6 +207,8 @@ class ViewConfig(object):
         """
         svc = self.saved_view_config
         if not svc:
-            raise ValueError("Error! Unable to retrieve view config; unable to save data. Is a theme set properly?")
+            raise ValueError(
+                "Error! Unable to retrieve view config; unable to save data. Is a theme set properly?"
+            )
         svc.set_layout_data(layout_data_key, layout)
         svc.save()

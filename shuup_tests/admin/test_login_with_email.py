@@ -30,7 +30,11 @@ def test_login_with_invalid_password(client, regular_user, rf):
     redirect_target = "/redirect-success/"
     response = client.post(
         reverse("shuup_admin:login"),
-        data={"username": regular_user.email, "password": "hello", REDIRECT_FIELD_NAME: redirect_target},
+        data={
+            "username": regular_user.email,
+            "password": "hello",
+            REDIRECT_FIELD_NAME: redirect_target,
+        },
     )
 
     assert not response.get("location")  # No redirect since errors
@@ -48,7 +52,11 @@ def test_login_with_email_1(client, regular_user, rf):
     redirect_target = "/redirect-success/"
     response = client.post(
         reverse("shuup_admin:login"),
-        data={"username": regular_user.email, "password": REGULAR_USER_PASSWORD, REDIRECT_FIELD_NAME: redirect_target},
+        data={
+            "username": regular_user.email,
+            "password": REGULAR_USER_PASSWORD,
+            REDIRECT_FIELD_NAME: redirect_target,
+        },
     )
 
     assert response.get("location")
@@ -63,14 +71,20 @@ def test_login_with_email_1(client, regular_user, rf):
 @pytest.mark.usefixtures("regular_user")
 def test_login_with_email_2(client, regular_user, rf):
     # Create user with same email as regular user to fail login
-    get_user_model().objects.create_user(username="el_person", password="123123", email=regular_user.email)
+    get_user_model().objects.create_user(
+        username="el_person", password="123123", email=regular_user.email
+    )
 
     get_default_shop()
     prepare_user(regular_user)
     redirect_target = "/redirect-success/"
     client.post(
         reverse("shuup_admin:login"),
-        data={"username": regular_user.email, "password": REGULAR_USER_PASSWORD, REDIRECT_FIELD_NAME: redirect_target},
+        data={
+            "username": regular_user.email,
+            "password": REGULAR_USER_PASSWORD,
+            REDIRECT_FIELD_NAME: redirect_target,
+        },
     )
 
     request = rf.get("/")
@@ -116,7 +130,9 @@ def test_login_with_email_2(client, regular_user, rf):
 def test_login_with_email_3(client, regular_user, rf):
     new_user_password = "123123"
     new_user = get_user_model().objects.create_user(
-        username=regular_user.email, password=new_user_password, email=regular_user.email
+        username=regular_user.email,
+        password=new_user_password,
+        email=regular_user.email,
     )
 
     get_default_shop()
@@ -126,7 +142,11 @@ def test_login_with_email_3(client, regular_user, rf):
     # Login with new_user username should work even if there is users with same email
     response = client.post(
         reverse("shuup_admin:login"),
-        data={"username": regular_user.email, "password": new_user_password, REDIRECT_FIELD_NAME: redirect_target},
+        data={
+            "username": regular_user.email,
+            "password": new_user_password,
+            REDIRECT_FIELD_NAME: redirect_target,
+        },
     )
 
     assert response.get("location")

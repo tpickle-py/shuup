@@ -43,13 +43,14 @@ def delete_dashboard_permissions(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shuup', '0001_initial'),
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('auth', '0006_require_contenttypes_0002'),
+        ("shuup", "0001_initial"),
+        ("contenttypes", "0002_remove_content_type_name"),
+        ("auth", "0006_require_contenttypes_0002"),
     ]
 
     operations = [
-        migrations.RunPython(create_dashboard_permissions, delete_dashboard_permissions),
+        migrations.RunPython(
+            create_dashboard_permissions, delete_dashboard_permissions
+        ),
     ]

@@ -33,7 +33,9 @@ class TaxesReport(OrderReportMixin, ShuupReportBase):
     ]
 
     def get_objects(self):
-        order_line_taxes = OrderLineTax.objects.filter(order_line__order__in=super(TaxesReport, self).get_objects())
+        order_line_taxes = OrderLineTax.objects.filter(
+            order_line__order__in=super(TaxesReport, self).get_objects()
+        )
 
         tax = self.options.get("tax")
         tax_class = self.options.get("tax_class")
@@ -50,7 +52,10 @@ class TaxesReport(OrderReportMixin, ShuupReportBase):
             .annotate(
                 total_tax_amount=Sum("amount_value"),
                 total_pretax_amount=Sum("base_amount_value"),
-                total=Sum(F("amount_value") + F("base_amount_value"), output_field=MoneyValueField()),
+                total=Sum(
+                    F("amount_value") + F("base_amount_value"),
+                    output_field=MoneyValueField(),
+                ),
                 order_count=Count("order_line__order", distinct=True),
             )
             .order_by("total_tax_amount")
@@ -70,8 +75,12 @@ class TaxesReport(OrderReportMixin, ShuupReportBase):
                     "tax": tax_map[tax_total["tax"]].name,
                     "tax_rate": tax_total["tax__rate"] * Decimal(100.0),
                     "order_count": tax_total["order_count"],
-                    "total_pretax_amount": Money(tax_total["total_pretax_amount"], self.shop.currency),
-                    "total_tax_amount": Money(tax_total["total_tax_amount"], self.shop.currency),
+                    "total_pretax_amount": Money(
+                        tax_total["total_pretax_amount"], self.shop.currency
+                    ),
+                    "total_tax_amount": Money(
+                        tax_total["total_tax_amount"], self.shop.currency
+                    ),
                     "total": Money(tax_total["total"], self.shop.currency),
                 }
             )

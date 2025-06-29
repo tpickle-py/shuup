@@ -108,7 +108,7 @@ def find_files(
     if isinstance(allowed_extensions, string_types):
         allowed_extensions = set([allowed_extensions])
     for root in roots:
-        for (path, dirs, files) in os.walk(root):
+        for path, dirs, files in os.walk(root):
             path = posixpath.normpath(path.replace(os.sep, "/"))
             _remove_ignored_directories(path, dirs, ignored_dirs, ignored_path_regexps)
             for filename in files:
@@ -132,7 +132,9 @@ def _remove_ignored_directories(path, dirs, ignored_dirs, ignored_path_regexps):
         matches.update(set(dir for dir in dirs if fnmatch.fnmatch(dir, ignored_dir)))
 
     for ignore_re in ignored_path_regexps:
-        matches.update(dir for dir in dirs if re.match(ignore_re, posixpath.join(path, dir)))
+        matches.update(
+            dir for dir in dirs if re.match(ignore_re, posixpath.join(path, dir))
+        )
 
     for ignored_dir in matches:
         dirs.remove(ignored_dir)

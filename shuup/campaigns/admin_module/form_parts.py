@@ -53,7 +53,9 @@ class SalesRangesFormPart(FormPart):
             return
 
         for shop in self.shops:
-            instance, _ = ContactGroupSalesRange.objects.get_or_create(group=self.object, shop=shop)
+            instance, _ = ContactGroupSalesRange.objects.get_or_create(
+                group=self.object, shop=shop
+            )
             yield TemplatedFormDef(
                 name=self._get_form_name(shop),
                 form_class=self.form,
@@ -83,7 +85,11 @@ class CampaignBaseFormPart(FormPart):
             self.form,
             required=True,
             template_name="shuup/campaigns/admin/_edit_base_form.jinja",
-            kwargs={"instance": self.object, "languages": settings.LANGUAGES, "request": self.request},
+            kwargs={
+                "instance": self.object,
+                "languages": settings.LANGUAGES,
+                "request": self.request,
+            },
         )
 
     def form_valid(self, form):

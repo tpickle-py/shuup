@@ -71,7 +71,9 @@ def test_sample_data_manager():
 
 @pytest.mark.django_db
 def test_sample_data_wizard_pane(rf, admin_user, settings):
-    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = ["shuup.testing.modules.sample_data.views.SampleObjectsWizardPane"]
+    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = [
+        "shuup.testing.modules.sample_data.views.SampleObjectsWizardPane"
+    ]
 
     shop = get_default_shop()
     get_default_tax_class()
@@ -95,7 +97,9 @@ def test_sample_data_wizard_pane(rf, admin_user, settings):
     # check for the injected plugin using the carousel
     assert Carousel.objects.count() == 1
     carousel = Carousel.objects.first()
-    assert Slide.objects.count() == len(BUSINESS_SEGMENTS["default"]["carousel"]["slides"])
+    assert Slide.objects.count() == len(
+        BUSINESS_SEGMENTS["default"]["carousel"]["slides"]
+    )
     svc = SavedViewConfig.objects.first()
     assert svc.view_name == "IndexView"
     layout = svc.get_layout_data("front_content")
@@ -104,7 +108,9 @@ def test_sample_data_wizard_pane(rf, admin_user, settings):
 
     for product in Product.objects.all():
         # all products must be orderable and have images
-        assert product.get_shop_instance(shop).is_orderable(supplier=supplier, customer=anon_contact, quantity=1)
+        assert product.get_shop_instance(shop).is_orderable(
+            supplier=supplier, customer=anon_contact, quantity=1
+        )
         assert product.primary_image is not None
 
     assert Category.objects.count() == len(BUSINESS_SEGMENTS["default"]["categories"])
@@ -171,7 +177,12 @@ def test_consolidate_objects(rf, admin_user):
     def populate_samples():
         manager.clear_installed_samples(shop)
         categories = [CategoryFactory().pk, CategoryFactory().pk, CategoryFactory().pk]
-        products = [ProductFactory().pk, ProductFactory().pk, ProductFactory().pk, ProductFactory().pk]
+        products = [
+            ProductFactory().pk,
+            ProductFactory().pk,
+            ProductFactory().pk,
+            ProductFactory().pk,
+        ]
         carousel = Carousel.objects.create(name="crazy stuff").pk
         manager.save_categories(shop, categories)
         manager.save_products(shop, products)

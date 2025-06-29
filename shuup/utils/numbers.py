@@ -68,7 +68,7 @@ def nickel_round(value, quant=Decimal("0.05"), rounding=ROUND_HALF_UP):
 
 
 def strip_non_float_chars(s):
-    """ Strips characters that aren't part of normal floats. """
+    """Strips characters that aren't part of normal floats."""
     return re.sub("[^-+0123456789.]+", "", six.text_type(s))
 
 
@@ -102,10 +102,18 @@ def parse_simple_decimal(value, error=raise_exception):
     :rtype: Decimal|type(error)
     :raises ValueError: on errors by default
     """
-    decoded_value = value.decode("ascii", errors="replace") if six.PY2 and isinstance(value, bytes) else value
-    if not isinstance(decoded_value, six.text_type) or (not _simple_decimal_rx.match(decoded_value)):
+    decoded_value = (
+        value.decode("ascii", errors="replace")
+        if six.PY2 and isinstance(value, bytes)
+        else value
+    )
+    if not isinstance(decoded_value, six.text_type) or (
+        not _simple_decimal_rx.match(decoded_value)
+    ):
         if error is raise_exception:
-            raise ValueError("Error! Value `%r` can't be parsed as a simple decimal." % (value,))
+            raise ValueError(
+                "Error! Value `%r` can't be parsed as a simple decimal." % (value,)
+            )
         return error
     return Decimal(value)
 

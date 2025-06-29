@@ -18,7 +18,11 @@ from shuup_tests.simple_cms.utils import create_page
 @pytest.mark.parametrize("template_name", ["page.jinja", "page_sidebar.jinja"])
 def test_superuser_can_see_invisible_page(rf, template_name):
     template_path = "shuup/simple_cms/" + template_name
-    page = create_page(template_name=template_path, available_from=datetime.date(1988, 1, 1), shop=get_default_shop())
+    page = create_page(
+        template_name=template_path,
+        available_from=datetime.date(1988, 1, 1),
+        shop=get_default_shop(),
+    )
     view_func = PageView.as_view()
     request = apply_request_middleware(rf.get("/"))
     response = view_func(request, url=page.url)

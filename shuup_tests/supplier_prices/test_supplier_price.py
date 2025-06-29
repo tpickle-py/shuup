@@ -24,15 +24,24 @@ def test_supplier_price_without_selected_supplier(rf):
     supplier2.shops.add(shop)
 
     strategy = "shuup.testing.supplier_pricing.supplier_strategy:CheapestSupplierPriceSupplierStrategy"
-    with override_settings(SHUUP_PRICING_MODULE="supplier_pricing", SHUUP_SHOP_PRODUCT_SUPPLIERS_STRATEGY=strategy):
+    with override_settings(
+        SHUUP_PRICING_MODULE="supplier_pricing",
+        SHUUP_SHOP_PRODUCT_SUPPLIERS_STRATEGY=strategy,
+    ):
         customer = AnonymousContact()
         pricing_mod = get_pricing_module()
-        supplier1_ctx = pricing_mod.get_context_from_data(shop, customer, supplier=supplier1)
-        supplier2_ctx = pricing_mod.get_context_from_data(shop, customer, supplier=supplier2)
+        supplier1_ctx = pricing_mod.get_context_from_data(
+            shop, customer, supplier=supplier1
+        )
+        supplier2_ctx = pricing_mod.get_context_from_data(
+            shop, customer, supplier=supplier2
+        )
 
         # Supplied by both suppliers
         product1_default_price = 10
-        product1 = factories.create_product("sku1", shop=shop, supplier=supplier1, default_price=product1_default_price)
+        product1 = factories.create_product(
+            "sku1", shop=shop, supplier=supplier1, default_price=product1_default_price
+        )
         shop_product1 = product1.get_shop_instance(shop)
         shop_product1.suppliers.add(supplier2)
 
@@ -44,8 +53,18 @@ def test_supplier_price_without_selected_supplier(rf):
         # Now let's add per supplier prices
         supplier1_price = 7
         supplier2_price = 8
-        SupplierPrice.objects.create(shop=shop, supplier=supplier1, product=product1, amount_value=supplier1_price)
-        SupplierPrice.objects.create(shop=shop, supplier=supplier2, product=product1, amount_value=supplier2_price)
+        SupplierPrice.objects.create(
+            shop=shop,
+            supplier=supplier1,
+            product=product1,
+            amount_value=supplier1_price,
+        )
+        SupplierPrice.objects.create(
+            shop=shop,
+            supplier=supplier2,
+            product=product1,
+            amount_value=supplier2_price,
+        )
 
         assert product1.get_price(supplier1_ctx).amount.value == supplier1_price
         assert product1.get_price(supplier2_ctx).amount.value == supplier2_price

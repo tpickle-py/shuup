@@ -9,7 +9,10 @@ import json
 from django.utils.translation import activate
 
 from shuup.gdpr.models import GDPRSettings, GDPRUserConsent
-from shuup.gdpr.utils import create_user_consent_for_all_documents, ensure_gdpr_privacy_policy
+from shuup.gdpr.utils import (
+    create_user_consent_for_all_documents,
+    ensure_gdpr_privacy_policy,
+)
 from shuup.gdpr.views import GDPRDownloadDataView
 from shuup.testing import factories
 from shuup.testing.utils import apply_request_middleware
