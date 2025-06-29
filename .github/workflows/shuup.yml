@@ -12,23 +12,25 @@ jobs:
     name: "Code style & sanity checks"
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v1
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
       with:
-        python-version: 3.6
+        version: "latest"
+    - name: Set up Python
+      run: uv python install 3.11
     - name: Install dev dependencies
-      run: pip install -r requirements-dev.txt
+      run: uv sync --dev
     - name: Run sanity check
-      run: _misc/check_sanity.py
+      run: uv run _misc/check_sanity.py
     - name: Run license headers check
-      run: _misc/ensure_license_headers.py -s shuup
+      run: uv run _misc/ensure_license_headers.py -s shuup
     - name: Check flake8
-      run: flake8 .
+      run: uv run flake8 .
     - name: Check isort
-      run: isort --check --diff .
+      run: uv run isort --check --diff .
     - name: Check black
-      run: black --check --diff .
+      run: uv run black --check --diff .
 
   core:
     name: "Test Shuup, migrations and messages"
@@ -38,27 +40,32 @@ jobs:
       SHUUP_TESTS_CI: 1
     strategy:
       matrix:
-        python-version: ['3.6', '3.7', '3.8']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v1
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        version: "latest"
+    - name: Set up Python
+      run: uv python install ${{ matrix.python-version }}
     - name: Install gettext
       run: sudo apt-get -y install gettext
-    - name: Install test dependencies
-      run: pip install -r requirements-tests.txt
+    - name: Install dependencies
+      run: uv sync --dev
     - name: Create logs folder
       run: mkdir .unit_tests
     - name: Run makemessages
-      run: python -m shuup_workbench shuup_makemessages -l en
+      run: uv run python -m shuup_workbench shuup_makemessages -l en
     - name: Run tests
-      run: py.test --nomigrations shuup_tests --cov shuup --cov-config=.coveragerc
+      run: uv run pytest --nomigrations shuup_tests --cov shuup --cov-config=.coveragerc
     - name: Run compilemessages
-      run: python -m shuup_workbench compilemessages
-    - name: Code coveragerc
-      run: codecov
+      run: uv run python -m shuup_workbench compilemessages
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: true
 
     - uses: actions/upload-artifact@v2
       if: failure()
@@ -74,13 +81,15 @@ jobs:
       SHUUP_TESTS_CI: 1
     strategy:
       matrix:
-        python-version: ['3.6']
+        python-version: ['3.11']
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v1
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        version: "latest"
+    - name: Set up Python
+      run: uv python install ${{ matrix.python-version }}
 
     - name: "Setup Firefox driver"
       uses: browser-actions/setup-geckodriver@latest
@@ -90,19 +99,19 @@ jobs:
       run: sudo apt-get -y install gettext
 
     - name: Build static files
-      run: python setup.py build_resources
+      run: uv run python setup.py build_resources
 
-    - name: Install test dependencies
-      run: pip install -r requirements-tests.txt
+    - name: Install dependencies
+      run: uv sync --dev
 
     - name: Compile messages
-      run: python -m shuup_workbench compilemessages
+      run: uv run python -m shuup_workbench compilemessages
 
     - name: Create logs folder
       run: mkdir .unit_tests
 
     - name: Run tests
-      run: py.test -v --nomigrations shuup_tests/browser/front shuup_tests/browser/admin --splinter-headless --splinter-screenshot-dir=.unit_tests/
+      run: uv run pytest -v --nomigrations shuup_tests/browser/front shuup_tests/browser/admin --splinter-headless --splinter-screenshot-dir=.unit_tests/
 
     - uses: actions/upload-artifact@v2
       if: failure()

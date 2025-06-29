@@ -21,9 +21,10 @@ classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.9", 
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     "Topic :: Software Development :: Libraries :: Application Frameworks",
 ]
@@ -85,7 +86,7 @@ include-package-data = true
 [tool.black]
 exclude = "migrations/.*|.eggs|.git|.tox|.venv|_build|buck-out|build|dist"
 line_length = 120
-target-version = ["py38", "py39", "py310", "py311"]
+target-version = ["py38", "py39", "py310", "py311", "py312"]
 
 [tool.isort]
 profile = "black"
@@ -115,7 +116,7 @@ exclude = [
 ]
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.11"
 ignore_missing_imports = true
 follow_imports = "silent"
 show_column_numbers = true
@@ -134,7 +135,9 @@ addopts = [
     "--disable-warnings",
     "--cov=shuup",
     "--cov-report=html",
-    "--cov-report=term-missing"
+    "--cov-report=term-missing",
+    "--cov-report=xml",
+    "--cov-fail-under=80"
 ]
 testpaths = ["shuup_tests"]
 python_files = ["test_*.py", "*_test.py"]
@@ -142,8 +145,13 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 markers = [
     "slow: marks tests as slow",
-    "integration: marks tests as integration tests",
+    "integration: marks tests as integration tests", 
     "unit: marks tests as unit tests",
+    "browser: marks tests that require browser functionality",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
 ]
 
 [tool.coverage.run]
@@ -184,3 +192,99 @@ disable = [
 
 [tool.pylint.format]
 max-line-length = 120
+
+[tool.uv]
+dev-dependencies = []  # Use dependency-groups instead
+
+[tool.uv.sources]
+# Pin to more recent versions in development
+pytest = { git = "https://github.com/pytest-dev/pytest.git", tag = "8.0.0" }
+
+[tool.ruff]
+line-length = 120
+target-version = "py38"
+exclude = [
+    "migrations",
+    "venv",
+    ".venv", 
+    ".git",
+    ".tox",
+    "dist",
+    "doc",
+    "*.egg",
+    "build",
+    "__pycache__",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings  
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "E203",  # whitespace before ':'
+    "W503",  # line break before binary operator
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"migrations/*.py" = ["E501", "F401"]
+
+[dependency-groups]
+dev = [
+    # Development tools
+    "black>=24.0.0",
+    "isort>=5.13.0",
+    "flake8>=7.0.0",
+    "mypy>=1.8.0",
+    
+    # Testing tools  
+    "pytest>=8.0.0",
+    "pytest-django>=4.8.0",
+    "pytest-cov>=4.0.0",
+    "pytest-splinter>=3.3.2",
+    "coverage>=7.4.0",
+    "codecov>=2.1.13",
+    
+    # Browser testing
+    "selenium>=4.15.0",
+    "splinter>=0.21.0",
+    
+    # Documentation tools
+    "sphinx>=7.2.0",
+    "sphinx-rtd-theme>=2.0.0",
+    
+    # Additional development tools
+    "pre-commit>=3.6.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
+    
+    # PDF generation and imaging for tests
+    "weasyprint>=61.0",
+    "pillow>=10.0.0",
+]
+
+test = [
+    "pytest>=8.0.0",
+    "pytest-django>=4.8.0", 
+    "pytest-cov>=4.0.0",
+    "pytest-splinter>=3.3.2",
+    "coverage>=7.4.0",
+    "selenium>=4.15.0",
+    "splinter>=0.21.0",
+    "weasyprint>=61.0",
+    "pillow>=10.0.0",
+    "beautifulsoup4>=4.12.0",
+    "mock>=5.0.0",
+]
+
+docs = [
+    "sphinx>=7.2.0",
+    "sphinx-rtd-theme>=2.0.0",
+]
