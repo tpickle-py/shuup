@@ -238,31 +238,27 @@ dev = [
     "isort>=5.13.0",
     "flake8>=7.0.0",
     "mypy>=1.8.0",
-    
-    # Testing tools  
+    # Testing tools
     "pytest>=8.0.0",
     "pytest-django>=4.8.0",
     "pytest-cov>=4.0.0",
     "pytest-splinter>=3.3.2",
     "coverage>=7.4.0",
     "codecov>=2.1.13",
-    
     # Browser testing
     "selenium>=4.15.0",
     "splinter>=0.21.0",
-    
     # Documentation tools
     "sphinx>=7.2.0",
     "sphinx-rtd-theme>=2.0.0",
-    
     # Additional development tools
     "pre-commit>=3.6.0",
     "build>=1.0.0",
     "twine>=4.0.0",
-    
     # PDF generation and imaging for tests
     "weasyprint>=61.0",
     "pillow>=10.0.0",
+    "gitignore-parser>=0.1.12",
 ]
 
 test = [

@@ -2,13 +2,11 @@ import fnmatch
 import os
 import posixpath
 import re
-import sys
 from ast import AST, Attribute, Name, iter_fields
 
-if sys.version_info[0] == 3:
-    string_types = (str,)
-else:
-    string_types = (basestring,)  # noqa
+import gitignore_parser
+
+string_types = (str,)
 
 IGNORED_DIRS = [
     "*.egg-info",
@@ -27,8 +25,11 @@ IGNORED_DIRS = [
     "node_modules",
     "var",
     "venv*",
+    ".venv",
     "static",
     "geckodriver",
+    ".ruff_cache",
+    ".mypy_cache",
 ]
 
 IGNORED_PATH_REGEXPS = [
@@ -81,26 +82,14 @@ def find_files(
     ignored_path_regexps=IGNORED_PATH_REGEXPS,
     allowed_extensions=None,
 ):
-    """
-    Find files in `roots` with ignores, `generated_resources` handling etc.
+    # Parse .gitignore file
+    gitignore_path = os.path.join(roots[0], ".gitignore")
+    gitignore_matcher = (
+        gitignore_parser.parse_gitignore(gitignore_path)
+        if os.path.exists(gitignore_path)
+        else None
+    )
 
-    :param roots: Root directory or directories
-    :type roots: str
-    :param generated_resources:
-        Output set of generated resources (mutated during find_files)
-    :type generated_resources: set
-    :param ignored_patterns: fnmatch file patterns to ignore
-    :type ignored_patterns: Iterable[str]
-    :param ignored_dirs: fnmatch directory patterns to ignore
-    :type ignored_dirs: Iterable[str]
-    :param ignored_path_regexps: Path regexps to ignore
-    :type ignored_path_regexps: Iterable[str]
-    :param allowed_extensions:
-        Extensions (really filename suffixes) to ignore (optional)
-    :type allowed_extensions: Iterable[str]|None
-    :return: Iterable of file paths
-    :rtype: Iterable[str]
-    """
     if generated_resources is None:
         generated_resources = set()
     if isinstance(roots, string_types):
@@ -113,6 +102,8 @@ def find_files(
             _remove_ignored_directories(path, dirs, ignored_dirs, ignored_path_regexps)
             for filename in files:
                 filepath = posixpath.join(path, filename)
+                if gitignore_matcher and gitignore_matcher(filepath):
+                    continue
                 if not all(not fnmatch.fnmatch(filename, x) for x in ignored_patterns):
                     continue
                 if not _check_allowed_extension(filepath, allowed_extensions):
@@ -148,7 +139,7 @@ class XNodeVisitor(object):
 
     def generic_visit(self, node, parents=None):
         parents = (parents or []) + [node]
-        for field, value in iter_fields(node):
+        for _, value in iter_fields(node):
             if isinstance(value, list):
                 for item in value:
                     if isinstance(item, AST):
@@ -159,10 +150,10 @@ class XNodeVisitor(object):
 
 def dotify_ast_name(name):
     if isinstance(name, Attribute):
-        return "%s.%s" % (dotify_ast_name(name.value), name.attr)
+        return f"{dotify_ast_name(name.value)}.{name.attr}"
     if isinstance(name, Name):
         return name.id
-    return "<%s>" % name.__class__.__name__
+    return f"{name.__class__.__name__}" 
 
 
 def get_assign_first_target(assign):
