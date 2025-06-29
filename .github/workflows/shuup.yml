@@ -76,12 +76,12 @@ jobs:
     - name: Run compilemessages
       run: uv run python -m shuup_workbench compilemessages
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: ./coverage.xml
         fail_ci_if_error: true
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: unit_tests
@@ -144,7 +144,7 @@ jobs:
     - name: Run tests
       run: uv run pytest -v --nomigrations shuup_tests/browser/front shuup_tests/browser/admin --splinter-headless --splinter-screenshot-dir=.unit_tests/
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: unit_tests
