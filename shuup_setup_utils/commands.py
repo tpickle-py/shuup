@@ -108,7 +108,7 @@ class BuildMessagesCommand(distutils.core.Command):
     def run(self):
         appdirs = set()
         rootdir = os.getcwd()
-        for dirpath, dirnames, filenames in os.walk(rootdir):
+        for dirpath, dirnames, _filenames in os.walk(rootdir):
             # Filter out hidden directories (.git, .svn, .tox, etc.)
             for dirname in list(dirnames):
                 if dirname.startswith("."):

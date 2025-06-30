@@ -67,7 +67,7 @@ class Builder:
 
     def _find_package_json_dirs(self):
         items = excludes.walk_excl(self.root_directory)
-        for dirpath, dirnames, filenames in items:
+        for dirpath, _dirnames, filenames in items:
             if "package.json" in filenames:
                 package = json.load(open(os.path.join(dirpath, "package.json")))
                 if package.get("shuup", {}).get("static_build"):
@@ -99,7 +99,7 @@ class Builder:
 
 
 def remove_all_subdirs(root, subdir_name):
-    for dirpath, dirnames, filenames in os.walk(root):
+    for dirpath, dirnames, _filenames in os.walk(root):
         if subdir_name in dirnames:
             dir_to_remove = os.path.join(dirpath, subdir_name)
             dirnames[:] = [dn for dn in dirnames if dn != subdir_name]

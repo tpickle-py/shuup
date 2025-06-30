@@ -141,7 +141,7 @@ class ImportMetaBase:
         :return: True or False if has post save handler
         :rtype: Boolean
         """
-        for func, fields in six.iteritems(self.post_save_handlers):
+        for _func, fields in six.iteritems(self.post_save_handlers):
             if field_name in fields:
                 return True
             for field in fields:

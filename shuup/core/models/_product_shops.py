@@ -411,7 +411,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
                     code="product_not_visible_to_group",
                 )
 
-        for receiver, response in get_visibility_errors.send(
+        for _receiver, response in get_visibility_errors.send(
             ShopProduct, shop_product=self, customer=customer
         ):
             for error in response:
@@ -475,7 +475,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
         ):
             yield error
 
-        for receiver, response in get_orderability_errors.send(
+        for _receiver, response in get_orderability_errors.send(
             ShopProduct,
             shop_product=self,
             customer=customer,
@@ -694,7 +694,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
         if not supplier:
             supplier = self.get_supplier(customer, quantity)
 
-        for message in self.get_orderability_errors(
+        for _message in self.get_orderability_errors(
             supplier=supplier, quantity=quantity, customer=customer
         ):
             if customer:
@@ -709,7 +709,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
         Visible products are shown in store front based on customer
         or customer group limitations.
         """
-        for message in self.get_visibility_errors(customer=customer):
+        for _message in self.get_visibility_errors(customer=customer):
             return False
         return True
 
@@ -717,7 +717,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
         """
         Whether product can be purchased.
         """
-        for message in self.get_purchasability_errors(supplier, customer, quantity):
+        for _message in self.get_purchasability_errors(supplier, customer, quantity):
             return False
         return True
 

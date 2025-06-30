@@ -74,7 +74,7 @@ class ScriptItemEditForm(forms.Form):
         if template_use == TemplateUse.MULTILINGUAL:
             self.template_languages = []
             # TODO: Should we get this list from somewhere else?
-            for language_code, language_name in settings.LANGUAGES:
+            for language_code, _language_name in settings.LANGUAGES:
                 self.template_languages.append(
                     (language_code, get_language_name(language_code))
                 )
@@ -137,7 +137,7 @@ class ScriptItemEditForm(forms.Form):
 
     def get_initial(self):
         initial = {}
-        for identifier, binding in self.script_item.bindings.items():
+        for identifier, _binding in self.script_item.bindings.items():
             bind_data = self.script_item.data.get(identifier, {})
             field_info = self.binding_field_info.get(identifier)
             if not field_info:

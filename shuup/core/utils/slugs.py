@@ -7,7 +7,7 @@ from shuup.utils.django_compat import force_text
 
 def generate_multilanguage_slugs(object, name_getter, slug_length=128):
     translations_model = object._parler_meta.root_model
-    for language_code, language_name in settings.LANGUAGES:
+    for language_code, _language_name in settings.LANGUAGES:
         try:
             translation = object.get_translation(language_code=language_code)
             translation.refresh_from_db()

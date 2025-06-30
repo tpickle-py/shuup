@@ -38,7 +38,7 @@ class ProductSalesReport(OrderReportMixin, ShuupReportBase):
         data = []
 
         # group products by id - que queryset must be ordered by id to make this work
-        for key, groups in itertools.groupby(
+        for _key, groups in itertools.groupby(
             self.get_objects(), lambda pl: pl.product_id
         ):
             quantity = 0

@@ -87,7 +87,7 @@ class GDPRSettings(TranslatableModel):
 
     def set_default_content(self):
         language = get_language()
-        for code, name in settings.LANGUAGES:
+        for code, _name in settings.LANGUAGES:
             activate(code)
             self.set_current_language(code)
             self.cookie_banner_content = settings.SHUUP_GDPR_DEFAULT_BANNER_STRING

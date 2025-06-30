@@ -762,7 +762,7 @@ def create_order_with_product(
     order.save()
 
     pricing_context = _get_pricing_context(order.shop, order.customer)
-    for x in range(n_lines):
+    for _x in range(n_lines):
         add_product_to_order(
             order,
             supplier,

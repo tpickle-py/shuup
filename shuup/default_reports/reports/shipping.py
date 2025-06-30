@@ -60,7 +60,7 @@ class ShippingReport(OrderReportMixin, ShuupReportBase):
         def get_group_func(ol):
             return (ol.order.shipping_method.carrier_id, ol.order.shipping_method_id)
 
-        for key, group in itertools.groupby(self.get_objects(), get_group_func):
+        for _key, group in itertools.groupby(self.get_objects(), get_group_func):
             orders = set()
             zero_price = total_charged = self.shop.create_price(0).amount
 

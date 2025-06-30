@@ -294,7 +294,7 @@ def get_quicklinks(request):
             quicklinks[help_block.category].append(help_block)
 
     links = quicklinks.copy()
-    for block, data in six.iteritems(links):
+    for block, _data in six.iteritems(links):
         if not quicklinks[block]:
             quicklinks.pop(block)
     return quicklinks

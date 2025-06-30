@@ -649,7 +649,7 @@ class OrderSource:
 
 
 def _collect_lines_from_signal(signal_results):
-    for receiver, response in signal_results:
+    for _receiver, response in signal_results:
         for line in response:
             if isinstance(line, SourceLine):
                 yield line

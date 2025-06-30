@@ -21,7 +21,7 @@ class SocialMediaLinksPluginForm(GenericPluginForm):
         """
         icon_classes = self.plugin.icon_classes
         links = self.plugin.config.get("links", {})
-        for name, icon_class in sorted(icon_classes.items()):
+        for name, _icon_class in sorted(icon_classes.items()):
             url = links[name]["url"] if name in links else ""
             ordering = links[name]["ordering"] if name in links else None
             self.fields[name] = forms.CharField(
@@ -41,7 +41,7 @@ class SocialMediaLinksPluginForm(GenericPluginForm):
         super().populate()
 
         # We set the initial after calling super, to avoid it shadowing our initial data.
-        for name, icon_class in icon_classes.items():
+        for name, _icon_class in icon_classes.items():
             url = links[name]["url"] if name in links else ""
             ordering = links[name]["ordering"] if name in links else None
             self.initial[name] = url

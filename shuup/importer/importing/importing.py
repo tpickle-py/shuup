@@ -207,7 +207,7 @@ class DataImporter:
 
             mapped_value = model_mapping.get(mfname)
             if not mapped_value:
-                for fld, opt in six.iteritems(model_mapping):
+                for _fld, opt in six.iteritems(model_mapping):
                     matcher = opt.get("matcher")
                     if matcher and (matcher(field_name) or matcher(mfname)):
                         mapped_value = opt
@@ -242,7 +242,7 @@ class DataImporter:
         self.map_data_to_fields(self.mapping)
 
     def matcher(self, value):
-        for original_field, new_field in six.iteritems(self.extra_matches):
+        for _original_field, new_field in six.iteritems(self.extra_matches):
             if new_field == value:
                 return True
         return False

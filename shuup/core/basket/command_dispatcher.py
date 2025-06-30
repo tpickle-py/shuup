@@ -40,7 +40,7 @@ class BasketCommandDispatcher:
         if handler and callable(handler):
             return handler
 
-        for receiver, handler in get_basket_command_handler.send(
+        for _receiver, handler in get_basket_command_handler.send(
             BasketCommandDispatcher, command=command, instance=self
         ):
             if handler and callable(handler):

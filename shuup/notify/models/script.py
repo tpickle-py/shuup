@@ -56,7 +56,7 @@ class Script(models.Model):
         self._steps = None
         self._step_data = serialized_data
         # Poor man's validation
-        for step in self.get_steps():
+        for _step in self.get_steps():
             pass
 
     @property

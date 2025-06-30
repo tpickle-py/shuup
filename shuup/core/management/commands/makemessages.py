@@ -145,7 +145,7 @@ def jinja_messages_to_python(src, origin=None, **kwargs):
     """
     output = StringIO("")
     output_lineno = 1
-    for lineno, message, comments, context in extract_jinja(src, origin):
+    for lineno, message, comments, _context in extract_jinja(src, origin):
         for comment in comments:
             output.write("# %s %s\n" % (COMMENT_TAG, comment))
             output_lineno += 1

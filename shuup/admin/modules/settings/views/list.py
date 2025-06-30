@@ -43,7 +43,7 @@ class ListSettingsView(FormView):
             col_data = {"ordering": idx, "active": True}
             self.settings.set_config(ordered_col, col_data, use_key=True)
 
-        for col, val in six.iteritems(form.cleaned_data):
+        for col, _val in six.iteritems(form.cleaned_data):
             if col in ordered_columns:
                 continue
             col_data = {"ordering": 99999, "active": False}

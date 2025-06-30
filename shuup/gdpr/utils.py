@@ -110,7 +110,7 @@ def ensure_gdpr_privacy_policy(shop, force_update=False):
 
         # update only if it was created
         if created or force_update:
-            for code, language in settings.LANGUAGES:
+            for code, _language in settings.LANGUAGES:
                 if code == current_language:
                     continue
                 url = settings.GDPR_PRIVACY_POLICY_PAGE_URLS.get(code)
@@ -149,7 +149,7 @@ def create_initial_required_cookie_category(shop):
             ),
         )
         current_language = get_language()
-        for code, language in settings.LANGUAGES:
+        for code, _language in settings.LANGUAGES:
             if code == current_language:
                 continue
             activate(code)

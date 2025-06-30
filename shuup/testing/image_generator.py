@@ -59,7 +59,7 @@ class BaseImageGenerator:
 
 class RandomImageGenerator(BaseImageGenerator):
     def generate(self):
-        for i in range(self.random.randint(2, 20)):
+        for _i in range(self.random.randint(2, 20)):
             self.step()
 
     def step(self):

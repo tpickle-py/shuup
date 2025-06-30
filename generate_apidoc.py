@@ -24,7 +24,7 @@ def main():
 
     # Generate a list of migration dirs to exclude
     migration_excludes = []
-    for root, dirnames, filenames in os.walk("shuup"):
+    for root, dirnames, _filenames in os.walk("shuup"):
         if "migrations" in dirnames:
             migration_excludes.append(os.path.join(root, "migrations"))
 

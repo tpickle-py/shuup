@@ -133,7 +133,7 @@ class MockerView(FormView):
         data = form.cleaned_data
         mocker = getattr(self.mockers, data["type"], None)
         assert callable(mocker)
-        for n in range(data["count"]):
+        for _n in range(data["count"]):
             try:
                 value = mocker(shop=self.request.shop)
                 if value:

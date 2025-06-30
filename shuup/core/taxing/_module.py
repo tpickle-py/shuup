@@ -127,7 +127,7 @@ class TaxModule(six.with_metaclass(abc.ABCMeta)):
         context = self.get_context_from_order_source(source)
         lines_without_tax_class = []
         taxed_lines = []
-        for idx, line in enumerate(lines):
+        for _idx, line in enumerate(lines):
             # this line doesn't belong to this source, ignore it
             if line.source != source:
                 continue

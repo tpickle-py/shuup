@@ -138,7 +138,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
         are required are not set.
         """
         data = self.cleaned_data
-        for language, field_names in self.trans_name_map.items():
+        for _language, field_names in self.trans_name_map.items():
             if not any(data.get(field_name) for field_name in field_names.values()):
                 continue  # No need to check this language further
             for field_name in field_names.values():

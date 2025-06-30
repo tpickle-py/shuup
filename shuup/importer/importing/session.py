@@ -63,7 +63,7 @@ class DataImporterRowSession:
             obj.save()
 
     def _handle_deferred(self):
-        for mkey, (model, using) in sorted(six.iteritems(self.deferred_attach)):
+        for _mkey, (model, using) in sorted(six.iteritems(self.deferred_attach)):
             for key, value in six.iteritems(using):
                 setattr(model, key, value)
             if isinstance(model, TranslatedFieldsModel):
