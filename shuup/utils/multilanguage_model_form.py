@@ -75,7 +75,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
         self.translated_field_names = []
         self.required_translated_field_names = []
         self.non_default_languages = sorted(
-            set(self.languages) - set([self.default_language])
+            set(self.languages) - {self.default_language}
         )
         self.language_names = {
             lang: get_language_name(lang) for lang in self.languages

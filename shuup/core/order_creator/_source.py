@@ -698,7 +698,7 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
         "supplier": Supplier,
         "tax_class": TaxClass,
     }
-    _PRICE_FIELDS = set(["base_unit_price", "discount_amount"])
+    _PRICE_FIELDS = {"base_unit_price", "discount_amount"}
 
     def __init__(self, source, **kwargs):
         """

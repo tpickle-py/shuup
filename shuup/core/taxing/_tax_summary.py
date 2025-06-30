@@ -69,7 +69,7 @@ class TaxSummaryLine:
         "tax_amount",
         "taxful",
     ]
-    _MONEY_FIELDS = set(["tax_amount", "taxful", "based_on", "raw_based_on"])
+    _MONEY_FIELDS = {"tax_amount", "taxful", "based_on", "raw_based_on"}
 
     @classmethod
     def from_tax(cls, tax, based_on, raw_based_on, tax_amount):

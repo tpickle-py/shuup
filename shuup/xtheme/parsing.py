@@ -184,7 +184,7 @@ class PlaceholderExtension(_PlaceholderManagingExtension):
       will).
     """
 
-    tags = set(["placeholder"])
+    tags = {"placeholder"}
 
     def parse(self, parser):
         """
@@ -251,7 +251,7 @@ class LayoutPartExtension(_PlaceholderManagingExtension):
       row and a single column.
     """
 
-    tags = set(["column", "row"])
+    tags = {"column", "row"}
 
     def parse(self, parser):
         """
@@ -320,7 +320,7 @@ class PluginExtension(_PlaceholderManagingExtension):
       TOML; the Jinja2 bccache should take care of the rest.
     """
 
-    tags = set(["plugin"])
+    tags = {"plugin"}
 
     def parse(self, parser):
         """

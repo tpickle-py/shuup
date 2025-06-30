@@ -95,7 +95,7 @@ def find_files(
     if isinstance(roots, string_types):
         roots = [roots]
     if isinstance(allowed_extensions, string_types):
-        allowed_extensions = set([allowed_extensions])
+        allowed_extensions = {allowed_extensions}
     for root in roots:
         for path, dirs, files in os.walk(root):
             path = posixpath.normpath(path.replace(os.sep, "/"))

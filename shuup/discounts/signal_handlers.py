@@ -30,7 +30,7 @@ def on_happy_hour_object_saved(sender, object: HappyHour, **kwargs):
 
 
 def handle_discount_post_save(sender, instance, **kwargs):
-    shop_ids = set([instance.shop.pk])
+    shop_ids = {instance.shop.pk}
     bump_price_expiration(shop_ids)
     bump_all_price_caches(shop_ids)
 

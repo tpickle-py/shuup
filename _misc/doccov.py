@@ -109,8 +109,7 @@ REPORT_TEMPLATE = """
 </html>
 """.strip()
 
-IGNORED_FUNCTIONS = set(
-    [
+IGNORED_FUNCTIONS = {
         "__abs__",
         "__add__",
         "__all__",
@@ -178,19 +177,16 @@ IGNORED_FUNCTIONS = set(
         "get_object",
         "get_success_url",
         "post",
-    ]
-)
+    }
 
-IGNORED_CLASSES = set(
-    [
+IGNORED_CLASSES = {
         "Labels",
         "Meta",
-    ]
-)
+    }
 
-IGNORED_FIRST_ARGS = set(["self", "cls"])  # classmethods
+IGNORED_FIRST_ARGS = {"self", "cls"}  # classmethods
 
-IGNORED_ARGS = set([])
+IGNORED_ARGS = set()
 
 ARG_RE = re.compile(r":param\s+([a-z_0-9]+)", re.I)
 

@@ -15,8 +15,7 @@ from shuup.utils.models import get_data_dict
 from ._base import ChangeProtected, ShuupModel
 
 REGION_ISO3166 = {
-    "europe": set(
-        (
+    "europe": {
             "AD",
             "AL",
             "AM",
@@ -74,10 +73,8 @@ REGION_ISO3166 = {
             "TR",
             "UA",
             "VA",
-        )
-    ),
-    "european-union": set(
-        (
+        },
+    "european-union": {
             "AT",
             "BE",
             "BG",
@@ -105,8 +102,7 @@ REGION_ISO3166 = {
             "SE",
             "SI",
             "SK",
-        )
-    ),
+        },
 }
 
 
