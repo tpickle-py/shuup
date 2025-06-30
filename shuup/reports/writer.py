@@ -495,7 +495,7 @@ class ReportWriterPopulator:
 
 def get_writer_names():
     """Get the registered writer names."""
-    return set([k for k, v in six.iteritems(REPORT_WRITERS_MAP) if v])
+    return {k for k, v in six.iteritems(REPORT_WRITERS_MAP) if v}
 
 
 def get_writer_instance(writer_name):

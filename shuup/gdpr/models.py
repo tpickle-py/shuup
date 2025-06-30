@@ -209,8 +209,8 @@ class GDPRUserConsent(models.Model):
     def should_reconsent(self, shop, user):
         from shuup.gdpr.utils import get_active_consent_pages
 
-        consent_pages_ids = set([page.id for page in get_active_consent_pages(shop)])
-        page_ids = set([doc.page.id for doc in self.documents.all()])
+        consent_pages_ids = {page.id for page in get_active_consent_pages(shop)}
+        page_ids = {doc.page.id for doc in self.documents.all()}
         if consent_pages_ids != page_ids:
             return True
 

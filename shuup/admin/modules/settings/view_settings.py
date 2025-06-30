@@ -109,7 +109,7 @@ class ViewSettings:
             )
             self._add_provided_columns(columns, identifier, known_names, model)
 
-        table_columns = set([col.id for col in columns])
+        table_columns = {col.id for col in columns}
         for default_column in self.default_columns:
             if default_column.id not in table_columns and default_column.id != "select":
                 columns.append(default_column)

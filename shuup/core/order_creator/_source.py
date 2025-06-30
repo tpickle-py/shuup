@@ -566,7 +566,7 @@ class OrderSource:
                 yield error
 
     def _get_suppliers(self):
-        return set([line.supplier for line in self.get_lines() if line.supplier])
+        return {line.supplier for line in self.get_lines() if line.supplier}
 
     def _get_products_and_quantities(self, supplier=None):
         q_counter = Counter()

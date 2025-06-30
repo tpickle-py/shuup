@@ -107,13 +107,13 @@ class BasketCampaignModule(OrderSourceModifierModule):
                 continue
 
             coupon_code = campaign.coupon
-            suppliers = set(
-                [
+            suppliers = {
+                
                     supplier
                     for supplier in (campaign.supplier, coupon_code.supplier)
                     if supplier
-                ]
-            )
+                
+            }
             if suppliers:
                 has_supplier = False
 
