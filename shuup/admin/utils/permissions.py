@@ -67,9 +67,9 @@ def get_missing_permissions(user, permissions):
             cache.set(cache_key, group_permissions)
 
     if group_permissions:
-        missing_permissions = set(
+        missing_permissions = {
             p for p in set(permissions) if p not in group_permissions
-        )
+        }
     else:
         missing_permissions = set(permissions)
 

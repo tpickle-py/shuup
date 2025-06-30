@@ -68,7 +68,7 @@ def process_data(rows):
                 headers = [x.lower().strip() for x in row if x]
                 continue
             datum = dict(zip(headers, row))
-            got_data.update(set(h for (h, d) in six.iteritems(datum) if d))
+            got_data.update({h for (h, d) in six.iteritems(datum) if d})
             data.append(datum)
 
     row_limit = getattr(settings, "IMPORT_MAX_ROWS", 1000)
@@ -119,7 +119,7 @@ def py2_read_file(data, filename):
         dialect = csv.Sniffer().sniff(f.read(20480))
         f.seek(0)
         for _x, row in enumerate(csv.DictReader(f, dialect=dialect)):
-            got_data.update(set(h.lower() for (h, d) in six.iteritems(row) if d))
+            got_data.update({h.lower() for (h, d) in six.iteritems(row) if d})
             data.append(
                 {k.lower(): v if v else None for k, v in six.iteritems(row)}
             )
@@ -142,7 +142,7 @@ def py3_read_file(data, filename):
         dialect = csv.Sniffer().sniff(f.read(20480))
         f.seek(0)
         for _x, row in enumerate(csv.DictReader(f, dialect=dialect)):
-            got_data.update(set(h.lower() for (h, d) in six.iteritems(row) if d))
+            got_data.update({h.lower() for (h, d) in six.iteritems(row) if d})
             data.append(
                 {k.lower(): v if v else None for k, v in six.iteritems(row)}
             )

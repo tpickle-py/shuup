@@ -18,7 +18,7 @@ def cache_translations(objects, languages=None, meta=None):
     xlate_model = meta.model
 
     object_map = {object.pk: object for object in objects}
-    languages.update(set(object._current_language for object in objects))
+    languages.update({object._current_language for object in objects})
     master_ids = object_map.keys()
 
     # SQLite limits host variables to 999 (see http://www.sqlite.org/limits.html#max_variable_number),

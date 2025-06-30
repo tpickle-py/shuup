@@ -49,7 +49,7 @@ def get_known_settings_with_comments():
     comments = {}
     modules = [x.module for x in known_settings]
     for module in modules:
-        names = set(x.name for x in known_settings if x.module == module)
+        names = {x.name for x in known_settings if x.module == module}
         comments.update(_get_comments_before_assignments(module, names))
 
     def to_dict_with_comment(setting):

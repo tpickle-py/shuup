@@ -303,7 +303,7 @@ class OrderSource:
 
     @property
     def product_ids(self):
-        return set(x.product.id for x in self.get_lines() if x.product)
+        return {x.product.id for x in self.get_lines() if x.product}
 
     def has_shippable_lines(self):
         for line in self.get_lines():

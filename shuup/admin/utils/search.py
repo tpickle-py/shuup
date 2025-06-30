@@ -24,8 +24,8 @@ def split_query(query_string, minimum_part_length=3):
     :rtype: set[str]
     """
     query_string = force_text(query_string)
-    return set(
+    return {
         part
         for part in (part.strip() for part in query_string.split())
         if len(part) >= minimum_part_length
-    )
+    }

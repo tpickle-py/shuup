@@ -468,7 +468,7 @@ class BaseProductMediaForm(MultiLanguageModelForm):
 
         if self.allowed_media_kinds:
             # multiple media kinds allowed, filter the choices list to reflect the `self.allowed_media_kinds`
-            allowed_kinds_values = set(v.value for v in self.allowed_media_kinds)
+            allowed_kinds_values = {v.value for v in self.allowed_media_kinds}
             self.fields["kind"].choices = [
                 (value, choice)
                 for value, choice in self.fields["kind"].choices

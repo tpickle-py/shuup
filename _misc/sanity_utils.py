@@ -120,7 +120,7 @@ def _check_allowed_extension(filepath, allowed_extensions):
 def _remove_ignored_directories(path, dirs, ignored_dirs, ignored_path_regexps):
     matches = set()
     for ignored_dir in ignored_dirs:
-        matches.update(set(dir for dir in dirs if fnmatch.fnmatch(dir, ignored_dir)))
+        matches.update({dir for dir in dirs if fnmatch.fnmatch(dir, ignored_dir)})
 
     for ignore_re in ignored_path_regexps:
         matches.update(

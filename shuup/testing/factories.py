@@ -285,7 +285,7 @@ def get_default_attribute_set():
             assert str(attr) == spec["name"], "attribute has correct name"
     return list(
         Attribute.objects.filter(
-            identifier__in=set(spec["identifier"] for spec in ATTR_SPECS)
+            identifier__in={spec["identifier"] for spec in ATTR_SPECS}
         )
     )
 

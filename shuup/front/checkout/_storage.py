@@ -7,7 +7,7 @@ class CheckoutPhaseStorage:
         self._key_prefix = f"checkout_{phase_identifier}:"
 
     def reset(self):
-        keys_to_pop = set(self._key_prefix + key for key in self.keys())
+        keys_to_pop = {self._key_prefix + key for key in self.keys()}
         for key in keys_to_pop:
             self.request.session.pop(key, None)
 

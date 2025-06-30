@@ -89,11 +89,11 @@ class Variable:
         self.attributes = attributes
 
     def get_matching_types(self, variable_dict):
-        return set(
+        return {
             name
             for name, variable in six.iteritems(variable_dict)
             if self.type.is_coercible_from(variable.type)
-        )
+        }
 
 
 class Binding(Variable):

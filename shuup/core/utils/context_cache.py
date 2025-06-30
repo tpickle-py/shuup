@@ -99,11 +99,11 @@ def bump_cache_for_shop_product(instance, shop=None):
         | Q(variation_parent_id__in=product_ids)
         | Q(variation_parent_id__in=variation_parent_ids)
         | Q(
-            id__in=set(
+            id__in={
                 value
                 for pair_of_values in package_product_ids
                 for value in pair_of_values
-            )
+            }
         )
     ).values_list("id", flat=True)
 

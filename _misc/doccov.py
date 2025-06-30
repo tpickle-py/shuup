@@ -324,7 +324,7 @@ class DocInfo:
 
     @staticmethod
     def parse_arg_mentions(docstring):
-        return set(m.group(1) for m in ARG_RE.finditer(docstring))
+        return {m.group(1) for m in ARG_RE.finditer(docstring)}
 
 
 class DocStringVisitor(ast.NodeVisitor):
