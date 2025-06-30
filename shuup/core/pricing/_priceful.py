@@ -4,7 +4,7 @@ from ._price import TaxfulPrice, TaxlessPrice
 from ._priceful_properties import TaxfulFrom, TaxlessFrom
 
 
-class Priceful(object):
+class Priceful:
     """
     Mixin to define price properties based on other price properties.
 

@@ -33,7 +33,7 @@ def get_matching_for_product(shop_product, provide_category, skippable_classes=N
     return collected
 
 
-class ProductCampaignMatcher(object):
+class ProductCampaignMatcher:
     """
     A class to match shop product to existing campaigns
     """

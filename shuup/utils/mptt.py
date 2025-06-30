@@ -75,7 +75,7 @@ def get_cached_trees(queryset):
 
                 if root_level == 0:
                     # get_ancestors() can use .parent.parent.parent...
-                    setattr(obj, "_mptt_use_cached_ancestors", True)
+                    obj._mptt_use_cached_ancestors = True
 
             # Add the current node to end of the current path - the last node
             # in the current path is the parent for the next iteration, unless

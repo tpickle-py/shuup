@@ -6,7 +6,7 @@ from ._process import CheckoutProcess
 from ._storage import CheckoutPhaseStorage
 
 
-class CheckoutPhaseViewMixin(object):
+class CheckoutPhaseViewMixin:
     identifier = None
     title = None  # User-visible
     final = False  # Should be set for final steps (those that may be accessed via the previous step's URL)

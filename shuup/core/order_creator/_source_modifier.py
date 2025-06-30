@@ -21,7 +21,7 @@ def is_code_usable(order_source, code):
     )
 
 
-class OrderSourceModifierModule(object):
+class OrderSourceModifierModule:
     def get_new_lines(self, order_source, lines):
         """
         Get new lines to be added to order source.

@@ -538,7 +538,7 @@ def _handle_or_return_error(func, request, error_message):
         if isinstance(exc, ValidationError):
             error_message += "\n" + "\n".join(force_text(err) for err in exc.messages)
         else:
-            error_message += " {}".format(exc)
+            error_message += f" {exc}"
         return JsonResponse(
             {"success": False, "errorMessage": error_message}, status=400
         )

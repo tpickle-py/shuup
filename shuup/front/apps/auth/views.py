@@ -37,7 +37,7 @@ class LoginView(FormView):
             form_class = self.get_form_class()
 
         kwargs = self.get_form_kwargs()
-        kwargs["auto_id"] = "id_{}_for_%s".format(id_prefix)
+        kwargs["auto_id"] = f"id_{id_prefix}_for_%s"
 
         form = form_class(**kwargs)
         form.fields[REDIRECT_FIELD_NAME] = forms.CharField(

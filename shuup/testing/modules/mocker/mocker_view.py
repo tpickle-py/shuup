@@ -19,7 +19,7 @@ from shuup.testing.factories import (
 from shuup.utils.django_compat import force_text
 
 
-class Mockers(object):
+class Mockers:
     """
     Namespace object for mocker methods.
 
@@ -117,7 +117,7 @@ class MockerView(FormView):
             (
                 name,
                 force_text(
-                    getattr(getattr(self.mockers, name, None), "__doc__") or name
+                    getattr(self.mockers, name, None).__doc__ or name
                 ).strip(),
             )
             for name in dir(self.mockers)

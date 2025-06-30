@@ -17,7 +17,7 @@ class TemplatedFormDef(FormDef):
         )
 
 
-class FormPart(object):
+class FormPart:
     priority = 0
 
     def __init__(self, request, object=None):
@@ -31,7 +31,7 @@ class FormPart(object):
         pass
 
 
-class FormPartsViewMixin(object):
+class FormPartsViewMixin:
     fields = ()  # Dealt with by the FormGroup
     request = None
     form_part_class_provide_key = None
@@ -69,7 +69,7 @@ class FormPartsViewMixin(object):
         return fg
 
 
-class SaveFormPartsMixin(object):
+class SaveFormPartsMixin:
     request = None  # Placate "missing field" errors
     object = None  # --"--
 

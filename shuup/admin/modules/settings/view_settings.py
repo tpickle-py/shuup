@@ -13,7 +13,7 @@ from shuup.utils.importing import load
 INVALID_FIELDS = ["ptr", "ctype", "key", "labelmaster"]
 
 
-class ViewSettings(object):
+class ViewSettings:
     key = "view_configuration_%s_%s"
     column_spec = []
 

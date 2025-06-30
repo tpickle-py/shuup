@@ -147,7 +147,7 @@ def jinja_messages_to_python(src, origin=None, **kwargs):
     output_lineno = 1
     for lineno, message, comments, context in extract_jinja(src, origin):
         for comment in comments:
-            output.write(("# %s %s\n" % (COMMENT_TAG, comment)))
+            output.write("# %s %s\n" % (COMMENT_TAG, comment))
             output_lineno += 1
         lines_to_add = lineno - output_lineno
         if lines_to_add > 0:  # Try to keep line numbers in sync

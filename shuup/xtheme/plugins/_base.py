@@ -13,7 +13,7 @@ from shuup.xtheme.plugins.forms import GenericPluginForm
 SENTINEL = object()
 
 
-class Plugin(object):
+class Plugin:
     """
     A plugin that can be instantiated within a `shuup.xtheme.layout.LayoutCell`.
 

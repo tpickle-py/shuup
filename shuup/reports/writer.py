@@ -34,7 +34,7 @@ except ImportError:
 REPORT_WRITERS_MAP = {}
 
 
-class ReportWriter(object):
+class ReportWriter:
     content_type = None
     extension = None
     inline = False  # Implementation-dependent
@@ -458,7 +458,7 @@ class PprintReportWriter(JSONReportWriter):
         return pformat(self.data)
 
 
-class ReportWriterPopulator(object):
+class ReportWriterPopulator:
     """
     A class which populates the report writers map.
     """

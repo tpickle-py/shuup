@@ -11,7 +11,7 @@ _URLCONF_ERROR_HANDLERS = {}
 HANDLER_ATTR_FMT = "handler%s"
 
 
-class ErrorPageHandler(object):
+class ErrorPageHandler:
     """
     A base class for error pages handling.
     """

@@ -21,7 +21,7 @@ def validate_tax_number(shop):
     return configuration.get(shop, "validate_tax_number", default=False)
 
 
-class TaxNumberCleanMixin(object):
+class TaxNumberCleanMixin:
     company_name_field = "name"
 
     def clean_tax_number(self):

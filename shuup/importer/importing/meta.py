@@ -3,7 +3,7 @@ import six
 from shuup.importer.utils import get_global_aliases
 
 
-class ImportMetaBase(object):
+class ImportMetaBase:
     fk_matchers = {}
     global_aliases = {}
 

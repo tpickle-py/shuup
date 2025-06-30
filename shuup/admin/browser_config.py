@@ -5,7 +5,7 @@ from shuup.admin.utils.permissions import has_permission
 from shuup.utils.i18n import get_current_babel_locale
 
 
-class BaseBrowserConfigProvider(object):
+class BaseBrowserConfigProvider:
     @classmethod
     def get_browser_urls(cls, request, **kwargs):
         return {}

@@ -13,7 +13,7 @@ from shuup.utils.i18n import format_money
 from .constants import ORDER_MIN_TOTAL_CONFIG_KEY
 
 
-class OrderSourceMinTotalValidator(object):
+class OrderSourceMinTotalValidator:
     @classmethod
     def get_validation_errors(cls, order_source):
         # check for the minimum sum of order total
@@ -34,7 +34,7 @@ class OrderSourceMinTotalValidator(object):
             yield ValidationError(msg, code="order_total_too_low")
 
 
-class OrderSourceMethodsUnavailabilityReasonsValidator(object):
+class OrderSourceMethodsUnavailabilityReasonsValidator:
     @classmethod
     def get_validation_errors(cls, order_source):
         shipping_method = order_source.shipping_method
@@ -51,7 +51,7 @@ class OrderSourceMethodsUnavailabilityReasonsValidator(object):
                 yield error
 
 
-class OrderSourceSupplierValidator(object):
+class OrderSourceSupplierValidator:
     @classmethod
     def get_validation_errors(cls, order_source):
         for supplier in order_source._get_suppliers():

@@ -8,7 +8,7 @@ from shuup.core.shop_provider import get_shop
 from shuup.core.utils.users import send_user_reset_password_email
 
 
-class UserMassActionProvider(object):
+class UserMassActionProvider:
     @classmethod
     def get_mass_actions_for_view(cls, view):
         return ["shuup.admin.modules.users.mass_actions.ResetPasswordAction"]

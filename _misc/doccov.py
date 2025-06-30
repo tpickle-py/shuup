@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -7,27 +6,29 @@
 # LICENSE file in the root directory of this source tree.
 import argparse
 import ast
-import jinja2
 import linecache
 import logging
 import os
 import re
 import sys
 from collections import Counter
+
+import jinja2
 from django.utils.text import slugify
+from markupsafe import Markup, escape
 from sanity_utils import find_files
 
 _paragraph_re = re.compile(r"(?:\r\n|\r|\n){2,}")
 
 
-@jinja2.evalcontextfilter
+@jinja2.pass_eval_context
 def nl2br(eval_ctx, value):
     result = "\n\n".join(
-        "<p>%s</p>" % p.replace("\n", "<br>\n")
-        for p in _paragraph_re.split(jinja2.escape(value))
+        "<p>{}</p>".format(p.replace("\n", "<br>\n"))
+        for p in _paragraph_re.split(escape(value))
     )
     if eval_ctx.autoescape:
-        result = jinja2.Markup(result)
+        result = Markup(result)
     return result
 
 
@@ -212,7 +213,7 @@ class ReturnValueVisitor(ast.NodeVisitor):
             self.returned_values.add(retval)
 
 
-class Validator(object):
+class Validator:
     disabling_directives = []
 
     def validate(self, docinfo):
@@ -263,7 +264,7 @@ class ReturnValidator(Validator):
                 yield "Error! Undocumented return value(s)"
 
 
-class DocInfo(object):
+class DocInfo:
     validator_classes = [GenericDocstringValidator, ArgValidator, ReturnValidator]
 
     def __init__(self, node, filename):
@@ -283,13 +284,13 @@ class DocInfo(object):
         if self.named_args and self.named_args[0] in IGNORED_FIRST_ARGS:
             self.named_args.pop(0)
 
-        self.required_args = set(
+        self.required_args = {
             arg for arg in self.named_args if arg not in IGNORED_ARGS
-        )
+        }
         self.mentioned_args = set(self.parse_arg_mentions(self.docstring))
         self.missing_args = self.required_args - self.mentioned_args
         self.extraneous_args = (
-            self.mentioned_args - self.required_args - set(["args", "kwargs"])
+            self.mentioned_args - self.required_args - {"args", "kwargs"}
         )
         self.validation_errors = list(self.validate())
         self.valid = not self.validation_errors
@@ -316,8 +317,7 @@ class DocInfo(object):
                 for directive in validator_class.disabling_directives
             ):
                 continue
-            for error in validator.validate(self):
-                yield error
+            yield from validator.validate(self)
 
     @staticmethod
     def parse_docstring(node):
@@ -363,7 +363,7 @@ class DocStringVisitor(ast.NodeVisitor):
         self._class_stack.pop(-1)
 
 
-class DocCov(object):
+class DocCov:
     def __init__(self):
         self.filenames = set()
         self.objects_by_file = {}
@@ -379,7 +379,7 @@ class DocCov(object):
             try:
                 tree = ast.parse(data, filename)
             except SyntaxError:
-                self.log.exception("Error! Can't parse %s." % filename)
+                self.log.exception(f"Error! Can't parse {filename}.")
                 return
         visitor = DocStringVisitor(filename=filename)
         visitor.visit(tree)
@@ -390,7 +390,7 @@ class DocCov(object):
         if os.path.isdir(path):
             for filepath in find_files(path, allowed_extensions=(".py",)):
                 if filepath.startswith("test_"):
-                    self.log.info("Info! Skipping: %s" % filepath)
+                    self.log.info(f"Info! Skipping: {filepath}")
                     continue
                 self.filenames.add(filepath)
         elif path.endswith(".py"):
@@ -398,7 +398,7 @@ class DocCov(object):
 
     def write_report(self, output_file):
         template_file_list = []
-        common_prefix = os.path.commonprefix(self.objects_by_file.keys())
+        common_prefix = os.path.commonprefix(list(self.objects_by_file.keys()))
         grand_totals = Counter()
         for path, objects in sorted(self.objects_by_file.items()):
             clean_path = path[len(common_prefix) :].replace(os.sep, "/")

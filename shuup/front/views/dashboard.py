@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from shuup.apps.provides import get_provide_objects
 
 
-class DashboardViewMixin(object):
+class DashboardViewMixin:
     def get_context_data(self, **kwargs):
         context = super(DashboardViewMixin, self).get_context_data(**kwargs)
         menu_items = self.get_menu_items()

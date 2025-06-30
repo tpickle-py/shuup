@@ -58,7 +58,7 @@ def maybe_call(thing, context, args=None, kwargs=None):
     return thing
 
 
-class Filter(object):
+class Filter:
     type = None
     filter_field = None
 
@@ -262,7 +262,7 @@ class MultiFieldTextFilter(TextFilter):
 true_or_false_filter = ChoicesFilter([(False, _("no")), (True, _("yes"))])
 
 
-class Column(object):
+class Column:
     def __init__(self, id, title, **kwargs):
         self.id = id
         self.title = title
@@ -385,7 +385,7 @@ class Column(object):
         return "<Column: %s> %s" % (self.title, self.id)
 
 
-class Picotable(object):
+class Picotable:
     def __init__(self, request, columns, mass_actions, queryset, context):
         for column in columns:
             column.set_context(context)
@@ -403,7 +403,7 @@ class Picotable(object):
         self.default_filters = self._get_default_filters()
 
     def _get_default_filter(self, column):
-        filter_config = getattr(column, "filter_config")
+        filter_config = column.filter_config
         if (
             filter_config
             and hasattr(filter_config, "default")
@@ -502,7 +502,7 @@ class Picotable(object):
             return _("objects")
 
 
-class PicotableViewMixin(object):
+class PicotableViewMixin:
     url_identifier = None
     default_columns = []
     columns = []
@@ -637,7 +637,7 @@ class PicotableViewMixin(object):
         return actions
 
 
-class PicotableMassAction(object):
+class PicotableMassAction:
     """
     Simple Mass Action.
 
@@ -675,7 +675,7 @@ class PicotableMassAction(object):
         return {}
 
 
-class PicotableMassActionProvider(object):
+class PicotableMassActionProvider:
     @classmethod
     def get_mass_actions_for_view(cls, view):
         """

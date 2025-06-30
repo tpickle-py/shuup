@@ -2,7 +2,7 @@
 from shuup.core.models import Shop
 
 
-class CurrencyBound(object):
+class CurrencyBound:
     """
     Mixin for adding currency property defaulting currency of the first Shop.
 

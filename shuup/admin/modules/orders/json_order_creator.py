@@ -45,7 +45,7 @@ class AdminOrderModifier(OrderModifier):
         return
 
 
-class JsonOrderCreator(object):
+class JsonOrderCreator:
     def __init__(self):
         self._errors = []
 
@@ -106,7 +106,7 @@ class JsonOrderCreator(object):
             self.add_error(ValidationError(msg, code="invalid_price"))
             return False
 
-        discount_val = sline.pop("discountAmount", parse_decimal_string(str("0.00")))
+        discount_val = sline.pop("discountAmount", parse_decimal_string("0.00"))
         try:
             sl_kwargs["discount_amount"] = source.create_price(
                 parse_decimal_string(discount_val)

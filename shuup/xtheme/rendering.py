@@ -73,7 +73,7 @@ def render_placeholder(
     return renderer.render()
 
 
-class PlaceholderRenderer(object):
+class PlaceholderRenderer:
     """
     Main class for materializing a placeholder's contents during template render time.
     """

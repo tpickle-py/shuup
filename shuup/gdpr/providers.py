@@ -61,7 +61,7 @@ class GDPRFieldProvider(FormFieldProvider):
             if user_consent and not user_consent.should_reconsent_to_page(page):
                 continue
 
-            key = "accept_{}".format(page.id)
+            key = f"accept_{page.id}"
             field = forms.BooleanField(
                 label=mark_safe(
                     ugettext(
@@ -114,7 +114,7 @@ class GDPRAuthFieldProvider(GDPRFieldProvider):
             return super(GDPRAuthFieldProvider, self).get_fields(**kwargs)
 
 
-class GDPRBaseUserDataProvider(object):
+class GDPRBaseUserDataProvider:
     @classmethod
     def get_user_data(
         cls, shop: Shop, user: UserModel = None, contact: Contact = None

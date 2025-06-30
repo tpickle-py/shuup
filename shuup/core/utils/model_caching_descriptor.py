@@ -3,7 +3,7 @@
 import six
 
 
-class ModelCachingDescriptor(object):
+class ModelCachingDescriptor:
     def __init__(self, name, queryset):
         self.name = name
         self.id_name = "_%s_id" % name

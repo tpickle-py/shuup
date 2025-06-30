@@ -22,7 +22,7 @@ def get_pip_path():
     return "pip"
 
 
-class PackageInstaller(object):
+class PackageInstaller:
     def __init__(self):
         self._log_buffer = b""
 

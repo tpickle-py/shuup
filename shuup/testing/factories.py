@@ -109,7 +109,7 @@ class UserFactory(DjangoModelFactory):
         model = settings.AUTH_USER_MODEL
 
     username = factory.Sequence(lambda n: "user%s" % n)
-    email = factory.Sequence(lambda n: "user{0}@example.shuup.com".format(n))
+    email = factory.Sequence(lambda n: f"user{n}@example.shuup.com")
     password = factory.PostGenerationMethodCall("set_password", "test")
     first_name = fuzzy.FuzzyText(length=4, prefix="First Name ")
     last_name = fuzzy.FuzzyText(length=4, prefix="Last Name ")
@@ -1052,9 +1052,7 @@ def create_random_user(locale="en", **kwargs):
     user_model = get_user_model()
     faker = get_faker(["person"], locale)
     params = {
-        user_model.USERNAME_FIELD: "{}-{}".format(
-            uuid.uuid4().hex, slugify(faker.first_name())
-        )
+        user_model.USERNAME_FIELD: f"{uuid.uuid4().hex}-{slugify(faker.first_name())}"
     }
     params.update(kwargs or {})
     return user_model.objects.create(**params)

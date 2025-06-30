@@ -7,7 +7,7 @@ import shuup.core.models
 import shuup.utils.money
 
 
-class LineTax(object):
+class LineTax:
     """
     Tax of some line.
 

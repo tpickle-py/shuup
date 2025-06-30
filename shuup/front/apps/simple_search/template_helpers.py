@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from shuup.compat import contextfunction
 
 
-class TemplateHelpers(object):
+class TemplateHelpers:
     name = "simple_search"
 
     @contextfunction

@@ -12,7 +12,7 @@ except ImportError:
 from shuup.importer.exceptions import ImporterError
 
 
-class DataImporterRowSession(object):
+class DataImporterRowSession:
     def __init__(self, importer, row, instance, shop):
         self.shop = shop
         self.row = row

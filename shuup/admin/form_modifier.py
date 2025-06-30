@@ -49,7 +49,7 @@ class FormModifier(six.with_metaclass(abc.ABCMeta)):
         pass
 
 
-class ModifiableFormMixin(object):
+class ModifiableFormMixin:
     form_modifier_provide_key = None
 
     def clean(self):
@@ -59,7 +59,7 @@ class ModifiableFormMixin(object):
         return cleaned_data
 
 
-class ModifiableViewMixin(object):
+class ModifiableViewMixin:
     def add_extra_fields(self, form, object=None):
         for extend_class in get_provide_objects(form.form_modifier_provide_key):
             for field_key, field in extend_class().get_extra_fields(object) or []:

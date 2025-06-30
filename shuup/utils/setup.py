@@ -1,6 +1,6 @@
 
 
-class Setup(object):
+class Setup:
     def __init__(self, load_from=None):
         self.commit(load_from)
 

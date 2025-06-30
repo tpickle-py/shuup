@@ -143,7 +143,7 @@ def _filer_image_from_file_path(image_file_path, path):
     return filer_image_from_data(
         request=None,
         path=path,
-        file_name="{}.jpeg".format(file_name),
+        file_name=f"{file_name}.jpeg",
         file_data=sio.getvalue(),
         sha1=True,
     )

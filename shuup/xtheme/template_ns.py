@@ -4,7 +4,7 @@ from shuup.xtheme.editing import is_edit_mode
 from shuup.xtheme.rendering import get_view_config
 
 
-class XthemeNamespace(object):
+class XthemeNamespace:
     """
     A template helper namespace for Xtheme-related functionality.
     """

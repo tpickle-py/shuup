@@ -7,4 +7,4 @@ def get_shuup_volume_unit():
 
     :rtype: str
     """
-    return "{}3".format(settings.SHUUP_LENGTH_UNIT)
+    return f"{settings.SHUUP_LENGTH_UNIT}3"

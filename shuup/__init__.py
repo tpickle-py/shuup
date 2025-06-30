@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 try:
     from . import _version
 except ImportError:

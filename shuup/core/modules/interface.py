@@ -9,7 +9,7 @@ class ModuleNotFound(ValueError):
     pass
 
 
-class ModuleInterface(object):
+class ModuleInterface:
     _cached_modules_impl = None
     module_options_field = "module_data"  # May be overridden on class level
     module_provides_key = None

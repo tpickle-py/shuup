@@ -17,7 +17,7 @@ from shuup.reports.utils import parse_date_range
 from shuup.utils.django_compat import force_text
 
 
-class ShuupReportBase(object):
+class ShuupReportBase:
     title = ""
     description = ""
     identifier = ""

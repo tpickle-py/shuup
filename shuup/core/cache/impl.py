@@ -39,7 +39,7 @@ def _get_cache_key_namespace(cache_key):
     :return: Cache namespace string
     :rtype: str
     """
-    return force_str(cache_key).split(str(":"), 1)[0]
+    return force_str(cache_key).split(":", 1)[0]
 
 
 def get_cache_duration(cache_key):
@@ -60,7 +60,7 @@ def get_cache_duration(cache_key):
     return duration
 
 
-class VersionedCache(object):
+class VersionedCache:
     def __init__(self, using):
         """
         :param using: Cache alias
@@ -78,7 +78,7 @@ class VersionedCache(object):
         """
         namespace = _get_cache_key_namespace(cache_key)
         version = str("%s/%s" % (time.time(), random.random()))
-        self.set(str("_version:") + namespace, version)
+        self.set("_version:" + namespace, version)
         setattr(_versions, namespace, version)
 
     def get_version(self, cache_key):
@@ -97,7 +97,7 @@ class VersionedCache(object):
         """
         namespace = _get_cache_key_namespace(cache_key)
         if not hasattr(_versions, namespace):
-            version = self._cache.get(str("_version:") + namespace)
+            version = self._cache.get("_version:" + namespace)
             setattr(_versions, namespace, version)
         else:
             version = getattr(_versions, namespace, None)
@@ -131,9 +131,7 @@ class VersionedCache(object):
             self._cache.set(key, value, timeout=timeout, version=version)
         except PicklingError:
             LOGGER.exception(
-                "Unable to set cache with key: {}, value: {!r}, value could not be pickled.".format(
-                    key, value
-                )
+                f"Unable to set cache with key: {key}, value: {value!r}, value could not be pickled."
             )
 
     def get(self, key, version=None, default=None):

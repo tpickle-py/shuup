@@ -33,7 +33,7 @@ def registration_complete(request):
     return redirect(settings.LOGIN_REDIRECT_URL)
 
 
-class RegistrationViewMixin(object):
+class RegistrationViewMixin:
     template_name = "shuup/registration/register.jinja"
 
     def get_success_url(self, *args, **kwargs):

@@ -128,7 +128,7 @@ class PaymentProcessor(ServiceProvider):
         return service
 
 
-class PaymentUrls(object):
+class PaymentUrls:
     """
     Container for URLs used in payment processing.
     """

@@ -8,7 +8,7 @@ from shuup.compat import contextfunction
 from shuup.gdpr.utils import get_active_consent_pages
 
 
-class GDPRNamespace(object):
+class GDPRNamespace:
     def is_enabled(self, request, **kwargs):
         from shuup.gdpr.models import GDPRSettings
 

@@ -1,7 +1,7 @@
 import os
 import re
 from logging import getLogger
-from typing import TYPE_CHECKING, Iterable
+from typing import TYPE_CHECKING
 
 import six
 from django.utils.html import escape
@@ -84,7 +84,7 @@ class InlineScriptResource(six.text_type):
         return cls("window.%s = %s;" % (var_name, TaggedJSONEncoder().encode(ns)))
 
 
-class JinjaMarkupResource(object):
+class JinjaMarkupResource:
     """
     A Jinja markup resource.
     """
@@ -131,7 +131,7 @@ class InlineStyleResource(six.text_type):
     """
 
 
-class ResourceContainer(object):
+class ResourceContainer:
     """
     ResourceContainers deal with storing and rendering injected resources.
 

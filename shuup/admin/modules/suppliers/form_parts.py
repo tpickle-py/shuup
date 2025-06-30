@@ -43,5 +43,5 @@ class SupplierContactAddressFormPart(FormPart):
         addr_form = form["address"]
         if addr_form.changed_data:
             addr = addr_form.save()
-            setattr(self.object, "contact_address", addr)
+            self.object.contact_address = addr
             self.object.save()

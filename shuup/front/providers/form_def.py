@@ -1,7 +1,7 @@
 import six
 
 
-class FormDefinition(object):
+class FormDefinition:
     """
     Simple Form definition class
 
@@ -20,7 +20,7 @@ class FormDefinition(object):
             setattr(self, k, v)
 
 
-class FormDefProvider(object):
+class FormDefProvider:
     """Provider to provide list of `FormDefinition`s"""
 
     # the form group / form instantiating this object

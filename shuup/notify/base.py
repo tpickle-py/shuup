@@ -55,7 +55,7 @@ class BaseMetaclass(type):
         return type.__new__(cls, name, bases, namespace)
 
 
-class Variable(object):
+class Variable:
     _creation_counter = 0  # For sorting, incremented by `__init__`
 
     def __init__(self, name, type=Type, required=True, help_text="", attributes=()):

@@ -164,7 +164,7 @@ class ShuupFrontMiddleware(MiddlewareMixin):
         finally:
             request.user = current_user
 
-    @lru_cache()
+    @lru_cache
     def _get_front_urlpatterns_callbacks(self):
         from shuup.front.urls import urlpatterns
 

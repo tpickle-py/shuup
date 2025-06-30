@@ -11,7 +11,7 @@ from shuup.apps.provides import get_provide_objects
 from shuup.utils.django_compat import force_text
 
 
-class HelpersNamespace(object):
+class HelpersNamespace:
     pass
 
 
@@ -36,7 +36,7 @@ def _get_helpers():
 library.global_function(name="shuup", fn=SimpleLazyObject(_get_helpers))
 
 
-@lru_cache()
+@lru_cache
 def _cached_markdown(str_value):
     return Markdown(
         extensions=[

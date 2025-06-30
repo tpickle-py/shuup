@@ -88,7 +88,7 @@ class RequestPasswordForm(RecoverPasswordForm):
         user_model = get_user_model()
         username = self.cleaned_data.get("username")
         email = self.cleaned_data.get("email")
-        username_filter = {"{0}__iexact".format(user_model.USERNAME_FIELD): username}
+        username_filter = {f"{user_model.USERNAME_FIELD}__iexact": username}
         # only staff and active users
         # only staff ( Access to Admin Panel ) and active users
         active_users = user_model.objects.filter(

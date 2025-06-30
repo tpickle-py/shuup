@@ -12,7 +12,7 @@ from shuup.utils.models import get_model_unique_fields
 NotCached = object()
 
 
-class RelatedMapper(object):
+class RelatedMapper:
     def __init__(self, handler, row_session, field):
         self.row_session = row_session
         self.handler = handler

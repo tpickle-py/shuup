@@ -223,7 +223,7 @@ class Category(MPTTModel, TranslatableModel):
     def get_cached_children(self):
         from shuup.core import cache
 
-        key = "category_cached_children:{}".format(self.pk)
+        key = f"category_cached_children:{self.pk}"
         children = cache.get(key)
         if children is not None:
             return children

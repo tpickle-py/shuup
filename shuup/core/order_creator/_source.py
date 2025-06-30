@@ -56,7 +56,7 @@ class TaxesNotCalculated(TypeError):
     """
 
 
-class _PriceSum(object):
+class _PriceSum:
     """
     Property that calculates a sum of prices.
 
@@ -88,7 +88,7 @@ class _PriceSum(object):
         return _UnknownTaxesAsNone(self)
 
 
-class _UnknownTaxesAsNone(object):
+class _UnknownTaxesAsNone:
     """
     Property that turns `TaxesNotCalculated` exception to None.
 
@@ -115,7 +115,7 @@ def count_in_line(line):
     return truncated_qty
 
 
-class OrderSource(object):
+class OrderSource:
     """
     A "provisional order" object.
 

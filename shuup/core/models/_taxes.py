@@ -105,9 +105,9 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
     def __str__(self):
         text = super(Tax, self).__str__()
         if self.rate is not None:
-            text += " ({})".format(format_percent(self.rate, digits=3))
+            text += f" ({format_percent(self.rate, digits=3)})"
         if self.amount is not None:
-            text += " ({})".format(format_money(self.amount))
+            text += f" ({format_money(self.amount)})"
         return text
 
     def _are_changes_protected(self):

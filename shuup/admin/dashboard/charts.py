@@ -9,14 +9,14 @@ from shuup.utils.money import Money
 from shuup.utils.serialization import ExtendedJSONEncoder
 
 
-class ChartType(object):
+class ChartType:
     """Type of a chart"""
 
     BAR = "bar"
     LINE = "line"
 
 
-class ChartDataType(object):
+class ChartDataType:
     """Data type of datasets"""
 
     NUMBER = "number"

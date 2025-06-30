@@ -9,7 +9,7 @@ from shuup.utils.importing import cached_load
 SHOP_SESSION_KEY = "admin_shop"
 
 
-class AdminShopProvider(object):
+class AdminShopProvider:
     def get_shop(self, request):
         if not request.user.is_staff:
             return None

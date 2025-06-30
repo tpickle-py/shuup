@@ -268,7 +268,7 @@ class OrderStatusHistory(models.Model):
     )
 
 
-class OrderStatusManager(object):
+class OrderStatusManager:
     def __init__(self):
         self.default_statuses = [
             {

@@ -105,8 +105,8 @@ class PseudoPaymentProcessor(PaymentProcessor):
     def _get_text_transformer(self, service):
         choice = service.choice_identifier
         if choice == "caps":
-            return type("").upper
+            return str.upper
         elif choice == "normal":
-            return type("")
+            return str
         else:
             raise ValueError("Error! Invalid service choice: `%r`." % choice)

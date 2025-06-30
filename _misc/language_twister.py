@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -8,6 +7,7 @@
 import os
 import re
 import sys
+
 from babel.messages.pofile import read_po
 from rope.base.codeanalyze import ChangeCollector
 from rope.base.project import Project
@@ -46,7 +46,7 @@ class LanguageTwist(CodeTemplate):
         else:
             if string not in self.not_in_catalog:
                 self.not_in_catalog.add(string)
-                print_("Not in catalog: %r" % string, file=sys.stderr)
+                print_(f"Not in catalog: {string!r}", file=sys.stderr)
 
         return repr(string)
 

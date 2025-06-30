@@ -44,7 +44,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
         self.default_language = kwargs.pop(
             "default_language",
             getattr(
-                self, "language", getattr(settings, "PARLER_DEFAULT_LANGUAGE_CODE")
+                self, "language", settings.PARLER_DEFAULT_LANGUAGE_CODE
             ),
         )
         self.languages = to_language_codes(

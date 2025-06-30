@@ -14,7 +14,7 @@ def _get_admin_module_for_url(url_names):
                 return module
 
 
-class Breadcrumbs(object):
+class Breadcrumbs:
     @classmethod
     def infer(cls, context):
         """

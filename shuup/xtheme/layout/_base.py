@@ -12,7 +12,7 @@ from shuup.xtheme.plugins._base import Plugin
 LOGGER = logging.getLogger(__name__)
 
 
-class LayoutCell(object):
+class LayoutCell:
     """
     A single cell in a layout. Maps to Bootstrap's `col-XX-XX` classes.
     """
@@ -103,7 +103,7 @@ class LayoutCell(object):
                     else plugin_inst.identifier
                 )
                 hash_key = hashlib.sha1(
-                    f"{cache_key_prefix}-{cache_key}".encode("utf-8")
+                    f"{cache_key_prefix}-{cache_key}".encode()
                 ).hexdigest()
                 full_cache_key = f"shuup_xtheme_cell:{hash_key}"
                 cached_content = cache.get(full_cache_key)
@@ -164,7 +164,7 @@ class LayoutCell(object):
         )
 
 
-class LayoutRow(object):
+class LayoutRow:
     """
     A single row in a layout. Maps to Bootstrap's `row` class.
     """
@@ -236,7 +236,7 @@ class LayoutRow(object):
         return cell
 
 
-class Layout(object):
+class Layout:
     """
     The layout (row, cell and plugin configuration) for a single placeholder.
     """

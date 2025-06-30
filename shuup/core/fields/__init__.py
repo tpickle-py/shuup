@@ -144,7 +144,7 @@ class MeasurementField(FormattedDecimalField):
         return (name, path, args, kwargs)
 
 
-class LanguageFieldMixin(object):
+class LanguageFieldMixin:
     LANGUAGE_CODES = remove_extinct_languages(
         tuple(set(babel.Locale("en").languages.keys()))
     )

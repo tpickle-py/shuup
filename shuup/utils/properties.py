@@ -4,7 +4,7 @@ from shuup.utils.money import Money
 from shuup.utils.numbers import UnitMixupError
 
 
-class MoneyProperty(object):
+class MoneyProperty:
     """
     Property for a Money amount.
 
@@ -114,7 +114,7 @@ class TaxlessPriceProperty(MoneyProperty):
     value_class = TaxlessPrice
 
 
-class MoneyPropped(object):
+class MoneyPropped:
     """
     Mixin for transforming MoneyProperty init parameters.
 

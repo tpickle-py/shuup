@@ -53,7 +53,7 @@ class ProductDetailView(DetailView):
                 ),
             )
             return HttpResponseRedirect(
-                "{}?variation={}".format(parent_url, product.sku)
+                f"{parent_url}?variation={product.sku}"
             )
 
         try:

@@ -115,7 +115,7 @@ class UnittedDecimal(decimal.Decimal):
     def __rtruediv__(self, other, **kwargs):
         if not isinstance(other, UnittedDecimal):
             type_name = type(self).__name__
-            raise TypeError("Error! Cannot divide non-{0} with {0}.".format(type_name))
+            raise TypeError(f"Error! Cannot divide non-{type_name} with {type_name}.")
         self._check_units_match(other)
         return super(UnittedDecimal, self).__rtruediv__(other, **kwargs)
 
@@ -125,7 +125,7 @@ class UnittedDecimal(decimal.Decimal):
     def __floordiv__(self, other, **kwargs):
         if not isinstance(other, UnittedDecimal):
             type_name = type(self).__name__
-            msg = "Error! Cannot floor-div {0} with non-{0}.".format(type_name)
+            msg = f"Error! Cannot floor-div {type_name} with non-{type_name}."
             raise TypeError(msg)
         self._check_units_match(other)
         return super(UnittedDecimal, self).__floordiv__(other, **kwargs)
@@ -133,7 +133,7 @@ class UnittedDecimal(decimal.Decimal):
     def __rfloordiv__(self, other, **kwargs):
         if not isinstance(other, UnittedDecimal):
             type_name = type(self).__name__
-            msg = "Error! Cannot floor-div non-{0} with {0}.".format(type_name)
+            msg = f"Error! Cannot floor-div non-{type_name} with {type_name}."
             raise TypeError(msg)
         self._check_units_match(other)
         return super(UnittedDecimal, self).__rfloordiv__(other, **kwargs)
@@ -141,21 +141,21 @@ class UnittedDecimal(decimal.Decimal):
     def __mod__(self, other, **kwargs):
         if not isinstance(other, UnittedDecimal):
             type_name = type(self).__name__
-            raise TypeError("Error! Cannot modulo {0} with non-{0}.".format(type_name))
+            raise TypeError(f"Error! Cannot modulo {type_name} with non-{type_name}.")
         self._check_units_match(other)
         return self.new(super(UnittedDecimal, self).__mod__(other, **kwargs))
 
     def __divmod__(self, other, **kwargs):
         if not isinstance(other, UnittedDecimal):
             type_name = type(self).__name__
-            raise TypeError("Error! Cannot divmod {0} with non-{0}.".format(type_name))
+            raise TypeError(f"Error! Cannot divmod {type_name} with non-{type_name}.")
         self._check_units_match(other)
         (div, mod) = super(UnittedDecimal, self).__divmod__(other, **kwargs)
         return (div, self.new(mod))
 
     def __pow__(self, other, **kwargs):
         type_name = type(self).__name__
-        raise TypeError("Error! {} cannot be powered.".format(type_name))
+        raise TypeError(f"Error! {type_name} cannot be powered.")
 
     def __neg__(self, **kwargs):
         return self.new(super(UnittedDecimal, self).__neg__(**kwargs))

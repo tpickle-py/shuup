@@ -3,7 +3,7 @@ import re
 from shuup.utils.django_compat import force_text
 
 
-class FuzzyMatcher(object):
+class FuzzyMatcher:
     def __init__(self, query):
         bits = [re.escape(bit.strip()) for bit in query.split() if bit.strip()]
         self.regexp = re.compile(".+".join(bits), re.I)

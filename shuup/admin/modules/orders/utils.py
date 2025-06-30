@@ -1,6 +1,6 @@
 
 
-class OrderInformation(object):
+class OrderInformation:
     order = 1
     title = "default"
 

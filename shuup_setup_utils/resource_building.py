@@ -13,7 +13,7 @@ from . import excludes
 from .nodejs_verify import verify_nodejs
 
 
-class Options(object):
+class Options:
     """
     Options for resource building.
 
@@ -47,7 +47,7 @@ def build_resources(options):
         builder.build_dirs(options.directories)
 
 
-class Builder(object):
+class Builder:
     def __init__(self, root_directory, options):
         self.root_directory = root_directory
         self.opts = options

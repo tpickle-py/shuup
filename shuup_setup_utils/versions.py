@@ -71,7 +71,7 @@ def _get_version_from_git(version, root):
 def _get_version_from_file(version_file, version_prefix=""):
     verstr = ""
     if os.path.exists(version_file):
-        with open(version_file, "rt") as fp:
+        with open(version_file) as fp:
             verstr = fp.read(100).strip()
     if verstr.startswith('__version__ = "' + version_prefix):
         return verstr.split('"', 2)[1]
@@ -79,5 +79,5 @@ def _get_version_from_file(version_file, version_prefix=""):
 
 
 def write_version_to_file(version, version_file):
-    with open(version_file, "wt") as fp:
-        fp.write('__version__ = "{version}"\n'.format(version=str(version)))
+    with open(version_file, "w") as fp:
+        fp.write(f'__version__ = "{str(version)}"\n')

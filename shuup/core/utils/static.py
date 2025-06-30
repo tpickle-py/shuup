@@ -4,7 +4,7 @@ from logging import getLogger
 LOGGER = getLogger(__name__)
 
 
-@lru_cache()
+@lru_cache
 def get_shuup_static_url(path, package=None):
     """
     `path` is the static source path, e.g. myapp/styles.css
@@ -27,6 +27,6 @@ def get_shuup_static_url(path, package=None):
             if distribution:
                 version = distribution.version
         except pkg_resources.DistributionNotFound:
-            LOGGER.exception("Failed to find the module {}".format(package))
+            LOGGER.exception(f"Failed to find the module {package}")
 
     return "%s?v=%s" % (static(path), version)

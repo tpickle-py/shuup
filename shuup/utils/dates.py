@@ -36,8 +36,8 @@ _time_formats = (
 _datetime_formats = list(
     itertools.chain.from_iterable(
         [
-            ["{} %H:%M:%S".format(fmt) for fmt in _date_formats],
-            ["{} %H:%M".format(fmt) for fmt in _date_formats],
+            [f"{fmt} %H:%M:%S" for fmt in _date_formats],
+            [f"{fmt} %H:%M" for fmt in _date_formats],
         ]
     )
 )
@@ -325,24 +325,20 @@ def to_datetime_range(start, end):
     for value in [start, end]:
         if not isinstance(value, datetime.date):
             raise TypeError(
-                "Error! Provided value `{!r}` is neither date nor datetime.".format(
-                    value
-                )
+                f"Error! Provided value `{value!r}` is neither date nor datetime."
             )
     start_is_datetime = isinstance(start, datetime.datetime)
     end_is_datetime = isinstance(end, datetime.datetime)
     if start_is_datetime != end_is_datetime:
         raise TypeError(
-            "Error! Start and end must be of the same type: `{!r}` - `{!r}`.".format(
-                start, end
-            )
+            f"Error! Start and end must be of the same type: `{start!r}` - `{end!r}`."
         )
     # Add +1 day to end if it's a date to make the range inclusive
     end_delta = datetime.timedelta(days=(1 if not end_is_datetime else 0))
     return (to_aware(start), to_aware(end) + end_delta)
 
 
-class DurationRange(object):
+class DurationRange:
     """
     Present duration range, min days to max days.
     """

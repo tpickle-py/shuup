@@ -2,7 +2,7 @@
 from django.utils.translation import ugettext_lazy as _
 
 
-class ProtectedFieldsMixin(object):
+class ProtectedFieldsMixin:
     change_protect_field_text = _("This field cannot be changed since it is protected.")
 
     def _get_protected_fields(self):

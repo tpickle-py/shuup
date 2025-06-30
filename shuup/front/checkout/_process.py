@@ -11,7 +11,7 @@ from shuup.utils.django_compat import reverse
 from shuup.utils.importing import load
 
 
-class CheckoutProcess(object):
+class CheckoutProcess:
     horizontal_template = True
 
     def __init__(self, phase_specs, phase_kwargs, view=None):
@@ -133,11 +133,11 @@ class CheckoutProcess(object):
             current_phase_index = self.phases.index(current_phase)
             # Set up attributes that are handy for the phase bar in the templates.
             for i, phase in enumerate(self.phases):
-                setattr(phase, "is_past", i > current_phase_index)
-                setattr(phase, "is_current", phase == current_phase)
-                setattr(phase, "is_future", i < current_phase_index)
-                setattr(phase, "is_previous", phase == target_phase.previous_phase)
-                setattr(phase, "is_next", phase == target_phase.next_phase)
+                phase.is_past = i > current_phase_index
+                phase.is_current = phase == current_phase
+                phase.is_future = i < current_phase_index
+                phase.is_previous = phase == target_phase.previous_phase
+                phase.is_next = phase == target_phase.next_phase
         return target_phase
 
     def reset(self):

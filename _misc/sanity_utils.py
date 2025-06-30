@@ -131,7 +131,7 @@ def _remove_ignored_directories(path, dirs, ignored_dirs, ignored_path_regexps):
         dirs.remove(ignored_dir)
 
 
-class XNodeVisitor(object):
+class XNodeVisitor:
     def visit(self, node, parents=None):
         method = "visit_" + node.__class__.__name__
         visitor = getattr(self, method, self.generic_visit)
@@ -153,7 +153,7 @@ def dotify_ast_name(name):
         return f"{dotify_ast_name(name.value)}.{name.attr}"
     if isinstance(name, Name):
         return name.id
-    return f"{name.__class__.__name__}" 
+    return f"{name.__class__.__name__}"
 
 
 def get_assign_first_target(assign):

@@ -11,7 +11,6 @@ to render certain price container elements conditionally.
 """
 
 import django_jinja
-import jinja2
 
 from shuup.compat import contextfunction
 from shuup.core.utils.price_display import (

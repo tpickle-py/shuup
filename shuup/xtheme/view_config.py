@@ -5,7 +5,7 @@ from shuup.xtheme.layout.utils import get_layout_data_key, get_provided_layouts
 from shuup.xtheme.models import SavedViewConfig
 
 
-class ViewConfig(object):
+class ViewConfig:
     """
     A view configuration.
 

@@ -1,6 +1,6 @@
 
 
-class PriceDisplayOptions(object):
+class PriceDisplayOptions:
     """
     Price display options.
 

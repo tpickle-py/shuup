@@ -17,7 +17,7 @@ from shuup.utils.numbers import bankers_round
 from ._source_modifier import get_order_source_modifier_modules
 
 
-class OrderProcessor(object):
+class OrderProcessor:
     def source_line_to_order_lines(self, order, source_line):
         """
         Convert a source line into one or more order lines.

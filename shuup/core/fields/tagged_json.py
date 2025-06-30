@@ -46,7 +46,7 @@ def decode_enum(val):
     return value  # Fall back to the bare value. Not optimal, I know.
 
 
-class TagRegistry(object):
+class TagRegistry:
     def __init__(self):
         self.tags = {}
 

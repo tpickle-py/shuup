@@ -15,7 +15,7 @@ if TYPE_CHECKING:  # pragma: no cover
     User = get_user_model()
 
 
-class AdminModule(object):
+class AdminModule:
     name = "_Base_"
 
     # A menu entry to represent this module in breadcrumbs
@@ -123,7 +123,7 @@ class AdminModule(object):
         return None
 
 
-class Resolvable(object):
+class Resolvable:
     _url = ""  # Set on instance level.
 
     @property
@@ -308,7 +308,7 @@ class Activity(Resolvable):
         self._url = url
 
 
-class Section(object):
+class Section:
     """
     Subclass this and add the class to the admin_*_section provide list
     (e.g. `admin_order_section`) to show a custom section on the specified

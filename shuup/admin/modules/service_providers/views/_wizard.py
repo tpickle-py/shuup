@@ -24,7 +24,7 @@ class ServiceProviderTypeForm(forms.Form):
         return data
 
 
-class ServiceWizardFormPartMixin(object):
+class ServiceWizardFormPartMixin:
     def visible(self):
         return not self.service_model.objects.for_shop(shop=self.object).exists()
 

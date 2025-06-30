@@ -34,7 +34,7 @@ class ProductKindSpec:
         return (cls.value, cls.name)
 
 
-@lru_cache()
+@lru_cache
 def get_product_kind_specs() -> Iterable[ProductKindSpec]:
     unique_values = []
     specs = []
@@ -50,7 +50,7 @@ def get_product_kind_specs() -> Iterable[ProductKindSpec]:
     return specs
 
 
-@lru_cache()
+@lru_cache
 def get_product_kind_choices() -> Dict[int, str]:
     return [
         product_kind_spec.get_enum_value_label()

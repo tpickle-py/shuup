@@ -46,7 +46,7 @@ def render_price_property(request, item, priceful, property_name="price"):
     return money(price_value)
 
 
-class _ContextObject(object):
+class _ContextObject:
     def __init__(self, name, property_name=None):
         self.name = name
         self.property_name = property_name or name
@@ -316,14 +316,14 @@ def _get_priceful(request, item, quantity, supplier):
     if supplier:
         # Passed from template and sometimes chosen by end user,
         # but most of the time just decided by supplier strategy.
-        setattr(request, "supplier", supplier)
+        request.supplier = supplier
 
     if hasattr(item, "supplier"):
         # When item already has supplier fe. order and basket lines.
         # This is always forced and supplier passed from template
         # can't override this. Though developer should never pass
         # supplier to template filter while getting price for source line.
-        setattr(request, "supplier", getattr(item, "supplier"))
+        request.supplier = item.supplier
 
     if hasattr(item, "get_price_info"):
         key_prefix = "%s-%s-" % (item.id, quantity)

@@ -66,7 +66,7 @@ class PictureDnDUploaderWidget(Widget):
             # `{max-filesize: 1}` will be converted into `data-dz_max-filesize="1"`
             file_attrs.extend(
                 [
-                    'data-dz_{}="{}"'.format(k, force_text(v))
+                    f'data-dz_{k}="{force_text(v)}"'
                     for k, v in self.dropzone_attrs.items()
                 ]
             )

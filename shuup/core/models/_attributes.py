@@ -498,7 +498,7 @@ class AppliedAttribute(TranslatableModel):
         )
 
 
-class AttributableMixin(object):
+class AttributableMixin:
     def _set_cached_attribute(self, language, identifier, applied_attribute):
         if not hasattr(self, "_attr_cache"):
             self._attr_cache = {}

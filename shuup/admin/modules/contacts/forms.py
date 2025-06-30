@@ -37,7 +37,7 @@ FIELDS_BY_MODEL_NAME = {
 }
 
 
-class ContactBaseFormMixin(object):
+class ContactBaseFormMixin:
     def __init__(self, *args, **kwargs):
         super(ContactBaseFormMixin, self).__init__(*args, **kwargs)
         self.init_fields()

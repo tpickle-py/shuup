@@ -104,6 +104,6 @@ def define_log_model(model_class):
             log_entry.save()
         return log_entry
 
-    setattr(model_class, "add_log_entry", _add_log_entry)
+    model_class.add_log_entry = _add_log_entry
     all_known_log_models[model_class] = log_entry_class
     return log_entry_class

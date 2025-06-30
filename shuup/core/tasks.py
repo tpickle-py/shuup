@@ -2,7 +2,7 @@ import inspect
 import json
 import logging
 from datetime import datetime
-from typing import Any, Optional, Tuple, Union
+from typing import Any, Optional, Tuple
 from uuid import uuid4
 
 from django.utils.translation import ugettext_lazy as _

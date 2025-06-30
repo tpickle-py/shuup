@@ -384,11 +384,11 @@ class UserDetailView(CreateOrUpdateView):
                 subject=_("You've been added as an admin user to `%s`." % shop_url),
                 message=NEW_USER_EMAIL_CONFIRMATION_TEMPLATE
                 % {
-                    "first_name": getattr(self.object, "first_name")
+                    "first_name": self.object.first_name
                     or getattr(self.object, "username", _("User")),
                     "shop_url": shop_url,
                     "admin_url": admin_url,
-                    "username": getattr(self.object, "username")
+                    "username": self.object.username
                     or getattr(self.object.email),
                 },
                 from_email=django_settings.DEFAULT_FROM_EMAIL,

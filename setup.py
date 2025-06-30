@@ -149,7 +149,7 @@ REQUIRES = get_requirements()
 
 if __name__ == "__main__":
     if "upload" in sys.argv:
-        raise EnvironmentError("Uploading is blacklisted")
+        raise OSError("Uploading is blacklisted")
 
     if HAS_SETUP_UTILS:
         version = utils.get_version(VERSION, TOPDIR, VERSION_FILE)
@@ -161,7 +161,7 @@ if __name__ == "__main__":
         # Fallback when setup utils is not available
         version = VERSION
         try:
-            with open(LONG_DESCRIPTION_FILE, "r", encoding="utf-8") as f:
+            with open(LONG_DESCRIPTION_FILE, encoding="utf-8") as f:
                 long_description = f.read()
         except:
             long_description = DESCRIPTION

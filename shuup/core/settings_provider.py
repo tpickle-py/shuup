@@ -3,7 +3,7 @@ from django.conf import settings
 from shuup.apps.provides import get_provide_objects
 
 
-class BaseSettingsProvider(object):
+class BaseSettingsProvider:
     provided_settings = []
 
     def offers(self, setting_key):
@@ -13,7 +13,7 @@ class BaseSettingsProvider(object):
         return None
 
 
-class ShuupSettings(object):
+class ShuupSettings:
     @classmethod
     def get_setting(cls, setting_key):
         for provider_cls in get_provide_objects("shuup_settings_provider"):

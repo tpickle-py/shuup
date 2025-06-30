@@ -13,7 +13,7 @@ FILE_READ_KWARGS = {"mode": "rb"}
 if six.PY3:
     FILE_READ_KWARGS = {"mode": "r", "encoding": "utf-8"}
 
-_TOKEN_MAP = dict(((k, v) for (v, k) in token.tok_name.items()))
+_TOKEN_MAP = dict((k, v) for (v, k) in token.tok_name.items())
 COMMENT_TOKEN = _TOKEN_MAP["COMMENT"]
 
 
@@ -36,8 +36,8 @@ def get_known_settings_documentation(order_by="app", only_changed=False):
         title = "{} (from {})".format(setting["name"], setting["app_name"])
         doc = (setting["comment"] or "Undocumented").strip()
         indented_doc = "\n    ".join(("    " + doc).splitlines()).rstrip()
-        default = "    Default value: {!r}".format(default_value)
-        current = "    Current value: {!r}".format(current_value)
+        default = f"    Default value: {default_value!r}"
+        current = f"    Current value: {current_value!r}"
         blocks = [title, indented_doc, "", default, current]
         doc_items.append("\n".join(blocks))
     return "\n\n".join(doc_items)

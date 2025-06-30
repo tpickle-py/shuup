@@ -158,7 +158,7 @@ def bump_cache_for_item_ids(item_ids, namespace, object_class, shop=None):
     :param ids: list of cached object id's
     """
     for item_id in item_ids:
-        cache.bump_version("{}-{}".format(namespace, item_id))
+        cache.bump_version(f"{namespace}-{item_id}")
 
 
 def bump_cache_for_item(item):
@@ -239,7 +239,7 @@ def _get_cached_value_from_context(context, key, value):
 
     # 1) check whether the value is cached inside the context as an attribute
     try:
-        cache_key = "_ctx_cache_{}".format(key)
+        cache_key = f"_ctx_cache_{key}"
         cached_value = getattr(context, cache_key)
     except AttributeError:
         pass
@@ -247,7 +247,7 @@ def _get_cached_value_from_context(context, key, value):
     # 2) Check whether the value is cached in general cache
     # we can only cache objects that has `pk` attribute
     if cached_value is None and hasattr(value, "pk"):
-        cache_key = "_ctx_cache:{}_{}".format(key, value.pk)
+        cache_key = f"_ctx_cache:{key}_{value.pk}"
         cached_value = cache.get(cache_key)
 
     # 3) Nothing is cached, then read the value itself
@@ -261,14 +261,14 @@ def _get_cached_value_from_context(context, key, value):
         # somethings this will raise AttributeError because the
         # context is not a valid object, like a dictionary
         try:
-            cache_key = "_ctx_cache_{}".format(key)
+            cache_key = f"_ctx_cache_{key}"
             setattr(context, cache_key, cached_value)
         except AttributeError:
             pass
 
         # cache the value in the general cache
         if hasattr(value, "pk"):
-            cache_key = "_ctx_cache:{}_{}".format(key, value.pk)
+            cache_key = f"_ctx_cache:{key}_{value.pk}"
             cache.set(cache_key, cached_value)
 
     return cached_value

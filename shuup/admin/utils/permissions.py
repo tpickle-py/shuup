@@ -57,7 +57,7 @@ def get_missing_permissions(user, permissions):
     group_permissions = None
 
     if user:
-        cache_key = "{}:{}".format(USER_PERMISSIONS_CACHE_NAMESPACE, user.pk)
+        cache_key = f"{USER_PERMISSIONS_CACHE_NAMESPACE}:{user.pk}"
         group_permissions = cache.get(cache_key)
 
         if group_permissions is None:

@@ -5,7 +5,7 @@ from shuup.utils.django_compat import force_text
 from shuup.utils.i18n import get_current_babel_locale
 
 
-class BaseAddressFormatter(object):
+class BaseAddressFormatter:
     def address_as_string_list(self, address, locale=None):
         raise NotImplementedError()
 

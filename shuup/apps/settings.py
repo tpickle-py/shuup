@@ -48,7 +48,7 @@ def get_known_settings():
     return _KNOWN_SETTINGS.values()
 
 
-class Setting(object):
+class Setting:
     def __init__(self, name, default, app_name, module):
         self.name = name
         self.default = default

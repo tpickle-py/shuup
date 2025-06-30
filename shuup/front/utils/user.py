@@ -19,5 +19,5 @@ def _is_admin_user(request):
 def is_admin_user(request):
     if getattr(request, "is_admin_user", False):
         return True
-    setattr(request, "is_admin_user", _is_admin_user(request))
+    request.is_admin_user = _is_admin_user(request)
     return getattr(request, "is_admin_user", False)

@@ -12,7 +12,7 @@ class MenuExtenderLocation(Enum):
     FOOTER = 4
 
 
-class FrontMenuExtender(object):
+class FrontMenuExtender:
     location = MenuExtenderLocation.MAIN_MENU
     items = []
     menu_item_template = "menu_extension.jinja"

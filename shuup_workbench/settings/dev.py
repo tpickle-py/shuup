@@ -6,6 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 
 from shuup.utils.setup import Setup
+
 from . import base_settings
 
 

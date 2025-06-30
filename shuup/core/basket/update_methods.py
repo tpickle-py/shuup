@@ -8,7 +8,7 @@ from shuup.core.order_creator import OrderLineBehavior
 from shuup.utils.numbers import parse_decimal_string
 
 
-class BasketUpdateMethods(object):
+class BasketUpdateMethods:
     def __init__(self, request, basket):
         """
         Initialize.

@@ -16,7 +16,7 @@ PATTERN_SYNTAX_HELP_TEXT = _(
 )
 
 
-class Pattern(object):
+class Pattern:
     def __init__(self, pattern_text):
         """
         Compile a pattern from the given `pattern_text`.
@@ -133,7 +133,7 @@ class Pattern(object):
                     return True
 
 
-@lru_cache()
+@lru_cache
 def _compile_pattern(pattern):
     return Pattern(pattern)
 

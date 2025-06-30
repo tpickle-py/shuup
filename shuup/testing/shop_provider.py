@@ -6,7 +6,7 @@ from shuup.core.models import Shop
 SHOP_SESSION_KEY = "admin_shop"
 
 
-class TestingAdminShopProvider(object):
+class TestingAdminShopProvider:
     def get_shop(self, request):
         return Shop.objects.first()
 

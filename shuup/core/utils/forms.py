@@ -87,7 +87,7 @@ class FormInfoMap(OrderedDict):
         return [(x.choice_value, x.choice_text) for x in self.values()]
 
 
-class FormInfo(object):
+class FormInfo:
     def __init__(self, form_class):
         self.form_class = form_class
         self.model = form_class._meta.model
@@ -128,7 +128,7 @@ class RecoverPasswordForm(forms.Form):
         username = self.cleaned_data["username"]
         email = self.cleaned_data["email"]
 
-        username_filter = {"{0}__iexact".format(user_model.USERNAME_FIELD): username}
+        username_filter = {f"{user_model.USERNAME_FIELD}__iexact": username}
 
         active_users = user_model.objects.filter(
             Q(**username_filter) | Q(email__iexact=email), Q(is_active=True)

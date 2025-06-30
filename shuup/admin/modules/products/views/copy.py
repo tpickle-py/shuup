@@ -52,9 +52,7 @@ class ProductCopyView(DetailView):
         messages.success(
             request,
             _(
-                "{product_name} was successfully copied".format(
-                    product_name=copied_shop_product.product
-                )
+                f"{copied_shop_product.product} was successfully copied"
             ),
         )
         return HttpResponseRedirect(self.get_success_url(copied_shop_product))

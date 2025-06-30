@@ -111,7 +111,7 @@ class TaskCommentForm(ModelForm):
         return super(TaskCommentForm, self).save(**kwargs)
 
 
-class BaseTaskViewMixin(object):
+class BaseTaskViewMixin:
     def get_queryset(self):
         tasks = Task.objects.for_shop(get_shop(self.request))
         if not self.request.user.is_superuser:

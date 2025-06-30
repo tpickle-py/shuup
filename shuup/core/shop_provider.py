@@ -3,7 +3,7 @@ from shuup.core.utils.shops import get_shop_from_host
 from shuup.utils.importing import cached_load
 
 
-class DefaultShopProvider(object):
+class DefaultShopProvider:
     @classmethod
     def get_shop(cls, request, **kwargs):
         shop = getattr(request, "_cached_default_shop_provider_shop", None)
@@ -18,7 +18,7 @@ class DefaultShopProvider(object):
             shop = Shop.objects.first()
 
         # cache shop as we already calculated it
-        setattr(request, "_cached_default_shop_provider_shop", shop)
+        request._cached_default_shop_provider_shop = shop
         return shop
 
 

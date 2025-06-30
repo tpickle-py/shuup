@@ -17,7 +17,7 @@ class Command(makemessages.Command):
     help = __doc__
 
     def add_arguments(self, parser):
-        class InterceptedParser(object):
+        class InterceptedParser:
             def add_argument(self, *args, **kwargs):
                 if args[0] == "--domain":
                     return

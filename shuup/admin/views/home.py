@@ -38,7 +38,7 @@ QUICKLINK_ORDER = [
 ]
 
 
-class SimpleHelpBlock(object):
+class SimpleHelpBlock:
     def __init__(self, text, **kwargs):
         self.text = text
         self.description = kwargs.pop("description", "")

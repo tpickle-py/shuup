@@ -12,7 +12,7 @@ class DashboardItemSize(Enum):
     LARGE = 12
 
 
-class DashboardItem(object):
+class DashboardItem:
     request = None
     template_name = "shuup/front/dashboard/dashboard_base.jinja"
 

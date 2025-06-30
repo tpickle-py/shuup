@@ -173,7 +173,7 @@ class GenericSendEmailScriptTemplate(BaseScriptTemplate):
 
             for language, data in send_email.data["template_data"].items():
                 for data_key, data_value in data.items():
-                    initial["{0}-{1}".format(language, data_key)] = data_value
+                    initial[f"{language}-{data_key}"] = data_value
             return initial
 
         else:

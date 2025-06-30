@@ -96,7 +96,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
                 ),
             )
             fg.add_form_def(
-                "saved_{}".format(kind),
+                f"saved_{kind}",
                 form_class=SavedAddressForm,
                 required=False,
                 kwargs={"kind": kind, "owner": self.basket.customer},
@@ -176,7 +176,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
 
         if isinstance(basket.customer, CompanyContact):
             for address_kind in self.address_kinds:
-                address = getattr(basket, "{}_address".format(address_kind), None)
+                address = getattr(basket, f"{address_kind}_address", None)
                 if address:
                     address.company_name = basket.customer.name
                     address.tax_number = basket.customer.tax_number

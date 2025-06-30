@@ -103,7 +103,7 @@ class StockLimitEmailScriptTemplate(GenericSendEmailScriptTemplate):
                     structure["send_mail"].data["template_data"].items()
                 ):
                     for data_key, data_value in data.items():
-                        initial["{0}-{1}".format(language, data_key)] = data_value
+                        initial[f"{language}-{data_key}"] = data_value
                 return initial
 
         else:

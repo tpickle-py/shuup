@@ -37,15 +37,13 @@ def _get_cached_thumbnail_url(source, **kwargs):
     cache_key = None
 
     if isinstance(source, (File, ProductMedia)) and source.pk:
-        cache_key = "thumbnail_{}_{}:_cached_thumbnail_{}".format(
-            source.pk, source.__class__.__name__, kwargs_hash
-        )
+        cache_key = f"thumbnail_{source.pk}_{source.__class__.__name__}:_cached_thumbnail_{kwargs_hash}"
 
     elif isinstance(source, six.string_types):
-        cache_key = "_cached_thumbnail_url_{}".format(kwargs_hash)
+        cache_key = f"_cached_thumbnail_url_{kwargs_hash}"
 
     elif hasattr(source, "url") and source.url:
-        cache_key = "_cached_thumbnail_url_{}".format(source.url)
+        cache_key = f"_cached_thumbnail_url_{source.url}"
 
     if cache_key:
         return cache_key, cache.get(cache_key)
@@ -86,7 +84,7 @@ def thumbnail(source, alias=None, generate=True, **kwargs):
         if cache_key:
             cache.set(cache_key, thumbnail_url)
         return thumbnail_url
-    except (IOError, InvalidImageFormatError, ValueError):
+    except (OSError, InvalidImageFormatError, ValueError):
         return None
 
 

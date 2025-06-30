@@ -34,7 +34,7 @@ class PermissionGroupForm(forms.ModelForm):
             help_texts = admin_module.get_permissions_help_texts()
 
             for required_permission in admin_module.get_required_permissions():
-                field_id = "perm:{}".format(required_permission)
+                field_id = f"perm:{required_permission}"
                 self.fields[field_id] = forms.BooleanField(
                     required=False,
                     label=required_permission,
@@ -51,7 +51,7 @@ class PermissionGroupForm(forms.ModelForm):
                 get_permissions_from_urls(admin_module.get_urls())
             ) + list(admin_module.get_extra_permissions())
             for permission in extra_permissions:
-                field_id = "perm:{}".format(permission)
+                field_id = f"perm:{permission}"
                 self.fields[field_id] = forms.BooleanField(
                     required=False,
                     label=permission,

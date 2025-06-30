@@ -1,7 +1,7 @@
 from shuup.core.pricing import TaxfulPrice, TaxlessPrice
 
 
-class TaxedPrice(object):
+class TaxedPrice:
     """
     Price with calculated taxes.
 

@@ -49,7 +49,7 @@ def render_in_context(context, template_text, html_intent=False):
     return template.render(context.get_variables())
 
 
-class Template(object):
+class Template:
     def __init__(self, context, data):
         """
         :param context: Script context.

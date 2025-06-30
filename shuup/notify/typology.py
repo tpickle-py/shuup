@@ -24,7 +24,7 @@ class MultiEmailField(forms.Field):
                     validate_email(email)
 
 
-class Type(object):
+class Type:
     name = None
     identifier = None
 

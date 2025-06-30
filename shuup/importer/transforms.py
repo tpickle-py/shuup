@@ -17,7 +17,7 @@ else:
     import csv
 
 
-class RowYielder(object):
+class RowYielder:
     def __init__(self, sheet_or_data):
         self.sheet_or_data = sheet_or_data
 
@@ -39,7 +39,7 @@ class XLSXRowYielder(RowYielder):
             )
 
 
-class TransformedData(object):
+class TransformedData:
     def __init__(self, mode, headers, rows, **meta):
         self.mode = mode
         self.headers = headers

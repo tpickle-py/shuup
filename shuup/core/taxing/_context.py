@@ -1,6 +1,6 @@
 
 
-class TaxingContext(object):
+class TaxingContext:
     def __init__(
         self, customer_tax_group=None, customer_tax_number=None, location=None
     ):

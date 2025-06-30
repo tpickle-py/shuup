@@ -7,7 +7,7 @@ from shuup.core.utils.product_subscription import UserModel
 from shuup.gdpr.signals import anonymization_requested
 
 
-class Anonymizer(object):
+class Anonymizer:
     mapping = {
         "phone": "_null_phone",
         "ip_address": "_null_ip",

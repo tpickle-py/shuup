@@ -226,7 +226,7 @@ def get_orderable_variation_children(
     return values
 
 
-class ProductContextExtra(object):
+class ProductContextExtra:
     def __init__(self, request, product, language, **kwargs):
         self.request = request
         self.product = product

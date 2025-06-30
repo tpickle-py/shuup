@@ -15,7 +15,7 @@ from shuup.utils.django_compat import force_text
 from shuup.utils.excs import Problem
 
 
-class BasketCommandDispatcher(object):
+class BasketCommandDispatcher:
     """
     BasketCommandDispatcher handles (usually AJAX) requests that somehow update the basket.
     You should never instantiate BasketCommandDispatcher yourself -- instead use

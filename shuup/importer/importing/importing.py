@@ -32,7 +32,7 @@ LOGGER = logging.getLogger(__name__)
 User = get_user_model()
 
 
-class ImporterExampleFile(object):
+class ImporterExampleFile:
     file_name = ""
     template_name = ""
     content_type = ""
@@ -63,7 +63,7 @@ class ImporterContext:
         self.user = user
 
 
-class DataImporter(object):
+class DataImporter:
     identifier = None
     name = None
     meta_class_getter_name = "get_import_meta"
@@ -132,7 +132,7 @@ class DataImporter(object):
 
     @classmethod
     def get_permission_identifier(cls):
-        return "{}:{}".format(cls.identifier, force_text(cls.name))
+        return f"{cls.identifier}:{force_text(cls.name)}"
 
     @classmethod
     def transform_file(cls, mode, filename, data=None):

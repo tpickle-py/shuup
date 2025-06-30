@@ -17,7 +17,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from shuup.core.models import Contact, Product, Shipment, ShopProduct, Supplier
 
 
-@lru_cache()
+@lru_cache
 def get_supported_product_kinds_for_module(
     module_identifier: str,
 ) -> Iterable[ProductKindSpec]:
@@ -29,7 +29,7 @@ def get_supported_product_kinds_for_module(
     return specs
 
 
-@lru_cache()
+@lru_cache
 def get_supported_product_kinds_values_for_module(
     module_identifier: str,
 ) -> Iterable[int]:

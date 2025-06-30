@@ -21,7 +21,7 @@ cond_op_to_func_map = {
 }
 
 
-class Step(object):
+class Step:
     def __init__(
         self,
         conditions=(),
@@ -96,7 +96,7 @@ class Step(object):
 CONTEXT_LOGGER = logging.Logger("%s.Context" % __name__)
 
 
-class Context(object):
+class Context:
     def __init__(self, variables=None, shop=None, event_identifier=None):
         if not variables:
             variables = {}

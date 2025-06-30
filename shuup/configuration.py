@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 API for Shuup's Dynamic Configuration.
 
@@ -125,7 +124,7 @@ def _get_configuration_from_db(shop):
     return configuration
 
 
-_SHOP_CONF_NAMESPACE = str("shop_config")
+_SHOP_CONF_NAMESPACE = "shop_config"
 
 
 def _get_cache_key(shop):
@@ -137,4 +136,4 @@ def _get_cache_key(shop):
     :return: Global or shop specific cache key
     :rtype: str
     """
-    return str("%s:%s") % (_SHOP_CONF_NAMESPACE, shop.pk if shop else 0)
+    return "%s:%s" % (_SHOP_CONF_NAMESPACE, shop.pk if shop else 0)

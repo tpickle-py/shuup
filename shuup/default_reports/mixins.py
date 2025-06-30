@@ -4,7 +4,7 @@ from shuup.core.models import Order, OrderLine
 from shuup.utils.dates import to_datetime_range
 
 
-class OrderReportMixin(object):
+class OrderReportMixin:
     def get_objects(self, paid=True):
         (start, end) = to_datetime_range(self.start_date, self.end_date)
         queryset = Order.objects.filter(shop=self.shop, order_date__range=(start, end))
@@ -24,7 +24,7 @@ class OrderReportMixin(object):
         return queryset.order_by("order_date")
 
 
-class OrderLineReportMixin(object):
+class OrderLineReportMixin:
     def get_objects(self):
         (start, end) = to_datetime_range(self.start_date, self.end_date)
         queryset = OrderLine.objects.filter(created_on__range=(start, end))

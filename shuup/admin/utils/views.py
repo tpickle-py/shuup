@@ -291,7 +291,7 @@ class PicotableListView(PicotableViewMixin, ListView):
         ]
 
 
-class MassEditMixin(object):
+class MassEditMixin:
     template_name = "shuup/admin/mass_action/mass_edit.jinja"
     title = _("Mass Edit")
 

@@ -2,7 +2,7 @@ from shuup.core.models import Supplier
 from shuup.testing.models import SupplierPrice
 
 
-class CheapestSupplierPriceSupplierStrategy(object):
+class CheapestSupplierPriceSupplierStrategy:
     def get_supplier(self, **kwargs):
         # Here we did some trick and passed different
         # kwargs than is passed from shop product get

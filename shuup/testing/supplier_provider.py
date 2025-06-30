@@ -1,19 +1,19 @@
 from shuup.core.models import Supplier
 
 
-class UsernameSupplierProvider(object):
+class UsernameSupplierProvider:
     @classmethod
     def get_supplier(cls, request, **kwargs):
         return Supplier.objects.filter(identifier=request.user.username).first()
 
 
-class RequestSupplierProvider(object):
+class RequestSupplierProvider:
     @classmethod
     def get_supplier(cls, request, **kwargs):
         return getattr(request, "supplier", None)
 
 
-class FirstSupplierProvider(object):
+class FirstSupplierProvider:
     @classmethod
     def get_supplier(cls, request, **kwargs):
         return Supplier.objects.first()

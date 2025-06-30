@@ -14,7 +14,7 @@ from shuup.utils.form_group import FormDef, FormGroup
 from shuup.utils.iterables import first
 
 
-class WizardFormDefMixin(object):
+class WizardFormDefMixin:
     def __init__(self, **kwargs):
         self.context = kwargs.pop("context", {})
         self.extra_js = kwargs.pop("extra_js", "")

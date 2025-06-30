@@ -6,7 +6,7 @@ from shuup.utils.i18n import get_current_babel_locale
 from shuup.utils.numbers import parse_decimal_string
 
 
-class DashboardBlock(object):
+class DashboardBlock:
     type = None
     sort_order = 0
     SIZES = ("small", "normal", "medium", "large", "full")

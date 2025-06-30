@@ -17,8 +17,8 @@ class ProductCloner:
         # clone product
         product = shop_product.product
         new_product = copy_model_instance(product)
-        new_product.sku = "{}-{}".format(product.sku, Product.objects.count())
-        new_product.name = ("{name} - Copy").format(name=product.name)
+        new_product.sku = f"{product.sku}-{Product.objects.count()}"
+        new_product.name = (f"{product.name} - Copy")
         new_product.save()
 
         for trans in product.translations.all():

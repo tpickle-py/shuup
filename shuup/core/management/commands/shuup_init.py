@@ -20,7 +20,7 @@ def schema(model, identifier, **info):
     return locals()
 
 
-class Initializer(object):
+class Initializer:
     schemata = [
         schema(
             Shop,

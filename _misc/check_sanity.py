@@ -48,8 +48,7 @@ def check_sanity_of_files(paths, ignored_paths):
     for path in paths:
         if path in ignored_paths:
             continue
-        for error in check_sanity_of_file(path):
-            yield error
+        yield from check_sanity_of_file(path)
 
 
 def check_sanity_of_file(path):
@@ -72,11 +71,16 @@ def insanity_class(cls):
     return cls
 
 
-class InsanityInLine(object):
+class InsanityInLine:
     code = "S000"
     insanity = "insane"
     only_once = False
     message_format = "{s.path}:{s.num}:{s.column}: {s.code} {s.insanity}"
+
+    @staticmethod
+    def check_line(_):
+        # Default implementation, subclasses should override
+        return False
 
     @classmethod
     def create_if_present(cls, path, num, line):
@@ -136,8 +140,9 @@ class ControlCharacterInLine(InsanityInLine):
         return self.line.index(self.char) + 1
 
     def __str__(self):
-        super_str = super(ControlCharacterInLine, self).__str__()
-        return super_str + ": " + self.char_description
+        super_str = super().__str__()
+        description = self.char_description if self.char_description is not None else ""
+        return super_str + ": " + description
 
 
 @insanity_class
@@ -204,7 +209,7 @@ def register_control_character_insanities():
         b"\x1f": "US",
     }.items():
         cls = type(
-            "%sControlCharacterInLine" % description,
+            f"{description}ControlCharacterInLine",
             (ControlCharacterInLine,),
             {"char": char, "char_description": description},
         )

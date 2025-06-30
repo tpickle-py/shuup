@@ -11,7 +11,7 @@ from filer.fields.image import FilerFileField
 from shuup.core.fields import SeparatedValuesField, TaggedJSONField
 
 
-class SnippetType(object):
+class SnippetType:
     InlineJS = "inline_js"
     InlineCSS = "inline_css"
     InlineHTMLMarkup = "inline_html"

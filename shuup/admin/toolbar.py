@@ -16,7 +16,7 @@ from shuup.apps.provides import get_provide_objects
 from shuup.utils.django_compat import NoReverseMatch, Resolver404, force_text, resolve, reverse
 
 
-class BaseToolbarButtonProvider(object):
+class BaseToolbarButtonProvider:
     @classmethod
     def get_buttons_for_view(cls, view):
         """
@@ -37,7 +37,7 @@ class BaseToolbarButtonProvider(object):
         return []
 
 
-class BaseActionButton(object):
+class BaseActionButton:
     base_css_classes = ("btn", "")
 
     def __init__(

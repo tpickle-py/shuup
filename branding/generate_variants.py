@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -10,6 +9,7 @@ import os
 import re
 import subprocess
 import tempfile
+
 from PIL import Image
 
 
@@ -35,9 +35,7 @@ class VariantProcessor:
             os.makedirs(self.output_directory)
 
     def generate_png(self, info, png_filename, svg_data):
-        with tempfile.NamedTemporaryFile(
-            "w+", encoding="utf-8", suffix=".svg", delete=False
-        ) as tmpfile:
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", suffix=".svg", delete=False) as tmpfile:
             tmpfile.write(svg_data)
             tmpfile.flush()
             command = [
@@ -50,19 +48,24 @@ class VariantProcessor:
                 "--export-area-drawing",
                 "--export-area-snap",
             ]
+
             if info.get("background"):
-                command.append("--export-background=%s" % info["background"])
+                cmd = f"--export-background={info['background']}"
+                command.append(cmd)
             if info.get("dpi"):
-                command.append("--export-dpi=%s" % info["dpi"])
+                cmd = f"--export-dpi={info['dpi']}"
+                command.append(cmd)
             if info.get("width"):
-                command.append("--export-width=%s" % info["width"])
+                cmd = f"--export-width={info['width']}"
+                command.append(cmd)
             if info.get("height"):
-                command.append("--export-height=%s" % info["height"])
+                cmd = f"--export-height={info['height']}"
+                command.append(cmd)
 
             subprocess.check_call(command)
 
     def process_single_info(self, info):
-        with open(info["input"], "r", encoding="utf-8") as input_file:
+        with open(info["input"], encoding="utf-8") as input_file:
             input_data = input_file.read()
 
         png_filename = (info["output"] % info) + ".png"
@@ -76,17 +79,13 @@ class VariantProcessor:
             os.unlink(png_filename)  # Get rid of the PNG
             subprocess.check_call(("jpegoptim", "--strip-all", jpg_filename))
 
-    def process(self, input_files, formats):
-        for input_spec in input_files:
-            for format in formats:
+    def process(self, input_specs, format_specs):
+        for input_spec in input_specs:
+            for fmt in format_specs:
                 info = update(
                     {},
-                    {
-                        "base": os.path.splitext(os.path.basename(input_spec["input"]))[
-                            0
-                        ]
-                    },
-                    format,
+                    {"base": os.path.splitext(os.path.basename(input_spec["input"]))[0]},
+                    fmt,
                     input_spec,
                 )
                 self.process_single_info(info)
@@ -128,9 +127,7 @@ def cmdline():
         metavar="DIR",
     )
     args = ap.parse_args()
-    vp = VariantProcessor(
-        output_directory=args.output_directory, inkscape=args.inkscape
-    )
+    vp = VariantProcessor(output_directory=args.output_directory, inkscape=args.inkscape)
     vp.process(input_files, formats)
 
 

@@ -35,13 +35,13 @@ PROTECTED_CONTACT_GROUP_IDENTIFIERS = [
 ]
 
 
-@lru_cache()
+@lru_cache
 def get_price_display_options(group):
     options = group.price_display_options.for_group_and_shop(group, shop=group.shop)
     return options.to_price_display() or PriceDisplayOptions()
 
 
-@lru_cache()
+@lru_cache
 def get_groups_ids(group):
     return group.groups.values_list("pk", flat=True)
 

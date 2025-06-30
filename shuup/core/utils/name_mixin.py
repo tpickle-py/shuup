@@ -2,7 +2,7 @@
 from django.utils.translation import ugettext_lazy as _
 
 
-class NameMixin(object):
+class NameMixin:
     @property
     def split_name(self):
         return (self.name.strip() or _("First Last")).split(None, 1)

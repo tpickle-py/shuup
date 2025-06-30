@@ -2,7 +2,7 @@ from shuup.compat import contextfunction
 from shuup.simple_cms.models import Page
 
 
-class SimpleCMSTemplateHelpers(object):
+class SimpleCMSTemplateHelpers:
     name = "simple_cms"
 
     @contextfunction

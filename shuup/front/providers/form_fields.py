@@ -1,7 +1,7 @@
 import six
 
 
-class FormFieldDefinition(object):
+class FormFieldDefinition:
     """
     Simple definition for form fields
 
@@ -21,7 +21,7 @@ class FormFieldDefinition(object):
             setattr(self, k, v)
 
 
-class FormFieldProvider(object):
+class FormFieldProvider:
     def __init__(self, **kwargs):
         for k, v in kwargs:
             setattr(self, k, v)

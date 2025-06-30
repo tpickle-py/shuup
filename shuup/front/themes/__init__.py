@@ -5,7 +5,7 @@ from shuup.admin.forms.widgets import TextEditorWidget
 from shuup.utils.djangoenv import has_installed
 
 
-class BaseThemeFieldsMixin(object):
+class BaseThemeFieldsMixin:
     """
     Default Theme mixing with fields used in Shuup Front
 

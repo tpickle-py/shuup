@@ -1,6 +1,6 @@
 
 
-class MainMenuUpdater(object):
+class MainMenuUpdater:
     """
     To update items add for example
     updates = {

@@ -41,7 +41,7 @@ def get_menu_entry_categories(context):
     return menu.get_menu_entry_categories(request=context["request"])
 
 
-@lru_cache()
+@lru_cache
 def get_all_target_urls(request, target_url, breadcrumbs):
     breadcrumbs_entries = breadcrumbs.get_entries(request) or [] if breadcrumbs else []
     return [entry.url for entry in breadcrumbs_entries] + [target_url]

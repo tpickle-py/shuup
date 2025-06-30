@@ -58,7 +58,7 @@ def script_item_editor(request):
     return render(request, "notify/admin/script_item_editor.jinja", context)
 
 
-class ScriptAPI(object):
+class ScriptAPI:
     def __init__(self, request, script):
         """
         :param request: Request.

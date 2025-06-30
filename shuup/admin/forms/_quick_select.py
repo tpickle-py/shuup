@@ -4,14 +4,14 @@ from django.utils.translation import ugettext_lazy as _
 from shuup.utils.django_compat import NoReverseMatch, force_text
 
 
-class NoModel(object):
+class NoModel:
     def __nonzero__(self):
         return False
 
     __bool__ = __nonzero__
 
 
-class QuickAddRelatedObjectBaseMixin(object):
+class QuickAddRelatedObjectBaseMixin:
     model = NoModel()
     url = None
 
@@ -69,9 +69,7 @@ class QuickAddRelatedObjectSelect(QuickAddRelatedObjectSelectMixin, Select):
         )
         context["quick_add_model"] = self.model
         try:
-            context["quick_add_url"] = "{}?mode=iframe&quick_add_target={}".format(
-                force_text(self.url), name
-            )
+            context["quick_add_url"] = f"{force_text(self.url)}?mode=iframe&quick_add_target={name}"
         except NoReverseMatch:
             pass
         context["quick_add_btn_title"] = _("Create New")
@@ -90,9 +88,7 @@ class QuickAddRelatedObjectMultiSelect(
         )
 
         try:
-            context["quick_add_url"] = "{}?mode=iframe&quick_add_target={}".format(
-                force_text(self.url), name
-            )
+            context["quick_add_url"] = f"{force_text(self.url)}?mode=iframe&quick_add_target={name}"
         except NoReverseMatch:
             pass
 

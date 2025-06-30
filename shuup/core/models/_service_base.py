@@ -140,7 +140,7 @@ class ServiceProvider(PolymorphicTranslatableShuupModel):
         return service.name
 
 
-class ServiceChoice(object):
+class ServiceChoice:
     """
     Choice of service provided by a service provider.
     """
@@ -433,7 +433,7 @@ def _sum_costs(costs, source):
     return functools.reduce(plus, (x.price_info for x in costs), zero_pi)
 
 
-class ServiceCost(object):
+class ServiceCost:
     """
     A cost of a service.
 

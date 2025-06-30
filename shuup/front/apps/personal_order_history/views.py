@@ -7,7 +7,7 @@ from shuup.front.views.dashboard import DashboardViewMixin
 from shuup.utils.django_compat import reverse
 
 
-class OrderViewMixin(object):
+class OrderViewMixin:
     model = Order
 
     def get_queryset(self):

@@ -10,7 +10,7 @@ class FormInstantiationAttributeError(Exception):
     """AttributeErrors occurring within the `forms` property are transmogrified into these."""
 
 
-class FormDef(object):
+class FormDef:
     def __init__(self, name, form_class, required=True, kwargs=None):
         self.name = name
         self.form_class = form_class
@@ -46,7 +46,7 @@ class FormDef(object):
         return form_inst
 
 
-class FormGroup(object):
+class FormGroup:
     def __init__(
         self, data=None, files=None, auto_id="id_%s", prefix=None, initial=None
     ):

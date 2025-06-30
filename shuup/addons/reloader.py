@@ -4,7 +4,7 @@ import os
 import sys
 
 
-class ReloadMethod(object):
+class ReloadMethod:
     identifier = None
     title = None
 
@@ -76,8 +76,8 @@ class GunicornReloadMethod(ReloadMethod):
 
     def is_parent_an_unicorn(self):
         try:
-            return "gunicorn" in open("/proc/%s/cmdline" % os.getppid(), "r").read()
-        except (AttributeError, IOError):
+            return "gunicorn" in open("/proc/%s/cmdline" % os.getppid()).read()
+        except (OSError, AttributeError):
             return False
 
     def is_viable(self):

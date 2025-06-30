@@ -32,7 +32,7 @@ class CurrencyListView(PicotableListView):
     mass_actions_provider_key = "currency_list_mass_actions_provider"
 
     def format_decimal_places(self, instance):
-        return "{0}".format(instance.decimal_places)
+        return f"{instance.decimal_places}"
 
     def get_currency_display(self, instance):
         locale = get_current_babel_locale()

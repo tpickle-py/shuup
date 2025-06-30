@@ -1,7 +1,7 @@
 from ._price import TaxfulPrice, TaxlessPrice
 
 
-class PriceRate(object):
+class PriceRate:
     doc_prefix = ""
 
     def __init__(self, price_field):

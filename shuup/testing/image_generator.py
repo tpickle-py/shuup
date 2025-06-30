@@ -23,7 +23,7 @@ PALATABLE_PALETTES = [
 ]
 
 
-class BaseImageGenerator(object):
+class BaseImageGenerator:
     def __init__(self, image, palette, seed):
         """
         :param image: The image to draw on

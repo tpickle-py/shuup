@@ -58,7 +58,7 @@ class TaxSummary(list):
         return "%s(%s)" % (type(self).__name__, super_repr)
 
 
-class TaxSummaryLine(object):
+class TaxSummaryLine:
     _FIELDS = [
         "tax_id",
         "tax_code",
@@ -99,14 +99,7 @@ class TaxSummaryLine(object):
         return (-self.tax_rate or 0, self.tax_name)
 
     def __repr__(self):
-        return "<{} {}/{}/{:.3%} based_on={} tax_amount={})>".format(
-            type(self).__name__,
-            self.tax_id,
-            self.tax_code,
-            float(self.tax_rate or 0),
-            self.based_on,
-            self.tax_amount,
-        )
+        return f"<{type(self).__name__} {self.tax_id}/{self.tax_code}/{float(self.tax_rate or 0):.3%} based_on={self.based_on} tax_amount={self.tax_amount})>"
 
     def to_dict(self):
         return dict(chain(*(self._serialize_field(x) for x in self._FIELDS)))

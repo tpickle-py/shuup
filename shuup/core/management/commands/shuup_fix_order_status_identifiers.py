@@ -21,13 +21,11 @@ class Command(BaseCommand):
                 identifier=invalid_identifier, role=role
             ).first()
             if not status:
-                self.stdout.write("No changes to {} statuses".format(role))
+                self.stdout.write(f"No changes to {role} statuses")
                 continue
             tmp_identifier = valid_identifier + "_tmp"
             self.stdout.write(
-                "Updating identifier of {} status: {!r} -> {!r}".format(
-                    role, status.identifier, tmp_identifier
-                )
+                f"Updating identifier of {role} status: {status.identifier!r} -> {tmp_identifier!r}"
             )
             status.identifier = tmp_identifier
             status.save()
@@ -36,9 +34,7 @@ class Command(BaseCommand):
         for status in to_post_process:
             new_identifier = status.identifier.replace("_tmp", "")
             self.stdout.write(
-                "Updating identifier of {} status: {!r} -> {!r}".format(
-                    status.role, status.identifier, new_identifier
-                )
+                f"Updating identifier of {status.role} status: {status.identifier!r} -> {new_identifier!r}"
             )
             status.identifier = new_identifier
             status.save()

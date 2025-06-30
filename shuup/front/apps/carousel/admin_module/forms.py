@@ -74,7 +74,7 @@ class SlideFormSet(BaseModelFormSet):
 
     def __init__(self, *args, **kwargs):
         self.default_language = kwargs.pop(
-            "default_language", getattr(settings, "PARLER_DEFAULT_LANGUAGE_CODE")
+            "default_language", settings.PARLER_DEFAULT_LANGUAGE_CODE
         )
         self.carousel = kwargs.pop("carousel")
         self.languages = to_language_codes(

@@ -56,7 +56,7 @@ def handle_manufacturer_post_save(sender, instance, **kwargs):
 
 
 def bump_instance_thumbnail_cache(sender, instance, **kwargs):
-    cache_namespace = "thumbnail_{}_{}".format(instance.pk, instance.__class__.__name__)
+    cache_namespace = f"thumbnail_{instance.pk}_{instance.__class__.__name__}"
     cache.bump_version(cache_namespace)
 
 

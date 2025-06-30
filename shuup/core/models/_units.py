@@ -22,9 +22,9 @@ from shuup.utils.numbers import bankers_round, parse_decimal_string
 from ._base import TranslatableShuupModel
 
 
-@lru_cache()
+@lru_cache
 def get_display_unit(sales_unit):
-    cache_key = "display_unit:sales_unit_{}_default_display_unit".format(sales_unit.pk)
+    cache_key = f"display_unit:sales_unit_{sales_unit.pk}_default_display_unit"
     default_display_unit = cache.get(cache_key)
     if default_display_unit is None:
         default_display_unit = sales_unit.display_units.filter(default=True).first()
@@ -35,7 +35,7 @@ def get_display_unit(sales_unit):
 
 
 # TODO: (3.0) Remove deprecated SalesUnit.short_name
-class _ShortNameToSymbol(object):
+class _ShortNameToSymbol:
     def __init__(self, *args, **kwargs):
         if "short_name" in kwargs:
             self._issue_deprecation_warning()
@@ -295,7 +295,7 @@ class PiecesSalesUnit(SalesUnit):
         return force_text(self.name)
 
 
-class UnitInterface(object):
+class UnitInterface:
     """
     Interface to unit functions.
 

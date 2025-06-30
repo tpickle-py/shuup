@@ -89,7 +89,7 @@ class GDPRCookieCategoryFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         self.shop = kwargs.pop("shop")
         self.default_language = kwargs.pop(
-            "default_language", getattr(settings, "PARLER_DEFAULT_LANGUAGE_CODE")
+            "default_language", settings.PARLER_DEFAULT_LANGUAGE_CODE
         )
         self.languages = to_language_codes(
             kwargs.pop("languages", ()), self.default_language

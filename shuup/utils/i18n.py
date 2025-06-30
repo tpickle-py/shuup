@@ -15,7 +15,7 @@ from django.views.decorators.cache import cache_page
 def lang_lru_cache(func):
     """Language aware least recently used cache decorator"""
 
-    @lru_cache()
+    @lru_cache
     def cached(*args, __lang=None, **kwargs):
         return func(*args, **kwargs)
 
@@ -28,7 +28,7 @@ def lang_lru_cache(func):
     return wrapper
 
 
-@lru_cache()
+@lru_cache
 def get_babel_locale(locale_string):
     """
     Parse a Django-format (dash-separated) locale string
@@ -201,7 +201,7 @@ def is_existing_language(language_code):
     return True
 
 
-@lru_cache()
+@lru_cache
 def remove_extinct_languages(language_codes):
     language_codes = set(language_codes)
     codes = language_codes.copy()

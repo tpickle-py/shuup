@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from shuup.core.models._units import PiecesSalesUnit, UnitInterface
 
 
-class LineWithUnit(object):
+class LineWithUnit:
     @property
     def unit(self):
         """

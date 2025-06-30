@@ -13,7 +13,7 @@ from shuup.front.views.dashboard import DashboardViewMixin
 from shuup.utils.django_compat import force_text
 
 
-class CartViewMixin(object):
+class CartViewMixin:
     model = StoredBasket
 
     def get_queryset(self):

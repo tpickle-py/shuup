@@ -6,7 +6,7 @@ from shuup.admin.template_helpers import shuup_admin as shuup_admin_template_hel
 from shuup.admin.utils.bs3_renderers import AdminFieldRenderer
 
 
-class Bootstrap3Namespace(object):
+class Bootstrap3Namespace:
     def field(self, field, **kwargs):
         if not field:
             return ""

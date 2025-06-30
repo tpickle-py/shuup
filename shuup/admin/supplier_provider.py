@@ -1,7 +1,7 @@
 from shuup.utils.importing import cached_load
 
 
-class DefaultSupplierProvider(object):
+class DefaultSupplierProvider:
     @classmethod
     def get_supplier(cls, request, **kwargs):
         return None

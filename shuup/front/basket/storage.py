@@ -36,7 +36,7 @@ class DirectSessionBasketStorage(BasketStorage):
         basket.request.session.pop(basket.basket_name, None)
 
 
-class DictStoredBasket(object):
+class DictStoredBasket:
     def __init__(self, id, shop_id, currency, prices_include_tax, data):
         self.id = id
         self.shop_id = shop_id

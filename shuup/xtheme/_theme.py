@@ -24,7 +24,7 @@ def get_theme_cache_key(shop=None):
 
 
 # TODO: Document how to create Xthemes
-class Theme(object):
+class Theme:
     """
     Base class for all the Xtheme themes.
 

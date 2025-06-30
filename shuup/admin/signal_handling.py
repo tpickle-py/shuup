@@ -24,7 +24,7 @@ def on_user_groups_change(instance, action, model, **kwargs):
     # bump only the user's permission cache
     elif isinstance(instance, get_user_model()):
         cache.bump_version(
-            "{}:{}".format(USER_PERMISSIONS_CACHE_NAMESPACE, instance.pk)
+            f"{USER_PERMISSIONS_CACHE_NAMESPACE}:{instance.pk}"
         )
 
 

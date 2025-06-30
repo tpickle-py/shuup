@@ -13,7 +13,7 @@ from shuup.notify.admin_module import SCRIPT_TEMPLATES_PROVIDE_CATEGORY
 from shuup.notify.models import Script
 
 
-class EditScriptMode(object):
+class EditScriptMode:
     CREATE = "create"
     MODIFY = "modify"
 
