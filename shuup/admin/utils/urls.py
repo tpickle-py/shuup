@@ -145,8 +145,7 @@ def admin_url(
     if isinstance(view, six.string_types):
         if not view:
             raise ImproperlyConfigured(
-                "Error! Empty URL pattern view name not permitted (for pattern `%r`)."
-                % regex
+                "Error! Empty URL pattern view name not permitted (for pattern `{!r}`).".format(regex)
             )
         if prefix:
             view = prefix + "." + view
@@ -179,26 +178,26 @@ def get_edit_and_list_urls(url_prefix, view_template, name_template):
     """
     return [
         admin_url(
-            r"%s/(?P<pk>\d+)/$" % url_prefix,
+            r"{}/(?P<pk>\d+)/$".format(url_prefix),
             view_template % "Edit",
             name=name_template % "edit",
             permissions=(name_template % "edit",),
         ),
         admin_url(
-            "%s/new/$" % url_prefix,
+            "{}/new/$".format(url_prefix),
             view_template % "Edit",
             name=name_template % "new",
             kwargs={"pk": None},
             permissions=(name_template % "new",),
         ),
         admin_url(
-            "%s/$" % url_prefix,
+            "{}/$".format(url_prefix),
             view_template % "List",
             name=name_template % "list",
             permissions=(name_template % "list",),
         ),
         admin_url(
-            "%s/list-settings/" % url_prefix,
+            "{}/list-settings/".format(url_prefix),
             "shuup.admin.modules.settings.views.ListSettingsView",
             name=name_template % "list_settings",
             permissions=(name_template % "list_settings",),
@@ -288,7 +287,7 @@ def get_model_url(
             return url
 
     raise NoModelUrl(
-        "Error! Can't get object URL of kind %s: %r." % (kind, force_text(object))
+        "Error! Can't get object URL of kind {}: {!r}.".format(kind, force_text(object))
     )
 
 
@@ -316,14 +315,14 @@ def derive_model_url(model_class, urlname_prefix, object, kind):
         return
 
     kind_to_urlnames = {
-        "detail": ("%s.detail" % urlname_prefix, "%s.edit" % urlname_prefix),
+        "detail": ("{}.detail".format(urlname_prefix), "{}.edit".format(urlname_prefix)),
     }
 
     kwarg_sets = [{}]
     if getattr(object, "pk", None):
         kwarg_sets.append({"pk": object.pk})
 
-    for urlname in kind_to_urlnames.get(kind, ["%s.%s" % (urlname_prefix, kind)]):
+    for urlname in kind_to_urlnames.get(kind, ["{}.{}".format(urlname_prefix, kind)]):
         for kwargs in kwarg_sets:
             try:
                 return reverse(urlname, kwargs=kwargs)
@@ -339,7 +338,7 @@ def manipulate_query_string(url, **qs):
         qs = dict(parse_qsl(current_qs), **qs)
     qs = [(key, value) for (key, value) in qs.items() if value is not None]
     if qs:
-        return "%s?%s" % (url, urlencode(qs))
+        return "{}?{}".format(url, urlencode(qs))
     else:
         return url
 

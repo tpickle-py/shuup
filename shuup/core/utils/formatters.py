@@ -24,8 +24,7 @@ class DefaultAddressFormatter(BaseAddressFormatter):
             address.street,
             address.street2,
             address.street3,
-            "%s %s %s"
-            % (
+            "{} {} {}".format(
                 address.postal_code,
                 address.city,
                 address.region_code or address.region,

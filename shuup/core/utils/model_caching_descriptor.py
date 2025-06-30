@@ -6,8 +6,8 @@ import six
 class ModelCachingDescriptor:
     def __init__(self, name, queryset):
         self.name = name
-        self.id_name = "_%s_id" % name
-        self.object_name = "_%s_cache" % name
+        self.id_name = "_{}_id".format(name)
+        self.object_name = "_{}_cache".format(name)
         self.queryset = queryset
         self.id_property = property(self.get_id, self.set_id)
         self.object_property = property(self.get_object, self.set_object)
@@ -26,8 +26,7 @@ class ModelCachingDescriptor:
                 setattr(instance, self.object_name, None)
         else:
             raise TypeError(
-                "Error! Can't assign ID `%r` in a `ModelCachingDescriptor(%s)`."
-                % (value, self.name)
+                "Error! Can't assign ID `{!r}` in a `ModelCachingDescriptor({})`.".format(value, self.name)
             )
 
     def get_id(self, instance):
@@ -39,15 +38,13 @@ class ModelCachingDescriptor:
         elif isinstance(value, self.queryset.model):
             if not value.pk:
                 raise ValueError(
-                    "Error! Can't assign unsaved model `%r` in a `ModelCachingDescriptor(%s)`."
-                    % (value, self.name)
+                    "Error! Can't assign unsaved model `{!r}` in a `ModelCachingDescriptor({})`.".format(value, self.name)
                 )
             setattr(instance, self.id_name, value.pk)
             setattr(instance, self.object_name, value)
         else:
             raise TypeError(
-                "Error! Can't assign object `%r` in a `ModelCachingDescriptor(%s)`."
-                % (value, self.name)
+                "Error! Can't assign object `{!r}` in a `ModelCachingDescriptor({})`.".format(value, self.name)
             )
 
     def get_object(self, instance):

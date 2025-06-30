@@ -123,8 +123,7 @@ class OrderStatusQuerySet(TranslatableQuerySet):
             return self.get(default=True, role=role)
         except ObjectDoesNotExist:
             raise ObjectDoesNotExist(
-                "Error! No default `%s` OrderStatus exists."
-                % getattr(role, "label", role)
+                "Error! No default `{}` OrderStatus exists.".format(getattr(role, "label", role))
             )
 
     def get_default_initial(self):
@@ -642,9 +641,9 @@ class Order(MoneyPropped, models.Model):
         else:
             name = "-"
         if ShuupSettings.get_setting("SHUUP_ENABLE_MULTIPLE_SHOPS"):
-            return "Order %s (%s, %s)" % (self.identifier, self.shop.name, name)
+            return "Order {} ({}, {})".format(self.identifier, self.shop.name, name)
         else:
-            return "Order %s (%s)" % (self.identifier, name)
+            return "Order {} ({})".format(self.identifier, name)
 
     @property
     def codes(self):
@@ -732,7 +731,7 @@ class Order(MoneyPropped, models.Model):
             self.modified_by = self.creator
 
     def _save_identifiers(self):
-        self.identifier = "%s" % (get_order_identifier(self))
+        self.identifier = "{}".format(get_order_identifier(self))
         self.reference_number = get_reference_number(self)
         super().save(
             update_fields=(
@@ -858,8 +857,7 @@ class Order(MoneyPropped, models.Model):
             and self.taxful_total_price
         ):
             raise NoPaymentToCreateException(
-                "Error! Order %s has already been fully paid (%s >= %s)."
-                % (self.pk, total_paid_amount, self.taxful_total_price)
+                "Error! Order {} has already been fully paid ({} >= {}).".format(self.pk, total_paid_amount, self.taxful_total_price)
             )
 
         if not payment_identifier:
@@ -1224,8 +1222,7 @@ class Order(MoneyPropped, models.Model):
         if status_before_update != self.shipping_status:
             self.add_log_entry(
                 _(
-                    "New shipping status is set to: %(shipping_status)s."
-                    % {"shipping_status": self.shipping_status}
+                    "New shipping status is set to: {shipping_status}.".format(shipping_status=self.shipping_status)
                 )
             )
             self.save(update_fields=("shipping_status",))
@@ -1243,8 +1240,7 @@ class Order(MoneyPropped, models.Model):
         if status_before_update != self.payment_status:
             self.add_log_entry(
                 _(
-                    "New payment status is set to: %(payment_status)s."
-                    % {"payment_status": self.payment_status}
+                    "New payment status is set to: {payment_status}.".format(payment_status=self.payment_status)
                 )
             )
             self.save(update_fields=("payment_status",))
@@ -1392,7 +1388,7 @@ class Order(MoneyPropped, models.Model):
     def get_customer_name(self):
         name_attrs = ["customer", "billing_address", "orderer", "shipping_address"]
         for attr in name_attrs:
-            if getattr(self, "%s_id" % attr):
+            if getattr(self, "{}_id".format(attr)):
                 return getattr(self, attr).name
 
     def get_available_shipping_methods(self):

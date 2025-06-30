@@ -63,7 +63,7 @@ class CreateOrUpdateView(UpdateView):
     def get_save_form_id(self):
         return getattr(
             self, "save_form_id", None
-        ) or "%s_form" % self.get_context_object_name(self.object)
+        ) or "{}_form".format(self.get_context_object_name(self.object))
 
     def get_return_url(self):
         return get_model_url(self.object, kind="list", shop=self.request.shop)
@@ -77,13 +77,13 @@ class CreateOrUpdateView(UpdateView):
 
             quick_add_target = self.request.GET.get("quick_add_target")
             if quick_add_target:
-                params.append("quick_add_target=%s" % quick_add_target)
+                params.append("quick_add_target={}".format(quick_add_target))
 
             quick_add_callback = self.request.GET.get("quick_add_callback")
             if quick_add_callback:
-                params.append("quick_add_callback=%s" % quick_add_callback)
+                params.append("quick_add_callback={}".format(quick_add_callback))
 
-            return "%s?%s" % (
+            return "{}?{}".format(
                 get_model_url(self.object, shop=self.request.shop),
                 "&".join(params),
             )
@@ -203,7 +203,7 @@ def get_create_or_change_title(request, instance, name_field=None):
     if name_field:
         name = getattr(instance, name_field, None)
     else:
-        name = "%s" % instance
+        name = "{}".format(instance)
 
     if name:
         return force_text(name)
@@ -287,7 +287,7 @@ class PicotableListView(PicotableViewMixin, ListView):
 
     def get_object_abstract(self, instance, item):
         return [
-            {"text": "%s" % instance, "class": "header"},
+            {"text": "{}".format(instance), "class": "header"},
         ]
 
 

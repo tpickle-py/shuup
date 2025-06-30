@@ -87,7 +87,7 @@ class ScriptItemEditForm(forms.Form):
         for lang_code, lang_name in self.template_languages:
             for t_field_name, base_field in fields:
                 field = copy.deepcopy(base_field)
-                field.label = "%s (%s)" % (field.label, lang_name)
+                field.label = "{} ({})".format(field.label, lang_name)
 
                 if (
                     lang_code == settings.PARLER_DEFAULT_LANGUAGE_CODE
@@ -95,7 +95,7 @@ class ScriptItemEditForm(forms.Form):
                     field.required = getattr(base_field, "required", False)
                 else:
                     field.required = False
-                field_name = "t_%s_%s" % (lang_code, t_field_name)
+                field_name = "t_{}_{}".format(lang_code, t_field_name)
                 self.fields[field_name] = field
                 self.template_field_info[lang_code][t_field_name] = field_name
 
@@ -110,7 +110,7 @@ class ScriptItemEditForm(forms.Form):
             binding_identifier, {"binding": binding}
         )
         if binding.allow_constant:
-            field_name = "b_%s_c" % binding_identifier
+            field_name = "b_{}_c".format(binding_identifier)
             self.fields[field_name] = binding.type.get_field(
                 label="Constant",
                 required=(binding.required and not binding.allow_variable),
@@ -126,7 +126,7 @@ class ScriptItemEditForm(forms.Form):
             ]
             if variables:
                 choices = [("", "---------")] + variables
-                field_name = "b_%s_v" % binding_identifier
+                field_name = "b_{}_v".format(binding_identifier)
                 self.fields[field_name] = forms.ChoiceField(
                     choices=choices,
                     label=_("Bind to Variable"),
@@ -179,7 +179,7 @@ class ScriptItemEditForm(forms.Form):
                 return
 
         if binding.required:
-            message = "Error! Binding %s is required, but has no value." % binding.name
+            message = "Error! Binding {} is required, but has no value.".format(binding.name)
             if field_info.get("constant"):
                 self.add_error(field_info["constant"], message)
             if field_info.get("variable"):

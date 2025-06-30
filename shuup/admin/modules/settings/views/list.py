@@ -16,10 +16,10 @@ class ListSettingsView(FormView):
     template_name = "shuup/admin/edit_settings.jinja"
 
     def dispatch(self, request, *args, **kwargs):
-        module_str = "%s:%s" % (request.GET.get("module"), request.GET.get("model"))
-        self.return_url = reverse("shuup_admin:%s.list" % request.GET.get("return_url"))
+        module_str = "{}:{}".format(request.GET.get("module"), request.GET.get("model"))
+        self.return_url = reverse("shuup_admin:{}.list".format(request.GET.get("return_url")))
         match = resolve(self.return_url)
-        view_context = load("%s:%s" % (match.func.__module__, match.func.__name__))
+        view_context = load("{}:{}".format(match.func.__module__, match.func.__name__))
 
         default_columns = view_context.default_columns
         self.model = load(module_str)

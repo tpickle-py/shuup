@@ -52,7 +52,7 @@ def get_cached_trees(queryset):
                 # ``queryset`` was a list or other iterable (unable to order),
                 # and was provided in an order other than depth-first
                 raise ValueError(
-                    "Error! Node %s not in depth-first order." % (type(queryset),)
+                    "Error! Node {} not in depth-first order.".format(type(queryset))
                 )
 
             # Set up the attribute on the node that will store cached children,

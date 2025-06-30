@@ -79,7 +79,7 @@ class SourceLineTax(LineTax):
         self.base_amount = base_amount
 
     def __repr__(self):
-        return "%s(%r, %r, %r, %r)" % (
+        return "{}({!r}, {!r}, {!r}, {!r})".format(
             type(self).__name__,
             self.tax,
             self.name,

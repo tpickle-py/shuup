@@ -32,16 +32,15 @@ class BasePopupChoiceWidget(Widget):
 
     def get_browse_markup(self):
         return """
-            <button class='browse-btn btn btn-primary btn-sm' type='button'><i class='%(icon)s'></i> %(text)s</button>
-        """ % {
-            "icon": self.select_icon,
-            "text": self.browse_text,
-        }
+            <button class='browse-btn btn btn-primary btn-sm' type='button'><i class='{icon}'></i> {text}</button>
+        """.format(
+            icon=self.select_icon,
+            text=self.browse_text,
+        )
 
     def get_clear_markup(self):
         return (
-            "<button class='clear-btn btn btn-danger btn-sm' type='button'><i class='%(icon)s'></i></button>"
-            % {"icon": self.clear_icon}
+            "<button class='clear-btn btn btn-danger btn-sm' type='button'><i class='{icon}'></i></button>".format(icon=self.clear_icon)
         )
 
     def render_text(self, obj):
@@ -64,19 +63,18 @@ class BasePopupChoiceWidget(Widget):
         if self.empty_text or not text:
             css_style = "display: none"
 
-        icon = "<i class='%s'></i>" % self.external_icon
+        icon = "<i class='{}'></i>".format(self.external_icon)
 
         return mark_safe(
             (
-                '<a class="btn btn-inverse browse-text btn-sm" style="%(css_style)s" \
-            href="%(url)s" target="_blank">%(icon)s %(text)s</a>'
+                '<a class="btn btn-inverse browse-text btn-sm" style="{css_style}" \
+            href="{url}" target="_blank">{icon} {text}</a>'
+            ).format(
+                css_style=css_style,
+                icon=icon,
+                text=escape(text),
+                url=escape(url),
             )
-            % {
-                "css_style": css_style,
-                "icon": icon,
-                "text": escape(text),
-                "url": escape(url),
-            }
         )
 
     def get_object(self, value):
@@ -97,20 +95,18 @@ class BasePopupChoiceWidget(Widget):
             bits.append(self.get_clear_markup())
 
         return mark_safe(
-            "<div %(attrs)s>%(content)s</div>"
-            % {
-                "attrs": flatatt_filter(
+            "<div {attrs}>{content}</div>".format(
+                attrs=flatatt_filter(
                     {
-                        "class": "browse-widget %s-browse-widget d-flex mr-auto align-items-center"
-                        % self.browse_kind,
+                        "class": "browse-widget {}-browse-widget d-flex mr-auto align-items-center".format(self.browse_kind),
                         "data-browse-kind": self.browse_kind,
                         "data-clearable": self.clearable,
                         "data-empty-text": self.empty_text,
                         "data-filter": self.filter,
                     }
                 ),
-                "content": "".join(bits),
-            }
+                content="".join(bits),
+            )
         )
 
 
@@ -159,7 +155,7 @@ class FileDnDUploaderWidget(Widget):
             "date": file.uploaded_at.isoformat(),
         }
         return [
-            "data-%s='%s'" % (key, val)
+            "data-{}='{}'".format(key, val)
             for key, val in six.iteritems(data)
             if val is not None
         ]
@@ -167,15 +163,15 @@ class FileDnDUploaderWidget(Widget):
     def render(self, name, value, attrs={}, renderer=None):
         pk_input = HiddenInput().render(name, value, attrs)
         file_attrs = [
-            "data-upload_path='%s'" % self.upload_path,
-            "data-add_remove_links='%s'" % self.clearable,
+            "data-upload_path='{}'".format(self.upload_path),
+            "data-add_remove_links='{}'".format(self.clearable),
             "data-dropzone='true'",
-            "data-browsable='%s'" % self.browsable,
+            "data-browsable='{}'".format(self.browsable),
         ]
         if self.upload_url:
-            file_attrs.append("data-upload_url='%s'" % self.upload_url)
+            file_attrs.append("data-upload_url='{}'".format(self.upload_url))
         if self.kind:
-            file_attrs.append("data-kind='%s'" % self.kind)
+            file_attrs.append("data-kind='{}'".format(self.kind))
 
         if self.dropzone_attrs:
             # attributes passed here will be converted into keys with dz_ prefix
@@ -191,8 +187,7 @@ class FileDnDUploaderWidget(Widget):
             file = File.objects.filter(pk=value).first()
             file_attrs += self._get_file_attrs(file)
         return mark_safe(
-            "<div id='%s-dropzone' class='dropzone %s' %s>%s</div>"
-            % (
+            "<div id='{}-dropzone' class='dropzone {}' {}>{}</div>".format(
                 attrs.get("id", "dropzone"),
                 "has-file" if value else "",
                 " ".join(file_attrs),
@@ -208,8 +203,7 @@ class TextEditorWidget(Textarea):
         attrs_for_textarea["id"] += "-textarea"
         html = super().render(name, value, attrs_for_textarea)
         return mark_safe(
-            "<div id='%s-editor-wrap' class='summernote-wrap'>%s<div class='summernote-editor'>%s</div></div>"
-            % (attrs["id"], html, value or "")
+            "<div id='{}-editor-wrap' class='summernote-wrap'>{}<div class='summernote-editor'>{}</div></div>".format(attrs["id"], html, value or "")
         )
 
 
@@ -253,11 +247,10 @@ class ContactChoiceWidget(BasePopupChoiceWidget):
     def get_browse_markup(self):
         icon = "<i class='fa fa-user'></i>"
         return (
-            "<button class='browse-btn btn btn-primary btn-sm' type='button'>%(icon)s %(text)s</button>"
-            % {
-                "icon": icon,
-                "text": self.browse_text,
-            }
+            "<button class='browse-btn btn btn-primary btn-sm' type='button'>{icon} {text}</button>".format(
+                icon=icon,
+                text=self.browse_text,
+            )
         )
 
 

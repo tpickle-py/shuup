@@ -166,7 +166,7 @@ class ProductListView(PicotableListView):
             thumbnail = instance.product.primary_image.get_thumbnail()
             if thumbnail:
                 return f"<img src='{thumbnail.url}'>"
-        return "<img src='%s'>" % static("shuup_admin/img/no_image_thumbnail.png")
+        return "<img src='{}'>".format(static("shuup_admin/img/no_image_thumbnail.png"))
 
     def get_listing_product_kinds_values(self):
         return [
@@ -199,7 +199,7 @@ class ProductListView(PicotableListView):
 
     def get_object_abstract(self, instance, item):
         return [
-            {"text": "%s" % instance.product, "class": "header"},
+            {"text": "{}".format(instance.product), "class": "header"},
             {"title": _("Barcode"), "text": item.get("product__barcode")},
             {"title": _("SKU"), "text": item.get("product__sku")},
             {"title": _("Type"), "text": item.get("product__type")},

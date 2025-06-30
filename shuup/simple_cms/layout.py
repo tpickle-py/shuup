@@ -12,12 +12,11 @@ class PageLayout(Layout):
         if not page:
             return ""
         return _(
-            "Content in this placeholder is shown for %(title)s only."
-            % {"title": page.title}
+            "Content in this placeholder is shown for {title} only.".format(title=page.title)
         )
 
     def is_valid_context(self, context):
         return bool(context.get("page"))
 
     def get_layout_data_suffix(self, context):
-        return "%s-%s" % (self.identifier, context["page"].pk)
+        return "{}-{}".format(self.identifier, context["page"].pk)

@@ -76,7 +76,7 @@ class HomeView(TemplateView):
                 wizard_actions.append(
                     {
                         "text": step.title,
-                        "url": "%s?pane_id=%s" % (wizard_url, step.identifier),
+                        "url": "{}?pane_id={}".format(wizard_url, step.identifier),
                         "no_redirect": True,
                     }
                 )

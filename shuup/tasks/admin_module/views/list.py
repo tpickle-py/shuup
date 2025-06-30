@@ -66,7 +66,7 @@ class TaskListView(PicotableListView):
         return instance.creator.name
 
     def get_priority_display(self, instance, **kwargs):
-        return "%s" % instance.priority
+        return "{}".format(instance.priority)
 
 
 class TaskTypeListView(PicotableListView):

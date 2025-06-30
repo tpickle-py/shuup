@@ -27,7 +27,7 @@ class ServiceModule(AdminModule):
     def get_urls(self):
         return [
             admin_url(
-                r"%s/(?P<pk>\d+)/delete/$" % self.url_prefix,
+                r"{}/(?P<pk>\d+)/delete/$".format(self.url_prefix),
                 self.view_template % "Delete",
                 name=self.name_template % "delete",
             )

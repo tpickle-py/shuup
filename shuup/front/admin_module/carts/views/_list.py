@@ -99,7 +99,7 @@ class CartListView(PicotableListView):
 
     def get_object_abstract(self, instance, item):
         return [
-            {"text": "%s" % instance, "class": "header"},
+            {"text": "{}".format(instance), "class": "header"},
             {"title": _("Created on"), "text": item.get("created_on")},
             {"title": _("Last updated on"), "text": item.get("updated_on")},
             {"title": _("Ordered"), "text": item.get("finished")},

@@ -93,7 +93,7 @@ class Step:
         self._enabled = bool(value)
 
 
-CONTEXT_LOGGER = logging.Logger("%s.Context" % __name__)
+CONTEXT_LOGGER = logging.Logger("{}.Context".format(__name__))
 
 
 class Context:

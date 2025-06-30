@@ -116,7 +116,7 @@ class MultiselectAjaxView(TemplateView):
             query = Q()
             keyword = request.GET.get("search", "").strip()
             for field in self.search_fields:
-                query |= Q(**{"%s__icontains" % field: keyword})
+                query |= Q(**{"{}__icontains".format(field): keyword})
 
             if issubclass(cls, Contact) or issubclass(cls, get_user_model()):
                 query &= Q(is_active=True)

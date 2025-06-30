@@ -249,9 +249,9 @@ def cached_product_queryset(queryset, request, category, data):
     item = "product_queryset:"
 
     if request.customer.is_all_seeing:
-        item = "%sU%s" % (item, request.user.pk)
+        item = "{}U{}".format(item, request.user.pk)
     if category:
-        item = "%sC%s" % (item, category.pk)
+        item = "{}C{}".format(item, category.pk)
 
     key, products = context_cache.get_cached_value(
         identifier="product_queryset",

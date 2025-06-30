@@ -111,7 +111,7 @@ def process_file(path, checkers):
         ck = checker_class()
         ck.visit(ast.parse(source, path))
         for err in ck.errors:
-            yield "%s: %s" % (checker_class.__name__, err)
+            yield "{}: {}".format(checker_class.__name__, err)
 
 
 def add_checker(ctx, param, value):

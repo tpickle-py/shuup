@@ -245,7 +245,7 @@ class OrderLineTax(MoneyPropped, ShuupModel, LineTax):
         ordering = ["ordering"]
 
     def __str__(self):
-        return "%s: %s on %s" % (self.name, self.amount, self.base_amount)
+        return "{}: {} on {}".format(self.name, self.amount, self.base_amount)
 
 
 OrderLineLogEntry = define_log_model(OrderLine)

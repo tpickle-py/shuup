@@ -33,7 +33,7 @@ def create_sample_category(name, description, business_segment, image_file, shop
     )
 
     image_file_path = os.path.join(SAMPLE_IMAGES_BASE_DIR, image_file)
-    path = "ProductCategories/Samples/%s" % business_segment.capitalize()
+    path = "ProductCategories/Samples/{}".format(business_segment.capitalize())
     filer_image = _filer_image_from_file_path(image_file_path, path)
 
     category.image = filer_image
@@ -53,7 +53,7 @@ def create_sample_product(name, description, business_segment, image_file, shop)
     )
 
     image_file_path = os.path.join(SAMPLE_IMAGES_BASE_DIR, image_file)
-    path = "ProductImages/Samples/%s" % business_segment.capitalize()
+    path = "ProductImages/Samples/{}".format(business_segment.capitalize())
     filer_image = _filer_image_from_file_path(image_file_path, path)
 
     media_file = MediaFile.objects.create(file=filer_image)
@@ -119,7 +119,7 @@ def create_sample_carousel(carousel_data, business_segment, shop):
 
     for slide_data in carousel_data["slides"]:
         image_file_path = os.path.join(SAMPLE_IMAGES_BASE_DIR, slide_data["image"])
-        path = "CarouselImages/Samples/%s" % business_segment.capitalize()
+        path = "CarouselImages/Samples/{}".format(business_segment.capitalize())
         filer_image = _filer_image_from_file_path(image_file_path, path)
 
         Slide.objects.create(

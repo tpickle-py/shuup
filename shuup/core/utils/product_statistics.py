@@ -13,7 +13,7 @@ def get_best_selling_product_info(
 ):
     shop_ids = sorted(map(int, shop_ids))
     cutoff_date = datetime.date.today() - datetime.timedelta(days=cutoff_days)
-    cache_key = "best_sellers:%r_%s_%s_%s_%s" % (
+    cache_key = "best_sellers:{!r}_{}_{}_{}_{}".format(
         shop_ids,
         cutoff_date,
         (supplier.pk if supplier else ""),

@@ -86,7 +86,7 @@ def get_orderability_errors(product, shop_products):
     for shop_product in shop_products:
         orderability_errors.extend(
             [
-                "%s: %s" % (shop_product.shop.name, msg.message)
+                "{}: {}".format(shop_product.shop.name, msg.message)
                 for msg in shop_product.get_orderability_errors(
                     supplier=None,
                     quantity=shop_product.minimum_purchase_quantity,
@@ -97,7 +97,7 @@ def get_orderability_errors(product, shop_products):
         for supplier in shop_product.suppliers.enabled(shop=shop_product.shop):
             orderability_errors.extend(
                 [
-                    "%s: %s" % (supplier.name, msg.message)
+                    "{}: {}".format(supplier.name, msg.message)
                     for msg in supplier.get_orderability_errors(
                         shop_product=shop_product,
                         quantity=shop_product.minimum_purchase_quantity,

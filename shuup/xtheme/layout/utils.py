@@ -12,7 +12,7 @@ def get_layout_data_key(placeholder_name, layout, context):
 
     data_suffix = layout.get_layout_data_suffix(context)
     if data_suffix:
-        return "%s-%s" % (placeholder_name, layout.get_layout_data_suffix(context))
+        return "{}-{}".format(placeholder_name, layout.get_layout_data_suffix(context))
 
     return placeholder_name
 

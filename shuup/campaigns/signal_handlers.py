@@ -56,4 +56,4 @@ def update_filter_cache(sender, instance, **kwargs):
 def invalidate_context_filter_cache(sender, instance, **kwargs):
     cache.bump_version(CAMPAIGNS_CACHE_NAMESPACE)
     # Let's try to preserve catalog filter cache as long as possible
-    cache.bump_version("%s:%s" % (CATALOG_FILTER_CACHE_NAMESPACE, instance.pk))
+    cache.bump_version("{}:{}".format(CATALOG_FILTER_CACHE_NAMESPACE, instance.pk))

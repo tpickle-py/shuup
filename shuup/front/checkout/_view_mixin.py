@@ -64,7 +64,7 @@ class CheckoutPhaseViewMixin:
     def process(self):
         raise NotImplementedError(
             "Error! Not implemented: `CheckoutPhaseViewMixin` -> `process()`. "
-            "`process()` MUST be overridden in %r." % self.__class__
+            "`process()` MUST be overridden in {!r}.".format(self.__class__)
         )
 
     def reset(self):

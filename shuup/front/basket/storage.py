@@ -72,7 +72,7 @@ class DatabaseBasketStorage(BaseDatabaseBasketStorage):
     model = StoredBasket
 
     def _get_session_key(self, basket):
-        return "basket_%s_key" % basket.basket_name
+        return "basket_{}_key".format(basket.basket_name)
 
     def get_basket_kwargs(self, basket):
         # Lets first try to get basket kwargs from basket request session
@@ -106,7 +106,7 @@ class DatabaseBasketStorage(BaseDatabaseBasketStorage):
 
     def _get_key_for_logs(self, basket):
         basket_kwargs = self.get_basket_kwargs(basket)
-        return "%s%s" % ("stored_basket_key:", basket_kwargs["key"])
+        return "{}{}".format("stored_basket_key:", basket_kwargs["key"])
 
     def add_log_entry(self, basket, message, extra={}, kind=LogEntryKind.NOTE):
         try:

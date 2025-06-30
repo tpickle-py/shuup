@@ -93,8 +93,7 @@ def _get_delivery_html(request, order, shipment, html_mode=False):
             order_id=order.id, type__in=[OrderLineType.PAYMENT, OrderLineType.SHIPPING]
         ).order_by("ordering"),
         "today": datetime.date.today(),
-        "header": "%s | %s | %s %s"
-        % (_("Delivery slip"), order.shop.name, _("Order"), order.pk),
+        "header": "{} | {} | {} {}".format(_("Delivery slip"), order.shop.name, _("Order"), order.pk),
         "footer": _get_footer_information(order.shop),
         "html_mode": html_mode,
     }
@@ -119,8 +118,7 @@ def _get_confirmation_html(request, order, html_mode=False):
     context = {
         "order": order,
         "today": datetime.date.today(),
-        "header": "%s | %s | %s %s"
-        % (_("Order confirmation"), order.shop.name, _("Order"), order.pk),
+        "header": "{} | {} | {} {}".format(_("Order confirmation"), order.shop.name, _("Order"), order.pk),
         "footer": _get_footer_information(order.shop),
         "html_mode": html_mode,
     }
@@ -135,7 +133,7 @@ def _get_footer_information(shop):
     address = shop.contact_address
     if not address:
         return shop.name
-    return "%s | %s %s, %s, %s | %s %s" % (
+    return "{} | {} {}, {}, {} | {} {}".format(
         shop.name,
         address.street,
         address.postal_code,

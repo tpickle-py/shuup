@@ -35,8 +35,8 @@ class MoneyProperty:
         self._fields = {"value": value, "currency": currency}
 
     def __repr__(self):
-        argstr = ", ".join("%s=%r" % x for x in self._fields.items())
-        return "%s(%s)" % (type(self).__name__, argstr)
+        argstr = ", ".join("{}={!r}".format(*x) for x in self._fields.items())
+        return "{}({})".format(type(self).__name__, argstr)
 
     def __get__(self, instance, type=None):
         if instance is None:
@@ -60,7 +60,7 @@ class MoneyProperty:
     def _check_unit(self, instance, value):
         value_template = self._get_value_from(instance, overrides={"value": 0})
         if not value_template.unit_matches_with(value):
-            msg = "Error! Can't set `%s` to value with non-matching unit." % (
+            msg = "Error! Can't set `{}` to value with non-matching unit.".format(
                 type(self).__name__,
             )
             raise UnitMixupError(value_template, value, msg)
@@ -144,15 +144,14 @@ def _transform_init_kwargs(cls, kwargs):
 def _transform_single_init_kwarg(prop, field, value, kwargs):
     if value is not None and not isinstance(value, prop.value_class):
         raise TypeError(
-            "Error! Expecting type `%s` for field `%s` (got `%r`)."
-            % (prop.value_class.__name__, field, value)
+            "Error! Expecting type `{}` for field `{}` (got `{!r}`).".format(prop.value_class.__name__, field, value)
         )
     for attr, path in prop._fields.items():
         if "." in path:
             continue  # Only set "local" fields
         if path in kwargs:
             f = (field, path)
-            raise TypeError("Error! Fields `%s` and `%s` conflict." % f)
+            raise TypeError("Error! Fields `{}` and `{}` conflict.".format(*f))
         if value is None:
             kwargs[path] = None
         else:

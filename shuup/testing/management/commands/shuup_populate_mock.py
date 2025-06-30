@@ -22,7 +22,7 @@ class Command(BaseCommand):
             if not user:
                 user = get_user_model().objects.create_superuser(
                     username=superuser_name,
-                    email="%s@shuup.local" % superuser_name,
+                    email="{}@shuup.local".format(superuser_name),
                     password=superuser_name,
                 )
                 print("Superuser created: %s" % user)  # noqa

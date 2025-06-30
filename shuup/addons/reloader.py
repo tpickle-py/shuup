@@ -76,7 +76,7 @@ class GunicornReloadMethod(ReloadMethod):
 
     def is_parent_an_unicorn(self):
         try:
-            return "gunicorn" in open("/proc/%s/cmdline" % os.getppid()).read()
+            return "gunicorn" in open("/proc/{}/cmdline".format(os.getppid())).read()
         except (OSError, AttributeError):
             return False
 

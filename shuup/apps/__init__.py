@@ -130,10 +130,9 @@ class AppConfig(django.apps.AppConfig):
         missing_apps = required_apps - installed_apps
         if missing_apps:
             information = ", ".join(
-                "%s (%s)" % (app_name, self._get_app_require_reason(app_name))
+                "{} ({})".format(app_name, self._get_app_require_reason(app_name))
                 for app_name in sorted(missing_apps)
             )
             raise ImproperlyConfigured(
-                "Error! `%s` requires the following INSTALLED_APPS: `%s`"
-                % (self.name, information)
+                "Error! `{}` requires the following INSTALLED_APPS: `{}`".format(self.name, information)
             )

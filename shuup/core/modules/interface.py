@@ -23,13 +23,12 @@ class ModuleInterface:
             impls = self.get_module_implementation_map()
             if supplier_module.module_identifier not in impls:
                 raise ModuleNotFound(
-                    "Invalid module identifier %r in %s"
-                    % (supplier_module.name, force_ascii(repr(self)))
+                    "Invalid module identifier {!r} in {}".format(supplier_module.name, force_ascii(repr(self)))
                 )
             spec = impls[supplier_module.module_identifier]
             module = load(
                 spec,
-                context_explanation="Loading module for %s" % force_ascii(repr(self)),
+                context_explanation="Loading module for {}".format(force_ascii(repr(self))),
             )
             loaded_modules.append(module(self, options))
 

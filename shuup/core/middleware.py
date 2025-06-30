@@ -43,10 +43,10 @@ class ExceptionMiddleware(MiddlewareMixin):
             namespace = force_text(request.resolver_match.namespace)
             templates.extend(
                 [
-                    "%s/problem.jinja" % app_name,
-                    "%s/problem.jinja" % app_name.replace("_", "/"),
-                    "%s/problem.jinja" % namespace,
-                    "%s/problem.jinja" % namespace.replace("_", "/"),
+                    "{}/problem.jinja".format(app_name),
+                    "{}/problem.jinja".format(app_name.replace("_", "/")),
+                    "{}/problem.jinja".format(namespace),
+                    "{}/problem.jinja".format(namespace.replace("_", "/")),
                 ]
             )
         except (AttributeError, NameError):  # No resolver match? :(

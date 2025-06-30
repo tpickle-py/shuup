@@ -67,7 +67,7 @@ class ProductBaseFormPart(FormPart):
     def get_initial(self):
         if not self.object.product_id:
             # Sane defaults...
-            name_field = "name__%s" % get_language()
+            name_field = "name__{}".format(get_language())
             return {
                 name_field: self.request.GET.get("name", ""),
                 "sku": self.get_sku(),
@@ -251,7 +251,7 @@ class ProductEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
                 shop_product = self.object
                 orderability_errors.extend(
                     [
-                        "%s: %s" % (shop.name, msg.message)
+                        "{}: {}".format(shop.name, msg.message)
                         for msg in shop_product.get_orderability_errors(
                             supplier=None,
                             quantity=shop_product.minimum_purchase_quantity,
@@ -261,7 +261,7 @@ class ProductEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
                 )
             except ObjectDoesNotExist:
                 orderability_errors.extend(
-                    ["Error! %s: %s" % (shop.name, _("Product is not available."))]
+                    ["Error! {}: {}".format(shop.name, _("Product is not available."))]
                 )
 
             product_validator_provides = sorted(

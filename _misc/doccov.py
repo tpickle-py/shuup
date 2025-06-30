@@ -244,9 +244,9 @@ class ArgValidator(Validator):
 
     def validate(self, docinfo):
         for arg in sorted(docinfo.missing_args):
-            yield "Error! Missing mention of arg `%s`" % arg
+            yield "Error! Missing mention of arg `{}`".format(arg)
         for arg in sorted(docinfo.extraneous_args):
-            yield "Error! Extraneous mention of arg `%s`" % arg
+            yield "Error! Extraneous mention of arg `{}`".format(arg)
 
 
 class ReturnValidator(Validator):
@@ -347,7 +347,7 @@ class DocStringVisitor(ast.NodeVisitor):
         elif isinstance(node, ast.ClassDef):
             return (line, "class", name)
         else:
-            raise NotImplementedError("Error! Not implemented: name for %s." % node)
+            raise NotImplementedError("Error! Not implemented: name for {}.".format(node))
 
     def visit_FunctionDef(self, node):  # noqa (N802)
         if node.name in IGNORED_FUNCTIONS:

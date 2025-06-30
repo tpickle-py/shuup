@@ -24,7 +24,7 @@ def model_url(context, model, absolute=False, raise_when_not_found=True, **kwarg
 
     if raise_when_not_found:
         # no url found
-        raise ValueError("Error! Unable to figure out `model_url` for %r." % model)
+        raise ValueError("Error! Unable to figure out `model_url` for {!r}.".format(model))
 
 
 def get_url(url, *args, **kwargs):

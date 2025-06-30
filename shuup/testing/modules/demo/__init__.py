@@ -20,7 +20,7 @@ class DemoModule(AdminModule):
 
     def get_urls(self):
         return [
-            admin_url("test/$", lambda request: HttpResponse("herrrp %s" % request)),
+            admin_url("test/$", lambda request: HttpResponse("herrrp {}".format(request))),
         ]
 
     def check_demo_optin(self, request):
@@ -45,8 +45,7 @@ class DemoModule(AdminModule):
         return [
             MenuEntry(
                 text=random_title(),
-                icon="fa %s"
-                % random.choice(
+                icon="fa {}".format(random.choice(
                     [
                         "fa-flash",
                         "fa-folder",
@@ -55,7 +54,7 @@ class DemoModule(AdminModule):
                         "fa-paw",
                         "fa-cloud",
                     ]
-                ),
+                )),
                 url="https://google.com/",
                 category="Test %d" % random.randint(1, 6),
             )
@@ -67,12 +66,12 @@ class DemoModule(AdminModule):
             return
         for word in query.split():
             if word:
-                yield SearchResult(word, url="https://google.com/?q=%s" % word)
+                yield SearchResult(word, url="https://google.com/?q={}".format(word))
                 yield SearchResult(
-                    word[::-1], url="https://google.com/?q=%s" % word[::-1]
+                    word[::-1], url="https://google.com/?q={}".format(word[::-1])
                 )
         yield SearchResult(
-            "Create test: %s" % query,
+            "Create test: {}".format(query),
             url="http://about:blank",
             icon="fa fa-plus",
             is_action=True,
@@ -81,7 +80,7 @@ class DemoModule(AdminModule):
     def get_notifications(self, request):
         if not self.check_demo_optin(request):
             return
-        yield Notification(text="Your IP is %s" % get_client_ip(request))
+        yield Notification(text="Your IP is {}".format(get_client_ip(request)))
         yield Notification(
             title="Dice",
             text="Your lucky number is %d" % random.randint(1, 43),
@@ -106,7 +105,7 @@ class DemoModule(AdminModule):
         yield DashboardValueBlock(
             id="test-x",
             color="blue",
-            title="Happy %s!" % weekday,
+            title="Happy {}!".format(weekday),
             value=today,
             icon="fa fa-calendar",
         )
@@ -162,4 +161,4 @@ class DemoModule(AdminModule):
         if not self.check_demo_optin(request):
             return
         t = now().replace(minute=0, second=0)
-        yield Activity(t, "It was %s" % t)
+        yield Activity(t, "It was {}".format(t))

@@ -540,7 +540,7 @@ class CompanyContact(Contact):
 
     @property
     def full_name(self):
-        return self.name + (" / %s" % self.name_ext if self.name_ext else "")
+        return self.name + (" / {}".format(self.name_ext) if self.name_ext else "")
 
 
 class Gender(Enum):
@@ -757,7 +757,7 @@ def get_company_contact(user):
 
 def get_company_contact_for_shop(shop):
     company = CompanyContact.objects.get_or_create(
-        identifier="shop-contact-%s" % shop.pk, defaults={"name": shop.public_name}
+        identifier="shop-contact-{}".format(shop.pk), defaults={"name": shop.public_name}
     )[0]
     company.add_to_shop(shop)
     return company

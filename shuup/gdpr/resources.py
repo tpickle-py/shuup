@@ -51,7 +51,7 @@ def add_gdpr_consent_resources(context, content):
         render_context = {
             "request": request,
             "csrf_token": context["csrf_token"],
-            "url": "/%s" % consent_page.url,
+            "url": "/{}".format(consent_page.url),
             "accept_url": reverse(
                 "shuup:gdpr_policy_consent", kwargs=dict(page_id=consent_page.id)
             ),

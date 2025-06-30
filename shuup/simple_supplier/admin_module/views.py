@@ -132,7 +132,7 @@ def get_adjustment_success_message(stock_adjustment):
 
 def _get_success_message(request, supplier, product, message):
     return {
-        "stockInformationDiv": "#%s" % get_stock_information_div_id(supplier, product),
+        "stockInformationDiv": "#{}".format(get_stock_information_div_id(supplier, product)),
         "updatedStockInformation": get_stock_information_html(supplier, product),
         "updatedStockManagement": get_stock_adjustment_div(request, supplier, product),
         "message": message,

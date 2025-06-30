@@ -46,7 +46,7 @@ class CategoryProductFormPart(FormPart):
         )
 
     def _get_form_name(self, shop):
-        return "%s_%s" % (shop.pk, self.name)
+        return "{}_{}".format(shop.pk, self.name)
 
     def form_valid(self, form):
         for shop in self.object.shops.all():

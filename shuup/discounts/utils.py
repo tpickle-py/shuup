@@ -20,7 +20,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 def _get_price_expiration_cache_key(shop_id):
-    return "price_expiration_%s" % shop_id
+    return "price_expiration_{}".format(shop_id)
 
 
 def get_potential_discounts_for_product(
@@ -189,7 +189,7 @@ def get_price_expiration(context, product):
     if value is not None:
         return value
 
-    context_cache_key = "price_expiration_%(shop_id)s" % dict(shop_id=context.shop.pk)
+    context_cache_key = "price_expiration_{shop_id}".format(**dict(shop_id=context.shop.pk))
     if hasattr(context, "context_cache_key"):
         return getattr(context, context_cache_key)
 

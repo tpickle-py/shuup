@@ -230,7 +230,7 @@ class CatalogCampaign(Campaign):
         sorted_items = dict(
             sorted(prod_ctx_cache_elements.items(), key=lambda item: item[0])
         )
-        key = "%s:%s" % (
+        key = "{}:{}".format(
             namespace,
             hashlib.sha1(str(sorted_items).encode("utf-8")).hexdigest(),
         )

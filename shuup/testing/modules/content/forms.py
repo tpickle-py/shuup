@@ -87,7 +87,7 @@ class BehaviorWizardForm(forms.Form):
                 }
 
             except Exception:
-                logger.exception("Error! Failed to translate language %s." % language)
+                logger.exception("Error! Failed to translate language {}.".format(language))
 
                 action_data["template_data"][language] = {
                     "content_type": "text",

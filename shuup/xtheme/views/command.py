@@ -36,4 +36,4 @@ def command_dispatch(request):
         response = handle_command(request, command)
         if response:
             return response
-    raise Problem("Error! Unknown command: `%r`" % escape(command))
+    raise Problem("Error! Unknown command: `{!r}`".format(escape(command)))

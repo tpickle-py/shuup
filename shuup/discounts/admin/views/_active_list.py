@@ -85,7 +85,7 @@ class DiscountListView(PicotableListView):
         shop = get_shop(self.request)
         if instance.discount_amount_value:
             effects.append(
-                "- %s" % format_money(shop.create_price(instance.discount_amount_value))
+                "- {}".format(format_money(shop.create_price(instance.discount_amount_value)))
                 if shop
                 else format_number(instance.discount_amount_value)
             )

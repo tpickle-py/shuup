@@ -228,7 +228,7 @@ class UserDetailToolbar(Toolbar):
             )
         else:
             contact_url = (
-                reverse("shuup_admin:contact.new") + "?type=person&user_id=%s" % user.pk
+                reverse("shuup_admin:contact.new") + "?type=person&user_id={}".format(user.pk)
             )
             menu_items.append(
                 DropdownItem(
@@ -378,10 +378,10 @@ class UserDetailView(CreateOrUpdateView):
         if getattr(self.object, "is_staff", False) and form.cleaned_data.get(
             "send_confirmation"
         ):
-            shop_url = "%s://%s/" % (self.request.scheme, self.request.get_host())
+            shop_url = "{}://{}/".format(self.request.scheme, self.request.get_host())
             admin_url = self.request.build_absolute_uri(reverse("shuup_admin:login"))
             send_mail(
-                subject=_("You've been added as an admin user to `%s`." % shop_url),
+                subject=_("You've been added as an admin user to `{}`.".format(shop_url)),
                 message=NEW_USER_EMAIL_CONFIRMATION_TEMPLATE
                 % {
                     "first_name": self.object.first_name

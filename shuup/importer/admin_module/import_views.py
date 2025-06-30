@@ -119,8 +119,8 @@ class ImportView(FormView):
         file = self.request.FILES["file"]
         basename, ext = os.path.splitext(file.name)
 
-        import_name = "%s%s" % (
-            hashlib.sha256(("%s" % datetime.now()).encode("utf-8")).hexdigest(),
+        import_name = "{}{}".format(
+            hashlib.sha256(("{}".format(datetime.now())).encode("utf-8")).hexdigest(),
             ext,
         )
         full_path = get_import_file_path(import_name)
@@ -135,7 +135,7 @@ class ImportView(FormView):
         importer = request.POST.get("importer")
         lang = request.POST.get("language")
         return redirect(
-            "%s?n=%s&importer=%s&lang=%s" % (next_url, import_name, importer, lang)
+            "{}?n={}&importer={}&lang={}".format(next_url, import_name, importer, lang)
         )
 
     def get_form_kwargs(self):
@@ -183,7 +183,7 @@ class ExampleFileDownloadView(View):
 
         response = HttpResponse(content_type=example_file.content_type)
         response["Content-Disposition"] = (
-            "attachment; filename=%s" % example_file.file_name
+            "attachment; filename={}".format(example_file.file_name)
         )
 
         data = importer_cls.get_example_file_content(example_file, request)

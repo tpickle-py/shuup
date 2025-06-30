@@ -68,5 +68,5 @@ class OrderSourceSupplierValidator:
                 for error in shop_product.get_orderability_errors(
                     supplier=supplier, quantity=quantity, customer=order_source.customer
                 ):
-                    error.message = "%s: %s" % (product.name, error.message)
+                    error.message = "{}: {}".format(product.name, error.message)
                     yield error

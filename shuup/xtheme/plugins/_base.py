@@ -249,4 +249,4 @@ def templated_plugin_factory(identifier, template_name, **kwargs):
     }
     ns.update(kwargs)
     ns.setdefault("name", space_case(identifier).title())
-    return type(str("%sPlugin" % identifier), (TemplatedPlugin,), ns)
+    return type(str("{}Plugin".format(identifier)), (TemplatedPlugin,), ns)

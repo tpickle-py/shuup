@@ -46,7 +46,7 @@ class TimeRange(models.Model):
     weekday = models.IntegerField(verbose_name=_("weekday"), db_index=True)
 
     def __str__(self):
-        return "%s-%s for %s" % (self.weekday, self.pk, self.happy_hour)
+        return "{}-{} for {}".format(self.weekday, self.pk, self.happy_hour)
 
     class Meta:
         verbose_name = _("time range")

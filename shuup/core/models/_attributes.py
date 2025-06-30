@@ -165,12 +165,12 @@ class Attribute(TranslatableModel):
         verbose_name_plural = _("attributes")
 
     def __str__(self):
-        return "%s" % self.name
+        return "{}".format(self.name)
 
     def save(self, *args, **kwargs):
         if not self.identifier:
             raise ValueError("Error! Attribute with null identifier is not allowed.")
-        self.identifier = flatten(("%s" % self.identifier).lower())
+        self.identifier = flatten(("{}".format(self.identifier)).lower())
         return super().save(*args, **kwargs)
 
     def formfield(self, **kwargs):
@@ -217,8 +217,7 @@ class Attribute(TranslatableModel):
             )
         else:
             raise ValueError(
-                "Error! `formfield` can't deal with the fields of type `%r`."
-                % self.type
+                "Error! `formfield` can't deal with the fields of type `{!r}`.".format(self.type)
             )
 
     @property
@@ -396,7 +395,7 @@ class AppliedAttribute(TranslatableModel):
             # Just store datetimes
             if not isinstance(new_value, datetime.datetime):
                 raise TypeError(
-                    "Error! Can't assign `%r` to DATETIME attribute." % new_value
+                    "Error! Can't assign `{!r}` to DATETIME attribute.".format(new_value)
                 )
             self.datetime_value = new_value
             self.numeric_value = calendar.timegm(self.datetime_value.timetuple())
@@ -490,7 +489,7 @@ class AppliedAttribute(TranslatableModel):
         return six.text_type(self.value)
 
     def __repr__(self):  # pragma: no cover
-        return "<%s of %r: %s=%r>" % (
+        return "<{} of {!r}: {}={!r}>".format(
             type(self).__name__,
             getattr(self, self._applied_fk_field or "", None),
             self.attribute.identifier,
@@ -516,7 +515,7 @@ class AttributableMixin:
         applied_attrs_by_target_id = defaultdict(list)
         attr_ids = set()
         filter_kwargs = {
-            "%s_id__in" % (applied_attr_cls._applied_fk_field): (t.pk for t in targets),
+            "{}_id__in".format(applied_attr_cls._applied_fk_field): (t.pk for t in targets),
             "attribute__identifier__in": attribute_identifiers,
         }
 
@@ -667,7 +666,7 @@ class AttributableMixin:
         if attr.is_translated:
             if not language:
                 raise ValueError(
-                    "Error! `language` must be set for translated attribute %s." % attr
+                    "Error! `language` must be set for translated attribute {}.".format(attr)
                 )
             applied_attr.set_current_language(language)
 

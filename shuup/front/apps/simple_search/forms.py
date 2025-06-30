@@ -41,7 +41,7 @@ def get_compiled_query(query_string, needles):
     for word in get_query_words(query_string):
         inner_query = None
         for needle in needles:
-            q = Q(**{"%s__icontains" % needle: word})
+            q = Q(**{"{}__icontains".format(needle): word})
             inner_query = q if inner_query is None else inner_query | q
         compiled_query = (
             inner_query if compiled_query is None else compiled_query & inner_query

@@ -60,14 +60,14 @@ class EditorView(TemplateView):
                 get_args["view"] = XTHEME_GLOBAL_VIEW_NAME
             # We are overriding the view with XTHEME_GLOBAL_VIEW_NAME if this is a global placeholder
             return HttpResponseRedirect(
-                "%s?%s" % (self.request.path, urlencode(get_args))
+                "{}?{}".format(self.request.path, urlencode(get_args))
             )
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):  # doccov: ignore
         command = request.POST.get("command")
         if command:
-            dispatcher = getattr(self, "dispatch_%s" % command, None)
+            dispatcher = getattr(self, "dispatch_{}".format(command), None)
             if not callable(dispatcher):
                 raise Problem(_("Unknown command: `%s`.") % escape(command))
             dispatch_kwargs = dict(request.POST.items())
@@ -198,11 +198,11 @@ class EditorView(TemplateView):
     def dispatch_publish(self, **kwargs):
         self.view_config.publish()
         return HttpResponse(
-            "<html><script>parent.location.reload()</script>%s.</html>" % _("Published")
+            "<html><script>parent.location.reload()</script>{}.</html>".format(_("Published"))
         )
 
     def dispatch_revert(self, **kwargs):
         self.view_config.revert()
         return HttpResponse(
-            "<html><script>parent.location.reload()</script>%s.</html>" % _("Reverted")
+            "<html><script>parent.location.reload()</script>{}.</html>".format(_("Reverted"))
         )

@@ -19,7 +19,7 @@ class ServiceProviderTypeForm(forms.Form):
         data = self.cleaned_data.get("providers", None)
         if not data:
             self.add_error(
-                None, _("Please activate at least one %s." % self.provider_label)
+                None, _("Please activate at least one {}.".format(self.provider_label))
             )
         return data
 

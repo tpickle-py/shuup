@@ -103,9 +103,9 @@ class Pattern:
             str_bits = []
             for min_value, max_value in in_bits:
                 if min_value != max_value:
-                    str_bits.append("%s%s-%s" % (prefix, min_value, max_value))
+                    str_bits.append("{}{}-{}".format(prefix, min_value, max_value))
                 else:
-                    str_bits.append("%s%s" % (prefix, min_value))
+                    str_bits.append("{}{}".format(prefix, min_value))
             bits.extend(sorted(str_bits))
 
         return ",".join(bits)

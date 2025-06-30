@@ -55,7 +55,7 @@ def finalize_installation_for_enabled_apps():
     enabled_addons = get_enabled_addons(settings.SHUUP_ENABLED_ADDONS_FILE)
     new_apps = [app for app in enabled_addons if app not in settings.INSTALLED_APPS]
     if new_apps:
-        out.write("Enabling new addons: %s" % new_apps)
+        out.write("Enabling new addons: {}".format(new_apps))
         settings.INSTALLED_APPS += type(settings.INSTALLED_APPS)(new_apps)
         reload_apps()
 

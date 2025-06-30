@@ -40,7 +40,7 @@ class CgpPrice(MoneyPropped, CgpBase):
         verbose_name_plural = _("product prices")
 
     def __repr__(self):
-        return "<CgpPrice (p%s,s%s,g%s): price %s" % (
+        return "<CgpPrice (p{},s{},g{}): price {}".format(
             self.product_id,
             self.shop_id,
             self.group_id,
@@ -67,7 +67,7 @@ class CgpDiscount(MoneyPropped, CgpBase):
         verbose_name_plural = _("product discounts")
 
     def __repr__(self):
-        return "<CgpDiscount (p%s,s%s,g%s): discount %s" % (
+        return "<CgpDiscount (p{},s{},g{}): discount {}".format(
             self.product_id,
             self.shop_id,
             self.group_id,

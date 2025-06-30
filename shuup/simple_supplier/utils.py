@@ -104,7 +104,7 @@ def get_current_stock_value(supplier_id, product_id):
 
 
 def get_stock_information_div_id(supplier, product):
-    return "stock-information-%s-%s" % (supplier.id, product.id)
+    return "stock-information-{}-{}".format(supplier.id, product.id)
 
 
 def get_stock_information_html(supplier, product):

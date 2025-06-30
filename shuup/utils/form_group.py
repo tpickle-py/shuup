@@ -31,7 +31,7 @@ class FormDef:
         kwargs.update(self.kwargs)
         kwargs.update(extra_kwargs)
         if group_initial:
-            prefix_with_dash = "%s-" % prefix
+            prefix_with_dash = "{}-".format(prefix)
             # Only copy keys from initial that begin with this form's prefix
             new_initial = {
                 k[len(prefix_with_dash) :]: v
@@ -69,7 +69,7 @@ class FormGroup:
         self._forms = OrderedDict()
         for name, form_def in six.iteritems(self.form_defs):
             if self.prefix:
-                prefix = "%s_%s" % (self.prefix, name)
+                prefix = "{}_{}".format(self.prefix, name)
             else:
                 prefix = name
 

@@ -223,7 +223,7 @@ class Discount(models.Model, MoneyPropped):
     objects = DiscountQueryset.as_manager()
 
     def __str__(self):
-        return self.name or self.identifier or "%s" % self.pk
+        return self.name or self.identifier or "{}".format(self.pk)
 
     class Meta:
         verbose_name = _("product discount")

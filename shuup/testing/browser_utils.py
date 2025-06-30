@@ -98,7 +98,7 @@ def move_to_element(browser, css_selector, header_height=155):
     wait_until_condition(browser, lambda x: x.is_element_present_by_css(css_selector))
     element = browser.driver.find_element_by_css_selector(css_selector)
     y = element.location["y"] - header_height
-    browser.execute_script("window.scrollTo(0, %s)" % y)
+    browser.execute_script("window.scrollTo(0, {})".format(y))
 
 
 def click_element(browser, css_selector, timeout=10, frequency=1.0, header_height=155):
@@ -118,7 +118,7 @@ def click_element(browser, css_selector, timeout=10, frequency=1.0, header_heigh
     # selenium weirdness when clicking a button that already has focus...grumble grumble
     # http://stackoverflow.com/questions/21330894/why-do-i-have-to-click-twice-to-a-submit-input-using-selenium
     browser.execute_script(
-        'document.querySelector("%s").focus()' % css_selector.replace('"', '\\"')
+        'document.querySelector("{}").focus()'.format(css_selector.replace('"', '\\"'))
     )
     wait_until_condition(
         browser,
@@ -192,6 +192,6 @@ def initialize_admin_browser_test(
 
         # set shop language to eng
         browser.find_by_id("dropdownMenu").click()
-        browser.find_by_xpath('//a[@data-value="%s"]' % language).first.click()
+        browser.find_by_xpath('//a[@data-value="{}"]'.format(language)).first.click()
 
     return browser

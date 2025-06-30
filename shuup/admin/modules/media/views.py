@@ -135,7 +135,7 @@ class MediaBrowserView(TemplateView):
         self.filter = request.GET.get("filter")
         self.disabledMenus = request.GET.get("disabledMenus", "").split(",")
         action = request.GET.get("action")
-        handler = getattr(self, "handle_get_%s" % action, None)
+        handler = getattr(self, "handle_get_{}".format(action), None)
         if handler:
             return handler(request.GET)
         return super().get(request, *args, **kwargs)
@@ -152,7 +152,7 @@ class MediaBrowserView(TemplateView):
 
         data = json.loads(request.body.decode("utf-8"))
         action = data.get("action")
-        handler = getattr(self, "handle_post_%s" % action, None)
+        handler = getattr(self, "handle_post_{}".format(action), None)
         if handler:
             try:
                 return handler(data)
@@ -161,7 +161,7 @@ class MediaBrowserView(TemplateView):
             except Problem as prob:
                 return JsonResponse({"error": force_text(prob)})
         else:
-            return JsonResponse({"error": "Error! Unknown action `%s`." % action})
+            return JsonResponse({"error": "Error! Unknown action `{}`.".format(action)})
 
     def handle_get_folders(self, data):
         shop = get_shop(self.request)
@@ -353,7 +353,7 @@ class MediaBrowserView(TemplateView):
                     {"success": True, "message": _("Folder was renamed.")}
                 )
             except IntegrityError:
-                message = _("Folder can't be renamed to %s." % (data["name"]))
+                message = _("Folder can't be renamed to {}.".format(data["name"]))
                 return JsonResponse({"success": False, "message": message})
 
         message = _(
@@ -505,7 +505,7 @@ def media_upload(request, *args, **kwargs):
             folder = None  # Root folder upload. How bold!
     except Exception as exc:
         return JsonResponse(
-            {"error": "Error! Invalid folder `%s`." % force_text(exc)}, status=400
+            {"error": "Error! Invalid folder `{}`.".format(force_text(exc))}, status=400
         )
 
     if subfolder_of_users_root(request.user, folder) or has_permission(

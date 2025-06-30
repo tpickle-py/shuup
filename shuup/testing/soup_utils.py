@@ -39,7 +39,7 @@ def extract_form_fields(soup):  # pragma: no cover  # noqa (C901)
                 fields.setdefault(name, value)
             continue
 
-        assert False, "input type %s not supported" % type
+        assert False, "input type {} not supported".format(type)
 
     for textarea in soup.findAll("textarea"):
         name = textarea.get("name")

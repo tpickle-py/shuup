@@ -378,7 +378,7 @@ class SavedAddress(ShuupModel):
         ordering = ("owner_id", "role", "title")
 
     def __str__(self):
-        return "%s" % self.get_title()
+        return "{}".format(self.get_title())
 
     def get_title(self):
         """

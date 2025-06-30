@@ -20,8 +20,7 @@ def to_language_codes(languages, default_language):
         languages = [code for (code, name) in languages]
     if default_language not in languages:
         raise ValueError(
-            "Error! Default language `%r` not in the list: `%r`."
-            % (default_language, languages)
+            "Error! Default language `{!r}` not in the list: `{!r}`.".format(default_language, languages)
         )
     languages = [default_language] + [
         code for code in languages if code != default_language
@@ -88,7 +87,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
                 continue
             for lang in self.languages:
                 language_field = copy.deepcopy(base)
-                language_field_name = "%s__%s" % (f.name, lang)
+                language_field_name = "{}__{}".format(f.name, lang)
                 language_field.required = language_field.required and (
                     lang in self.required_languages
                 )
@@ -115,7 +114,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
                 for trans in translations:
                     model_dict = model_to_dict(trans, opts.fields, opts.exclude)
                     object_data.update(
-                        ("%s__%s" % (fn, lang), f)
+                        ("{}__{}".format(fn, lang), f)
                         for (fn, f) in six.iteritems(model_dict)
                     )
 
@@ -207,7 +206,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
         with switch_language(self.instance, language):
             self.instance.set_current_language(language)
             for field in self.translation_fields:
-                value = self.cleaned_data["%s__%s" % (field.name, language)]
+                value = self.cleaned_data["{}__{}".format(field.name, language)]
                 field.save_form_data(self.instance, value)
 
     def _save_master(self, commit=True):
@@ -234,5 +233,5 @@ class MultiLanguageModelForm(TranslatableModelForm):
         if self._meta.labels:
             label = self._meta.labels.get(field_name, field.label)
         if len(self.languages) > 1:
-            return "%s [%s]" % (label, self.language_names.get(lang))
+            return "{} [{}]".format(label, self.language_names.get(lang))
         return label

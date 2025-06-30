@@ -49,7 +49,7 @@ class MockProductToolbarActionItem(DropdownItem):
     def __init__(self, object, **kwargs):
         kwargs["icon"] = "fa fa-female"
         kwargs["text"] = _("This is %(sku)s") % {"sku": object.sku}
-        kwargs["url"] = "#%(sku)s" % {"sku": object.sku}
+        kwargs["url"] = "#{sku}".format(sku=object.sku)
         super().__init__(**kwargs)
 
 

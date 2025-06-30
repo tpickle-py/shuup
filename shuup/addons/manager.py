@@ -35,9 +35,9 @@ def get_enabled_addons(file_path):
 def set_enabled_addons(file_path, addons, comment=None):
     with codecs.open(file_path, "w", "utf-8") as f:
         if comment:
-            f.write("# %s\n\n" % comment)
+            f.write("# {}\n\n".format(comment))
         for addon in addons:
-            f.write("%s\n" % addon)
+            f.write("{}\n".format(addon))
 
 
 def add_enabled_addons(addon_filename, apps):

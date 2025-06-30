@@ -46,7 +46,7 @@ class PictureDnDUploaderWidget(Widget):
             "date": file.uploaded_at.isoformat(),
         }
         return [
-            "data-%s='%s'" % (key, val)
+            "data-{}='{}'".format(key, val)
             for key, val in six.iteritems(data)
             if val is not None
         ]
@@ -54,12 +54,12 @@ class PictureDnDUploaderWidget(Widget):
     def render(self, name, value, attrs={}, renderer=None):
         pk_input = HiddenInput().render(name, value, attrs)
         file_attrs = [
-            "data-upload_path='%s'" % self.upload_path,
-            "data-add_remove_links='%s'" % self.clearable,
+            "data-upload_path='{}'".format(self.upload_path),
+            "data-add_remove_links='{}'".format(self.clearable),
             "data-dropzone='true'",
         ]
         if self.kind:
-            file_attrs.append("data-kind='%s'" % self.kind)
+            file_attrs.append("data-kind='{}'".format(self.kind))
 
         if self.dropzone_attrs:
             # attributes passed here will be converted into keys with dz_ prefix
@@ -75,8 +75,7 @@ class PictureDnDUploaderWidget(Widget):
             file = File.objects.filter(pk=value).first()
             file_attrs += self._get_file_attrs(file)
         return mark_safe(
-            "<div id='%s-dropzone' class='dropzone %s' %s>%s</div>"
-            % (
+            "<div id='{}-dropzone' class='dropzone {}' {}>{}</div>".format(
                 attrs.get("id", "dropzone"),
                 "has-file" if value else "",
                 " ".join(file_attrs),

@@ -26,4 +26,4 @@ def run_event(event, shop):
         except Exception:  # pragma: no cover
             if settings.DEBUG:
                 raise
-            LOG.exception("Error! Script %r failed for event %r." % (script, event))
+            LOG.exception("Error! Script {!r} failed for event {!r}.".format(script, event))

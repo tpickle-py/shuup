@@ -89,5 +89,5 @@ class ProductPackageView(ProductParentBaseView):
             clear_existing_package(product)
             messages.success(self.request, _("Package cleared."))
         else:
-            raise Problem("Error! Unknown command: `%s`." % command)
+            raise Problem("Error! Unknown command: `{}`.".format(command))
         return HttpResponseRedirect(self.get_success_url())

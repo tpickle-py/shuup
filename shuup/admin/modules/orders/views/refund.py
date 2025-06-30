@@ -173,9 +173,9 @@ class OrderCreateRefundView(UpdateView):
         return kwargs
 
     def _get_line_text(self, line):
-        text = "line %s: %s" % (line.ordering + 1, line.text)
+        text = "line {}: {}".format(line.ordering + 1, line.text)
         if line.sku:
-            text += " (SKU %s)" % (line.sku)
+            text += " (SKU {})".format(line.sku)
         return text
 
     def _get_line_number_choices(self, supplier):

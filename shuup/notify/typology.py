@@ -171,7 +171,7 @@ class Enum(Type):
 
     def __init__(self, enum_class):
         self.enum_class = enum_class
-        assert issubclass(enum_class, enumfields.Enum), "%r is not an enum" % enum_class
+        assert issubclass(enum_class, enumfields.Enum), "{!r} is not an enum".format(enum_class)
 
     def unserialize(self, value):
         if isinstance(value, self.enum_class):

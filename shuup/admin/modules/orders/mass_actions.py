@@ -44,7 +44,7 @@ class OrderConfirmationPdfAction(PicotableFileMassAction):
             try:
                 response = get_confirmation_pdf(request, ids[0])
                 response["Content-Disposition"] = (
-                    "attachment; filename=order_%s_confirmation.pdf" % ids[0]
+                    "attachment; filename=order_{}_confirmation.pdf".format(ids[0])
                 )
                 return response
             except Exception as e:
@@ -96,7 +96,7 @@ class OrderDeliveryPdfAction(PicotableFileMassAction):
                 shipment_id = shipment_ids.pop()
                 response = get_delivery_pdf(request, shipment_id)
                 response["Content-Disposition"] = (
-                    "attachment; filename=shipment_%s_delivery.pdf" % shipment_id
+                    "attachment; filename=shipment_{}_delivery.pdf".format(shipment_id)
                 )
                 return response
             except Exception as e:

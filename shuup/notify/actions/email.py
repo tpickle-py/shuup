@@ -189,7 +189,7 @@ class SendEmail(Action):
 
         if send_identifier:
             context.add_log_entry_on_log_target(
-                "Info! Email sent to %s: %s" % (recipient, subject), send_identifier
+                "Info! Email sent to {}: {}".format(recipient, subject), send_identifier
             )
 
 

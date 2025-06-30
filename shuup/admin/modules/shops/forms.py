@@ -120,7 +120,7 @@ class ShopWizardForm(ShuupAdminForm):
     def save(self):
         obj = super().save()
         for language in settings.LANGUAGES:
-            public_name = self.cleaned_data.get("public_name__%s" % language[0])
+            public_name = self.cleaned_data.get("public_name__{}".format(language[0]))
             if public_name:
                 obj.set_current_language(language[0])
                 obj.name = obj.public_name
@@ -182,7 +182,7 @@ class ShopAddressWizardForm(forms.ModelForm):
 
     def save(self):
         obj = super().save()
-        obj.name = "%s %s" % (
+        obj.name = "{} {}".format(
             self.cleaned_data.get("first_name"),
             self.cleaned_data.get("last_name"),
         )

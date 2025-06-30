@@ -61,7 +61,7 @@ class RelatedMapper:
                 except Exception:
                     continue
                 if self.is_translated and name in self.translated_field_names:
-                    name = "translations__%s" % name
+                    name = "translations__{}".format(name)
                 qs.append(Q(**{name: arg}))
         try:
             int(arg)
@@ -95,7 +95,7 @@ class RelatedMapper:
 
         if not value:
             return None
-        value = "%s" % value
+        value = "{}".format(value)
         mapped = self.fk_cache.get(value, NotCached)
         if mapped is NotCached:
             try:
@@ -161,7 +161,7 @@ class RelatedMapper:
         field = self.reverse_fields[0]
         value = getattr(instance, field)
         if field in ("pk", "id"):
-            value = "#%s" % value
+            value = "#{}".format(value)
         return value
 
     def split_value(self, value):

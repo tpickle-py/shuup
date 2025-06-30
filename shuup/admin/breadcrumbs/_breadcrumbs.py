@@ -32,8 +32,7 @@ class Breadcrumbs:
 
         url_names = (
             request.resolver_match.url_name,
-            "%s:%s"
-            % (request.resolver_match.app_name, request.resolver_match.url_name),
+            "{}:{}".format(request.resolver_match.app_name, request.resolver_match.url_name),
         )
         url_admin_module = _get_admin_module_for_url(url_names)
 

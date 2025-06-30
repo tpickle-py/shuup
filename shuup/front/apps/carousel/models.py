@@ -257,7 +257,7 @@ class Slide(TranslatableShuupModel):
     )
 
     def __str__(self):
-        return "%s %s" % (_("Slide"), self.pk)
+        return "{} {}".format(_("Slide"), self.pk)
 
     class Meta:
         verbose_name = _("Slide")

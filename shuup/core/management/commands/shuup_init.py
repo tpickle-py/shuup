@@ -56,7 +56,7 @@ class Initializer:
         obj = model.objects.filter(**{identifier_attr: schema["identifier"]}).first()
         if obj:
             return obj
-        print_("Creating %s..." % model._meta.verbose_name, end=" ")
+        print_("Creating {}...".format(model._meta.verbose_name), end=" ")
         obj = model()
         setattr(obj, identifier_attr, schema["identifier"])
         for key, value in schema["info"].items():

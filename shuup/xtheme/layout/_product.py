@@ -11,12 +11,11 @@ class ProductLayout(Layout):
         if not product:
             return ""
         return _(
-            "Content in this placeholder is shown for %(product_name)s only."
-            % {"product_name": product.name}
+            "Content in this placeholder is shown for {product_name} only.".format(product_name=product.name)
         )
 
     def is_valid_context(self, context):
         return bool(context.get("product"))
 
     def get_layout_data_suffix(self, context):
-        return "%s-%s" % (self.identifier, context["product"].pk)
+        return "{}-{}".format(self.identifier, context["product"].pk)

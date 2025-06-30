@@ -100,7 +100,7 @@ def transform_file(mode, filename, data=None):
     else:
         raise NotImplementedError(
             "Error! Not implemented: `TransformedData` -> "
-            "`transform_file()` -> mode `%s` is not implemented." % mode
+            "`transform_file()` -> mode `{}` is not implemented.".format(mode)
         )
 
     headers = data[0].keys() if len(data) else []

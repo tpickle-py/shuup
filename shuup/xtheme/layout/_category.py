@@ -11,12 +11,11 @@ class CategoryLayout(Layout):
         if not category:
             return ""
         return _(
-            "Content in this placeholder is shown for %(category_name)s category only."
-            % {"category_name": category.name}
+            "Content in this placeholder is shown for {category_name} category only.".format(category_name=category.name)
         )
 
     def is_valid_context(self, context):
         return bool(context.get("category"))
 
     def get_layout_data_suffix(self, context):
-        return "%s-%s" % (self.identifier, context["category"].pk)
+        return "{}-{}".format(self.identifier, context["category"].pk)

@@ -80,7 +80,7 @@ class Variable:
             type = type()
         assert isinstance(type, Type), "`type` must be a Type instance"
         assert isinstance(required, bool), (
-            "`required` must be a bool (it's %r)" % required
+            "`required` must be a bool (it's {!r})".format(required)
         )
         self.name = name
         self.type = type
@@ -195,8 +195,7 @@ class Event(Base):
             variable = self.variables.get(key)
             if not variable:
                 raise ValueError(
-                    "Error! Unknown variable `%r` for the event `%s`."
-                    % (key, self.identifier)
+                    "Error! Unknown variable `{!r}` for the event `{}`.".format(key, self.identifier)
                 )
             self.variable_values[key] = variable.type.unserialize(
                 variable_values.pop(key)
@@ -205,8 +204,7 @@ class Event(Base):
         for name, variable in six.iteritems(self.variables):
             if variable.required and name not in self.variable_values:
                 raise ValueError(
-                    "Error! Required variable `%r` missing for the event `%s`"
-                    % (name, self.identifier)
+                    "Error! Required variable `{!r}` missing for the event `{}`".format(name, self.identifier)
                 )
 
     def run(self, shop):
@@ -220,8 +218,7 @@ class ScriptItem(Base):
     def __init__(self, data, validate=True):
         if not self.identifier:  # pragma: no cover
             raise ValueError(
-                "Error! Attempting to initialize %s without an identifier: %r."
-                % (self.__class__.__name__, self)
+                "Error! Attempting to initialize {} without an identifier: {!r}.".format(self.__class__.__name__, self)
             )
         self.data = data
         if validate:
@@ -234,7 +231,7 @@ class ScriptItem(Base):
                 unbound.add(name)
         if unbound:
             raise ValueError(
-                "Error! Bindings unbound for %r: %r." % (self.identifier, unbound)
+                "Error! Bindings unbound for {!r}: {!r}.".format(self.identifier, unbound)
             )
 
     def get_value(self, context, binding_name):

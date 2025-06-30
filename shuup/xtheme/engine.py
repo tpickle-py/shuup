@@ -140,9 +140,9 @@ class XthemeEnvironment(Environment):
         theme = get_middleware_current_theme()
         if not theme:
             return name
-        theme_template = "%s/%s" % ((theme.template_dir or theme.identifier), name)
+        theme_template = "{}/{}".format((theme.template_dir or theme.identifier), name)
         default_template = (
-            ("%s/%s" % (theme.default_template_dir, name))
+            ("{}/{}".format(theme.default_template_dir, name))
             if theme.default_template_dir
             else None
         )

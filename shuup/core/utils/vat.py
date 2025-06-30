@@ -190,7 +190,7 @@ def compile_pattern(prefix, pattern):
         ("S", "[a-z0-9+*]"),
         ("L", "[a-z]"),
     ):
-        regex_frag = "(%s{%%d})" % gt
+        regex_frag = "({}{{%d}})".format(gt)
 
         def gt(m):
             return regex_frag % len(m.group(0))
@@ -263,7 +263,7 @@ def verify_vat(vat_id, default_prefix=""):
             return (prefix, match.groups())
 
     raise VatInvalidValidationError(
-        "VAT ID for %(country)s could not be validated" % spec
+        "VAT ID for {country} could not be validated".format(**spec)
     )
 
 

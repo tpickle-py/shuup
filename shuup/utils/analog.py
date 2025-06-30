@@ -58,7 +58,7 @@ all_known_log_models = {}
 
 
 def define_log_model(model_class):
-    log_model_name = "%sLogEntry" % model_class.__name__
+    log_model_name = "{}LogEntry".format(model_class.__name__)
 
     class Meta:
         app_label = model_class._meta.app_label

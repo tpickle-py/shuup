@@ -81,7 +81,7 @@ class InlineScriptResource(six.text_type):
         :rtype: InlineScriptResource
         """
         ns = dict(*args, **kwargs)
-        return cls("window.%s = %s;" % (var_name, TaggedJSONEncoder().encode(ns)))
+        return cls("window.{} = {};".format(var_name, TaggedJSONEncoder().encode(ns)))
 
 
 class JinjaMarkupResource:
@@ -160,7 +160,7 @@ class ResourceContainer:
             return False
         if location not in KNOWN_LOCATIONS:
             raise ValueError(
-                "Error! `%r` is not a known xtheme resource location." % location
+                "Error! `{!r}` is not a known xtheme resource location.".format(location)
             )
         lst = self.resources.setdefault(location, [])
         if resource not in lst:
@@ -204,10 +204,10 @@ class ResourceContainer:
             return force_text(resource)
 
         if isinstance(resource, InlineStyleResource):
-            return '<style type="text/css">%s</style>' % resource
+            return '<style type="text/css">{}</style>'.format(resource)
 
         if isinstance(resource, InlineScriptResource):
-            return "<script>%s</script>" % resource
+            return "<script>{}</script>".format(resource)
 
         resource = force_text(resource)
 
@@ -217,12 +217,12 @@ class ResourceContainer:
         file_name = os.path.basename(file_path.path)
 
         if file_name.endswith(".js"):
-            return "<script%s></script>" % get_html_attrs({"src": resource})
+            return "<script{}></script>".format(get_html_attrs({"src": resource}))
 
         if file_name.endswith(".css"):
-            return "<link%s>" % get_html_attrs({"href": resource, "rel": "stylesheet"})
+            return "<link{}>".format(get_html_attrs({"href": resource, "rel": "stylesheet"}))
 
-        return "<!-- (unknown resource type: %s) -->" % escape(resource)
+        return "<!-- (unknown resource type: {}) -->".format(escape(resource))
 
 
 @contextfunction
@@ -264,7 +264,7 @@ def inject_resources(context, content, clean=True):
         elif placement == "post":
             content = content[:end] + injection + content[end:]
         else:  # pragma: no cover
-            raise ValueError("Error! Unknown placement `%s`." % placement)
+            raise ValueError("Error! Unknown placement `{}`.".format(placement))
 
     return content
 

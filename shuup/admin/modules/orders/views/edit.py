@@ -273,10 +273,10 @@ class OrderEditView(CreateOrUpdateView):
         return super().dispatch(request, *args, **kwargs)
 
     def dispatch_command(self, request):
-        handler = getattr(self, "handle_%s" % request.GET.get("command"), None)
+        handler = getattr(self, "handle_{}".format(request.GET.get("command")), None)
         if not callable(handler):
             return JsonResponse(
-                {"error": "Error! Unknown command `%s`." % request.GET.get("command")},
+                {"error": "Error! Unknown command `{}`.".format(request.GET.get("command"))},
                 status=400,
             )
         retval = handler(request)

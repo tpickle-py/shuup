@@ -30,8 +30,7 @@ class BasketStorage(six.with_metaclass(abc.ABCMeta)):
         if stored_basket.shop_id != basket.shop.id:
             msg = (
                 "Error! Cannot load basket of a different Shop ("
-                "%s id=%r with Shop=%s, Dest. Basket Shop=%s)"
-                % (
+                "{} id={!r} with Shop={}, Dest. Basket Shop={})".format(
                     type(stored_basket).__name__,
                     stored_basket.id,
                     stored_basket.shop_id,
@@ -41,7 +40,7 @@ class BasketStorage(six.with_metaclass(abc.ABCMeta)):
             raise BasketCompatibilityError(msg)
         price_units_diff = _price_units_diff(stored_basket, basket.shop)
         if price_units_diff:
-            msg = "Error! %s %r: Price unit mismatch with Shop (%s)" % (
+            msg = "Error! {} {!r}: Price unit mismatch with Shop ({})".format(
                 type(stored_basket).__name__,
                 stored_basket.id,
                 price_units_diff,
@@ -127,7 +126,7 @@ class BaseDatabaseBasketStorage(BasketStorage):
         if hasattr(self.model, "supplier") and hasattr(basket, "supplier"):
             stored_basket.supplier = basket.supplier
 
-        stored_basket.class_spec = "%s.%s" % (
+        stored_basket.class_spec = "{}.{}".format(
             basket.__class__.__module__,
             basket.__class__.__name__,
         )
@@ -178,10 +177,10 @@ class DatabaseBasketStorage(BaseDatabaseBasketStorage):
 def _price_units_diff(x, y):
     diff = []
     if x.currency != y.currency:
-        diff.append("currency: %r vs %r" % (x.currency, y.currency))
+        diff.append("currency: {!r} vs {!r}".format(x.currency, y.currency))
     if x.prices_include_tax != y.prices_include_tax:
         diff.append(
-            "includes_tax: %r vs %r" % (x.prices_include_tax, y.prices_include_tax)
+            "includes_tax: {!r} vs {!r}".format(x.prices_include_tax, y.prices_include_tax)
         )
     return ", ".join(diff)
 

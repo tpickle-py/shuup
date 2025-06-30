@@ -115,7 +115,7 @@ class PaymentProcessor(ServiceProvider):
         """
         if order.payment_status == PaymentStatus.NOT_PAID:
             order.payment_status = PaymentStatus.DEFERRED
-            order.add_log_entry("Info! Payment status set to `deferred` by %s." % self)
+            order.add_log_entry("Info! Payment status set to `deferred` by {}.".format(self))
             order.save(update_fields=("payment_status",))
 
     def _create_service(self, choice_identifier, **kwargs):
@@ -202,7 +202,7 @@ class CustomPaymentProcessor(PaymentProcessor):
             if not order.is_paid():
                 order.create_payment(
                     order.taxful_total_price,
-                    payment_identifier="Cash-%s" % now().isoformat(),
+                    payment_identifier="Cash-{}".format(now().isoformat()),
                     description="Cash Payment",
                 )
 

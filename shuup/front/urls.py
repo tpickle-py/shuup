@@ -34,7 +34,7 @@ from .views.upload import media_upload
 
 def _not_here_yet(request, *args, **kwargs):
     return HttpResponse(
-        "Not here yet: %s (%r, %r)" % (request.path, escape(args), escape(kwargs)),
+        "Not here yet: {} ({!r}, {!r})".format(request.path, escape(args), escape(kwargs)),
         status=410,
     )
 

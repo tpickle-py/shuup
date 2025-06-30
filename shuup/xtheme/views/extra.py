@@ -22,7 +22,7 @@ def _get_view_by_name(theme, view_name):
     if hasattr(view, "as_view"):  # Handle CBVs
         view = view.as_view()
     if view and not callable(view):
-        raise ImproperlyConfigured("Error! View `%r` is not callable." % view)
+        raise ImproperlyConfigured("Error! View `{!r}` is not callable.".format(view))
     return view
 
 
@@ -52,7 +52,7 @@ def extra_view_dispatch(request, view):
     theme = getattr(request, "theme", None) or get_current_theme(request.shop)
     view_func = get_view_by_name(theme, view)
     if not view_func:
-        msg = "Error! %s/%s: Not found." % (
+        msg = "Error! {}/{}: Not found.".format(
             getattr(theme, "identifier", None),
             escape(view),
         )

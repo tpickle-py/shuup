@@ -54,7 +54,7 @@ def add_form_errors_as_messages(request, form):
         else:
             field_label = ""
         for error in errors:
-            messages.error(request, "%s %s" % (field_label, error))
+            messages.error(request, "{} {}".format(field_label, error))
             n_messages += 1
     return n_messages
 

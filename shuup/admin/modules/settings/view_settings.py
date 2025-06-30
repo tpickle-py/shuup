@@ -176,7 +176,7 @@ class ViewSettings:
     def _get_translated_column(self, model, field, known_names, identifier):
         field_name = field.verbose_name.title()
         if identifier:
-            field_name = "%s %s" % (
+            field_name = "{} {}".format(
                 identifier.replace("_", " ").capitalize(),
                 field_name,
             )
@@ -186,18 +186,17 @@ class ViewSettings:
 
         if model != self.model:
             filter_field = (
-                "%s__%s__%s" % (identifier, translation_rel_name, field.name)
+                "{}__{}__{}".format(identifier, translation_rel_name, field.name)
                 if identifier
                 else field.name
             )
         else:
-            filter_field = "%s__%s" % (translation_rel_name, field.name)
+            filter_field = "{}__{}".format(translation_rel_name, field.name)
 
-        display = "%s__%s" % (identifier, field.name) if identifier else field.name
+        display = "{}__{}".format(identifier, field.name) if identifier else field.name
 
         column = Column(
-            "%s_%s"
-            % ((identifier if identifier else model.__name__.lower()), field.name),
+            "{}_{}".format((identifier if identifier else model.__name__.lower()), field.name),
             field_name,
             sort_field=display,
             display=display,
@@ -219,16 +218,15 @@ class ViewSettings:
 
         field_name = field.verbose_name.title()
         if identifier:
-            field_name = "%s %s" % (
+            field_name = "{} {}".format(
                 identifier.replace("_", " ").capitalize(),
                 field_name,
             )
 
-        display = "%s__%s" % (identifier, field.name) if identifier else field.name
+        display = "{}__{}".format(identifier, field.name) if identifier else field.name
 
         column = Column(
-            "%s_%s"
-            % ((identifier if identifier else model.__name__.lower()), field.name),
+            "{}_{}".format((identifier if identifier else model.__name__.lower()), field.name),
             field_name,
             display=display,
         )
@@ -246,7 +244,7 @@ class ViewSettings:
         return column
 
     def _add_provided_columns(self, columns, identifier, known_names, model):
-        provide_object_key = "provided_columns_%s" % model.__name__
+        provide_object_key = "provided_columns_{}".format(model.__name__)
         for provided_column_object in get_provide_objects(provide_object_key):
             obj = provided_column_object()
             column = obj.get_column(model, known_names, identifier)

@@ -189,7 +189,7 @@ def bump_cache_for_pk(cls, pk):
     :param cls: Class for cached object
     :param pk: pk for cached object
     """
-    cache.bump_version("%s-%s" % (_get_namespace_prefix(cls), pk))
+    cache.bump_version("{}-{}".format(_get_namespace_prefix(cls), pk))
 
 
 def bump_product_signal_handler(sender, instance, **kwargs):
@@ -227,7 +227,7 @@ def get_cache_key_for_context(identifier, item, context, **kwargs):
 
     sorted_items = dict(sorted(items.items(), key=lambda item: item[0]))
     key_hash = hashlib.sha1(str(sorted_items).encode("utf-8")).hexdigest()
-    return "%s:%s_%s" % (namespace, identifier, key_hash)
+    return "{}:{}_{}".format(namespace, identifier, key_hash)
 
 
 def bump_internal_cache():
@@ -312,13 +312,13 @@ def _get_val(v):
 
 
 def _get_namespace_for_item(item):
-    return "%s-%s" % (_get_namespace_prefix(item), _get_item_id(item))
+    return "{}-{}".format(_get_namespace_prefix(item), _get_item_id(item))
 
 
 def _get_namespace_prefix(item):
     if hasattr(item, "_meta"):
         model_meta = item._meta
-        return "%s-%s" % (model_meta.app_label, model_meta.model_name)
+        return "{}-{}".format(model_meta.app_label, model_meta.model_name)
     return GENERIC_CACHE_NAMESPACE_PREFIX
 
 

@@ -134,4 +134,4 @@ def map_relation_type(relation_type):
     try:
         return getattr(ProductCrossSellType, attr_name)
     except AttributeError:
-        raise LookupError("Unknown ProductCrossSellType %r" % (relation_type,))
+        raise LookupError("Unknown ProductCrossSellType {!r}".format(relation_type))

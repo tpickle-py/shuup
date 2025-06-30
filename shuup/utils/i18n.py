@@ -61,8 +61,7 @@ def get_current_babel_locale(fallback="en-US-POSIX"):
             locale = get_babel_locale(fallback)
         if not locale:
             raise ValueError(
-                "Error! Failed to get the current babel locale (lang=%s)."
-                % (translation.get_language(),)
+                "Error! Failed to get the current babel locale (lang={}).".format(translation.get_language())
             )
     return locale
 
@@ -159,7 +158,7 @@ def get_language_name(language_code):
     return language_code
 
 
-@cache_page(3600, key_prefix="js18n-%s" % get_language())
+@cache_page(3600, key_prefix="js18n-{}".format(get_language()))
 def javascript_catalog_all(request, domain="djangojs"):
     """
     Get JavaScript message catalog for all apps in `INSTALLED_APPS`.

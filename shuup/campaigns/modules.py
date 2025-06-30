@@ -82,10 +82,10 @@ class BasketCampaignModule(OrderSourceModifierModule):
         text = campaign.public_name
 
         if campaign.coupon:
-            text += " (%s %s)" % (_("Coupon Code:"), campaign.coupon.code)
+            text += " ({} {})".format(_("Coupon Code:"), campaign.coupon.code)
 
         return order_source.create_line(
-            line_id="discount_%s" % uuid4().hex,
+            line_id="discount_{}".format(uuid4().hex),
             type=OrderLineType.DISCOUNT,
             quantity=1,
             discount_amount=campaign.shop.create_price(highest_discount),

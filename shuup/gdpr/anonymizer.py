@@ -52,7 +52,7 @@ class Anonymizer:
         return "0.0.0.0"
 
     def _null_email(self):
-        return "%s@%s.com" % (get_random_string(10), get_random_string(8))
+        return "{}@{}.com".format(get_random_string(10), get_random_string(8))
 
     def _null_name(self):
         return get_random_string(8)

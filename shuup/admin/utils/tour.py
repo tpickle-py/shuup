@@ -12,12 +12,12 @@ def is_tour_complete(shop, tour_key, user=None):
     """
     user_id = user.pk if user else "-"
     return configuration.get(
-        shop, "shuup_%s_%s_tour_complete" % (tour_key, user_id), False
+        shop, "shuup_{}_{}_tour_complete".format(tour_key, user_id), False
     )
 
 
 def set_tour_complete(shop, tour_key, complete=True, user=None):
     user_id = user.pk if user else "-"
     return configuration.set(
-        shop, "shuup_%s_%s_tour_complete" % (tour_key, user_id), complete
+        shop, "shuup_{}_{}_tour_complete".format(tour_key, user_id), complete
     )

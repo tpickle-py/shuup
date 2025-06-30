@@ -35,7 +35,7 @@ class PricingModule(six.with_metaclass(abc.ABCMeta)):
             return context
         elif isinstance(context, HttpRequest):
             return self.get_context_from_request(context)
-        raise TypeError("Error! Not pricing contextable: %r." % (context,))
+        raise TypeError("Error! Not pricing contextable: {!r}.".format(context))
 
     def get_context_from_request(self, request):
         """

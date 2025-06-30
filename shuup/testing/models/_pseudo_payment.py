@@ -76,7 +76,7 @@ class PseudoPaymentProcessor(PaymentProcessor):
             ("Return", urls.return_url),
         ]
         urls_html = "\n".join(
-            '<li><a href="%s?mac=%s">%s</a></li>' % (url, mac, transform(title))
+            '<li><a href="{}?mac={}">{}</a></li>'.format(url, mac, transform(title))
             for (title, url) in url_list
         )
         html = HTML_TEMPLATE % {
@@ -96,7 +96,7 @@ class PseudoPaymentProcessor(PaymentProcessor):
         if not order.is_paid():
             order.create_payment(
                 order.taxful_total_price,
-                payment_identifier="Pseudo-%s" % now().isoformat(),
+                payment_identifier="Pseudo-{}".format(now().isoformat()),
                 description=transform("Shuup Pseudo Payment Service Payment"),
             )
             msg = transform("Success! The request was processed by Pseudo Payment.")
@@ -109,4 +109,4 @@ class PseudoPaymentProcessor(PaymentProcessor):
         elif choice == "normal":
             return str
         else:
-            raise ValueError("Error! Invalid service choice: `%r`." % choice)
+            raise ValueError("Error! Invalid service choice: `{!r}`.".format(choice))
