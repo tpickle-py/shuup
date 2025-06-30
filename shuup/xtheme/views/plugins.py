@@ -115,7 +115,7 @@ def get_prouduct_selections_highlight(request, product_ids, cache_timeout):
 
     plugin = ProductSelectionPlugin(
         config={
-            "products": [prod_id for prod_id in product_ids.split(",")],
+            "products": list(product_ids.split(",")),
             "cache_timeout": int(cache_timeout),
         }
     )

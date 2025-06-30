@@ -388,7 +388,7 @@ class HourBasketCondition(BasketCondition):
 
     @property
     def values(self):
-        return [v for v in map(int, self.days.split(","))]
+        return list(map(int, self.days.split(",")))
 
 
 class ChildrenProductCondition(BasketCondition):

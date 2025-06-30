@@ -634,7 +634,7 @@ class AttributableMixin:
 
         if applied_attr:
             if applied_attr.attribute.type == AttributeType.CHOICES:
-                return [choice for choice in applied_attr.chosen_options.all()]
+                return list(applied_attr.chosen_options.all())
             else:
                 return applied_attr.value
         return default

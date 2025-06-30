@@ -99,7 +99,7 @@ class HourCondition(ContextCondition):
 
     @property
     def values(self):
-        return [v for v in map(int, self.days.split(","))] if self.days else []
+        return list(map(int, self.days.split(","))) if self.days else []
 
     @values.setter
     def values(self, values):

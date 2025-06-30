@@ -72,12 +72,9 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
         supplier_id = self._get_supplier_id()
 
         form.product_summary = order.get_product_summary(supplier=supplier_id)
-        form.product_names = {
-            product_id: text
-            for (product_id, text) in order.lines.exclude(product=None).values_list(
+        form.product_names = dict(order.lines.exclude(product=None).values_list(
                 "product_id", "text"
-            )
-        }
+            ))
         for product_id, info in sorted(six.iteritems(form.product_summary)):
             product_name = _("%(product_name)s (%(supplier)s)") % {
                 "product_name": form.product_names.get(

@@ -278,7 +278,7 @@ class ObjectSelect2ModelMultipleField(Select2ModelMultipleField):
     def prepare_value(self, value):
         if self.model:
             return super(ObjectSelect2ModelMultipleField, self).prepare_value(value)
-        return [v for v in value or []]
+        return list(value or [])
 
     def to_python(self, value):
         if self.model:
@@ -318,7 +318,7 @@ class ObjectSelect2MultipleMainProductField(Select2MultipleMainProductField):
             return super(ObjectSelect2MultipleMainProductField, self).prepare_value(
                 value
             )
-        return [v for v in value or []]
+        return list(value or [])
 
     def to_python(self, value):
         if self.model:

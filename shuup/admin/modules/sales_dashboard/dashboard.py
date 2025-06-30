@@ -126,7 +126,7 @@ class OrderValueChartDashboardBlock(DashboardChartBlock):
         # this will be on top of all bars
         if average_sales:
             mixed_chart.add_data(
-                _("Average Sales"), [v for v in average_sales], ChartType.LINE
+                _("Average Sales"), list(average_sales), ChartType.LINE
             )
 
         # this will be under the cummulative bars
@@ -138,7 +138,7 @@ class OrderValueChartDashboardBlock(DashboardChartBlock):
         if cumulative_sales:
             mixed_chart.add_data(
                 _("Cumulative Total Sales"),
-                [v for v in cumulative_sales],
+                list(cumulative_sales),
                 ChartType.BAR,
             )
 

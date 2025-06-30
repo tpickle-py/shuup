@@ -58,14 +58,11 @@ class EditProductToolbar(Toolbar):
                 "shuup_admin:shop_product.edit_cross_sell", kwargs={"pk": product.pk}
             ),
         )
-        menu_items = [
-            menu_item
-            for menu_item in self._get_header_items(
+        menu_items = list(self._get_header_items(
                 header=_("Cross-Selling"),
                 divider=False,
                 identifier=ProductActionCategory.CHILD_CROSS_SELL,
-            )
-        ]
+            ))
         menu_items.append(cross_sell_button)
 
         # packages

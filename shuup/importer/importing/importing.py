@@ -508,7 +508,7 @@ class DataImporter:
         :rtype: list
         """
         fields = []
-        mapped_keys = [k for k in self.data_map]
+        mapped_keys = list(self.data_map)
         for model in self.get_related_models():
             for field in model._meta.local_fields:
                 if only_non_mapped and field.name in mapped_keys:
