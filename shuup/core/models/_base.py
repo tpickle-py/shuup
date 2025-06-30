@@ -51,8 +51,10 @@ class TranslatableShuupModel(ShuupModel, parler.models.TranslatableModel):
         if not name:
             # Ensure no empty value is returned
             identifier = getattr(self, self.identifier_attr, None)
-            suffix = ' "{}"'.format(identifier) if identifier else ""
-            return self._meta.verbose_name + suffix
+            suffix = f" {identifier}" if identifier else ""
+            if self._meta.verbose_name:
+                return f"{suffix}{self._meta.verbose_name}"
+            return f"{suffix}{type(self).__name__}"
         return name
 
     class Meta:

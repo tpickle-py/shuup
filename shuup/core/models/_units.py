@@ -249,7 +249,7 @@ class DisplayUnit(TranslatableShuupModel):
 
 class SalesUnitAsDisplayUnit(DisplayUnit):
     class Meta:
-        abstract = True
+        managed = False
 
     def __init__(self, sales_unit):
         super(SalesUnitAsDisplayUnit, self).__init__()
@@ -280,7 +280,7 @@ class PiecesSalesUnit(SalesUnit):
     """
 
     class Meta:
-        abstract = True
+        managed = False
 
     def __init__(self):
         super(PiecesSalesUnit, self).__init__(
