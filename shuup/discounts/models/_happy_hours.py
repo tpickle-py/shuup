@@ -11,10 +11,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from shuup.compat import python_2_unicode_compatible
 
-
-@python_2_unicode_compatible
 class HappyHour(models.Model):
     shop = models.ForeignKey(
         "shuup.Shop", verbose_name=_("shop"), on_delete=models.CASCADE
@@ -35,7 +32,7 @@ class HappyHour(models.Model):
         verbose_name_plural = _("happy hours")
 
 
-@python_2_unicode_compatible
+
 class TimeRange(models.Model):
     happy_hour = models.ForeignKey(
         on_delete=models.CASCADE,

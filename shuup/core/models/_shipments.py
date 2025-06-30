@@ -15,7 +15,6 @@ from django.utils.text import format_lazy
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField, MeasurementField, QuantityField
 from shuup.core.models import ShuupModel
 from shuup.core.signals import shipment_deleted, shipment_sent
@@ -212,7 +211,7 @@ class Shipment(ShuupModel):
                 )
 
 
-@python_2_unicode_compatible
+
 class ShipmentProduct(ShuupModel):
     shipment = models.ForeignKey(
         Shipment,

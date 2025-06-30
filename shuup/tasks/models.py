@@ -15,7 +15,6 @@ from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from parler.models import TranslatableModel, TranslatedFields
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField
 from shuup.utils.analog import LogEntryKind, define_log_model
 from shuup.utils.django_compat import force_text
@@ -45,7 +44,7 @@ class TaskCommentVisibility(Enum):
         ADMINS_ONLY = _("Admins Only")
 
 
-@python_2_unicode_compatible
+
 class TaskType(TranslatableModel):
     identifier = InternalIdentifierField(
         unique=False, blank=True, null=True, editable=True
@@ -87,7 +86,7 @@ class TaskQuerySet(models.QuerySet):
         return self.filter(assigned_to=contact)
 
 
-@python_2_unicode_compatible
+
 class Task(models.Model):
     shop = models.ForeignKey(
         on_delete=models.CASCADE,

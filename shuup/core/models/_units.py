@@ -20,7 +20,6 @@ from django.utils.translation import ugettext_lazy as _
 from parler.fields import TranslationsForeignKey
 from parler.models import TranslatedField, TranslatedFields, TranslatedFieldsModel
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core import cache
 from shuup.core.fields import InternalIdentifierField, QuantityField
 from shuup.utils.django_compat import force_text
@@ -67,7 +66,7 @@ class _ShortNameToSymbol(object):
         )
 
 
-@python_2_unicode_compatible
+
 class SalesUnit(_ShortNameToSymbol, TranslatableShuupModel):
     identifier = InternalIdentifierField(unique=True)
     decimals = models.PositiveSmallIntegerField(
@@ -247,7 +246,7 @@ class DisplayUnit(TranslatableShuupModel):
         verbose_name_plural = _("display units")
 
 
-@python_2_unicode_compatible
+
 class SalesUnitAsDisplayUnit(DisplayUnit):
     class Meta:
         abstract = True
@@ -272,7 +271,7 @@ class SalesUnitAsDisplayUnit(DisplayUnit):
         return force_text(self.name)
 
 
-@python_2_unicode_compatible
+
 class PiecesSalesUnit(SalesUnit):
     """
     An object representing `Pieces` sales unit.

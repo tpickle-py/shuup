@@ -4,17 +4,19 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import django
 import json
-from unittest import mock
-import pytest
 import tempfile
+from unittest import mock
+
+import django
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models import ProtectedError
 from django.http import JsonResponse
 from django.test import override_settings
 from django.test.client import RequestFactory
 from django.utils.encoding import force_text
+
+import pytest
 from filer.models import File, Folder, Image
 from six import BytesIO
 
@@ -24,11 +26,7 @@ from shuup.testing import factories
 from shuup.testing.factories import generate_image, get_default_shop
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse
-from shuup.utils.filer import (
-    can_see_root_folder,
-    ensure_media_folder,
-    get_or_create_folder,
-)
+from shuup.utils.filer import can_see_root_folder, ensure_media_folder, get_or_create_folder
 from shuup_tests.utils import printable_gibberish
 
 

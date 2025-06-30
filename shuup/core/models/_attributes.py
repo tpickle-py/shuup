@@ -25,7 +25,6 @@ from enumfields import Enum, EnumIntegerField
 from parler.managers import TranslatableQuerySet
 from parler.models import TranslatableModel, TranslatedFields
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField
 from shuup.core.templatetags.shuup_common import datetime as format_datetime
 from shuup.core.templatetags.shuup_common import number as format_number
@@ -103,7 +102,7 @@ class AttributeQuerySet(TranslatableQuerySet):
         return self.exclude(visibility_mode=AttributeVisibility.HIDDEN)
 
 
-@python_2_unicode_compatible
+
 class Attribute(TranslatableModel):
     identifier = InternalIdentifierField(
         unique=True, blank=False, null=False, editable=True

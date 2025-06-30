@@ -10,7 +10,6 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.models import CustomerTaxGroup, Tax, TaxClass
 from shuup.utils.patterns import Pattern, pattern_matches
 
@@ -26,7 +25,7 @@ class TaxRuleQuerySet(models.QuerySet):
         return self.filter(null | in_range)
 
 
-@python_2_unicode_compatible
+
 class TaxRule(models.Model):
     enabled = models.BooleanField(
         default=True,

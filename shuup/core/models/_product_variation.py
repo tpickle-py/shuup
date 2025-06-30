@@ -18,7 +18,6 @@ from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from parler.models import TranslatableModel, TranslatedFields
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField
 from shuup.utils.django_compat import force_bytes, force_text
 from shuup.utils.models import SortableMixin
@@ -33,7 +32,7 @@ class ProductVariationLinkStatus(Enum):
         VISIBLE = _("visible")
 
 
-@python_2_unicode_compatible
+
 class ProductVariationVariable(TranslatableModel, SortableMixin):
     product = models.ForeignKey(
         "Product",
@@ -63,7 +62,7 @@ class ProductVariationVariable(TranslatableModel, SortableMixin):
         )
 
 
-@python_2_unicode_compatible
+
 class ProductVariationVariableValue(TranslatableModel, SortableMixin):
     variable = models.ForeignKey(
         ProductVariationVariable,

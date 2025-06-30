@@ -16,7 +16,6 @@ from polymorphic.base import PolymorphicModelBase
 from polymorphic.managers import PolymorphicManager, PolymorphicQuerySet
 from polymorphic.models import PolymorphicModel
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.utils import text
 from shuup.utils.django_compat import force_text
 
@@ -40,7 +39,7 @@ class ShuupModel(models.Model):
         abstract = True
 
 
-@python_2_unicode_compatible
+
 class TranslatableShuupModel(ShuupModel, parler.models.TranslatableModel):
     name_attr = "name"
 

@@ -17,7 +17,6 @@ from mptt.querysets import TreeQuerySet
 from parler.managers import TranslatableQuerySet
 from parler.models import TranslatableManager, TranslatableModel, TranslatedFields
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField
 from shuup.core.signals import category_deleted
 from shuup.core.utils.slugs import generate_multilanguage_slugs
@@ -92,7 +91,7 @@ class CategoryManager(TreeManager, TranslatableManager):
         return qs
 
 
-@python_2_unicode_compatible
+
 class Category(MPTTModel, TranslatableModel):
     parent = TreeForeignKey(
         "self",

@@ -5,7 +5,7 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-
+from __future__ import unicode_literals
 
 import sys
 
@@ -46,9 +46,8 @@ class XthemeTemplate(Template):
                 return content
 
             return self._postprocess(ctx, content)
-        except Exception:
-            exc_info = sys.exc_info()
-        return self.environment.handle_exception(exc_info, True)
+        except:
+            return self.environment.handle_exception()
 
     def _postprocess(self, context, content):
         # if the context contains the `allow_resource_injection` key and

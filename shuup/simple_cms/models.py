@@ -10,7 +10,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
-from shuup.compat import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumField
@@ -92,7 +91,7 @@ class PageQuerySet(TranslatableQuerySet):
 
 
 @reversion.register(follow=["translations"])
-@python_2_unicode_compatible
+
 class Page(MPTTModel, TranslatableModel):
     shop = models.ForeignKey(
         on_delete=models.CASCADE, to="shuup.Shop", verbose_name=_("shop")
@@ -306,7 +305,7 @@ class Page(MPTTModel, TranslatableModel):
         )
 
 
-@python_2_unicode_compatible
+
 class PageOpenGraph(TranslatableModel):
     """
     Object that describes Open Graph extra meta attributes.

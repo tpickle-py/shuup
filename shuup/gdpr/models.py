@@ -14,7 +14,6 @@ from django.utils.translation import ugettext_lazy as _
 from parler.models import TranslatableModel, TranslatedFields
 from reversion.models import Version
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.simple_cms.models import Page
 from shuup.utils.i18n import lang_lru_cache
 
@@ -31,7 +30,7 @@ def get_setting(shop):
     return instance
 
 
-@python_2_unicode_compatible
+
 class GDPRSettings(TranslatableModel):
     shop = models.OneToOneField(
         "shuup.Shop", related_name="gdpr_settings", on_delete=models.CASCADE
@@ -110,7 +109,7 @@ class GDPRSettings(TranslatableModel):
         return get_setting(shop)
 
 
-@python_2_unicode_compatible
+
 class GDPRCookieCategory(TranslatableModel):
     shop = models.ForeignKey(
         on_delete=models.CASCADE, to="shuup.Shop", related_name="gdpr_cookie_categories"
@@ -157,7 +156,7 @@ class GDPRCookieCategory(TranslatableModel):
         return _("GDPR cookie category for {}").format(self.shop)
 
 
-@python_2_unicode_compatible
+
 class GDPRUserConsent(models.Model):
     created_on = models.DateTimeField(
         auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on")
@@ -240,7 +239,7 @@ class GDPRUserConsent(models.Model):
         )
 
 
-@python_2_unicode_compatible
+
 class GDPRUserConsentDocument(models.Model):
     page = models.ForeignKey(on_delete=models.CASCADE, to="shuup_simple_cms.Page")
     version = models.ForeignKey(on_delete=models.CASCADE, to=Version)

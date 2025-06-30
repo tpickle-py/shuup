@@ -22,7 +22,6 @@ from parler.models import TranslatedFields
 from timezone_field.fields import TimeZoneField
 
 from shuup import configuration
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField, LanguageField, PolymorphicJSONField
 from shuup.core.pricing import PriceDisplayOptions
 from shuup.core.utils.users import is_user_all_seeing
@@ -220,7 +219,7 @@ class ContactGroup(TranslatableShuupModel):
         ).hide_prices
 
 
-@python_2_unicode_compatible
+
 class Contact(PolymorphicShuupModel):
     is_anonymous = False
     is_all_seeing = False

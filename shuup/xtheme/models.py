@@ -15,7 +15,6 @@ from enumfields import Enum
 from enumfields.fields import EnumIntegerField
 from filer.fields.image import FilerFileField
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import SeparatedValuesField, TaggedJSONField
 
 
@@ -208,7 +207,7 @@ class ThemeSettings(models.Model):
         return _("Theme configuration for %s") % self.theme_identifier
 
 
-@python_2_unicode_compatible
+
 class Font(models.Model):
     shop = models.ForeignKey(
         "shuup.Shop",

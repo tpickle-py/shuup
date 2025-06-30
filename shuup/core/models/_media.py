@@ -13,10 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from filer.fields.file import FilerFileField
 from filer.fields.folder import FilerFolderField
 
-from shuup.compat import python_2_unicode_compatible
 
-
-@python_2_unicode_compatible
 class MediaFile(models.Model):
     file = FilerFileField(
         related_name="media_file", verbose_name=_("file"), on_delete=models.CASCADE
@@ -32,7 +29,7 @@ class MediaFile(models.Model):
         return "%s" % (self.file)
 
 
-@python_2_unicode_compatible
+
 class MediaFolder(models.Model):
     folder = FilerFolderField(
         related_name="media_folder", verbose_name=_("folder"), on_delete=models.CASCADE

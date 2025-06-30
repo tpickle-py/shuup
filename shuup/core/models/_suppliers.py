@@ -6,8 +6,9 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import logging
+from typing import TYPE_CHECKING, Union
+
 from django.db import models
-from shuup.compat import python_2_unicode_compatible
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
@@ -15,7 +16,6 @@ from filer.fields.image import FilerImageField
 from jsonfield import JSONField
 from parler.managers import TranslatableQuerySet
 from parler.models import TranslatedFields
-from typing import TYPE_CHECKING, Union
 
 from shuup.core.excs import SupplierHasNoSupplierModules
 from shuup.core.fields import InternalIdentifierField
@@ -66,7 +66,7 @@ class SupplierQueryset(TranslatableQuerySet):
         return queryset.distinct()
 
 
-@python_2_unicode_compatible
+
 class Supplier(ModuleInterface, TranslatableShuupModel):
     module_provides_key = "supplier_module"
 

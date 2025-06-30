@@ -24,7 +24,6 @@ from jsonfield import JSONField
 from parler.managers import TranslatableQuerySet
 from parler.models import TranslatableModel, TranslatedFields
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core import taxing
 from shuup.core.excs import (
     InvalidOrderStatusError,
@@ -148,7 +147,7 @@ class OrderStatusQuerySet(TranslatableQuerySet):
         return self._default_for_role(OrderStatusRole.COMPLETE)
 
 
-@python_2_unicode_compatible
+
 class OrderStatus(TranslatableModel):
     identifier = InternalIdentifierField(
         db_index=True,
@@ -429,7 +428,7 @@ class OrderQuerySet(models.QuerySet):
         return result
 
 
-@python_2_unicode_compatible
+
 class Order(MoneyPropped, models.Model):
     # Identification
     shop = UnsavedForeignKey("Shop", on_delete=models.PROTECT, verbose_name=_("shop"))

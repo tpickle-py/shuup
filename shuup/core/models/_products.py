@@ -18,7 +18,6 @@ from enumfields import Enum, EnumIntegerField
 from parler.managers import TranslatableQuerySet
 from parler.models import TranslatableModel, TranslatedFields
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.excs import ImpossibleProductModeException
 from shuup.core.fields import InternalIdentifierField, MeasurementField
 from shuup.core.signals import post_clean, pre_clean
@@ -127,7 +126,7 @@ class ProductVerificationMode(Enum):
         THIRD_PARTY_VERIFICATION_REQUIRED = _("third party verification required")
 
 
-@python_2_unicode_compatible
+
 class ProductType(TranslatableModel):
     identifier = InternalIdentifierField(unique=True)
     translations = TranslatedFields(
@@ -232,7 +231,7 @@ class ProductQuerySet(TranslatableQuerySet):
         return qs
 
 
-@python_2_unicode_compatible
+
 class Product(TaxableItem, AttributableMixin, TranslatableModel):
     COMMON_SELECT_RELATED = (
         "sales_unit",

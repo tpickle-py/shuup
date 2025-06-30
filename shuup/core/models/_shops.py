@@ -16,7 +16,6 @@ from jsonfield import JSONField
 from parler.managers import TranslatableManager
 from parler.models import TranslatedFields
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import CurrencyField, InternalIdentifierField
 from shuup.core.pricing import TaxfulPrice, TaxlessPrice
 from shuup.utils.analog import define_log_model
@@ -47,7 +46,7 @@ class ShopStatus(Enum):
         ENABLED = _("enabled")
 
 
-@python_2_unicode_compatible
+
 class Shop(ChangeProtected, TranslatableShuupModel):
     protected_fields = ["currency", "prices_include_tax"]
     change_protect_message = _(

@@ -13,7 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from jsonfield import JSONField
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import MoneyValueField, QuantityField, UnsavedForeignKey
 from shuup.core.pricing import Priceful
 from shuup.core.taxing import LineTax
@@ -65,7 +64,7 @@ class OrderLineManager(models.Manager):
         return self.filter(type=OrderLineType.OTHER)
 
 
-@python_2_unicode_compatible
+
 class AbstractOrderLine(MoneyPropped, models.Model, Priceful):
     product = UnsavedForeignKey(
         "shuup.Product",
@@ -222,7 +221,7 @@ class OrderLine(LineWithUnit, AbstractOrderLine):
         return self.order.shop
 
 
-@python_2_unicode_compatible
+
 class OrderLineTax(MoneyPropped, ShuupModel, LineTax):
     order_line = models.ForeignKey(
         OrderLine,

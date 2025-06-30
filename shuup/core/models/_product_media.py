@@ -13,7 +13,6 @@ from enumfields import Enum, EnumIntegerField
 from filer.fields.file import FilerFileField
 from parler.models import TranslatableModel, TranslatedFields
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField
 from shuup.utils.analog import define_log_model
 
@@ -31,7 +30,7 @@ class ProductMediaKind(Enum):
         SAMPLE = _("sample")
 
 
-@python_2_unicode_compatible
+
 class ProductMedia(TranslatableModel):
     identifier = InternalIdentifierField(unique=True)
     product = models.ForeignKey(

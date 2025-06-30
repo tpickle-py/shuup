@@ -8,7 +8,6 @@
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
-from shuup.compat import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from easy_thumbnails.files import get_thumbnailer
@@ -63,7 +62,7 @@ class SlideQuerySet(TranslatableQuerySet):
         return qs
 
 
-@python_2_unicode_compatible
+
 class Carousel(ShuupModel):
     shops = models.ManyToManyField(
         "shuup.Shop",
@@ -131,7 +130,7 @@ class Carousel(ShuupModel):
         return "fade" if self.animation == CarouselMode.FADE else "slide"
 
 
-@python_2_unicode_compatible
+
 class Slide(TranslatableShuupModel):
     carousel = models.ForeignKey(
         Carousel, related_name="slides", on_delete=models.CASCADE

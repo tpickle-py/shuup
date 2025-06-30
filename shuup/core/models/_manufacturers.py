@@ -11,14 +11,13 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from filer.fields.image import FilerImageField
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField
 from shuup.utils.analog import define_log_model
 
 __all__ = ("Manufacturer",)
 
 
-@python_2_unicode_compatible
+
 class Manufacturer(models.Model):
     created_on = models.DateTimeField(auto_now_add=True, verbose_name=_("added"))
     identifier = InternalIdentifierField(unique=True)

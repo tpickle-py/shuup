@@ -12,13 +12,10 @@ from django.utils.translation import ugettext_lazy as _
 from jsonfield import JSONField
 from shuup_mirage_field.fields import EncryptedCharField
 
-from shuup.compat import python_2_unicode_compatible
-
 from ._base import ShuupModel
 from ._shops import Shop
 
 
-@python_2_unicode_compatible
 class ConfigurationItem(ShuupModel):
     shop = models.ForeignKey(
         on_delete=models.CASCADE,
@@ -46,7 +43,7 @@ class ConfigurationItem(ShuupModel):
         return '<%s "%s" for %r>' % (type(self).__name__, self.key, self.shop)
 
 
-@python_2_unicode_compatible
+
 class EncryptedConfigurationItem(ShuupModel):
     shop = models.ForeignKey(
         on_delete=models.CASCADE,

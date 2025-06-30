@@ -11,14 +11,12 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from jsonfield.fields import JSONField
 
-from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField
 from shuup.notify.base import Event
 from shuup.notify.enums import StepNext
 from shuup.utils.analog import define_log_model
 
 
-@python_2_unicode_compatible
 class Script(models.Model):
     shop = models.ForeignKey(
         on_delete=models.CASCADE, to="shuup.Shop", verbose_name=_("shop")
