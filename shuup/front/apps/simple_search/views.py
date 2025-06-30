@@ -19,7 +19,7 @@ class SearchView(ListView):
             category=None,
             data=self.request.GET,
         )
-        return super(SearchView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         if not self.form.is_valid():
@@ -46,7 +46,7 @@ class SearchView(ListView):
         return products.distinct()
 
     def get_context_data(self, **kwargs):
-        context = super(SearchView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["form"] = self.form
         products = context["products"]
         context["no_results"] = self.form.is_valid() and not products.exists()

@@ -89,7 +89,7 @@ class Carrier(ServiceProvider):
 
     def delete(self, *args, **kwargs):
         ShippingMethod.objects.filter(carrier=self).update(**{"enabled": False})
-        super(Carrier, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     def _create_service(self, choice_identifier, **kwargs):
         labels = kwargs.pop("labels", None)

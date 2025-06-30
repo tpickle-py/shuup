@@ -20,7 +20,7 @@ class QuickAddRelatedObjectBaseMixin:
         self.editable_model = editable_model
         if editable_model:
             attrs.update({"data-edit-model": editable_model})
-        super(QuickAddRelatedObjectBaseMixin, self).__init__(attrs, choices)
+        super().__init__(attrs, choices)
 
 
 class QuickAddRelatedObjectSelectMixin(QuickAddRelatedObjectBaseMixin):
@@ -36,7 +36,7 @@ class QuickAddRelatedObjectSelectMixin(QuickAddRelatedObjectBaseMixin):
         if self.model and initial:
             choices = [(initial.pk, force_text(initial))]
 
-        super(QuickAddRelatedObjectSelectMixin, self).__init__(
+        super().__init__(
             attrs, choices, editable_model
         )
 
@@ -55,7 +55,7 @@ class QuickAddRelatedObjectMultipleSelectMixin(QuickAddRelatedObjectBaseMixin):
         if self.model and initial:
             choices = [(instance.pk, force_text(instance)) for instance in initial]
 
-        super(QuickAddRelatedObjectMultipleSelectMixin, self).__init__(
+        super().__init__(
             attrs, choices, editable_model
         )
 
@@ -64,7 +64,7 @@ class QuickAddRelatedObjectSelect(QuickAddRelatedObjectSelectMixin, Select):
     template_name = "shuup/admin/forms/widgets/quick_add_select.jinja"
 
     def get_context(self, name, value, attrs):
-        context = super(QuickAddRelatedObjectSelect, self).get_context(
+        context = super().get_context(
             name, value, attrs
         )
         context["quick_add_model"] = self.model
@@ -83,7 +83,7 @@ class QuickAddRelatedObjectMultiSelect(
 
     def get_context(self, name, value, attrs):
         attrs["multiple"] = True
-        context = super(QuickAddRelatedObjectMultiSelect, self).get_context(
+        context = super().get_context(
             name, value, attrs
         )
 

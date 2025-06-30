@@ -123,7 +123,7 @@ class BarChart(Chart):
     supported_chart_types = [ChartType.BAR]
 
     def __init__(self, title, labels, data_type=ChartDataType.NUMBER, **kwargs):
-        super(BarChart, self).__init__(title, data_type=data_type, **kwargs)
+        super().__init__(title, data_type=data_type, **kwargs)
         self.labels = labels
 
     def get_config(self):
@@ -142,7 +142,7 @@ class MixedChart(Chart):
     supported_chart_types = [ChartType.BAR, ChartType.LINE]
 
     def __init__(self, title, labels, data_type=ChartDataType.NUMBER, **kwargs):
-        super(MixedChart, self).__init__(title, data_type=data_type, **kwargs)
+        super().__init__(title, data_type=data_type, **kwargs)
         self.labels = labels
 
     def get_config(self):

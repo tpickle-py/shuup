@@ -28,7 +28,7 @@ class TaxesReport(OrderReportMixin, ShuupReportBase):
 
     def get_objects(self):
         order_line_taxes = OrderLineTax.objects.filter(
-            order_line__order__in=super(TaxesReport, self).get_objects()
+            order_line__order__in=super().get_objects()
         )
 
         tax = self.options.get("tax")

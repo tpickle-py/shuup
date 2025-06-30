@@ -39,7 +39,7 @@ class ContactGroupSalesRange(models.Model):
 
     def save(self, *args, **kwargs):
         self.clean()
-        super(ContactGroupSalesRange, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if self.is_active():  # Update group members only if the range is still active
             contact_ids = get_contacts_in_sales_range(
                 self.shop, self.min_value, self.max_value
@@ -47,7 +47,7 @@ class ContactGroupSalesRange(models.Model):
             self.group.members.set(contact_ids)
 
     def clean(self):
-        super(ContactGroupSalesRange, self).clean()
+        super().clean()
         if self.group.is_protected:
             raise ValidationError(
                 _("Can not add sales limits for default contact groups.")

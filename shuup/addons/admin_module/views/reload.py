@@ -25,7 +25,7 @@ class ReloadMethodForm(forms.Form):
                 yield rm
 
     def __init__(self, **kwargs):
-        super(ReloadMethodForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.reload_methods = list(self.get_viable_reload_methods())
 
         if not self.reload_methods:
@@ -78,4 +78,4 @@ class ReloadView(FormView):
             return JsonResponse({"pong": time.time()})
         elif request.GET.get("finalize"):
             return JsonResponse({"message": finalize_installation_for_enabled_apps()})
-        return super(ReloadView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)

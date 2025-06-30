@@ -27,7 +27,7 @@ class SupplierEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
         return get_default_edit_toolbar(self, save_form_id, delete_url=delete_url)
 
     def get_object(self, queryset=None):
-        obj = super(SupplierEditView, self).get_object(queryset)
+        obj = super().get_object(queryset)
         check_and_raise_if_only_one_allowed("SHUUP_ENABLE_MULTIPLE_SUPPLIERS", obj)
         return obj
 

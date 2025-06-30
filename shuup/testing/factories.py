@@ -98,7 +98,7 @@ COUNTRY_CODES = sorted(COUNTRIES.keys())
 class FuzzyBoolean(fuzzy.BaseFuzzyAttribute):
     def __init__(self, probability, **kwargs):
         self.probability = probability
-        super(FuzzyBoolean, self).__init__()
+        super().__init__()
 
     def fuzz(self):
         return random.random() < self.probability

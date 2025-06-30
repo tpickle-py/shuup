@@ -109,7 +109,7 @@ class OrderListView(PicotableListView):
 
     def get_queryset(self):
         return (
-            super(OrderListView, self)
+            super()
             .get_queryset()
             .exclude(deleted=True)
             .filter(shop=get_shop(self.request))

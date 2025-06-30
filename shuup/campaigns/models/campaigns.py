@@ -118,7 +118,7 @@ class Campaign(MoneyPropped, TranslatableModel):
         verbose_name_plural = _("Campaigns")
 
     def save(self, *args, **kwargs):
-        super(Campaign, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         cache.bump_version(CAMPAIGNS_CACHE_NAMESPACE)
         cache.bump_version(CONTEXT_CONDITION_CACHE_NAMESPACE)
         cache.bump_version(CATALOG_FILTER_CACHE_NAMESPACE)
@@ -174,7 +174,7 @@ class CatalogCampaign(Campaign):
             "The CatalogCampaign discount module will be removed on next major version.",
             DeprecationWarning,
         )
-        super(CatalogCampaign, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         self.filters.update(active=self.active)
         for f in self.filters.all():
             for matching_product in f.get_matching_shop_products():
@@ -344,7 +344,7 @@ class BasketCampaign(Campaign):
                     _("Can't have multiple active campaigns with same code.")
                 )
 
-        super(BasketCampaign, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         self.conditions.update(active=self.active)
 
     @classmethod
@@ -563,7 +563,7 @@ class Coupon(models.Model):
                 _("Can not have multiple active campaigns with the same code.")
             )
 
-        return super(Coupon, self).save(**kwargs)
+        return super().save(**kwargs)
 
     @classmethod
     def generate_code(cls, length=6):

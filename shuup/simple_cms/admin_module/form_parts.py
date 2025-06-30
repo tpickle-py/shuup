@@ -21,7 +21,7 @@ class CMSOpenGraphForm(ShuupAdminForm):
         )
 
     def __init__(self, *args, **kwargs):
-        super(CMSOpenGraphForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["og_type"].required = False
 
 

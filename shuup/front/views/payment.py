@@ -34,7 +34,7 @@ class ProcessPaymentView(DetailView):
         )
 
     def get_context_data(self, **kwargs):
-        context = super(ProcessPaymentView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["payment_urls"] = get_payment_urls(self.request, self.object)
         return context
 

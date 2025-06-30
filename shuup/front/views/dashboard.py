@@ -5,7 +5,7 @@ from shuup.apps.provides import get_provide_objects
 
 class DashboardViewMixin:
     def get_context_data(self, **kwargs):
-        context = super(DashboardViewMixin, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         menu_items = self.get_menu_items()
         context["menu_items"] = menu_items
         selected_item = None
@@ -36,7 +36,7 @@ class DashboardViewMixin:
             from shuup.utils.django_compat import reverse
 
             return HttpResponseRedirect(reverse("shuup:index"))
-        return super(DashboardViewMixin, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class DashboardView(DashboardViewMixin, TemplateView):

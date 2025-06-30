@@ -18,7 +18,7 @@ class ProductDetailView(DetailView):
         return Product.objects.language(get_language()).select_related("primary_image")
 
     def get_context_data(self, **kwargs):
-        context = super(ProductDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         language = self.language = get_language()
 
         supplier_pk = self.kwargs.get("supplier_pk")
@@ -68,4 +68,4 @@ class ProductDetailView(DetailView):
         if errors:
             raise Problem("\n".join(extract_messages(errors)))
 
-        return super(ProductDetailView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)

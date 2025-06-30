@@ -66,7 +66,7 @@ class ScriptListView(PicotableListView):
 
     def get_queryset(self):
         return (
-            super(ScriptListView, self)
+            super()
             .get_queryset()
             .filter(shop=get_shop(self.request))
         )

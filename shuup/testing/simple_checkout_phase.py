@@ -21,7 +21,7 @@ class TestMethodCheckoutPhase(CheckoutPhaseViewMixin, FormView):
     storage_identifier = None  # Override in subclass
 
     def get_initial(self):
-        initial = super(TestMethodCheckoutPhase, self).get_initial()
+        initial = super().get_initial()
         storage = self.storage.get(self.storage_identifier)
         if storage:
             initial.update({"input_field": storage.get("input_value")})
@@ -31,7 +31,7 @@ class TestMethodCheckoutPhase(CheckoutPhaseViewMixin, FormView):
         self.storage[self.storage_identifier] = {
             "input_value": form.cleaned_data.get("input_field"),
         }
-        return super(TestMethodCheckoutPhase, self).form_valid(form)
+        return super().form_valid(form)
 
     def is_valid(self):
         data = self.storage.get(self.storage_identifier, {})

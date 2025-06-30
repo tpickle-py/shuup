@@ -59,7 +59,7 @@ class UserListView(PicotableListView):
         return qs
 
     def get_context_data(self, **kwargs):
-        context = super(UserListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = force_text(
             self.get_model()._meta.verbose_name_plural
         ).title()

@@ -26,7 +26,7 @@ class ServiceEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
         return self.save_form_parts(form)
 
     def get_form_parts(self, object):
-        form_parts = super(ServiceEditView, self).get_form_parts(object)
+        form_parts = super().get_form_parts(object)
         if not object.pk:
             return form_parts
         for form in get_provide_objects(self.form_provide_key):

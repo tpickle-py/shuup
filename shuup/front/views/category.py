@@ -68,7 +68,7 @@ class CategoryView(DetailView):
         }
 
     def get_context_data(self, **kwargs):
-        context = super(CategoryView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         return get_context_data(
             context, self.request, self.object, self.get_product_filters()
         )
@@ -92,6 +92,6 @@ class AllCategoriesView(TemplateView):
         }
 
     def get_context_data(self, **kwargs):
-        context = super(AllCategoriesView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["category"] = None
         return get_context_data(context, self.request, None, self.get_product_filters())

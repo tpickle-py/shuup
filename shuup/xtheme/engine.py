@@ -107,12 +107,12 @@ class XthemeEnvironment(Environment):
         """
         # Overridden to redirect calls to super.
         if isinstance(template_name_or_list, six.string_types):
-            return super(XthemeEnvironment, self).get_template(
+            return super().get_template(
                 template_name_or_list, parent, globals
             )
         elif isinstance(template_name_or_list, Template):
             return template_name_or_list
-        return super(XthemeEnvironment, self).select_template(
+        return super().select_template(
             template_name_or_list, parent, globals
         )
 

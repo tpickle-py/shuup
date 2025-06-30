@@ -32,14 +32,14 @@ class Currency(models.Model):
     )
 
     def clean(self):
-        super(Currency, self).clean()
+        super().clean()
 
         # make sure the code is a valid ISO-4217 currency
         if self.code not in babel.Locale("en").currencies:
             raise ValidationError(_("Enter a valid ISO-4217 currency code."))
 
     def save(self, *args, **kwargs):
-        super(Currency, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         cache.bump_version("currency_precision")
 
     class Meta:

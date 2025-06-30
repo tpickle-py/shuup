@@ -105,7 +105,7 @@ class EditScriptContentView(DetailView):
         return ScriptAPI(request, self.get_object()).dispatch()
 
     def get_context_data(self, **kwargs):
-        context = super(EditScriptContentView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = get_create_or_change_title(self.request, self.object)
         context["action_infos"] = Action.get_ui_info_map()
         context["condition_infos"] = Condition.get_ui_info_map()

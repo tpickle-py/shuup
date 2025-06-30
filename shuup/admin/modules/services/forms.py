@@ -69,7 +69,7 @@ class BaseMethodForm(ShuupAdminForm):
         selected_provider = self.get_service_provider(self.request.GET.get("provider"))
         if selected_provider:
             self.service_provider = selected_provider
-        super(BaseMethodForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["choice_identifier"] = forms.ChoiceField(
             choices=_get_service_choices(self.service_provider),
             required=bool(self.service_provider),
@@ -104,7 +104,7 @@ class BaseMethodForm(ShuupAdminForm):
     def _save_master(self, commit=True):
         self.cleaned_data["shop"] = self.request.shop
         if self.instance.pk:
-            return super(BaseMethodForm, self)._save_master(commit)
+            return super()._save_master(commit)
 
         # New services are always created with provider.create_service method
         service_data = self._get_cleaned_data_without_translations()
@@ -128,7 +128,7 @@ class AlwaysChangedModelForm(forms.ModelForm):
     def has_changed(self, *args, **kwargs):
         if self.instance.pk is None:
             return True
-        return super(AlwaysChangedModelForm, self).has_changed(*args, **kwargs)
+        return super().has_changed(*args, **kwargs)
 
 
 class ShippingMethodForm(BaseMethodForm):
@@ -236,7 +236,7 @@ class CountryLimitBehaviorComponentForm(forms.ModelForm):
         }
 
     def __init__(self, **kwargs):
-        super(CountryLimitBehaviorComponentForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if self.instance and self.instance.pk:
             self.initial["available_in_countries"] = (
                 self.instance.available_in_countries

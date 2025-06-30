@@ -31,7 +31,7 @@ class ConfirmForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         self.current_product_ids = kwargs.pop("current_product_ids", "")
-        super(ConfirmForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # check whether we already asked for marketing permissions before
         # if so, make the field hidden and set the initial value
@@ -87,13 +87,13 @@ class ConfirmPhase(CheckoutPhaseViewMixin, FormView):
         ]
 
     def get_form_kwargs(self):
-        kwargs = super(ConfirmPhase, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         kwargs["current_product_ids"] = set(self._get_product_ids())
         return kwargs
 
     def get_context_data(self, **kwargs):
-        context = super(ConfirmPhase, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         basket = self.basket
 
         basket.calculate_taxes()

@@ -16,7 +16,7 @@ from shuup.utils.iterables import first
 
 class ProductPicotable(Picotable):
     def process_item(self, object):
-        out = super(ProductPicotable, self).process_item(object)
+        out = super().process_item(object)
         popup = self.request.GET.get("popup")
         kind = self.request.GET.get("kind", "")
         if popup and kind == "product":  # Enable option to pick products
@@ -140,7 +140,7 @@ class ProductListView(PicotableListView):
                     filter_config=get_suppliers_filter(),
                 )
             )
-        super(ProductListView, self).__init__()
+        super().__init__()
         suppliers_column = get_suppliers_column(self.columns)
         if suppliers_column:
             suppliers_column.filter_config = get_suppliers_filter()

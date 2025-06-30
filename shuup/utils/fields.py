@@ -10,7 +10,7 @@ class RelaxedModelChoiceField(forms.ModelChoiceField):
     # as an improvement over the normal `ModelChoiceField`.
     def to_python(self, value):
         try:
-            return super(RelaxedModelChoiceField, self).to_python(value)
+            return super().to_python(value)
         except ValidationError as verr:
             if verr.code == "invalid_choice":
                 # If the original code declared this as invalid, see if we have custom choices.

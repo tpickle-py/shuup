@@ -80,12 +80,12 @@ class OrderAddressEditView(UpdateView):
         return HttpResponseRedirect(get_model_url(order))
 
     def get_form_kwargs(self):
-        kwargs = super(OrderAddressEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.pop("instance")
         return kwargs
 
     def get_context_data(self, **kwargs):
-        context = super(OrderAddressEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Save -- %s") % context["order"]
         context["toolbar"] = Toolbar(
             [

@@ -138,7 +138,7 @@ class ProductListFormModifier(six.with_metaclass(abc.ABCMeta)):
 
 class ProductListForm(forms.Form):
     def __init__(self, request, shop, category, *args, **kwargs):
-        super(ProductListForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for extend_obj in _get_active_modifiers(shop, category):
             for field_key, field in extend_obj.get_fields(request, category) or []:
                 is_choice_field = isinstance(
@@ -163,7 +163,7 @@ class ProductListForm(forms.Form):
                     self.fields[field_key].widget.choices += choices
 
     def clean(self):
-        cleaned_data = super(ProductListForm, self).clean()
+        cleaned_data = super().clean()
         for extend_class in get_provide_objects(FORM_MODIFIER_PROVIDER_KEY):
             extend_class().clean_hook(self)
         return cleaned_data

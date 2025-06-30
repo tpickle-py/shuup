@@ -47,6 +47,6 @@ class SupplierListView(PicotableListView):
 
     def get_toolbar(self):
         if settings.SHUUP_ENABLE_MULTIPLE_SUPPLIERS:
-            return super(SupplierListView, self).get_toolbar()
+            return super().get_toolbar()
         else:
             return Toolbar.for_view(self)

@@ -14,7 +14,7 @@ class MockContactToolbarButton(URLActionButton):
 
         self.contact = contact
 
-        super(MockContactToolbarButton, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class MockShopToolbarButton(URLActionButton):
@@ -26,7 +26,7 @@ class MockShopToolbarButton(URLActionButton):
 
         self.shop = shop
 
-        super(MockShopToolbarButton, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     @staticmethod
     def visible_for_object(shop):
@@ -38,7 +38,7 @@ class MockContactToolbarActionItem(DropdownItem):
         kwargs["icon"] = "fa fa-hand-peace-o"
         kwargs["text"] = _("Hello %(name)s") % {"name": object.full_name}
         kwargs["url"] = "/#mocktoolbaractionitem"
-        super(MockContactToolbarActionItem, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     @staticmethod
     def visible_for_object(object):
@@ -50,7 +50,7 @@ class MockProductToolbarActionItem(DropdownItem):
         kwargs["icon"] = "fa fa-female"
         kwargs["text"] = _("This is %(sku)s") % {"sku": object.sku}
         kwargs["url"] = "#%(sku)s" % {"sku": object.sku}
-        super(MockProductToolbarActionItem, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class MockContactGroupToolbarButton(URLActionButton):
@@ -59,7 +59,7 @@ class MockContactGroupToolbarButton(URLActionButton):
         kwargs["text"] = _("Hello")
         kwargs["extra_css_class"] = "btn-info btn-contact-group-hello"
         kwargs["url"] = "/#mocktoolbarbutton"
-        super(MockContactGroupToolbarButton, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class ContactGroupPriceDisplayButtonProvider(BaseToolbarButtonProvider):

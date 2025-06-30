@@ -45,13 +45,13 @@ class RegistrationViewMixin:
         return ("shuup:registration_complete", (), {})
 
     def get_form_kwargs(self):
-        kwargs = super(RegistrationViewMixin, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         kwargs["auto_id"] = "id_registration_for_%s"
         return kwargs
 
     def register(self, form):
-        user = super(RegistrationViewMixin, self).register(form)
+        user = super().register(form)
         get_person_contact(user).add_to_shop(self.request.shop)
         return user
 
@@ -87,10 +87,10 @@ class CompanyRegistrationView(RegistrationViewMixin, default_views.RegistrationV
     def dispatch(self, request, *args, **kwargs):
         if not allow_company_registration(request.shop):
             return redirect("shuup:registration_register")
-        return super(CompanyRegistrationView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def register(self, form):
-        user = super(CompanyRegistrationView, self).register(form)
+        user = super().register(form)
 
         if (
             settings.SHUUP_ENABLE_MULTIPLE_SHOPS

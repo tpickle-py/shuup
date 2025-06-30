@@ -248,7 +248,7 @@ class Page(MPTTModel, TranslatableModel):
                 "Success! Deleted (soft).", kind=LogEntryKind.DELETION, user=user
             )
             # Bypassing local `save()` on purpose.
-            super(Page, self).save(update_fields=("deleted",))
+            super().save(update_fields=("deleted",))
 
     def clean(self):
         url = getattr(self, "url", None)
@@ -277,7 +277,7 @@ class Page(MPTTModel, TranslatableModel):
 
     def save(self, *args, **kwargs):
         with reversion.create_revision():
-            super(Page, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
 
     def get_html(self):
         return self.content

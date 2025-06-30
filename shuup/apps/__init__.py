@@ -103,7 +103,7 @@ class AppConfig(django.apps.AppConfig):
     provides = {}
 
     def __init__(self, *args, **kwargs):
-        super(AppConfig, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         collect_settings_from_app(self)
         self._check_required_installed_apps()
 

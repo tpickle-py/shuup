@@ -87,7 +87,7 @@ class PaymentProcessor(ServiceProvider):
         PaymentMethod.objects.filter(payment_processor=self).update(
             **{"enabled": False}
         )
-        super(PaymentProcessor, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     def get_payment_process_response(self, service, order, urls):
         """
@@ -190,7 +190,7 @@ class CustomPaymentProcessor(PaymentProcessor):
         ]
 
     def _create_service(self, choice_identifier, **kwargs):
-        service = super(CustomPaymentProcessor, self)._create_service(
+        service = super()._create_service(
             choice_identifier, **kwargs
         )
         if choice_identifier == "cash":

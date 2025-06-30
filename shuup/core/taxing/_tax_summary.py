@@ -54,7 +54,7 @@ class TaxSummary(list):
         return cls(sorted(lines, key=TaxSummaryLine.get_sort_key))
 
     def __repr__(self):
-        super_repr = super(TaxSummary, self).__repr__()
+        super_repr = super().__repr__()
         return "%s(%s)" % (type(self).__name__, super_repr)
 
 

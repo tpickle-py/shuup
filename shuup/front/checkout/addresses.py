@@ -24,12 +24,12 @@ class CompanyForm(TaxNumberCleanMixin, forms.ModelForm):
 
     def __init__(self, **kwargs):
         self.request = kwargs.pop("request")
-        super(CompanyForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["name"].required = False
         self.fields["tax_number"].required = False
 
     def clean(self):
-        data = super(CompanyForm, self).clean()
+        data = super().clean()
 
         if data.get("name") and not data.get("tax_number"):
             self.add_error(
@@ -53,7 +53,7 @@ class SavedAddressForm(forms.Form):
     )
 
     def __init__(self, owner, kind, **kwargs):
-        super(SavedAddressForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         saved_addr_qs = SavedAddress.objects.filter(
             owner=owner,
             role=self.kind_to_role_map[kind],
@@ -117,7 +117,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
         return fg
 
     def get_initial(self):
-        initial = super(AddressesPhase, self).get_initial()
+        initial = super().get_initial()
         customer = self.basket.customer
         for address_kind in self.address_kinds:
             if self.storage.get(address_kind):
@@ -157,7 +157,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
             self.process()
             self.basket.save()
             self.basket.storage.add_log_entry(self.basket, _("Saved addresses."))
-        return super(AddressesPhase, self).form_valid(form)
+        return super().form_valid(form)
 
     def _process_addresses(self, basket):
         for kind in self.address_kinds:
@@ -182,7 +182,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
                     address.tax_number = basket.customer.tax_number
 
     def get_context_data(self, **kwargs):
-        context = super(AddressesPhase, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         # generate all the available saved addresses if user wants to use some
         saved_addr_qs = SavedAddress.objects.filter(

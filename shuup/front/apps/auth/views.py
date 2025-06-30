@@ -23,12 +23,12 @@ class LoginView(FormView):
     form_class = cached_load("SHUUP_AUTH_LOGIN_FORM_SPEC")
 
     def get_context_data(self, **kwargs):
-        context = super(LoginView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context[REDIRECT_FIELD_NAME] = self.request.GET.get(REDIRECT_FIELD_NAME)
         return context
 
     def get_form_kwargs(self):
-        kwargs = super(LoginView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 
@@ -51,7 +51,7 @@ class LoginView(FormView):
         user = form.get_user()
         if user is not None:
             login(self.request, user)
-        return super(LoginView, self).form_valid(form)
+        return super().form_valid(form)
 
     def get_success_url(self):
         url = self.request.POST.get(REDIRECT_FIELD_NAME)
@@ -66,7 +66,7 @@ class LogoutView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         if is_authenticated(request.user):
             logout(request)
-        return super(LogoutView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class RecoverPasswordView(FormView):
@@ -89,7 +89,7 @@ class RecoverPasswordConfirmView(FormView):
     success_url = reverse_lazy("shuup:recover_password_complete")
 
     def get_form_kwargs(self):
-        kwargs = super(RecoverPasswordConfirmView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["user"] = self.get_target_user()
         return kwargs
 
@@ -111,7 +111,7 @@ class RecoverPasswordConfirmView(FormView):
         if not valid:
             raise Problem(_("Error! This recovery link is invalid."))
 
-        return super(RecoverPasswordConfirmView, self).dispatch(
+        return super().dispatch(
             request, *args, **kwargs
         )
 

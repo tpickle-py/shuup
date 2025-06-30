@@ -34,7 +34,7 @@ class ProductChildrenBaseFormPart(FormPart):
 
 class ProductParentBaseToolbar(Toolbar):
     def __init__(self, view):
-        super(ProductParentBaseToolbar, self).__init__()
+        super().__init__()
         self.view = view
         self.parent_product = view.object
         self.request = view.request
@@ -60,7 +60,7 @@ class ProductParentBaseView(FormPartsViewMixin, UpdateView):
                     "shuup_admin:shop_product.edit_package", kwargs={"pk": parent.id}
                 )
             )
-        return super(ProductParentBaseView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_breadcrumb_parents(self):
         return [
@@ -73,14 +73,14 @@ class ProductParentBaseView(FormPartsViewMixin, UpdateView):
         command = request.POST.get("command")
         if command:
             return self.dispatch_command(request, command)
-        return super(ProductParentBaseView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def get_form_part_classes(self):
         for form_part_class in self.form_part_classes:
             yield form_part_class
 
     def get_context_data(self, **kwargs):
-        context = super(ProductParentBaseView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         if self.toolbar_class:
             context["toolbar"] = self.toolbar_class(self)
         return context

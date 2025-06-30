@@ -32,7 +32,7 @@ class MutableAddressForm(forms.ModelForm):
         labels = {"region_code": _("Region")}
 
     def __init__(self, **kwargs):
-        super(MutableAddressForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if not kwargs.get("instance"):
             # Set default country
             self.fields["country"].initial = settings.SHUUP_ADDRESS_HOME_COUNTRY
@@ -48,7 +48,7 @@ class MutableAddressForm(forms.ModelForm):
                 self.instance, ImmutableAddress
             ) or _is_assigned_multiple_times(self.instance):
                 self.instance.pk = None  # Force resave
-        return super(MutableAddressForm, self).save(commit)
+        return super().save(commit)
 
 
 def _is_assigned_multiple_times(address):
@@ -71,7 +71,7 @@ def _is_assigned_multiple_times(address):
 class FormInfoMap(OrderedDict):
     def __init__(self, form_classes):
         form_infos = (FormInfo(formcls) for formcls in form_classes)
-        super(FormInfoMap, self).__init__(
+        super().__init__(
             (form_info.choice_value, form_info) for form_info in form_infos
         )
 

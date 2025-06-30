@@ -32,7 +32,7 @@ class ContactGroupListView(PicotableListView):
         )
 
     def get_context_data(self, **kwargs):
-        context = super(ContactGroupListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         if self.request.user.is_superuser:
             settings_button = SettingsActionButton.for_model(
                 ContactGroup, return_url="contact_group"

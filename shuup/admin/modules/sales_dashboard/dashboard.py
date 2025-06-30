@@ -52,7 +52,7 @@ class OrderValueChartDashboardBlock(DashboardChartBlock):
         self.cached_chart = None
         self.request = request
         self.currency = shop.currency
-        super(OrderValueChartDashboardBlock, self).__init__(id, **kwargs)
+        super().__init__(id, **kwargs)
         self.sort_order = 2
 
     @property

@@ -21,7 +21,7 @@ class PictureDnDUploaderWidget(Widget):
         self.clearable = clearable
         self.dropzone_attrs = dropzone_attrs
 
-        super(PictureDnDUploaderWidget, self).__init__(attrs)
+        super().__init__(attrs)
 
     def _get_file_attrs(self, file):
         if not file:

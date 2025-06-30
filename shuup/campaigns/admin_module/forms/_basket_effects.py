@@ -51,7 +51,7 @@ class FreeProductLineForm(BaseEffectModelForm):
         model = FreeProductLine
 
     def clean(self):
-        super(FreeProductLineForm, self).clean()
+        super().clean()
         # Don't validate data is form is deleted
         if self.cleaned_data.get("DELETE"):
             return
@@ -89,7 +89,7 @@ class DiscountFromCategoryProductsForm(BaseEffectModelForm):
         model = DiscountFromCategoryProducts
 
     def __init__(self, **kwargs):
-        super(DiscountFromCategoryProductsForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["category"].queryset = Category.objects.all_except_deleted()
 
     def clean(self):

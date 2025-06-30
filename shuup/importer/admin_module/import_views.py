@@ -139,14 +139,14 @@ class ImportView(FormView):
         )
 
     def get_form_kwargs(self):
-        kwargs = super(ImportView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         initial = kwargs.get("initial", {})
         initial["importer"] = self.request.GET.get("importer", initial.get("initial"))
         kwargs.update({"request": self.request, "initial": initial})
         return kwargs
 
     def get_context_data(self, **kwargs):
-        context = super(ImportView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         # check whether the importer has a example file template
         # if so, we also add a url to download the example file

@@ -99,7 +99,7 @@ class Shipment(ShuupModel):
         verbose_name_plural = _("shipments")
 
     def __init__(self, *args, **kwargs):
-        super(Shipment, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if not self.identifier:
             if self.order and self.order.pk:
                 prefix = "%s/%s/" % (self.order.pk, self.order.shipments.count())
@@ -115,7 +115,7 @@ class Shipment(ShuupModel):
         )
 
     def save(self, *args, **kwargs):
-        super(Shipment, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         for product_id in self.products.values_list("product_id", flat=True):
             self.supplier.update_stock(product_id=product_id)
 

@@ -19,7 +19,7 @@ class ArchivedDiscountListView(DiscountListView):
         return Discount.objects.archived(get_shop(self.request))
 
     def get_context_data(self, **kwargs):
-        context = super(ArchivedDiscountListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Archived Product Discounts")
         return context
 

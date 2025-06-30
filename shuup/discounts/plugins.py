@@ -46,7 +46,7 @@ class ProductSelectionConfigForm(GenericPluginForm):
         """
         A custom clean method to transform selected discounts into a list of ids
         """
-        cleaned_data = super(ProductSelectionConfigForm, self).clean()
+        cleaned_data = super().clean()
         if cleaned_data.get("discounts"):
             cleaned_data["discounts"] = [
                 discount.pk for discount in cleaned_data["discounts"]

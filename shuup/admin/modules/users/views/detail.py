@@ -93,7 +93,7 @@ class BaseUserForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
-        super(BaseUserForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if "email" in self.fields:
             self.fields["email"].help_text = _(
                 "The user email address. Used for password resets."
@@ -147,7 +147,7 @@ class BaseUserForm(forms.ModelForm):
                 )
 
     def clean(self):
-        cleaned_data = super(BaseUserForm, self).clean()
+        cleaned_data = super().clean()
         if (
             cleaned_data.get("send_confirmation")
             and cleaned_data.get("is_staff")
@@ -158,7 +158,7 @@ class BaseUserForm(forms.ModelForm):
             )
 
     def save(self, commit=True):
-        user = super(BaseUserForm, self).save(commit=False)
+        user = super().save(commit=False)
 
         if "password" in self.fields:
             user.set_password(self.cleaned_data["password"])
@@ -174,7 +174,7 @@ class UserDetailToolbar(Toolbar):
         self.view = view
         self.request = view.request
         self.user = view.object
-        super(UserDetailToolbar, self).__init__()
+        super().__init__()
         self.extend(
             get_default_edit_toolbar(self.view, "user_form", with_split_save=False)
         )
@@ -333,7 +333,7 @@ class UserDetailView(CreateOrUpdateView):
         return None
 
     def get_queryset(self):
-        qs = super(UserDetailView, self).get_queryset()
+        qs = super().get_queryset()
 
         # non superusers can't see superusers
         if not self.request.user.is_superuser:
@@ -342,7 +342,7 @@ class UserDetailView(CreateOrUpdateView):
         return qs
 
     def get_initial(self):
-        initial = super(UserDetailView, self).get_initial()
+        initial = super().get_initial()
         contact = self._get_bind_contact()
         if contact:
             # Guess some sort of usable username
@@ -434,11 +434,11 @@ class UserDetailView(CreateOrUpdateView):
         self.object = self.get_object()
         if "set_is_active" in request.POST:
             return self._handle_set_is_active()
-        return super(UserDetailView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
         self.model = get_user_model()
-        return super(UserDetailView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 def _check_for_login_as_problems(redirect_url, impersonator_user, user):

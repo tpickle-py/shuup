@@ -49,7 +49,7 @@ class GDPRView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView):
         return GDPRSettings.get_for_shop(get_shop(self.request))
 
     def get_context_data(self, **kwargs):
-        context = super(GDPRView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("General Data Protection Regulation")
         context["toolbar"] = self.get_toolbar()
         return context

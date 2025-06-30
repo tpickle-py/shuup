@@ -45,8 +45,8 @@ class ProtectedFieldsMixin:
         return cleaned_data
 
     def clean(self):
-        return self.clean_protected_fields(super(ProtectedFieldsMixin, self).clean())
+        return self.clean_protected_fields(super().clean())
 
     def __init__(self, **kwargs):
-        super(ProtectedFieldsMixin, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.disable_protected_fields()

@@ -36,7 +36,7 @@ class CustomerEditView(DashboardViewMixin, FormView):
         return cached_load("SHUUP_CUSTOMER_INFORMATION_EDIT_FORM")
 
     def get_form_kwargs(self):
-        kwargs = super(CustomerEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 
@@ -55,13 +55,13 @@ class CompanyEditView(DashboardViewMixin, FormView):
             or allow_company_registration(self.request.shop)
         ):
             return redirect("shuup:customer_edit")
-        return super(CompanyEditView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_class(self):
         return cached_load("SHUUP_COMPANY_INFORMATION_EDIT_FORM")
 
     def get_form_kwargs(self):
-        kwargs = super(CompanyEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 
@@ -70,7 +70,7 @@ class CompanyEditView(DashboardViewMixin, FormView):
         return redirect("shuup:company_edit")
 
     def get_context_data(self, **kwargs):
-        context = super(CompanyEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["pending_company_approval"] = CompanyContact.objects.filter(
             members__in=[self.request.customer], is_active=False
         ).exists()
@@ -81,7 +81,7 @@ class AddressBookView(DashboardViewMixin, TemplateView):
     template_name = "shuup/customer_information/addressbook/index.jinja"
 
     def get_context_data(self, **kwargs):
-        context = super(AddressBookView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["addresses"] = SavedAddress.objects.filter(owner=self.request.customer)
         context["customer"] = self.request.customer
         return context
@@ -98,13 +98,13 @@ class AddressBookEditView(DashboardViewMixin, FormView):
             )
         except Exception:
             self.instance = None
-        return super(AddressBookEditView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_class(self):
         return cached_load("SHUUP_ADDRESS_BOOK_EDIT_FORM")
 
     def get_form_kwargs(self):
-        kwargs = super(AddressBookEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         kwargs["instance"] = self.instance
         return kwargs

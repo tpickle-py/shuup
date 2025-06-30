@@ -17,7 +17,7 @@ class DashboardView(TemplateView):
     template_name = "shuup/admin/dashboard/dashboard.jinja"
 
     def get_context_data(self, **kwargs):
-        context = super(DashboardView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["version"] = shuup.__version__
         context["notifications"] = notifications = []
         context["blocks"] = blocks = []
@@ -45,4 +45,4 @@ class DashboardView(TemplateView):
             return HttpResponseRedirect(reverse("shuup_admin:wizard"))
         elif request.shop.maintenance_mode:
             return HttpResponseRedirect(reverse("shuup_admin:home"))
-        return super(DashboardView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)

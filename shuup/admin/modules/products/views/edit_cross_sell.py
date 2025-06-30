@@ -25,13 +25,13 @@ class ProductCrossSellForm(ModelForm):
 
     def __init__(self, **kwargs):
         self.product = kwargs.pop("product")
-        super(ProductCrossSellForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["product2"].widget = ProductChoiceWidget()
         self.fields["product2"].label = _("Product")
 
     def save(self, commit=True):
         self.instance.product1 = self.product
-        return super(ProductCrossSellForm, self).save(commit=commit)
+        return super().save(commit=commit)
 
 
 class ProductCrossSellFormSet(BaseModelFormSet):
@@ -47,7 +47,7 @@ class ProductCrossSellFormSet(BaseModelFormSet):
 
     def __init__(self, *args, **kwargs):
         self.product = kwargs.pop("product")
-        super(ProductCrossSellFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def form(self, **kwargs):
         kwargs.setdefault("product", self.product)
@@ -69,7 +69,7 @@ class ProductCrossSellEditView(UpdateView):
         ]
 
     def get_context_data(self, **kwargs):
-        context = super(ProductCrossSellEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Edit Cross-Sell: %s") % self.object
         context["toolbar"] = Toolbar(
             [
@@ -85,7 +85,7 @@ class ProductCrossSellEditView(UpdateView):
         return context
 
     def get_form_kwargs(self):
-        kwargs = super(ProductCrossSellEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         instance = kwargs.pop("instance", None)
         kwargs["queryset"] = (
             ProductCrossSell.objects.filter(product1=instance)

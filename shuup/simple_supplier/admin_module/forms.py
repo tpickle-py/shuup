@@ -10,7 +10,7 @@ class SimpleSupplierForm(forms.Form):
     def __init__(self, **kwargs):
         self.product = kwargs.pop("product")
         self.request = kwargs.pop("request")
-        super(SimpleSupplierForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.products = []
         self.module_name = SimpleSupplierModule.name
         self.supplier_model = Supplier

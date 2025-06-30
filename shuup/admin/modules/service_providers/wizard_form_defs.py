@@ -20,7 +20,7 @@ class ServiceWizardFormDef(TemplatedWizardFormDef):
                 "languages": configuration.get(shop, "languages", settings.LANGUAGES),
             },
         }
-        super(ServiceWizardFormDef, self).__init__(
+        super().__init__(
             form_class=form_class,
             template_name=template_name,
             extra_js=extra_js,
@@ -35,7 +35,7 @@ class ManualShippingWizardFormDef(ServiceWizardFormDef):
     priority = 1000
 
     def __init__(self, request):
-        super(ManualShippingWizardFormDef, self).__init__(
+        super().__init__(
             name="manual_shipping",
             form_class=ManualShippingWizardForm,
             template_name="shuup/admin/service_providers/_wizard_manual_shipping_form.jinja",
@@ -47,7 +47,7 @@ class ManualPaymentWizardFormDef(ServiceWizardFormDef):
     priority = 1000
 
     def __init__(self, request):
-        super(ManualPaymentWizardFormDef, self).__init__(
+        super().__init__(
             name="manual_payment",
             form_class=ManualPaymentWizardForm,
             template_name="shuup/admin/service_providers/_wizard_manual_payment_form.jinja",

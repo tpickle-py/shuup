@@ -25,7 +25,7 @@ class ProductTypeForm(MultiLanguageModelForm):
         exclude = ()
 
     def __init__(self, **kwargs):
-        super(ProductTypeForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if self.instance.pk:
             choices = [(a.pk, a.name) for a in self.instance.attributes.all()]
             self.fields["attributes"].initial = [pk for pk, name in choices]
@@ -35,7 +35,7 @@ class ProductTypeForm(MultiLanguageModelForm):
         return Attribute.objects.filter(pk__in=attributes).all()
 
     def save(self, commit=True):
-        obj = super(ProductTypeForm, self).save(commit=commit)
+        obj = super().save(commit=commit)
         obj.attributes.clear()
         obj.attributes.set(self.cleaned_data["attributes"])
         return self.instance

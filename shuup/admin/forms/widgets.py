@@ -28,7 +28,7 @@ class BasePopupChoiceWidget(Widget):
     def __init__(self, attrs=None, clearable=False, empty_text=True):
         self.clearable = clearable
         self.empty_text = empty_text
-        super(BasePopupChoiceWidget, self).__init__(attrs)
+        super().__init__(attrs)
 
     def get_browse_markup(self):
         return """
@@ -134,7 +134,7 @@ class FileDnDUploaderWidget(Widget):
         if upload_url is None:
             upload_url = reverse_lazy("shuup_admin:media.upload")
         self.upload_url = upload_url
-        super(FileDnDUploaderWidget, self).__init__(attrs)
+        super().__init__(attrs)
 
     def _get_file_attrs(self, file):
         if not file:
@@ -206,7 +206,7 @@ class TextEditorWidget(Textarea):
         attrs_for_textarea = attrs.copy()
         attrs_for_textarea["class"] = "hidden"
         attrs_for_textarea["id"] += "-textarea"
-        html = super(TextEditorWidget, self).render(name, value, attrs_for_textarea)
+        html = super().render(name, value, attrs_for_textarea)
         return mark_safe(
             "<div id='%s-editor-wrap' class='summernote-wrap'>%s<div class='summernote-editor'>%s</div></div>"
             % (attrs["id"], html, value or "")
@@ -265,7 +265,7 @@ class HexColorWidget(TextInput):
     def render(self, name, value, attrs=None, renderer=None):
         field_attrs = attrs.copy()
         field_attrs["class"] = field_attrs.get("class", "") + " hex-color-picker"
-        return super(HexColorWidget, self).render(name, value, field_attrs)
+        return super().render(name, value, field_attrs)
 
 
 class CodeEditorWidget(Textarea):

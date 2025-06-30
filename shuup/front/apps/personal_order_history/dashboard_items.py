@@ -13,7 +13,7 @@ class OrderHistoryItem(DashboardItem):
     _url = "shuup:personal-orders"
 
     def get_context(self):
-        context = super(OrderHistoryItem, self).get_context()
+        context = super().get_context()
         context["orders"] = Order.objects.filter(
             customer=self.request.customer
         ).order_by("-created_on")[:5]

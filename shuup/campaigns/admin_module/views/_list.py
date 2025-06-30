@@ -102,7 +102,7 @@ class BasketCampaignListView(CampaignListView):
         return context
 
     def get_queryset(self):
-        queryset = super(BasketCampaignListView, self).get_queryset()
+        queryset = super().get_queryset()
         supplier = get_supplier(self.request)
         if supplier:
             queryset = queryset.filter(supplier=supplier)
@@ -132,7 +132,7 @@ class CouponListView(PicotableListView):
         return instance.usages.count()
 
     def get_context_data(self, **kwargs):
-        context = super(CouponListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         if self.request.user.is_superuser:
             settings_button = SettingsActionButton.for_model(
                 self.model, return_url="coupon"
@@ -149,7 +149,7 @@ class CouponListView(PicotableListView):
         return context
 
     def get_queryset(self):
-        queryset = super(CouponListView, self).get_queryset()
+        queryset = super().get_queryset()
         if not self.request.user.is_superuser:
             queryset = queryset.filter(shop=get_shop(self.request))
 

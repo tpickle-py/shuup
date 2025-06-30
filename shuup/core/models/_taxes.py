@@ -74,7 +74,7 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
     )
 
     def clean(self):
-        super(Tax, self).clean()
+        super().clean()
         if self.rate is None and self.amount is None:
             raise ValidationError(_("Either rate or amount tax is required."))
         if self.amount is not None and self.rate is not None:
@@ -103,7 +103,7 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
         )
 
     def __str__(self):
-        text = super(Tax, self).__str__()
+        text = super().__str__()
         if self.rate is not None:
             text += f" ({format_percent(self.rate, digits=3)})"
         if self.amount is not None:

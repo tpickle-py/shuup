@@ -26,7 +26,7 @@ class ContactDetailToolbar(Toolbar):
         self.contact = contact
         self.request = request
         self.user = getattr(self.contact, "user", None)
-        super(ContactDetailToolbar, self).__init__()
+        super().__init__()
         self.build()
 
     def build_renew_password_button(self):
@@ -186,12 +186,12 @@ class ContactDetailView(DetailView):
     context_object_name = "contact"
 
     def get_object(self, *args, **kwargs):
-        contact = super(ContactDetailView, self).get_object(*args, **kwargs)
+        contact = super().get_object(*args, **kwargs)
         check_contact_permission(self.request, contact)
         return contact
 
     def get_queryset(self):
-        qs = super(ContactDetailView, self).get_queryset()
+        qs = super().get_queryset()
 
         if request_limited(self.request):
             qs = qs.filter(shops=get_shop(self.request))
@@ -203,7 +203,7 @@ class ContactDetailView(DetailView):
         return qs
 
     def get_context_data(self, **kwargs):
-        context = super(ContactDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["toolbar"] = ContactDetailToolbar(
             contact=self.object, request=self.request
         )
@@ -273,4 +273,4 @@ class ContactDetailView(DetailView):
         self.object = self.get_object()
         if "set_is_active" in request.POST:
             return self._handle_set_is_active()
-        return super(ContactDetailView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)

@@ -111,7 +111,7 @@ class GDPRAuthFieldProvider(GDPRFieldProvider):
                 )
             ]
         else:
-            return super(GDPRAuthFieldProvider, self).get_fields(**kwargs)
+            return super().get_fields(**kwargs)
 
 
 class GDPRBaseUserDataProvider:

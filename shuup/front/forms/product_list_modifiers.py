@@ -78,7 +78,7 @@ class CommaSeparatedListField(forms.CharField):
         if isinstance(value, (list, tuple)) and len(value) == 1:
             value = value[0].split(",")
         else:
-            value = super(CommaSeparatedListField, self).to_python(value)
+            value = super().to_python(value)
         return value
 
     def prepare_value(self, value):
@@ -157,7 +157,7 @@ class SortProductListByName(SimpleProductListModifier):
         return queryset
 
     def get_admin_fields(self):
-        default_fields = super(SortProductListByName, self).get_admin_fields()
+        default_fields = super().get_admin_fields()
         default_fields[0][1].help_text = _(
             "Enable this to allow products to be sortable by product name."
         )
@@ -216,7 +216,7 @@ class SortProductListByPrice(SimpleProductListModifier):
         return queryset
 
     def get_admin_fields(self):
-        default_fields = super(SortProductListByPrice, self).get_admin_fields()
+        default_fields = super().get_admin_fields()
         default_fields[0][1].help_text = _(
             "Enable this to allow products to be sortable by price (from low to high; from high to low)."
         )
@@ -270,7 +270,7 @@ class SortProductListByCreatedDate(SimpleProductListModifier):
         return queryset
 
     def get_admin_fields(self):
-        default_fields = super(SortProductListByCreatedDate, self).get_admin_fields()
+        default_fields = super().get_admin_fields()
         default_fields[0][1].help_text = _(
             "Enable this to allow products to be sortable from newest to oldest products."
         )
@@ -303,9 +303,7 @@ class SortProductListByAscendingCreatedDate(SortProductListByCreatedDate):
         ]
 
     def get_admin_fields(self):
-        default_fields = super(
-            SortProductListByAscendingCreatedDate, self
-        ).get_admin_fields()
+        default_fields = super().get_admin_fields()
         default_fields[0][1].help_text = _(
             "Enable this to allow products to be sortable from oldest to newest products."
         )
@@ -364,7 +362,7 @@ class ManufacturerProductListFilter(SimpleProductListModifier):
             return Q(manufacturer__in=manufacturers)
 
     def get_admin_fields(self):
-        default_fields = super(ManufacturerProductListFilter, self).get_admin_fields()
+        default_fields = super().get_admin_fields()
         default_fields[0][1].help_text = _(
             "Enable this to allow products to be filterable by manufacturer for this category."
         )
@@ -440,7 +438,7 @@ class CategoryProductListFilter(SimpleProductListModifier):
             )
 
     def get_admin_fields(self):
-        default_fields = super(CategoryProductListFilter, self).get_admin_fields()
+        default_fields = super().get_admin_fields()
         default_fields[0][1].help_text = _(
             "Enable this to allow products to be filterable by any visible product category. "
         )
@@ -475,7 +473,7 @@ class LimitProductListPageSize(SimpleProductListModifier):
         ]
 
     def get_admin_fields(self):
-        default_fields = super(LimitProductListPageSize, self).get_admin_fields()
+        default_fields = super().get_admin_fields()
         default_fields[0][1].help_text = _(
             "Enable this to allow the customer to be able to select the number of products to display."
         )
@@ -548,7 +546,7 @@ class ProductVariationFilter(SimpleProductListModifier):
         return queryset
 
     def get_admin_fields(self):
-        default_fields = super(ProductVariationFilter, self).get_admin_fields()
+        default_fields = super().get_admin_fields()
         default_fields[0][1].help_text = _(
             "Enable this to allow products to be filterable by their different variations. "
             "For example, size or color."
@@ -754,7 +752,7 @@ class AttributeProductListFilter(SimpleProductListModifier):
         return queryset
 
     def get_admin_fields(self):
-        active, ordering = super(AttributeProductListFilter, self).get_admin_fields()
+        active, ordering = super().get_admin_fields()
         active[1].help_text = _(
             "Allow products to be filtered according to their attributes."
         )

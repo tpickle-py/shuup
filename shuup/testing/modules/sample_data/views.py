@@ -67,13 +67,13 @@ class ConsolidateSampleObjectsView(FormView):
         return HttpResponseRedirect(reverse("shuup_admin:dashboard"))
 
     def get_form_kwargs(self):
-        kwargs = super(ConsolidateSampleObjectsView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.update({"shop": Shop.objects.first()})
         return kwargs
 
     def get_context_data(self, **kwargs):
         shop = Shop.objects.first()
-        context = super(ConsolidateSampleObjectsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["has_installed_sample"] = sample_manager.has_installed_samples(shop)
         context["title"] = _("Sample Data")
         return context

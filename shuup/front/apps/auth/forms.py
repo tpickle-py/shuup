@@ -21,7 +21,7 @@ class EmailAuthenticationForm(AuthenticationForm):
     }
 
     def __init__(self, *args, **kwargs):
-        super(EmailAuthenticationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["username"].label = _("Username or email address")
         for provider_cls in get_provide_objects("front_auth_form_field_provider"):
             provider = provider_cls()
@@ -97,6 +97,6 @@ class EmailAuthenticationForm(AuthenticationForm):
                         _("You are not allowed to log in to this shop.")
                     )
 
-        super(EmailAuthenticationForm, self).confirm_login_allowed(user)
+        super().confirm_login_allowed(user)
 
         login_allowed.send(sender=type(self), request=self.request, user=user)

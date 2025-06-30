@@ -21,7 +21,7 @@ from shuup.utils.django_compat import reverse
 class OrderDetailToolbar(Toolbar):
     def __init__(self, order):
         self.order = order
-        super(OrderDetailToolbar, self).__init__()
+        super().__init__()
         self.build()
 
     def build(self):
@@ -140,7 +140,7 @@ class CreatePaymentAction(DropdownItem):
         )
         kwargs["icon"] = "fa fa-money"
         kwargs["text"] = _("Create Payment")
-        super(CreatePaymentAction, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     @staticmethod
     def visible_for_object(object):
@@ -157,7 +157,7 @@ class SetPaidAction(PostActionDropdownItem):
         )
         kwargs["icon"] = "fa fa-exclamation-circle"
         kwargs["text"] = _("Set Paid")
-        super(SetPaidAction, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     @staticmethod
     def visible_for_object(object):
@@ -173,7 +173,7 @@ class CreateRefundAction(DropdownItem):
         )
         kwargs["icon"] = "fa fa-dollar"
         kwargs["text"] = _("Create Refund")
-        super(CreateRefundAction, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     @staticmethod
     def visible_for_object(object):
@@ -187,7 +187,7 @@ class EditAddresses(DropdownItem):
         )
         kwargs["icon"] = "fa fa-address-card"
         kwargs["text"] = _("Edit Addresses")
-        super(EditAddresses, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     @staticmethod
     def visible_for_object(object):

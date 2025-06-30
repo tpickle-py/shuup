@@ -83,20 +83,20 @@ class DatabaseBasketStorage(BaseDatabaseBasketStorage):
         return basket_kwargs
 
     def save(self, basket, data):
-        stored_basket = super(DatabaseBasketStorage, self).save(basket, data)
+        stored_basket = super().save(basket, data)
         basket_kwargs = {"pk": stored_basket.pk, "key": stored_basket.key}
         basket.request.session[self._get_session_key(basket)] = basket_kwargs
 
     def delete(self, basket):
-        super(DatabaseBasketStorage, self).delete(basket)
+        super().delete(basket)
         basket.request.session.pop(self._get_session_key(basket), None)
 
     def finalize(self, basket):
-        super(DatabaseBasketStorage, self).finalize(basket)
+        super().finalize(basket)
         basket.request.session.pop(self._get_session_key(basket), None)
 
     def _load_stored_basket(self, basket):
-        stored_basket = super(DatabaseBasketStorage, self)._load_stored_basket(basket)
+        stored_basket = super()._load_stored_basket(basket)
         if not stored_basket.pk and self.get_basket_kwargs(basket):
             basket.request.session.pop(self._get_session_key(basket), None)
         return stored_basket

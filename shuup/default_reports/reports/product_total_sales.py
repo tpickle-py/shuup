@@ -26,7 +26,7 @@ class ProductSalesReport(OrderReportMixin, ShuupReportBase):
 
     def get_objects(self):
         order_line_qs = OrderLine.objects.products().filter(
-            order__in=super(ProductSalesReport, self).get_objects()
+            order__in=super().get_objects()
         )
         return (
             order_line_qs.select_related("product")

@@ -48,7 +48,7 @@ class PseudoPaymentProcessor(PaymentProcessor):
         ]
 
     def _create_service(self, choice_identifier, **kwargs):
-        service = super(PseudoPaymentProcessor, self)._create_service(
+        service = super()._create_service(
             choice_identifier, **kwargs
         )
         service.behavior_components.add(

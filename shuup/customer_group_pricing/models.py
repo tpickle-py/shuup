@@ -48,7 +48,7 @@ class CgpPrice(MoneyPropped, CgpBase):
         )
 
     def save(self, *args, **kwargs):
-        super(CgpPrice, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
         # check if there is a shop product before bumping the cache
         if self.product.shop_products.filter(shop_id=self.shop.id).exists():
@@ -75,7 +75,7 @@ class CgpDiscount(MoneyPropped, CgpBase):
         )
 
     def save(self, *args, **kwargs):
-        super(CgpDiscount, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
         # check if there is a shop product before bumping the cache
         if self.product.shop_products.filter(shop_id=self.shop.id).exists():

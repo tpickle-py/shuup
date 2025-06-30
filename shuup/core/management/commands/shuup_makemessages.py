@@ -38,15 +38,15 @@ class Command(makemessages.Command):
                     new_args = (name,) + args[1:]
                     parser.add_argument(*new_args, **kwargs)
 
-        super(Command, self).add_arguments(InterceptedParser())
+        super().add_arguments(InterceptedParser())
 
     def handle(self, *args, **options):
         if not options.get("extensions"):
             options["extensions"] = EXTENSIONS
 
         self.stdout.write("Doing makemessages for django domain")
-        super(Command, self).handle(*args, domain="django", **options)
+        super().handle(*args, domain="django", **options)
 
         options["extensions"] = ["js", "jsx"]
         self.stdout.write("Doing makemessages for djangojs domain")
-        super(Command, self).handle(*args, domain="djangojs", **options)
+        super().handle(*args, domain="djangojs", **options)

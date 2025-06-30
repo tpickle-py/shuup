@@ -50,7 +50,7 @@ class AddonUploadView(FormView):
         )
 
     def get_context_data(self, **kwargs):
-        context = super(AddonUploadView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["toolbar"] = Toolbar(
             [
                 PostActionButton(
@@ -82,7 +82,7 @@ class AddonUploadConfirmView(FormView):
         return path
 
     def get_context_data(self, **kwargs):
-        context = super(AddonUploadConfirmView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         with zipfile.ZipFile(self.get_addon_path()) as zf:
             context["filenames"] = sorted(zf.namelist())

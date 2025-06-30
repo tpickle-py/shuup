@@ -208,7 +208,7 @@ class TelemetryNotSent(Exception):
     def __init__(self, message, code):
         self.message = message
         self.code = code
-        super(TelemetryNotSent, self).__init__(message, code)
+        super().__init__(message, code)
 
 
 def _send_telemetry(request, max_age_hours, force_send=False):

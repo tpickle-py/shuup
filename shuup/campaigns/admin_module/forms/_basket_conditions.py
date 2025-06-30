@@ -40,7 +40,7 @@ class ProductsInBasketConditionForm(BaseRuleModelForm):
         model = ProductsInBasketCondition
 
     def __init__(self, *args, **kwargs):
-        super(ProductsInBasketConditionForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["products"].widget = forms.SelectMultiple(
             attrs={"data-model": "shuup.product"}
         )
@@ -68,7 +68,7 @@ class BasketMaxTotalAmountConditionForm(BaseRuleModelForm):
 
 class ChildrenProductConditionForm(BaseRuleModelForm):
     def __init__(self, *args, **kwargs):
-        super(ChildrenProductConditionForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["product"].widget = forms.Select(
             attrs={"data-model": "shuup.product", "data-search-mode": "parent_product"}
         )
@@ -79,7 +79,7 @@ class ChildrenProductConditionForm(BaseRuleModelForm):
 
 class CategoryProductsBasketConditionForm(BaseRuleModelForm):
     def __init__(self, **kwargs):
-        super(CategoryProductsBasketConditionForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["categories"].queryset = Category.objects.all_except_deleted()
         self.fields[
             "excluded_categories"

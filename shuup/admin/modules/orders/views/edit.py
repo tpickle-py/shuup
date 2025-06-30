@@ -182,7 +182,7 @@ class OrderEditView(CreateOrUpdateView):
     fields = []
 
     def get_context_data(self, **kwargs):
-        context = super(OrderEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["config"] = self.get_config()
         return context
 
@@ -270,7 +270,7 @@ class OrderEditView(CreateOrUpdateView):
     def dispatch(self, request, *args, **kwargs):
         if request.GET.get("command"):
             return self.dispatch_command(request)
-        return super(OrderEditView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def dispatch_command(self, request):
         handler = getattr(self, "handle_%s" % request.GET.get("command"), None)

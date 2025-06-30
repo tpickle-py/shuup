@@ -24,14 +24,14 @@ class ListSettingsView(FormView):
         default_columns = view_context.default_columns
         self.model = load(module_str)
         self.settings = ViewSettings(self.model, default_columns, view_context)
-        return super(ListSettingsView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form(self, form_class=None):
         kwargs = self.get_form_kwargs()
         return ColumnSettingsForm(self.settings, **kwargs)
 
     def get_initial(self):
-        initial = super(ListSettingsView, self).get_initial()
+        initial = super().get_initial()
         for col in self.settings.columns:
             key = self.settings.get_settings_key(col.id)
             initial.update({key: self.settings.get_config(col.id)})
@@ -53,7 +53,7 @@ class ListSettingsView(FormView):
         return HttpResponseRedirect(self.return_url)
 
     def get_context_data(self, **kwargs):
-        context = super(ListSettingsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["toolbar"] = Toolbar(
             [
                 PostActionButton(

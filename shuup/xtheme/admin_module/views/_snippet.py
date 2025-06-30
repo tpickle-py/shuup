@@ -25,7 +25,7 @@ class SnippetForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(SnippetForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         themes_choices = [
             (theme.identifier, theme.name)
@@ -53,7 +53,7 @@ class SnippetForm(forms.ModelForm):
 
     def save(self, commit=True):
         self.instance.shop = get_shop(self.request)
-        return super(SnippetForm, self).save(commit)
+        return super().save(commit)
 
     def clean_themes(self):
         return ",".join(self.cleaned_data["themes"])
@@ -79,14 +79,14 @@ class SnippetEditView(CreateOrUpdateView):
         return Snippet.objects.filter(shop=get_shop(self.request))
 
     def form_valid(self, form):
-        response = super(SnippetEditView, self).form_valid(form)
+        response = super().form_valid(form)
         shop = get_shop(self.request)
         cache_key = GLOBAL_SNIPPETS_CACHE_KEY.format(shop_id=shop.pk)
         cache.bump_version(cache_key)
         return response
 
     def get_form_kwargs(self):
-        kwargs = super(SnippetEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 
@@ -138,7 +138,7 @@ class SnippetDeleteView(BaseDeleteView):
         return Snippet.objects.filter(shop=get_shop(self.request))
 
     def delete(self, request, *args, **kwargs):
-        response = super(SnippetDeleteView, self).delete(request, *args, **kwargs)
+        response = super().delete(request, *args, **kwargs)
         shop = get_shop(self.request)
         cache_key = GLOBAL_SNIPPETS_CACHE_KEY.format(shop_id=shop.pk)
         cache.bump_version(cache_key)

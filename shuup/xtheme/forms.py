@@ -27,7 +27,7 @@ class GenericThemeForm(forms.ModelForm):
 
     def __init__(self, **kwargs):
         self.theme = kwargs.pop("theme")
-        super(GenericThemeForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if self.theme.stylesheets:
             if isinstance(self.theme.stylesheets[0], dict):
                 choices = [
@@ -83,7 +83,7 @@ class FontForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(FontForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["woff"].widget = FileDnDUploaderWidget(
             upload_path="/admin_typography/", clearable=True
         )
@@ -102,7 +102,7 @@ class FontForm(forms.ModelForm):
 
     def save(self, commit=True):
         self.instance.shop = get_shop(self.request)
-        return super(FontForm, self).save(commit)
+        return super().save(commit)
 
 
 class QuickAddFontSelect(QuickAddRelatedObjectSelect):
@@ -130,7 +130,7 @@ class AdminThemeForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(AdminThemeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.instance.pk:
             initial_header_font = self.instance.admin_header_font

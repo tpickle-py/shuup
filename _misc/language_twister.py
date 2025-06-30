@@ -23,7 +23,7 @@ class LanguageTwist(CodeTemplate):
         with open(po_file, "rb") as in_f:
             self.catalog = read_po(in_f)
         self.not_in_catalog = set()
-        super(LanguageTwist, self).__init__(template="_(${str})")
+        super().__init__(template="_(${str})")
 
     def get_names(self):
         return ["str"]

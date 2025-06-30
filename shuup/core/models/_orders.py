@@ -218,7 +218,7 @@ class OrderStatus(TranslatableModel):
         return force_text(self.safe_translation_getter("name", default=self.identifier))
 
     def save(self, *args, **kwargs):
-        super(OrderStatus, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if self.default and self.role != OrderStatusRole.NONE:
             # If this status is the default, make the others for this role non-default.
             OrderStatus.objects.filter(role=self.role).exclude(pk=self.pk).update(
@@ -734,7 +734,7 @@ class Order(MoneyPropped, models.Model):
     def _save_identifiers(self):
         self.identifier = "%s" % (get_order_identifier(self))
         self.reference_number = get_reference_number(self)
-        super(Order, self).save(
+        super().save(
             update_fields=(
                 "identifier",
                 "reference_number",
@@ -743,7 +743,7 @@ class Order(MoneyPropped, models.Model):
 
     def full_clean(self, exclude=None, validate_unique=True):
         self._cache_values()
-        return super(Order, self).full_clean(exclude, validate_unique)
+        return super().full_clean(exclude, validate_unique)
 
     def save(self, *args, **kwargs):
         if not self.creator_id:
@@ -757,7 +757,7 @@ class Order(MoneyPropped, models.Model):
         if self.status is None:
             self.status = OrderStatus.objects.get_default_initial()
 
-        super(Order, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
         if first_save:  # Have to do a double save the first time around to be able to save identifiers
             self._save_identifiers()
@@ -773,7 +773,7 @@ class Order(MoneyPropped, models.Model):
             self.deleted = True
             self.add_log_entry("Success! Deleted (soft).", kind=LogEntryKind.DELETION)
             # Bypassing local `save()` on purpose.
-            super(Order, self).save(update_fields=("deleted",), using=using)
+            super().save(update_fields=("deleted",), using=using)
 
     def set_canceled(self):
         if self.status.role != OrderStatusRole.CANCELED:

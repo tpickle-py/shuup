@@ -37,7 +37,7 @@ class CampaignEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
         return self.save_form_parts(form)
 
     def get_form_parts(self, object):
-        form_parts = super(CampaignEditView, self).get_form_parts(object)
+        form_parts = super().get_form_parts(object)
         if not object.pk:
             return form_parts
 
@@ -72,7 +72,7 @@ class CampaignEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
 
     def get_queryset(self):
         return (
-            super(CampaignEditView, self)
+            super()
             .get_queryset()
             .filter(shop=get_shop(self.request))
         )
@@ -90,7 +90,7 @@ class CatalogCampaignEditView(BreadcrumbedView, CampaignEditView):
     parent_url = "shuup_admin:catalog_campaign.list"
 
     def get_form_parts(self, object):
-        form_parts = super(CatalogCampaignEditView, self).get_form_parts(object)
+        form_parts = super().get_form_parts(object)
         if not object.pk:
             return form_parts
 
@@ -119,7 +119,7 @@ class BasketCampaignEditView(BreadcrumbedView, CampaignEditView):
     parent_url = "shuup_admin:basket_campaign.list"
 
     def get_queryset(self):
-        queryset = super(BasketCampaignEditView, self).get_queryset()
+        queryset = super().get_queryset()
         supplier = get_supplier(self.request)
         if supplier:
             queryset = queryset.filter(supplier=supplier)
@@ -136,7 +136,7 @@ class CouponEditView(BreadcrumbedView, CreateOrUpdateView):
     parent_url = "shuup_admin:coupon.list"
 
     def get_form_kwargs(self):
-        kwargs = super(CouponEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         if self.request.GET.get("mode") == "iframe":
             initial = kwargs.get("initial", {})
@@ -147,7 +147,7 @@ class CouponEditView(BreadcrumbedView, CreateOrUpdateView):
     def get_queryset(self):
         # get coupons for this shop or for shared shops
         queryset = (
-            super(CouponEditView, self)
+            super()
             .get_queryset()
             .filter(shop=get_shop(self.request))
         )

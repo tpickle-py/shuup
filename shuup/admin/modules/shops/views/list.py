@@ -46,6 +46,6 @@ class ShopListView(PicotableListView):
 
     def get_toolbar(self):
         if ShuupSettings.get_setting("SHUUP_ENABLE_MULTIPLE_SHOPS"):
-            return super(ShopListView, self).get_toolbar()
+            return super().get_toolbar()
         else:
             return Toolbar.for_view(self)

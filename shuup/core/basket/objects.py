@@ -37,7 +37,7 @@ ANONYMOUS_ID = "anonymous"
 class BasketLine(SourceLine):
     def __init__(self, source=None, **kwargs):
         self.__in_init = True
-        super(BasketLine, self).__init__(source, **kwargs)
+        super().__init__(source, **kwargs)
         self.__in_init = False
 
     @property
@@ -125,7 +125,7 @@ class _ExtraDataContainerProperty:
 
 class BaseBasket(OrderSource):
     def __init__(self, request, basket_name="basket", shop=None, **kwargs):
-        super(BaseBasket, self).__init__(shop or request.shop)
+        super().__init__(shop or request.shop)
         self.request = request
         self.basket_name = basket_name
         self.key = basket_name
@@ -158,7 +158,7 @@ class BaseBasket(OrderSource):
         ).hexdigest()
 
     def uncache(self):
-        super(BaseBasket, self).uncache()
+        super().uncache()
         self._orderable_lines_cache = None
         self._unorderable_lines_cache = None
         self._lines_by_line_id_cache = None
@@ -498,17 +498,17 @@ class BaseBasket(OrderSource):
         self._data["codes"] = value
 
     def add_code(self, code):
-        modified = super(BaseBasket, self).add_code(code)
+        modified = super().add_code(code)
         self.dirty = bool(self.dirty or modified)
         return modified
 
     def clear_codes(self):
-        modified = super(BaseBasket, self).clear_codes()
+        modified = super().clear_codes()
         self.dirty = bool(self.dirty or modified)
         return modified
 
     def remove_code(self, code):
-        modified = super(BaseBasket, self).remove_code(code)
+        modified = super().remove_code(code)
         self.dirty = bool(self.dirty or modified)
         return modified
 
@@ -813,7 +813,7 @@ class BaseBasket(OrderSource):
             yield ValidationError(msg % advice, code="no_common_payment")
 
     def get_validation_errors(self):
-        for error in super(BaseBasket, self).get_validation_errors():
+        for error in super().get_validation_errors():
             yield error
 
         for error in self.get_methods_validation_errors():

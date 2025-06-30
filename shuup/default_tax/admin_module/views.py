@@ -39,7 +39,7 @@ class TaxRuleForm(forms.ModelForm):
         }
 
     def clean(self):
-        data = super(TaxRuleForm, self).clean()
+        data = super().clean()
         data["country_codes_pattern"] = data["country_codes_pattern"].upper()
         return data
 

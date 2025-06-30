@@ -30,7 +30,7 @@ class BaseFormset(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         self.form_class = kwargs.pop("form")
         self.owner = kwargs.pop("owner")
-        super(BaseFormset, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_name(self):
         return getattr(self._get_actual_model(), "name", None)
@@ -58,7 +58,7 @@ class BasketConditionsFormSet(BaseFormset):
 class EffectsFormset(BaseFormset):
     def form(self, **kwargs):
         kwargs.setdefault("initial", {"campaign": self.owner})
-        return super(EffectsFormset, self).form(**kwargs)
+        return super().form(**kwargs)
 
 
 class BasketDiscountEffectsFormSet(EffectsFormset):

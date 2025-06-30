@@ -83,7 +83,7 @@ class Notification(models.Model):
 
     def __init__(self, *args, **kwargs):
         url = kwargs.pop("url", None)
-        super(Notification, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if url:
             self.url = url
 
@@ -92,7 +92,7 @@ class Notification(models.Model):
             raise ValueError(
                 "Error! With `RecipientType.SPECIFIC_USER`, recipient is required."
             )
-        super(Notification, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def mark_read(self, user):
         if self.marked_read:

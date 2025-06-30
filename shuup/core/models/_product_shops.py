@@ -306,7 +306,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
 
     def clean(self):
         pre_clean.send(type(self), instance=self)
-        super(ShopProduct, self).clean()
+        super().clean()
         if self.display_unit:
             if self.display_unit.internal_unit != self.product.sales_unit:
                 raise ValidationError(

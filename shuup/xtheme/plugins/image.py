@@ -29,7 +29,7 @@ class ImageIDField(forms.IntegerField):
 
     def clean(self, value):
         try:
-            value = super(ImageIDField, self).clean(value)
+            value = super().clean(value)
         except ValidationError:
             raise ValidationError("Error! Invalid image ID.", code="invalid")
         return value

@@ -10,7 +10,7 @@ class ProductPreviewView(ProductDetailView):
         # This is fine if you are on product page but here in
         # preview, we cannot redirect back to `/xtheme/product_preview`.
 
-        context = super(ProductPreviewView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         # Add `return_url` to context to avoid usage of `request.path`
         context["return_url"] = "/xtheme/products"
         return context

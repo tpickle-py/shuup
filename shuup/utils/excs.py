@@ -10,7 +10,7 @@ class Problem(Exception):
     message = property(lambda self: self.args[0] if self.args else None)
 
     def __init__(self, message, title=None):
-        super(Problem, self).__init__(message)
+        super().__init__(message)
         self.title = title
         self.links = []
 
@@ -37,7 +37,7 @@ class Problem(Exception):
 class ExceptionalResponse(Exception):
     def __init__(self, response):
         self.response = response
-        super(ExceptionalResponse, self).__init__(force_text(response))
+        super().__init__(force_text(response))
 
 
 def extract_messages(obj_list):

@@ -70,7 +70,7 @@ class _PolyTransManager(PolymorphicManager, TranslatableManager):
 
 class PolyTransModelBase(PolymorphicModelBase):
     def get_inherited_managers(self, attrs):
-        parent = super(PolyTransModelBase, self)
+        parent = super()
         result = []
         for base_name, key, manager in parent.get_inherited_managers(attrs):
             if base_name == "PolymorphicModel":
@@ -104,7 +104,7 @@ class ChangeProtected:
     )
 
     def clean(self, *args, **kwargs):
-        super(ChangeProtected, self).clean(*args, **kwargs)
+        super().clean(*args, **kwargs)
         if self.pk:
             changed_protected_fields = self._get_changed_protected_fields()
             if changed_protected_fields and self._are_changes_protected():
@@ -116,7 +116,7 @@ class ChangeProtected:
 
     def save(self, *args, **kwargs):
         self.clean()
-        super(ChangeProtected, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def _are_changes_protected(self):
         """

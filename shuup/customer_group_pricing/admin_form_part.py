@@ -14,7 +14,7 @@ class CustomerGroupPricingForm(forms.Form):
         self.product = kwargs.pop("product", None)
         self.request = kwargs.pop("request", None)
         self.shop = kwargs.pop("shop", None)
-        super(CustomerGroupPricingForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.groups = []
         if not self.shop:
             self.shop = self.request.shop
@@ -102,7 +102,7 @@ class CustomerGroupDiscountForm(forms.Form):
         self.product = kwargs.pop("product", None)
         self.request = kwargs.pop("request", None)
         self.shop = kwargs.pop("shop", None)
-        super(CustomerGroupDiscountForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.groups = []
 
         if not self.shop:

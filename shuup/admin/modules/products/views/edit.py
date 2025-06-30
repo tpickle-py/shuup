@@ -81,7 +81,7 @@ class ShopProductFormPart(FormPart):
     priority = -900
 
     def __init__(self, request, object=None):
-        super(ShopProductFormPart, self).__init__(request, object)
+        super().__init__(request, object)
         self.shop = request.shop
 
     def get_form_defs(self):
@@ -215,7 +215,7 @@ class ProductEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
             instance.shop = self.request.shop
             instance.product = Product()
             return instance
-        return super(ProductEditView, self).get_object(queryset)
+        return super().get_object(queryset)
 
     @atomic
     def form_valid(self, form):
@@ -226,7 +226,7 @@ class ProductEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
 
     def get_queryset(self):
         qs = (
-            super(ProductEditView, self)
+            super()
             .get_queryset()
             .filter(
                 shop=get_shop(self.request),
@@ -241,7 +241,7 @@ class ProductEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
         return qs
 
     def get_context_data(self, **kwargs):
-        context = super(ProductEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         orderability_errors = []
 
         shop = get_shop(self.request)

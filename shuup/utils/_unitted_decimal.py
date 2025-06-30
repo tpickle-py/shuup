@@ -26,7 +26,7 @@ class UnittedDecimal(decimal.Decimal):
         return decimal.Decimal(self)
 
     def __repr__(self):
-        decimal_repr = super(UnittedDecimal, self).__repr__()
+        decimal_repr = super().__repr__()
         return decimal_repr.replace("Decimal", type(self).__name__)
 
     def unit_matches_with(self, other):
@@ -58,42 +58,42 @@ class UnittedDecimal(decimal.Decimal):
 
     def __lt__(self, other, **kwargs):
         self._check_units_match(other)
-        return super(UnittedDecimal, self).__lt__(other, **kwargs)
+        return super().__lt__(other, **kwargs)
 
     def __le__(self, other, **kwargs):
         self._check_units_match(other)
-        return super(UnittedDecimal, self).__le__(other, **kwargs)
+        return super().__le__(other, **kwargs)
 
     def __gt__(self, other, **kwargs):
         self._check_units_match(other)
-        return super(UnittedDecimal, self).__gt__(other, **kwargs)
+        return super().__gt__(other, **kwargs)
 
     def __ge__(self, other, **kwargs):
         self._check_units_match(other)
-        return super(UnittedDecimal, self).__ge__(other, **kwargs)
+        return super().__ge__(other, **kwargs)
 
     def __eq__(self, other, *args, **kwargs):
         if not self.unit_matches_with(other):
             return False
-        return super(UnittedDecimal, self).__eq__(other, **kwargs)
+        return super().__eq__(other, **kwargs)
 
     def __ne__(self, other, *args, **kwargs):
         if not self.unit_matches_with(other):
             return True
-        return super(UnittedDecimal, self).__ne__(other, **kwargs)
+        return super().__ne__(other, **kwargs)
 
     def __add__(self, other, **kwargs):
         self._check_units_match(other)
-        return self.new(super(UnittedDecimal, self).__add__(other, **kwargs))
+        return self.new(super().__add__(other, **kwargs))
 
     def __sub__(self, other, **kwargs):
         self._check_units_match(other)
-        return self.new(super(UnittedDecimal, self).__sub__(other, **kwargs))
+        return self.new(super().__sub__(other, **kwargs))
 
     def __mul__(self, other, **kwargs):
         if isinstance(other, UnittedDecimal):
             raise TypeError("Error! Cannot multiply %r with %r." % (self, other))
-        return self.new(super(UnittedDecimal, self).__mul__(other, **kwargs))
+        return self.new(super().__mul__(other, **kwargs))
 
     def __radd__(self, other, **kwargs):
         return self.__add__(other, **kwargs)
@@ -107,9 +107,9 @@ class UnittedDecimal(decimal.Decimal):
     def __truediv__(self, other, **kwargs):
         if isinstance(other, UnittedDecimal):
             self._check_units_match(other)
-            return super(UnittedDecimal, self).__truediv__(other, **kwargs)
+            return super().__truediv__(other, **kwargs)
         else:
-            value = super(UnittedDecimal, self).__truediv__(other, **kwargs)
+            value = super().__truediv__(other, **kwargs)
             return self.new(value)
 
     def __rtruediv__(self, other, **kwargs):
@@ -117,7 +117,7 @@ class UnittedDecimal(decimal.Decimal):
             type_name = type(self).__name__
             raise TypeError(f"Error! Cannot divide non-{type_name} with {type_name}.")
         self._check_units_match(other)
-        return super(UnittedDecimal, self).__rtruediv__(other, **kwargs)
+        return super().__rtruediv__(other, **kwargs)
 
     __div__ = __truediv__
     __rdiv__ = __rtruediv__
@@ -128,7 +128,7 @@ class UnittedDecimal(decimal.Decimal):
             msg = f"Error! Cannot floor-div {type_name} with non-{type_name}."
             raise TypeError(msg)
         self._check_units_match(other)
-        return super(UnittedDecimal, self).__floordiv__(other, **kwargs)
+        return super().__floordiv__(other, **kwargs)
 
     def __rfloordiv__(self, other, **kwargs):
         if not isinstance(other, UnittedDecimal):
@@ -136,21 +136,21 @@ class UnittedDecimal(decimal.Decimal):
             msg = f"Error! Cannot floor-div non-{type_name} with {type_name}."
             raise TypeError(msg)
         self._check_units_match(other)
-        return super(UnittedDecimal, self).__rfloordiv__(other, **kwargs)
+        return super().__rfloordiv__(other, **kwargs)
 
     def __mod__(self, other, **kwargs):
         if not isinstance(other, UnittedDecimal):
             type_name = type(self).__name__
             raise TypeError(f"Error! Cannot modulo {type_name} with non-{type_name}.")
         self._check_units_match(other)
-        return self.new(super(UnittedDecimal, self).__mod__(other, **kwargs))
+        return self.new(super().__mod__(other, **kwargs))
 
     def __divmod__(self, other, **kwargs):
         if not isinstance(other, UnittedDecimal):
             type_name = type(self).__name__
             raise TypeError(f"Error! Cannot divmod {type_name} with non-{type_name}.")
         self._check_units_match(other)
-        (div, mod) = super(UnittedDecimal, self).__divmod__(other, **kwargs)
+        (div, mod) = super().__divmod__(other, **kwargs)
         return (div, self.new(mod))
 
     def __pow__(self, other, **kwargs):
@@ -158,30 +158,30 @@ class UnittedDecimal(decimal.Decimal):
         raise TypeError(f"Error! {type_name} cannot be powered.")
 
     def __neg__(self, **kwargs):
-        return self.new(super(UnittedDecimal, self).__neg__(**kwargs))
+        return self.new(super().__neg__(**kwargs))
 
     def __pos__(self, **kwargs):
-        return self.new(super(UnittedDecimal, self).__pos__(**kwargs))
+        return self.new(super().__pos__(**kwargs))
 
     def __abs__(self, **kwargs):
-        return self.new(super(UnittedDecimal, self).__abs__(**kwargs))
+        return self.new(super().__abs__(**kwargs))
 
     def __int__(self, **kwargs):
-        return super(UnittedDecimal, self).__int__(**kwargs)
+        return super().__int__(**kwargs)
 
     def __float__(self, **kwargs):
-        return super(UnittedDecimal, self).__float__(**kwargs)
+        return super().__float__(**kwargs)
 
     def __round__(self, ndigits=0, **kwargs):
-        value = super(UnittedDecimal, self).__round__(ndigits, **kwargs)
+        value = super().__round__(ndigits, **kwargs)
         return self.new(value)
 
     def quantize(self, exp, *args, **kwargs):
-        value = super(UnittedDecimal, self).quantize(exp, *args, **kwargs)
+        value = super().quantize(exp, *args, **kwargs)
         return self.new(value)
 
     def copy_negate(self, *args, **kwargs):
-        value = super(UnittedDecimal, self).copy_negate(*args, **kwargs)
+        value = super().copy_negate(*args, **kwargs)
         return self.new(value)
 
 
@@ -200,8 +200,8 @@ class UnitMixupError(TypeError):
     def __init__(self, obj1, obj2, msg="Unit mixup"):
         self.obj1 = obj1
         self.obj2 = obj2
-        super(UnitMixupError, self).__init__(msg)
+        super().__init__(msg)
 
     def __str__(self):
-        super_str = super(UnitMixupError, self).__str__()
+        super_str = super().__str__()
         return "%s: %r vs %r" % (super_str, self.obj1, self.obj2)

@@ -45,7 +45,7 @@ class SystemSettingsView(FormPartsViewMixin, FormView):
         return redirect("shuup_admin:settings.list")
 
     def get_context_data(self, **kwargs):
-        context = super(SystemSettingsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["toolbar"] = Toolbar(
             [
                 PostActionButton(

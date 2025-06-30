@@ -704,13 +704,13 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
         self.clean()
         if self.net_weight and self.net_weight > 0:
             self.gross_weight = max(self.net_weight, self.gross_weight)
-        rv = super(Product, self).save(*args, **kwargs)
+        rv = super().save(*args, **kwargs)
         generate_multilanguage_slugs(self, self._get_slug_name)
         return rv
 
     def clean(self):
         pre_clean.send(type(self), instance=self)
-        super(Product, self).clean()
+        super().clean()
         post_clean.send(type(self), instance=self)
 
     def delete(self, using=None):
@@ -725,7 +725,7 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
                 "Success! Deleted (soft).", kind=LogEntryKind.DELETION, user=user
             )
             # Bypassing local `save()` on purpose.
-            super(Product, self).save(update_fields=("deleted",))
+            super().save(update_fields=("deleted",))
 
     def verify_mode(self):
         if ProductPackageLink.objects.filter(parent=self).exists():

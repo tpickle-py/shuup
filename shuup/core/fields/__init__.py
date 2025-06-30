@@ -43,19 +43,19 @@ class InternalIdentifierField(models.CharField):
             _("Do not change this value if you are not sure what you are doing."),
         )
         kwargs.setdefault("editable", False)
-        super(InternalIdentifierField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.validators.append(IdentifierValidator)
 
     def get_prep_value(self, value):
         # Save `None`s instead of falsy values (such as empty strings)
         # for `InternalIdentifierField`s to avoid `IntegrityError`s on unique fields.
-        prepared_value = super(InternalIdentifierField, self).get_prep_value(value)
+        prepared_value = super().get_prep_value(value)
         if self.null:
             return prepared_value or None
         return prepared_value
 
     def deconstruct(self):
-        (name, path, args, kwargs) = super(InternalIdentifierField, self).deconstruct()
+        (name, path, args, kwargs) = super().deconstruct()
         kwargs["null"] = self.null
         kwargs["unique"] = self.unique
         kwargs["blank"] = self.blank
@@ -68,7 +68,7 @@ class InternalIdentifierField(models.CharField):
 class CurrencyField(models.CharField):
     def __init__(self, **kwargs):
         kwargs.setdefault("max_length", 4)
-        super(CurrencyField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class FormattedDecimalFormField(forms.DecimalField):
@@ -83,7 +83,7 @@ class FormattedDecimalFormField(forms.DecimalField):
             else:
                 step = "any"
             widget.attrs.setdefault("step", step)
-        return super(FormattedDecimalFormField, self).widget_attrs(widget)
+        return super().widget_attrs(widget)
 
 
 class FormattedDecimalField(models.DecimalField):
@@ -93,7 +93,7 @@ class FormattedDecimalField(models.DecimalField):
     """
 
     def value_from_object(self, obj):
-        value = super(FormattedDecimalField, self).value_from_object(obj)
+        value = super().value_from_object(obj)
         if isinstance(value, numbers.Number):
             return self.format_decimal(decimal.Decimal(str(value)))
 
@@ -111,14 +111,14 @@ class FormattedDecimalField(models.DecimalField):
 
     def formfield(self, **kwargs):
         kwargs.setdefault("form_class", FormattedDecimalFormField)
-        return super(FormattedDecimalField, self).formfield(**kwargs)
+        return super().formfield(**kwargs)
 
 
 class MoneyValueField(FormattedDecimalField):
     def __init__(self, **kwargs):
         kwargs.setdefault("decimal_places", MONEY_FIELD_DECIMAL_PLACES)
         kwargs.setdefault("max_digits", FORMATTED_DECIMAL_FIELD_MAX_DIGITS)
-        super(MoneyValueField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class QuantityField(FormattedDecimalField):
@@ -126,7 +126,7 @@ class QuantityField(FormattedDecimalField):
         kwargs.setdefault("decimal_places", FORMATTED_DECIMAL_FIELD_DECIMAL_PLACES)
         kwargs.setdefault("max_digits", FORMATTED_DECIMAL_FIELD_MAX_DIGITS)
         kwargs.setdefault("default", 0)
-        super(QuantityField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class MeasurementField(FormattedDecimalField):
@@ -135,10 +135,10 @@ class MeasurementField(FormattedDecimalField):
         kwargs.setdefault("decimal_places", FORMATTED_DECIMAL_FIELD_DECIMAL_PLACES)
         kwargs.setdefault("max_digits", FORMATTED_DECIMAL_FIELD_MAX_DIGITS)
         kwargs.setdefault("default", 0)
-        super(MeasurementField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def deconstruct(self):
-        parent = super(MeasurementField, self)
+        parent = super()
         (name, path, args, kwargs) = parent.deconstruct()
         kwargs["unit"] = self.unit
         return (name, path, args, kwargs)
@@ -154,13 +154,13 @@ class LanguageField(LanguageFieldMixin, models.CharField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("max_length", 10)
         kwargs["choices"] = [(code, code) for code in sorted(self.LANGUAGE_CODES)]
-        super(LanguageField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_choices(self, include_blank=True, blank_choice=BLANK_CHOICE_DASH):
         locale = get_current_babel_locale()
         translated_choices = [
             (code, locale.languages.get(code, code))
-            for (code, _) in super(LanguageField, self).get_choices(
+            for (code, _) in super().get_choices(
                 include_blank, blank_choice
             )
         ]
@@ -173,7 +173,7 @@ class LanguageFormField(LanguageFieldMixin, forms.ChoiceField):
         include_blank = kwargs.pop("include_blank", True)
         blank_choice = kwargs.pop("blank_choice", BLANK_CHOICE_DASH)
         kwargs["choices"] = self.get_choices(include_blank, blank_choice)
-        super(LanguageFormField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_choices(self, include_blank=True, blank_choice=BLANK_CHOICE_DASH):
         locale = get_current_babel_locale()
@@ -199,7 +199,7 @@ class TaggedJSONField(JSONField):
         dump_kwargs.setdefault("separators", (",", ":"))
         load_kwargs = kwargs.setdefault("load_kwargs", {})
         load_kwargs.setdefault("object_hook", tag_registry.decode)
-        super(TaggedJSONField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class HexColorField(models.CharField):
@@ -209,7 +209,7 @@ class HexColorField(models.CharField):
 
     def __init__(self, **kwargs):
         kwargs["max_length"] = 9
-        super(HexColorField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.validators.append(
             RegexValidator(
                 "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$", _("Invalid color")
@@ -224,7 +224,7 @@ class SeparatedValuesField(models.TextField):
 
     def __init__(self, *args, **kwargs):
         self.separator = kwargs.pop("separator", ",")
-        super(SeparatedValuesField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def from_db_value(self, value, expression, connection):
         if isinstance(value, six.string_types):

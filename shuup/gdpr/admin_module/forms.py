@@ -36,7 +36,7 @@ class GDPRSettingsForm(MultiLanguageModelForm):
 
     def __init__(self, **kwargs):
         self.request = kwargs.pop("request")
-        super(GDPRSettingsForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         shop = get_shop(self.request)
         choices = [
             (p.id, p.safe_translation_getter("title"))
@@ -95,7 +95,7 @@ class GDPRCookieCategoryFormSet(BaseModelFormSet):
             kwargs.pop("languages", ()), self.default_language
         )
         kwargs.pop("empty_permitted", None)  # this is unknown to formset
-        super(GDPRCookieCategoryFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_queryset(self):
         return GDPRCookieCategory.objects.filter(shop=self.shop)
@@ -108,7 +108,7 @@ class GDPRCookieCategoryFormSet(BaseModelFormSet):
         forms = self.forms or []
         for form in forms:
             form.instance.shop = self.shop
-        super(GDPRCookieCategoryFormSet, self).save(commit)
+        super().save(commit)
 
 
 class GDPRCookieCategoryFormPart(FormPart):

@@ -72,7 +72,7 @@ class StocksListView(PicotableListView):
     ]
 
     def __init__(self):
-        super(StocksListView, self).__init__()
+        super().__init__()
         self.columns = self.default_columns
 
     def get_object_abstract(self, instance, item):

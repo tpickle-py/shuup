@@ -82,7 +82,7 @@ class ShopEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView):
     form_part_class_provide_key = "admin_shop_form_part"
 
     def get_object(self, queryset=None):
-        obj = super(ShopEditView, self).get_object(queryset)
+        obj = super().get_object(queryset)
         check_and_raise_if_only_one_allowed("SHUUP_ENABLE_MULTIPLE_SHOPS", obj)
         return obj
 

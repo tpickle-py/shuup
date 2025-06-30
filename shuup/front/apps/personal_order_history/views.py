@@ -11,7 +11,7 @@ class OrderViewMixin:
     model = Order
 
     def get_queryset(self):
-        qs = super(OrderViewMixin, self).get_queryset()
+        qs = super().get_queryset()
         return qs.filter(customer=self.request.customer)
 
 
@@ -27,7 +27,7 @@ class OrderDetailView(
     context_object_name = "order"
 
     def get_context_data(self, **kwargs):
-        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         reorderable_lines = _get_reorderable_lines(context["order"])
         context["order_is_reorderable"] = reorderable_lines.exists()
         return context

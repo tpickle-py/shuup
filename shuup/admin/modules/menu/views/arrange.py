@@ -32,7 +32,7 @@ class AdminMenuArrangeView(TemplateView):
         """
         Populate context with admin_menus
         """
-        context = super(AdminMenuArrangeView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["admin_menus"] = get_menu_entry_categories(self.request)
         context["reset_url"] = self.reset_url
         return context
@@ -68,7 +68,7 @@ class AdminMenuResetView(RedirectView):
     def get(self, request, *args, **kwargs):
         self.reset_configuration(request)
         messages.add_message(request, messages.SUCCESS, _("Menu reset"))
-        return super(AdminMenuResetView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class SuperUserMenuArrangeView(AdminMenuArrangeView):

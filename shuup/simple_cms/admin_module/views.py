@@ -56,7 +56,7 @@ class PageForm(MultiLanguageModelForm):
     def __init__(self, **kwargs):
         self.request = kwargs.pop("request")
         kwargs.setdefault("required_languages", ())  # No required languages here
-        super(PageForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.fields["parent"].queryset = Page.objects.filter(
             shop=get_shop(self.request)
@@ -79,7 +79,7 @@ class PageForm(MultiLanguageModelForm):
         This is done the way it is because url is not
         required by default in model level.
         """
-        data = super(PageForm, self).clean()
+        data = super().clean()
         something_filled = False
         urls = []
         for language in self.languages:
@@ -133,7 +133,7 @@ class PageForm(MultiLanguageModelForm):
     def save(self, commit=True):
         if not hasattr(self.instance, "shop") or not self.instance.shop:
             self.instance.shop = get_shop(self.request)
-        return super(PageForm, self).save(commit)
+        return super().save(commit)
 
     def is_url_valid(self, language_code, field_name, url):
         """
@@ -227,7 +227,7 @@ class PageEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView):
 
     def get_queryset(self):
         return (
-            super(PageEditView, self)
+            super()
             .get_queryset()
             .for_shop(get_shop(self.request))
             .not_deleted()
@@ -268,7 +268,7 @@ class PageListView(PicotableListView):
 
     def get_queryset(self):
         return (
-            super(PageListView, self)
+            super()
             .get_queryset()
             .for_shop(get_shop(self.request))
             .not_deleted()
@@ -282,7 +282,7 @@ class PageDeleteView(DetailView):
         return reverse("shuup_admin:simple_cms.page.list")
 
     def get_queryset(self, *args, **kwargs):
-        queryset = super(PageDeleteView, self).get_queryset()
+        queryset = super().get_queryset()
         queryset = queryset.for_shop(get_shop(self.request)).not_deleted()
 
         supplier = get_supplier(self.request)

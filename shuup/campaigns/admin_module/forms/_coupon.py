@@ -24,7 +24,7 @@ class CouponForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
 
-        super(CouponForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.instance.pk and self.instance.has_been_used():
             self.fields["code"].readonly = True
 

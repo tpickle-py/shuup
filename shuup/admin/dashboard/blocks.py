@@ -25,7 +25,7 @@ class DashboardContentBlock(DashboardBlock):
     type = "normal"
 
     def __init__(self, id, content, size="normal"):
-        super(DashboardContentBlock, self).__init__(id=id, size=size)
+        super().__init__(id=id, size=size)
         self.content = content
 
     @classmethod
@@ -41,7 +41,7 @@ class DashboardValueBlock(DashboardBlock):
     default_size = "small"
 
     def __init__(self, id, value, title, **kwargs):
-        super(DashboardValueBlock, self).__init__(id=id, size="small")
+        super().__init__(id=id, size="small")
         self.value = value
         self.title = title
         self.color = kwargs.pop("color", None)
@@ -56,7 +56,7 @@ class DashboardNumberBlock(DashboardValueBlock):
         if int(value) == value:
             value = int(value)
         value = format_number(value, locale=get_current_babel_locale())
-        super(DashboardNumberBlock, self).__init__(id, value, title, **kwargs)
+        super().__init__(id, value, title, **kwargs)
 
 
 class DashboardMoneyBlock(DashboardValueBlock):
@@ -66,7 +66,7 @@ class DashboardMoneyBlock(DashboardValueBlock):
         value = format_currency(
             value, currency=self.currency, locale=get_current_babel_locale()
         )
-        super(DashboardMoneyBlock, self).__init__(id, value, title, **kwargs)
+        super().__init__(id, value, title, **kwargs)
 
 
 class DashboardChartBlock(DashboardBlock):
@@ -95,7 +95,7 @@ class DashboardChartBlock(DashboardBlock):
         return None
 
     def __init__(self, id, size="normal"):
-        super(DashboardChartBlock, self).__init__(id=id, size=size)
+        super().__init__(id=id, size=size)
         self.content = self._get_content()
 
     def _get_content(self):

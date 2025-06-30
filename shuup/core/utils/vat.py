@@ -205,7 +205,7 @@ class VatValidationError(ValidationError):
 
     def __init__(self, *args, **kwargs):
         code = kwargs.pop("code", self.code)
-        super(VatValidationError, self).__init__(*args, code=code, **kwargs)
+        super().__init__(*args, code=code, **kwargs)
 
 
 class VatCannotIdentifyValidationError(VatValidationError):

@@ -25,7 +25,7 @@ class PermissionGroupListView(PicotableListView):
     mass_actions_provider_key = "permission_group_list_mass_actions_provider"
 
     def get_context_data(self, **kwargs):
-        context = super(PermissionGroupListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Granular Permission Groups")
         if self.request.user.is_superuser:
             settings_button = SettingsActionButton.for_model(

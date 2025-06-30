@@ -28,7 +28,7 @@ class OrderDetailView(DetailView):
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_context_data(self, **kwargs):
-        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["toolbar"] = self.get_toolbar()
         context["title"] = force_text(self.object)
         context["order_sections"] = []

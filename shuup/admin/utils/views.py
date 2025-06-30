@@ -29,7 +29,7 @@ class CreateOrUpdateView(UpdateView):
     def get_object(self, queryset=None):
         if not self.kwargs.get(self.pk_url_kwarg):
             return self.model()
-        return super(CreateOrUpdateView, self).get_object(queryset)
+        return super().get_object(queryset)
 
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
@@ -37,7 +37,7 @@ class CreateOrUpdateView(UpdateView):
             return get_default_edit_toolbar(self, save_form_id)
 
     def get_context_data(self, **kwargs):
-        context = super(CreateOrUpdateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["is_new"] = not self.object.pk
         context["front_url"] = get_model_front_url(self.request, self.object)
         context["title"] = get_create_or_change_title(self.request, self.object)
@@ -98,7 +98,7 @@ class CreateOrUpdateView(UpdateView):
             pass
 
         try:
-            return super(CreateOrUpdateView, self).get_success_url()
+            return super().get_success_url()
         except ImproperlyConfigured:
             pass
 
@@ -108,7 +108,7 @@ class CreateOrUpdateView(UpdateView):
             pass
 
     def get_form_kwargs(self):
-        kwargs = super(CreateOrUpdateView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         form_class = getattr(self, "form_class", None)
         if form_class and issubclass(form_class, MultiLanguageModelForm):
             kwargs["languages"] = settings.LANGUAGES
@@ -161,7 +161,7 @@ class CreateOrUpdateView(UpdateView):
                         add_form_errors_as_messages(self.request, form_part)
             else:
                 add_form_errors_as_messages(self.request, form)
-        return super(CreateOrUpdateView, self).form_invalid(form)
+        return super().form_invalid(form)
 
 
 def add_create_or_change_message(request, instance, is_new):
@@ -222,7 +222,7 @@ def check_and_raise_if_only_one_allowed(setting_name, obj):
 
 class PicotableListView(PicotableViewMixin, ListView):
     def __init__(self):
-        super(PicotableListView, self).__init__()
+        super().__init__()
         if self.mass_actions:
             self.default_columns = [
                 Column(
@@ -281,7 +281,7 @@ class PicotableListView(PicotableViewMixin, ListView):
         return toolbar
 
     def get_context_data(self, **kwargs):
-        context = super(PicotableListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["toolbar"] = self.get_toolbar()
         return context
 
@@ -297,10 +297,10 @@ class MassEditMixin:
 
     def dispatch(self, request, *args, **kwargs):
         self.ids = request.session["mass_action_ids"]
-        return super(MassEditMixin, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(MassEditMixin, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
         context["edit_title"] = self.title
         context["is_all_selected"] = bool(

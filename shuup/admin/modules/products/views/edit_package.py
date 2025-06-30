@@ -33,7 +33,7 @@ class ProductChildrenFormPart(ProductChildrenBaseFormPart):
             )
             template_name = "shuup/admin/products/package/_package_children.jinja"
 
-        form_defs = super(ProductChildrenFormPart, self).get_form_defs(
+        form_defs = super().get_form_defs(
             form, template_name
         )
         for form_def in form_defs:
@@ -45,7 +45,7 @@ class ProductPackageViewToolbar(ProductParentBaseToolbar):
     confirm_text = _("Are you sure? This will remove all products from the package.")
 
     def __init__(self, view):
-        super(ProductPackageViewToolbar, self).__init__(view)
+        super().__init__(view)
         if self.parent_product.get_package_child_to_quantity_map():
             self.append(
                 PostActionButton(
@@ -75,10 +75,10 @@ class ProductPackageView(ProductParentBaseView):
                     "shuup_admin:shop_product.edit_package", kwargs={"pk": parent.id}
                 )
             )
-        return super(ProductPackageView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(ProductPackageView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Edit Package: %s") % self.object
         context["is_package"] = self.object.is_package_parent()
         return context

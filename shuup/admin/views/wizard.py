@@ -18,7 +18,7 @@ class WizardFormDefMixin:
     def __init__(self, **kwargs):
         self.context = kwargs.pop("context", {})
         self.extra_js = kwargs.pop("extra_js", "")
-        super(WizardFormDefMixin, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class WizardFormDef(WizardFormDefMixin, FormDef):
@@ -31,7 +31,7 @@ class TemplatedWizardFormDef(WizardFormDefMixin, TemplatedFormDef):
 
 class _WizardFormGroup(FormGroup):
     def __init__(self, identifier, title, text, icon, can_skip, **kwargs):
-        super(_WizardFormGroup, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.identifier = identifier
         self.title = title
         self.text = text
@@ -96,7 +96,7 @@ class WizardView(TemplateView):
         return 0
 
     def get_context_data(self, **kwargs):
-        context = super(WizardView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["panes"] = self.get_all_pane_forms()
         context["active_pane_id"] = self.request.GET.get("pane_id", 1)
         context["final_pane_id"] = self.get_final_pane_identifier()
@@ -146,4 +146,4 @@ class WizardView(TemplateView):
                 return HttpResponseRedirect(reverse("shuup_admin:home"))
             else:
                 return HttpResponseRedirect(reverse("shuup_admin:dashboard"))
-        return super(WizardView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)

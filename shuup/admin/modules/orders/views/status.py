@@ -16,7 +16,7 @@ class OrderStatusForm(MultiLanguageModelForm):
         ]
 
     def __init__(self, **kwargs):
-        super(OrderStatusForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if self.instance.pk and OrderStatusManager().is_default(self.instance):
             del self.fields["identifier"]
             del self.fields["role"]
@@ -36,11 +36,11 @@ class OrderStatusForm(MultiLanguageModelForm):
         if qs.exists():
             self.add_error("identifier", _("Identifier already exists."))
 
-        return super(OrderStatusForm, self).clean()
+        return super().clean()
 
     def save(self, commit=True):
         self.instance.identifier = self.cleaned_data["identifier"]
-        return super(OrderStatusForm, self).save(commit)
+        return super().save(commit)
 
 
 class OrderStatusEditView(CreateOrUpdateView):

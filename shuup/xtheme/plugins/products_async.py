@@ -172,7 +172,7 @@ class ProductCrossSellsPlugin(TemplatedPlugin):
             except LookupError:
                 type = ProductCrossSellType.RELATED
             config["type"] = type
-        super(ProductCrossSellsPlugin, self).__init__(config)
+        super().__init__(config)
 
     def get_cache_key(self, context, **kwargs) -> str:
         title = self.get_translated_value("title")

@@ -10,7 +10,7 @@ from shuup.front.checkout.methods import PAYMENT_METHOD_REQUIRED_CONFIG_KEY, SHI
 
 class BaseBasket(Basket):
     def __init__(self, request, basket_name="basket", shop=None, **kwargs):
-        super(BaseBasket, self).__init__(request, basket_name, shop)
+        super().__init__(request, basket_name, shop)
         self.basket_name = basket_name
 
     def get_methods_validation_errors(self):

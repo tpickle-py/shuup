@@ -9,11 +9,11 @@ class CartDetailView(DetailView):
     template_name = "shuup/front/admin/stored_basket_detail.jinja"
 
     def get_queryset(self):
-        qs = super(CartDetailView, self).get_queryset()
+        qs = super().get_queryset()
         return qs.prefetch_related("products")
 
     def get_context_data(self, **kwargs):
-        context = super(CartDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         basket_class = None
         if self.object.class_spec:
             basket_class = load(self.object.class_spec)

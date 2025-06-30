@@ -171,7 +171,7 @@ class Attribute(TranslatableModel):
         if not self.identifier:
             raise ValueError("Error! Attribute with null identifier is not allowed.")
         self.identifier = flatten(("%s" % self.identifier).lower())
-        return super(Attribute, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def formfield(self, **kwargs):
         """

@@ -33,18 +33,18 @@ class AdminFieldRenderer(FieldRenderer):
         if "form_group_class" not in kwargs:
             kwargs["form_group_class"] = "form-group form-content"
         kwargs["field_class"] = "form-input-group d-flex position-relative"
-        super(AdminFieldRenderer, self).__init__(field, **kwargs)
+        super().__init__(field, **kwargs)
         if not self.set_placeholder:
             self.placeholder = None
 
     def get_label(self):
         if not self.render_label:
             return None
-        return super(AdminFieldRenderer, self).get_label()
+        return super().get_label()
 
     def add_class_attrs(self, *args, **kwargs):
         widget = kwargs.get("widget") or self.widget
-        super(AdminFieldRenderer, self).add_class_attrs(*args, **kwargs)
+        super().add_class_attrs(*args, **kwargs)
         if self.widget_class:
             classes = widget.attrs.get("class", "")
             classes = add_css_class(classes, self.widget_class)
@@ -52,7 +52,7 @@ class AdminFieldRenderer(FieldRenderer):
 
     def add_help_attrs(self, *args, **kwargs):
         widget = kwargs.get("widget") or self.widget
-        super(AdminFieldRenderer, self).add_help_attrs(*args, **kwargs)
+        super().add_help_attrs(*args, **kwargs)
         if not widget.attrs.get("title"):
             widget.attrs.pop("title", None)  # Remove the empty attribute
 

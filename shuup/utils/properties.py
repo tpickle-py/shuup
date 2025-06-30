@@ -102,7 +102,7 @@ class PriceProperty(MoneyProperty):
         :param includes_tax: Locator for includes_tax of the Price.
         :type includes_tax: str
         """
-        super(PriceProperty, self).__init__(value, currency, **kwargs)
+        super().__init__(value, currency, **kwargs)
         self._fields["includes_tax"] = includes_tax
 
 
@@ -126,7 +126,7 @@ class MoneyPropped:
 
     def __init__(self, *args, **kwargs):
         transformed = _transform_init_kwargs(type(self), kwargs)
-        super(MoneyPropped, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         _check_transformed_types(self, transformed)
 
 

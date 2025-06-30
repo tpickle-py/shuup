@@ -27,7 +27,7 @@ class PermissionChangeFormBase(forms.ModelForm):
     )
 
     def __init__(self, changing_user, *args, **kwargs):
-        super(PermissionChangeFormBase, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.changing_user = changing_user
         if not getattr(self.changing_user, "is_superuser", False):
             self.fields.pop("is_superuser")
@@ -119,7 +119,7 @@ class PermissionChangeFormBase(forms.ModelForm):
         return self.cleaned_data
 
     def save(self):
-        obj = super(PermissionChangeFormBase, self).save()
+        obj = super().save()
         obj.groups.clear()
         obj.groups.set(self.cleaned_data["permission_groups"])
 
@@ -149,12 +149,12 @@ class UserChangePermissionsView(UpdateView):
         return toolbar
 
     def get_form_kwargs(self):
-        kwargs = super(UserChangePermissionsView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["changing_user"] = self.request.user
         return kwargs
 
     def get_context_data(self, **kwargs):
-        context = super(UserChangePermissionsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["toolbar"] = self.get_toolbar()
         context["title"] = _("Change Main Permissions: %s") % self.object
         return context

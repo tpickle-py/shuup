@@ -12,7 +12,7 @@ class ServiceBaseFormPart(FormPart):
     form = None  # Override in subclass
 
     def __init__(self, *args, **kwargs):
-        super(ServiceBaseFormPart, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_form_defs(self):
         yield TemplatedFormDef(

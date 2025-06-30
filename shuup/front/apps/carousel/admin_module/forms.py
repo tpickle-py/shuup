@@ -32,7 +32,7 @@ class SlideForm(MultiLanguageModelForm):
     def __init__(self, **kwargs):
         self.carousel = kwargs.pop("carousel")
         self.request = kwargs.pop("request")
-        super(SlideForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.empty_permitted = False
         shop = get_shop(self.request)
         self.fields["category_link"].queryset = Category.objects.all_except_deleted(
@@ -81,7 +81,7 @@ class SlideFormSet(BaseModelFormSet):
             kwargs.pop("languages", ()), self.default_language
         )
         self.request = kwargs.pop("request")
-        super(SlideFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_queryset(self):
         return Slide.objects.filter(carousel=self.carousel)

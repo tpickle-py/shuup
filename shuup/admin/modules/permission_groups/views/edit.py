@@ -17,7 +17,7 @@ class PermissionGroupForm(forms.ModelForm):
         exclude = ("permissions",)
 
     def __init__(self, *args, **kwargs):
-        super(PermissionGroupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["name"].help_text = _("The Permission Group name.")
 
         initial_permissions = (
@@ -75,7 +75,7 @@ class PermissionGroupForm(forms.ModelForm):
         return modules
 
     def clean(self):
-        cleaned_data = super(PermissionGroupForm, self).clean()
+        cleaned_data = super().clean()
         permissions = set()
 
         for field, value in cleaned_data.items():
@@ -86,7 +86,7 @@ class PermissionGroupForm(forms.ModelForm):
         return cleaned_data
 
     def save(self):
-        obj = super(PermissionGroupForm, self).save()
+        obj = super().save()
         set_permissions_for_group(obj.pk, self.cleaned_data["permissions"])
         return obj
 

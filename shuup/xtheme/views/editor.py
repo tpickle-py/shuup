@@ -33,7 +33,7 @@ class EditorView(TemplateView):
             return None
 
     def get_context_data(self, **kwargs):  # doccov: ignore
-        ctx = super(EditorView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx["layout"] = self.layout
         ctx["csrf_token_str"] = get_token(self.request)
         # ctx["layout_debug"] = pformat(ctx["layout"].serialize())
@@ -62,7 +62,7 @@ class EditorView(TemplateView):
             return HttpResponseRedirect(
                 "%s?%s" % (self.request.path, urlencode(get_args))
             )
-        return super(EditorView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):  # doccov: ignore
         command = request.POST.get("command")
@@ -78,7 +78,7 @@ class EditorView(TemplateView):
                 "GET"  # At this point, we won't want to cause form validation
             )
             self.build_form()  # and it's not a bad idea to rebuild the form
-            return super(EditorView, self).get(request, *args, **kwargs)
+            return super().get(request, *args, **kwargs)
 
         if request.POST.get("save") and self.form and self.form.is_valid():
             self.form.save()

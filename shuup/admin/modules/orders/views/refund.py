@@ -79,7 +79,7 @@ class OrderCreateRefundView(UpdateView):
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_context_data(self, **kwargs):
-        context = super(OrderCreateRefundView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Create Refund -- %s") % context["order"]
         context["toolbar"] = Toolbar(
             [
@@ -168,7 +168,7 @@ class OrderCreateRefundView(UpdateView):
         return base_data
 
     def get_form_kwargs(self):
-        kwargs = super(OrderCreateRefundView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.pop("instance")
         return kwargs
 
@@ -209,7 +209,7 @@ class OrderCreateRefundView(UpdateView):
         ]
 
     def get_form(self, form_class=None):
-        formset = super(OrderCreateRefundView, self).get_form(form_class)
+        formset = super().get_form(form_class)
 
         # Line orderings are zero-indexed, but shouldn't display that way
         choices = self._get_line_number_choices(get_supplier(self.request))
@@ -290,7 +290,7 @@ class OrderCreateFullRefundView(UpdateView):
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_context_data(self, **kwargs):
-        context = super(OrderCreateFullRefundView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Create Full Refund -- %s") % context["order"]
         context["toolbar"] = Toolbar(
             [
@@ -308,7 +308,7 @@ class OrderCreateFullRefundView(UpdateView):
         return context
 
     def get_form_kwargs(self):
-        kwargs = super(OrderCreateFullRefundView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.pop("instance")
         return kwargs
 

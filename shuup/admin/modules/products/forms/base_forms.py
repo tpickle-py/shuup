@@ -100,7 +100,7 @@ class ProductBaseForm(MultiLanguageModelForm):
 
     def __init__(self, **kwargs):
         self.request = kwargs.pop("request", None)
-        super(ProductBaseForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["sales_unit"].required = True  # TODO: Move this to model
         self.fields["type"].required = True
         if self.instance.pk:
@@ -165,7 +165,7 @@ class ProductBaseForm(MultiLanguageModelForm):
         form_pre_clean.send(
             Product, instance=self.instance, cleaned_data=self.cleaned_data
         )
-        super(ProductBaseForm, self).clean()
+        super().clean()
 
         if not settings.SHUUP_ADMIN_ALLOW_HTML_IN_PRODUCT_DESCRIPTION:
             for key, value in self.cleaned_data.items():
@@ -220,7 +220,7 @@ class ShopProductForm(MultiLanguageModelForm):
     def __init__(self, **kwargs):
         # TODO: Revise this. Since this is shop product form then maybe we should have shop available insted of request
         self.request = kwargs.pop("request", None)
-        super(ShopProductForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         if "default_price_value" in self.fields:
             self.initial["default_price_value"] = (
@@ -326,7 +326,7 @@ class ShopProductForm(MultiLanguageModelForm):
         form_pre_clean.send(
             ShopProduct, instance=self.instance, cleaned_data=self.cleaned_data
         )
-        data = super(ShopProductForm, self).clean()
+        data = super().clean()
         if not getattr(settings, "SHUUP_AUTO_SHOP_PRODUCT_CATEGORIES", False):
             return data
 
@@ -365,7 +365,7 @@ class ProductAttributesForm(forms.Form):
         self.attributes = self.product.get_available_attribute_queryset()
         self.trans_name_map = defaultdict(dict)
         self.translated_field_names = []
-        super(ProductAttributesForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.applied_attrs = self._get_applied_attributes()
         self._field_languages = {}
         self._build_fields()
@@ -461,7 +461,7 @@ class BaseProductMediaForm(MultiLanguageModelForm):
     def __init__(self, **kwargs):
         self.product = kwargs.pop("product")
         self.allowed_media_kinds = kwargs.pop("allowed_media_kinds")
-        super(BaseProductMediaForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.fields["file"].widget = forms.HiddenInput()
         self.fields["file"].required = True
@@ -530,7 +530,7 @@ class BaseProductMediaFormSet(BaseModelFormSet):
             kwargs.pop("languages", ()), self.default_language
         )
         kwargs.pop("empty_permitted", None)  # this is unknown to formset
-        super(BaseProductMediaFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_queryset(self):
         qs = ProductMedia.objects.filter(product=self.product)
@@ -548,12 +548,12 @@ class BaseProductMediaFormSet(BaseModelFormSet):
         forms = self.forms or []
         for form in forms:
             form.request = self.request
-        super(BaseProductMediaFormSet, self).save(commit)
+        super().save(commit)
 
 
 class ProductMediaForm(BaseProductMediaForm):
     def __init__(self, **kwargs):
-        super(ProductMediaForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["file"].required = False
 
     def clean_external_url(self):
@@ -582,7 +582,7 @@ class ProductImageMediaForm(BaseProductMediaForm):
     is_primary = forms.BooleanField(required=False, label=_("Is primary"))
 
     def __init__(self, **kwargs):
-        super(ProductImageMediaForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["file"].widget = forms.HiddenInput()
 
         if self.instance.pk and self.instance.file:
@@ -596,7 +596,7 @@ class ProductImageMediaForm(BaseProductMediaForm):
         return file
 
     def save(self, commit=True):
-        instance = super(ProductImageMediaForm, self).save(commit)
+        instance = super().save(commit)
         if self.cleaned_data.get("is_primary"):
             self.product.primary_image = instance
             self.product.save()
@@ -614,7 +614,7 @@ class ProductImageMediaFormSet(ProductMediaFormSet):
         In addition add the first saved image as primary image for the
         product if none is selected as such.
         """
-        super(ProductImageMediaFormSet, self).save(commit)
+        super().save(commit)
         self.product.refresh_from_db()
         if not self.product.primary_image:
             fallback_primary_image = self.product.media.filter(

@@ -142,7 +142,7 @@ class ContactGroup(TranslatableShuupModel):
         verbose_name_plural = _("contact groups")
 
     def clean(self):
-        super(ContactGroup, self).clean()
+        super().clean()
         shop = getattr(self, "shop", None)
         is_default = self.identifier in PROTECTED_CONTACT_GROUP_IDENTIFIERS
         if is_default and shop:
@@ -153,7 +153,7 @@ class ContactGroup(TranslatableShuupModel):
 
     def save(self, **kwargs):
         self.clean()
-        super(ContactGroup, self).save(**kwargs)
+        super().save(**kwargs)
         self.price_display_options.for_group_and_shop(self, self.shop)
 
     def set_price_display_options(self, **kwargs):
@@ -186,7 +186,7 @@ class ContactGroup(TranslatableShuupModel):
             raise models.ProtectedError(
                 _("Can't delete. This object is protected."), [self]
             )
-        super(ContactGroup, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     @property
     def is_protected(self):
@@ -394,7 +394,7 @@ class Contact(PolymorphicShuupModel):
     def __init__(self, *args, **kwargs):
         if self.default_tax_group_getter:
             kwargs.setdefault("tax_group", self.default_tax_group_getter())
-        super(Contact, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @property
     def full_name(self):
@@ -416,7 +416,7 @@ class Contact(PolymorphicShuupModel):
         add_to_default_group = bool(
             self.pk is None and self.default_contact_group_identifier
         )
-        super(Contact, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if add_to_default_group:
             self.groups.add(self.get_default_group())
 
@@ -606,7 +606,7 @@ class PersonContact(Contact):
             (first_name, last_name) = _split_name(name)
             kwargs["first_name"] = first_name
             kwargs["last_name"] = last_name
-        super(PersonContact, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @property
     def name(self):
@@ -623,7 +623,7 @@ class PersonContact(Contact):
         #   https://code.djangoproject.com/ticket/27419
         #   https://github.com/jpwatts/django-positions/issues/49
         #
-        deferred_set = super(PersonContact, self).get_deferred_fields()
+        deferred_set = super().get_deferred_fields()
         return {f for f in deferred_set if f != "name"}
 
     def save(self, *args, **kwargs):
@@ -637,7 +637,7 @@ class PersonContact(Contact):
                 self.first_name = getattr(user, "first_name", "")
                 self.last_name = getattr(user, "last_name", "")
 
-        return super(PersonContact, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     @property
     def is_all_seeing(self):
@@ -656,7 +656,7 @@ class AnonymousContact(Contact):
         )
 
     def __init__(self, *args, **kwargs):
-        super(AnonymousContact, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def __nonzero__(self):
         return False

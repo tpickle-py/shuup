@@ -39,7 +39,7 @@ class CheckoutPhaseViewMixin:
 
         self._checkout_process = checkout_process
         self.horizontal_template = horizontal_template
-        super(CheckoutPhaseViewMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @property
     def checkout_process(self):
@@ -73,7 +73,7 @@ class CheckoutPhaseViewMixin:
     def get_success_url(self, *args, **kwargs):
         if self.next_phase:
             return self.checkout_process.get_phase_url(self.next_phase)
-        next_obj = super(CheckoutPhaseViewMixin, self)
+        next_obj = super()
         if hasattr(next_obj, "get_success_url"):
             return next_obj.get_success_url(*args, **kwargs)
 
@@ -98,7 +98,7 @@ class CheckoutPhaseViewMixin:
         return self._storage
 
     def get_context_data(self, **kwargs):
-        context = super(CheckoutPhaseViewMixin, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["current_phase_url"] = self.get_url()
         context["next_phase_url"] = (
             self.next_phase.get_url() if self.next_phase else None

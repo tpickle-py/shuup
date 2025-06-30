@@ -7,7 +7,7 @@ class ColumnSettingsForm(forms.Form):
     selected = []
 
     def __init__(self, settings, *args, **kwargs):
-        super(ColumnSettingsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.settings = settings
         self.selected = [
             settings.get_settings_key(c.id) for c in settings.active_columns

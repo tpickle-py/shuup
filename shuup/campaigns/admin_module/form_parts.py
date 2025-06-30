@@ -27,7 +27,7 @@ class SalesRangesForm(forms.ModelForm):
         help_texts = {"max_value": _("Leave empty for no maximum")}
 
     def __init__(self, **kwargs):
-        super(SalesRangesForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class SalesRangesFormPart(FormPart):
@@ -36,7 +36,7 @@ class SalesRangesFormPart(FormPart):
     form = SalesRangesForm
 
     def __init__(self, request, object=None):
-        super(SalesRangesFormPart, self).__init__(request, object)
+        super().__init__(request, object)
         self.shops = [get_shop(request)]
 
     def _get_form_name(self, shop):
@@ -71,7 +71,7 @@ class CampaignBaseFormPart(FormPart):
     form = None  # Override in subclass
 
     def __init__(self, *args, **kwargs):
-        super(CampaignBaseFormPart, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_form_defs(self):
         yield TemplatedFormDef(
@@ -106,7 +106,7 @@ class BaseFormPart(FormPart):
     def __init__(self, request, form, name, owner):
         self.name = name
         self.form = form
-        super(BaseFormPart, self).__init__(request, object=owner)
+        super().__init__(request, object=owner)
 
     def get_form_defs(self):
         yield TemplatedFormDef(

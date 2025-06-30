@@ -28,7 +28,7 @@ class OrderCreatePaymentView(UpdateView):
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_context_data(self, **kwargs):
-        context = super(OrderCreatePaymentView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Create Payment -- %s") % context["order"]
         context["toolbar"] = Toolbar(
             [
@@ -44,12 +44,12 @@ class OrderCreatePaymentView(UpdateView):
         return context
 
     def get_form_kwargs(self):
-        kwargs = super(OrderCreatePaymentView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.pop("instance")
         return kwargs
 
     def get_form(self, form_class=None):
-        form = super(OrderCreatePaymentView, self).get_form(form_class)
+        form = super().get_form(form_class)
         order = self.object
         form.fields["amount"] = forms.DecimalField(
             required=True,
@@ -62,7 +62,7 @@ class OrderCreatePaymentView(UpdateView):
 
     def form_invalid(self, form):
         add_form_errors_as_messages(self.request, form)
-        return super(OrderCreatePaymentView, self).form_invalid(form)
+        return super().form_invalid(form)
 
     def form_valid(self, form):
         order = self.object

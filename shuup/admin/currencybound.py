@@ -15,7 +15,7 @@ class CurrencyBound:
 
     def __init__(self, currency=None, *args, **kwargs):
         self._currency = currency
-        super(CurrencyBound, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @property
     def currency(self):

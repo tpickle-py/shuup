@@ -98,7 +98,7 @@ class CampaignAdminModule(AdminModule):
 
     def get_model_url(self, object, kind, shop=None):
         if not hasattr(object, "admin_url_suffix"):
-            return super(CampaignAdminModule, self).get_model_url(object, kind)
+            return super().get_model_url(object, kind)
         admin_url = "shuup_admin:%s" % object.admin_url_suffix
         return derive_model_url(type(object), admin_url, object, kind)
 

@@ -13,7 +13,7 @@ class ProductPriceView(ProductDetailView):
     template_name = "shuup/front/product/detail_order_section.jinja"
 
     def get_object(self, queryset=None):
-        product = super(ProductPriceView, self).get_object(queryset)
+        product = super().get_object(queryset)
         vars = self.get_variation_variables()
         return ProductVariationResult.resolve(product, vars) if vars else product
 
@@ -21,7 +21,7 @@ class ProductPriceView(ProductDetailView):
         product = self.get_object()
         if not product:
             raise Http404
-        context = super(ProductPriceView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         shop_product = context["shop_product"]
 
         quantity = self._get_quantity(shop_product)

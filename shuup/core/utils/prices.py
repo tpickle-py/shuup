@@ -84,5 +84,5 @@ def _make_taxed(request, item, priceful, with_taxes):
 
 class TaxedPriceInfo(PriceInfo):
     def __init__(self, price, base_price, quantity, tax_amount, **kwargs):
-        super(TaxedPriceInfo, self).__init__(price, base_price, quantity, **kwargs)
+        super().__init__(price, base_price, quantity, **kwargs)
         self.tax_amount = tax_amount

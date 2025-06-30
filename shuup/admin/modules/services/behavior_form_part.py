@@ -25,7 +25,7 @@ class BehaviorFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         self.form_class = kwargs.pop("form")
         self.owner = kwargs.pop("owner")
-        super(BehaviorFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _get_actual_model(self):
         return self.form_class._meta.model
@@ -50,7 +50,7 @@ class BehaviorComponentFormPart(FormPart):
     def __init__(self, request, form, name, owner):
         self.name = name
         self.form = form
-        super(BehaviorComponentFormPart, self).__init__(request, object=owner)
+        super().__init__(request, object=owner)
 
     def get_form_defs(self):
         yield TemplatedFormDef(

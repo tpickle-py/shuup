@@ -12,7 +12,7 @@ class OrderCompleteView(DetailView):
 
     def render_to_response(self, context, **response_kwargs):
         order_complete_viewed.send(sender=self, order=self.object, request=self.request)
-        return super(OrderCompleteView, self).render_to_response(
+        return super().render_to_response(
             context, **response_kwargs
         )
 
@@ -32,7 +32,7 @@ class OrderRequiresVerificationView(DetailView):
         )
 
     def get_context_data(self, **kwargs):
-        context = super(OrderRequiresVerificationView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         if self.object.user and self.object.user.password == "//IMPLICIT//":
             from shuup.shop.views.activation_views import OneShotActivationForm
 

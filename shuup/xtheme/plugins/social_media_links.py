@@ -54,7 +54,7 @@ class SocialMediaLinksPluginForm(GenericPluginForm):
         Processed link configuration information is stored and returned as a dictionary
         (``links``).
         """
-        cleaned_data = super(SocialMediaLinksPluginForm, self).clean()
+        cleaned_data = super().clean()
         cleaned_data["links"] = {
             link_name: {
                 "url": cleaned_data.pop(link_name),

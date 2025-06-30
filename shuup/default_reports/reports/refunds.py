@@ -20,7 +20,7 @@ class RefundedSalesReport(OrderReportMixin, ShuupReportBase):
 
     def get_data(self, **kwargs):
         orders = (
-            super(RefundedSalesReport, self)
+            super()
             .get_objects()
             .filter(lines__type=OrderLineType.REFUND)
             .distinct()[: self.queryset_row_limit]

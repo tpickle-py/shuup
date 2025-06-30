@@ -70,7 +70,7 @@ class CheckoutMethodPhase(CheckoutPhaseViewMixin, LoginView):
         if (
             login_form.cleaned_data
         ):  # TODO: There is probably better way to figure out when to login
-            return super(CheckoutMethodPhase, self).form_valid(login_form)
+            return super().form_valid(login_form)
         checkout_choice_form = form.forms[self.checkout_method_choice_key]
         should_register = bool(int(checkout_choice_form.cleaned_data["register"] or 0))
         self.storage[CHECKOUT_CHOICE_STORAGE_KEY] = should_register

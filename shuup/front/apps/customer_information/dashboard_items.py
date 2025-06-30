@@ -12,7 +12,7 @@ class CustomerDashboardItem(DashboardItem):
     _url = "shuup:customer_edit"
 
     def get_context(self):
-        context = super(CustomerDashboardItem, self).get_context()
+        context = super().get_context()
         customer = self.request.customer
         context["customer"] = customer
         context["is_company"] = isinstance(customer, CompanyContact)

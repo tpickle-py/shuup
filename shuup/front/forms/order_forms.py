@@ -14,7 +14,7 @@ class ProductOrderForm(FormView):
         self.context = context
         self.product = product
         self.language = language
-        super(ProductOrderForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def render(self):  # doccov: ignore
         # vars = self.get_context_data(context)

@@ -22,7 +22,7 @@ class ServiceWizardForm(ShuupAdminForm):
 
     def __init__(self, **kwargs):
         self.provider = kwargs["instance"]
-        super(ServiceWizardForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def is_active(self):
         return bool(self.get_service()) if self.provider else None
@@ -51,7 +51,7 @@ class ServiceWizardForm(ShuupAdminForm):
 
     def save(self):
         is_new = not self.instance.pk
-        provider = super(ServiceWizardForm, self).save()
+        provider = super().save()
         provider.enabled = True
         provider.save()
         if is_new:
@@ -83,7 +83,7 @@ class ManualShippingWizardForm(ServiceWizardForm):
     )
 
     def __init__(self, **kwargs):
-        super(ManualShippingWizardForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if not self.provider:
             return
         service = self.get_shipping_method()
@@ -106,7 +106,7 @@ class ManualPaymentWizardForm(ServiceWizardForm):
     )
 
     def __init__(self, **kwargs):
-        super(ManualPaymentWizardForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if not self.provider:
             return
         service = self.get_payment_method()

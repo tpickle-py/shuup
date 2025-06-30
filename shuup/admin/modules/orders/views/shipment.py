@@ -42,7 +42,7 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_context_data(self, **kwargs):
-        context = super(OrderCreateShipmentView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Create Shipment -- %s") % context["order"]
         context["toolbar"] = Toolbar(
             [
@@ -58,7 +58,7 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
         return context
 
     def get_form_kwargs(self):
-        kwargs = super(OrderCreateShipmentView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.pop("instance")
         return kwargs
 
@@ -67,7 +67,7 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
 
     def get_form(self, form_class=None):
         default_field_keys = set()
-        form = super(OrderCreateShipmentView, self).get_form(form_class)
+        form = super().get_form(form_class)
         order = self.object
         supplier_id = self._get_supplier_id()
 
@@ -107,7 +107,7 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
 
     def form_invalid(self, form):
         add_form_errors_as_messages(self.request, form)
-        return super(OrderCreateShipmentView, self).form_invalid(form)
+        return super().form_invalid(form)
 
     def create_shipment(self, order, product_quantities, shipment):
         """

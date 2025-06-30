@@ -9,7 +9,7 @@ from shuup.xtheme.plugins.widgets import XThemeModelChoiceField
 
 class CarouselConfigForm(GenericPluginForm):
     def populate(self):
-        super(CarouselConfigForm, self).populate()
+        super().populate()
         self.fields["carousel"] = XThemeModelChoiceField(
             label=_("Carousel"),
             queryset=Carousel.objects.filter(shops=get_shop(self.request)),
@@ -21,7 +21,7 @@ class CarouselConfigForm(GenericPluginForm):
         )
 
     def clean(self):
-        cleaned_data = super(CarouselConfigForm, self).clean()
+        cleaned_data = super().clean()
         carousel = cleaned_data.get("carousel")
         cleaned_data["carousel"] = carousel.pk if hasattr(carousel, "pk") else None
         return cleaned_data

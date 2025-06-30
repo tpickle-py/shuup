@@ -230,7 +230,7 @@ class Discount(models.Model, MoneyPropped):
         verbose_name_plural = _("product discounts")
 
     def save(self, *args, **kwargs):
-        super(Discount, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def clean(self):
         if self.active and (not self.start_datetime or not self.end_datetime):

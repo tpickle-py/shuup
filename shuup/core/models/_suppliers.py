@@ -170,7 +170,7 @@ class Supplier(ModuleInterface, TranslatableShuupModel):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
-        return super(Supplier, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def get_orderability_errors(
         self, shop_product, quantity, customer, *args, **kwargs

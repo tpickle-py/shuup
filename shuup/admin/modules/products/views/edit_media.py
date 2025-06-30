@@ -37,7 +37,7 @@ class ProductMediaForm(MultiLanguageModelForm):
 
     def __init__(self, **kwargs):
         self.product = kwargs.pop("product")
-        super(ProductMediaForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         # Filer has a misimplemented field; we need to do this manually.
         self.fields["file"].widget = MediaChoiceWidget()
 
@@ -58,7 +58,7 @@ class ProductMediaFormSet(BaseModelFormSet):
 
     def __init__(self, *args, **kwargs):
         self.product = kwargs.pop("product")
-        super(ProductMediaFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def form(self, **kwargs):
         kwargs.setdefault("languages", settings.LANGUAGES)
@@ -94,10 +94,10 @@ class ProductMediaEditView(UpdateView):
         # TODO: Change this to use ShopProduct
         key = self.pk_url_kwarg
         self.kwargs[key] = ShopProduct.objects.get(pk=self.kwargs[key]).product.pk
-        return super(ProductMediaEditView, self).get_object(queryset)
+        return super().get_object(queryset)
 
     def get_context_data(self, **kwargs):
-        context = super(ProductMediaEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Edit Media: %s") % self.object
         context["toolbar"] = Toolbar(
             [
@@ -113,7 +113,7 @@ class ProductMediaEditView(UpdateView):
         return context
 
     def get_form_kwargs(self):
-        kwargs = super(ProductMediaEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         instance = kwargs.pop("instance", None)
         kwargs["queryset"] = ProductMedia.objects.filter(product=instance).order_by(
             "ordering"

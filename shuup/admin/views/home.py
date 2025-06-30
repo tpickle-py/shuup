@@ -55,7 +55,7 @@ class HomeView(TemplateView):
     template_name = "shuup/admin/home/home.jinja"
 
     def get_context_data(self, **kwargs):
-        context = super(HomeView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         shop = get_shop(self.request)
         context["blocks"] = blocks = []
         context["tour_key"] = "home"

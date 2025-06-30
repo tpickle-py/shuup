@@ -35,7 +35,7 @@ class ShopBaseForm(ProtectedFieldsMixin, ShuupAdminForm):
         }
 
     def __init__(self, **kwargs):
-        super(ShopBaseForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["currency"] = forms.ChoiceField(
             choices=get_currency_choices(),
             required=True,
@@ -107,7 +107,7 @@ class ShopWizardForm(ShuupAdminForm):
         labels = {"public_name": _("Shop name")}
 
     def __init__(self, **kwargs):
-        super(ShopWizardForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["currency"] = forms.ChoiceField(
             choices=get_currency_choices(),
             required=True,
@@ -118,7 +118,7 @@ class ShopWizardForm(ShuupAdminForm):
         )
 
     def save(self):
-        obj = super(ShopWizardForm, self).save()
+        obj = super().save()
         for language in settings.LANGUAGES:
             public_name = self.cleaned_data.get("public_name__%s" % language[0])
             if public_name:
@@ -163,7 +163,7 @@ class ShopAddressWizardForm(forms.ModelForm):
 
     def __init__(self, **kwargs):
         self.user = kwargs.pop("user")
-        super(ShopAddressWizardForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["postal_code"].required = True
         self.fields["phone"].required = True
 
@@ -181,7 +181,7 @@ class ShopAddressWizardForm(forms.ModelForm):
             self.fields["last_name"].initial = last_name
 
     def save(self):
-        obj = super(ShopAddressWizardForm, self).save()
+        obj = super().save()
         obj.name = "%s %s" % (
             self.cleaned_data.get("first_name"),
             self.cleaned_data.get("last_name"),

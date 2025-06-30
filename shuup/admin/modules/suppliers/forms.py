@@ -27,7 +27,7 @@ class SupplierBaseForm(ShuupAdminForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(SupplierBaseForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # add shops field when superuser only
         if getattr(self.request.user, "is_superuser", False):
@@ -69,7 +69,7 @@ class SupplierBaseForm(ShuupAdminForm):
             self.fields["is_approved"].initial = False
 
     def clean(self):
-        cleaned_data = super(SupplierBaseForm, self).clean()
+        cleaned_data = super().clean()
         stock_managed = cleaned_data.get("stock_managed")
         supplier_modules = cleaned_data.get("supplier_modules")
 
@@ -95,7 +95,7 @@ class SupplierBaseForm(ShuupAdminForm):
         return cleaned_data
 
     def save(self, commit=True):
-        instance = super(SupplierBaseForm, self).save(commit)
+        instance = super().save(commit)
         instance.shop_products.remove(
             *list(
                 instance.shop_products.exclude(

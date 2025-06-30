@@ -32,7 +32,7 @@ class ContactGroupPriceDisplayForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(ContactGroupPriceDisplayForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         shop = get_shop(self.request)
         if self.instance.pk:
             self.fields["group"].choices = [
@@ -65,7 +65,7 @@ class ContactGroupPriceDisplayForm(forms.ModelForm):
 
     def save(self, commit=True):
         price_display_mode = self.cleaned_data["price_display_mode"]
-        super(ContactGroupPriceDisplayForm, self).save(commit=commit)
+        super().save(commit=commit)
         _set_price_display_mode(self.request, self.instance.group, price_display_mode)
 
 

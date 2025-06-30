@@ -12,7 +12,7 @@ from shuup.utils.form_group import FormDef, FormGroup
 class TemplatedFormDef(FormDef):
     def __init__(self, name, form_class, template_name, required=True, kwargs=None):
         self.template_name = template_name
-        super(TemplatedFormDef, self).__init__(
+        super().__init__(
             name=name, form_class=form_class, required=required, kwargs=kwargs
         )
 

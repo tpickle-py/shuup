@@ -16,7 +16,7 @@ from shuup.utils.http import get_client_ip
 
 class AddonEnableDisableForm(forms.Form):
     def __init__(self, **kwargs):
-        super(AddonEnableDisableForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.addons = sorted(get_addons_from_entry_points())
         self._create_fields()
 
@@ -65,7 +65,7 @@ class AddonListView(FormView):
         return HttpResponseRedirect(self.request.path)
 
     def get_context_data(self, **kwargs):
-        context = super(AddonListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["toolbar"] = Toolbar(
             [
                 PostActionButton(

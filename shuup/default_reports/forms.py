@@ -9,7 +9,7 @@ from shuup.reports.forms import BaseReportForm
 
 class OrderReportForm(BaseReportForm):
     def __init__(self, *args, **kwargs):
-        super(OrderReportForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         customer_field = ObjectSelect2MultipleField(
             label=_("Customer"),
@@ -52,7 +52,7 @@ class OrderLineReportForm(BaseReportForm):
     )  # Because value of OrderLineType.PRODUCT is 1
 
     def __init__(self, *args, **kwargs):
-        super(OrderLineReportForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         supplier = ObjectSelect2MultipleField(
             label=_("Suppliers"),
@@ -143,7 +143,7 @@ class TaxesReportForm(OrderReportForm):
     )
 
     def __init__(self, *args, **kwargs):
-        super(TaxesReportForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.data and "tax" in self.data:
             taxes = Tax.objects.filter(pk__in=self.data.getlist("tax"))
@@ -174,7 +174,7 @@ class ShippingReportForm(OrderReportForm):
     )
 
     def __init__(self, *args, **kwargs):
-        super(ShippingReportForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.data and "shipping_method" in self.data:
             shipping_method = ShippingMethod.objects.filter(

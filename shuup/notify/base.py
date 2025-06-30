@@ -106,7 +106,7 @@ class Binding(Variable):
         constant_use=ConstantUse.VARIABLE_ONLY,
         default=None,
     ):
-        super(Binding, self).__init__(
+        super().__init__(
             name=name, type=type, required=required, help_text=help_text
         )
         self.constant_use = constant_use
@@ -143,14 +143,14 @@ class Binding(Variable):
 
 class TemplatedBinding(Binding):
     def __init__(self, *args, **kwargs):
-        super(TemplatedBinding, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.allow_variable:
             raise ValueError(
                 "Error! TemplatedBindings may not allow variable binding for security reasons."
             )
 
     def get_value(self, context, bind_data):
-        value = super(TemplatedBinding, self).get_value(context, bind_data)
+        value = super().get_value(context, bind_data)
         try:
             return render_in_context(context, value)
         except TemplateError:

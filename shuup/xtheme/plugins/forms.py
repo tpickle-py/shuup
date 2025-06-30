@@ -16,7 +16,7 @@ class PluginForm(forms.Form):
     def __init__(self, **kwargs):
         self.plugin = kwargs.pop("plugin")
         self.request = kwargs.pop("request")
-        super(PluginForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.populate()
         self.set_defaults()
         self.init_translated_fields()
@@ -60,7 +60,7 @@ class PluginForm(forms.Form):
         """
         Use initial values as defaults for cleaned data
         """
-        super(PluginForm, self).full_clean()
+        super().full_clean()
         for name in self.fields:
             if name in self.cleaned_data:
                 continue

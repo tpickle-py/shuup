@@ -45,7 +45,7 @@ COMMENT_TAG = "Translators:"
 
 class Command(makemessages.Command):
     def add_arguments(self, parser):
-        super(Command, self).add_arguments(parser)
+        super().add_arguments(parser)
         parser.add_argument(
             "--no-pot-date",
             action="store_true",
@@ -63,7 +63,7 @@ class Command(makemessages.Command):
         old_templatize = trans_real.templatize
         trans_real.templatize = jinja_messages_to_python
         try:
-            super(Command, self).handle(*args, **options)
+            super().handle(*args, **options)
         finally:
             trans_real.templatize = old_templatize
 
@@ -74,7 +74,7 @@ class Command(makemessages.Command):
         Extends base classes version of this method by adding the
         "Remove POT-Creation-Date" feature.
         """
-        potfiles = super(Command, self).build_potfiles()
+        potfiles = super().build_potfiles()
 
         if self.no_pot_date:
             unique_potfiles = sorted(set(potfiles))  # Remove duplicates
@@ -98,7 +98,7 @@ class Command(makemessages.Command):
         if self.no_pot_date:
             orig_contents = _read_file(pofile)
 
-        super(Command, self).write_po_file(potfile, locale)
+        super().write_po_file(potfile, locale)
 
         if self.no_pot_date:
             new_contents = _read_file(pofile)

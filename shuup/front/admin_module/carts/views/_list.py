@@ -70,7 +70,7 @@ class CartListView(PicotableListView):
     mass_actions_provider_key = "cart_list_actions_provider"
 
     def __init__(self):
-        super(CartListView, self).__init__()
+        super().__init__()
         self.columns = self.default_columns
 
     def get_queryset(self):
@@ -79,7 +79,7 @@ class CartListView(PicotableListView):
         """
         shop = get_shop(self.request)
         filters = {"product_count__gte": 0, "persistent": False, "shop": shop}
-        return super(CartListView, self).get_queryset().filter(**filters)
+        return super().get_queryset().filter(**filters)
 
     def format_finished_status(self, instance, *args, **kwargs):
         return "yes" if instance.finished else "no"
@@ -93,7 +93,7 @@ class CartListView(PicotableListView):
         return escape(format_money(instance.taxful_total_price))
 
     def get_context_data(self, **kwargs):
-        context = super(CartListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = _("Carts")
         return context
 

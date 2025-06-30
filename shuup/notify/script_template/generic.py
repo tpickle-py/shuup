@@ -51,7 +51,7 @@ class GenericScriptTemplateEmailForm(forms.Form):
     )
 
     def clean(self):
-        cleaned_data = super(GenericScriptTemplateEmailForm, self).clean()
+        cleaned_data = super().clean()
         send_to = cleaned_data.get("send_to")
         recipient = cleaned_data.get("recipient")
 
@@ -116,7 +116,7 @@ class GenericSendEmailScriptTemplate(BaseScriptTemplate):
         return [Step(next=StepNext.STOP, actions=(send_mail_action,))]
 
     def get_context_data(self):
-        context = super(GenericSendEmailScriptTemplate, self).get_context_data()
+        context = super().get_context_data()
         context["languages"] = dict(settings.LANGUAGES)
         context["default_language"] = settings.PARLER_DEFAULT_LANGUAGE_CODE
         return context
@@ -177,7 +177,7 @@ class GenericSendEmailScriptTemplate(BaseScriptTemplate):
             return initial
 
         else:
-            return super(GenericSendEmailScriptTemplate, self).get_initial()
+            return super().get_initial()
 
     def can_edit_script(self):
         """

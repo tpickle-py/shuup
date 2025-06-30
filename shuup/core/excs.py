@@ -55,7 +55,7 @@ class InvalidOrderStatusError(Problem):
 
 class ImpossibleProductModeException(ValueError):
     def __init__(self, message, code=None):
-        super(ImpossibleProductModeException, self).__init__(message)
+        super().__init__(message)
         self.code = code
 
 

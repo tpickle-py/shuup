@@ -35,7 +35,7 @@ class ScriptForm(forms.ModelForm):
 
     def __init__(self, **kwargs):
         self.shop = kwargs.pop("shop", None)
-        super(ScriptForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         event_choices = get_name_map("notify_event")
         self.fields["event_identifier"].choices = event_choices
         self.fields["event_identifier"].widget.choices = event_choices
@@ -46,14 +46,14 @@ class ScriptForm(forms.ModelForm):
 
     def save(self, commit=True):
         self.instance.shop = self.shop
-        return super(ScriptForm, self).save(commit)
+        return super().save(commit)
 
 
 class ScriptItemEditForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.script_item = kwargs.pop("script_item")
         self.event_class = kwargs.pop("event_class")
-        super(ScriptItemEditForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.variables = self.event_class.variables.copy()
         self.populate_form()
 

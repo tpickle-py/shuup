@@ -14,7 +14,7 @@ class BasketCampaignForm(BaseCampaignForm):
         model = BasketCampaign
 
     def __init__(self, *args, **kwargs):
-        super(BasketCampaignForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         coupons = Coupon.objects.filter(
             Q(active=True, shop=get_shop(self.request)),

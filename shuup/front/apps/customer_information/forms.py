@@ -44,7 +44,7 @@ class PersonContactForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        super(PersonContactForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for field in ("first_name", "last_name", "email"):
             self.fields[field].required = True
         self.initial["language"] = self.instance.language
@@ -61,7 +61,7 @@ class PersonContactForm(forms.ModelForm):
 
     def save(self, commit=True):
         self.instance.language = self.cleaned_data["language"]
-        return super(PersonContactForm, self).save(commit)
+        return super().save(commit)
 
 
 class CompanyContactForm(forms.ModelForm):
@@ -77,7 +77,7 @@ class CompanyContactForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        super(CompanyContactForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if settings.SHUUP_CUSTOMER_INFORMATION_ALLOW_PICTURE_UPLOAD:
             self.fields["picture"].widget = PictureDnDUploaderWidget(clearable=True)
@@ -125,7 +125,7 @@ class CustomerInformationFormGroup(FormGroup):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(CustomerInformationFormGroup, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         contact = get_person_contact(self.request.user)
         address_form_class = cached_load("SHUUP_ADDRESS_MODEL_FORM")
 
@@ -173,7 +173,7 @@ class CompanyInformationFormGroup(FormGroup):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(CompanyInformationFormGroup, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         user = self.request.user
         company = get_company_contact(user)
@@ -248,7 +248,7 @@ class AddressBookFormGroup(FormGroup):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         self.instance = kwargs.pop("instance")
-        super(AddressBookFormGroup, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         address_kwargs = {}
         saved_address_kwargs = {}
 

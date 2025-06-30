@@ -18,7 +18,7 @@ class PackageChildForm(forms.Form):
     def __init__(self, **kwargs):
         initial = kwargs.get("initial", {})
         self.product = initial.get("child")
-        super(PackageChildForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def get_shop_products(self, user):
         if not user or not self.product:
@@ -122,7 +122,7 @@ class PackageChildFormSet(ProductChildBaseFormSet):
                 self.parent_product.get_package_child_to_quantity_map()
             )
         ]
-        super(PackageChildFormSet, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def save(self):
         parent_product = self.parent_product

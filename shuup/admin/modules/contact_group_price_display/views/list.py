@@ -34,7 +34,7 @@ class ContactGroupPriceDisplayListView(PicotableListView):
         return _("Unspecified")
 
     def get_context_data(self, **kwargs):
-        context = super(ContactGroupPriceDisplayListView, self).get_context_data(
+        context = super().get_context_data(
             **kwargs
         )
         if self.request.user.is_superuser:

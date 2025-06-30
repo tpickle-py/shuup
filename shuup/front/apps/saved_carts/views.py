@@ -17,7 +17,7 @@ class CartViewMixin:
     model = StoredBasket
 
     def get_queryset(self):
-        qs = super(CartViewMixin, self).get_queryset()
+        qs = super().get_queryset()
         return qs.filter(
             persistent=True,
             deleted=False,
@@ -36,11 +36,11 @@ class CartDetailView(DashboardViewMixin, CartViewMixin, DetailView):
     context_object_name = "cart"
 
     def get_queryset(self):
-        qs = super(CartDetailView, self).get_queryset()
+        qs = super().get_queryset()
         return qs.prefetch_related("products")
 
     def get_context_data(self, **kwargs):
-        context = super(CartDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         lines = []
         product_dict = {}
         for product in self.object.products.all():

@@ -126,7 +126,7 @@ class URLActionButton(BaseActionButton):
             except Resolver404:
                 pass
 
-        super(URLActionButton, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def render(self, request):
         if not get_missing_permissions(request.user, self.required_permissions):
@@ -151,7 +151,7 @@ class SettingsActionButton(URLActionButton):
         kwargs.setdefault("text", _("Settings"))
         kwargs.setdefault("extra_css_class", "btn-inverse")
         kwargs.pop("return_url")
-        super(SettingsActionButton, self).__init__(url, **kwargs)
+        super().__init__(url, **kwargs)
 
     @classmethod
     def for_model(cls, model, **kwargs):
@@ -188,7 +188,7 @@ class NewActionButton(URLActionButton):
         kwargs.setdefault("text", _("Create new"))
         kwargs.setdefault("extra_css_class", "btn-primary")
 
-        super(NewActionButton, self).__init__(url, **kwargs)
+        super().__init__(url, **kwargs)
 
     @classmethod
     def for_model(cls, model, **kwargs):
@@ -221,7 +221,7 @@ class JavaScriptActionButton(BaseActionButton):
 
     def __init__(self, onclick, **kwargs):
         self.onclick = onclick
-        super(JavaScriptActionButton, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def render(self, request):
         if not get_missing_permissions(request.user, self.required_permissions):
@@ -251,7 +251,7 @@ class PostActionButton(BaseActionButton):
         self.value = value
         self.form_id = form_id
         self.confirm = confirm
-        super(PostActionButton, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def render(self, request):
         if not get_missing_permissions(request.user, self.required_permissions):
@@ -286,7 +286,7 @@ class DropdownActionButton(BaseActionButton):
     def __init__(self, items, split_button=None, **kwargs):
         self.split_button = split_button
         self.items = list(items)
-        super(DropdownActionButton, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def render_dropdown(self, request):
         yield '<div class="dropdown-menu dropdown-menu-right">'
@@ -337,7 +337,7 @@ class DropdownItem(BaseActionButton):
     def __init__(self, url="#", onclick=None, **kwargs):
         self.url = url
         self.onclick = onclick
-        super(DropdownItem, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def render(self, request):
         if not get_missing_permissions(request.user, self.required_permissions):
@@ -370,11 +370,11 @@ class PostActionDropdownItem(PostActionButton):
     base_css_classes = ("dropdown-item", "")
 
     def __init__(self, **kwargs):
-        super(PostActionDropdownItem, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def render(self, request):
         if not get_missing_permissions(request.user, self.required_permissions):
-            button = super(PostActionDropdownItem, self).render(request)
+            button = super().render(request)
             for bit in button:
                 yield bit
 
@@ -470,7 +470,7 @@ class Toolbar(list):
 
     def __init__(self, *args, **kwargs):
         view = kwargs.pop("view", None)
-        super(Toolbar, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if view:
             self.extend(Toolbar.for_view(view))
 

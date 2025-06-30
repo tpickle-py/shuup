@@ -29,7 +29,7 @@ class LayoutCellGeneralInfoForm(forms.Form):
     def __init__(self, **kwargs):
         self.layout_cell = kwargs.pop("layout_cell")
         self.theme = kwargs.pop("theme")
-        super(LayoutCellGeneralInfoForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.populate()
 
     def populate(self):
@@ -103,7 +103,7 @@ class LayoutCellFormGroup(FormGroup):
         self.theme = kwargs.pop("theme")
         self.request = kwargs.pop("request")
         assert isinstance(self.layout_cell, LayoutCell)
-        super(LayoutCellFormGroup, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.add_form_def(
             "general",
             LayoutCellGeneralInfoForm,

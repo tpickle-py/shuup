@@ -46,7 +46,7 @@ class BehaviorWizardForm(forms.Form):
 
     def __init__(self, **kwargs):
         self.shop = kwargs.pop("shop")
-        super(BehaviorWizardForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         if self._get_saved_script():
             self.fields["order_confirm_notification"].widget = forms.CheckboxInput(
@@ -134,7 +134,7 @@ class ContentWizardForm(forms.Form):
         self.shop = kwargs.pop("shop")
         if not self.shop:
             raise ValueError("Error! No shop provided.")
-        super(ContentWizardForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         if djangoenv.has_installed("shuup.simple_cms"):
             pages = self._get_installed_pages()

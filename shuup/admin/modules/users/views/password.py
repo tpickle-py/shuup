@@ -32,7 +32,7 @@ class PasswordChangeForm(forms.Form):
     )
 
     def __init__(self, changing_user, target_user, *args, **kwargs):
-        super(PasswordChangeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.changing_user = changing_user
         self.target_user = target_user
         if getattr(self.target_user, "is_superuser", False) and not getattr(
@@ -96,13 +96,13 @@ class UserChangePasswordView(UpdateView):
         return toolbar
 
     def get_form_kwargs(self):
-        kwargs = super(UserChangePasswordView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["target_user"] = kwargs.pop("instance")
         kwargs["changing_user"] = self.request.user
         return kwargs
 
     def get_context_data(self, **kwargs):
-        context = super(UserChangePasswordView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["toolbar"] = self.get_toolbar()
         return context
 

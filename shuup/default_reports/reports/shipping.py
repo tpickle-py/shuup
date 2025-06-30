@@ -33,7 +33,7 @@ class ShippingReport(OrderReportMixin, ShuupReportBase):
             filters &= Q(shipping_method__carrier__in=carrier)
 
         orders = (
-            super(ShippingReport, self)
+            super()
             .get_objects()
             .filter(filters)[: self.queryset_row_limit]
         )

@@ -20,7 +20,7 @@ class EmailAuthenticationForm(AuthenticationForm):
     }
 
     def __init__(self, *args, **kwargs):
-        super(EmailAuthenticationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["username"].label = _("Username or email address")
 
     def clean_username(self):
@@ -82,7 +82,7 @@ class RequestPasswordForm(RecoverPasswordForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(RequestPasswordForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def save(self):
         user_model = get_user_model()

@@ -120,7 +120,7 @@ class MediaBrowserView(TemplateView):
     title = ugettext_lazy("Browse Media")
 
     def get_context_data(self, **kwargs):
-        context = super(MediaBrowserView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["browser_config"] = {
             "filter": self.filter,
             "disabledMenus": self.disabledMenus,
@@ -138,7 +138,7 @@ class MediaBrowserView(TemplateView):
         handler = getattr(self, "handle_get_%s" % action, None)
         if handler:
             return handler(request.GET)
-        return super(MediaBrowserView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         action = request.POST.get("action") or request.GET.get("action")
@@ -541,7 +541,7 @@ class MediaFolderEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdate
         return get_default_edit_toolbar(self, self.get_save_form_id())
 
     def get_context_data(self, **kwargs):
-        context = super(MediaFolderEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = self.object.folder.name
         return context
 

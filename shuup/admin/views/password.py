@@ -28,7 +28,7 @@ class RequestPasswordView(FormView):
         )
 
     def get_form_kwargs(self):
-        kwargs = super(RequestPasswordView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 
@@ -52,7 +52,7 @@ class ResetPasswordView(FormView):
         return SetPasswordForm
 
     def get_form_kwargs(self):
-        kwargs = super(ResetPasswordView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["user"] = self.get_target_user()
         return kwargs
 
@@ -74,7 +74,7 @@ class ResetPasswordView(FormView):
         if not valid:
             raise Problem(_("This recovery link is invalid."))
 
-        return super(ResetPasswordView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     @atomic
     def form_valid(self, form):

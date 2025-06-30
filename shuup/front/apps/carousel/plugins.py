@@ -28,7 +28,7 @@ class CarouselPlugin(TemplatedPlugin):
     editor_form_class = CarouselConfigForm
 
     def get_defaults(self):
-        defaults = super(CarouselPlugin, self).get_defaults()
+        defaults = super().get_defaults()
         defaults.update(
             {
                 "carousel": self.config.get("carousel", None),
@@ -90,7 +90,7 @@ class BannerBoxPlugin(CarouselPlugin):
         :return: updated Plugin context
         :rtype: dict
         """
-        data = super(BannerBoxPlugin, self).get_context_data(context)
+        data = super().get_context_data(context)
         data["title"] = self.get_translated_value("title")
         data["type"] = "banner_box"
         return data

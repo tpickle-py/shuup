@@ -113,7 +113,7 @@ class Select2Filter(ChoicesFilter):
     type = "select2"
 
     def to_json(self, context):
-        json_dict = super(Select2Filter, self).to_json(context)
+        json_dict = super().to_json(context)
         json_dict["select2"] = True
         return json_dict
 
@@ -122,7 +122,7 @@ class MPTTFilter(Select2Filter):
     type = "mptt"
 
     def filter_queryset(self, queryset, column, value, context):
-        qs = super(MPTTFilter, self).filter_queryset(queryset, column, value, context)
+        qs = super().filter_queryset(queryset, column, value, context)
         return qs.get_descendants(include_self=True)
 
 
@@ -183,7 +183,7 @@ class RangeFilter(Filter):
 
 class DateRangeFilter(RangeFilter):
     def __init__(self, *args, **kwargs):
-        super(DateRangeFilter, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if not self.field_type:
             self.field_type = "date"
 
@@ -193,7 +193,7 @@ class DateRangeFilter(RangeFilter):
                 "min": try_parse_datetime(value.get("min")),
                 "max": try_parse_datetime(value.get("max")),
             }
-        return super(DateRangeFilter, self).filter_queryset(
+        return super().filter_queryset(
             queryset, column, value, context
         )
 
@@ -247,7 +247,7 @@ class MultiFieldTextFilter(TextFilter):
         :type filter_field: list<str>
         :param kwargs: Kwargs for `TextFilter`.
         """
-        super(MultiFieldTextFilter, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.filter_fields = tuple(filter_fields)
 
     def filter_queryset(self, queryset, column, value, context):
@@ -530,7 +530,7 @@ class PicotableViewMixin:
         query = request.GET.get("jq")
         if query:
             return self.process_picotable(query)
-        return super(PicotableViewMixin, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """

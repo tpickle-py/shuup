@@ -35,7 +35,7 @@ class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
             self.queryset = order_query_by_values(self.queryset, initial)
 
     def _check_values(self, value):  # To save current choice order in DB
-        queryset = super(OrderedModelMultipleChoiceField, self)._check_values(value)
+        queryset = super()._check_values(value)
         return order_query_by_values(queryset, value)
 
 
@@ -45,7 +45,7 @@ class PageLinksConfigForm(GenericPluginForm):
     """
 
     def __init__(self, **kwargs):
-        super(PageLinksConfigForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def populate(self):
         """
@@ -67,7 +67,7 @@ class PageLinksConfigForm(GenericPluginForm):
         """
         A custom clean method to save page configuration information in a serializable form
         """
-        cleaned_data = super(PageLinksConfigForm, self).clean()
+        cleaned_data = super().clean()
         pages = cleaned_data.get("pages", [])
         cleaned_data["pages"] = [page.pk for page in pages if hasattr(page, "pk")]
         return cleaned_data

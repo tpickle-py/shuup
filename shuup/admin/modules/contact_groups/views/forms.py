@@ -26,7 +26,7 @@ class ContactGroupBaseForm(MultiLanguageModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(ContactGroupBaseForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         shop = get_shop(self.request)
         self.fields["shop"] = forms.ModelChoiceField(
             queryset=Shop.objects.filter(pk=shop.id),
@@ -75,10 +75,10 @@ class ContactGroupMembersFormSet(BaseFormSet):
         kwargs.pop("empty_permitted", None)
         self.request = kwargs.pop("request", None)
         self.contact_group = kwargs.pop("contact_group")
-        super(ContactGroupMembersFormSet, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def _construct_form(self, i, **kwargs):
-        form = super(ContactGroupMembersFormSet, self)._construct_form(i, **kwargs)
+        form = super()._construct_form(i, **kwargs)
         form.fields[DELETION_FIELD_NAME].label = _("Remove")
         return form
 

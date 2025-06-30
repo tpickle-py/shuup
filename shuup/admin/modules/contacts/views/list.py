@@ -14,7 +14,7 @@ from shuup.utils.django_compat import force_text, reverse
 
 class ContactTypeFilter(ChoicesFilter):
     def __init__(self):
-        super(ContactTypeFilter, self).__init__(
+        super().__init__(
             choices=[
                 ("person", _("Person")),
                 ("company", _("Company")),
@@ -92,7 +92,7 @@ class ContactListView(PicotableListView):
     mass_actions_provider_key = "contact_list_mass_actions_provider"
 
     def __init__(self):
-        super(ContactListView, self).__init__()
+        super().__init__()
         picture_column = [
             column for column in self.columns if column.id == "contact_picture"
         ]
@@ -137,7 +137,7 @@ class ContactListView(PicotableListView):
         )
 
     def get_queryset(self):
-        qs = super(ContactListView, self).get_queryset()
+        qs = super().get_queryset()
         groups = self.get_filter().get("groups")
         query = Q(groups__in=groups) if groups else Q()
 

@@ -189,7 +189,7 @@ class CSVReportWriter(ReportWriter):
     writer_type = "csv"
 
     def __init__(self):
-        super(CSVReportWriter, self).__init__()
+        super().__init__()
         self.data = []
 
     def write_heading(self, text):
@@ -225,7 +225,7 @@ class ExcelReportWriter(ReportWriter):
     writer_type = "excel"
 
     def __init__(self):
-        super(ExcelReportWriter, self).__init__()
+        super().__init__()
         self.workbook = openpyxl.Workbook()
         self.worksheet = self.workbook.active
 
@@ -313,7 +313,7 @@ table, th, td {
     extra_header = ""
 
     def __init__(self):
-        super(HTMLReportWriter, self).__init__()
+        super().__init__()
         self.output = []
 
     def _w_raw(self, content):
@@ -419,7 +419,7 @@ class JSONReportWriter(ReportWriter):
     writer_type = "json"
 
     def __init__(self):
-        super(JSONReportWriter, self).__init__()
+        super().__init__()
         self.data = {}
 
     def write_data_table(self, report, report_data, has_totals=True):

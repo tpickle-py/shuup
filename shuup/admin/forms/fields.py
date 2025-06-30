@@ -14,17 +14,17 @@ class PercentageField(DecimalField):
         # Percentage values are 0..1 in database, so multiply by 100
         if value is not None and isinstance(value, Number):
             value *= self.MULTIPLIER
-        return super(PercentageField, self).prepare_value(value)
+        return super().prepare_value(value)
 
     def to_python(self, value):
-        value = super(PercentageField, self).to_python(value)
+        value = super().to_python(value)
         if value is not None:
             # We got a value, so divide it by 100 to get the 0..1 range value
             value /= self.MULTIPLIER
         return value
 
     def widget_attrs(self, widget):
-        attrs = super(PercentageField, self).widget_attrs(widget)
+        attrs = super().widget_attrs(widget)
         if self.min_value is not None:
             attrs["min"] = self.min_value * self.MULTIPLIER
         if self.max_value is not None:
@@ -42,7 +42,7 @@ class Select2ModelField(Field):
 
     def __init__(self, model, *args, **kwargs):
         self.model = model
-        super(Select2ModelField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def prepare_value(self, value):
         return getattr(value, "pk", value)
@@ -52,7 +52,7 @@ class Select2ModelField(Field):
             return self.model.objects.filter(pk=value).first()
 
     def widget_attrs(self, widget):
-        attrs = super(Select2ModelField, self).widget_attrs(widget)
+        attrs = super().widget_attrs(widget)
         model_name = "%s.%s" % (self.model._meta.app_label, self.model._meta.model_name)
         attrs.update({"data-model": model_name})
         if not self.required:
@@ -73,7 +73,7 @@ class Select2MultipleField(Field):
         self.model = model
         if search_mode:
             self.search_mode = search_mode
-        super(Select2MultipleField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def prepare_value(self, value):
         values = [getattr(v, "pk", v) for v in value or []]
@@ -88,13 +88,13 @@ class Select2MultipleField(Field):
         return values
 
     def to_python(self, value):
-        value = super(Select2MultipleField, self).to_python(value)
+        value = super().to_python(value)
         # Here we have sometimes None which will cause errors when
         # saving related fields so let's fallback to empty list
         return value or []
 
     def widget_attrs(self, widget):
-        attrs = super(Select2MultipleField, self).widget_attrs(widget)
+        attrs = super().widget_attrs(widget)
         model_name = "%s.%s" % (self.model._meta.app_label, self.model._meta.model_name)
         attrs.update({"data-model": model_name})
         if getattr(self, "search_mode", None):
@@ -132,7 +132,7 @@ class Select2MultipleMainProductField(Select2MultipleField):
     """
 
     def widget_attrs(self, widget):
-        attrs = super(Select2MultipleMainProductField, self).widget_attrs(widget)
+        attrs = super().widget_attrs(widget)
         attrs.update({"data-search-mode": "main"})
         return attrs
 
@@ -189,7 +189,7 @@ class WeekdayField(MultipleChoiceField):
         )
 
     def clean(self, value):
-        return ",".join(super(WeekdayField, self).clean(value))
+        return ",".join(super().clean(value))
 
 
 class ObjectSelect2ModelField(Select2ModelField):
@@ -199,22 +199,22 @@ class ObjectSelect2ModelField(Select2ModelField):
     """
 
     def __init__(self, model, selector=None, search_mode=None, *args, **kwargs):
-        super(ObjectSelect2ModelField, self).__init__(model, *args, **kwargs)
+        super().__init__(model, *args, **kwargs)
         self.selector = selector
 
     def prepare_value(self, value):
         if self.model:
-            return super(ObjectSelect2ModelField, self).prepare_value(value)
+            return super().prepare_value(value)
         return value
 
     def to_python(self, value):
         if self.model:
-            return super(ObjectSelect2ModelField, self).to_python(value)
+            return super().to_python(value)
         return value
 
     def widget_attrs(self, widget):
         if self.model:
-            attrs = super(ObjectSelect2ModelField, self).widget_attrs(widget)
+            attrs = super().widget_attrs(widget)
         else:
             attrs = super(Select2ModelField, self).widget_attrs(widget)
             attrs["data-model"] = self.selector
@@ -232,17 +232,17 @@ class ObjectSelect2MultipleField(Select2MultipleField):
     """
 
     def __init__(self, model, selector=None, search_mode=None, *args, **kwargs):
-        super(ObjectSelect2MultipleField, self).__init__(model, *args, **kwargs)
+        super().__init__(model, *args, **kwargs)
         self.selector = selector
 
     def prepare_value(self, value):
         if self.model:
-            return super(ObjectSelect2MultipleField, self).prepare_value(value)
+            return super().prepare_value(value)
         return value
 
     def to_python(self, value):
         if self.model:
-            return super(ObjectSelect2MultipleField, self).to_python(value)
+            return super().to_python(value)
         if not value:
             return []
         elif not isinstance(value, (list, tuple)):
@@ -253,7 +253,7 @@ class ObjectSelect2MultipleField(Select2MultipleField):
 
     def widget_attrs(self, widget):
         if self.model:
-            attrs = super(ObjectSelect2MultipleField, self).widget_attrs(widget)
+            attrs = super().widget_attrs(widget)
         else:
             attrs = super(Select2MultipleField, self).widget_attrs(widget)
             attrs["data-model"] = self.selector
@@ -272,24 +272,24 @@ class ObjectSelect2ModelMultipleField(Select2ModelMultipleField):
     """
 
     def __init__(self, model, selector=None, search_mode=None, *args, **kwargs):
-        super(ObjectSelect2ModelMultipleField, self).__init__(model, *args, **kwargs)
+        super().__init__(model, *args, **kwargs)
         self.selector = selector
 
     def prepare_value(self, value):
         if self.model:
-            return super(ObjectSelect2ModelMultipleField, self).prepare_value(value)
+            return super().prepare_value(value)
         return list(value or [])
 
     def to_python(self, value):
         if self.model:
-            return super(ObjectSelect2ModelMultipleField, self).to_python(value)
+            return super().to_python(value)
         if value and isinstance(value, (list, tuple)):
             return value
         return []
 
     def widget_attrs(self, widget):
         if self.model:
-            attrs = super(ObjectSelect2ModelMultipleField, self).widget_attrs(widget)
+            attrs = super().widget_attrs(widget)
         else:
             attrs = super(Select2MultipleField, self).widget_attrs(widget)
             attrs["data-model"] = self.selector
@@ -308,28 +308,28 @@ class ObjectSelect2MultipleMainProductField(Select2MultipleMainProductField):
     """
 
     def __init__(self, model, selector=None, search_mode=None, *args, **kwargs):
-        super(ObjectSelect2MultipleMainProductField, self).__init__(
+        super().__init__(
             model, *args, **kwargs
         )
         self.selector = selector
 
     def prepare_value(self, value):
         if self.model:
-            return super(ObjectSelect2MultipleMainProductField, self).prepare_value(
+            return super().prepare_value(
                 value
             )
         return list(value or [])
 
     def to_python(self, value):
         if self.model:
-            return super(ObjectSelect2MultipleMainProductField, self).to_python(value)
+            return super().to_python(value)
         if value and isinstance(value, (list, tuple)):
             return value
         return []
 
     def widget_attrs(self, widget):
         if self.model:
-            attrs = super(ObjectSelect2MultipleMainProductField, self).widget_attrs(
+            attrs = super().widget_attrs(
                 widget
             )
         else:

@@ -17,7 +17,7 @@ class BaseCampaignForm(ShuupAdminForm):
     def __init__(self, **kwargs):
         self.request = kwargs.pop("request")
         self.instance = kwargs.get("instance")
-        super(BaseCampaignForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["shop"].widget = forms.HiddenInput()
         self.fields["shop"].required = False
 
@@ -37,7 +37,7 @@ class BaseCampaignForm(ShuupAdminForm):
         return get_shop(self.request)
 
     def clean(self):
-        data = super(BaseCampaignForm, self).clean()
+        data = super().clean()
 
         start_datetime = data.get("start_datetime")
         end_datetime = data.get("end_datetime")
@@ -58,7 +58,7 @@ class CampaignsSelectMultipleField(ObjectSelect2MultipleField):
         )
         label = field.verbose_name if field_count > 1 else campaign_model.name
         help_text = field.help_text if field_count > 1 else campaign_model().description
-        super(CampaignsSelectMultipleField, self).__init__(
+        super().__init__(
             model=campaign_model.model,
             label=label,
             help_text=help_text,
@@ -72,7 +72,7 @@ class BaseEffectModelForm(forms.ModelForm):
         exclude = ["identifier", "active"]
 
     def __init__(self, **kwargs):
-        super(BaseEffectModelForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["campaign"].widget = forms.HiddenInput()
         _process_fields(self, **kwargs)
 
@@ -82,7 +82,7 @@ class BaseRuleModelForm(forms.ModelForm):
         exclude = ["identifier", "active"]
 
     def __init__(self, **kwargs):
-        super(BaseRuleModelForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         _process_fields(self, **kwargs)
 
 

@@ -25,7 +25,7 @@ class ScriptTemplateView(TemplateView):
         """
         Put all the script templates on disposal of the user.
         """
-        context = super(ScriptTemplateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["script_templates"] = six.iteritems(
             get_identifier_to_object_map(SCRIPT_TEMPLATES_PROVIDE_CATEGORY)
         )
@@ -90,7 +90,7 @@ class ScriptTemplateConfigView(FormView):
             messages.error(request, _("Template Script not found."))
             return redirect("shuup_admin:notify.script.list")
 
-        return super(ScriptTemplateConfigView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form(self, form_class=None):
         """
@@ -114,7 +114,7 @@ class ScriptTemplateConfigView(FormView):
         return redirect("shuup_admin:notify.script.list")
 
     def get_context_data(self, **kwargs):
-        context = super(ScriptTemplateConfigView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         script_template = self._get_script_template_class()()
         context["script_template"] = script_template
         context["edit_mode"] = EditScriptMode.CREATE
@@ -145,7 +145,7 @@ class ScriptTemplateEditView(FormView):
             messages.error(request, _("Templated script not found."))
             return redirect("shuup_admin:notify.script.list")
 
-        return super(ScriptTemplateEditView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form(self, form_class=None):
         """
@@ -165,7 +165,7 @@ class ScriptTemplateEditView(FormView):
         return redirect("shuup_admin:notify.script.list")
 
     def get_context_data(self, **kwargs):
-        context = super(ScriptTemplateEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         script_template = self._get_script_template_class()(self.instance)
         context["script_template"] = script_template
         context["edit_mode"] = EditScriptMode.MODIFY

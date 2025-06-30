@@ -18,12 +18,12 @@ class WeightBasedPriceRangeForm(ShuupAdminForm):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("languages", settings.LANGUAGES)
         kwargs.setdefault("default_language", settings.PARLER_DEFAULT_LANGUAGE_CODE)
-        super(WeightBasedPriceRangeForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class CustomRangeFormSet(forms.BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
-        super(CustomRangeFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_name(self):
         return _("Weight-based pricing range")
@@ -50,7 +50,7 @@ class WeightBasedPricingFormPart(FormPart):
         ).first()
         if not self.component:
             self.component = WeightBasedPricingBehaviorComponent()
-        super(WeightBasedPricingFormPart, self).__init__(request, object)
+        super().__init__(request, object)
 
     def get_form_defs(self):
         yield TemplatedFormDef(

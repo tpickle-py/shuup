@@ -14,7 +14,7 @@ class ContactGroupPriceDisplayEditView(CreateOrUpdateView):
     add_form_errors_as_messages = True
 
     def get_form_kwargs(self):
-        kwargs = super(ContactGroupPriceDisplayEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 

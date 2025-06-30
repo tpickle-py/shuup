@@ -46,7 +46,7 @@ class ServiceListView(PicotableListView):
 
     def get_queryset(self):
         return (
-            super(ServiceListView, self).get_queryset().filter(shop=self.request.shop)
+            super().get_queryset().filter(shop=self.request.shop)
         )
 
 
@@ -55,7 +55,7 @@ class ShippingMethodListView(ServiceListView):
 
     def __init__(self, **kwargs):
         self.default_columns = self.base_columns + [Column("carrier", _("Carrier"))]
-        super(ShippingMethodListView, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 class PaymentMethodListView(ServiceListView):
@@ -65,4 +65,4 @@ class PaymentMethodListView(ServiceListView):
         self.default_columns = self.base_columns + [
             Column("payment_processor", _("Payment Processor"))
         ]
-        super(PaymentMethodListView, self).__init__(**kwargs)
+        super().__init__(**kwargs)

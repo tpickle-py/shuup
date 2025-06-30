@@ -477,7 +477,7 @@ class ServiceBehaviorComponent(PolymorphicShuupModel):
     def __init__(self, *args, **kwargs):
         if type(self) != ServiceBehaviorComponent and self.name is None:
             raise TypeError("Error! %s.name is not defined." % type(self).__name__)
-        super(ServiceBehaviorComponent, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_unavailability_reasons(
         self, service: "Service", source: Union["OrderSource", "Order"]

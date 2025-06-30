@@ -278,7 +278,7 @@ class Category(MPTTModel, TranslatableModel):
             category_deleted.send(sender=type(self), category=self)
 
     def save(self, *args, **kwargs):
-        rv = super(Category, self).save(*args, **kwargs)
+        rv = super().save(*args, **kwargs)
         generate_multilanguage_slugs(self, self._get_slug_name)
 
         # bump children cache

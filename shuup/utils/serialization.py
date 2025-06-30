@@ -9,4 +9,4 @@ class ExtendedJSONEncoder(django.core.serializers.json.DjangoJSONEncoder):
     def default(self, o):
         if isinstance(o, Promise):
             return force_text(o)
-        return super(ExtendedJSONEncoder, self).default(o)
+        return super().default(o)

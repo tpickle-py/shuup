@@ -13,7 +13,7 @@ class ServiceProviderTypeForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.provider_label = kwargs.pop("label", "")
-        super(ServiceProviderTypeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean_providers(self):
         data = self.cleaned_data.get("providers", None)

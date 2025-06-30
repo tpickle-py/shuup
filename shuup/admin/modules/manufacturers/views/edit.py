@@ -24,7 +24,7 @@ class ManufacturerForm(ShuupAdminFormNoTranslation):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(ManufacturerForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # add shops field when superuser only
         if getattr(self.request.user, "is_superuser", False):
             self.fields["shops"] = ObjectSelect2MultipleField(
@@ -52,7 +52,7 @@ class ManufacturerForm(ShuupAdminFormNoTranslation):
                 _("You have no permission to change a shared Manufacturer.")
             )
 
-        instance = super(ManufacturerForm, self).save(commit)
+        instance = super().save(commit)
 
         # if shops field is not available and it is a new manufacturer, set the current shop
         if not settings.SHUUP_ENABLE_MULTIPLE_SHOPS or "shops" not in self.fields:
@@ -73,7 +73,7 @@ class ManufacturerEditView(CreateOrUpdateView):
         )
 
     def get_form_kwargs(self):
-        kwargs = super(ManufacturerEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 

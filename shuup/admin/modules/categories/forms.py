@@ -38,7 +38,7 @@ class CategoryBaseForm(ShuupAdminForm):
 
     def __init__(self, request, **kwargs):
         self.request = request
-        super(CategoryBaseForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         # Exclude `DELETED`. We don't want people to use that field to set a category as deleted.
         filter_form_field_choices(
             self.fields["status"], (CategoryStatus.DELETED.value,), invert=True
@@ -64,7 +64,7 @@ class CategoryBaseForm(ShuupAdminForm):
         return parent
 
     def save(self, commit=True):
-        instance = super(CategoryBaseForm, self).save(commit)
+        instance = super().save(commit)
         instance.shops.add(self.request.shop)
 
 
@@ -90,7 +90,7 @@ class CategoryProductForm(forms.Form):
     def __init__(self, shop, category, **kwargs):
         self.shop = shop
         self.category = category
-        super(CategoryProductForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.fields["remove_products"].choices = [(None, "-----")] + [
             (obj.product.pk, obj.product.name)
             for obj in category.shop_products.filter(shop=shop)

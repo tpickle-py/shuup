@@ -11,7 +11,7 @@ class SavedCartsItem(DashboardItem):
     _url = "shuup:saved_cart.list"
 
     def get_context(self):
-        context = super(SavedCartsItem, self).get_context()
+        context = super().get_context()
         context["carts"] = StoredBasket.objects.filter(
             persistent=True,
             deleted=False,

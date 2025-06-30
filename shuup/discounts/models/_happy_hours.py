@@ -62,4 +62,4 @@ class TimeRange(models.Model):
                 code="time_range_error",
             )
 
-        return super(TimeRange, self).save(**kwargs)
+        return super().save(**kwargs)

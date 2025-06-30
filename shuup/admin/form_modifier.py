@@ -53,7 +53,7 @@ class ModifiableFormMixin:
     form_modifier_provide_key = None
 
     def clean(self):
-        cleaned_data = super(ModifiableFormMixin, self).clean()
+        cleaned_data = super().clean()
         for extend_class in get_provide_objects(self.form_modifier_provide_key):
             extend_class().clean_hook(self)
         return cleaned_data
@@ -66,7 +66,7 @@ class ModifiableViewMixin:
                 form.fields[field_key] = field
 
     def get_form(self, form_class=None):
-        form = super(ModifiableViewMixin, self).get_form(self.form_class)
+        form = super().get_form(self.form_class)
         self.add_extra_fields(form, self.object)
         return form
 
@@ -82,7 +82,7 @@ class ModifiableViewMixin:
 
     @atomic
     def form_valid(self, form):
-        response = super(ModifiableViewMixin, self).form_valid(form)
+        response = super().form_valid(form)
         has_extension_errors = self.form_valid_hook(form, self.object)
 
         if has_extension_errors:

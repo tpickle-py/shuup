@@ -21,7 +21,7 @@ class AnonymizeContactToolbarButton(PostActionButton):
         kwargs["post_url"] = reverse(
             "shuup_admin:gdpr.anonymize", kwargs=dict(pk=object.pk)
         )
-        super(AnonymizeContactToolbarButton, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     @staticmethod
     def visible_for_object(object):
@@ -38,7 +38,7 @@ class DownloadDataToolbarButton(PostActionButton):
         kwargs["post_url"] = reverse(
             "shuup_admin:gdpr.download_data", kwargs=dict(pk=object.pk)
         )
-        super(DownloadDataToolbarButton, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     @staticmethod
     def visible_for_object(object):

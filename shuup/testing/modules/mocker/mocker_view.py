@@ -125,7 +125,7 @@ class MockerView(FormView):
         ]
 
     def get_form(self, form_class=None):
-        form = super(MockerView, self).get_form(form_class)
+        form = super().get_form(form_class)
         form.fields["type"].choices = self.get_mockers()
         return form
 

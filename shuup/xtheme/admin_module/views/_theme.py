@@ -93,7 +93,7 @@ class ThemeConfigView(FormView):
     form_class = ActivationForm
 
     def get_context_data(self, **kwargs):
-        context = super(ThemeConfigView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         shop = get_shop(self.request)
         context.update(cached_load("SHUUP_XTHEME_ADMIN_THEME_CONTEXT")(shop))
         return context
@@ -134,7 +134,7 @@ class ThemeConfigDetailView(CreateOrUpdateView):
         )
 
     def get_context_data(self, **kwargs):
-        context = super(ThemeConfigDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         shop = get_shop(self.request)
         theme = self.get_theme()
         context["theme"] = theme
@@ -162,7 +162,7 @@ class ThemeConfigDetailView(CreateOrUpdateView):
         )
 
     def save_form(self, form):
-        super(ThemeConfigDetailView, self).save_form(form)
+        super().save_form(form)
         cache.bump_version(get_theme_cache_key(get_shop(self.request)))
 
     def get_toolbar(self):
@@ -188,7 +188,7 @@ class ThemeGuideTemplateView(TemplateView):
             kwargs["theme_identifier"], shop=get_shop(self.request)
         )
         self.template_name = theme.guide_template
-        return super(ThemeGuideTemplateView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class FontEditView(CreateOrUpdateView):
@@ -201,7 +201,7 @@ class FontEditView(CreateOrUpdateView):
         return Font.objects.filter(shop=get_shop(self.request))
 
     def get_form_kwargs(self):
-        kwargs = super(FontEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 

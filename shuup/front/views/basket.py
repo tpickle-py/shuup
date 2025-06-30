@@ -7,7 +7,7 @@ class DefaultBasketView(TemplateView):
     template_name = "shuup/front/basket/default_basket.jinja"
 
     def get_context_data(self, **kwargs):
-        context = super(DefaultBasketView, self).get_context_data()
+        context = super().get_context_data()
         basket = self.request.basket  # noqa (F821) type: shuup.front.basket.objects.BaseBasket
         context["basket"] = basket
         context["errors"] = list(basket.get_validation_errors())

@@ -81,7 +81,7 @@ class SupplierProductListFilter(SimpleProductListModifier):
             return Q(shop_products__suppliers__in=suppliers)
 
     def get_admin_fields(self):
-        default_fields = super(SupplierProductListFilter, self).get_admin_fields()
+        default_fields = super().get_admin_fields()
         default_fields[0][1].help_text = _(
             "Enable this to allow products to be filterable by supplier."
         )

@@ -122,13 +122,13 @@ class MultiLanguageModelForm(TranslatableModelForm):
         if initial is not None:
             object_data.update(initial)
         kwargs["initial"] = object_data
-        super(MultiLanguageModelForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def __getitem__(self, key):
         try:
-            return super(MultiLanguageModelForm, self).__getitem__(key)
+            return super().__getitem__(key)
         except KeyError:
-            return super(MultiLanguageModelForm, self).__getitem__(
+            return super().__getitem__(
                 key + "__" + self.default_language
             )
 

@@ -19,7 +19,7 @@ class CouponsUsageForm(OrderReportForm):
     )
 
     def __init__(self, *args, **kwargs):
-        super(CouponsUsageForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.data and "coupon" in self.data:
             coupon = Coupon.objects.filter(pk__in=self.data.getlist("coupon"))
@@ -45,7 +45,7 @@ class CouponsUsageReport(OrderReportMixin, ShuupReportBase):
     ]
 
     def get_objects(self):
-        filters = Q(order__in=super(CouponsUsageReport, self).get_objects())
+        filters = Q(order__in=super().get_objects())
 
         if self.options.get("coupon"):
             filters &= Q(coupon__in=self.options["coupon"])

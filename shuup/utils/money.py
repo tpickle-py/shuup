@@ -37,7 +37,7 @@ class Money(numbers.UnittedDecimal):
             currency = value.currency
         if not currency:
             raise TypeError("Error! %s: currency must be given." % cls.__name__)
-        instance = super(Money, cls).__new__(cls, value, *args, **kwargs)
+        instance = super().__new__(cls, value, *args, **kwargs)
         instance.currency = currency
         return instance
 

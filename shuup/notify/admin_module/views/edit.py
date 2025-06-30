@@ -20,7 +20,7 @@ class ScriptEditView(CreateOrUpdateView):
     context_object_name = "script"
 
     def get_context_data(self, **kwargs):
-        context = super(ScriptEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         if self.object.pk:
             buttons = []
 
@@ -83,7 +83,7 @@ class ScriptEditView(CreateOrUpdateView):
         return context
 
     def get_form_kwargs(self):
-        kwargs = super(ScriptEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["shop"] = get_shop(self.request)
         return kwargs
 
@@ -98,7 +98,7 @@ class ScriptEditView(CreateOrUpdateView):
 
     def get_queryset(self):
         return (
-            super(ScriptEditView, self)
+            super()
             .get_queryset()
             .filter(shop=get_shop(self.request))
         )

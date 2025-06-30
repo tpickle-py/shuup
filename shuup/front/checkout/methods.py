@@ -25,7 +25,7 @@ PAYMENT_METHOD_REQUIRED_CONFIG_KEY = "checkout_required_method:payment"
 
 class MethodWidget(forms.Widget):
     def __init__(self, attrs=None, choices=()):
-        super(MethodWidget, self).__init__(attrs)
+        super().__init__(attrs)
         self.choices = list(choices)
         self.field_name = None
         self.basket = None
@@ -65,7 +65,7 @@ class MethodsForm(forms.Form):
         self.request = kwargs.pop("request")
         self.basket = kwargs.pop("basket")
         self.shop = kwargs.pop("shop")
-        super(MethodsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.fields["shipping_method"] = forms.ModelChoiceField(
             queryset=ShippingMethod.objects.all(),
@@ -137,7 +137,7 @@ class MethodsPhase(CheckoutPhaseViewMixin, FormView):
         self.basket.uncache()
 
     def get_form_kwargs(self):
-        kwargs = super(MethodsPhase, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         kwargs["basket"] = self.basket
         kwargs["shop"] = self.request.shop
@@ -160,7 +160,7 @@ class MethodsPhase(CheckoutPhaseViewMixin, FormView):
         if form.has_changed():
             self.basket.storage.add_log_entry(self.basket, _("Saved services."))
 
-        return super(MethodsPhase, self).form_valid(form)
+        return super().form_valid(form)
 
     def get_initial(self):
         initial = {}
@@ -171,7 +171,7 @@ class MethodsPhase(CheckoutPhaseViewMixin, FormView):
         return initial
 
     def get_context_data(self, **kwargs):
-        context = super(MethodsPhase, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["show_shipping"] = self.basket.has_shippable_lines()
         return context
 

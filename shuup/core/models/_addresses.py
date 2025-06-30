@@ -331,7 +331,7 @@ class ImmutableAddress(ChangeProtected, Address):
     def to_immutable(self):
         if self.pk:
             return self
-        return super(ImmutableAddress, self).to_immutable()
+        return super().to_immutable()
 
 
 class SavedAddressManager(models.Manager):

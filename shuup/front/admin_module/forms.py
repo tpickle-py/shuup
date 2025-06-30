@@ -47,7 +47,7 @@ class BaseSettingsForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(BaseSettingsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for field in self.fields.keys():
             self.fields[field].initial = configuration.get(self.request.shop, field)

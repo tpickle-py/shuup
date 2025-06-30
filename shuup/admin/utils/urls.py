@@ -47,7 +47,7 @@ class AdminRegexURLPattern(URLPattern):
 
         repath = re_path(regex, callback, default_args, name)
         pattern = repath.pattern
-        super(AdminRegexURLPattern, self).__init__(
+        super().__init__(
             pattern, callback, default_args, name
         )
 

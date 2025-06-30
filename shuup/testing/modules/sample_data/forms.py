@@ -35,7 +35,7 @@ class SampleObjectsWizardForm(forms.Form):
 
     def __init__(self, **kwargs):
         shop = kwargs.pop("shop")
-        super(SampleObjectsWizardForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         if sample_manager.get_installed_categories(shop):
             self.fields["categories"].initial = True
@@ -78,7 +78,7 @@ class SampleObjectsWizardForm(forms.Form):
 class ConsolidateObjectsForm(forms.Form):
     def __init__(self, **kwargs):
         shop = kwargs.pop("shop")
-        super(ConsolidateObjectsForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         if sample_manager.get_installed_categories(shop):
             self.fields["categories"] = forms.BooleanField(

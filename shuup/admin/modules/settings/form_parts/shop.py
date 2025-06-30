@@ -50,7 +50,7 @@ class ShopOrderConfigurationForm(forms.Form):
                 settings.SHUUP_REFERENCE_NUMBER_PREFIX,
             ),
         }
-        super(ShopOrderConfigurationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         reference_method = configuration.get(
             shop,

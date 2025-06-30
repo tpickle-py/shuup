@@ -21,10 +21,10 @@ class Price(Money):
     def __new__(cls, value="0", *args, **kwargs):
         if cls == Price:
             raise TypeError("Error! Do not create direct instances of Price.")
-        return super(Price, cls).__new__(cls, value, *args, **kwargs)
+        return super().__new__(cls, value, *args, **kwargs)
 
     def unit_matches_with(self, other):
-        if not super(Price, self).unit_matches_with(other):
+        if not super().unit_matches_with(other):
             return False
         self_includes_tax = getattr(self, "includes_tax", None)
         other_includes_tax = getattr(other, "includes_tax", None)
@@ -53,7 +53,7 @@ class Price(Money):
 
     def __str__(self):
         incl = "incl." if self.includes_tax else "excl."
-        return "%s (%s tax)" % (super(Price, self).__str__(), incl)
+        return "%s (%s tax)" % (super().__str__(), incl)
 
 
 class TaxfulPrice(Price):

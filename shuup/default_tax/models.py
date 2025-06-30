@@ -113,7 +113,7 @@ class TaxRule(models.Model):
         ).get_alphabetical_limits()
         self._postal_codes_min = min_value
         self._postal_codes_max = max_value
-        return super(TaxRule, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return _("Tax rule {} ({})").format(self.pk, self.tax)

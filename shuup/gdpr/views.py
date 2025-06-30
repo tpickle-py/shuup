@@ -81,7 +81,7 @@ class GDPRCustomerDashboardView(DashboardViewMixin, TemplateView):
     template_name = "shuup/gdpr/edit_customer_data.jinja"
 
     def get_context_data(self, **kwargs):
-        context = super(GDPRCustomerDashboardView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         has_peding_orders = False
 
         if Order.objects.incomplete().filter(customer=self.request.person).exists():

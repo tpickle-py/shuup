@@ -67,7 +67,7 @@ class ReportView(FormView):
         return writer.get_response(report=report)
 
     def get_context_data(self, **kwargs):
-        context = super(ReportView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         selected_report = self.request.GET.get("report")
         context["current_report"] = (
             self.report_classes[selected_report] if selected_report else None

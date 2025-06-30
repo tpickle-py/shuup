@@ -24,7 +24,7 @@ class CarouselListView(PicotableListView):
 
     def get_queryset(self):
         return (
-            super(CarouselListView, self)
+            super()
             .get_queryset()
             .filter(shops=get_shop(self.request))
         )

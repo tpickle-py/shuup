@@ -46,7 +46,7 @@ class ClassicGrayTheme(BaseThemeFieldsMixin, Theme):
 
     @property
     def fields(self):
-        return self._theme_fields + super(ClassicGrayTheme, self).get_base_fields()
+        return self._theme_fields + super().get_base_fields()
 
     def get_view(self, view_name):
         import shuup.front.themes.views as views

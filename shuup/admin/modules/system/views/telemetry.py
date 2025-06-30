@@ -12,7 +12,7 @@ class TelemetryView(TemplateView):
     template_name = "shuup/admin/system/telemetry.jinja"
 
     def get_context_data(self, **kwargs):
-        context = super(TelemetryView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context.update(
             {
                 "opt_in": not telemetry.is_opt_out(),
@@ -32,7 +32,7 @@ class TelemetryView(TemplateView):
                 telemetry.get_last_submission_data(),
                 content_type="text/plain; charset=UTF-8",
             )
-        return super(TelemetryView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         opt = request.POST.get("opt")
@@ -44,7 +44,7 @@ class TelemetryView(TemplateView):
 class TelemetryWizardForm(forms.Form):
     def __init__(self, **kwargs):
         self.shop = kwargs.pop("shop")
-        super(TelemetryWizardForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.fields["opt_in_telemetry"] = forms.BooleanField(
             label=_("Opt-in for telemetry"),

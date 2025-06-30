@@ -26,7 +26,7 @@ class ProductActionCategory(Enum):
 # TODO: Rewrite this for 3.0.
 class EditProductToolbar(Toolbar):
     def __init__(self, view):
-        super(EditProductToolbar, self).__init__()
+        super().__init__()
         self.view = view
         self.request = view.request
         self.product = view.object.product

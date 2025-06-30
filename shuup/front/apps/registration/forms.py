@@ -30,7 +30,7 @@ class CompanyForm(TaxNumberCleanMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(CompanyForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["name"].required = True
         self.fields["tax_number"].required = True
         address_form = cached_load("SHUUP_ADDRESS_MODEL_FORM")()
@@ -50,7 +50,7 @@ class ContactPersonForm(forms.ModelForm):
         fields = ["first_name", "last_name", "email", "phone"]
 
     def __init__(self, **kwargs):
-        super(ContactPersonForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         for field_name, formfield in self.fields.items():
             if field_name in ["first_name", "last_name", "email"]:
                 formfield.required = True
@@ -60,7 +60,7 @@ class ContactPersonForm(forms.ModelForm):
 class PersonRegistrationForm(RegistrationForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(PersonRegistrationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for provider_cls in get_provide_objects("front_registration_field_provider"):
             provider = provider_cls()
@@ -69,7 +69,7 @@ class PersonRegistrationForm(RegistrationForm):
 
     def save(self, commit=True, *args, **kwargs):
         with atomic():
-            user = super(PersonRegistrationForm, self).save(*args, **kwargs)
+            user = super().save(*args, **kwargs)
             contact = get_person_contact(user)
             contact.add_to_shop(self.request.shop)
             person_registration_save.send(
@@ -81,7 +81,7 @@ class PersonRegistrationForm(RegistrationForm):
 class CompanyRegistrationForm(FormGroup):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(CompanyRegistrationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         address_form_cls = cached_load("SHUUP_ADDRESS_MODEL_FORM")
         self.add_form_def("company", CompanyForm, kwargs={"request": self.request})
         self.add_form_def("billing", address_form_cls)
@@ -101,7 +101,7 @@ class CompanyRegistrationForm(FormGroup):
                 )
 
     def instantiate_forms(self):
-        super(CompanyRegistrationForm, self).instantiate_forms()
+        super().instantiate_forms()
         company_form = self.forms["company"]
         billing_form = self.forms["billing"]
         for field in list(billing_form.fields):

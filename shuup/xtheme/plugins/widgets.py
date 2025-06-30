@@ -52,7 +52,7 @@ class XThemeSelect2ModelMultipleChoiceField(forms.MultipleChoiceField):
                 for instance in model.objects.filter(pk__in=initial)
             ]
 
-        super(XThemeSelect2ModelMultipleChoiceField, self).__init__(
+        super().__init__(
             choices=choices,
             required=required,
             widget=forms.SelectMultiple(attrs=widget_attrs),
@@ -95,7 +95,7 @@ class XThemeSelect2ModelChoiceField(forms.ChoiceField):
             if instance:
                 choices = [(instance.pk, force_text(instance))]
 
-        super(XThemeSelect2ModelChoiceField, self).__init__(
+        super().__init__(
             choices=choices,
             required=required,
             widget=forms.Select(attrs=widget_attrs),

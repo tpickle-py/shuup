@@ -40,7 +40,7 @@ class _ShortNameToSymbol:
         if "short_name" in kwargs:
             self._issue_deprecation_warning()
             kwargs.setdefault("symbol", kwargs.pop("short_name"))
-        super(_ShortNameToSymbol, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @property
     def short_name(self):
@@ -245,7 +245,7 @@ class SalesUnitAsDisplayUnit(DisplayUnit):
         managed = False
 
     def __init__(self, sales_unit):
-        super(SalesUnitAsDisplayUnit, self).__init__()
+        super().__init__()
         self.internal_unit = sales_unit
         self.ratio = Decimal(1)
         self.decimals = sales_unit.decimals
@@ -276,7 +276,7 @@ class PiecesSalesUnit(SalesUnit):
         managed = False
 
     def __init__(self):
-        super(PiecesSalesUnit, self).__init__(
+        super().__init__(
             identifier="_internal_pieces_unit", decimals=0
         )
 

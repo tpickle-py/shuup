@@ -97,7 +97,7 @@ class HappyHourForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         self.shop = get_shop(self.request)
-        super(HappyHourForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.instance.pk:
             self.fields["discounts"] = ObjectSelect2MultipleField(
@@ -147,7 +147,7 @@ class HappyHourForm(forms.ModelForm):
 
     def save(self, commit=True):
         with transaction.atomic():
-            instance = super(HappyHourForm, self).save(commit=False)
+            instance = super().save(commit=False)
             instance.shop = self.shop
             instance.save()
 
@@ -192,7 +192,7 @@ class HappyHourEditView(CreateOrUpdateView):
         )
 
     def get_form_kwargs(self):
-        kwargs = super(HappyHourEditView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 

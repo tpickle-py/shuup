@@ -41,7 +41,7 @@ class ContactEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
         return contact_type
 
     def get_queryset(self):
-        qs = super(ContactEditView, self).get_queryset()
+        qs = super().get_queryset()
 
         if request_limited(self.request):
             qs = qs.filter(shops=get_shop(self.request))
@@ -83,7 +83,7 @@ class ContactEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
         return toolbar
 
     def get_context_data(self, **kwargs):
-        context = super(ContactEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         contact_type = self.get_contact_type()
         context["contact_type"] = contact_type
         if not self.object.pk:

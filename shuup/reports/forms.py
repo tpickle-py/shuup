@@ -46,7 +46,7 @@ class ShuupReportForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(ShuupReportForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_report_instance(self, request=None):
         """
@@ -82,7 +82,7 @@ class BaseReportForm(ShuupReportForm):
     )
 
     def __init__(self, *args, **kwargs):
-        super(BaseReportForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["shop"].choices = [
             (shop.pk, shop.name)
             for shop in Shop.objects.get_for_user(self.request.user)

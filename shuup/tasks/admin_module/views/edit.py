@@ -32,12 +32,12 @@ class TaskTypeForm(MultiLanguageModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(TaskTypeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def save(self, **kwargs):
         if not self.instance.pk:
             self.instance.shop = get_shop(self.request)
-        return super(TaskTypeForm, self).save(**kwargs)
+        return super().save(**kwargs)
 
 
 class TaskForm(ModelForm):
@@ -58,7 +58,7 @@ class TaskForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(TaskForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         shop = get_shop(self.request)
         self.fields["assigned_to"].queryset = Contact.objects.filter(
@@ -76,7 +76,7 @@ class TaskForm(ModelForm):
             self.instance.creator = get_person_contact(self.request.user)
             self.instance.shop = get_shop(self.request)
 
-        result = super(TaskForm, self).save(**kwargs)
+        result = super().save(**kwargs)
 
         if not is_new and old_assigned != self.instance.assigned_to:
             self.instance.add_log_entry(
@@ -102,13 +102,13 @@ class TaskCommentForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         self.task = kwargs.pop("task")
-        super(TaskCommentForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def save(self, **kwargs):
         if not self.instance.pk:
             self.instance.task = self.task
             self.instance.author = get_person_contact(self.request.user)
-        return super(TaskCommentForm, self).save(**kwargs)
+        return super().save(**kwargs)
 
 
 class BaseTaskViewMixin:
@@ -129,7 +129,7 @@ class TaskTypeEditView(CreateOrUpdateView):
         return TaskType.objects.filter(shop=get_shop(self.request))
 
     def get_form_kwargs(self, **kwargs):
-        args = super(TaskTypeEditView, self).get_form_kwargs(**kwargs)
+        args = super().get_form_kwargs(**kwargs)
         args["request"] = self.request
         return args
 
@@ -208,7 +208,7 @@ class TaskEditView(BaseTaskViewMixin, CreateOrUpdateView):
             form.forms["comment"].save()
 
     def get_context_data(self, **kwargs):
-        context = super(TaskEditView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         comments = []
         task = self.get_object()
         if task:
