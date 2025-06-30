@@ -8,7 +8,7 @@ import math
 import pytest
 from decimal import ROUND_FLOOR, ROUND_HALF_DOWN, Decimal
 from django.conf import settings
-from mock import patch
+from unittest.mock import patch
 
 from shuup.utils import babel_precision_provider, money
 from shuup.utils.money import Money, set_precision_provider

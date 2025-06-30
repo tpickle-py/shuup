@@ -10,7 +10,7 @@ import pytest
 import pytz
 from django.test import override_settings
 from django.utils import timezone
-from mock import patch
+from unittest.mock import patch
 
 from shuup.campaigns.models.basket_conditions import HourBasketCondition
 from shuup.campaigns.models.context_conditions import HourCondition

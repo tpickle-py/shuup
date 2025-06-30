@@ -7,7 +7,7 @@
 # LICENSE file in the root directory of this source tree.
 
 
-import mock
+from unittest import mock
 
 from shuup.core import cache
 from shuup.core.utils import context_cache

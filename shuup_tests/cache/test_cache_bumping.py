@@ -11,7 +11,7 @@ Tests for utils.price_display and the price filters.
 import pytest
 import pytz
 from datetime import datetime
-from mock import patch
+from unittest.mock import patch
 
 from shuup.core.models import get_person_contact
 from shuup.core.utils import context_cache

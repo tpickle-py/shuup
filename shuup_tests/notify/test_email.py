@@ -5,11 +5,13 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
+from unittest import mock
+
 import django.core.mail as mail
-import mock
-import pytest
 from django.conf import settings
 from django.test import override_settings
+
+import pytest
 
 from shuup.notify.actions.email import SendEmail
 from shuup.notify.models import EmailTemplate

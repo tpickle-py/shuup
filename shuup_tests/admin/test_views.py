@@ -13,7 +13,7 @@ from django.test import override_settings
 from django.test.client import Client
 from django.utils.encoding import force_text
 from django.utils.translation import activate
-from mock import patch
+from unittest.mock import patch
 
 from shuup.admin.modules.products.views import ProductEditView
 from shuup.admin.utils.tour import is_tour_complete

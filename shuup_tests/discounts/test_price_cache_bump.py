@@ -11,7 +11,7 @@ Tests for utils.price_display and the price filters.
 import pytest
 import pytz
 from datetime import datetime, timedelta
-from mock import patch
+from unittest.mock import patch
 
 from shuup.core.utils.price_cache import cache_price_info, get_cached_price_info
 from shuup.discounts.exceptions import DiscountM2MChangeError

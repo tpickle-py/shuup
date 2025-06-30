@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
+import argparse
 import re
 from ast import BinOp, Mod, parse
 
-import click
 from sanity_utils import XNodeVisitor, find_files
 from six import text_type
 
@@ -44,9 +43,9 @@ class StringVisitor(XNodeVisitor):
     def get_stats(self):
         stat_bits = []
         if self.texts:
-            stat_bits.append("%d text-like strings" % len(self.texts))
+            stat_bits.append(f"{len(self.texts)} text-like strings")
         if self.formattees:
-            stat_bits.append("%d formattee strings" % len(self.formattees))
+            stat_bits.append(f"{len(self.formattees)} formattee strings")
         return ", ".join(stat_bits)
 
     def needs_fix(self):
@@ -101,31 +100,30 @@ def gather_files(dirnames, filenames):
     return files_to_process
 
 
-@click.command()
-@click.option(
-    "-f",
-    "--file",
-    "filenames",
-    type=click.Path(exists=True, dir_okay=False),
-    multiple=True,
-)
-@click.option(
-    "-d",
-    "--dir",
-    "dirnames",
-    type=click.Path(exists=True, file_okay=False),
-    multiple=True,
-)
-@click.option("--fix/--no-fix", default=False)
+
 def command(filenames, dirnames, fix):
     for filename in gather_files(dirnames, filenames):
         visitor = process_file(filename)
         if visitor.needs_fix():
-            print("%s: %s" % (filename, visitor.get_stats()))  # noqa
+            print(f"{filename}: {visitor.get_stats()}")
             if fix:
-                print("Fixing: %s" % filename)  # noqa
+                print(f"Fixing: {filename}")  # noqa
                 fix_file(filename)
+
+def main():
+    parser = argparse.ArgumentParser(description="Ensure unicode literals in Python files.")
+    parser.add_argument(
+        "-f", "--file", type=str, nargs="*", help="Files to process."
+    )
+    parser.add_argument(
+        "-d", "--dir", type=str, nargs="*", help="Directories to search for files."
+    )
+    parser.add_argument(
+        "--fix", action="store_true", help="Fix the files by adding unicode literals."
+    )
+    args = parser.parse_args()
+    command(args.filenames, args.dirnames, args.fix)
 
 
 if __name__ == "__main__":
-    command()
+    main()

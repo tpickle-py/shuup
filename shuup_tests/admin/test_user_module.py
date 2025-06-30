@@ -16,7 +16,7 @@ from django.forms.models import modelform_factory
 from django.http.response import Http404
 from django.test import override_settings
 from django.utils.encoding import force_text
-from mock import patch
+from unittest.mock import patch
 from rest_framework.serializers import raise_errors_on_nested_writes
 
 from shuup.admin.modules.users.views import (

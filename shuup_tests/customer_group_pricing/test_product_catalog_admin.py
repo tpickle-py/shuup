@@ -6,7 +6,7 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 from decimal import Decimal
-from mock import patch
+from unittest.mock import patch
 
 from shuup.admin.modules.products.views.edit import ProductEditView
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext

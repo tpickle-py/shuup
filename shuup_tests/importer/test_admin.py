@@ -5,17 +5,15 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import json
-import mock
-import pytest
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.utils.translation import activate
+from unittest import mock
 from urllib.parse import parse_qs, urlparse
 
-from shuup.core.models import (
-    BackgroundTaskExecution,
-    BackgroundTaskExecutionStatus,
-    Product,
-)
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.translation import activate
+
+import pytest
+
+from shuup.core.models import BackgroundTaskExecution, BackgroundTaskExecutionStatus, Product
 from shuup.default_importer.importers import ProductImporter
 from shuup.importer.admin_module.import_views import ImportDetailView, ImportListView
 from shuup.importer.utils.importer import ImportMode

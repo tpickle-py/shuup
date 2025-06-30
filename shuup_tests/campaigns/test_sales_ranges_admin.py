@@ -7,7 +7,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import pytest
-from mock import patch
+from unittest.mock import patch
 
 from shuup.admin.modules.contact_groups.views import ContactGroupEditView
 from shuup.admin.modules.contact_groups.views.forms import ContactGroupBaseFormPart

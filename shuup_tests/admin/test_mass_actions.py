@@ -5,17 +5,15 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import json
-import mock
-import pytest
+from unittest import mock
+
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import activate
 
-from shuup.admin.modules.products.mass_actions import (
-    ExportProductsCSVAction,
-    InvisibleMassAction,
-    VisibleMassAction,
-)
+import pytest
+
+from shuup.admin.modules.products.mass_actions import ExportProductsCSVAction, InvisibleMassAction, VisibleMassAction
 from shuup.admin.utils.picotable import PicotableMassAction
 from shuup.core.models import Shop, ShopProduct, ShopProductVisibility, ShopStatus
 from shuup.core.utils import context_cache

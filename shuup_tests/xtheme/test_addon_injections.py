@@ -7,7 +7,7 @@
 # LICENSE file in the root directory of this source tree.
 import pytest
 from django.test import override_settings
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 from shuup.apps.provides import override_provides
 from shuup.core import cache

@@ -11,7 +11,7 @@ import pytest
 import requests
 from django.test.utils import override_settings
 from django.utils.timezone import now
-from mock import patch
+from unittest.mock import patch
 from requests.models import Response
 
 from shuup.admin.modules.system import SystemModule

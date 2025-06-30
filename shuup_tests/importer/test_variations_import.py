@@ -4,12 +4,14 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import mock
 import os
-import pytest
 from decimal import Decimal
+from unittest import mock
+
 from django.conf import settings
 from django.utils.translation import activate
+
+import pytest
 from six import BytesIO
 
 from shuup.core.models import MediaFile, Product, ProductMode, ShopProduct, Supplier

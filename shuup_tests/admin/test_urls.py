@@ -8,7 +8,7 @@
 import pytest
 from collections import Counter
 from django.core.exceptions import ImproperlyConfigured
-from mock import patch
+from unittest.mock import patch
 
 from shuup.admin.utils.permissions import set_permissions_for_group
 from shuup.admin.utils.urls import NoModelUrl, admin_url, get_model_url

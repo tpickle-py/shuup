@@ -12,7 +12,7 @@ from django.core.exceptions import ValidationError
 from django.template import engines
 from django.test import override_settings
 from django.utils import timezone
-from mock import patch
+from unittest.mock import patch
 
 from shuup.core.utils.price_cache import get_cached_price_info
 from shuup.discounts.models import Discount, HappyHour, TimeRange

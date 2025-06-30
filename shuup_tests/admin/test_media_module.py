@@ -6,7 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 import django
 import json
-import mock
+from unittest import mock
 import pytest
 import tempfile
 from django.core.files.uploadedfile import InMemoryUploadedFile

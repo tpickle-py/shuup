@@ -15,7 +15,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
-from mock import patch
+from unittest.mock import patch
 
 from shuup.apps.provides import override_provides
 from shuup.core.models import (

@@ -9,7 +9,7 @@ import pytz
 from datetime import datetime, timedelta
 from decimal import Decimal
 from django.utils import timezone
-from mock import patch
+from unittest.mock import patch
 
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
 from shuup.core.models import PersonContact

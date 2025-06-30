@@ -2000,6 +2000,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "beautifulsoup4" },
     { name = "black" },
     { name = "build" },
     { name = "codecov" },
@@ -2085,6 +2086,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "black", specifier = ">=24.0.0" },
     { name = "build", specifier = ">=1.0.0" },
     { name = "codecov", specifier = ">=2.1.13" },
