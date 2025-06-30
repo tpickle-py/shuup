@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,16 +5,18 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import contextlib
-import django.conf
 import logging
 import string
 import sys
 import types
 import uuid
-from bs4 import BeautifulSoup
+
+import django.conf
 from django.test import Client, TestCase, override_settings
 from django.utils.crypto import get_random_string
 from django.utils.timezone import now
+
+from bs4 import BeautifulSoup
 
 from shuup.utils.django_compat import clear_url_caches, get_urlconf, set_urlconf
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,9 +5,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import django
+from django.contrib.auth.models import AbstractUser, Group
+
 import pytest
 import six
-from django.contrib.auth.models import AbstractUser, Group
 
 from shuup.admin.menu import get_menu_entry_categories
 from shuup.admin.module_registry import get_modules, replace_modules

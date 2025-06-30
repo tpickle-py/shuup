@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -7,13 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 import pytest
 
-from shuup.core.models import (
-    AnonymousContact,
-    CompanyContact,
-    CustomerTaxGroup,
-    PersonContact,
-    get_person_contact,
-)
+from shuup.core.models import AnonymousContact, CompanyContact, CustomerTaxGroup, PersonContact, get_person_contact
 from shuup.testing.factories import (
     DEFAULT_IDENTIFIER,
     DEFAULT_NAME,

@@ -1,23 +1,12 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 import inspect
+
 from django.conf import settings
 from django.core.exceptions import MiddlewareNotUsed
 from django.utils.module_loading import import_string
 from django.utils.translation import activate, get_language
 
 from shuup.admin import shop_provider
-from shuup.utils.django_compat import (
-    RegexPattern,
-    URLResolver,
-    get_middleware_classes,
-    set_urlconf,
-)
+from shuup.utils.django_compat import RegexPattern, URLResolver, get_middleware_classes, set_urlconf
 
 
 def apply_request_middleware(request, **attrs):

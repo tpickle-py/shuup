@@ -1,14 +1,15 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
+from uuid import uuid4
+
 from django.contrib.auth import get_user_model
 from django.utils.translation import activate
-from uuid import uuid4
+
+import pytest
 
 from shuup.core.models import Basket, CompanyContact, Order, PersonContact
 from shuup.front.models import StoredBasket

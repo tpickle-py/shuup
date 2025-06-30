@@ -1,10 +1,4 @@
 #!/usr/bin/env python3
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 """
 General sanity checker.
 
@@ -29,6 +23,7 @@ otherwise it will return with exit code 1.
 """
 
 import argparse
+
 from sanity_utils import find_files
 
 

@@ -1,27 +1,25 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 import re
 import uuid
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test.utils import override_settings
+
+import pytest
 
 from shuup import configuration
 from shuup.admin.modules.contacts.views import ContactDetailView
 from shuup.apps.provides import override_provides
 from shuup.core.models import CompanyContact, PersonContact, get_person_contact
 from shuup.front.apps.customer_information.views import CompanyEditView
-from shuup.front.apps.registration.forms import (
-    CompanyRegistrationForm,
-    PersonRegistrationForm,
-)
+from shuup.front.apps.registration.forms import CompanyRegistrationForm, PersonRegistrationForm
 from shuup.front.apps.registration.signals import user_reactivated
 from shuup.front.signals import company_registration_save, person_registration_save
 from shuup.notify.models import Script

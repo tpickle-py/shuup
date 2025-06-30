@@ -1,35 +1,9 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 from shuup.utils import update_module_attributes
 
-from ._addresses import (
-    ImmutableAddress,
-    MutableAddress,
-    SavedAddress,
-    SavedAddressRole,
-    SavedAddressStatus,
-)
-from ._attributes import (
-    Attribute,
-    AttributeChoiceOption,
-    AttributeType,
-    AttributeVisibility,
-)
-from ._background_tasks import (
-    BackgroundTask,
-    BackgroundTaskExecution,
-    BackgroundTaskExecutionStatus,
-)
-from ._base import (
-    PolymorphicShuupModel,
-    PolymorphicTranslatableShuupModel,
-    ShuupModel,
-    TranslatableShuupModel,
-)
+from ._addresses import ImmutableAddress, MutableAddress, SavedAddress, SavedAddressRole, SavedAddressStatus
+from ._attributes import Attribute, AttributeChoiceOption, AttributeType, AttributeVisibility
+from ._background_tasks import BackgroundTask, BackgroundTaskExecution, BackgroundTaskExecutionStatus
+from ._base import PolymorphicShuupModel, PolymorphicTranslatableShuupModel, ShuupModel, TranslatableShuupModel
 from ._basket import Basket
 from ._categories import Category, CategoryStatus, CategoryVisibility
 from ._configurations import ConfigurationItem, EncryptedConfigurationItem
@@ -97,13 +71,7 @@ from ._products import (
     ShippingMode,
     StockBehavior,
 )
-from ._service_base import (
-    Service,
-    ServiceBehaviorComponent,
-    ServiceChoice,
-    ServiceCost,
-    ServiceProvider,
-)
+from ._service_base import Service, ServiceBehaviorComponent, ServiceChoice, ServiceCost, ServiceProvider
 from ._service_behavior import (
     CountryLimitBehaviorComponent,
     FixedCostBehaviorComponent,
@@ -116,12 +84,7 @@ from ._service_behavior import (
     WeightBasedPricingBehaviorComponent,
     WeightLimitsBehaviorComponent,
 )
-from ._service_payment import (
-    CustomPaymentProcessor,
-    PaymentMethod,
-    PaymentProcessor,
-    PaymentUrls,
-)
+from ._service_payment import CustomPaymentProcessor, PaymentMethod, PaymentProcessor, PaymentUrls
 from ._service_shipping import Carrier, CustomCarrier, ShippingMethod
 from ._shipments import Shipment, ShipmentProduct, ShipmentStatus, ShipmentType
 from ._shops import Shop, ShopStatus

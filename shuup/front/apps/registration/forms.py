@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
@@ -15,10 +8,7 @@ from registration.forms import RegistrationForm
 from shuup.apps.provides import get_provide_objects
 from shuup.core.models import CompanyContact, PersonContact, get_person_contact
 from shuup.front.signals import company_registration_save, person_registration_save
-from shuup.front.utils.companies import (
-    TaxNumberCleanMixin,
-    company_registration_requires_approval,
-)
+from shuup.front.utils.companies import TaxNumberCleanMixin, company_registration_requires_approval
 from shuup.utils.form_group import FormGroup
 from shuup.utils.importing import cached_load
 

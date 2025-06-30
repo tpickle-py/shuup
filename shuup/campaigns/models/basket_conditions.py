@@ -1,29 +1,13 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from polymorphic.models import PolymorphicModel
 
-from shuup.campaigns.utils.campaigns import (
-    get_product_ids_and_quantities,
-    get_total_price_of_products,
-)
+from shuup.campaigns.utils.campaigns import get_product_ids_and_quantities, get_total_price_of_products
 from shuup.campaigns.utils.time_range import is_in_time_range
 from shuup.core.fields import MoneyValueField
-from shuup.core.models import (
-    Category,
-    Contact,
-    ContactGroup,
-    Product,
-    ProductMode,
-    ShopProduct,
-)
+from shuup.core.models import Category, Contact, ContactGroup, Product, ProductMode, ShopProduct
 from shuup.core.pricing import PricingContext
 from shuup.utils.django_compat import force_text
 from shuup.utils.properties import MoneyPropped, PriceProperty

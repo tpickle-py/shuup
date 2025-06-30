@@ -1,21 +1,14 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 
 """
 This module is installed as the `shuup_admin` template function namespace.
 """
 
 import itertools
+from functools import lru_cache
+
 from django.conf import settings
 from django.http.request import HttpRequest
 from django.middleware.csrf import get_token
-from functools import lru_cache
-from shuup.compat import contextfunction
 
 from shuup import configuration
 from shuup.admin import menu
@@ -25,6 +18,7 @@ from shuup.admin.supplier_provider import get_supplier
 from shuup.admin.utils.menu import is_menu_open
 from shuup.admin.utils.urls import NoModelUrl, manipulate_query_string
 from shuup.apps.provides import get_provide_objects
+from shuup.compat import contextfunction
 from shuup.core.models import Shop
 from shuup.core.telemetry import is_telemetry_enabled
 from shuup.utils import django_compat

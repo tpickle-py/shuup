@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -8,11 +7,7 @@
 
 import pytest
 
-from shuup.core.models import (
-    ProductMode,
-    ProductVariationVariable,
-    ProductVariationVariableValue,
-)
+from shuup.core.models import ProductMode, ProductVariationVariable, ProductVariationVariableValue
 from shuup.testing.factories import create_product, get_default_shop
 from shuup.utils.django_compat import reverse
 from shuup_tests.utils import printable_gibberish

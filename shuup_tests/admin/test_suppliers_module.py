@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,16 +5,14 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import json
-import pytest
 from decimal import Decimal
+
 from django.test.utils import override_settings
 from django.utils.text import slugify
 
-from shuup.admin.modules.suppliers.views import (
-    SupplierDeleteView,
-    SupplierEditView,
-    SupplierListView,
-)
+import pytest
+
+from shuup.admin.modules.suppliers.views import SupplierDeleteView, SupplierEditView, SupplierListView
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
 from shuup.core.models import Supplier, SupplierType
 from shuup.testing import factories

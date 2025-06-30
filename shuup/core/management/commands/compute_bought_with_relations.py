@@ -1,24 +1,10 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
 
-from shuup.core.models import (
-    OrderLine,
-    OrderLineType,
-    ProductCrossSell,
-    ProductCrossSellType,
-    Shop,
-)
+from shuup.core.models import OrderLine, OrderLineType, ProductCrossSell, ProductCrossSellType, Shop
 from shuup.core.utils import context_cache
-from shuup.core.utils.product_bought_with_relations import (
-    add_bought_with_relations_for_product,
-)
+from shuup.core.utils.product_bought_with_relations import add_bought_with_relations_for_product
 from shuup.front.utils import cache as cache_utils
 
 

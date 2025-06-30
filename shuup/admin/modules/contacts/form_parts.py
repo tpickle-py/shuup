@@ -1,19 +1,9 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.form_part import FormPart, TemplatedFormDef
-from shuup.admin.modules.contacts.forms import (
-    CompanyContactBaseForm,
-    PersonContactBaseForm,
-)
+from shuup.admin.modules.contacts.forms import CompanyContactBaseForm, PersonContactBaseForm
 from shuup.core.models import PersonContact
 from shuup.utils.excs import Problem
 from shuup.utils.form_group import FormDef

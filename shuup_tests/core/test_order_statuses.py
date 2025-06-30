@@ -1,28 +1,18 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import force_text
 from django.utils.translation import activate, get_language
 
-from shuup.core.models import (
-    DefaultOrderStatus,
-    OrderLineType,
-    OrderStatus,
-    OrderStatusManager,
-    OrderStatusRole,
-)
+import pytest
+
+from shuup.core.models import DefaultOrderStatus, OrderLineType, OrderStatus, OrderStatusManager, OrderStatusRole
 from shuup.core.order_creator import OrderCreator
-from shuup.testing.factories import (
-    create_default_order_statuses,
-    get_default_product,
-    get_default_supplier,
-)
+from shuup.testing.factories import create_default_order_statuses, get_default_product, get_default_supplier
 from shuup_tests.core.test_order_creator import seed_source
 
 

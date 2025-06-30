@@ -1,23 +1,13 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
+from typing import Dict, Tuple
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext, ugettext_lazy as _
-from typing import Dict, Tuple
+from django.utils.translation import ugettext
+from django.utils.translation import ugettext_lazy as _
 
 from shuup.core.models import Contact, Shop
-from shuup.front.providers import (
-    FormDefinition,
-    FormDefProvider,
-    FormFieldDefinition,
-    FormFieldProvider,
-)
+from shuup.front.providers import FormDefinition, FormDefProvider, FormFieldDefinition, FormFieldProvider
 from shuup.gdpr.forms import CompanyAgreementForm
 from shuup.utils.django_compat import is_authenticated, reverse
 from shuup.utils.djangoenv import has_installed

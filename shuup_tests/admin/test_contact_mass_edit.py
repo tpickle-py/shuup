@@ -1,17 +1,14 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.utils.translation import activate
 
-from shuup.admin.modules.contacts.views import (
-    ContactGroupMassEditView,
-    ContactMassEditView,
-)
+import pytest
+
+from shuup.admin.modules.contacts.views import ContactGroupMassEditView, ContactMassEditView
 from shuup.core.models import Contact, ContactGroup, Gender
 from shuup.testing.factories import create_random_person, get_default_shop
 from shuup.testing.utils import apply_request_middleware

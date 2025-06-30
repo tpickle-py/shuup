@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -8,12 +7,7 @@
 import pytest
 
 from shuup.core.models import ShipmentStatus, ShippingMode, Supplier, SupplierModule
-from shuup.testing.factories import (
-    add_product_to_order,
-    create_empty_order,
-    create_product,
-    get_default_shop,
-)
+from shuup.testing.factories import add_product_to_order, create_empty_order, create_product, get_default_shop
 
 
 @pytest.mark.django_db

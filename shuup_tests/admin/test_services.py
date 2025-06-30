@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,19 +5,17 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-import pytest
 from django import forms
 from django.conf import settings
 from django.db.models import ProtectedError
 from django.test import override_settings
 from django.utils.encoding import force_text
 
+import pytest
+
 from shuup.admin.modules.services.base_form_part import ServiceBaseFormPart
 from shuup.admin.modules.services.forms import PaymentMethodForm, ShippingMethodForm
-from shuup.admin.modules.services.views import (
-    PaymentMethodEditView,
-    ShippingMethodEditView,
-)
+from shuup.admin.modules.services.views import PaymentMethodEditView, ShippingMethodEditView
 from shuup.admin.utils.urls import get_model_url
 from shuup.apps.provides import override_provides
 from shuup.core.models import Label, PaymentMethod, ShippingMethod

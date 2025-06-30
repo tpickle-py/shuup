@@ -1,13 +1,7 @@
-# This file is part of Shuup.
-# -*- coding: utf-8 -*-
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
+from typing import Iterable, Tuple
+
 from django.contrib.auth import get_user_model
 from django.db.models.query_utils import Q
-from typing import Iterable, Tuple
 
 from shuup.admin.views.select import BaseAdminObjectSelector
 

@@ -1,23 +1,13 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 import inspect
 import json
 import logging
 from datetime import datetime
-from django.utils.translation import ugettext_lazy as _
 from typing import Any, Optional, Tuple, Union
 from uuid import uuid4
 
-from shuup.core.models import (
-    BackgroundTask,
-    BackgroundTaskExecution,
-    BackgroundTaskExecutionStatus,
-)
+from django.utils.translation import ugettext_lazy as _
+
+from shuup.core.models import BackgroundTask, BackgroundTaskExecution, BackgroundTaskExecutionStatus
 from shuup.utils.importing import cached_load, load
 
 LOGGER = logging.getLogger(__name__)

@@ -1,29 +1,15 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 from django import forms
 from django.conf import settings
 from django.forms import BaseModelFormSet
 from django.forms.formsets import DEFAULT_MAX_NUM, DEFAULT_MIN_NUM
 
 from shuup.admin.form_part import FormPart, TemplatedFormDef
-from shuup.admin.forms.widgets import (
-    QuickAddRelatedObjectMultiSelect,
-    QuickAddRelatedObjectSelect,
-    TextEditorWidget,
-)
+from shuup.admin.forms.widgets import QuickAddRelatedObjectMultiSelect, QuickAddRelatedObjectSelect, TextEditorWidget
 from shuup.admin.shop_provider import get_shop
 from shuup.gdpr.models import GDPRCookieCategory, GDPRSettings
 from shuup.gdpr.utils import get_possible_consent_pages
 from shuup.utils.django_compat import reverse_lazy
-from shuup.utils.multilanguage_model_form import (
-    MultiLanguageModelForm,
-    to_language_codes,
-)
+from shuup.utils.multilanguage_model_form import MultiLanguageModelForm, to_language_codes
 
 
 class QuickAddPageSelect(QuickAddRelatedObjectSelect):

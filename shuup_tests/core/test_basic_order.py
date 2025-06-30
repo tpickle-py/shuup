@@ -1,21 +1,14 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.utils.timezone import now
 
-from shuup.core.models import (
-    Order,
-    OrderLine,
-    OrderLineTax,
-    OrderLineType,
-    ShipmentStatus,
-    get_person_contact,
-)
+import pytest
+
+from shuup.core.models import Order, OrderLine, OrderLineTax, OrderLineType, ShipmentStatus, get_person_contact
 from shuup.core.shortcuts import update_order_line_from_product
 from shuup.default_tax.module import DefaultTaxModule
 from shuup.testing.factories import (

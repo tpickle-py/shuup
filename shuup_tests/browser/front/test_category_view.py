@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,8 +5,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import os
-import pytest
+
 from django.utils.translation import activate
+
+import pytest
 
 from shuup.core import cache
 from shuup.core.models import (
@@ -22,16 +23,8 @@ from shuup.core.models import (
     ShopProductVisibility,
 )
 from shuup.front.utils.sorts_and_filters import set_configuration
-from shuup.testing.browser_utils import (
-    click_element,
-    initialize_front_browser_test,
-    wait_until_condition,
-)
-from shuup.testing.factories import (
-    create_product,
-    get_default_shop,
-    get_default_supplier,
-)
+from shuup.testing.browser_utils import click_element, initialize_front_browser_test, wait_until_condition
+from shuup.testing.factories import create_product, get_default_shop, get_default_supplier
 from shuup.utils.django_compat import reverse
 
 pytestmark = pytest.mark.skipif(

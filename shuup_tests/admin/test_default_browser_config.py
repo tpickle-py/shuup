@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -9,10 +8,7 @@ import pytest
 
 from shuup.admin.modules.media import MediaModule
 from shuup.admin.template_helpers.shuup_admin import get_browser_urls
-from shuup.admin.utils.permissions import (
-    get_permissions_from_urls,
-    set_permissions_for_group,
-)
+from shuup.admin.utils.permissions import get_permissions_from_urls, set_permissions_for_group
 from shuup.testing import factories
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse

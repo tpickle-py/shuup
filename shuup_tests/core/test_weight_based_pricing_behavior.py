@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -7,13 +6,10 @@
 # LICENSE file in the root directory of this source tree.
 
 import decimal
+
 import pytest
 
-from shuup.core.models import (
-    OrderLineType,
-    WeightBasedPriceRange,
-    WeightBasedPricingBehaviorComponent,
-)
+from shuup.core.models import OrderLineType, WeightBasedPriceRange, WeightBasedPricingBehaviorComponent
 from shuup.core.models._service_behavior import _is_in_range
 from shuup.testing.factories import (
     create_product,

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -8,11 +7,7 @@
 import pytest
 
 from shuup.core.models import ProductCrossSell, ProductCrossSellType
-from shuup.testing.factories import (
-    create_product,
-    get_default_shop,
-    get_default_supplier,
-)
+from shuup.testing.factories import create_product, get_default_shop, get_default_supplier
 from shuup.xtheme.plugins.products import ProductCrossSellsPlugin
 from shuup_tests.front.fixtures import get_jinja_context
 

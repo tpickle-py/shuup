@@ -1,16 +1,12 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
-import bleach
 import csv
-import six
-from babel.dates import format_datetime
 from datetime import datetime
 from decimal import Decimal
+from io import StringIO
+from pprint import pformat
+
+import bleach
+import six
+from babel.dates import format_datetime
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.http import HttpResponse
@@ -21,17 +17,11 @@ from django.utils.functional import Promise
 from django.utils.html import conditional_escape, escape
 from django.utils.safestring import mark_safe
 from django.utils.timezone import now
-from io import StringIO
-from pprint import pformat
 from six import BytesIO
 
 from shuup.apps.provides import get_provide_objects
 from shuup.utils.django_compat import force_text
-from shuup.utils.i18n import (
-    format_money,
-    get_current_babel_locale,
-    get_locally_formatted_datetime,
-)
+from shuup.utils.i18n import format_money, get_current_babel_locale, get_locally_formatted_datetime
 from shuup.utils.money import Money
 from shuup.utils.pdf import render_html_to_pdf
 

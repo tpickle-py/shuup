@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -10,11 +9,7 @@ import pytest
 
 from shuup.core.models import Product
 from shuup.core.utils.product_caching_object import ProductCachingObject
-from shuup.testing.factories import (
-    create_product,
-    get_default_category,
-    get_default_shop_product,
-)
+from shuup.testing.factories import create_product, get_default_category, get_default_shop_product
 
 
 def test_product_caching_object_nulling():

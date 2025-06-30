@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,12 +5,14 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import os
-import pytest
+from itertools import chain
+
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.test.utils import override_settings
 from django.utils.timezone import now
-from itertools import chain
+
+import pytest
 
 from shuup.admin import ShuupAdminAppConfig
 from shuup.admin.base import AdminModule
@@ -26,12 +27,7 @@ from shuup.testing.utils import apply_request_middleware
 from shuup.utils.excs import Problem
 from shuup_tests.admin.fixtures.test_module import ARestrictedTestModule, ATestModule
 from shuup_tests.utils import empty_iterable
-from shuup_tests.utils.faux_users import (
-    AnonymousUser,
-    AuthenticatedUser,
-    StaffUser,
-    SuperUser,
-)
+from shuup_tests.utils.faux_users import AnonymousUser, AuthenticatedUser, StaffUser, SuperUser
 from shuup_tests.utils.templates import get_templates_setting_for_specific_directories
 
 TEMPLATES_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "templates"))

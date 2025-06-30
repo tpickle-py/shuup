@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -7,11 +6,13 @@
 # LICENSE file in the root directory of this source tree.
 import datetime
 import json
-import pytest
-import requests
+from unittest.mock import patch
+
 from django.test.utils import override_settings
 from django.utils.timezone import now
-from unittest.mock import patch
+
+import pytest
+import requests
 from requests.models import Response
 
 from shuup.admin.modules.system import SystemModule

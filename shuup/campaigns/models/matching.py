@@ -1,19 +1,9 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 import hashlib
+
 from django.db.models import Q
 
 from shuup.campaigns.consts import CONTEXT_CONDITION_CACHE_NAMESPACE
-from shuup.campaigns.models import (
-    CatalogFilter,
-    CatalogFilterCachedShopProduct,
-    CategoryFilter,
-    ContextCondition,
-)
+from shuup.campaigns.models import CatalogFilter, CatalogFilterCachedShopProduct, CategoryFilter, ContextCondition
 from shuup.core import cache
 from shuup.core.models import ShopProduct
 from shuup.core.utils import context_cache

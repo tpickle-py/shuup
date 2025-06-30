@@ -1,24 +1,17 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.conf import settings
 
+import pytest
+
 from shuup.core.models import ContactGroup, Shop
-from shuup.customer_group_pricing.admin_form_part import (
-    CustomerGroupDiscountForm,
-    CustomerGroupPricingForm,
-)
+from shuup.customer_group_pricing.admin_form_part import CustomerGroupDiscountForm, CustomerGroupPricingForm
 from shuup.customer_group_pricing.models import CgpDiscount, CgpPrice
-from shuup.testing.factories import (
-    create_product,
-    get_default_customer_group,
-    get_default_shop,
-)
+from shuup.testing.factories import create_product, get_default_customer_group, get_default_shop
 from shuup_tests.utils.forms import get_form_data
 
 pytestmark = pytest.mark.skipif(

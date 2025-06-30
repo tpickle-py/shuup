@@ -1,22 +1,10 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 from django import forms
-from django.utils.translation import get_language, ugettext_lazy as _
+from django.utils.translation import get_language
+from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum
 
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
-from shuup.core.models import (
-    Product,
-    ProductCrossSell,
-    ProductCrossSellType,
-    ProductMode,
-    ShopProductVisibility,
-)
+from shuup.core.models import Product, ProductCrossSell, ProductCrossSellType, ProductMode, ShopProductVisibility
 from shuup.front.template_helpers.general import (
     get_best_selling_products,
     get_newest_products,
@@ -26,10 +14,7 @@ from shuup.front.template_helpers.general import (
 from shuup.front.template_helpers.product import map_relation_type
 from shuup.xtheme import TemplatedPlugin
 from shuup.xtheme.plugins.forms import GenericPluginForm, TranslatableField
-from shuup.xtheme.plugins.widgets import (
-    XThemeSelect2ModelChoiceField,
-    XThemeSelect2ModelMultipleChoiceField,
-)
+from shuup.xtheme.plugins.widgets import XThemeSelect2ModelChoiceField, XThemeSelect2ModelMultipleChoiceField
 
 
 class HighlightType(Enum):

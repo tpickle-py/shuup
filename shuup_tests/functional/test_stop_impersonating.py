@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.contrib.auth import get_user
+
+import pytest
 
 from shuup.admin.modules.users.views import LoginAsUserView
 from shuup.core.models import get_person_contact

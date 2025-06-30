@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,20 +5,16 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-import pytest
 import random
+
 from django.core import mail
 from django.utils.translation import activate
 
+import pytest
+
 from shuup.core import cache
 from shuup.core.defaults.order_statuses import create_default_order_statuses
-from shuup.core.models import (
-    MutableAddress,
-    Order,
-    OrderLineType,
-    Product,
-    get_person_contact,
-)
+from shuup.core.models import MutableAddress, Order, OrderLineType, Product, get_person_contact
 from shuup.core.order_creator import OrderCreator
 from shuup.core.pricing import get_pricing_module
 from shuup.notify.models import Script
@@ -38,14 +33,8 @@ from shuup.testing.factories import (
 from shuup.testing.mock_population import populate_if_required
 from shuup.testing.soup_utils import extract_form_fields
 from shuup.utils.django_compat import reverse
-from shuup_tests.admin.test_order_creator import (
-    get_frontend_order_state,
-    get_order_from_state,
-)
-from shuup_tests.front.test_checkout_flow import (
-    _populate_client_basket,
-    fill_address_inputs,
-)
+from shuup_tests.admin.test_order_creator import get_frontend_order_state, get_order_from_state
+from shuup_tests.front.test_checkout_flow import _populate_client_basket, fill_address_inputs
 from shuup_tests.functional.test_refunds import (
     INITIAL_PRODUCT_QUANTITY,
     _add_basket_campaign,
@@ -56,11 +45,7 @@ from shuup_tests.functional.test_refunds import (
 from shuup_tests.simple_supplier.utils import get_simple_supplier
 from shuup_tests.utils import SmartClient
 from shuup_tests.utils.basketish_order_source import BasketishOrderSource
-from shuup_tests.utils.fixtures import (
-    REGULAR_USER_PASSWORD,
-    REGULAR_USER_USERNAME,
-    regular_user,
-)
+from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME, regular_user
 
 STEP_DATA = [
     {

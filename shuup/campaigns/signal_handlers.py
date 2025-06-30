@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 from shuup.campaigns.consts import (
     CAMPAIGNS_CACHE_NAMESPACE,
     CATALOG_FILTER_CACHE_NAMESPACE,
@@ -12,10 +5,7 @@ from shuup.campaigns.consts import (
 )
 from shuup.campaigns.models import CatalogFilter
 from shuup.campaigns.models.contact_group_sales_ranges import ContactGroupSalesRange
-from shuup.campaigns.models.matching import (
-    update_matching_catalog_filters,
-    update_matching_category_filters,
-)
+from shuup.campaigns.models.matching import update_matching_catalog_filters, update_matching_category_filters
 from shuup.core import cache
 from shuup.core.models import Category, ShopProduct
 

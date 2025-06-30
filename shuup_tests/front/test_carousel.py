@@ -1,27 +1,23 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2018, Shuup Ltd. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
-from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+
 from django.conf import settings
 from django.test.client import Client
 from django.utils import translation
+
+import pytest
+from bs4 import BeautifulSoup
 from filer.models import Image
 
 from shuup.front.apps.carousel.admin_module.forms import SlideForm
 from shuup.front.apps.carousel.models import Carousel, LinkTargetType, Slide
 from shuup.front.apps.carousel.plugins import BannerBoxPlugin, CarouselPlugin
-from shuup.testing.factories import (
-    get_default_category,
-    get_default_product,
-    get_default_shop,
-    get_shop,
-)
+from shuup.testing.factories import get_default_category, get_default_product, get_default_shop, get_shop
 from shuup.testing.utils import apply_request_middleware
 from shuup_tests.front.fixtures import get_jinja_context
 from shuup_tests.simple_cms.utils import create_page

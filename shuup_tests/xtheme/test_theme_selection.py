@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,9 +5,11 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-import pytest
 from contextlib import contextmanager
+
 from django.template import TemplateDoesNotExist
+
+import pytest
 
 from shuup.apps.provides import get_provide_objects, override_provides
 from shuup.testing.factories import get_default_shop

@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.conf import settings
 from django.test.utils import override_settings
+
+import pytest
 
 from shuup.admin.module_registry import replace_modules
 from shuup.admin.views.search import get_search_results

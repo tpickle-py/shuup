@@ -1,25 +1,11 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
-import six
-from django.utils.translation import ugettext_lazy as _
 from typing import Union
 
-from shuup.core.models import (
-    AnonymousContact,
-    ProductCatalogDiscountedPrice,
-    ShopProduct,
-)
+import six
+from django.utils.translation import ugettext_lazy as _
+
+from shuup.core.models import AnonymousContact, ProductCatalogDiscountedPrice, ShopProduct
 from shuup.core.pricing import DiscountModule, PriceInfo
-from shuup.discounts.utils import (
-    get_potential_discounts_for_product,
-    get_price_expiration,
-    index_shop_product_price,
-)
+from shuup.discounts.utils import get_potential_discounts_for_product, get_price_expiration, index_shop_product_price
 
 
 class ProductDiscountModule(DiscountModule):

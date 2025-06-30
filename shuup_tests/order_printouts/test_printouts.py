@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -8,11 +7,7 @@
 import pytest
 
 from shuup.apps.provides import override_provides
-from shuup.order_printouts.admin_module.views import (
-    get_confirmation_pdf,
-    get_delivery_html,
-    get_delivery_pdf,
-)
+from shuup.order_printouts.admin_module.views import get_confirmation_pdf, get_delivery_html, get_delivery_pdf
 from shuup.order_printouts.utils import PrintoutDeliveryExtraInformation
 from shuup.testing.factories import (
     create_order_with_product,

@@ -1,9 +1,3 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 import django
 import six
 from django.apps import apps
@@ -12,12 +6,7 @@ from django.db.models import BooleanField, CharField, ForeignKey
 from enumfields import EnumIntegerField
 
 from shuup import configuration
-from shuup.admin.utils.picotable import (
-    ChoicesFilter,
-    Column,
-    TextFilter,
-    true_or_false_filter,
-)
+from shuup.admin.utils.picotable import ChoicesFilter, Column, TextFilter, true_or_false_filter
 from shuup.apps.provides import get_provide_objects
 from shuup.utils.importing import load
 

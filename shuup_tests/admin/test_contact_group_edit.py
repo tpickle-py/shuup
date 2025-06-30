@@ -1,19 +1,16 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.forms import formset_factory
 from django.utils.encoding import force_text
 
+import pytest
+
 from shuup.admin.modules.contact_groups.views import ContactGroupEditView
-from shuup.admin.modules.contact_groups.views.forms import (
-    ContactGroupMembersForm,
-    ContactGroupMembersFormSet,
-)
+from shuup.admin.modules.contact_groups.views.forms import ContactGroupMembersForm, ContactGroupMembersFormSet
 from shuup.core.models import AnonymousContact
 from shuup.testing.factories import (
     create_random_company,

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,8 +5,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import os
-import pytest
+
 from django.utils.translation import activate
+
+import pytest
 
 from shuup.admin.modules.orders.views.addresses import ADDRESS_EDITED_LOG_IDENTIFIER
 from shuup.core.models import OrderStatus

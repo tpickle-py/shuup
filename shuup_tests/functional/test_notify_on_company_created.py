@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.conf import settings
+
+import pytest
 
 from shuup import configuration
 from shuup.core.models import get_company_contact, get_person_contact
@@ -18,11 +18,7 @@ from shuup.notify.script import Step
 from shuup.testing.factories import get_default_shop
 from shuup.utils.django_compat import reverse
 from shuup_tests.utils import SmartClient
-from shuup_tests.utils.fixtures import (
-    REGULAR_USER_PASSWORD,
-    REGULAR_USER_USERNAME,
-    regular_user,
-)
+from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME, regular_user
 
 
 @pytest.mark.django_db

@@ -1,20 +1,18 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
-import six
 from collections import defaultdict
 from decimal import Decimal
+
 from django.test import override_settings
 
-from shuup.core.excs import (
-    RefundArbitraryRefundsNotAllowedException,
-    RefundExceedsAmountException,
-)
+import pytest
+import six
+
+from shuup.core.excs import RefundArbitraryRefundsNotAllowedException, RefundExceedsAmountException
 from shuup.core.models import OrderLine, OrderLineType, ShippingMode, Supplier
 from shuup.testing.factories import (
     add_product_to_order,

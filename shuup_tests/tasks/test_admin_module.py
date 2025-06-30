@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,18 +5,14 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import json
-import pytest
+
 from django.utils.translation import activate
+
+import pytest
 
 from shuup.core.models import AnonymousContact, get_person_contact
 from shuup.tasks.admin_module import TaskAdminModule
-from shuup.tasks.models import (
-    Task,
-    TaskComment,
-    TaskCommentVisibility,
-    TaskStatus,
-    TaskType,
-)
+from shuup.tasks.models import Task, TaskComment, TaskCommentVisibility, TaskStatus, TaskType
 from shuup.tasks.utils import create_task
 from shuup.testing import factories
 from shuup.testing.soup_utils import extract_form_fields

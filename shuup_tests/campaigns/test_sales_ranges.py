@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,15 +5,13 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-import pytest
 from django.core.exceptions import ValidationError
+
+import pytest
 
 from shuup.campaigns.models import ContactGroupSalesRange
 from shuup.campaigns.signal_handlers import update_customers_groups
-from shuup.campaigns.utils.sales_range import (
-    assign_to_group_based_on_sales,
-    get_total_sales,
-)
+from shuup.campaigns.utils.sales_range import assign_to_group_based_on_sales, get_total_sales
 from shuup.core.models import AnonymousContact, ContactGroup, Payment, PersonContact
 from shuup.testing.factories import (
     create_order_with_product,

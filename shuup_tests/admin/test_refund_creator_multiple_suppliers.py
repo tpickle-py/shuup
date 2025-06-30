@@ -1,27 +1,23 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
+from collections import defaultdict
+from decimal import Decimal
+
+from django.test import override_settings
+
 import pytest
 import six
 from bs4 import BeautifulSoup
-from collections import defaultdict
-from decimal import Decimal
-from django.test import override_settings
 
 from shuup.admin.modules.orders.views.refund import OrderCreateRefundView
 from shuup.admin.supplier_provider import get_supplier
 from shuup.core.excs import NoRefundToCreateException
 from shuup.core.models import OrderLineType, ShippingMode, Supplier
-from shuup.testing.factories import (
-    add_product_to_order,
-    create_empty_order,
-    create_product,
-    get_default_shop,
-)
+from shuup.testing.factories import add_product_to_order, create_empty_order, create_product, get_default_shop
 from shuup.testing.utils import apply_request_middleware
 
 

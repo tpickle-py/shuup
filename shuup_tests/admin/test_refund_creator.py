@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,14 +5,12 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-import pytest
-from bs4 import BeautifulSoup
 from django.test import override_settings
 
-from shuup.admin.modules.orders.views.refund import (
-    OrderCreateFullRefundView,
-    OrderCreateRefundView,
-)
+import pytest
+from bs4 import BeautifulSoup
+
+from shuup.admin.modules.orders.views.refund import OrderCreateFullRefundView, OrderCreateRefundView
 from shuup.core.models import OrderLine, OrderLineType
 from shuup.testing.factories import (
     add_product_to_order,

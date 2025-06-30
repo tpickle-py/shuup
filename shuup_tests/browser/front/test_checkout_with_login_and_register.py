@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,18 +5,14 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import os
-import pytest
 import time
+
 from django.test.utils import override_settings
 
+import pytest
+
 from shuup.core import cache
-from shuup.core.models import (
-    Order,
-    OrderStatus,
-    OrderStatusRole,
-    PersonContact,
-    Product,
-)
+from shuup.core.models import Order, OrderStatus, OrderStatusRole, PersonContact, Product
 from shuup.testing.browser_utils import (
     click_element,
     initialize_front_browser_test,

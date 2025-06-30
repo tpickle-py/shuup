@@ -1,23 +1,19 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
-from bs4 import BeautifulSoup
 from django.db.models.deletion import ProtectedError
 from django.test import override_settings
+
+import pytest
+from bs4 import BeautifulSoup
 
 from shuup.admin.modules.service_providers.views import ServiceProviderEditView
 from shuup.apps.provides import override_provides
 from shuup.core.models import CustomCarrier, CustomPaymentProcessor
-from shuup.testing.factories import (
-    get_default_payment_method,
-    get_default_shipping_method,
-    get_default_shop,
-)
+from shuup.testing.factories import get_default_payment_method, get_default_shipping_method, get_default_shop
 from shuup.testing.models import PseudoPaymentProcessor
 from shuup.testing.utils import apply_all_middleware
 

@@ -1,22 +1,12 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
+from uuid import uuid4
+
 from django.conf import settings
 from django.db import models
 from django.db.models.fields.related import ManyToManyField
 from django.utils.translation import ugettext_lazy as _
-from uuid import uuid4
 
 from shuup.core.fields import CurrencyField, MoneyValueField, TaggedJSONField
-from shuup.utils.properties import (
-    MoneyPropped,
-    TaxfulPriceProperty,
-    TaxlessPriceProperty,
-)
+from shuup.utils.properties import MoneyPropped, TaxfulPriceProperty, TaxlessPriceProperty
 
 
 def generate_key():

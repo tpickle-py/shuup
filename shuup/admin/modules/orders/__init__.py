@@ -1,12 +1,6 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
-import six
 from datetime import timedelta
+
+import six
 from django.db.models import Q
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -14,12 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from shuup.admin.base import AdminModule, MenuEntry, Notification, SearchResult
 from shuup.admin.menu import ORDERS_MENU_CATEGORY, STOREFRONT_MENU_CATEGORY
 from shuup.admin.shop_provider import get_shop
-from shuup.admin.utils.urls import (
-    admin_url,
-    derive_model_url,
-    get_edit_and_list_urls,
-    get_model_url,
-)
+from shuup.admin.utils.urls import admin_url, derive_model_url, get_edit_and_list_urls, get_model_url
 from shuup.admin.views.home import HelpBlockCategory, SimpleHelpBlock
 from shuup.core.models import Order, OrderStatus, OrderStatusRole
 

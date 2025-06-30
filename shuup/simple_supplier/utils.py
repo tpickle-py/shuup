@@ -1,11 +1,5 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 from decimal import Decimal
+
 from django.conf import settings
 from django.db.models import Q, Sum
 from django.template.loader import render_to_string
@@ -22,11 +16,7 @@ from shuup.core.models import (
     ShippingMode,
 )
 from shuup.core.suppliers.enums import StockAdjustmentType
-from shuup.simple_supplier.forms import (
-    AlertLimitForm,
-    StockAdjustmentForm,
-    StockManagedForm,
-)
+from shuup.simple_supplier.forms import AlertLimitForm, StockAdjustmentForm, StockManagedForm
 from shuup.simple_supplier.models import StockAdjustment, StockCount
 from shuup.utils.django_compat import reverse
 

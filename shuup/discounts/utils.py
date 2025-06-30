@@ -1,14 +1,8 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
+from typing import TYPE_CHECKING, Iterable
+
 import six
 from django.conf import settings
 from django.db.models import Q
-from typing import TYPE_CHECKING, Iterable
 
 from shuup.core.models import (
     AnonymousContact,
@@ -126,6 +120,7 @@ def get_next_dates_for_range(weekday, from_hour, to_hour):
     :rtype list[datetime.datetime]
     """
     import datetime
+
     from django.utils.timezone import now
 
     now_datetime = now()

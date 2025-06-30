@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -11,11 +10,7 @@ from shuup.apps.provides import override_provides
 from shuup.core.models import ProductMode
 from shuup.front.utils.product import ProductContextExtra
 from shuup.front.views.product import ProductDetailView
-from shuup.testing.factories import (
-    create_product,
-    get_default_product,
-    get_default_shop,
-)
+from shuup.testing.factories import create_product, get_default_product, get_default_shop
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse
 

@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.contrib.contenttypes.models import ContentType
 from django.http.response import Http404
+
+import pytest
 
 from shuup.admin.shop_provider import SHOP_SESSION_KEY
 from shuup.admin.utils.urls import get_model_url

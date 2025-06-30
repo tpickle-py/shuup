@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,13 +5,15 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import datetime
-import pytest
-import pytz
+from unittest.mock import patch
+
 from django.core.exceptions import ValidationError
 from django.template import engines
 from django.test import override_settings
 from django.utils import timezone
-from unittest.mock import patch
+
+import pytest
+import pytz
 
 from shuup.core.utils.price_cache import get_cached_price_info
 from shuup.discounts.models import Discount, HappyHour, TimeRange

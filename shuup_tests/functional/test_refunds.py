@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,6 +5,7 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import decimal
+
 import pytest
 
 from shuup.campaigns.models.basket_conditions import BasketTotalProductAmountCondition
@@ -13,13 +13,7 @@ from shuup.campaigns.models.basket_effects import BasketDiscountAmount
 from shuup.campaigns.models.campaigns import BasketCampaign, CatalogCampaign
 from shuup.campaigns.models.catalog_filters import CategoryFilter
 from shuup.campaigns.models.product_effects import ProductDiscountAmount
-from shuup.core.models import (
-    AnonymousContact,
-    OrderLineType,
-    PaymentStatus,
-    ShipmentStatus,
-    ShippingStatus,
-)
+from shuup.core.models import AnonymousContact, OrderLineType, PaymentStatus, ShipmentStatus, ShippingStatus
 from shuup.core.order_creator import OrderCreator
 from shuup.core.pricing import get_pricing_module
 from shuup.testing.factories import (

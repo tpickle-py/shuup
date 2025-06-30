@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -7,9 +6,11 @@
 # LICENSE file in the root directory of this source tree.
 
 import json
-import pytest
+
 from django.test import override_settings
 from django.utils.translation import activate, get_language
+
+import pytest
 
 from shuup.admin.views.select import MultiselectAjaxView
 from shuup.core.models import (
@@ -24,12 +25,7 @@ from shuup.core.models import (
     ShopProductVisibility,
     Supplier,
 )
-from shuup.testing.factories import (
-    create_product,
-    create_random_user,
-    get_default_shop,
-    get_shop,
-)
+from shuup.testing.factories import create_product, create_random_user, get_default_shop, get_shop
 from shuup.testing.utils import apply_request_middleware
 from shuup_tests.utils.fixtures import regular_user  # noqa: F401
 

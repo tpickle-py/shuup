@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -16,13 +9,7 @@ from shuup.admin.forms.fields import ObjectSelect2MultipleField
 from shuup.admin.forms.widgets import QuickAddCategorySelect, TextEditorWidget
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.utils.forms import filter_form_field_choices
-from shuup.core.models import (
-    Category,
-    CategoryStatus,
-    Product,
-    ShopProduct,
-    ShopProductVisibility,
-)
+from shuup.core.models import Category, CategoryStatus, Product, ShopProduct, ShopProductVisibility
 from shuup.utils.django_compat import force_text
 
 

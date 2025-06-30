@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -10,13 +9,7 @@ from unittest.mock import patch
 
 from shuup.admin.modules.products.views.edit import ProductEditView
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
-from shuup.core.models import (
-    PersonContact,
-    Product,
-    ProductVisibility,
-    ShippingMode,
-    ShopProductVisibility,
-)
+from shuup.core.models import PersonContact, Product, ProductVisibility, ShippingMode, ShopProductVisibility
 from shuup.testing import factories
 from shuup.testing.utils import apply_request_middleware
 from shuup_tests.utils import atomic_commit_mock

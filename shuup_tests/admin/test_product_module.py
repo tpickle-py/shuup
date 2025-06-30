@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,9 +5,11 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import json
-import pytest
+
 from django.http.response import Http404
 from django.test import override_settings
+
+import pytest
 from filer.models import File
 
 from shuup.admin.module_registry import replace_modules
@@ -27,13 +28,7 @@ from shuup.admin.modules.services import PaymentMethodModule, ShippingMethodModu
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.utils.urls import get_model_url
 from shuup.admin.views.search import get_search_results
-from shuup.core.models import (
-    Product,
-    ProductMedia,
-    ProductMediaKind,
-    ProductVisibility,
-    ShopProduct,
-)
+from shuup.core.models import Product, ProductMedia, ProductMediaKind, ProductVisibility, ShopProduct
 from shuup.importer.admin_module import ImportAdminModule
 from shuup.testing.factories import (
     create_product,

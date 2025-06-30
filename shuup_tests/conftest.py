@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,9 +5,11 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import os
-import pytest
+
 from django.conf import settings
 from django.core.signals import setting_changed
+
+import pytest
 
 from shuup.apps.provides import clear_provides_cache
 from shuup.core.models._contacts import get_groups_ids, get_price_display_options

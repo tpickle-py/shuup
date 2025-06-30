@@ -1,24 +1,19 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.forms import formset_factory
+
+import pytest
 
 from shuup.admin.modules.products.forms import PackageChildForm, PackageChildFormSet
 from shuup.admin.modules.products.utils import clear_existing_package
 from shuup.admin.modules.products.views import ProductPackageView
 from shuup.core.models import ProductMode, ShopProduct
 from shuup.simple_supplier.module import SimpleSupplierModule
-from shuup.testing.factories import (
-    create_package_product,
-    create_product,
-    get_default_shop,
-    get_supplier,
-)
+from shuup.testing.factories import create_package_product, create_product, get_default_shop, get_supplier
 from shuup.testing.utils import apply_all_middleware
 from shuup.utils.excs import Problem
 from shuup_tests.utils import printable_gibberish

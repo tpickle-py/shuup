@@ -1,14 +1,8 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
-from django.db.models.functions import Coalesce
-from shuup.compat import contextfunction
 from typing import Iterable
 
+from django.db.models.functions import Coalesce
+
+from shuup.compat import contextfunction
 from shuup.core.catalog import ProductCatalog, ProductCatalogContext
 from shuup.core.models import (
     AttributeVisibility,
@@ -19,10 +13,7 @@ from shuup.core.models import (
     ShopProductVisibility,
     get_person_contact,
 )
-from shuup.core.utils.product_subscription import (
-    ProductSubscriptionContext,
-    get_product_subscription_options,
-)
+from shuup.core.utils.product_subscription import ProductSubscriptionContext, get_product_subscription_options
 from shuup.utils.text import force_ascii
 
 

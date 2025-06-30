@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -9,12 +8,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.apps.provides import get_provide_objects
-from shuup.front.providers import (
-    FormDefinition,
-    FormDefProvider,
-    FormFieldDefinition,
-    FormFieldProvider,
-)
+from shuup.front.providers import FormDefinition, FormDefProvider, FormFieldDefinition, FormFieldProvider
 from shuup.testing.factories import create_package_product
 
 

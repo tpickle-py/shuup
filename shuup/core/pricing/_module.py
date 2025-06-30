@@ -1,13 +1,8 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 import abc
+from typing import TYPE_CHECKING, Union
+
 import six
 from django.http import HttpRequest
-from typing import TYPE_CHECKING, Union
 
 from shuup.apps.provides import load_module
 

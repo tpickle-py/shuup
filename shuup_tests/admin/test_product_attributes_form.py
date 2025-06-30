@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,17 +5,15 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import datetime
-import pytest
 from decimal import Decimal
+
 from django.utils.timezone import make_aware, utc
+
+import pytest
 
 from shuup.admin.modules.products.forms import ProductAttributesForm
 from shuup.core.models import ProductAttribute, ProductType
-from shuup.testing.factories import (
-    create_attribute_with_options,
-    create_product,
-    get_default_shop,
-)
+from shuup.testing.factories import create_attribute_with_options, create_product, get_default_shop
 from shuup.utils.objects import compare_partial_dicts
 from shuup_tests.utils.forms import get_form_data
 

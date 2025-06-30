@@ -1,18 +1,16 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
-import six
 from django.core.management import call_command
 
+import pytest
+import six
+
 from shuup.core.models import Product, ProductCrossSell, ShopProduct
-from shuup.core.utils.product_bought_with_relations import (
-    add_bought_with_relations_for_product,
-)
+from shuup.core.utils.product_bought_with_relations import add_bought_with_relations_for_product
 from shuup.testing.factories import (
     add_product_to_order,
     create_order_with_product,

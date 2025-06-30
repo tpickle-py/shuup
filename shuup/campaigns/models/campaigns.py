@@ -1,13 +1,8 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 import hashlib
 import random
 import string
 import warnings
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -23,14 +18,8 @@ from shuup.campaigns.consts import (
     CATALOG_FILTER_CACHE_NAMESPACE,
     CONTEXT_CONDITION_CACHE_NAMESPACE,
 )
-from shuup.campaigns.models.basket_conditions import (
-    CategoryProductsBasketCondition,
-    ProductsInBasketCondition,
-)
-from shuup.campaigns.utils.campaigns import (
-    get_lines_suppliers,
-    get_product_ids_and_quantities,
-)
+from shuup.campaigns.models.basket_conditions import CategoryProductsBasketCondition, ProductsInBasketCondition
+from shuup.campaigns.utils.campaigns import get_lines_suppliers, get_product_ids_and_quantities
 from shuup.campaigns.utils.matcher import get_matching_for_product
 from shuup.core import cache
 from shuup.core.fields import InternalIdentifierField
@@ -249,10 +238,7 @@ class CatalogCampaign(Campaign):
         if cached_matching is not None:
             return cached_matching
 
-        from shuup.campaigns.models.matching import (
-            get_matching_catalog_filters,
-            get_matching_context_conditions,
-        )
+        from shuup.campaigns.models.matching import get_matching_catalog_filters, get_matching_context_conditions
 
         matching_context_conditions = get_matching_context_conditions(context)
         matching_catalog_filters = get_matching_catalog_filters(shop_product)

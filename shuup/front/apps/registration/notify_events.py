@@ -1,19 +1,10 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from registration.signals import user_activated, user_registered
 
 from shuup.core.models import PersonContact, get_person_contact
 from shuup.notify.base import Event, Variable
-from shuup.notify.script_template.factory import (
-    generic_send_email_script_template_factory,
-)
+from shuup.notify.script_template.factory import generic_send_email_script_template_factory
 from shuup.notify.typology import URL, Boolean, Email, Model
 from shuup.utils.django_compat import reverse
 

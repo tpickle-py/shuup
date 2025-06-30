@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,10 +5,12 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import json
-import pytest
+
 from django.template import loader
 from django.test.client import Client
 from django.urls import reverse
+
+import pytest
 
 from shuup.admin.modules.orders.sections import ShipmentSection
 from shuup.admin.utils.permissions import set_permissions_for_group

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,10 +5,12 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import json
-import pytest
+
 from django import forms
 from django.http.response import Http404
 from django.test.utils import override_settings
+
+import pytest
 
 from shuup.admin.shop_provider import set_shop
 from shuup.notify.actions.email import SendEmail

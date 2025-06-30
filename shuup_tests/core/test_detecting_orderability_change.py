@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -8,12 +7,7 @@
 import pytest
 
 from shuup.core.signals import stocks_updated
-from shuup.testing.factories import (
-    create_product,
-    create_random_person,
-    get_default_shop,
-    get_default_supplier,
-)
+from shuup.testing.factories import create_product, create_random_person, get_default_shop, get_default_supplier
 from shuup.testing.receivers import shop_product_orderability_check
 
 

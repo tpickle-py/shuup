@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,16 +5,13 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-import pytest
-from bs4 import BeautifulSoup
 from django.utils.encoding import force_text
 
-from shuup.admin.modules.contact_group_price_display.views import (
-    ContactGroupPriceDisplayEditView,
-)
-from shuup.admin.modules.contact_group_price_display.views.forms import (
-    PriceDisplayChoices,
-)
+import pytest
+from bs4 import BeautifulSoup
+
+from shuup.admin.modules.contact_group_price_display.views import ContactGroupPriceDisplayEditView
+from shuup.admin.modules.contact_group_price_display.views.forms import PriceDisplayChoices
 from shuup.core.models import (
     AnonymousContact,
     CompanyContact,

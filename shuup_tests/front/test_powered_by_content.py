@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
+from django.test.utils import override_settings
+
 import pytest
 from bs4 import BeautifulSoup
-from django.test.utils import override_settings
 
 from shuup.front.views.index import IndexView
 from shuup.testing.factories import get_default_shop

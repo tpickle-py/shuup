@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,26 +5,22 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import json
-import pytest
-import pytz
-import six
-from babel.dates import format_date
 from datetime import datetime
 from decimal import Decimal
+
 from django.test.utils import override_settings
 from django.utils.dateparse import parse_datetime
 from django.utils.encoding import force_text
 from django.utils.timezone import activate
+
+import pytest
+import pytz
+import six
+from babel.dates import format_date
 from pytz import timezone
 
 from shuup.apps.provides import override_provides
-from shuup.core.models import (
-    CustomCarrier,
-    FixedCostBehaviorComponent,
-    Order,
-    OrderLine,
-    get_person_contact,
-)
+from shuup.core.models import CustomCarrier, FixedCostBehaviorComponent, Order, OrderLine, get_person_contact
 from shuup.core.order_creator import OrderCreator
 from shuup.default_reports.reports import (
     CustomerSalesReport,

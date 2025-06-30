@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -7,11 +6,13 @@
 # LICENSE file in the root directory of this source tree.
 import os
 import re
-import six
+
 from django.contrib.auth.models import AnonymousUser
 from django.http.response import HttpResponse
 from django.test.client import RequestFactory
 from django.views.generic import View
+
+import six
 from django_jinja.backend import Jinja2
 from django_jinja.builtins import DEFAULT_EXTENSIONS
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -8,13 +7,7 @@
 import pytest
 
 from shuup.core import cache
-from shuup.core.models import (
-    AnonymousContact,
-    Manufacturer,
-    Product,
-    ShopProductVisibility,
-    Supplier,
-)
+from shuup.core.models import AnonymousContact, Manufacturer, Product, ShopProductVisibility, Supplier
 from shuup.front.apps.auth.forms import EmailAuthenticationForm
 from shuup.testing.factories import (
     create_order_with_product,

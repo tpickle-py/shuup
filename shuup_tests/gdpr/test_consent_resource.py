@@ -1,18 +1,19 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import django.template
 import json
-import pytest
-import reversion
-from bs4 import BeautifulStoneSoup
+
+import django.template
 from django.conf import settings
 from django.test.utils import override_settings
 from django.utils.translation import activate
+
+import pytest
+import reversion
+from bs4 import BeautifulStoneSoup
 
 from shuup.core.models import ShopStatus
 from shuup.gdpr.models import GDPRCookieCategory, GDPRSettings

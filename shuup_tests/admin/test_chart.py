@@ -1,21 +1,15 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
-from babel.numbers import format_decimal, format_percent
 from collections import OrderedDict
 
-from shuup.admin.dashboard.charts import (
-    BarChart,
-    Chart,
-    ChartDataType,
-    ChartType,
-    MixedChart,
-)
+import pytest
+from babel.numbers import format_decimal, format_percent
+
+from shuup.admin.dashboard.charts import BarChart, Chart, ChartDataType, ChartType, MixedChart
 from shuup.utils.i18n import format_money
 from shuup.utils.money import Money
 

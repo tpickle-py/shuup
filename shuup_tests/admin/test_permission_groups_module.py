@@ -1,20 +1,17 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.contrib.auth.models import Group as PermissionGroup
 from django.utils.encoding import force_text
 
+import pytest
+
 from shuup.admin.base import AdminModule
 from shuup.admin.module_registry import get_modules, replace_modules
-from shuup.admin.modules.permission_groups.views.edit import (
-    PermissionGroupEditView,
-    PermissionGroupForm,
-)
+from shuup.admin.modules.permission_groups.views.edit import PermissionGroupEditView, PermissionGroupForm
 from shuup.admin.utils.permissions import get_permissions_from_group
 from shuup.testing.factories import get_default_shop
 from shuup.testing.utils import apply_request_middleware

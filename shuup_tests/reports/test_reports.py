@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -7,19 +6,21 @@
 # LICENSE file in the root directory of this source tree.
 import itertools
 import json
-import pytest
-import pytz
-import six
-from babel.dates import format_date
-from bs4 import BeautifulSoup
 from datetime import date
 from decimal import Decimal
+
 from django.test.utils import override_settings
 from django.utils.encoding import force_text
 from django.utils.functional import lazy
 from django.utils.safestring import SafeText
 from django.utils.timezone import activate
 from django.utils.translation import ugettext_lazy as _
+
+import pytest
+import pytz
+import six
+from babel.dates import format_date
+from bs4 import BeautifulSoup
 
 from shuup.apps.provides import override_provides
 from shuup.core.models import Order

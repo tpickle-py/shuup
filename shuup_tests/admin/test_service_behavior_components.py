@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -7,13 +6,12 @@
 # LICENSE file in the root directory of this source tree.
 
 import decimal
-import pytest
+
 from django.test import override_settings
 
-from shuup.admin.modules.services.views import (
-    PaymentMethodEditView,
-    ShippingMethodEditView,
-)
+import pytest
+
+from shuup.admin.modules.services.views import PaymentMethodEditView, ShippingMethodEditView
 from shuup.core.models import (
     CountryLimitBehaviorComponent,
     FixedCostBehaviorComponent,

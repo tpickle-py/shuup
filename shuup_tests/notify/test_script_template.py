@@ -1,19 +1,17 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.conf import settings
 from django.template.defaultfilters import linebreaksbr
 from django.utils.translation import activate
 
+import pytest
+
 from shuup.apps.provides import override_provides
-from shuup.front.apps.registration.notify_events import (
-    RegistrationReceivedEmailScriptTemplate,
-)
+from shuup.front.apps.registration.notify_events import RegistrationReceivedEmailScriptTemplate
 from shuup.front.notify_script_templates.generics import (
     OrderConfirmationEmailScriptTemplate,
     PaymentCreatedEmailScriptTemplate,
@@ -21,11 +19,7 @@ from shuup.front.notify_script_templates.generics import (
     ShipmentCreatedEmailScriptTemplate,
     ShipmentDeletedEmailScriptTemplate,
 )
-from shuup.notify.admin_module.views import (
-    ScriptTemplateConfigView,
-    ScriptTemplateEditView,
-    ScriptTemplateView,
-)
+from shuup.notify.admin_module.views import ScriptTemplateConfigView, ScriptTemplateEditView, ScriptTemplateView
 from shuup.notify.models import Script
 from shuup.notify.script_templates import PasswordResetTemplate
 from shuup.simple_supplier.notify_events import AlertLimitReached

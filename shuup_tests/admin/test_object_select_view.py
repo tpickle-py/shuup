@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -7,9 +6,11 @@
 # LICENSE file in the root directory of this source tree.
 
 import json
-import pytest
+
 from django.test import override_settings
 from django.utils.translation import activate, get_language
+
+import pytest
 
 from shuup.admin.utils.permissions import set_permissions_for_group
 from shuup.admin.views.select import ObjectSelectorView

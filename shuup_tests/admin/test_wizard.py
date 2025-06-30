@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,9 +5,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
+from django.test.utils import override_settings
+
 import pytest
 from bs4 import BeautifulSoup
-from django.test.utils import override_settings
 
 from shuup.admin.views.wizard import WizardView
 from shuup.apps.provides import override_provides
@@ -23,11 +23,7 @@ from shuup.core.models import (
     TaxClass,
 )
 from shuup.core.telemetry import is_opt_out
-from shuup.testing.factories import (
-    get_currency,
-    get_default_shop,
-    get_default_tax_class,
-)
+from shuup.testing.factories import get_currency, get_default_shop, get_default_tax_class
 from shuup.testing.soup_utils import extract_form_fields
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse

@@ -1,25 +1,18 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.contrib.auth import get_user_model
 from django.http.response import Http404
 from django.test.utils import override_settings
 
+import pytest
+
 from shuup.admin.forms.fields import ObjectSelect2MultipleField
-from shuup.admin.modules.contacts.forms import (
-    CompanyContactBaseForm,
-    PersonContactBaseForm,
-)
-from shuup.admin.modules.contacts.views import (
-    ContactDetailView,
-    ContactEditView,
-    ContactListView,
-)
+from shuup.admin.modules.contacts.forms import CompanyContactBaseForm, PersonContactBaseForm
+from shuup.admin.modules.contacts.views import ContactDetailView, ContactEditView, ContactListView
 from shuup.core.models import CompanyContact, Gender, PersonContact, get_person_contact
 from shuup.testing.factories import (
     create_random_company,

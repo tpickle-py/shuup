@@ -1,23 +1,16 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
-import six
 import zipfile
+
+import six
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext
+from django.utils.translation import ugettext_lazy as _
 from six import BytesIO
 
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.utils.picotable import PicotableFileMassAction, PicotableMassAction
 from shuup.core.models import Order, Shipment
-from shuup.order_printouts.admin_module.views import (
-    get_confirmation_pdf,
-    get_delivery_pdf,
-)
+from shuup.order_printouts.admin_module.views import get_confirmation_pdf, get_delivery_pdf
 from shuup.utils.django_compat import force_text
 
 

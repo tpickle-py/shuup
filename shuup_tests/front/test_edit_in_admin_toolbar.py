@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -12,11 +11,7 @@ from shuup.admin.utils.urls import get_model_url
 from shuup.front.views.category import CategoryView
 from shuup.front.views.product import ProductDetailView
 from shuup.simple_cms.views import PageView
-from shuup.testing.factories import (
-    get_default_category,
-    get_default_product,
-    get_default_shop,
-)
+from shuup.testing.factories import get_default_category, get_default_product, get_default_shop
 from shuup.testing.utils import apply_request_middleware
 from shuup_tests.simple_cms.utils import create_page
 

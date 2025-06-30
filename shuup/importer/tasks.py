@@ -1,15 +1,9 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 import logging
+from typing import TYPE_CHECKING
+
 from django.contrib.auth import get_user_model
 from django.db.transaction import atomic
 from django.utils.translation import gettext_lazy as _
-from typing import TYPE_CHECKING
 
 from shuup.core.models import Shop, Supplier
 from shuup.core.tasks import TaskResult

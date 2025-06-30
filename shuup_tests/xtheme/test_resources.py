@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -18,12 +17,7 @@ from shuup.xtheme.resources import (
     inject_resources,
 )
 from shuup.xtheme.testing import override_current_theme_class
-from shuup_tests.xtheme.utils import (
-    get_jinja2_engine,
-    get_request,
-    get_test_template_bits,
-    plugin_override,
-)
+from shuup_tests.xtheme.utils import get_jinja2_engine, get_request, get_test_template_bits, plugin_override
 
 
 class ResourceInjectorPlugin(Plugin):

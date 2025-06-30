@@ -1,14 +1,8 @@
-# -*- coding: utf-8 -*-
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 import hashlib
 import logging
 import os
 from datetime import datetime
+
 from django.apps import apps
 from django.contrib import messages
 from django.db.models import Q
@@ -21,23 +15,14 @@ from shuup.admin.shop_provider import get_shop
 from shuup.admin.supplier_provider import get_supplier
 from shuup.admin.toolbar import NewActionButton
 from shuup.admin.utils.permissions import has_permission
-from shuup.admin.utils.picotable import (
-    ChoicesFilter,
-    Column,
-    DateRangeFilter,
-    Picotable,
-)
+from shuup.admin.utils.picotable import ChoicesFilter, Column, DateRangeFilter, Picotable
 from shuup.admin.utils.views import PicotableListView
 from shuup.apps.provides import get_provide_objects
 from shuup.core.models import BackgroundTaskExecution, BackgroundTaskExecutionStatus
 from shuup.core.tasks import LOGGER, run_task
 from shuup.importer.admin_module.forms import ImportForm, ImportSettingsForm
 from shuup.importer.exceptions import ImporterError
-from shuup.importer.utils import (
-    get_import_file_path,
-    get_importer,
-    get_importer_choices,
-)
+from shuup.importer.utils import get_import_file_path, get_importer, get_importer_choices
 from shuup.importer.utils.importer import FileImporter, ImportMode
 from shuup.utils.django_compat import reverse
 

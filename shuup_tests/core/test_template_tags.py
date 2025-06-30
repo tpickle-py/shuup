@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -8,13 +7,13 @@
 
 
 from decimal import Decimal
+from unittest.mock import patch
 
 from django.conf import settings
 from django.test import override_settings
 from django.utils import translation
 
 from jinja2 import Template
-from unittest.mock import patch
 
 from shuup.core.models import Shop
 from shuup.core.templatetags.shuup_common import (

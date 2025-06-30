@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -6,25 +5,19 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-import pytest
 import re
-from bs4 import BeautifulSoup
+
 from django import forms
 
+import pytest
+from bs4 import BeautifulSoup
+
 from shuup.admin.form_modifier import FormModifier
-from shuup.admin.modules.orders.views.shipment import (
-    OrderCreateShipmentView,
-    ShipmentForm,
-)
+from shuup.admin.modules.orders.views.shipment import OrderCreateShipmentView, ShipmentForm
 from shuup.apps.provides import override_provides
 from shuup.core.excs import NoShippingAddressException
 from shuup.core.models import Order
-from shuup.testing.factories import (
-    create_order_with_product,
-    create_product,
-    get_default_shop,
-    get_default_supplier,
-)
+from shuup.testing.factories import create_order_with_product, create_product, get_default_shop, get_default_supplier
 from shuup.testing.utils import apply_request_middleware
 
 

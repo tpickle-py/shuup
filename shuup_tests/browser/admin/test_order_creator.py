@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # This file is part of Shuup.
 #
 # Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
@@ -7,6 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 import decimal
 import os
+
 import pytest
 from splinter.exceptions import ElementDoesNotExist
 
