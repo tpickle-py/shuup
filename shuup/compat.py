@@ -1,4 +1,3 @@
-
 """
 Compatibility module for Django and other library version differences.
 """
@@ -16,8 +15,8 @@ except ImportError:
 try:
     from django.utils import six  # type: ignore  # noqa: I001
 except ImportError:
-    # Django removed six in 4.0, use the external package
-    pass
+    # Fallback to the standalone six library
+    import six  # type: ignore  # noqa: I001
 
 # Jinja2 compatibility
 try:
@@ -42,6 +41,7 @@ except ImportError:
         # Fallback for older versions
         def contextfilter(f):
             return f
+
 
 __all__ = [
     "python_2_unicode_compatible",
