@@ -63,10 +63,10 @@ class BasePopupChoiceWidget(Widget):
         icon = f"<i class='{self.external_icon}'></i>"
 
         return mark_safe(
-            (
+
                 f'<a class="btn btn-inverse browse-text btn-sm" style="{css_style}" \
             href="{escape(url)}" target="_blank">{icon} {escape(text)}</a>'
-            )
+
         )
 
     def get_object(self, value):

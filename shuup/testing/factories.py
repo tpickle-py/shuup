@@ -1010,12 +1010,12 @@ def create_random_order(  # noqa
         order = oc.create_order(source)
         if random.random() < completion_probability:
             suppliers = {
-                
+
                     line.supplier
                     for line in order.lines.filter(
                         supplier__isnull=False, quantity__gt=0
                     )
-                
+
             }
             for supplier in suppliers:
                 order.create_shipment_of_all_products(supplier=supplier)

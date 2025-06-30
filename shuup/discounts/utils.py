@@ -39,13 +39,13 @@ def get_potential_discounts_for_product(
     product_id = product if isinstance(product, six.integer_types) else product.pk
 
     category_ids = {
-        
+
             category_id
             for category_id in ShopProduct.objects.filter(
                 product_id=product_id, shop=context.shop
             ).values_list("categories__id", flat=True)
             if category_id
-        
+
     }
     group_ids = groups_ids if groups_ids else list(context.customer.groups_ids)
 

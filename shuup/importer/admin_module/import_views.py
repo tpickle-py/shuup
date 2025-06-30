@@ -120,7 +120,7 @@ class ImportView(FormView):
         basename, ext = os.path.splitext(file.name)
 
         import_name = "{}{}".format(
-            hashlib.sha256((f"{datetime.now()}").encode("utf-8")).hexdigest(),
+            hashlib.sha256((f"{datetime.now()}").encode()).hexdigest(),
             ext,
         )
         full_path = get_import_file_path(import_name)
