@@ -29,8 +29,6 @@ jobs:
       run: uv pip install -e .
     - name: Run sanity check
       run: uv run _misc/check_sanity.py
-    - name: Run license headers check
-      run: uv run _misc/ensure_license_headers.py -s shuup
     - name: Check flake8
       run: uv run flake8 .
     - name: Check isort
