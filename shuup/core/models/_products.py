@@ -887,10 +887,10 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
                     "child_id", "quantity"
                 )
             )
-            products = dict(
-                (p.pk, p)
+            products = {
+                p.pk: p
                 for p in Product.objects.filter(pk__in=product_id_to_quantity.keys())
-            )
+            }
             return {
                 products[product_id]: quantity
                 for (product_id, quantity) in six.iteritems(product_id_to_quantity)

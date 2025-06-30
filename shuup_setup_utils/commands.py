@@ -130,8 +130,8 @@ class BuildMessagesCommand(distutils.core.Command):
             subprocess.check_call(command, env=env, cwd=appdir)
 
 
-COMMANDS = dict(
-    (x.command_name, x)
+COMMANDS = {
+    x.command_name: x
     for x in [
         BuildCommand,
         BuildPyCommand,
@@ -139,4 +139,4 @@ COMMANDS = dict(
         BuildProductionResourcesCommand,
         BuildMessagesCommand,
     ]
-)
+}

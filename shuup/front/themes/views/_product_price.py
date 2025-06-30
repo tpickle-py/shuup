@@ -69,11 +69,11 @@ class ProductPriceView(ProductDetailView):
             return shop_product.unit.from_display(decimal.Decimal(quantity))
 
     def get_variation_variables(self):
-        return dict(
-            (int(k.split("_")[-1]), int(v))
+        return {
+            int(k.split("_")[-1]): int(v)
             for (k, v) in self.request.GET.items()
             if k.startswith("var_")
-        )
+        }
 
     def get(self, request, *args, **kwargs):
         # Skipping ProductPriceView.super for a reason.

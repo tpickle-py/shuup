@@ -32,12 +32,12 @@ class CustomerGroupPricingForm(forms.Form):
                 )
             ).distinct()
         )
-        prices_by_shop_and_group = dict(
-            ((shop_id or 0, group_id or 0), price)
+        prices_by_shop_and_group = {
+            (shop_id or 0, group_id or 0): price
             for (shop_id, group_id, price) in CgpPrice.objects.filter(
                 product=self.product
             ).values_list("shop_id", "group_id", "price_value")
-        )
+        }
 
         for group in self.groups:
             shop_group_id_tuple = self._get_id_tuple(self.shop, group)
@@ -122,12 +122,12 @@ class CustomerGroupDiscountForm(forms.Form):
                 )
             ).distinct()
         )
-        discounts_by_shop_and_group = dict(
-            ((shop_id or 0, group_id or 0), discount_amount)
+        discounts_by_shop_and_group = {
+            (shop_id or 0, group_id or 0): discount_amount
             for (shop_id, group_id, discount_amount) in CgpDiscount.objects.filter(
                 product=self.product
             ).values_list("shop_id", "group_id", "discount_amount_value")
-        )
+        }
 
         for group in self.groups:
             shop_group_id_tuple = self._get_id_tuple(self.shop, group)

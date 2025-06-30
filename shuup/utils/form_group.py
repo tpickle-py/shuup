@@ -33,11 +33,11 @@ class FormDef:
         if group_initial:
             prefix_with_dash = "%s-" % prefix
             # Only copy keys from initial that begin with this form's prefix
-            new_initial = dict(
-                (k[len(prefix_with_dash) :], v)
+            new_initial = {
+                k[len(prefix_with_dash) :]: v
                 for (k, v) in group_initial.items()
                 if k.startswith(prefix_with_dash)
-            )
+            }
             # But any explicitly passed kwargs shall be copied as-is
             new_initial.update(kwargs.get("initial", {}))
             kwargs["initial"] = new_initial

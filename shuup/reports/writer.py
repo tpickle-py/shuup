@@ -426,10 +426,10 @@ class JSONReportWriter(ReportWriter):
         table = {
             "columns": report.schema,
             "data": [
-                dict(
-                    (c["key"], format_data(val, format_iso_dates=True))
+                {
+                    c["key"]: format_data(val, format_iso_dates=True)
                     for (c, val) in zip(report.schema, report.read_datum(datum))
-                )
+                }
                 for datum in report_data
             ],
         }

@@ -13,7 +13,7 @@ FILE_READ_KWARGS = {"mode": "rb"}
 if six.PY3:
     FILE_READ_KWARGS = {"mode": "r", "encoding": "utf-8"}
 
-_TOKEN_MAP = dict((k, v) for (v, k) in token.tok_name.items())
+_TOKEN_MAP = {k: v for (v, k) in token.tok_name.items()}
 COMMENT_TOKEN = _TOKEN_MAP["COMMENT"]
 
 
@@ -96,4 +96,4 @@ def _get_comments_before_assignments(module_name, names):
             if x[0] == COMMENT_TOKEN and x[1].startswith("#:")
         )
 
-    return dict((name, get_comment_before(pos)) for (name, pos) in name_assign_tokens)
+    return {name: get_comment_before(pos) for (name, pos) in name_assign_tokens}

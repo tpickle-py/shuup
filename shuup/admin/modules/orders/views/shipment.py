@@ -72,12 +72,12 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
         supplier_id = self._get_supplier_id()
 
         form.product_summary = order.get_product_summary(supplier=supplier_id)
-        form.product_names = dict(
-            (product_id, text)
+        form.product_names = {
+            product_id: text
             for (product_id, text) in order.lines.exclude(product=None).values_list(
                 "product_id", "text"
             )
-        )
+        }
         for product_id, info in sorted(six.iteritems(form.product_summary)):
             product_name = _("%(product_name)s (%(supplier)s)") % {
                 "product_name": form.product_names.get(
@@ -134,18 +134,18 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
         return get_model_url(self.object)
 
     def form_valid(self, form):
-        product_ids_to_quantities = dict(
-            (int(key.replace("q_", "")), value)
+        product_ids_to_quantities = {
+            int(key.replace("q_", "")): value
             for (key, value) in six.iteritems(form.cleaned_data)
             if key.startswith("q_") and (value > 0 if value else False)
-        )
+        }
         order = self.object
 
         product_map = Product.objects.in_bulk(set(product_ids_to_quantities.keys()))
-        products_to_quantities = dict(
-            (product_map[product_id], quantity)
+        products_to_quantities = {
+            product_map[product_id]: quantity
             for (product_id, quantity) in six.iteritems(product_ids_to_quantities)
-        )
+        }
 
         unsaved_shipment = Shipment(
             order=order,

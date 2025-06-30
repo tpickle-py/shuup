@@ -181,10 +181,10 @@ class DataImporter:
                     else:
                         mapping[name] = map_base
 
-        mapping = dict(
-            (fold_mapping_name(mname), mdata)
+        mapping = {
+            fold_mapping_name(mname): mdata
             for (mname, mdata) in six.iteritems(mapping)
-        )
+        }
         self.mapping = mapping
         return mapping
 
@@ -552,11 +552,11 @@ class DataImporter:
             (fname, mapping, row.get(fname))
             for (fname, mapping) in six.iteritems(self.unique_fields)
         ]
-        row_keys = dict(
-            (mapping["field"].name, value)
+        row_keys = {
+            mapping["field"].name: value
             for (fname, mapping, value) in field_map_values
             if value
-        )
+        }
         if row_keys:
             qs = [Q(**{fname: value}) for (fname, value) in six.iteritems(row_keys)]
             fields = [field.name for field in self.model._meta.local_fields]

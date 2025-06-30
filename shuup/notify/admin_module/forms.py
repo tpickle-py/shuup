@@ -194,10 +194,10 @@ class ScriptItemEditForm(forms.Form):
 
         for lang_code, field_info in self.template_field_info.items():
             t_field_name_to_field_name = dict(field_info.items())
-            lang_vals = dict(
-                (t_field_name, (self.cleaned_data.get(field_name) or "").strip())
+            lang_vals = {
+                t_field_name: (self.cleaned_data.get(field_name) or "").strip()
                 for (t_field_name, field_name) in field_info.items()
-            )
+            }
             if not any(lang_vals.values()):  # Not worth saving
                 continue
             can_save = True

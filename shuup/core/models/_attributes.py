@@ -525,10 +525,10 @@ class AttributableMixin:
         ):
             attr_ids.add(applied_attr.attribute_id)
             applied_attrs_by_target_id[applied_attr.product_id].append(applied_attr)
-        attr_map = dict(
-            (attr.id, attr)
+        attr_map = {
+            attr.id: attr
             for attr in Attribute.objects.language(language).filter(id__in=attr_ids)
-        )
+        }
 
         for target in targets:
             for identifier in attribute_identifiers:
@@ -562,7 +562,7 @@ class AttributableMixin:
         if visibility_mode is not None:
             qs = qs.filter(visibility_mode=visibility_mode)
 
-        all_attributes = dict((a.identifier, (a, None)) for a in qs)
+        all_attributes = {a.identifier: (a, None) for a in qs}
 
         applied_attribute_qs = self.attributes.all().select_related("attribute")
         if visibility_mode is not None:
@@ -570,13 +570,10 @@ class AttributableMixin:
                 attribute__visibility_mode=visibility_mode
             )
 
-        existing_attributes = dict(
-            (
-                aa.attribute.identifier,
-                (all_attributes.get(aa.attribute.identifier, (aa.attribute,))[0], aa),
-            )
+        existing_attributes = {
+            aa.attribute.identifier: (all_attributes.get(aa.attribute.identifier, (aa.attribute,))[0], aa)
             for aa in applied_attribute_qs
-        )
+        }
 
         attribute_infos = {}
         attribute_infos.update(all_attributes)

@@ -121,7 +121,7 @@ def py2_read_file(data, filename):
         for _x, row in enumerate(csv.DictReader(f, dialect=dialect)):
             got_data.update(set(h.lower() for (h, d) in six.iteritems(row) if d))
             data.append(
-                dict((k.lower(), v if v else None) for k, v in six.iteritems(row))
+                {k.lower(): v if v else None for k, v in six.iteritems(row)}
             )
     return data, got_data
 
@@ -144,6 +144,6 @@ def py3_read_file(data, filename):
         for _x, row in enumerate(csv.DictReader(f, dialect=dialect)):
             got_data.update(set(h.lower() for (h, d) in six.iteritems(row) if d))
             data.append(
-                dict((k.lower(), v if v else None) for k, v in six.iteritems(row))
+                {k.lower(): v if v else None for k, v in six.iteritems(row)}
             )
     return data, got_data

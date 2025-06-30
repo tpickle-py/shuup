@@ -60,7 +60,7 @@ def add_form_errors_as_messages(request, form):
 
 
 def flatatt_filter(attrs):
-    attrs = dict((key, value) for (key, value) in six.iteritems(attrs) if key and value)
+    attrs = {key: value for (key, value) in six.iteritems(attrs) if key and value}
     return flatatt(attrs)
 
 

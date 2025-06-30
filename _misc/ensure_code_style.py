@@ -31,7 +31,7 @@ class ForeignKeyVisitor(XNodeVisitor):
             name.endswith(suffix)
             for suffix in ("ForeignKey", "FilerFileField", "FilerImageField")
         ):
-            kwmap = dict((kw.arg, kw.value) for kw in node.keywords)
+            kwmap = {kw.arg: kw.value for kw in node.keywords}
             if "on_delete" not in kwmap:
                 self.errors.append(
                     "Error! %d: %s call missing explicit `on_delete`."
@@ -62,7 +62,7 @@ class VerboseNameVisitor(XNodeVisitor):
         if context and (context.startswith("_") or context.endswith("data")):
             return
 
-        kwmap = dict((kw.arg, kw.value) for kw in node.keywords)
+        kwmap = {kw.arg: kw.value for kw in node.keywords}
 
         kw_value = None
         needle = None

@@ -295,9 +295,9 @@ class Column:
             "allowHighlight": bool(self.allow_highlight),
             "raw": bool(self.raw),
         }
-        return dict(
-            (key, value) for (key, value) in six.iteritems(out) if value is not None
-        )
+        return {
+            key: value for (key, value) in six.iteritems(out) if value is not None
+        }
 
     def get_sort_field(self, sort_field):
         if self.sort_field:
@@ -394,7 +394,7 @@ class Picotable:
         self.mass_actions = mass_actions
         self.queryset = queryset
         self.context = context
-        self.columns_by_id = dict((c.id, c) for c in self.columns)
+        self.columns_by_id = {c.id: c for c in self.columns}
         self.get_object_url = maybe_callable("get_object_url", context=self.context)
         self.get_object_abstract = maybe_callable(
             "get_object_abstract", context=self.context

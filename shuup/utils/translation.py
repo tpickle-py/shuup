@@ -17,7 +17,7 @@ def cache_translations(objects, languages=None, meta=None):
         meta = objects[0]._parler_meta.root  # work on base model by default
     xlate_model = meta.model
 
-    object_map = dict((object.pk, object) for object in objects)
+    object_map = {object.pk: object for object in objects}
     languages.update(set(object._current_language for object in objects))
     master_ids = object_map.keys()
 

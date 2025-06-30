@@ -358,9 +358,9 @@ class ProductAttributesForm(forms.Form):
         self.languages = to_language_codes(
             kwargs.pop("languages", ()), self.default_language
         )
-        self.language_names = dict(
-            (lang, get_language_name(lang)) for lang in self.languages
-        )
+        self.language_names = {
+            lang: get_language_name(lang) for lang in self.languages
+        }
         self.product = kwargs.pop("product")
         self.attributes = self.product.get_available_attribute_queryset()
         self.trans_name_map = defaultdict(dict)

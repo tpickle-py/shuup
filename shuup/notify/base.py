@@ -260,10 +260,10 @@ class ScriptItem(Base):
         :return: Dict of binding name -> value
         :rtype: dict[name, value]
         """
-        return dict(
-            (binding_name, self.get_value(context, binding_name))
+        return {
+            binding_name: self.get_value(context, binding_name)
             for binding_name in self.bindings
-        )
+        }
 
     @classmethod
     def unserialize(cls, data, validate=True):

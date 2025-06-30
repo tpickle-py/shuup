@@ -1098,14 +1098,14 @@ class Order(MoneyPropped, models.Model):
         else:
             quantities = suppliers_to_product_quantities[supplier.id]
 
-        products = dict(
-            (product.pk, product)
+        products = {
+            product.pk: product
             for product in Product.objects.filter(pk__in=quantities.keys())
-        )
-        quantities = dict(
-            (products[product_id], quantity)
+        }
+        quantities = {
+            products[product_id]: quantity
             for (product_id, quantity) in quantities.items()
-        )
+        }
         return self.create_shipment(quantities, supplier=supplier)
 
     def check_all_verified(self):
@@ -1352,13 +1352,13 @@ class Order(MoneyPropped, models.Model):
         )
 
     def get_unshipped_products(self, supplier=None):
-        return dict(
-            (product, summary_datum)
+        return {
+            product: summary_datum
             for product, summary_datum in self.get_product_summary(
                 supplier=supplier
             ).items()
             if summary_datum["unshipped"]
-        )
+        }
 
     def get_status_display(self):
         return force_text(self.status)

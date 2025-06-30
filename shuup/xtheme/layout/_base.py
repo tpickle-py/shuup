@@ -151,8 +151,8 @@ class LayoutCell:
         :return: Layout cell data dict.
         :rtype: dict
         """
-        return dict(
-            (k, v)
+        return {
+            k: v
             for (k, v) in (
                 ("plugin", self.plugin_identifier),
                 ("config", self.config),
@@ -161,7 +161,7 @@ class LayoutCell:
                 ("extra_classes", self.extra_classes),
             )
             if k and v
-        )
+        }
 
 
 class LayoutRow:

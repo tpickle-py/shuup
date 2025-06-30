@@ -30,7 +30,7 @@ class RelatedMapper:
         )
         self.translated_field_names = [f.name for f in self.translated_fields]
 
-        uk_fields = dict((f.name, f) for f in get_model_unique_fields(to))
+        uk_fields = {f.name: f for f in get_model_unique_fields(to)}
         uk_fields.update((fname, None) for fname in self.explicit_uk_fields)
 
         # TODO: can explicit fields be used to map stuff

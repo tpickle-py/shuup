@@ -67,18 +67,15 @@ class SimpleSupplierModule(BaseSupplierModule):
             .values_list("pk", "physical_count", "logical_count", "stock_managed")
         )
 
-        values = dict(
-            (
-                product_id,
-                (physical_count or 0, logical_count or 0, stock_managed or False),
-            )
+        values = {
+            product_id: (physical_count or 0, logical_count or 0, stock_managed or False)
             for (
                 product_id,
                 physical_count,
                 logical_count,
                 stock_managed,
             ) in stock_counts
-        )
+        }
         null = (0, 0, self.supplier.stock_managed)
 
         stati = []
@@ -96,7 +93,7 @@ class SimpleSupplierModule(BaseSupplierModule):
                 )
             )
 
-        return dict((pss.product_id, pss) for pss in stati)
+        return {pss.product_id: pss for pss in stati}
 
     def adjust_stock(
         self,

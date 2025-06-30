@@ -168,11 +168,11 @@ def handle_add_var(
     """
 
     # Resolve the combination...
-    vars = dict(
-        (int(k.split("_")[-1]), int(v))
+    vars = {
+        int(k.split("_")[-1]): int(v)
         for (k, v) in six.iteritems(kwargs)
         if k.startswith("var_")
-    )
+    }
     var_product = ProductVariationResult.resolve(product_id, combination=vars)
     if not var_product:
         raise ValidationError(

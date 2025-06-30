@@ -78,9 +78,9 @@ class MultiLanguageModelForm(TranslatableModelForm):
         self.non_default_languages = sorted(
             set(self.languages) - set([self.default_language])
         )
-        self.language_names = dict(
-            (lang, get_language_name(lang)) for lang in self.languages
-        )
+        self.language_names = {
+            lang: get_language_name(lang) for lang in self.languages
+        }
 
         for f in self.translation_fields:
             base = self.base_fields.pop(f.name, None)
@@ -150,16 +150,16 @@ class MultiLanguageModelForm(TranslatableModelForm):
 
     def _save_translations(self, instance, data):
         for translations_model in self._get_translation_models():
-            current_translations = dict(
-                (trans.language_code, trans)
+            current_translations = {
+                trans.language_code: trans
                 for trans in translations_model.objects.filter(
                     master_id=instance.id, language_code__in=self.languages
                 )
-            )
+            }
             for lang, field_map in six.iteritems(self.trans_field_map):
-                translation_fields = dict(
-                    (src_name, data.get(src_name)) for src_name in field_map
-                )
+                translation_fields = {
+                    src_name: data.get(src_name) for src_name in field_map
+                }
                 translation = current_translations.get(lang)
                 # Add translation only if at least one translated field is given
                 if not any(translation_fields.values()):
@@ -223,11 +223,11 @@ class MultiLanguageModelForm(TranslatableModelForm):
         Get cleaned data without translated fields.
         """
         translated_field_names = set(self.translated_field_names)
-        return dict(
-            (k, v)
+        return {
+            k: v
             for (k, v) in six.iteritems(self.cleaned_data)
             if k not in translated_field_names
-        )
+        }
 
     def _get_label(self, field_name, field, lang):
         label = field.label
