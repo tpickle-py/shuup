@@ -19,22 +19,14 @@ jobs:
         version: "latest"
     - name: Set up Python
       run: uv python install 3.11
-    - name: Create virtual environment
-      run: uv venv .venv
-    - name: Install build dependencies
-      run: uv pip install setuptools wheel
-    - name: Install dev dependencies (without editable)
-      run: uv pip install black isort flake8 mypy pytest pytest-django pytest-cov coverage sphinx sphinx-rtd-theme pre-commit
-    - name: Install package in editable mode
-      run: uv pip install -e .
+    - name: Sync dependencies
+      run: uv sync --dev
     - name: Run sanity check
       run: uv run _misc/check_sanity.py
-    - name: Check flake8
-      run: uv run flake8 .
-    - name: Check isort
-      run: uv run isort --check --diff .
-    - name: Check black
-      run: uv run black --check --diff .
+    - name: Check ruff lint
+      run: uv run ruff check .
+    - name: Check ruff format
+      run: uv run ruff format --check --diff .
 
   core:
     name: "Test Shuup, migrations and messages"

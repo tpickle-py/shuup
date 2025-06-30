@@ -271,6 +271,7 @@ dev = [
     "gitignore-parser>=0.1.12",
     "pylint-django>=2.6.1",
     "beautifulsoup4>=4.13.4",
+    "flake8-pyproject>=1.2.3",
 ]
 
 test = [
