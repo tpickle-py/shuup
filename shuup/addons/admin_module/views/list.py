@@ -51,11 +51,7 @@ class AddonListView(FormView):
             set_enabled_addons(
                 settings.SHUUP_ENABLED_ADDONS_FILE,
                 new_enabled_addons,
-                comment="Written via Shuup admin (user {}; IP {}; time {})".format(
-                    self.request.user.pk,
-                    get_client_ip(self.request),
-                    now().isoformat(),
-                ),
+                comment=f"Written via Shuup admin (user {self.request.user.pk}; IP {get_client_ip(self.request)}; time {now().isoformat()})",
             )
             messages.success(self.request, " ".join(changes))
             return HttpResponseRedirect(self.request.path + "?reload=1")

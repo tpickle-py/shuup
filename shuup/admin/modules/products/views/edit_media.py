@@ -82,7 +82,7 @@ class ProductMediaEditView(UpdateView):
     def get_breadcrumb_parents(self):
         return [
             MenuEntry(
-                text="{}".format(self.object),
+                text=f"{self.object}",
                 url=get_model_url(self.object, shop=self.request.shop),
             )
         ]
@@ -147,7 +147,7 @@ class ProductMediaBulkAdderView(View):
             return JsonResponse(
                 {
                     "response": "error",
-                    "message": "Error! Invalid shop id `{}`.".format(shop_id),
+                    "message": f"Error! Invalid shop id `{shop_id}`.",
                 },
                 status=400,
             )
@@ -159,7 +159,7 @@ class ProductMediaBulkAdderView(View):
             return JsonResponse(
                 {
                     "response": "error",
-                    "message": "Error! Invalid shop product id `{}`.".format(shop_product_id),
+                    "message": f"Error! Invalid shop product id `{shop_product_id}`.",
                 },
                 status=400,
             )
@@ -171,7 +171,7 @@ class ProductMediaBulkAdderView(View):
             return JsonResponse(
                 {
                     "response": "error",
-                    "message": "Error! Invalid file kind `{}`.".format(kind),
+                    "message": f"Error! Invalid file kind `{kind}`.",
                 },
                 status=400,
             )
@@ -180,7 +180,7 @@ class ProductMediaBulkAdderView(View):
                 return JsonResponse(
                     {
                         "response": "error",
-                        "message": "Error! Invalid file id `{}`.".format(file_id),
+                        "message": f"Error! Invalid file id `{file_id}`.",
                     },
                     status=400,
                 )

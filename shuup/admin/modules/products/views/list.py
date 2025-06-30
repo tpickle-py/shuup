@@ -199,7 +199,7 @@ class ProductListView(PicotableListView):
 
     def get_object_abstract(self, instance, item):
         return [
-            {"text": "{}".format(instance.product), "class": "header"},
+            {"text": f"{instance.product}", "class": "header"},
             {"title": _("Barcode"), "text": item.get("product__barcode")},
             {"title": _("SKU"), "text": item.get("product__sku")},
             {"title": _("Type"), "text": item.get("product__type")},

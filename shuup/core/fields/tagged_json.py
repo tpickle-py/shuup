@@ -29,7 +29,7 @@ def isoformat(obj):
 
 def encode_enum(enum_val):
     enum_cls = enum_val.__class__
-    spec = "{}:{}".format(enum_cls.__module__, enum_cls.__name__)
+    spec = f"{enum_cls.__module__}:{enum_cls.__name__}"
     try:
         if load(spec) != enum_cls:
             raise ImproperlyConfigured("Error! That's not the same class.")
@@ -58,11 +58,11 @@ class TagRegistry:
                 decoder = classes
         if not callable(decoder):
             raise ValueError(
-                "Error! Decoder `{!r}` for tag `{!r}` is not callable.".format(decoder, tag)
+                f"Error! Decoder `{decoder!r}` for tag `{tag!r}` is not callable."
             )
         if not callable(encoder):
             raise ValueError(
-                "Error! Encoder `{!r}` for tag `{!r}` is not callable.".format(encoder, tag)
+                f"Error! Encoder `{encoder!r}` for tag `{tag!r}` is not callable."
             )
 
         self.tags[tag] = {"classes": classes, "encoder": encoder, "decoder": decoder}

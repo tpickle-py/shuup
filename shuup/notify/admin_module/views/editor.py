@@ -72,10 +72,10 @@ class ScriptAPI:
     def dispatch(self):
         data = json.loads(self.request.body.decode("UTF-8"))
         command = data.pop("command")
-        func_name = "handle_{}".format(snake_case(camel_case_to_spaces(command)))
+        func_name = f"handle_{snake_case(camel_case_to_spaces(command))}"
         func = getattr(self, func_name, None)
         if not callable(func):
-            return JsonResponse({"error": "Error! No handler: {}.".format(func_name)})
+            return JsonResponse({"error": f"Error! No handler: {func_name}."})
         return func(data)
 
     def handle_get_data(self, data):

@@ -36,20 +36,20 @@ class Money(numbers.UnittedDecimal):
         if currency is None and hasattr(value, "currency"):
             currency = value.currency
         if not currency:
-            raise TypeError("Error! {}: currency must be given.".format(cls.__name__))
+            raise TypeError(f"Error! {cls.__name__}: currency must be given.")
         instance = super().__new__(cls, value, *args, **kwargs)
         instance.currency = currency
         return instance
 
     def __repr__(self):
         cls_name = type(self).__name__
-        return "{}('{}', {!r})".format(cls_name, self.value, self.currency)
+        return f"{cls_name}('{self.value}', {self.currency!r})"
 
     def __reduce_ex__(self, protocol):
         return (type(self), (self.value, self.currency))
 
     def __str__(self):
-        return "{} {}".format(self.value, self.currency)
+        return f"{self.value} {self.currency}"
 
     @classmethod
     def from_data(cls, value, currency):

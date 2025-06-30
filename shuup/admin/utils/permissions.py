@@ -27,7 +27,7 @@ def get_default_model_permissions(model):
 
     for default in model._meta.default_permissions:
         permissions.add(
-            "{}.{}_{}".format(model._meta.app_label, default, model._meta.model_name)
+            f"{model._meta.app_label}.{default}_{model._meta.model_name}"
         )
 
     return permissions
@@ -91,7 +91,7 @@ def has_permission(user, permission):
 
 
 def _get_permission_key_for_group(group_id):
-    return "{}_admin_permissions".format(group_id)
+    return f"{group_id}_admin_permissions"
 
 
 def get_permissions_for_user(user):

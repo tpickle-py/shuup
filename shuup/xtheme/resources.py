@@ -81,7 +81,7 @@ class InlineScriptResource(six.text_type):
         :rtype: InlineScriptResource
         """
         ns = dict(*args, **kwargs)
-        return cls("window.{} = {};".format(var_name, TaggedJSONEncoder().encode(ns)))
+        return cls(f"window.{var_name} = {TaggedJSONEncoder().encode(ns)};")
 
 
 class JinjaMarkupResource:
@@ -160,7 +160,7 @@ class ResourceContainer:
             return False
         if location not in KNOWN_LOCATIONS:
             raise ValueError(
-                "Error! `{!r}` is not a known xtheme resource location.".format(location)
+                f"Error! `{location!r}` is not a known xtheme resource location."
             )
         lst = self.resources.setdefault(location, [])
         if resource not in lst:
@@ -204,10 +204,10 @@ class ResourceContainer:
             return force_text(resource)
 
         if isinstance(resource, InlineStyleResource):
-            return '<style type="text/css">{}</style>'.format(resource)
+            return f'<style type="text/css">{resource}</style>'
 
         if isinstance(resource, InlineScriptResource):
-            return "<script>{}</script>".format(resource)
+            return f"<script>{resource}</script>"
 
         resource = force_text(resource)
 
@@ -222,7 +222,7 @@ class ResourceContainer:
         if file_name.endswith(".css"):
             return "<link{}>".format(get_html_attrs({"href": resource, "rel": "stylesheet"}))
 
-        return "<!-- (unknown resource type: {}) -->".format(escape(resource))
+        return f"<!-- (unknown resource type: {escape(resource)}) -->"
 
 
 @contextfunction
@@ -264,7 +264,7 @@ def inject_resources(context, content, clean=True):
         elif placement == "post":
             content = content[:end] + injection + content[end:]
         else:  # pragma: no cover
-            raise ValueError("Error! Unknown placement `{}`.".format(placement))
+            raise ValueError(f"Error! Unknown placement `{placement}`.")
 
     return content
 

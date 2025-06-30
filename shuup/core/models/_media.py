@@ -19,7 +19,7 @@ class MediaFile(models.Model):
     )
 
     def __str__(self):  # pragma: no cover
-        return "{}".format(self.file)
+        return f"{self.file}"
 
 
 
@@ -48,7 +48,7 @@ class MediaFolder(models.Model):
     )
 
     def __str__(self):  # pragma: no cover
-        return "{}".format(self.folder)
+        return f"{self.folder}"
 
     def get_all_children(self):
         folders = [self.folder]

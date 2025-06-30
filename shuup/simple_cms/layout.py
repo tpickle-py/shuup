@@ -12,7 +12,7 @@ class PageLayout(Layout):
         if not page:
             return ""
         return _(
-            "Content in this placeholder is shown for {title} only.".format(title=page.title)
+            f"Content in this placeholder is shown for {page.title} only."
         )
 
     def is_valid_context(self, context):

@@ -517,7 +517,7 @@ class ProductVariationFilter(SimpleProductListModifier):
         for variation_key, choices in six.iteritems(variation_values):
             fields.append(
                 (
-                    "variation_{}".format(variation_key),
+                    f"variation_{variation_key}",
                     CommaSeparatedListField(
                         required=False,
                         label=capfirst(variation_key),
@@ -784,7 +784,7 @@ def get_price_ranges(shop, min_price, max_price, range_step):
     ranges = []
     min_price_value = format_money(shop.create_price(min_price))
     ranges.append(
-        ("-{}".format(min_price), _("Under %(min_limit)s") % {"min_limit": min_price_value})
+        (f"-{min_price}", _("Under %(min_limit)s") % {"min_limit": min_price_value})
     )
 
     for range_min in range(min_price, max_price, range_step):
@@ -794,7 +794,7 @@ def get_price_ranges(shop, min_price, max_price, range_step):
             range_max_price = format_money(shop.create_price(range_max))
             ranges.append(
                 (
-                    "{}-{}".format(range_min, range_max),
+                    f"{range_min}-{range_max}",
                     _("%(min)s to %(max)s")
                     % dict(min=range_min_price, max=range_max_price),
                 )
@@ -802,6 +802,6 @@ def get_price_ranges(shop, min_price, max_price, range_step):
 
     max_price_value = format_money(shop.create_price(max_price))
     ranges.append(
-        ("{}-".format(max_price), _("%(max_limit)s & Above") % {"max_limit": max_price_value})
+        (f"{max_price}-", _("%(max_limit)s & Above") % {"max_limit": max_price_value})
     )
     return ranges

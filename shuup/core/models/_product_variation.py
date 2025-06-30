@@ -196,7 +196,7 @@ def get_all_available_combinations(product):
             variable_to_value.items(), key=lambda varval: varval[0].ordering
         )
         text_description = ", ".join(
-            sorted("{}: {}".format(var, val) for (var, val) in sorted_variable_to_value)
+            sorted(f"{var}: {val}" for (var, val) in sorted_variable_to_value)
         )
         sku_part = "-".join(
             slugify(force_text(val))[:6] for (var, val) in sorted_variable_to_value

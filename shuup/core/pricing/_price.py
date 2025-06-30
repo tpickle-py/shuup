@@ -53,7 +53,7 @@ class Price(Money):
 
     def __str__(self):
         incl = "incl." if self.includes_tax else "excl."
-        return "{} ({} tax)".format(super().__str__(), incl)
+        return f"{super().__str__()} ({incl} tax)"
 
 
 class TaxfulPrice(Price):

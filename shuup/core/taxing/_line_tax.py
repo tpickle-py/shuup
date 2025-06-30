@@ -79,10 +79,4 @@ class SourceLineTax(LineTax):
         self.base_amount = base_amount
 
     def __repr__(self):
-        return "{}({!r}, {!r}, {!r}, {!r})".format(
-            type(self).__name__,
-            self.tax,
-            self.name,
-            self.amount,
-            self.base_amount,
-        )
+        return f"{type(self).__name__}({self.tax!r}, {self.name!r}, {self.amount!r}, {self.base_amount!r})"

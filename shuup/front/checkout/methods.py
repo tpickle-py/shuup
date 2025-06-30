@@ -145,7 +145,7 @@ class MethodsPhase(CheckoutPhaseViewMixin, FormView):
 
     def form_valid(self, form):
         for field_name in ["shipping_method", "payment_method"]:
-            storage_key = "{}_id".format(field_name)
+            storage_key = f"{field_name}_id"
             value = None
 
             if form.cleaned_data.get(field_name):
@@ -165,7 +165,7 @@ class MethodsPhase(CheckoutPhaseViewMixin, FormView):
     def get_initial(self):
         initial = {}
         for key in ("shipping_method", "payment_method"):
-            value = self.storage.get("{}_id".format(key))
+            value = self.storage.get(f"{key}_id")
             if value:
                 initial[key] = value
         return initial

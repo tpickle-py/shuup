@@ -29,4 +29,4 @@ def get_shuup_static_url(path, package=None):
         except pkg_resources.DistributionNotFound:
             LOGGER.exception(f"Failed to find the module {package}")
 
-    return "{}?v={}".format(static(path), version)
+    return f"{static(path)}?v={version}"

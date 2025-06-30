@@ -98,7 +98,7 @@ def move_to_element(browser, css_selector, header_height=155):
     wait_until_condition(browser, lambda x: x.is_element_present_by_css(css_selector))
     element = browser.driver.find_element_by_css_selector(css_selector)
     y = element.location["y"] - header_height
-    browser.execute_script("window.scrollTo(0, {})".format(y))
+    browser.execute_script(f"window.scrollTo(0, {y})")
 
 
 def click_element(browser, css_selector, timeout=10, frequency=1.0, header_height=155):
@@ -192,6 +192,6 @@ def initialize_admin_browser_test(
 
         # set shop language to eng
         browser.find_by_id("dropdownMenu").click()
-        browser.find_by_xpath('//a[@data-value="{}"]'.format(language)).first.click()
+        browser.find_by_xpath(f'//a[@data-value="{language}"]').first.click()
 
     return browser

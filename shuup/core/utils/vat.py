@@ -190,7 +190,7 @@ def compile_pattern(prefix, pattern):
         ("S", "[a-z0-9+*]"),
         ("L", "[a-z]"),
     ):
-        regex_frag = "({}{{%d}})".format(gt)
+        regex_frag = f"({gt}{{%d}})"
 
         def gt(m):
             return regex_frag % len(m.group(0))

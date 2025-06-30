@@ -67,9 +67,9 @@ class BooleanValuesEqual(Condition):
 
 
 def construct_simple(base, var_type):
-    identifier = "{}_{}".format(var_type.identifier, base.identifier_suffix)
+    identifier = f"{var_type.identifier}_{base.identifier_suffix}"
     class_name = str(camel_case(identifier))
-    suffixed_type_name = lazy(lambda s: "{} {}".format(var_type.name, s), six.text_type)
+    suffixed_type_name = lazy(lambda s: f"{var_type.name} {s}", six.text_type)
     class_ns = {
         "bindings": {
             "v1": Binding(suffixed_type_name("1"), type=var_type),

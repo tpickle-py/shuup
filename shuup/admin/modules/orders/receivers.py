@@ -9,7 +9,7 @@ def _create_cash_payment_for_order(order):
     if not order.is_paid():
         order.create_payment(
             order.taxful_total_price,
-            payment_identifier="Cash-{}".format(now().isoformat()),
+            payment_identifier=f"Cash-{now().isoformat()}",
             description="Cash Payment",
         )
 

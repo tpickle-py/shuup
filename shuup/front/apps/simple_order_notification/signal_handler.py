@@ -42,14 +42,14 @@ def send_simple_order_notification(sender, order, request, **kwargs):
     try:
         message.send()
     except Exception as exc:
-        LOG.exception("Error! Failed to send order notification to {}.".format(message.to))
+        LOG.exception(f"Error! Failed to send order notification to {message.to}.")
         order.add_log_entry(
-            "Error! Order Notification Email failed: {}.".format(exc),
+            f"Error! Order Notification Email failed: {exc}.",
             identifier=NOTIFICATION_ERROR_LOG_IDENTIFIER,
             kind=LogEntryKind.ERROR,
         )
     else:
-        LOG.info("Info! Order notification sent to {}.".format(message.to))
+        LOG.info(f"Info! Order notification sent to {message.to}.")
         order.add_log_entry(
             "Info! Order Notification Email was sent.",
             identifier=NOTIFICATION_SUCCESS_LOG_IDENTIFIER,

@@ -118,7 +118,7 @@ class PageForm(MultiLanguageModelForm):
                 )
 
         if not something_filled:
-            title_field = "title__{}".format(self.default_language)
+            title_field = f"title__{self.default_language}"
             self.add_error(title_field, _("Please fill at least one language fully."))
 
         return data

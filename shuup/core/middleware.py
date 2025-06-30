@@ -43,9 +43,9 @@ class ExceptionMiddleware(MiddlewareMixin):
             namespace = force_text(request.resolver_match.namespace)
             templates.extend(
                 [
-                    "{}/problem.jinja".format(app_name),
+                    f"{app_name}/problem.jinja",
                     "{}/problem.jinja".format(app_name.replace("_", "/")),
-                    "{}/problem.jinja".format(namespace),
+                    f"{namespace}/problem.jinja",
                     "{}/problem.jinja".format(namespace.replace("_", "/")),
                 ]
             )

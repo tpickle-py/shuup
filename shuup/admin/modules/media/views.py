@@ -135,7 +135,7 @@ class MediaBrowserView(TemplateView):
         self.filter = request.GET.get("filter")
         self.disabledMenus = request.GET.get("disabledMenus", "").split(",")
         action = request.GET.get("action")
-        handler = getattr(self, "handle_get_{}".format(action), None)
+        handler = getattr(self, f"handle_get_{action}", None)
         if handler:
             return handler(request.GET)
         return super().get(request, *args, **kwargs)
@@ -152,7 +152,7 @@ class MediaBrowserView(TemplateView):
 
         data = json.loads(request.body.decode("utf-8"))
         action = data.get("action")
-        handler = getattr(self, "handle_post_{}".format(action), None)
+        handler = getattr(self, f"handle_post_{action}", None)
         if handler:
             try:
                 return handler(data)
@@ -161,7 +161,7 @@ class MediaBrowserView(TemplateView):
             except Problem as prob:
                 return JsonResponse({"error": force_text(prob)})
         else:
-            return JsonResponse({"error": "Error! Unknown action `{}`.".format(action)})
+            return JsonResponse({"error": f"Error! Unknown action `{action}`."})
 
     def handle_get_folders(self, data):
         shop = get_shop(self.request)
@@ -505,7 +505,7 @@ def media_upload(request, *args, **kwargs):
             folder = None  # Root folder upload. How bold!
     except Exception as exc:
         return JsonResponse(
-            {"error": "Error! Invalid folder `{}`.".format(force_text(exc))}, status=400
+            {"error": f"Error! Invalid folder `{force_text(exc)}`."}, status=400
         )
 
     if subfolder_of_users_root(request.user, folder) or has_permission(

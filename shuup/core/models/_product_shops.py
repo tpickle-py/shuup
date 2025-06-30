@@ -622,7 +622,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
                 )
             except ShopProduct.DoesNotExist:
                 yield ValidationError(
-                    "Error! {} is not available in {}.".format(child_product, self.shop),
+                    f"Error! {child_product} is not available in {self.shop}.",
                     code="invalid_shop",
                 )
             else:
@@ -635,7 +635,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
                     message = getattr(error, "message", "")
                     code = getattr(error, "code", None)
                     yield ValidationError(
-                        "Error! {}: {}".format(child_product, message), code=code
+                        f"Error! {child_product}: {message}", code=code
                     )
 
     def raise_if_not_orderable(

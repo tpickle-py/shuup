@@ -48,7 +48,7 @@ class Manufacturer(models.Model):
         verbose_name_plural = _("manufacturers")
 
     def __str__(self):  # pragma: no cover
-        return "{}".format(self.name)
+        return f"{self.name}"
 
 
 ManufacturerLogEntry = define_log_model(Manufacturer)

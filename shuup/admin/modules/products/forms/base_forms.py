@@ -408,9 +408,9 @@ class ProductAttributesForm(forms.Form):
         else:
             extant_languages = set()
         for lang in languages:
-            field_name = "{}__{}".format(attribute.identifier, lang)
+            field_name = f"{attribute.identifier}__{lang}"
             self.fields[field_name] = field = attribute.formfield()
-            field.label = "{} [{}]".format(field.label, get_language_name(lang))
+            field.label = f"{field.label} [{get_language_name(lang)}]"
             self.trans_name_map[lang][field_name] = field_name
             self.translated_field_names.append(field_name)
 

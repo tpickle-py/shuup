@@ -78,7 +78,7 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
         for product_id, info in sorted(six.iteritems(form.product_summary)):
             product_name = _("%(product_name)s (%(supplier)s)") % {
                 "product_name": form.product_names.get(
-                    product_id, "Product {}".format(product_id)
+                    product_id, f"Product {product_id}"
                 ),
                 "supplier": ", ".join(info["suppliers"]),
             }
@@ -98,7 +98,7 @@ class OrderCreateShipmentView(ModifiableViewMixin, UpdateView):
                 label=product_name,
                 widget=forms.TextInput(attrs=attrs),
             )
-            field_key = "q_{}".format(product_id)
+            field_key = f"q_{product_id}"
             form.fields[field_key] = field
             default_field_keys.add(field_key)
 

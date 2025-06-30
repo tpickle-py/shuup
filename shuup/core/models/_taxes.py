@@ -98,7 +98,7 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
         if self.rate is not None:
             return self.rate * base_amount
         raise ValueError(
-            "Error! Calculations of the tax amount failed. Improperly configured tax: {}.".format(self)
+            f"Error! Calculations of the tax amount failed. Improperly configured tax: {self}."
         )
 
     def __str__(self):

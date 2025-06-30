@@ -137,9 +137,9 @@ class MockerView(FormView):
             try:
                 value = mocker(shop=self.request.shop)
                 if value:
-                    messages.success(self.request, "Created: {}".format(value))
+                    messages.success(self.request, f"Created: {value}")
             except Exception as e:
                 if settings.DEBUG:
                     raise
-                messages.error(self.request, "Error! {}".format(e))
+                messages.error(self.request, f"Error! {e}")
         return self.get(self.request)

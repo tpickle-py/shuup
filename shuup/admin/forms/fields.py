@@ -53,7 +53,7 @@ class Select2ModelField(Field):
 
     def widget_attrs(self, widget):
         attrs = super().widget_attrs(widget)
-        model_name = "{}.{}".format(self.model._meta.app_label, self.model._meta.model_name)
+        model_name = f"{self.model._meta.app_label}.{self.model._meta.model_name}"
         attrs.update({"data-model": model_name})
         if not self.required:
             attrs["data-allow-clear"] = "true"
@@ -95,7 +95,7 @@ class Select2MultipleField(Field):
 
     def widget_attrs(self, widget):
         attrs = super().widget_attrs(widget)
-        model_name = "{}.{}".format(self.model._meta.app_label, self.model._meta.model_name)
+        model_name = f"{self.model._meta.app_label}.{self.model._meta.model_name}"
         attrs.update({"data-model": model_name})
         if getattr(self, "search_mode", None):
             attrs.update({"data-search-mode": self.search_mode})

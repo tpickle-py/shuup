@@ -90,7 +90,7 @@ def _load_provide_objects(category):
         loaded_provides.keys()
     ):  # Changes occurred, reload provides
         _uncache(category)
-        explanation = "Loading provides {}".format(category)
+        explanation = f"Loading provides {category}"
         loaded_provides = OrderedDict()
         for spec in provide_specs:
             loaded_provides[spec] = load(spec, explanation)
@@ -224,7 +224,7 @@ def load_module_instances(setting_name, provide_category):
 def _get_settings_value(setting_name):
     if not hasattr(settings, setting_name):
         raise ImproperlyConfigured(
-            "Error! The setting `{}` MUST be set.".format(setting_name)
+            f"Error! The setting `{setting_name}` MUST be set."
         )
     return getattr(settings, setting_name, None)
 
@@ -233,13 +233,8 @@ def _load_module(provide_category, setting_name, setting_value):
     object = get_identifier_to_object_map(provide_category).get(setting_value)
     if not object:
         raise ImproperlyConfigured(
-            "Error! Setting `{}` refers to a provide with identifier `{!r}`, but "
-            "it isn't one of the known identifiers in the `{}` category: `{!r}`.".format(
-                setting_name,
-                setting_value,
-                provide_category,
-                sorted(get_identifier_to_object_map(provide_category).keys()),
-            )
+            f"Error! Setting `{setting_name}` refers to a provide with identifier `{setting_value!r}`, but "
+            f"it isn't one of the known identifiers in the `{provide_category}` category: `{sorted(get_identifier_to_object_map(provide_category).keys())!r}`."
         )
 
     return object

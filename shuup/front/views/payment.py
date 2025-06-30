@@ -67,7 +67,7 @@ class ProcessPaymentView(DetailView):
             return self.render_to_response(self.get_context_data(object=order))
         else:
             raise ImproperlyConfigured(
-                "Error! Unknown ProcessPaymentView mode: `{}`.".format(mode)
+                f"Error! Unknown ProcessPaymentView mode: `{mode}`."
             )
 
         return redirect("shuup:order_complete", pk=order.pk, key=order.key)

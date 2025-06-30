@@ -30,21 +30,12 @@ class BasketStorage(six.with_metaclass(abc.ABCMeta)):
         if stored_basket.shop_id != basket.shop.id:
             msg = (
                 "Error! Cannot load basket of a different Shop ("
-                "{} id={!r} with Shop={}, Dest. Basket Shop={})".format(
-                    type(stored_basket).__name__,
-                    stored_basket.id,
-                    stored_basket.shop_id,
-                    basket.shop.id,
-                )
+                f"{type(stored_basket).__name__} id={stored_basket.id!r} with Shop={stored_basket.shop_id}, Dest. Basket Shop={basket.shop.id})"
             )
             raise BasketCompatibilityError(msg)
         price_units_diff = _price_units_diff(stored_basket, basket.shop)
         if price_units_diff:
-            msg = "Error! {} {!r}: Price unit mismatch with Shop ({})".format(
-                type(stored_basket).__name__,
-                stored_basket.id,
-                price_units_diff,
-            )
+            msg = f"Error! {type(stored_basket).__name__} {stored_basket.id!r}: Price unit mismatch with Shop ({price_units_diff})"
             raise BasketCompatibilityError(msg)
         return stored_basket.data or {}
 
@@ -126,10 +117,7 @@ class BaseDatabaseBasketStorage(BasketStorage):
         if hasattr(self.model, "supplier") and hasattr(basket, "supplier"):
             stored_basket.supplier = basket.supplier
 
-        stored_basket.class_spec = "{}.{}".format(
-            basket.__class__.__module__,
-            basket.__class__.__name__,
-        )
+        stored_basket.class_spec = f"{basket.__class__.__module__}.{basket.__class__.__name__}"
 
         stored_basket.save()
         stored_basket.products.set(set(basket.product_ids))
@@ -177,10 +165,10 @@ class DatabaseBasketStorage(BaseDatabaseBasketStorage):
 def _price_units_diff(x, y):
     diff = []
     if x.currency != y.currency:
-        diff.append("currency: {!r} vs {!r}".format(x.currency, y.currency))
+        diff.append(f"currency: {x.currency!r} vs {y.currency!r}")
     if x.prices_include_tax != y.prices_include_tax:
         diff.append(
-            "includes_tax: {!r} vs {!r}".format(x.prices_include_tax, y.prices_include_tax)
+            f"includes_tax: {x.prices_include_tax!r} vs {y.prices_include_tax!r}"
         )
     return ", ".join(diff)
 

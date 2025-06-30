@@ -59,7 +59,7 @@ class ScriptListView(PicotableListView):
 
     def get_object_abstract(self, instance, item):
         return [
-            {"text": "{}".format(instance), "class": "header"},
+            {"text": f"{instance}", "class": "header"},
             {"title": _("Event"), "text": item.get("event_identifier")},
             {"title": _("Enabled"), "text": item.get("enabled")},
         ]

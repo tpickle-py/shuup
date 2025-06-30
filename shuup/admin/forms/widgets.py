@@ -31,16 +31,13 @@ class BasePopupChoiceWidget(Widget):
         super().__init__(attrs)
 
     def get_browse_markup(self):
-        return """
-            <button class='browse-btn btn btn-primary btn-sm' type='button'><i class='{icon}'></i> {text}</button>
-        """.format(
-            icon=self.select_icon,
-            text=self.browse_text,
-        )
+        return f"""
+            <button class='browse-btn btn btn-primary btn-sm' type='button'><i class='{self.select_icon}'></i> {self.browse_text}</button>
+        """
 
     def get_clear_markup(self):
         return (
-            "<button class='clear-btn btn btn-danger btn-sm' type='button'><i class='{icon}'></i></button>".format(icon=self.clear_icon)
+            f"<button class='clear-btn btn btn-danger btn-sm' type='button'><i class='{self.clear_icon}'></i></button>"
         )
 
     def render_text(self, obj):
@@ -63,17 +60,12 @@ class BasePopupChoiceWidget(Widget):
         if self.empty_text or not text:
             css_style = "display: none"
 
-        icon = "<i class='{}'></i>".format(self.external_icon)
+        icon = f"<i class='{self.external_icon}'></i>"
 
         return mark_safe(
             (
-                '<a class="btn btn-inverse browse-text btn-sm" style="{css_style}" \
-            href="{url}" target="_blank">{icon} {text}</a>'
-            ).format(
-                css_style=css_style,
-                icon=icon,
-                text=escape(text),
-                url=escape(url),
+                f'<a class="btn btn-inverse browse-text btn-sm" style="{css_style}" \
+            href="{escape(url)}" target="_blank">{icon} {escape(text)}</a>'
             )
         )
 
@@ -98,7 +90,7 @@ class BasePopupChoiceWidget(Widget):
             "<div {attrs}>{content}</div>".format(
                 attrs=flatatt_filter(
                     {
-                        "class": "browse-widget {}-browse-widget d-flex mr-auto align-items-center".format(self.browse_kind),
+                        "class": f"browse-widget {self.browse_kind}-browse-widget d-flex mr-auto align-items-center",
                         "data-browse-kind": self.browse_kind,
                         "data-clearable": self.clearable,
                         "data-empty-text": self.empty_text,
@@ -155,7 +147,7 @@ class FileDnDUploaderWidget(Widget):
             "date": file.uploaded_at.isoformat(),
         }
         return [
-            "data-{}='{}'".format(key, val)
+            f"data-{key}='{val}'"
             for key, val in six.iteritems(data)
             if val is not None
         ]
@@ -163,15 +155,15 @@ class FileDnDUploaderWidget(Widget):
     def render(self, name, value, attrs={}, renderer=None):
         pk_input = HiddenInput().render(name, value, attrs)
         file_attrs = [
-            "data-upload_path='{}'".format(self.upload_path),
-            "data-add_remove_links='{}'".format(self.clearable),
+            f"data-upload_path='{self.upload_path}'",
+            f"data-add_remove_links='{self.clearable}'",
             "data-dropzone='true'",
-            "data-browsable='{}'".format(self.browsable),
+            f"data-browsable='{self.browsable}'",
         ]
         if self.upload_url:
-            file_attrs.append("data-upload_url='{}'".format(self.upload_url))
+            file_attrs.append(f"data-upload_url='{self.upload_url}'")
         if self.kind:
-            file_attrs.append("data-kind='{}'".format(self.kind))
+            file_attrs.append(f"data-kind='{self.kind}'")
 
         if self.dropzone_attrs:
             # attributes passed here will be converted into keys with dz_ prefix
@@ -247,10 +239,7 @@ class ContactChoiceWidget(BasePopupChoiceWidget):
     def get_browse_markup(self):
         icon = "<i class='fa fa-user'></i>"
         return (
-            "<button class='browse-btn btn btn-primary btn-sm' type='button'>{icon} {text}</button>".format(
-                icon=icon,
-                text=self.browse_text,
-            )
+            f"<button class='browse-btn btn btn-primary btn-sm' type='button'>{icon} {self.browse_text}</button>"
         )
 
 

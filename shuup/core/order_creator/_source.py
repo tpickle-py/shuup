@@ -167,7 +167,7 @@ class OrderSource:
         for key, value in values.items():
             if not hasattr(self, key):
                 raise ValueError(
-                    "Error! Can't update `{!r}` with key `{!r}`, as it is not a pre-existing attribute.".format(self, key)
+                    f"Error! Can't update `{self!r}` with key `{key!r}`, as it is not a pre-existing attribute."
                 )
             if (
                 isinstance(getattr(self, key), dict) and value
@@ -748,7 +748,7 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
     def _state_check(self):
         if not self.base_unit_price.unit_matches_with(self.discount_amount):
             raise TypeError(
-                "Error! Unit price {!r} unit mismatch with discount {!r}.".format(self.base_unit_price, self.discount_amount)
+                f"Error! Unit price {self.base_unit_price!r} unit mismatch with discount {self.discount_amount!r}."
             )
 
         assert self.shop is None or isinstance(self.shop, Shop)
@@ -777,7 +777,7 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
         found_forbidden_keys = [key for key in kwargs if key in forbidden_keys]
         if found_forbidden_keys:
             raise TypeError(
-                "Error! You may not add these keys to SourceLine: `{}`.".format(forbidden_keys)
+                f"Error! You may not add these keys to SourceLine: `{forbidden_keys}`."
             )
 
         for key, value in kwargs.items():
@@ -790,7 +790,7 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
         key_values = [(key, getattr(self, key, None)) for key in self._FIELDS]
         set_key_values = [(k, v) for (k, v) in key_values if v is not None]
         assigns = [
-            "{}={!r}".format(k, v) for (k, v) in (set_key_values + sorted(self._data.items()))
+            f"{k}={v!r}" for (k, v) in (set_key_values + sorted(self._data.items()))
         ]
         return "<{}({!r}, {})>".format(type(self).__name__, self.source, ", ".join(assigns))
 
@@ -811,7 +811,7 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
             if line.line_id == self.parent_line_id:
                 return line
         raise ValueError(
-            "Error! Invalid `parent_line_id`: `{!r}`.".format(self.parent_line_id)
+            f"Error! Invalid `parent_line_id`: `{self.parent_line_id!r}`."
         )
 
     @property
@@ -822,7 +822,7 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
     def tax_class(self, value):
         if self.product and value and value != self.product.tax_class:
             raise ValueError(
-                "Error! Conflicting product and line tax classes: `{!r}` vs. `{!r}`.".format(self.product.tax_class, value)
+                f"Error! Conflicting product and line tax classes: `{self.product.tax_class!r}` vs. `{value!r}`."
             )
         self._tax_class = value
 
@@ -868,10 +868,10 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
             return [(key + "_id", value.id)]
         elif isinstance(value, Price):
             if key not in self._PRICE_FIELDS:
-                raise TypeError("Error! Non-price field `{}` has `{!r}`.".format(key, value))
+                raise TypeError(f"Error! Non-price field `{key}` has `{value!r}`.")
             if not value.unit_matches_with(self.source.zero_price):
                 raise TypeError(
-                    "Error! Price `{!r}` (in field `{}`) not compatible with `{!r}`.".format(value, key, self.source.zero_price)
+                    f"Error! Price `{value!r}` (in field `{key}`) not compatible with `{self.source.zero_price!r}`."
                 )
             return [(key, value.value)]
         assert not isinstance(value, Money)

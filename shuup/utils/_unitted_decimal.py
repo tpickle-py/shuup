@@ -92,7 +92,7 @@ class UnittedDecimal(decimal.Decimal):
 
     def __mul__(self, other, **kwargs):
         if isinstance(other, UnittedDecimal):
-            raise TypeError("Error! Cannot multiply {!r} with {!r}.".format(self, other))
+            raise TypeError(f"Error! Cannot multiply {self!r} with {other!r}.")
         return self.new(super().__mul__(other, **kwargs))
 
     def __radd__(self, other, **kwargs):
@@ -204,4 +204,4 @@ class UnitMixupError(TypeError):
 
     def __str__(self):
         super_str = super().__str__()
-        return "{}: {!r} vs {!r}".format(super_str, self.obj1, self.obj2)
+        return f"{super_str}: {self.obj1!r} vs {self.obj2!r}"

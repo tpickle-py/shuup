@@ -39,7 +39,7 @@ class CheckoutProcess:
     def instantiate_phase_class(self, phase_class, **extra_kwargs):
         if not phase_class.identifier:  # pragma: no cover
             raise ImproperlyConfigured(
-                "Error! Phase `{!r}` has no identifier.".format(phase_class)
+                f"Error! Phase `{phase_class!r}` has no identifier."
             )
         kwargs = {}
         kwargs.update(self.phase_kwargs)
@@ -84,7 +84,7 @@ class CheckoutProcess:
             ):  # A past phase is not valid, that's the current one
                 return phase
         raise Http404(
-            "Error! Phase with identifier `{}` not found.".format(escape(requested_phase_identifier))
+            f"Error! Phase with identifier `{escape(requested_phase_identifier)}` not found."
         )
 
     def _get_next_phase(self, phases, current_phase, target_phase):

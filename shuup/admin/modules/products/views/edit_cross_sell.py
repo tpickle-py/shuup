@@ -63,7 +63,7 @@ class ProductCrossSellEditView(UpdateView):
     def get_breadcrumb_parents(self):
         return [
             MenuEntry(
-                text="{}".format(self.object),
+                text=f"{self.object}",
                 url=get_model_url(self.object, shop=self.request.shop),
             )
         ]

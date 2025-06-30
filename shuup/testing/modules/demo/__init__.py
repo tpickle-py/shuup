@@ -20,7 +20,7 @@ class DemoModule(AdminModule):
 
     def get_urls(self):
         return [
-            admin_url("test/$", lambda request: HttpResponse("herrrp {}".format(request))),
+            admin_url("test/$", lambda request: HttpResponse(f"herrrp {request}")),
         ]
 
     def check_demo_optin(self, request):
@@ -66,12 +66,12 @@ class DemoModule(AdminModule):
             return
         for word in query.split():
             if word:
-                yield SearchResult(word, url="https://google.com/?q={}".format(word))
+                yield SearchResult(word, url=f"https://google.com/?q={word}")
                 yield SearchResult(
-                    word[::-1], url="https://google.com/?q={}".format(word[::-1])
+                    word[::-1], url=f"https://google.com/?q={word[::-1]}"
                 )
         yield SearchResult(
-            "Create test: {}".format(query),
+            f"Create test: {query}",
             url="http://about:blank",
             icon="fa fa-plus",
             is_action=True,
@@ -80,7 +80,7 @@ class DemoModule(AdminModule):
     def get_notifications(self, request):
         if not self.check_demo_optin(request):
             return
-        yield Notification(text="Your IP is {}".format(get_client_ip(request)))
+        yield Notification(text=f"Your IP is {get_client_ip(request)}")
         yield Notification(
             title="Dice",
             text="Your lucky number is %d" % random.randint(1, 43),
@@ -105,7 +105,7 @@ class DemoModule(AdminModule):
         yield DashboardValueBlock(
             id="test-x",
             color="blue",
-            title="Happy {}!".format(weekday),
+            title=f"Happy {weekday}!",
             value=today,
             icon="fa fa-calendar",
         )
@@ -161,4 +161,4 @@ class DemoModule(AdminModule):
         if not self.check_demo_optin(request):
             return
         t = now().replace(minute=0, second=0)
-        yield Activity(t, "It was {}".format(t))
+        yield Activity(t, f"It was {t}")

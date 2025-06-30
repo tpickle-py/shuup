@@ -37,7 +37,7 @@ def get_model_unique_fields(model):
 
 def build_or_query(over_fields, term, operator=""):
     def add_term(query_q, field):
-        return query_q | models.Q(**{("{}{}".format(field, operator)): term})
+        return query_q | models.Q(**{(f"{field}{operator}"): term})
 
     return reduce(add_term, over_fields, models.Q())
 

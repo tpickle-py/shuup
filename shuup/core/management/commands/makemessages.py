@@ -93,7 +93,7 @@ class Command(makemessages.Command):
         """
 
         basedir = os.path.join(os.path.dirname(potfile), locale, "LC_MESSAGES")
-        pofile = os.path.join(basedir, "{}.po".format(str(self.domain)))
+        pofile = os.path.join(basedir, f"{str(self.domain)}.po")
 
         if self.no_pot_date:
             orig_contents = _read_file(pofile)
@@ -147,13 +147,13 @@ def jinja_messages_to_python(src, origin=None, **kwargs):
     output_lineno = 1
     for lineno, message, comments, _context in extract_jinja(src, origin):
         for comment in comments:
-            output.write("# {} {}\n".format(COMMENT_TAG, comment))
+            output.write(f"# {COMMENT_TAG} {comment}\n")
             output_lineno += 1
         lines_to_add = lineno - output_lineno
         if lines_to_add > 0:  # Try to keep line numbers in sync
             output.write(lines_to_add * "\n")
             output_lineno += lines_to_add
-        output.write("gettext({!r}),".format(message))
+        output.write(f"gettext({message!r}),")
     return output.getvalue()
 
 

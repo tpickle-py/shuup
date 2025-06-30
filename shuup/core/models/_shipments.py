@@ -102,17 +102,13 @@ class Shipment(ShuupModel):
         super().__init__(*args, **kwargs)
         if not self.identifier:
             if self.order and self.order.pk:
-                prefix = "{}/{}/".format(self.order.pk, self.order.shipments.count())
+                prefix = f"{self.order.pk}/{self.order.shipments.count()}/"
             else:
                 prefix = ""
             self.identifier = prefix + get_random_string(32)
 
     def __repr__(self):  # pragma: no cover
-        return "<Shipment {} (tracking {!r}, created {})>".format(
-            self.pk,
-            self.tracking_code,
-            self.created_on,
-        )
+        return f"<Shipment {self.pk} (tracking {self.tracking_code!r}, created {self.created_on})>"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -234,11 +230,7 @@ class ShipmentProduct(ShuupModel):
         verbose_name_plural = _("sent products")
 
     def __str__(self):  # pragma: no cover
-        return "{quantity} of '{product}' in Shipment #{shipment_pk}".format(
-            product=self.product,
-            quantity=self.quantity,
-            shipment_pk=self.shipment_id,
-        )
+        return f"{self.quantity} of '{self.product}' in Shipment #{self.shipment_id}"
 
     def cache_values(self):
         prod = self.product

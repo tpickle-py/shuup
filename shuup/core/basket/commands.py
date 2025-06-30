@@ -120,7 +120,7 @@ def handle_add(  # noqa (C901)
                 sp = child_product.get_shop_instance(shop=request.shop)
             except ShopProduct.DoesNotExist:
                 raise ProductNotOrderableProblem(
-                    "Error! Product {} is not available in shop {}.".format(child_product, request.shop)
+                    f"Error! Product {child_product} is not available in shop {request.shop}."
                 )
 
             sp.raise_if_not_orderable(

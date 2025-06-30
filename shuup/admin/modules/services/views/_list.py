@@ -35,7 +35,7 @@ class ServiceListView(PicotableListView):
 
     def get_object_abstract(self, instance, item):
         return [
-            {"text": "{}".format(instance), "class": "header"},
+            {"text": f"{instance}", "class": "header"},
         ]
 
     def format_service_choice(self, instance, *args, **kwargs):

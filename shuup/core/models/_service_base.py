@@ -187,7 +187,7 @@ class ServiceQuerySet(TranslatableQuerySet):
         :rtype: set[int]
         """
         shop_product_m2m = self.model.shop_product_m2m
-        shop_product_limiter_attr = "limit_{}".format(self.model.shop_product_m2m)
+        shop_product_limiter_attr = f"limit_{self.model.shop_product_m2m}"
 
         limiting_products_query = {
             "shop": shop,
@@ -402,12 +402,12 @@ class Service(TranslatableShuupModel):
 
     def _make_sure_is_usable(self):
         if not self.provider:
-            raise ValueError("Error! {!r} has no {}.".format(self, self.provider_attr))
+            raise ValueError(f"Error! {self!r} has no {self.provider_attr}.")
         if not self.enabled:
-            raise ValueError("Error! {!r} is disabled.".format(self))
+            raise ValueError(f"Error! {self!r} is disabled.")
         if not self.provider.enabled:
             raise ValueError(
-                "Error! {} of {!r} is disabled.".format(self.provider_attr, self)
+                f"Error! {self.provider_attr} of {self!r} is disabled."
             )
 
 
@@ -476,7 +476,7 @@ class ServiceBehaviorComponent(PolymorphicShuupModel):
 
     def __init__(self, *args, **kwargs):
         if type(self) != ServiceBehaviorComponent and self.name is None:
-            raise TypeError("Error! {}.name is not defined.".format(type(self).__name__))
+            raise TypeError(f"Error! {type(self).__name__}.name is not defined.")
         super().__init__(*args, **kwargs)
 
     def get_unavailability_reasons(

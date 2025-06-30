@@ -16,14 +16,14 @@ def load(specification, context_explanation="Load"):
         module = import_module(module_name)
     except ImportError as ie:  # pragma: no cover
         exc = ImproperlyConfigured(
-            "Error! {}: Could not import module `{!r}` to load `{!r}` from. (`{!r}`)".format(context_explanation, module_name, object_name, ie)
+            f"Error! {context_explanation}: Could not import module `{module_name!r}` to load `{object_name!r}` from. (`{ie!r}`)"
         )
         six.raise_from(exc, ie)
 
     obj = getattr(module, object_name, None)
     if obj is None:  # pragma: no cover
         raise ImproperlyConfigured(
-            "Error! {}: Module `{!r}` does not have a name `{!r}`, or its value is None.".format(context_explanation, module, object_name)
+            f"Error! {context_explanation}: Module `{module!r}` does not have a name `{object_name!r}`, or its value is None."
         )
     return obj
 

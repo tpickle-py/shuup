@@ -57,13 +57,13 @@ class CampaignEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
         return self.rules_form_part_class(
             self.request,
             form,
-            "conditions_{}".format(form._meta.model.__name__.lower()),
+            f"conditions_{form._meta.model.__name__.lower()}",
             object,
         )
 
     def _get_effects_form_part(self, form, object, cls):
         return cls(
-            self.request, form, "effects_{}".format(form._meta.model.__name__.lower()), object
+            self.request, form, f"effects_{form._meta.model.__name__.lower()}", object
         )
 
     def get_toolbar(self):
@@ -101,7 +101,7 @@ class CatalogCampaignEditView(BreadcrumbedView, CampaignEditView):
 
     def _get_filters_form_part(self, form, object):
         return CatalogFiltersFormPart(
-            self.request, form, "filters_{}".format(form._meta.model.__name__.lower()), object
+            self.request, form, f"filters_{form._meta.model.__name__.lower()}", object
         )
 
 

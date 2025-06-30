@@ -60,14 +60,14 @@ class EditorView(TemplateView):
                 get_args["view"] = XTHEME_GLOBAL_VIEW_NAME
             # We are overriding the view with XTHEME_GLOBAL_VIEW_NAME if this is a global placeholder
             return HttpResponseRedirect(
-                "{}?{}".format(self.request.path, urlencode(get_args))
+                f"{self.request.path}?{urlencode(get_args)}"
             )
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):  # doccov: ignore
         command = request.POST.get("command")
         if command:
-            dispatcher = getattr(self, "dispatch_{}".format(command), None)
+            dispatcher = getattr(self, f"dispatch_{command}", None)
             if not callable(dispatcher):
                 raise Problem(_("Unknown command: `%s`.") % escape(command))
             dispatch_kwargs = dict(request.POST.items())

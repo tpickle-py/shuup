@@ -144,7 +144,7 @@ class Command(BaseCommand):
                 cursor.execute(statement, args)
 
             for app in APP_LABELS:
-                self.stdout.write("Updating migrations and content types for {}".format(app))
+                self.stdout.write(f"Updating migrations and content types for {app}")
                 new_app = app.replace("shoop", "shuup")
                 run(
                     "DELETE FROM django_migrations"
@@ -159,6 +159,6 @@ class Command(BaseCommand):
                 )
 
             for table in TABLES:
-                self.stdout.write("Renaming table {}".format(table))
+                self.stdout.write(f"Renaming table {table}")
                 new_table = table.replace("shoop", "shuup")
-                run("ALTER TABLE {} RENAME TO {}".format(table, new_table))
+                run(f"ALTER TABLE {table} RENAME TO {new_table}")

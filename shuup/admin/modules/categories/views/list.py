@@ -61,6 +61,6 @@ class CategoryListView(PicotableListView):
 
     def get_object_abstract(self, instance, item):
         return [
-            {"text": "{}".format(instance.name), "class": "header"},
+            {"text": f"{instance.name}", "class": "header"},
             {"title": _("Status"), "text": item.get("status")},
         ]

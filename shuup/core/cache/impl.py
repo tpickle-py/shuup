@@ -77,7 +77,7 @@ class VersionedCache:
         :type cache_key: str
         """
         namespace = _get_cache_key_namespace(cache_key)
-        version = str("{}/{}".format(time.time(), random.random()))
+        version = str(f"{time.time()}/{random.random()}")
         self.set("_version:" + namespace, version)
         setattr(_versions, namespace, version)
 

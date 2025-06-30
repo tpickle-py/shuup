@@ -20,7 +20,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 def _get_price_expiration_cache_key(shop_id):
-    return "price_expiration_{}".format(shop_id)
+    return f"price_expiration_{shop_id}"
 
 
 def get_potential_discounts_for_product(

@@ -173,9 +173,9 @@ class RangeFilter(Filter):
             q = {}
             filter_field = self.get_filter_field(column, context)
             if min is not None:
-                q["{}__gte".format(filter_field)] = min
+                q[f"{filter_field}__gte"] = min
             if max is not None:
-                q["{}__lte".format(filter_field)] = max
+                q[f"{filter_field}__lte"] = max
             if q:
                 queryset = queryset.filter(**q)
         return queryset
@@ -236,7 +236,7 @@ class TextFilter(Filter):
             value = force_text(value).strip()
             field = self.get_filter_field(column, context)
             if value:
-                return queryset.filter(**{"{}__{}".format(field, self.operator): value})
+                return queryset.filter(**{f"{field}__{self.operator}": value})
         return queryset
 
 
@@ -254,7 +254,7 @@ class MultiFieldTextFilter(TextFilter):
         if value:
             q = Q()
             for filter_field in self.filter_fields:
-                q |= Q(**{"{}__{}".format(filter_field, self.operator): value})
+                q |= Q(**{f"{filter_field}__{self.operator}": value})
             return queryset.filter(q)
         return queryset
 
@@ -280,7 +280,7 @@ class Column:
         if (
             kwargs and type(self) is Column
         ):  # If we're not derived, validate that client code doesn't fail
-            raise NameError("Unexpected kwarg(s): {}".format(kwargs.keys()))
+            raise NameError(f"Unexpected kwarg(s): {kwargs.keys()}")
 
     def to_json(self, context=None):
         out = {
@@ -352,19 +352,19 @@ class Column:
 
     def check_different_types(self, value):
         if isinstance(value, ProductMedia):
-            return "<img src='{}'>".format(value.get_thumbnail().url)
+            return f"<img src='{value.get_thumbnail().url}'>"
 
         if isinstance(value, Image):
             thumbnailer = get_thumbnailer(value)
             options = {"size": (64, 64)}
             thumbnail = thumbnailer.get_thumbnail(options, generate=True)
-            return "<img src='{}'>".format(thumbnail.url)
+            return f"<img src='{thumbnail.url}'>"
 
         if isinstance(value, bool):
             value = yesno(value)
 
         if isinstance(value, Manager):
-            value = ", ".join("{}".format(x) for x in value.all())
+            value = ", ".join(f"{x}" for x in value.all())
             return value
 
         if isinstance(value, datetime.datetime):
@@ -374,7 +374,7 @@ class Column:
             return escape(format_money(value))
 
     def search_from_provided_contexts(self, object):
-        provide_object_key = "provided_columns_{}".format(type(object).__name__)
+        provide_object_key = f"provided_columns_{type(object).__name__}"
         for provided_column_object in get_provide_objects(provide_object_key):
             obj = provided_column_object()
             display_callable = maybe_callable(self.display, context=obj)
@@ -382,7 +382,7 @@ class Column:
                 return display_callable(object)
 
     def __repr__(self):
-        return "<Column: {}> {}".format(self.title, self.id)
+        return f"<Column: {self.title}> {self.id}"
 
 
 class Picotable:
@@ -439,7 +439,7 @@ class Picotable:
             desc = sort[0] == "-"
             column = self.columns_by_id.get(sort[1:])
             if not (column and column.sortable):
-                raise ValueError("Error! Can't sort by column {!r}.".format(sort[1:]))
+                raise ValueError(f"Error! Can't sort by column {sort[1:]!r}.")
             queryset = column.sort_queryset(queryset, desc=desc)
 
         return queryset
@@ -652,7 +652,7 @@ class PicotableMassAction:
     identifier = "mass_action"
 
     def __repr__(self):
-        return "Mass Action: {}".format(force_text(self.label))
+        return f"Mass Action: {force_text(self.label)}"
 
     def process(self, request, ids):
         """

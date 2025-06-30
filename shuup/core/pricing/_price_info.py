@@ -71,12 +71,6 @@ class PriceInfo(Priceful):
 
     def __repr__(self):
         expire_str = (
-            "" if self.expires_on is None else (", expires_on={!r}".format(self.expires_on))
+            "" if self.expires_on is None else (f", expires_on={self.expires_on!r}")
         )
-        return "{}({!r}, {!r}, {!r}{})".format(
-            type(self).__name__,
-            self.price,
-            self.base_price,
-            self.quantity,
-            expire_str,
-        )
+        return f"{type(self).__name__}({self.price!r}, {self.base_price!r}, {self.quantity!r}{expire_str})"

@@ -186,17 +186,17 @@ class ViewSettings:
 
         if model != self.model:
             filter_field = (
-                "{}__{}__{}".format(identifier, translation_rel_name, field.name)
+                f"{identifier}__{translation_rel_name}__{field.name}"
                 if identifier
                 else field.name
             )
         else:
-            filter_field = "{}__{}".format(translation_rel_name, field.name)
+            filter_field = f"{translation_rel_name}__{field.name}"
 
-        display = "{}__{}".format(identifier, field.name) if identifier else field.name
+        display = f"{identifier}__{field.name}" if identifier else field.name
 
         column = Column(
-            "{}_{}".format((identifier if identifier else model.__name__.lower()), field.name),
+            f"{identifier if identifier else model.__name__.lower()}_{field.name}",
             field_name,
             sort_field=display,
             display=display,
@@ -223,10 +223,10 @@ class ViewSettings:
                 field_name,
             )
 
-        display = "{}__{}".format(identifier, field.name) if identifier else field.name
+        display = f"{identifier}__{field.name}" if identifier else field.name
 
         column = Column(
-            "{}_{}".format((identifier if identifier else model.__name__.lower()), field.name),
+            f"{identifier if identifier else model.__name__.lower()}_{field.name}",
             field_name,
             display=display,
         )
@@ -244,7 +244,7 @@ class ViewSettings:
         return column
 
     def _add_provided_columns(self, columns, identifier, known_names, model):
-        provide_object_key = "provided_columns_{}".format(model.__name__)
+        provide_object_key = f"provided_columns_{model.__name__}"
         for provided_column_object in get_provide_objects(provide_object_key):
             obj = provided_column_object()
             column = obj.get_column(model, known_names, identifier)

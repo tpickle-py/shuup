@@ -11,7 +11,7 @@ class CategoryLayout(Layout):
         if not category:
             return ""
         return _(
-            "Content in this placeholder is shown for {category_name} category only.".format(category_name=category.name)
+            f"Content in this placeholder is shown for {category.name} category only."
         )
 
     def is_valid_context(self, context):

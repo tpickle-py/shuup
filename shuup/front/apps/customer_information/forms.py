@@ -133,7 +133,7 @@ class CustomerInformationFormGroup(FormGroup):
             self.add_form_def(
                 form_name,
                 address_form_class,
-                kwargs={"instance": getattr(contact, "default_{}_address".format(form_name))},
+                kwargs={"instance": getattr(contact, f"default_{form_name}_address")},
             )
 
         self.add_form_def("contact", PersonContactForm, kwargs={"instance": contact})
@@ -186,7 +186,7 @@ class CompanyInformationFormGroup(FormGroup):
                 address_form_class,
                 kwargs={
                     "instance": _get_default_address_for_contact(
-                        company, "default_{}_address".format(form_name), person
+                        company, f"default_{form_name}_address", person
                     )
                 },
             )

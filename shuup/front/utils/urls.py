@@ -24,7 +24,7 @@ def model_url(context, model, absolute=False, **kwargs):
         uri = reverse("shuup:category", kwargs=dict(pk=model.pk, slug=model.slug))
 
     if hasattr(model, "pk") and model.pk and hasattr(model, "url"):
-        uri = "/{}".format(model.url)
+        uri = f"/{model.url}"
 
     if absolute:
         request = context.get("request")

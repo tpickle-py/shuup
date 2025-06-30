@@ -122,7 +122,7 @@ def datetime(value, kind="datetime", format="medium", tz=True):
     elif kind == "time":
         return format_time(value, format=format, locale=locale)
     else:
-        raise ValueError("Error! Unknown `datetime` kind: {!r}.".format(kind))
+        raise ValueError(f"Error! Unknown `datetime` kind: {kind!r}.")
 
 
 @library.filter(name="json")

@@ -59,7 +59,7 @@ def get_running_reference_number(order):
     )
 
     padded_value = force_text(value).rjust(ref_length - len(prefix), "0")
-    reference_no = "{}{}".format(prefix, padded_value)
+    reference_no = f"{prefix}{padded_value}"
     return reference_no + calc_reference_number_checksum(reference_no)
 
 
@@ -75,7 +75,7 @@ def get_shop_running_reference_number(order):
         settings.SHUUP_REFERENCE_NUMBER_LENGTH,
     )
     padded_value = force_text(value).rjust(ref_length - len(prefix), "0")
-    reference_no = "{}{}".format(prefix, padded_value)
+    reference_no = f"{prefix}{padded_value}"
     return reference_no + calc_reference_number_checksum(reference_no)
 
 

@@ -33,7 +33,7 @@ class ConfigurationItem(ShuupModel):
             return _("%(key)s (global)") % dict(key=self.key)
 
     def __repr__(self):
-        return '<{} "{}" for {!r}>'.format(type(self).__name__, self.key, self.shop)
+        return f'<{type(self).__name__} "{self.key}" for {self.shop!r}>'
 
 
 
@@ -61,4 +61,4 @@ class EncryptedConfigurationItem(ShuupModel):
             return _("%(key)s (global)") % dict(key=self.key)
 
     def __repr__(self):
-        return '<{} "{}" for {!r}>'.format(type(self).__name__, self.key, self.shop)
+        return f'<{type(self).__name__} "{self.key}" for {self.shop!r}>'

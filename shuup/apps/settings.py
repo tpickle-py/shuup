@@ -28,7 +28,7 @@ def _declare_setting(app_name, module, name, default):
     if name in _KNOWN_SETTINGS:
         other_app = _KNOWN_SETTINGS[name].app_name
         raise ImproperlyConfigured(
-            "Error! Apps `{}` and `{}` define the same setting `{}`.".format(other_app, app_name, name)
+            f"Error! Apps `{other_app}` and `{app_name}` define the same setting `{name}`."
         )
     _KNOWN_SETTINGS[name] = Setting(
         name=name,
@@ -55,7 +55,7 @@ class Setting:
         self.module = module
 
     def __repr__(self):
-        items = ("{}={!r}".format(k, v) for (k, v) in self.__dict__.items())
+        items = (f"{k}={v!r}" for (k, v) in self.__dict__.items())
         return "{}({})".format(type(self).__name__, ", ".join(items))
 
 

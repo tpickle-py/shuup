@@ -135,7 +135,7 @@ class PlaceholderRenderer:
 
         full_content = ""
         for layout in self.layouts:
-            wrapper_start = "<div{}>".format(get_html_attrs(self._get_wrapper_attrs(layout)))
+            wrapper_start = f"<div{get_html_attrs(self._get_wrapper_attrs(layout))}>"
             buffer = []
             write = buffer.append
             self._render_layout(write, layout)
@@ -147,7 +147,7 @@ class PlaceholderRenderer:
             )
             full_content += layout_content
 
-        return Markup('<div class="placeholder-edit-wrap">{}</div>'.format(full_content))
+        return Markup(f'<div class="placeholder-edit-wrap">{full_content}</div>')
 
     def _get_wrapper_attrs(self, layout):
         layout_data_key = get_layout_data_key(
@@ -159,7 +159,7 @@ class PlaceholderRenderer:
                 "xt-ph-edit" if self.edit else None,
                 "xt-global-ph" if self.global_type else None,
             ],
-            "id": "xt-ph-{}".format(layout_data_key),
+            "id": f"xt-ph-{layout_data_key}",
         }
         if self.edit:
             # Pass layout editor to editor so we can fetch
@@ -208,7 +208,7 @@ class PlaceholderRenderer:
         row_attrs = {"class": [layout.row_class, "xt-ph-row"]}
         if self.edit:
             row_attrs["data-xt-row"] = str(y)
-        write("<div{}>".format(get_html_attrs(row_attrs)))
+        write(f"<div{get_html_attrs(row_attrs)}>")
 
         language = get_language()
         saved_view_config = self.view_config.saved_view_config
@@ -269,7 +269,7 @@ class PlaceholderRenderer:
         cell_attrs = {"class": classes}
         if self.edit:
             cell_attrs.update({"data-xt-cell": str(x)})
-        write("<div{}>".format(get_html_attrs(cell_attrs)))
+        write(f"<div{get_html_attrs(cell_attrs)}>")
         content = cell.render(self.context, cache_key_prefix=cache_key_prefix)
         if content is not None:  # pragma: no branch
             write(force_text(content))

@@ -314,7 +314,7 @@ class UnitInterface:
             internal_unit is None
             or display_unit is None
             or (display_unit.internal_unit == internal_unit)
-        ), "Incompatible units: {!r}, {!r}".format(internal_unit, display_unit)
+        ), f"Incompatible units: {internal_unit!r}, {display_unit!r}"
         if display_unit:
             self.internal_unit = display_unit.internal_unit
             self.display_unit = display_unit

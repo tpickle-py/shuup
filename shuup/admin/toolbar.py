@@ -85,7 +85,7 @@ class BaseActionButton:
     def render_label(self):
         bits = []
         if self.icon:
-            bits.append('<i class="{}"></i>&nbsp;'.format(self.icon))
+            bits.append(f'<i class="{self.icon}"></i>&nbsp;')
         bits.append(conditional_escape(self.text))
         return "".join(force_text(bit) for bit in bits)
 
@@ -169,11 +169,7 @@ class SettingsActionButton(URLActionButton):
             return_url = kwargs.get("return_url")
             if not return_url:
                 return_url = camelcase_to_snakecase(model.__name__)
-            kwargs["url"] = url + "?module={}&model={}&return_url={}".format(
-                model.__module__,
-                model.__name__,
-                return_url,
-            )
+            kwargs["url"] = url + f"?module={model.__module__}&model={model.__name__}&return_url={return_url}"
 
         return cls(**kwargs)
 
@@ -265,7 +261,7 @@ class PostActionButton(BaseActionButton):
                     "title": self.tooltip,
                     "class": self.get_computed_class(),
                     "onclick": (
-                        "return confirm({})".format(json.dumps(force_text(self.confirm)))
+                        f"return confirm({json.dumps(force_text(self.confirm))})"
                         if self.confirm
                         else None
                     ),
@@ -347,7 +343,7 @@ class DropdownItem(BaseActionButton):
                 "href": self.url,
                 "onclick": (mark_safe(self.onclick) if self.onclick else None),
             }
-            yield "<a {}>".format(flatatt_filter(attrs))
+            yield f"<a {flatatt_filter(attrs)}>"
             yield self.render_label()
             yield "</a>"
 
@@ -409,7 +405,7 @@ class DropdownHeader(BaseActionButton):
 
     def render(self, request):
         if not get_missing_permissions(request.user, self.required_permissions):
-            yield '<h6 class="dropdown-header">{}</h6>'.format(self.text)
+            yield f'<h6 class="dropdown-header">{self.text}</h6>'
 
 
 # -----------
@@ -597,12 +593,12 @@ def get_default_edit_toolbar(
     if with_split_save:
         dropdown_options = [
             DropdownItem(
-                onclick="setNextActionAndSubmit('{}', 'return')".format(save_form_id),
+                onclick=f"setNextActionAndSubmit('{save_form_id}', 'return')",
                 text=_("Save and Exit"),
                 icon="fa fa-floppy-o",
             ),
             DropdownItem(
-                onclick="setNextActionAndSubmit('{}', 'new')".format(save_form_id),
+                onclick=f"setNextActionAndSubmit('{save_form_id}', 'new')",
                 text=_("Save and Create New"),
                 icon="fa fa-file-o",
             ),

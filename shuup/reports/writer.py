@@ -116,7 +116,7 @@ class ReportWriter:
         if self.writer_type == "html":
             output = mark_safe(rendered_output)
         else:
-            output = mark_safe("<pre>{}</pre>".format(escape(rendered_output)))
+            output = mark_safe(f"<pre>{escape(rendered_output)}</pre>")
         return output
 
     def get_response(self, report):
@@ -133,7 +133,7 @@ class ReportWriter:
         )
         if report.filename_template:
             response["Content-Disposition"] = (
-                "attachment; filename={}".format(self.get_filename(report))
+                f"attachment; filename={self.get_filename(report)}"
             )
         return response
 
@@ -327,9 +327,9 @@ table, th, td {
         )
 
     def _w_tag(self, tag, content):
-        self._w_raw("<{}>".format(tag))
+        self._w_raw(f"<{tag}>")
         self._w(content)
-        self._w_raw("</{}>".format(tag))
+        self._w_raw(f"</{tag}>")
 
     def next_page(self):
         self._w_raw("<hr>")

@@ -72,7 +72,7 @@ class DatabaseBasketStorage(BaseDatabaseBasketStorage):
     model = StoredBasket
 
     def _get_session_key(self, basket):
-        return "basket_{}_key".format(basket.basket_name)
+        return f"basket_{basket.basket_name}_key"
 
     def get_basket_kwargs(self, basket):
         # Lets first try to get basket kwargs from basket request session

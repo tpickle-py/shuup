@@ -481,7 +481,7 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
 
     def __str__(self):
         try:
-            return "{}".format(self.name)
+            return f"{self.name}"
         except ObjectDoesNotExist:
             return self.sku
 

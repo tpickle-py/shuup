@@ -133,15 +133,7 @@ def _get_footer_information(shop):
     address = shop.contact_address
     if not address:
         return shop.name
-    return "{} | {} {}, {}, {} | {} {}".format(
-        shop.name,
-        address.street,
-        address.postal_code,
-        address.city,
-        address.country.name,
-        address.phone,
-        address.email,
-    )
+    return f"{shop.name} | {address.street} {address.postal_code}, {address.city}, {address.country.name} | {address.phone} {address.email}"
 
 
 def _send_printouts_email(recipients, subject, body, html, attachment_filename):

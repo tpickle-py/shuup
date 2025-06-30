@@ -30,7 +30,7 @@ class SocialMediaLinksPluginForm(GenericPluginForm):
                 required=False,
                 widget=forms.TextInput(attrs={"placeholder": _("URL")}),
             )
-            self.fields["{}-ordering".format(name)] = forms.IntegerField(
+            self.fields[f"{name}-ordering"] = forms.IntegerField(
                 label=_("%(name)s Ordering") % {"name": name},
                 required=False,
                 min_value=0,
@@ -45,7 +45,7 @@ class SocialMediaLinksPluginForm(GenericPluginForm):
             url = links[name]["url"] if name in links else ""
             ordering = links[name]["ordering"] if name in links else None
             self.initial[name] = url
-            self.initial["{}-ordering".format(name)] = ordering
+            self.initial[f"{name}-ordering"] = ordering
 
     def clean(self):
         """

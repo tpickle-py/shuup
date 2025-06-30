@@ -134,9 +134,9 @@ def parse_date(value):
     elif isinstance(value, six.string_types):
         date = _parse_date_str(value)
         if not date:
-            raise ValueError("Error! Unable to parse `{}` as date.".format(value))
+            raise ValueError(f"Error! Unable to parse `{value}` as date.")
         return date
-    raise ValueError("Error! Unable to parse `{}` as date (unknown type).".format(value))
+    raise ValueError(f"Error! Unable to parse `{value}` as date (unknown type).")
 
 
 def parse_datetime(value):
@@ -156,9 +156,9 @@ def parse_datetime(value):
     elif isinstance(value, six.string_types):
         date = _parse_datetime_str(value)
         if not date:
-            raise ValueError("Error! Unable to parse `{}` as datetime.".format(value))
+            raise ValueError(f"Error! Unable to parse `{value}` as datetime.")
         return date
-    raise ValueError("Error! Unable to parse `{}` as datetime (unknown type).".format(value))
+    raise ValueError(f"Error! Unable to parse `{value}` as datetime (unknown type).")
 
 
 def parse_time(value):
@@ -177,9 +177,9 @@ def parse_time(value):
     if isinstance(value, six.string_types):
         parsed_time = _parse_time_str(value)
         if not parsed_time:
-            raise ValueError("Error! Unable to parse `{}` as date.".format(value))
+            raise ValueError(f"Error! Unable to parse `{value}` as date.")
         return parsed_time
-    raise ValueError("Error! Unable to parse `{}` as date (unknown type).".format(value))
+    raise ValueError(f"Error! Unable to parse `{value}` as date (unknown type).")
 
 
 def try_parse_datetime(value):
@@ -265,7 +265,7 @@ def to_aware(date, time=datetime.time.min, tz=None):
         if timezone.is_aware(date):
             return date
         return dst_safe_timezone_aware(date, tz)
-    assert isinstance(date, datetime.date), "{!r} should be date".format(date)
+    assert isinstance(date, datetime.date), f"{date!r} should be date"
     combined = datetime.datetime.combine(date, time)
     return dst_safe_timezone_aware(combined, tz)
 

@@ -148,7 +148,7 @@ class Resolvable:
             return reverse(url)
 
         raise TypeError(
-            "Error! Can't resolve the object's provided value `{!r}` to an actual URL.".format(url)
+            f"Error! Can't resolve the object's provided value `{url!r}` to an actual URL."
         )
 
     @property

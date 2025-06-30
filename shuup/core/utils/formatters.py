@@ -24,11 +24,7 @@ class DefaultAddressFormatter(BaseAddressFormatter):
             address.street,
             address.street2,
             address.street3,
-            "{} {} {}".format(
-                address.postal_code,
-                address.city,
-                address.region_code or address.region,
-            ),
+            f"{address.postal_code} {address.city} {address.region_code or address.region}",
             locale.territories.get(country, country) if not address.is_home else None,
         ]
 

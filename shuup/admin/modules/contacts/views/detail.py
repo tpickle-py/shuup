@@ -58,7 +58,7 @@ class ContactDetailToolbar(Toolbar):
         if self.user or isinstance(self.contact, CompanyContact):
             return
         return URLActionButton(
-            url=reverse("shuup_admin:user.new") + "?contact_id={}".format(self.contact.pk),
+            url=reverse("shuup_admin:user.new") + f"?contact_id={self.contact.pk}",
             text=_("New User"),
             tooltip=_("Create a user for the contact."),
             icon="fa fa-user-plus",
@@ -68,7 +68,7 @@ class ContactDetailToolbar(Toolbar):
 
     def build_new_order_button(self):
         return URLActionButton(
-            url=reverse("shuup_admin:order.new") + "?contact_id={}".format(self.contact.pk),
+            url=reverse("shuup_admin:order.new") + f"?contact_id={self.contact.pk}",
             text=_("New Order"),
             tooltip=_("Create an order for the contact."),
             icon="fa fa-shopping-cart",
@@ -207,10 +207,7 @@ class ContactDetailView(DetailView):
         context["toolbar"] = ContactDetailToolbar(
             contact=self.object, request=self.request
         )
-        context["title"] = "{}: {}".format(
-            self.object._meta.verbose_name.title(),
-            force_text(self.object),
-        )
+        context["title"] = f"{self.object._meta.verbose_name.title()}: {force_text(self.object)}"
         context["contact_sections"] = []
 
         contact_sections_provides = sorted(

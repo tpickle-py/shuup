@@ -113,7 +113,7 @@ class OrderProcessor:
             shop_product = order_line.product.get_shop_instance(order.shop)
         except ShopProduct.DoesNotExist:
             raise ValidationError(
-                "Error! {} is not available in {}.".format(order_line.product, order.shop),
+                f"Error! {order_line.product} is not available in {order.shop}.",
                 code="invalid_shop",
             )
 
@@ -264,7 +264,7 @@ class OrderProcessor:
             order_addr = getattr(order, address_kind, None)
             if not order_addr:
                 continue
-            customer_address_field = "default_{}".format(address_kind)
+            customer_address_field = f"default_{address_kind}"
             if not getattr(order.customer, customer_address_field, None):
                 new_customer_address = order_addr.to_mutable()
                 new_customer_address.save()

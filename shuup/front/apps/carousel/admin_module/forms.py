@@ -41,7 +41,7 @@ class SlideForm(MultiLanguageModelForm):
         self.fields["cms_page_link"].queryset = Page.objects.filter(shop=shop)
         self.fields["product_link"].widget = ProductChoiceWidget(clearable=True)
         for lang in self.languages:
-            image_field = "image__{}".format(lang)
+            image_field = f"image__{lang}"
             self.fields[image_field].widget = FileDnDUploaderWidget(
                 kind="images", upload_path="/carousel", clearable=True
             )

@@ -99,7 +99,7 @@ class CampaignAdminModule(AdminModule):
     def get_model_url(self, object, kind, shop=None):
         if not hasattr(object, "admin_url_suffix"):
             return super().get_model_url(object, kind)
-        admin_url = "shuup_admin:{}".format(object.admin_url_suffix)
+        admin_url = f"shuup_admin:{object.admin_url_suffix}"
         return derive_model_url(type(object), admin_url, object, kind)
 
     def get_extra_permissions(self) -> Iterable[str]:

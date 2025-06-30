@@ -86,7 +86,7 @@ def parse_constantlike(environment, parser):
     try:
         return expr.as_const(EvalContext(environment))
     except Impossible:
-        raise NonConstant("Error! Expression `{!r}` is not constant.".format(expr))
+        raise NonConstant(f"Error! Expression `{expr!r}` is not constant.")
 
 
 class _PlaceholderManagingExtension(Extension):
@@ -130,7 +130,7 @@ class _PlaceholderManagingExtension(Extension):
         curr_layout = self._get_layout(parser, accept_none=True)
         if curr_layout is not None:
             raise NestingError(
-                "Error! Can't nest `placeholder`s! (Currently in `{!r}`, trying to start `{!r}`).".format(curr_layout.placeholder_name, placeholder_name)
+                f"Error! Can't nest `placeholder`s! (Currently in `{curr_layout.placeholder_name!r}`, trying to start `{placeholder_name!r}`)."
             )
         layout = Layout(None, placeholder_name=placeholder_name)
         parser._xtheme_placeholder_layout = layout
@@ -274,7 +274,7 @@ class LayoutPartExtension(_PlaceholderManagingExtension):
         elif start.value == "column":
             self._begin_column(cfg, arg)
 
-        parser.parse_statements(["name:end{}".format(start.value)], drop_needle=True)
+        parser.parse_statements([f"name:end{start.value}"], drop_needle=True)
         # Body parsing is also a no-op here; the layout is populated already
 
         return noop_node(lineno)
@@ -282,7 +282,7 @@ class LayoutPartExtension(_PlaceholderManagingExtension):
     def _begin_row(self, cfg, arg):
         if arg is not None:
             raise ValueError(
-                "Error! `row`s do not take arguments at present time (got `{!r}`).".format(arg)
+                f"Error! `row`s do not take arguments at present time (got `{arg!r}`)."
             )
         cfg.begin_row()
 
@@ -292,10 +292,10 @@ class LayoutPartExtension(_PlaceholderManagingExtension):
             try:
                 sizes = arg.as_const(eval_ctx=EvalContext(self.environment))
             except Impossible:
-                raise ValueError("Error! Invalid argument for `column`: `{!r}`.".format(arg))
+                raise ValueError(f"Error! Invalid argument for `column`: `{arg!r}`.")
             if not isinstance(sizes, dict):
                 raise ValueError(
-                    "Error! Argument for `column` must be a dict: `{!r}`.".format(arg)
+                    f"Error! Argument for `column` must be a dict: `{arg!r}`."
                 )
         cfg.begin_column(sizes)
 
@@ -341,7 +341,7 @@ class PluginExtension(_PlaceholderManagingExtension):
                 config = flatten_const_node_list(self.environment, body)
             except Unflattenable as uf:
                 raise NonConstant(
-                    "Error! A `plugin` block may only contain static layout (found: `{!r}`).".format(uf.args[0])
+                    f"Error! A `plugin` block may only contain static layout (found: `{uf.args[0]!r}`)."
                 )
             config = toml.loads(config)
         layout.add_plugin(name, config)

@@ -59,7 +59,7 @@ class _ContextFilter(_ContextObject):
 
     @property
     def cache_identifier(self):
-        return "price_filter_{}".format(self.name)
+        return f"price_filter_{self.name}"
 
 
 class _ContextFunction(_ContextObject):
@@ -326,11 +326,11 @@ def _get_priceful(request, item, quantity, supplier):
         request.supplier = item.supplier
 
     if hasattr(item, "get_price_info"):
-        key_prefix = "{}-{}-".format(item.id, quantity)
+        key_prefix = f"{item.id}-{quantity}-"
         if supplier:
-            key_prefix += "-{}".format(supplier.id)
+            key_prefix += f"-{supplier.id}"
 
-        price_key = "{}_get_priceful".format(key_prefix)
+        price_key = f"{key_prefix}_get_priceful"
         if hasattr(request, price_key):
             return getattr(request, price_key)
 

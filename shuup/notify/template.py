@@ -104,5 +104,5 @@ class Template:
                 rendered["_language"] = language
                 return rendered
         raise NoLanguageMatches(
-            "Error! No language in template matches any of languages `{!r}` for fields `{!r}`.".format(language_preferences, fields.keys())
+            f"Error! No language in template matches any of languages `{language_preferences!r}` for fields `{fields.keys()!r}`."
         )

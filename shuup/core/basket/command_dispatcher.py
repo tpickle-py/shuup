@@ -36,7 +36,7 @@ class BasketCommandDispatcher:
         self.basket = basket or request.basket
 
     def get_command_handler(self, command):
-        handler = getattr(self.commands_module, "handle_{}".format(command.lower()), None)
+        handler = getattr(self.commands_module, f"handle_{command.lower()}", None)
         if handler and callable(handler):
             return handler
 

@@ -118,7 +118,7 @@ def get_urls():
 
     for u in urls:  # pragma: no cover
         if not isinstance(u, AdminRegexURLPattern):
-            warnings.warn("Warning! Admin URL {!r} is not an `AdminRegexURLPattern`.".format(u))
+            warnings.warn(f"Warning! Admin URL {u!r} is not an `AdminRegexURLPattern`.")
 
     # Add Django javascript catalog url
     urls.append(url(r"^i18n.js$", javascript_catalog_all, name="js-catalog"))

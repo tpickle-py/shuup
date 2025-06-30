@@ -156,10 +156,10 @@ SHUUP_TELEMETRY_ENABLED = True
 SHUUP_TELEMETRY_HOST_URL = "https://telemetry.shuup.com"
 
 #: The submission URL for Shuup's telemetry (statistics) system.
-SHUUP_TELEMETRY_URL = "{}/collect/".format(SHUUP_TELEMETRY_HOST_URL)
+SHUUP_TELEMETRY_URL = f"{SHUUP_TELEMETRY_HOST_URL}/collect/"
 
 #: The URL to fetch the Shuup installation `support id`.
-SHUUP_SUPPORT_ID_URL = "{}/support-id".format(SHUUP_TELEMETRY_HOST_URL)
+SHUUP_SUPPORT_ID_URL = f"{SHUUP_TELEMETRY_HOST_URL}/support-id"
 
 #: Default cache duration for various caches (in seconds).
 SHUUP_DEFAULT_CACHE_DURATION = 60 * 30

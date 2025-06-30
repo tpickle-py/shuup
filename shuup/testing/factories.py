@@ -108,7 +108,7 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = settings.AUTH_USER_MODEL
 
-    username = factory.Sequence(lambda n: "user{}".format(n))
+    username = factory.Sequence(lambda n: f"user{n}")
     email = factory.Sequence(lambda n: f"user{n}@example.shuup.com")
     password = factory.PostGenerationMethodCall("set_password", "test")
     first_name = fuzzy.FuzzyText(length=4, prefix="First Name ")
@@ -195,7 +195,7 @@ def _generate_product_image(product):
     filer_file = filer_image_from_data(
         request=None,
         path="ProductImages/Mock",
-        file_name="{}.jpg".format(product.sku),
+        file_name=f"{product.sku}.jpg",
         file_data=sio.getvalue(),
         sha1=True,
     )
@@ -349,7 +349,7 @@ def get_default_tax():
 
 
 def get_test_tax(rate):
-    name = "TEST_{}".format(rate)
+    name = f"TEST_{rate}"
     return get_tax(name, name, rate)
 
 
@@ -533,7 +533,7 @@ def get_shop(
     enabled=False,
     **kwargs,
 ):
-    key = "shop:{}/taxful={}".format(currency, prices_include_tax)
+    key = f"shop:{currency}/taxful={prices_include_tax}"
     values = {"prices_include_tax": prices_include_tax, "currency": currency}
     if enabled:
         values["status"] = ShopStatus.ENABLED
@@ -786,7 +786,7 @@ def get_random_filer_image():
     io = six.BytesIO()
     pil_image.save(io, "JPEG", quality=45)
     jpeg_data = io.getvalue()
-    name = "{}.jpg".format(uuid.uuid4())
+    name = f"{uuid.uuid4()}.jpg"
     image = imagemodels.Image(name=name)
     image.file.save(name, ContentFile(jpeg_data))
     return image
@@ -794,7 +794,7 @@ def get_random_filer_image():
 
 def get_faker(providers, locale="en"):
     providers = [
-        ("faker.providers.{}".format(provider) if ("." not in provider) else provider)
+        (f"faker.providers.{provider}" if ("." not in provider) else provider)
         for provider in providers
     ]
     locale = locale or (
@@ -854,7 +854,7 @@ def create_random_person(locale="en", minimum_name_comp_len=0, shop=None):
     while True:
         first_name = fake.first_name()
         last_name = fake.last_name()
-        name = "{} {}".format(first_name, last_name)
+        name = f"{first_name} {last_name}"
         if (
             len(first_name) > minimum_name_comp_len
             and len(last_name) > minimum_name_comp_len

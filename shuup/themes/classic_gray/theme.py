@@ -59,7 +59,7 @@ class ClassicGrayTheme(BaseThemeFieldsMixin, Theme):
         from shuup.simple_cms.models import Page
 
         for page in Page.objects.visible(shop).filter(**query_kwargs):
-            yield {"url": "/{}".format(page.url), "text": force_text(page)}
+            yield {"url": f"/{page.url}", "text": force_text(page)}
 
     def get_cms_navigation_links(self, request):
         return self._format_cms_links(shop=request.shop, visible_in_menu=True)

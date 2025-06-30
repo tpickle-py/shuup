@@ -276,7 +276,7 @@ class DataImporter:
                     hasattr(cls, "_parler_meta")
                     and field in cls._parler_meta.get_translated_fields()
                 ):
-                    field = "{}__{}".format(cls._parler_meta.root_rel_name, field)
+                    field = f"{cls._parler_meta.root_rel_name}__{field}"
                 else:
                     from django.core.exceptions import FieldDoesNotExist
 
@@ -458,7 +458,7 @@ class DataImporter:
                 }
             )
 
-        row_session.defer("m2m_{}".format(field.name), target, {field.name: value})
+        row_session.defer(f"m2m_{field.name}", target, {field.name: value})
 
     def _handle_row_fk_value(self, field, orig_value, row_session, value):
         value = self.process_related_value(row_session, field, value, multi=False)
@@ -513,13 +513,13 @@ class DataImporter:
             for field in model._meta.local_fields:
                 if only_non_mapped and field.name in mapped_keys:
                     continue
-                model_field = "{}:{}".format(model.__name__, field.name)
+                model_field = f"{model.__name__}:{field.name}"
                 fields.append((model_field, field.verbose_name))
             if hasattr(model, "_parler_meta"):
                 for field in model._parler_meta.root_model._meta.get_fields():
                     if only_non_mapped and field.name in mapped_keys:
                         continue
-                    model_field = "{}:{}".format(model.__name__, field.name)
+                    model_field = f"{model.__name__}:{field.name}"
                     fields.append((model_field, field.verbose_name))
         return fields
 

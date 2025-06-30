@@ -36,4 +36,4 @@ def colorscale(hexstr, scalefactor):
     g = clamp(int(g * scalefactor))
     b = clamp(int(b * scalefactor))
 
-    return "#{:02x}{:02x}{:02x}".format(r, g, b)
+    return f"#{r:02x}{g:02x}{b:02x}"

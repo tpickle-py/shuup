@@ -165,12 +165,12 @@ class Attribute(TranslatableModel):
         verbose_name_plural = _("attributes")
 
     def __str__(self):
-        return "{}".format(self.name)
+        return f"{self.name}"
 
     def save(self, *args, **kwargs):
         if not self.identifier:
             raise ValueError("Error! Attribute with null identifier is not allowed.")
-        self.identifier = flatten(("{}".format(self.identifier)).lower())
+        self.identifier = flatten((f"{self.identifier}").lower())
         return super().save(*args, **kwargs)
 
     def formfield(self, **kwargs):
@@ -217,7 +217,7 @@ class Attribute(TranslatableModel):
             )
         else:
             raise ValueError(
-                "Error! `formfield` can't deal with the fields of type `{!r}`.".format(self.type)
+                f"Error! `formfield` can't deal with the fields of type `{self.type!r}`."
             )
 
     @property
@@ -395,7 +395,7 @@ class AppliedAttribute(TranslatableModel):
             # Just store datetimes
             if not isinstance(new_value, datetime.datetime):
                 raise TypeError(
-                    "Error! Can't assign `{!r}` to DATETIME attribute.".format(new_value)
+                    f"Error! Can't assign `{new_value!r}` to DATETIME attribute."
                 )
             self.datetime_value = new_value
             self.numeric_value = calendar.timegm(self.datetime_value.timetuple())
@@ -515,7 +515,7 @@ class AttributableMixin:
         applied_attrs_by_target_id = defaultdict(list)
         attr_ids = set()
         filter_kwargs = {
-            "{}_id__in".format(applied_attr_cls._applied_fk_field): (t.pk for t in targets),
+            f"{applied_attr_cls._applied_fk_field}_id__in": (t.pk for t in targets),
             "attribute__identifier__in": attribute_identifiers,
         }
 
@@ -666,7 +666,7 @@ class AttributableMixin:
         if attr.is_translated:
             if not language:
                 raise ValueError(
-                    "Error! `language` must be set for translated attribute {}.".format(attr)
+                    f"Error! `language` must be set for translated attribute {attr}."
                 )
             applied_attr.set_current_language(language)
 

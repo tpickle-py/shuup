@@ -6,7 +6,7 @@ class PriceRate:
 
     def __init__(self, price_field):
         self.price_field = price_field
-        self.__doc__ = "{} `{}`".format(self.doc_prefix, price_field)
+        self.__doc__ = f"{self.doc_prefix} `{price_field}`"
 
     def __get__(self, instance, type=None):
         """

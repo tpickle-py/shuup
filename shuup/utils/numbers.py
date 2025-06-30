@@ -106,7 +106,7 @@ def parse_simple_decimal(value, error=raise_exception):
     ):
         if error is raise_exception:
             raise ValueError(
-                "Error! Value `{!r}` can't be parsed as a simple decimal.".format(value)
+                f"Error! Value `{value!r}` can't be parsed as a simple decimal."
             )
         return error
     return Decimal(value)

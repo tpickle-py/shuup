@@ -55,7 +55,7 @@ class TaxSummary(list):
 
     def __repr__(self):
         super_repr = super().__repr__()
-        return "{}({})".format(type(self).__name__, super_repr)
+        return f"{type(self).__name__}({super_repr})"
 
 
 class TaxSummaryLine:
@@ -108,7 +108,7 @@ class TaxSummaryLine:
         value = getattr(self, key)
         if isinstance(value, Money):
             if key not in self._MONEY_FIELDS:
-                raise TypeError('Error! Non-price field "{}" has {!r}.'.format(key, value))
+                raise TypeError(f'Error! Non-price field "{key}" has {value!r}.')
             return [(key, value.value), (key + "_currency", value.currency)]
         assert not isinstance(value, Money)
         return [(key, value)]

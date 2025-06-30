@@ -128,7 +128,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
                 address = None
             if address:
                 for key, value in model_to_dict(address).items():
-                    initial["{}-{}".format(address_kind, key)] = value
+                    initial[f"{address_kind}-{key}"] = value
         return initial
 
     def _get_address_of_contact(self, contact, kind):
@@ -137,7 +137,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
         elif kind == "shipping":
             return contact.default_shipping_address
         else:
-            raise TypeError("Error! Unknown address kind: {!r}.".format(kind))
+            raise TypeError(f"Error! Unknown address kind: {kind!r}.")
 
     def is_valid(self):
         return self.storage.has_all(self.address_kinds)
@@ -161,7 +161,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
 
     def _process_addresses(self, basket):
         for kind in self.address_kinds:
-            setattr(basket, "{}_address".format(kind), self.storage.get(kind))
+            setattr(basket, f"{kind}_address", self.storage.get(kind))
 
     def process(self):
         basket = self.basket

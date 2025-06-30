@@ -136,4 +136,4 @@ def _get_cache_key(shop):
     :return: Global or shop specific cache key
     :rtype: str
     """
-    return "{}:{}".format(_SHOP_CONF_NAMESPACE, shop.pk if shop else 0)
+    return f"{_SHOP_CONF_NAMESPACE}:{shop.pk if shop else 0}"

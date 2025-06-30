@@ -34,7 +34,7 @@ class PluginForm(forms.Form):
             if isinstance(field, TranslatableField):
                 self.translatable_field_names.append(name)
                 for language_code in languages:
-                    key = "{}_{}".format(name, language_code)
+                    key = f"{name}_{language_code}"
                     new_fields[key] = deepcopy(field)
                     new_fields[key].initial = self.plugin.get_translated_value(
                         name, language=language_code
@@ -87,7 +87,7 @@ class PluginForm(forms.Form):
         for field_name in self.translatable_field_names:
             data[field_name] = {}
             for language_code in languages:
-                key = "{}_{}".format(field_name, language_code)
+                key = f"{field_name}_{language_code}"
                 val = self.cleaned_data.get(key, "")
                 if val not in ["", None]:
                     data[field_name][language_code] = val

@@ -74,4 +74,4 @@ class XthemeNamespace:
                 and not getattr(helper, "alters_data", False)
             ):
                 return helper
-        raise KeyError("No such template helper: {}".format(item))
+        raise KeyError(f"No such template helper: {item}")

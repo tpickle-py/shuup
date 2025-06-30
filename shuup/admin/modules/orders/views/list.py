@@ -133,7 +133,7 @@ class OrderListView(PicotableListView):
 
     def get_object_abstract(self, instance, item):
         return [
-            {"text": "{}".format(instance), "class": "header"},
+            {"text": f"{instance}", "class": "header"},
             {
                 "title": _("Total, incl. tax"),
                 "text": item.get("taxful_total_price_value"),

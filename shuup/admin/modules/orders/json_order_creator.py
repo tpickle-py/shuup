@@ -246,7 +246,7 @@ class JsonOrderCreator:
                 for error_msg in errors:
                     self.add_error(
                         ValidationError(
-                            "Error! {field_label}: {error_msg}".format(field_label=field_label, error_msg=error_msg),
+                            f"Error! {field_label}: {error_msg}",
                             code="invalid_address",
                         )
                     )

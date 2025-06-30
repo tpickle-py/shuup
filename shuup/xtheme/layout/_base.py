@@ -91,7 +91,7 @@ class LayoutCell:
             return ""  # Null!
         plugin_inst = self.instantiate_plugin()
         if plugin_inst is None:
-            return mark_safe("<!-- {}? -->".format(self.plugin_identifier))
+            return mark_safe(f"<!-- {self.plugin_identifier}? -->")
 
         try:
             if plugin_inst.is_context_valid(context=context):

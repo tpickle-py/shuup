@@ -245,15 +245,15 @@ class Font(models.Model):
         font_sources = []
 
         if self.eot:
-            font_sources.append("url('{}?#iefix') format('embedded-opentype')".format(self.eot.url))
+            font_sources.append(f"url('{self.eot.url}?#iefix') format('embedded-opentype')")
         if self.woff:
-            font_sources.append("url('{}') format('woff')".format(self.woff.url))
+            font_sources.append(f"url('{self.woff.url}') format('woff')")
         if self.woff2:
-            font_sources.append("url('{}') format('woff2')".format(self.woff2.url))
+            font_sources.append(f"url('{self.woff2.url}') format('woff2')")
         if self.ttf:
-            font_sources.append("url('{}') format('truetype')".format(self.ttf.url))
+            font_sources.append(f"url('{self.ttf.url}') format('truetype')")
         if self.svg:
-            font_sources.append("url('{}#svgFontName') format('svg')".format(self.svg.url))
+            font_sources.append(f"url('{self.svg.url}#svgFontName') format('svg')")
 
         return font_sources
 

@@ -102,11 +102,11 @@ class FormattedDecimalField(models.DecimalField):
         val = value.normalize()
         (sign, digits, exponent) = val.as_tuple()
         if exponent > exponent_limit:
-            raise ValueError("Error! Exponent is too large for formatting: {!r}.".format(value))
+            raise ValueError(f"Error! Exponent is too large for formatting: {value!r}.")
         elif exponent < -exponent_limit:
-            raise ValueError("Error! Exponent is too small for formatting: {!r}.".format(value))
+            raise ValueError(f"Error! Exponent is too small for formatting: {value!r}.")
         if len(digits) > max_digits:
-            raise ValueError("Error! Too many digits for formatting: {!r}.".format(value))
+            raise ValueError(f"Error! Too many digits for formatting: {value!r}.")
         return format(val, "f")
 
     def formfield(self, **kwargs):

@@ -23,7 +23,7 @@ class SimpleCMSAdminModule(AdminModule):
             name_template=name_template,
         ) + [
             admin_url(
-                r"{}/delete/(?P<pk>\d+)/".format(url_prefix),
+                rf"{url_prefix}/delete/(?P<pk>\d+)/",
                 view_template % "Delete",
                 name=name_template % "delete",
                 permissions=(name_template % "delete",),

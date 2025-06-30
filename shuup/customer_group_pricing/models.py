@@ -40,12 +40,7 @@ class CgpPrice(MoneyPropped, CgpBase):
         verbose_name_plural = _("product prices")
 
     def __repr__(self):
-        return "<CgpPrice (p{},s{},g{}): price {}".format(
-            self.product_id,
-            self.shop_id,
-            self.group_id,
-            self.price,
-        )
+        return f"<CgpPrice (p{self.product_id},s{self.shop_id},g{self.group_id}): price {self.price}"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -67,12 +62,7 @@ class CgpDiscount(MoneyPropped, CgpBase):
         verbose_name_plural = _("product discounts")
 
     def __repr__(self):
-        return "<CgpDiscount (p{},s{},g{}): discount {}".format(
-            self.product_id,
-            self.shop_id,
-            self.group_id,
-            self.discount_amount,
-        )
+        return f"<CgpDiscount (p{self.product_id},s{self.shop_id},g{self.group_id}): discount {self.discount_amount}"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

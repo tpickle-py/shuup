@@ -12,12 +12,12 @@ class ShuupSupportModule(AdminModule):
     name = _("Shuup Support")
 
     def _get_resource(self, request, resource_id):
-        cache_key = "SHUUPCOM_API_{}_{}".format(request.LANGUAGE_CODE, resource_id)
+        cache_key = f"SHUUPCOM_API_{request.LANGUAGE_CODE}_{resource_id}"
         resource = cache.get(cache_key)
         if not resource:
             try:
                 r = requests.get(
-                    "https://www.shuup.com/{}/api/{}/".format(request.LANGUAGE_CODE, resource_id)
+                    f"https://www.shuup.com/{request.LANGUAGE_CODE}/api/{resource_id}/"
                 )
                 resource = r.json()
                 cache.set(cache_key, resource, timeout=SECONDS_IN_DAY)

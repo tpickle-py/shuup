@@ -18,7 +18,7 @@ def _fetch_static_resource_str(resource_file):
     resource_path = os.path.realpath(os.path.join(settings.STATIC_ROOT, resource_file))
     if not resource_path.startswith(os.path.realpath(settings.STATIC_ROOT)):
         raise ValueError(
-            "Error! Possible file system traversal shenanigan detected with path: `{path}`.".format(path=resource_file)
+            f"Error! Possible file system traversal shenanigan detected with path: `{resource_file}`."
         )
 
     if not os.path.isfile(resource_path):
@@ -28,7 +28,7 @@ def _fetch_static_resource_str(resource_file):
 
     if not resource_path:
         raise ValueError(
-            "Error! Unable to find path: `{path}`.".format(path=resource_file)
+            f"Error! Unable to find path: `{resource_file}`."
         )
 
     return open(resource_path, "rb").read().decode("UTF-8", "replace")
@@ -43,7 +43,7 @@ def _custom_url_fetcher(url):
             "mime_type": "image/jpg",
         }
     raise ValueError(
-        "Error! Possible file system traversal shenanigan detected with path: `{path}`.".format(path=url)
+        f"Error! Possible file system traversal shenanigan detected with path: `{url}`."
     )
 
 
