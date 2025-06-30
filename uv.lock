@@ -664,12 +664,15 @@ wheels = [
 ]
 
 [[package]]
-name = "django-enumfields"
-version = "2.1.1"
+name = "django-enumfields2"
+version = "3.0.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/24/a8/aaf2b5ddb697c9bcab53c32cfebe11e536502e07c30646b4756e7214b685/django-enumfields-2.1.1.tar.gz", hash = "sha256:f64841732a9c343f5071220e0abcf5f51c9472c06e3c33d7c6a7ec27b6087561", size = 13954, upload-time = "2021-02-23T06:41:07.843Z" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/03/e4/96daf09b637433a08dc720650d22bbb5a669d069a1afefd08bcc03eb71f3/django_enumfields2-3.0.2.tar.gz", hash = "sha256:787dd61d132f73ffadbcfd74dc5caa339505f506b1ebb60da9bf0344eacf2115", size = 6689, upload-time = "2022-12-29T19:08:53.373Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a4/0f/30b3c47b88ebf4c9fcd5f0387f8982cc4adc39705232f745ebcc3fbe6172/django_enumfields-2.1.1-py3-none-any.whl", hash = "sha256:d32f2151801a5fc13c860276ee99495c2c9345e0a4281d0104276c39ddb22807", size = 9103, upload-time = "2021-02-23T06:41:05.426Z" },
+    { url = "https://files.pythonhosted.org/packages/77/dd/d83e5aa2feed816cba8099bb4893c32962fc55cc8da2ea63052768e7a8ef/django_enumfields2-3.0.2-py3-none-any.whl", hash = "sha256:7ddcbdea6b97428f481f7191b53b110933be355f6d10656d59a4f886488a6cc4", size = 9003, upload-time = "2022-12-29T19:08:51.231Z" },
 ]
 
 [[package]]
@@ -1964,7 +1967,7 @@ dependencies = [
     { name = "django" },
     { name = "django-bootstrap3" },
     { name = "django-countries" },
-    { name = "django-enumfields" },
+    { name = "django-enumfields2" },
     { name = "django-filer" },
     { name = "django-filter" },
     { name = "django-jinja" },
@@ -2049,7 +2052,7 @@ requires-dist = [
     { name = "django", specifier = ">=3.2,<4.3" },
     { name = "django-bootstrap3", specifier = ">=21.2" },
     { name = "django-countries", specifier = ">=7.5.0" },
-    { name = "django-enumfields", specifier = ">=2.1.1" },
+    { name = "django-enumfields2" },
     { name = "django-filer", specifier = ">=2.2.0" },
     { name = "django-filter", specifier = ">=23.0" },
     { name = "django-jinja", specifier = ">=2.11.0" },

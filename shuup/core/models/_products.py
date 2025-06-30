@@ -5,28 +5,24 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-, with_statement
+from typing import TYPE_CHECKING, Iterable
 
 import six
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
-from shuup.compat import python_2_unicode_compatible
 from django.utils.text import format_lazy
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from parler.managers import TranslatableQuerySet
 from parler.models import TranslatableModel, TranslatedFields
-from typing import TYPE_CHECKING, Iterable
 
+from shuup.compat import python_2_unicode_compatible
 from shuup.core.excs import ImpossibleProductModeException
 from shuup.core.fields import InternalIdentifierField, MeasurementField
 from shuup.core.signals import post_clean, pre_clean
-from shuup.core.specs.product_kind import (
-    DefaultProductKindSpec,
-    get_product_kind_choices,
-)
+from shuup.core.specs.product_kind import DefaultProductKindSpec, get_product_kind_choices
 from shuup.core.taxing import TaxableItem
 from shuup.core.utils.slugs import generate_multilanguage_slugs
 from shuup.utils.analog import LogEntryKind, define_log_model

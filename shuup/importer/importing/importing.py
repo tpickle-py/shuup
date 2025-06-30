@@ -5,14 +5,15 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-, with_statement
-
 import datetime
-import django
 import itertools
 import logging
-import six
 import warnings
+from operator import iand, ior
+from typing import TYPE_CHECKING
+
+import django
+import six
 import xlrd
 from django.contrib.auth import get_user_model
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
@@ -22,8 +23,6 @@ from django.db.models.fields.related import RelatedField
 from django.db.transaction import atomic
 from django.utils.translation import ugettext_lazy as _
 from enumfields import EnumIntegerField
-from operator import iand, ior
-from typing import TYPE_CHECKING
 
 from shuup.importer._mapper import RelatedMapper
 from shuup.importer.exceptions import ImporterError

@@ -34,7 +34,7 @@ dependencies = [
     "django>=3.2,<4.3",
     "django-bootstrap3>=21.2",
     "django-countries>=7.5.0",
-    "django-enumfields>=2.1.1",
+    "django-enumfields2",
     "django-filer>=2.2.0",
     "django-filter>=23.0",
     "django-jinja>=2.11.0",

@@ -5,11 +5,10 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-, with_statement
+from functools import reduce
 
 from django.db import models
 from django_countries.fields import Country
-from functools import reduce
 
 from shuup.utils.django_compat import force_text
 

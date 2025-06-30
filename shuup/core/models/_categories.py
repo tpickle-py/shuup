@@ -5,12 +5,9 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-from __future__ import with_statement
-
 from django.db import models
 from django.db.models import Q
 from django.db.transaction import atomic
-from shuup.compat import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from filer.fields.image import FilerImageField
@@ -20,6 +17,7 @@ from mptt.querysets import TreeQuerySet
 from parler.managers import TranslatableQuerySet
 from parler.models import TranslatableManager, TranslatableModel, TranslatedFields
 
+from shuup.compat import python_2_unicode_compatible
 from shuup.core.fields import InternalIdentifierField
 from shuup.core.signals import category_deleted
 from shuup.core.utils.slugs import generate_multilanguage_slugs

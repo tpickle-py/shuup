@@ -5,12 +5,12 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-, with_statement
-
 import datetime
-import six
 from collections import defaultdict
 from decimal import Decimal
+from typing import TYPE_CHECKING
+
+import six
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
@@ -18,14 +18,13 @@ from django.db import models
 from django.db.models import Q
 from django.db.transaction import atomic
 from django.utils.crypto import get_random_string
-from shuup.compat import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from jsonfield import JSONField
 from parler.managers import TranslatableQuerySet
 from parler.models import TranslatableModel, TranslatedFields
-from typing import TYPE_CHECKING
 
+from shuup.compat import python_2_unicode_compatible
 from shuup.core import taxing
 from shuup.core.excs import (
     InvalidOrderStatusError,
@@ -34,13 +33,7 @@ from shuup.core.excs import (
     NoRefundToCreateException,
     NoShippingAddressException,
 )
-from shuup.core.fields import (
-    CurrencyField,
-    InternalIdentifierField,
-    LanguageField,
-    MoneyValueField,
-    UnsavedForeignKey,
-)
+from shuup.core.fields import CurrencyField, InternalIdentifierField, LanguageField, MoneyValueField, UnsavedForeignKey
 from shuup.core.pricing import TaxfulPrice, TaxlessPrice
 from shuup.core.settings_provider import ShuupSettings
 from shuup.core.signals import (
@@ -55,11 +48,7 @@ from shuup.utils.analog import LogEntryKind, define_log_model
 from shuup.utils.dates import local_now, to_aware
 from shuup.utils.django_compat import force_text
 from shuup.utils.money import Money
-from shuup.utils.properties import (
-    MoneyPropped,
-    TaxfulPriceProperty,
-    TaxlessPriceProperty,
-)
+from shuup.utils.properties import MoneyPropped, TaxfulPriceProperty, TaxlessPriceProperty
 
 from ._order_lines import OrderLineType
 from ._order_utils import get_order_identifier, get_reference_number
