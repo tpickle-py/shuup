@@ -24,4 +24,4 @@ class ArchivedDiscountListView(DiscountListView):
         return context
 
     def get_object_url(self, instance):
-        return reverse("shuup_admin:discounts.edit", kwargs=dict(pk=instance.pk))
+        return reverse("shuup_admin:discounts.edit", kwargs={"pk": instance.pk})

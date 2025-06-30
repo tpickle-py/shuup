@@ -74,18 +74,18 @@ class FreeProductLine(BasketLineEffect):
             ):
                 continue
 
-            line_data = dict(
-                line_id=f"free_product_{uuid4().hex}",
-                type=OrderLineType.PRODUCT,
-                quantity=self.quantity,
-                shop=shop,
-                text=(f"{product.name} ({self.campaign.public_name})"),
-                base_unit_price=shop.create_price(0),
-                product=product,
-                sku=product.sku,
-                supplier=supplier,
-                line_source=LineSource.DISCOUNT_MODULE,
-            )
+            line_data = {
+                "line_id": f"free_product_{uuid4().hex}",
+                "type": OrderLineType.PRODUCT,
+                "quantity": self.quantity,
+                "shop": shop,
+                "text": (f"{product.name} ({self.campaign.public_name})"),
+                "base_unit_price": shop.create_price(0),
+                "product": product,
+                "sku": product.sku,
+                "supplier": supplier,
+                "line_source": LineSource.DISCOUNT_MODULE,
+            }
             lines.append(order_source.create_line(**line_data))
         return lines
 

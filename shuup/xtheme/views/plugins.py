@@ -35,7 +35,7 @@ def get_category_products_highlight(request, category_id, count, cache_timeout):
             "orderable_only": orderable_only,
         }
     )
-    html = plugin.render(dict(request=request))
+    html = plugin.render({"request": request})
     context_cache.set_cached_value(key, html, int(cache_timeout))
     return HttpResponse(html)
 
@@ -68,7 +68,7 @@ def get_product_cross_sell_highlight(
             "orderable_only": orderable_only,
         }
     )
-    html = plugin.render(dict(request=request))
+    html = plugin.render({"request": request})
     context_cache.set_cached_value(key, html, int(cache_timeout))
     return HttpResponse(html)
 
@@ -97,7 +97,7 @@ def get_product_highlight(request, plugin_type, cutoff_days, count, cache_timeou
             "orderable_only": orderable_only,
         }
     )
-    html = plugin.render(dict(request=request))
+    html = plugin.render({"request": request})
     context_cache.set_cached_value(key, html, int(cache_timeout))
     return HttpResponse(html)
 
@@ -119,6 +119,6 @@ def get_prouduct_selections_highlight(request, product_ids, cache_timeout):
             "cache_timeout": int(cache_timeout),
         }
     )
-    html = plugin.render(dict(request=request))
+    html = plugin.render({"request": request})
     context_cache.set_cached_value(key, html, int(cache_timeout))
     return HttpResponse(html)

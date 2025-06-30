@@ -83,10 +83,10 @@ class TaskForm(ModelForm):
                 _(
                     "Changed assigment from {from_contact_name} to {to_contact_name}."
                 ).format(
-                    **dict(
-                        from_contact_name=old_assigned,
-                        to_contact_name=self.instance.assigned_to,
-                    )
+                    **{
+                        "from_contact_name": old_assigned,
+                        "to_contact_name": self.instance.assigned_to,
+                    }
                 ),
                 kind=LogEntryKind.EDIT,
             )
@@ -158,7 +158,7 @@ class TaskEditView(BaseTaskViewMixin, CreateOrUpdateView):
                 toolbar.append(
                     PostActionButton(
                         post_url=reverse_lazy(
-                            "shuup_admin:task.set_status", kwargs=dict(pk=obj.pk)
+                            "shuup_admin:task.set_status", kwargs={"pk": obj.pk}
                         ),
                         icon="fa fa-check",
                         name="status",
@@ -171,7 +171,7 @@ class TaskEditView(BaseTaskViewMixin, CreateOrUpdateView):
                 toolbar.append(
                     PostActionButton(
                         post_url=reverse_lazy(
-                            "shuup_admin:task.set_status", kwargs=dict(pk=obj.pk)
+                            "shuup_admin:task.set_status", kwargs={"pk": obj.pk}
                         ),
                         icon="fa fa-check",
                         name="status",
@@ -189,13 +189,13 @@ class TaskEditView(BaseTaskViewMixin, CreateOrUpdateView):
         form_group.add_form_def(
             name="base",
             form_class=TaskForm,
-            kwargs=dict(instance=instance, request=self.request),
+            kwargs={"instance": instance, "request": self.request},
         )
         if self.object.pk:
             form_group.add_form_def(
                 name="comment",
                 form_class=TaskCommentForm,
-                kwargs=dict(request=self.request, task=instance),
+                kwargs={"request": self.request, "task": instance},
                 required=False,
             )
         return form_group
@@ -231,7 +231,7 @@ class TaskSetStatusView(BaseTaskViewMixin, BaseDetailView):
     def post(self, request, *args, **kwargs):
         status = int(request.POST.get("status", 0))
         obj = self.get_object()
-        redirect_url = reverse_lazy("shuup_admin:task.edit", kwargs=dict(pk=obj.pk))
+        redirect_url = reverse_lazy("shuup_admin:task.edit", kwargs={"pk": obj.pk})
         possible_status = [TaskStatus.COMPLETED.value, TaskStatus.IN_PROGRESS.value]
 
         if not status or status not in possible_status:

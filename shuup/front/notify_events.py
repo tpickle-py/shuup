@@ -118,21 +118,21 @@ class RefundCreated(Event):
 
 @receiver(order_creator_finished)
 def send_order_received_notification(order, **kwargs):
-    params = dict(
-        order=order,
-        customer_email=order.email,
-        customer_phone=order.phone,
-        shop_email=None,
-        shop_phone=None,
-        language=order.language,
-    )
+    params = {
+        "order": order,
+        "customer_email": order.email,
+        "customer_phone": order.phone,
+        "shop_email": None,
+        "shop_phone": None,
+        "language": order.language,
+    }
 
     if order.shop.contact_address:
         params.update(
-            dict(
-                shop_email=order.shop.contact_address.email,
-                shop_phone=order.shop.contact_address.phone,
-            )
+            {
+                "shop_email": order.shop.contact_address.email,
+                "shop_phone": order.shop.contact_address.phone,
+            }
         )
 
     OrderReceived(**params).run(shop=order.shop)
@@ -212,23 +212,23 @@ def send_order_status_changed_notification(order, old_status, new_status, **kwar
     if not enabled_scripts.exists():
         return
 
-    params = dict(
-        order=order,
-        customer_email=order.email,
-        customer_phone=order.phone,
-        shop_email=None,
-        shop_phone=None,
-        language=order.language,
-        old_status=old_status,
-        new_status=new_status,
-    )
+    params = {
+        "order": order,
+        "customer_email": order.email,
+        "customer_phone": order.phone,
+        "shop_email": None,
+        "shop_phone": None,
+        "language": order.language,
+        "old_status": old_status,
+        "new_status": new_status,
+    }
 
     if order.shop.contact_address:
         params.update(
-            dict(
-                shop_email=order.shop.contact_address.email,
-                shop_phone=order.shop.contact_address.phone,
-            )
+            {
+                "shop_email": order.shop.contact_address.email,
+                "shop_phone": order.shop.contact_address.phone,
+            }
         )
 
     OrderStatusChanged(**params).run(shop=order.shop)

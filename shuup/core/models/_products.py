@@ -796,7 +796,7 @@ class Product(TaxableItem, AttributableMixin, TranslatableModel):
             pvr = ProductVariationResult.objects.update_or_create(
                 product=parent,
                 combination_hash=combination_hash,
-                defaults=dict(result=self),
+                defaults={"result": self},
             )[0]
             if parent.mode == ProductMode.SIMPLE_VARIATION_PARENT:
                 parent.verify_mode()

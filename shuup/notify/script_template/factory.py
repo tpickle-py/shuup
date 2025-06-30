@@ -22,7 +22,7 @@ def generic_send_email_script_template_factory(
     attrs.setdefault("name", name)
     attrs.setdefault("description", description)
     attrs.setdefault("help_text", help_text)
-    attrs.setdefault("initial", initial or dict())
+    attrs.setdefault("initial", initial or {})
     return type(
         "GenericSendEmailScriptTemplate", (GenericSendEmailScriptTemplate,), attrs
     )

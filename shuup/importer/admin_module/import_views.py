@@ -50,7 +50,7 @@ class ImportProcessView(TemplateView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        mapping = dict()
+        mapping = {}
 
         for field in request.POST.keys():
             if field.startswith("remap["):
@@ -273,7 +273,7 @@ class ImportListView(PicotableListView):
 
     def get_object_url(self, instance):
         return reverse(
-            "shuup_admin:importer.import.detail", kwargs=dict(pk=instance.pk)
+            "shuup_admin:importer.import.detail", kwargs={"pk": instance.pk}
         )
 
     def get_object_abstract(self, instance, item):

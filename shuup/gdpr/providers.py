@@ -67,11 +67,11 @@ class GDPRFieldProvider(FormFieldProvider):
                     ugettext(
                         "I have read and accept the <a href='{}' target='_blank' class='gdpr_consent_doc_check'>{}</a>"
                     ).format(
-                        reverse("shuup:cms_page", kwargs=dict(url=page.url)), page.title
+                        reverse("shuup:cms_page", kwargs={"url": page.url}), page.title
                     )
                 ),
                 required=True,
-                error_messages=dict(required=self.error_message),
+                error_messages={"required": self.error_message},
             )
             definition = FormFieldDefinition(name=key, field=field)
             fields.append(definition)

@@ -161,13 +161,13 @@ class ContactGroup(TranslatableShuupModel):
         ContactGroupPriceDisplay.objects.update_or_create(
             shop=shop,
             group=self,
-            defaults=dict(
-                show_prices_including_taxes=kwargs.get(
+            defaults={
+                "show_prices_including_taxes": kwargs.get(
                     "show_prices_including_taxes", None
                 ),
-                show_pricing=kwargs.get("show_pricing", True),
-                hide_prices=kwargs.get("hide_prices", None),
-            ),
+                "show_pricing": kwargs.get("show_pricing", True),
+                "hide_prices": kwargs.get("hide_prices", None),
+            },
         )
         return self
 

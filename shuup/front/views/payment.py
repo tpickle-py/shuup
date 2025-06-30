@@ -12,7 +12,7 @@ def get_payment_urls(request, order):
     """
     :type request: django.http.HttpRequest
     """
-    kwargs = dict(pk=order.pk, key=order.key)
+    kwargs = {"pk": order.pk, "key": order.key}
 
     def absolute_url_for(name):
         return request.build_absolute_uri(reverse(name, kwargs=kwargs))

@@ -105,8 +105,8 @@ class SupplierPricingModule(PricingModule):
                     shop_id=shop_product.shop_id,
                     supplier_id=supplier_id,
                     catalog_rule=None,
-                    defaults=dict(
-                        price_value=supplier_price.amount_value
+                    defaults={
+                        "price_value": supplier_price.amount_value
                         or shop_product.default_price_value
-                    ),
+                    },
                 )

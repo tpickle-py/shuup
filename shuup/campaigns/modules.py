@@ -176,9 +176,9 @@ class BasketCampaignModule(OrderSourceModifierModule):
                         not best_discount
                         or discount_amount > best_discount["discount_amount"]
                     ):
-                        best_discount_for_supplier[campaign_supplier] = dict(
-                            discount_amount=discount_amount, campaign=campaign
-                        )
+                        best_discount_for_supplier[campaign_supplier] = {
+                            "discount_amount": discount_amount, "campaign": campaign
+                        }
 
         for supplier, best_discount_info in best_discount_for_supplier.items():
             lines.append(

@@ -11,7 +11,7 @@ from shuup.core.utils import context_cache
 
 def get_matching_context_conditions(context):
     namespace = CONTEXT_CONDITION_CACHE_NAMESPACE
-    ctx_cache_elements = dict(customer=context.customer.pk or 0, shop=context.shop.pk)
+    ctx_cache_elements = {"customer": context.customer.pk or 0, "shop": context.shop.pk}
     sorted_items = dict(sorted(ctx_cache_elements.items(), key=lambda item: item[0]))
     conditions_cache_key = "{}:{}".format(
         namespace,

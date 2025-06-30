@@ -270,7 +270,7 @@ class ScriptItem(Base):
         return obj_cls(data, validate=validate)
 
     def serialize(self):
-        data = dict(identifier=self.identifier)
+        data = {"identifier": self.identifier}
         data.update(**self.data)
         return data
 

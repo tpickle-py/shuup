@@ -34,9 +34,9 @@ class TranslationSettingsFormPart(FormPart):
             template_name="shuup/front/admin/translation.jinja",
             required=False,
             kwargs={
-                "initial": dict(
-                    available_languages=get_shop_available_languages(self.object)
-                )
+                "initial": {
+                    "available_languages": get_shop_available_languages(self.object)
+                }
             },
         )
 

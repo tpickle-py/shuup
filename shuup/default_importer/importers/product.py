@@ -120,14 +120,14 @@ class ProductMetaBase(ImportMetaBase):
                 ProductVariationVariable.objects.update_or_create(
                     product=parent_product,
                     identifier=slugify(variable_name),
-                    defaults=dict(name=variable_name),
+                    defaults={"name": variable_name},
                 )
             )
             value, value_created = (
                 ProductVariationVariableValue.objects.update_or_create(
                     variable=variable,
                     identifier=slugify(value_name),
-                    defaults=dict(value=value_name),
+                    defaults={"value": value_name},
                 )
             )
             value_names.append(value_name)

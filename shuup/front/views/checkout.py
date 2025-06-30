@@ -25,7 +25,7 @@ class BaseCheckoutView(View):
 
         process = self.process_class(
             phase_specs=self.phase_specs,
-            phase_kwargs=dict(request=request, args=args, kwargs=kwargs),
+            phase_kwargs={"request": request, "args": args, "kwargs": kwargs},
             view=self,
         )
         request.basket = process.basket

@@ -82,15 +82,15 @@ DEFAULT_IDENTIFIER = "default"
 DEFAULT_NAME = "Default"
 DEFAULT_CURRENCY = "EUR"
 
-DEFAULT_ADDRESS_DATA = dict(
-    prefix="Sir",
-    name="Dog Hello",
-    suffix=", Esq.",
-    postal_code="K9N",
-    street="Woof Ave.",
-    city="Dog Fort",
-    country="FR",
-)
+DEFAULT_ADDRESS_DATA = {
+    "prefix": "Sir",
+    "name": "Dog Hello",
+    "suffix": ", Esq.",
+    "postal_code": "K9N",
+    "street": "Woof Ave.",
+    "city": "Dog Fort",
+    "country": "FR",
+}
 
 COUNTRY_CODES = sorted(COUNTRIES.keys())
 
@@ -249,27 +249,27 @@ def get_address(**overrides):
 
 
 ATTR_SPECS = [
-    dict(type=AttributeType.BOOLEAN, identifier="awesome", name="Awesome?"),
-    dict(type=AttributeType.INTEGER, identifier="bogomips", name="BogoMIPS"),
-    dict(
-        type=AttributeType.DECIMAL,
-        identifier="surface_pressure",
-        name="Surface pressure (kPa)",
-    ),
-    dict(
-        type=AttributeType.TIMEDELTA, identifier="time_to_finish", name="Time to finish"
-    ),
-    dict(type=AttributeType.UNTRANSLATED_STRING, identifier="author", name="Author"),
-    dict(type=AttributeType.TRANSLATED_STRING, identifier="genre", name="Genre"),
-    dict(type=AttributeType.DATE, identifier="release_date", name="Release Date"),
-    dict(
-        type=AttributeType.DATETIME,
-        identifier="important_datetime",
-        name="Time and Date of Eschaton",
-    ),
-    dict(
-        type=AttributeType.CHOICES, identifier="list_choices", name="Options to select"
-    ),
+    {"type": AttributeType.BOOLEAN, "identifier": "awesome", "name": "Awesome?"},
+    {"type": AttributeType.INTEGER, "identifier": "bogomips", "name": "BogoMIPS"},
+    {
+        "type": AttributeType.DECIMAL,
+        "identifier": "surface_pressure",
+        "name": "Surface pressure (kPa)",
+    },
+    {
+        "type": AttributeType.TIMEDELTA, "identifier": "time_to_finish", "name": "Time to finish"
+    },
+    {"type": AttributeType.UNTRANSLATED_STRING, "identifier": "author", "name": "Author"},
+    {"type": AttributeType.TRANSLATED_STRING, "identifier": "genre", "name": "Genre"},
+    {"type": AttributeType.DATE, "identifier": "release_date", "name": "Release Date"},
+    {
+        "type": AttributeType.DATETIME,
+        "identifier": "important_datetime",
+        "name": "Time and Date of Eschaton",
+    },
+    {
+        "type": AttributeType.CHOICES, "identifier": "list_choices", "name": "Options to select"
+    },
 ]
 
 
@@ -652,18 +652,18 @@ def create_product(sku, shop=None, supplier=None, default_price=None, **attrs):
     else:
         get_sales_unit = get_default_sales_unit
 
-    product_attrs = dict(
-        type=get_default_product_type(),
-        tax_class=get_default_tax_class(),
-        sku=sku,
-        name=sku.title(),
-        width=100,
-        height=100,
-        depth=100,
-        net_weight=100,
-        gross_weight=100,
-        sales_unit=get_sales_unit(),
-    )
+    product_attrs = {
+        "type": get_default_product_type(),
+        "tax_class": get_default_tax_class(),
+        "sku": sku,
+        "name": sku.title(),
+        "width": 100,
+        "height": 100,
+        "depth": 100,
+        "net_weight": 100,
+        "gross_weight": 100,
+        "sales_unit": get_sales_unit(),
+    }
     product_attrs.update(attrs)
     product = Product(**product_attrs)
     product.full_clean()

@@ -19,7 +19,7 @@ class AnonymizeContactToolbarButton(PostActionButton):
         kwargs["name"] = "download"
         kwargs["value"] = "1"
         kwargs["post_url"] = reverse(
-            "shuup_admin:gdpr.anonymize", kwargs=dict(pk=object.pk)
+            "shuup_admin:gdpr.anonymize", kwargs={"pk": object.pk}
         )
         super().__init__(**kwargs)
 
@@ -36,7 +36,7 @@ class DownloadDataToolbarButton(PostActionButton):
         kwargs["value"] = "1"
         kwargs["extra_css_class"] = "dropdown-item"
         kwargs["post_url"] = reverse(
-            "shuup_admin:gdpr.download_data", kwargs=dict(pk=object.pk)
+            "shuup_admin:gdpr.download_data", kwargs={"pk": object.pk}
         )
         super().__init__(**kwargs)
 

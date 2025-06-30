@@ -15,13 +15,13 @@ def model_url(context, model, absolute=False, **kwargs):
         ):
             uri = reverse(
                 "shuup:supplier-product",
-                kwargs=dict(pk=model.pk, slug=model.slug, supplier_pk=supplier.pk),
+                kwargs={"pk": model.pk, "slug": model.slug, "supplier_pk": supplier.pk},
             )
         else:
-            uri = reverse("shuup:product", kwargs=dict(pk=model.pk, slug=model.slug))
+            uri = reverse("shuup:product", kwargs={"pk": model.pk, "slug": model.slug})
 
     if isinstance(model, Category):
-        uri = reverse("shuup:category", kwargs=dict(pk=model.pk, slug=model.slug))
+        uri = reverse("shuup:category", kwargs={"pk": model.pk, "slug": model.slug})
 
     if hasattr(model, "pk") and model.pk and hasattr(model, "url"):
         uri = f"/{model.url}"

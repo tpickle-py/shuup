@@ -31,7 +31,7 @@ def get_cookie_consent_data(cookie_categories, consent_documents):
     consent_cookies = [cookie_category.cookies for cookie_category in cookie_categories]
     return {
         "cookies": list(set(",".join(consent_cookies).replace(" ", "").split(","))),
-        "documents": [dict(id=doc.id, url=doc.url) for doc in consent_documents],
+        "documents": [{"id": doc.id, "url": doc.url} for doc in consent_documents],
     }
 
 

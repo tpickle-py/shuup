@@ -101,9 +101,9 @@ class CustomerGroupPricingModule(PricingModule):
                         shop_id=shop_product.shop_id,
                         supplier_id=supplier_id,
                         catalog_rule=catalog_rule,
-                        defaults=dict(
-                            price_value=customer_group_price.price_value or Decimal()
-                        ),
+                        defaults={
+                            "price_value": customer_group_price.price_value or Decimal()
+                        },
                     )
 
         for supplier_id in shop_product.suppliers.values_list("pk", flat=True):
@@ -113,9 +113,9 @@ class CustomerGroupPricingModule(PricingModule):
                 shop_id=shop_product.shop_id,
                 supplier_id=supplier_id,
                 catalog_rule=None,
-                defaults=dict(
-                    price_value=shop_product.default_price_value or Decimal()
-                ),
+                defaults={
+                    "price_value": shop_product.default_price_value or Decimal()
+                },
             )
 
 
@@ -215,5 +215,5 @@ class CustomerGroupDiscountModule(DiscountModule):
                         shop_id=shop_product.shop_id,
                         supplier_id=supplier_id,
                         catalog_rule=catalog_rule,
-                        defaults=dict(discounted_price_value=discounted_price),
+                        defaults={"discounted_price_value": discounted_price},
                     )

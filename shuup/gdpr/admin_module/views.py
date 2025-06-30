@@ -118,5 +118,5 @@ class GDPRAnonymizeView(BaseContactView):
 
         messages.success(request, _("Contact was anonymized."))
         return HttpResponseRedirect(
-            reverse("shuup_admin:contact.detail", kwargs=dict(pk=contact.pk))
+            reverse("shuup_admin:contact.detail", kwargs={"pk": contact.pk})
         )

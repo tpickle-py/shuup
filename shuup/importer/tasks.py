@@ -57,12 +57,12 @@ def import_file(
             file_importer.import_file()
 
             importer_instance = file_importer.importer  # type: DataImporter
-            result = dict(
-                other_log_messages=[
+            result = {
+                "other_log_messages": [
                     str(msg) for msg in importer_instance.other_log_messages
                 ],
-                log_messages=[str(msg) for msg in importer_instance.log_messages],
-            )
+                "log_messages": [str(msg) for msg in importer_instance.log_messages],
+            }
 
             new_objects = []
             updated_objects = []

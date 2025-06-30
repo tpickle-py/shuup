@@ -113,7 +113,7 @@ class LayoutCellFormGroup(FormGroup):
         if plugin:
             form_class = plugin.get_editor_form_class()
             if form_class:
-                kwargs = dict(plugin=plugin, request=self.request)
+                kwargs = {"plugin": plugin, "request": self.request}
                 self.add_form_def("plugin", form_class, kwargs=kwargs)
 
     def save(self):

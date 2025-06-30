@@ -97,7 +97,7 @@ class CompanyRegistrationForm(FormGroup):
                     name=definition.form_name,
                     form_class=definition.form_class,
                     required=definition.required,
-                    kwargs=dict(shop=self.request.shop, request=self.request),
+                    kwargs={"shop": self.request.shop, "request": self.request},
                 )
 
     def instantiate_forms(self):

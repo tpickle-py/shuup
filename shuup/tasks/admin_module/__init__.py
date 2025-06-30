@@ -64,7 +64,7 @@ class TaskAdminModule(AdminModule):
                 "articles",
                 request,
                 "shuup/admin/tasks/tasks_dashboard_block.jinja",
-                context=dict(tasks=tasks),
+                context={"tasks": tasks},
             )
             tasks_block.size = "medium"
             yield tasks_block
@@ -84,7 +84,7 @@ class TaskAdminModule(AdminModule):
                 yield SearchResult(
                     text=force_text(
                         "{task_name} [{task_status}]".format(
-                            **dict(task_name=task.name, task_status=task.status)
+                            **{"task_name": task.name, "task_status": task.status}
                         )
                     ),
                     url=get_model_url(task, shop=shop),

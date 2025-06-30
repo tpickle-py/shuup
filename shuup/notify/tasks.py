@@ -17,7 +17,7 @@ def send_user_reset_password_email(
     uid = urlsafe_base64_encode(force_bytes(user_id))
     token = default_token_generator.make_token(user)
     recovery_url = urljoin(
-        reset_domain_url, reverse(reset_url_name, kwargs=dict(uidb64=uid, token=token))
+        reset_domain_url, reverse(reset_url_name, kwargs={"uidb64": uid, "token": token})
     )
     context = {
         "site_name": shop.public_name,

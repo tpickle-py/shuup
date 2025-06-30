@@ -175,11 +175,11 @@ def get_price_expiration(context, product):
     :rtype numbers.Number|None
     :returns the price expiration time timestamp
     """
-    cache_params = dict(
-        identifier="price_expiration",
-        item=_get_price_expiration_cache_key(context.shop.pk),
-        context={},
-    )
+    cache_params = {
+        "identifier": "price_expiration",
+        "item": _get_price_expiration_cache_key(context.shop.pk),
+        "context": {},
+    }
 
     if settings.SHUUP_DISCOUNTS_PER_PRODUCT_EXPIRATION_DATES:
         cache_params["customer"] = getattr(context, "customer", None)
@@ -189,7 +189,7 @@ def get_price_expiration(context, product):
     if value is not None:
         return value
 
-    context_cache_key = "price_expiration_{shop_id}".format(**dict(shop_id=context.shop.pk))
+    context_cache_key = "price_expiration_{shop_id}".format(**{"shop_id": context.shop.pk})
     if hasattr(context, "context_cache_key"):
         return getattr(context, context_cache_key)
 
@@ -406,5 +406,5 @@ def index_shop_product_price(
                 shop=shop_product.shop,
                 supplier=supplier,
                 catalog_rule=catalog_rule,
-                defaults=dict(discounted_price_value=best_discounted_price),
+                defaults={"discounted_price_value": best_discounted_price},
             )

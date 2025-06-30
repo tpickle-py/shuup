@@ -221,11 +221,11 @@ class CatalogCampaign(Campaign):
 
     @classmethod
     def get_matching(cls, context, shop_product):
-        prod_ctx_cache_elements = dict(
-            customer=context.customer.pk or 0,
-            shop=context.shop.pk,
-            product_id=shop_product.pk,
-        )
+        prod_ctx_cache_elements = {
+            "customer": context.customer.pk or 0,
+            "shop": context.shop.pk,
+            "product_id": shop_product.pk,
+        }
         namespace = CAMPAIGNS_CACHE_NAMESPACE
         sorted_items = dict(
             sorted(prod_ctx_cache_elements.items(), key=lambda item: item[0])

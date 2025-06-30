@@ -28,9 +28,9 @@ class ConfigurationItem(ShuupModel):
 
     def __str__(self):
         if self.shop:
-            return _("%(key)s for shop %(shop)s") % dict(key=self.key, shop=self.shop)
+            return _("%(key)s for shop %(shop)s") % {"key": self.key, "shop": self.shop}
         else:
-            return _("%(key)s (global)") % dict(key=self.key)
+            return _("%(key)s (global)") % {"key": self.key}
 
     def __repr__(self):
         return f'<{type(self).__name__} "{self.key}" for {self.shop!r}>'
@@ -56,9 +56,9 @@ class EncryptedConfigurationItem(ShuupModel):
 
     def __str__(self):
         if self.shop:
-            return _("%(key)s for shop %(shop)s") % dict(key=self.key, shop=self.shop)
+            return _("%(key)s for shop %(shop)s") % {"key": self.key, "shop": self.shop}
         else:
-            return _("%(key)s (global)") % dict(key=self.key)
+            return _("%(key)s (global)") % {"key": self.key}
 
     def __repr__(self):
         return f'<{type(self).__name__} "{self.key}" for {self.shop!r}>'

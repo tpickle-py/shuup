@@ -27,7 +27,7 @@ class BasketCampaignForm(BaseCampaignForm):
         coupon_code_choices = [("", "---------")] + list(
             coupons.values_list("pk", "code")
         )
-        field_kwargs = dict(choices=coupon_code_choices, required=False)
+        field_kwargs = {"choices": coupon_code_choices, "required": False}
         field_kwargs["help_text"] = _("Define the required coupon for this campaign.")
         field_kwargs["label"] = _("Coupon")
         field_kwargs["widget"] = QuickAddCouponSelect(editable_model="campaigns.Coupon")

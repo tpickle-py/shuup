@@ -193,37 +193,37 @@ class OrderProcessor:
         """
         :type order_source: shuup.core.order_creator.OrderSource
         """
-        return dict(
-            shop=order_source.shop,
-            currency=order_source.currency,
-            prices_include_tax=order_source.prices_include_tax,
-            shipping_address=(
+        return {
+            "shop": order_source.shop,
+            "currency": order_source.currency,
+            "prices_include_tax": order_source.prices_include_tax,
+            "shipping_address": (
                 order_source.shipping_address.to_immutable()
                 if order_source.shipping_address
                 else None
             ),
-            billing_address=(
+            "billing_address": (
                 order_source.billing_address.to_immutable()
                 if order_source.billing_address
                 else None
             ),
-            customer=(order_source.customer or None),
-            orderer=(order_source.orderer or None),
-            creator=real_user_or_none(order_source.creator),
-            shipping_method=order_source.shipping_method,
-            payment_method=order_source.payment_method,
-            customer_comment=(
+            "customer": (order_source.customer or None),
+            "orderer": (order_source.orderer or None),
+            "creator": real_user_or_none(order_source.creator),
+            "shipping_method": order_source.shipping_method,
+            "payment_method": order_source.payment_method,
+            "customer_comment": (
                 order_source.customer_comment if order_source.customer_comment else ""
             ),
-            marketing_permission=bool(order_source.marketing_permission),
-            language=order_source.language,
-            ip_address=order_source.ip_address,
-            order_date=order_source.order_date,
-            status=order_source.status,
-            payment_data=order_source.payment_data,
-            shipping_data=order_source.shipping_data,
-            extra_data=order_source.extra_data,
-        )
+            "marketing_permission": bool(order_source.marketing_permission),
+            "language": order_source.language,
+            "ip_address": order_source.ip_address,
+            "order_date": order_source.order_date,
+            "status": order_source.status,
+            "payment_data": order_source.payment_data,
+            "shipping_data": order_source.shipping_data,
+            "extra_data": order_source.extra_data,
+        }
 
     def finalize_creation(self, order, order_source):
         order_source.verify_orderability()

@@ -796,7 +796,7 @@ def get_price_ranges(shop, min_price, max_price, range_step):
                 (
                     f"{range_min}-{range_max}",
                     _("%(min)s to %(max)s")
-                    % dict(min=range_min_price, max=range_max_price),
+                    % {"min": range_min_price, "max": range_max_price},
                 )
             )
 

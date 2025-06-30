@@ -115,12 +115,12 @@ class ProductHighlightPlugin(TemplatedPlugin):
             "orderable_only": self.config.get("orderable_only", False),
             "data_url": reverse(
                 "shuup:xtheme-product-highlight",
-                kwargs=dict(
-                    plugin_type=plugin_type,
-                    cutoff_days=cutoff_days,
-                    count=count,
-                    cache_timeout=cache_timeout,
-                ),
+                kwargs={
+                    "plugin_type": plugin_type,
+                    "cutoff_days": cutoff_days,
+                    "count": count,
+                    "cache_timeout": cache_timeout,
+                },
             ),
         }
 
@@ -228,13 +228,13 @@ class ProductCrossSellsPlugin(TemplatedPlugin):
             "orderable_only": self.config.get("orderable_only", False),
             "data_url": reverse(
                 "shuup:xtheme-product-cross-sells-highlight",
-                kwargs=dict(
-                    product_id=product.id if isinstance(product, Product) else product,
-                    relation_type=relation_type.label,
-                    use_parents=(1 if use_variation_parents else 0),
-                    count=count,
-                    cache_timeout=cache_timeout,
-                ),
+                kwargs={
+                    "product_id": product.id if isinstance(product, Product) else product,
+                    "relation_type": relation_type.label,
+                    "use_parents": (1 if use_variation_parents else 0),
+                    "count": count,
+                    "cache_timeout": cache_timeout,
+                },
             )
             if product
             else "/",
@@ -321,9 +321,9 @@ class ProductsFromCategoryPlugin(TemplatedPlugin):
             "orderable_only": orderable_only,
             "data_url": reverse(
                 "shuup:xtheme-category-products-highlight",
-                kwargs=dict(
-                    category_id=category_id, count=count, cache_timeout=cache_timeout
-                ),
+                kwargs={
+                    "category_id": category_id, "count": count, "cache_timeout": cache_timeout
+                },
             ),
         }
 
@@ -403,14 +403,14 @@ class ProductSelectionPlugin(TemplatedPlugin):
             "products": products_qs,
             "data_url": reverse(
                 "shuup:xtheme-product-selections-highlight",
-                kwargs=dict(
-                    product_ids=",".join(
+                kwargs={
+                    "product_ids": ",".join(
                         [
                             (str(prod.pk) if hasattr(prod, "pk") else str(prod))
                             for prod in products
                         ]
                     ),
-                    cache_timeout=cache_timeout,
-                ),
+                    "cache_timeout": cache_timeout,
+                },
             ),
         }

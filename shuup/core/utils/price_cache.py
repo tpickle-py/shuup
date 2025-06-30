@@ -13,7 +13,7 @@ PRICE_INFO_NAMESPACE_ITEM = "price_info_%(shop_id)s"
 
 
 def _get_price_info_namespace_for_shop(shop_id):
-    return PRICE_INFO_NAMESPACE_ITEM % dict(shop_id=shop_id)
+    return PRICE_INFO_NAMESPACE_ITEM % {"shop_id": shop_id}
 
 
 def _get_price_info_cache_key_params(context, item, quantity, **context_args):
@@ -36,7 +36,7 @@ def _get_price_info_cache_key_params(context, item, quantity, **context_args):
             AnonymousContact._cached_default_group_id = anonymous_group_id
             groups = [anonymous_group_id]
 
-    extra_kwargs = dict()
+    extra_kwargs = {}
     for key, value in context_args.items():
         if hasattr(value, "pk"):
             extra_kwargs[key] = value.pk

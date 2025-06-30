@@ -15,11 +15,11 @@ def create_task(shop, creator, task_type, task_name, comment=None, **kwargs):
         if comment:
             task.comment(creator, comment)
 
-        params = dict(
-            type=task_type,
-            task=task_name,
-            status=task.status,
-            priority=task.priority,
-        )
+        params = {
+            "type": task_type,
+            "task": task_name,
+            "status": task.status,
+            "priority": task.priority,
+        }
         TaskCreated(**params).run(shop)
         return task

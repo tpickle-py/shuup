@@ -86,7 +86,7 @@ class AdminModule:
         and the value is a help text that can help the user to understand
         where the permissions is used and how it works.
         """
-        return dict()
+        return {}
 
     def get_notifications(self, request):
         """

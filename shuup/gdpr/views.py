@@ -132,7 +132,7 @@ class GDPRAnonymizeView(View):
             task_type = TaskType.objects.get_or_create(
                 shop=request.shop,
                 identifier=GDPR_ANONYMIZE_TASK_TYPE_IDENTIFIER,
-                defaults=dict(name=_("GDPR: Anonymize")),
+                defaults={"name": _("GDPR: Anonymize")},
             )[0]
             contact = get_person_contact(request.user)
             create_task(
@@ -141,7 +141,7 @@ class GDPRAnonymizeView(View):
                 task_type,
                 _("GDPR: Anonymize contact"),
                 _("Customer ID {customer_id} requested to be anonymized.").format(
-                    **dict(customer_id=contact.id)
+                    **{"customer_id": contact.id}
                 ),
             )
 

@@ -287,15 +287,15 @@ class Slide(TranslatableShuupModel):
         elif self.product_link:
             return reverse(
                 "shuup:product",
-                kwargs=dict(pk=self.product_link.pk, slug=self.product_link.slug),
+                kwargs={"pk": self.product_link.pk, "slug": self.product_link.slug},
             )
         elif self.category_link:
             return reverse(
                 "shuup:category",
-                kwargs=dict(pk=self.category_link.pk, slug=self.category_link.slug),
+                kwargs={"pk": self.category_link.pk, "slug": self.category_link.slug},
             )
         elif self.cms_page_link:
-            return reverse("shuup:cms_page", kwargs=dict(url=self.cms_page_link.url))
+            return reverse("shuup:cms_page", kwargs={"url": self.cms_page_link.url})
 
     def is_visible(self, dt=None):
         """

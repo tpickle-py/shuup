@@ -111,5 +111,5 @@ def _set_price_display_mode(request, contact_group, price_display_mode):
             "show_prices_including_taxes": False,
         }
     if options or price_display_mode == PriceDisplayChoices.NONE.value:
-        options.update(dict(shop=shop))
+        options.update({"shop": shop})
         contact_group.set_price_display_options(**options)

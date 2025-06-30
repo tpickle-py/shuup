@@ -21,9 +21,9 @@ def get_sandboxed_template_environment(context, **kwargs):
     :return: The environment used to render.
     :rtype: jinja2.environment.Environment
     """
-    env_kwargs = dict()
+    env_kwargs = {}
     if "html_intent" in kwargs:
-        env_kwargs = dict(autoescape=kwargs["html_intent"])
+        env_kwargs = {"autoescape": kwargs["html_intent"]}
     return SandboxedEnvironment(**env_kwargs)
 
 

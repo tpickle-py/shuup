@@ -48,9 +48,9 @@ class ProductDetailView(DetailView):
             # redirect to parent url with child pre-selected
             parent_url = reverse(
                 "shuup:product",
-                kwargs=dict(
-                    pk=product.variation_parent.pk, slug=product.variation_parent.slug
-                ),
+                kwargs={
+                    "pk": product.variation_parent.pk, "slug": product.variation_parent.slug
+                },
             )
             return HttpResponseRedirect(
                 f"{parent_url}?variation={product.sku}"

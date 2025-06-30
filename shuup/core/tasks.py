@@ -110,12 +110,12 @@ class DefaultTaskRunner(TaskRunner):
         task_identifier = task_identifier or f"{queue}_{uuid4().hex}"
 
         if stored:
-            background_data = dict(
-                queue=queue,
-                identifier=task_identifier,
-                function=function,
-                arguments=kwargs,
-            )
+            background_data = {
+                "queue": queue,
+                "identifier": task_identifier,
+                "function": function,
+                "arguments": kwargs,
+            }
 
             if kwargs.get("shop_id"):
                 background_data["shop_id"] = kwargs["shop_id"]

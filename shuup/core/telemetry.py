@@ -19,9 +19,9 @@ from shuup.utils.django_compat import force_text
 
 User = get_user_model()
 
-OPT_OUT_KWARGS = dict(module="telemetry", key="opt_out")
-INSTALLATION_KEY_KWARGS = dict(module="telemetry", key="installation_key")
-LAST_DATA_KWARGS = dict(module="telemetry", key="last_data")
+OPT_OUT_KWARGS = {"module": "telemetry", "key": "opt_out"}
+INSTALLATION_KEY_KWARGS = {"module": "telemetry", "key": "installation_key"}
+LAST_DATA_KWARGS = {"module": "telemetry", "key": "last_data"}
 
 
 def safe_json(data_dict, indent=None):

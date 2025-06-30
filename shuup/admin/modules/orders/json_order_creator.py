@@ -182,13 +182,13 @@ class JsonOrderCreator:
     def _add_json_line_to_source(self, source, sline):
         valid = True
         type = sline.get("type")
-        sl_kwargs = dict(
-            line_id=sline.pop("id"),
-            sku=sline.pop("sku", None),
-            text=sline.pop("text", None),
-            shop=source.shop,
-            type=OrderLineType.OTHER,  # Overridden in the `product` branch
-        )
+        sl_kwargs = {
+            "line_id": sline.pop("id"),
+            "sku": sline.pop("sku", None),
+            "text": sline.pop("text", None),
+            "shop": source.shop,
+            "type": OrderLineType.OTHER,  # Overridden in the `product` branch
+        }
 
         # _process_product_line pops this value, so need to store it here
         supplier_info = sline.get("supplier")
@@ -427,16 +427,16 @@ class JsonOrderCreator:
                 rounding=processor.rounding_mode.value,
             )
             remainder = rounded - taxful_total
-            line_data = dict(
-                line_id="rounding",
-                type=OrderLineType.ROUNDING,
-                quantity=1,
-                shop=source.shop,
-                text="Rounding",
-                base_unit_price=source.create_price(remainder.value),
-                tax_class=None,
-                line_source=LineSource.ADMIN,
-            )
+            line_data = {
+                "line_id": "rounding",
+                "type": OrderLineType.ROUNDING,
+                "quantity": 1,
+                "shop": source.shop,
+                "text": "Rounding",
+                "base_unit_price": source.create_price(remainder.value),
+                "tax_class": None,
+                "line_source": LineSource.ADMIN,
+            }
             source.add_line(**line_data)
             source.get_final_lines()
 

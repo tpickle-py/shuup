@@ -332,10 +332,10 @@ def get_admin_edit_url(context, intance_or_model):
 
     url = model_url(context, intance_or_model)
     if url:
-        return dict(
-            url=url,
-            name=intance_or_model._meta.verbose_name.title(),
-        )
+        return {
+            "url": url,
+            "name": intance_or_model._meta.verbose_name.title(),
+        }
 
 
 @contextfunction
