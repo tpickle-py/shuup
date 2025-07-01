@@ -1,5 +1,3 @@
-
-
 import hashlib
 import itertools
 from collections import defaultdict
@@ -23,7 +21,6 @@ class ProductVariationLinkStatus(Enum):
     class Labels:
         INVISIBLE = _("invisible")
         VISIBLE = _("visible")
-
 
 
 class ProductVariationVariable(TranslatableModel, SortableMixin):
@@ -50,10 +47,7 @@ class ProductVariationVariable(TranslatableModel, SortableMixin):
         ordering = ("ordering",)
 
     def __str__(self):
-        return force_text(
-            self.safe_translation_getter("name") or self.identifier or repr(self)
-        )
-
+        return force_text(self.safe_translation_getter("name") or self.identifier or repr(self))
 
 
 class ProductVariationVariableValue(TranslatableModel, SortableMixin):
@@ -81,9 +75,7 @@ class ProductVariationVariableValue(TranslatableModel, SortableMixin):
         ordering = ("ordering",)
 
     def __str__(self):
-        return force_text(
-            self.safe_translation_getter("value") or self.identifier or repr(self)
-        )
+        return force_text(self.safe_translation_getter("value") or self.identifier or repr(self))
 
 
 class ProductVariationResult(models.Model):
@@ -93,9 +85,7 @@ class ProductVariationResult(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("product"),
     )
-    combination_hash = models.CharField(
-        max_length=40, unique=True, db_index=True, verbose_name=_("combination hash")
-    )
+    combination_hash = models.CharField(max_length=40, unique=True, db_index=True, verbose_name=_("combination hash"))
     result = models.ForeignKey(
         "Product",
         related_name="variation_result_subs",
@@ -136,12 +126,10 @@ def hash_combination(combination):
     bits = []
 
     for variable, value in six.iteritems(combination):
-        if isinstance(variable, six.integer_types) and isinstance(
-            value, six.integer_types
-        ):
-            bits.append("%d=%d" % (variable, value))
+        if isinstance(variable, six.integer_types) and isinstance(value, six.integer_types):
+            bits.append(f"{variable}={value}")
         else:
-            bits.append("%d=%d" % (variable.pk, value.pk))
+            bits.append(f"{variable.pk}={value.pk}")
 
     bits.sort()
     raw_combination = ",".join(bits)
@@ -192,15 +180,9 @@ def get_all_available_combinations(product):
 
     for value_set_combo in itertools.product(*value_sets_list):
         variable_to_value = dict(zip(variables_list, value_set_combo))
-        sorted_variable_to_value = sorted(
-            variable_to_value.items(), key=lambda varval: varval[0].ordering
-        )
-        text_description = ", ".join(
-            sorted(f"{var}: {val}" for (var, val) in sorted_variable_to_value)
-        )
-        sku_part = "-".join(
-            slugify(force_text(val))[:6] for (var, val) in sorted_variable_to_value
-        )
+        sorted_variable_to_value = sorted(variable_to_value.items(), key=lambda varval: varval[0].ordering)
+        text_description = ", ".join(sorted(f"{var}: {val}" for (var, val) in sorted_variable_to_value))
+        sku_part = "-".join(slugify(force_text(val))[:6] for (var, val) in sorted_variable_to_value)
         hash = hash_combination(variable_to_value)
         yield {
             "variable_to_value": variable_to_value,

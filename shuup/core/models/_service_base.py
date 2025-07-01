@@ -316,8 +316,7 @@ class Service(TranslatableShuupModel):
         :return: description, price and tax class of the costs.
         """
         for component in self.behavior_components.all():
-            for cost in component.get_costs(self, source):
-                yield cost
+            yield from component.get_costs(self, source)
 
     def get_lines(self, source):
         """
@@ -377,15 +376,15 @@ class Service(TranslatableShuupModel):
         )
 
     def _generate_line_id(self, num):
-        return "%s-%02d-%s" % (self.line_type.name.lower(), num, uuid4().hex)
+        return f"{self.line_type.name.lower()}-{num:02d}-{uuid4().hex}"  # type: ignore
 
     def _make_sure_is_usable(self):
         if not self.provider:
-            raise ValueError(f"Error! {self!r} has no {self.provider_attr}.")
+            raise ValueError(f"Error! {self!r} has no {self.provider_attr}.")  # type: ignore
         if not self.enabled:
             raise ValueError(f"Error! {self!r} is disabled.")
         if not self.provider.enabled:
-            raise ValueError(f"Error! {self.provider_attr} of {self!r} is disabled.")
+            raise ValueError(f"Error! {self.provider_attr} of {self!r} is disabled.")  # type: ignore
 
 
 def _sum_costs(costs, source):
@@ -450,7 +449,7 @@ class ServiceBehaviorComponent(PolymorphicShuupModel):
     identifier = InternalIdentifierField(unique=True)
 
     def __init__(self, *args, **kwargs):
-        if type(self) != ServiceBehaviorComponent and self.name is None:
+        if type(self) is not ServiceBehaviorComponent and self.name is None:
             raise TypeError(f"Error! {type(self).__name__}.name is not defined.")
         super().__init__(*args, **kwargs)
 

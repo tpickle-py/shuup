@@ -8,9 +8,7 @@ from shuup.core.models import OrderLine, OrderLineType, Product, ProductCatalogP
 from shuup.utils.dates import to_aware
 
 
-def get_best_selling_product_info(
-    shop_ids, cutoff_days=30, supplier=None, orderable_only=True, quantity=100
-):
+def get_best_selling_product_info(shop_ids, cutoff_days=30, supplier=None, orderable_only=True, quantity=100):
     shop_ids = sorted(map(int, shop_ids))
     cutoff_date = datetime.date.today() - datetime.timedelta(days=cutoff_days)
     cache_key = "best_sellers:{!r}_{}_{}_{}_{}".format(
@@ -33,9 +31,7 @@ def get_best_selling_product_info(
             order__shop_id__in=shop_ids,
             order__order_date__gte=to_aware(cutoff_date),
             type=OrderLineType.PRODUCT,
-            product_id__in=valid_products.values_list(
-                "product_id", flat=True
-            ).distinct(),
+            product_id__in=valid_products.values_list("product_id", flat=True).distinct(),
         )
         if supplier:
             queryset = queryset.filter(supplier=supplier)
@@ -60,13 +56,13 @@ def get_best_selling_product_info(
 
 
 def get_products_ordered_with(prod, count=20, request=None, language=None):
-    cache_key = "ordered_with:%d" % prod.pk
+    cache_key = f"ordered_with:{prod.pk}"
     product_ids = cache.get(cache_key)
     if product_ids is None:
         # XXX: could this be optimized more? (and does it matter?)
-        order_ids = OrderLine.objects.filter(
-            product=prod, type=OrderLineType.PRODUCT
-        ).values_list("order__id", flat=True)
+        order_ids = OrderLine.objects.filter(product=prod, type=OrderLineType.PRODUCT).values_list(
+            "order__id", flat=True
+        )
         product_ids = (
             OrderLine.objects.filter(order_id__in=order_ids)
             .exclude(product=prod)
@@ -75,7 +71,7 @@ def get_products_ordered_with(prod, count=20, request=None, language=None):
         )
         cache.set(cache_key, set(product_ids), 4 * 60 * 60)
     return (
-        Product.objects.all_visible(request, language=language)
+        Product.objects.all_visible(request, language=language)  # type: ignore
         .filter(id__in=product_ids)
         .order_by("?")[:count]
     )
