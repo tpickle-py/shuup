@@ -174,7 +174,7 @@ def bump_price_info_cache(shop):
     context_cache.bump_cache_for_item(_get_price_info_namespace_for_shop(shop_id))
 
 
-def bump_all_price_caches(shops=[]):
+def bump_all_price_caches(shops=None):
     """
     Bump all price info caches for the given shops or all shops
 
@@ -182,6 +182,8 @@ def bump_all_price_caches(shops=[]):
     """
     from shuup.core.models import Shop
 
+    if shops is None:
+        shops = []
     if shops:
         shop_ids = [shop.pk if isinstance(shop, Shop) else int(shop) for shop in shops]
     else:

@@ -128,7 +128,7 @@ class OrderDetailToolbar(Toolbar):
             warnings.warn(
                 "Warning! `admin_order_toolbar_button` provider is deprecated, "
                 "use `admin_order_toolbar_action_item` instead.",
-                RemovedFromShuupWarning,
+                RemovedFromShuupWarning, stacklevel=2,
             )
             self.append(button(self.order))
 

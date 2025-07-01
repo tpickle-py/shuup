@@ -49,5 +49,5 @@ def is_in_time_range(date, hour_start, hour_end, valid_weekdays):
         return False
 
     return any(
-        [(start <= current_local_dt < end) for (start, end) in valid_date_ranges]
+        (start <= current_local_dt < end) for (start, end) in valid_date_ranges
     )

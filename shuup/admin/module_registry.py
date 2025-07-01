@@ -38,8 +38,7 @@ def get_modules():
 
 def get_module_urls():
     for module in get_modules():  # pragma: no branch
-        for url in module.get_urls():  # pragma: no branch
-            yield url
+        yield from module.get_urls()
 
 
 @contextlib.contextmanager

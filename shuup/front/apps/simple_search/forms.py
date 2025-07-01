@@ -49,7 +49,9 @@ def get_compiled_query(query_string, needles):
     return compiled_query
 
 
-def get_product_ids_for_query_str(request, query_str, limit, product_ids=[]):
+def get_product_ids_for_query_str(request, query_str, limit, product_ids=None):
+    if product_ids is None:
+        product_ids = []
     if not query_str:
         return []
 

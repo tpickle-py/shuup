@@ -172,7 +172,7 @@ class CatalogCampaign(Campaign):
     def save(self, *args, **kwargs):
         warnings.warn(
             "The CatalogCampaign discount module will be removed on next major version.",
-            DeprecationWarning,
+            DeprecationWarning, stacklevel=2,
         )
         super().save(*args, **kwargs)
         self.filters.update(active=self.active)

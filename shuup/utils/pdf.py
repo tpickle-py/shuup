@@ -47,11 +47,15 @@ def _custom_url_fetcher(url):
     )
 
 
-def render_html_to_pdf(html, stylesheet_paths=[]):
+def render_html_to_pdf(html, stylesheet_paths=None):
+    if stylesheet_paths is None:
+        stylesheet_paths = []
     return wrap_pdf_in_response(html_to_pdf(html, stylesheet_paths))
 
 
-def html_to_pdf(html, stylesheet_paths=[]):
+def html_to_pdf(html, stylesheet_paths=None):
+    if stylesheet_paths is None:
+        stylesheet_paths = []
     if not weasyprint:
         raise Problem(
             _(

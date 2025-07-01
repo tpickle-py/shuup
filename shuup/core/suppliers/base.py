@@ -33,12 +33,10 @@ def get_supported_product_kinds_for_module(
 def get_supported_product_kinds_values_for_module(
     module_identifier: str,
 ) -> Iterable[int]:
-    return list(
-        [
+    return [
             spec.value
             for spec in get_supported_product_kinds_for_module(module_identifier)
         ]
-    )
 
 
 class SupplierModuleInterface:

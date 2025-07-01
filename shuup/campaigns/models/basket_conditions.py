@@ -274,7 +274,9 @@ class ContactGroupBasketCondition(BasketCondition):
         ContactGroup, verbose_name=_("contact groups")
     )
 
-    def matches(self, basket, lines=[]):
+    def matches(self, basket, lines=None):
+        if lines is None:
+            lines = []
         contact_group_ids = basket.customer.groups.values_list("pk", flat=True)
         return self.contact_groups.filter(pk__in=contact_group_ids).exists()
 
@@ -298,7 +300,9 @@ class ContactBasketCondition(BasketCondition):
 
     contacts = models.ManyToManyField(Contact, verbose_name=_("contacts"))
 
-    def matches(self, basket, lines=[]):
+    def matches(self, basket, lines=None):
+        if lines is None:
+            lines = []
         customer = basket.customer
         return bool(customer and self.contacts.filter(pk=customer.pk).exists())
 

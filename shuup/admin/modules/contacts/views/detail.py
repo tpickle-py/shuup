@@ -126,7 +126,7 @@ class ContactDetailToolbar(Toolbar):
             warnings.warn(
                 "`admin_contact_toolbar_button` provider is deprecated, "
                 "use `admin_contact_toolbar_action_item` instead.",
-                RemovedFromShuupWarning,
+                RemovedFromShuupWarning, stacklevel=2,
             )
             self.append(button(self.contact))
 

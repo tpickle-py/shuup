@@ -529,7 +529,7 @@ class ProductVariationFilter(SimpleProductListModifier):
         return fields
 
     def get_products_queryset(self, request, queryset, data):
-        if not any([key for key in data.keys() if key.startswith("variation")]):
+        if not any(key for key in data.keys() if key.startswith("variation")):
             return
 
         for key, values in six.iteritems(data):

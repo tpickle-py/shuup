@@ -140,8 +140,7 @@ class EditProductToolbar(Toolbar):
                 url=self._get_package_url(product),
             )
 
-            for child in self._get_children_items(product.get_all_package_children()):
-                yield child
+            yield from self._get_children_items(product.get_all_package_children())
         elif product.is_package_child():
             for parent in product.get_all_package_parents():
                 for item in self._get_parent_and_sibling_items(

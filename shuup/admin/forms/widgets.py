@@ -111,8 +111,10 @@ class FileDnDUploaderWidget(Widget):
         clearable=False,
         browsable=True,
         upload_url=None,
-        dropzone_attrs={},
+        dropzone_attrs=None,
     ):
+        if dropzone_attrs is None:
+            dropzone_attrs = {}
         self.kind = kind
         self.upload_path = upload_path
         self.clearable = clearable
@@ -152,7 +154,9 @@ class FileDnDUploaderWidget(Widget):
             if val is not None
         ]
 
-    def render(self, name, value, attrs={}, renderer=None):
+    def render(self, name, value, attrs=None, renderer=None):
+        if attrs is None:
+            attrs = {}
         pk_input = HiddenInput().render(name, value, attrs)
         file_attrs = [
             f"data-upload_path='{self.upload_path}'",

@@ -76,8 +76,7 @@ class OrderProcessor:
 
         yield order_line
 
-        for child_order_line in self.create_package_children(order_line):
-            yield child_order_line
+        yield from self.create_package_children(order_line)
 
     def create_package_children(self, order_line):
         order = order_line.order

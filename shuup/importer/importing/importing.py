@@ -101,7 +101,7 @@ class DataImporter:
         if request:
             warnings.warn(
                 "Warning! `request` parameter is deprecated and will be removed in next major version.",
-                DeprecationWarning,
+                DeprecationWarning, stacklevel=2,
             )
 
         return ImporterContext(

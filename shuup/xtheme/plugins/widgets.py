@@ -34,10 +34,12 @@ class XThemeSelect2ModelMultipleChoiceField(forms.MultipleChoiceField):
         label=None,
         initial=None,
         help_text="",
-        extra_widget_attrs={},
+        extra_widget_attrs=None,
         *args,
         **kwargs,
     ):
+        if extra_widget_attrs is None:
+            extra_widget_attrs = {}
         widget_attrs = {"data-model": model}
         widget_attrs.update(extra_widget_attrs)
 
@@ -78,10 +80,12 @@ class XThemeSelect2ModelChoiceField(forms.ChoiceField):
         label=None,
         initial=None,
         help_text="",
-        extra_widget_attrs={},
+        extra_widget_attrs=None,
         *args,
         **kwargs,
     ):
+        if extra_widget_attrs is None:
+            extra_widget_attrs = {}
         widget_attrs = {"data-model": model}
         widget_attrs.update(extra_widget_attrs)
 

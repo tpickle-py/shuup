@@ -35,7 +35,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
     def _get_translation_model(self):
         warnings.warn(
             "Warning! `_get_translation_model` is deprecated in Shuup 2.x as unused for this util.",
-            DeprecationWarning,
+            DeprecationWarning, stacklevel=2,
         )
         return self._meta.model._parler_meta.root_model
 

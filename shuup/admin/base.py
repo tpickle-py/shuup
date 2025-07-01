@@ -218,8 +218,7 @@ class MenuEntry(BaseMenuEntry):
 
     def get_search_query_texts(self):
         yield self.text
-        for alias in self.aliases:
-            yield alias
+        yield from self.aliases
 
     def get_text(self, request) -> str:
         return self.text

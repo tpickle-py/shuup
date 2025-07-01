@@ -290,8 +290,7 @@ class DropdownActionButton(BaseActionButton):
             if not item:  # TODO: Revise!
                 continue
 
-            for bit in item.render(request):
-                yield bit
+            yield from item.render(request)
         yield "</div>"
 
     def render(self, request):
@@ -371,8 +370,7 @@ class PostActionDropdownItem(PostActionButton):
     def render(self, request):
         if not get_missing_permissions(request.user, self.required_permissions):
             button = super().render(request)
-            for bit in button:
-                yield bit
+            yield from button
 
     @staticmethod
     def visible_for_object(object):
@@ -419,8 +417,7 @@ class ButtonGroup(list):
                 if callable(button):  # Buttons may be functions/other callables too
                     yield button(request)
                 else:
-                    for bit in button.render(request):
-                        yield bit
+                    yield from button.render(request)
         yield "</div>"
 
 
@@ -483,8 +480,7 @@ class Toolbar(list):
 
         for group in self:
             if group:
-                for bit in group.render(request):
-                    yield bit
+                yield from group.render(request)
 
         yield "</div></form></div>"
 

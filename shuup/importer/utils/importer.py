@@ -54,12 +54,14 @@ class FileImporter:
         import_mode: ImportMode,
         file_name: str,
         language: str = None,
-        mapping={},
+        mapping=None,
         shop=None,
         supplier=None,
         user=None,
         **kwargs,
     ):
+        if mapping is None:
+            mapping = {}
         self.importer = None
         self.importer_cls = get_importer(importer)
         self.import_mode = import_mode

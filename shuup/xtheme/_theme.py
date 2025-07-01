@@ -319,7 +319,7 @@ class Theme:
             warnings.warn(
                 "Warning! Using list of tuples in `theme.stylesheets` will deprecate "
                 "in Shuup 0.5.7. Use list of dictionaries instead.",
-                RemovedInFutureShuupWarning,
+                RemovedInFutureShuupWarning, stacklevel=2,
             )
         return False
 
@@ -333,7 +333,7 @@ class Theme:
             warnings.warn(
                 "Warning! Using list of tuples in `theme.stylesheets` will deprecate "
                 "in Shuup 0.5.7. Use list of dictionaries instead.",
-                RemovedInFutureShuupWarning,
+                RemovedInFutureShuupWarning, stacklevel=2,
             )
 
             # just return this, no identifier available

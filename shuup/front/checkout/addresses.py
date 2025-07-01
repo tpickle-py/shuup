@@ -151,7 +151,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
             self.storage["company"] = None
 
         process_and_save_basket = any(
-            [form[form_key].has_changed() for form_key in form.forms]
+            form[form_key].has_changed() for form_key in form.forms
         )
         if process_and_save_basket:
             self.process()

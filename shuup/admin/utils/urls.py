@@ -260,7 +260,7 @@ def get_model_url(
                 warnings.warn(
                     "Warning! `required_permissions` parameter will be deprecated "
                     "in Shuup 2.0 as unused for this util.",
-                    DeprecationWarning,
+                    DeprecationWarning, stacklevel=2,
                 )
                 permissions = required_permissions
             else:

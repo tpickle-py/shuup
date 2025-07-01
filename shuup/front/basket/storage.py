@@ -108,7 +108,9 @@ class DatabaseBasketStorage(BaseDatabaseBasketStorage):
         basket_kwargs = self.get_basket_kwargs(basket)
         return "{}{}".format("stored_basket_key:", basket_kwargs["key"])
 
-    def add_log_entry(self, basket, message, extra={}, kind=LogEntryKind.NOTE):
+    def add_log_entry(self, basket, message, extra=None, kind=LogEntryKind.NOTE):
+        if extra is None:
+            extra = {}
         try:
             if getattr(basket, "shop", None):
                 identifier = self._get_key_for_logs(basket)

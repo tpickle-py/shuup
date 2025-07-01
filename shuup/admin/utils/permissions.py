@@ -21,7 +21,7 @@ def get_default_model_permissions(model):
     warnings.warn(
         "Warning! `get_default_model_permissions` is deprecated in Shuup 2.0. "
         "Use human readable permission strings instead.",
-        DeprecationWarning,
+        DeprecationWarning, stacklevel=2,
     )
     permissions = set()
 
@@ -149,7 +149,7 @@ def get_permission_object_from_string(permission_string):
     warnings.warn(
         "Warning! `get_permission_object_from_string` is deprecated in Shuup 2.0. "
         "Django permission shouldn't be needed.",
-        DeprecationWarning,
+        DeprecationWarning, stacklevel=2,
     )
     app_label, codename = permission_string.split(".")
     return Permission.objects.get(content_type__app_label=app_label, codename=codename)

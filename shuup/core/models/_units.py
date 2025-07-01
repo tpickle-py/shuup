@@ -55,7 +55,7 @@ class _ShortNameToSymbol:
     def _issue_deprecation_warning(self):
         warnings.warn(
             "Warning! `short_name` is deprecated, use `symbol` instead.",
-            DeprecationWarning,
+            DeprecationWarning, stacklevel=2,
         )
 
 

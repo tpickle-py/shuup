@@ -36,8 +36,7 @@ class ProductChildrenFormPart(ProductChildrenBaseFormPart):
         form_defs = super().get_form_defs(
             form, template_name
         )
-        for form_def in form_defs:
-            yield form_def
+        yield from form_defs
 
 
 class ProductPackageViewToolbar(ProductParentBaseToolbar):

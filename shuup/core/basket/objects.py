@@ -858,7 +858,7 @@ class BaseBasket(OrderSource):
             if m.is_available_for(self)
         ]
 
-    def add_log_entry(self, message, extra={}, kind=LogEntryKind.NOTE):
+    def add_log_entry(self, message, extra=None, kind=LogEntryKind.NOTE):
         """
         Log errors to basket storage
 
@@ -866,6 +866,8 @@ class BaseBasket(OrderSource):
         :type extra: dict
         :type kind: shuup.utils.analog.LogEntryKind
         """
+        if extra is None:
+            extra = {}
         if hasattr(self.storage, "add_log_entry"):
             self.storage.add_log_entry(self, message, extra, kind)
 

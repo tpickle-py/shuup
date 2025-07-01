@@ -54,12 +54,12 @@ def is_menu_category_active(context, category, target_url, breadcrumbs=None):
 
     identifiers = settings.SHUUP_ALWAYS_ACTIVE_MENU_CATEGORY_IDENTIFIERS
     if any(
-        [identifier for identifier in identifiers if does_identifier_match(identifier)]
+        identifier for identifier in identifiers if does_identifier_match(identifier)
     ):
         return True
 
     all_target_urls = get_all_target_urls(context["request"], target_url, breadcrumbs)
-    return any([entry for entry in category.entries if entry.url in all_target_urls])
+    return any(entry for entry in category.entries if entry.url in all_target_urls)
 
 
 @contextfunction

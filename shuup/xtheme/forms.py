@@ -38,7 +38,7 @@ class GenericThemeForm(forms.ModelForm):
                 warnings.warn(
                     "Warning! Using list of tuples in `theme.stylesheets` will deprecate "
                     "in Shuup 0.5.7. Use list of dictionaries instead.",
-                    RemovedInFutureShuupWarning,
+                    RemovedInFutureShuupWarning, stacklevel=2,
                 )
                 choices = self.theme.stylesheets
             self.fields["stylesheet"] = forms.ChoiceField(

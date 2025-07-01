@@ -1,6 +1,6 @@
 import codecs
+import csv
 import os
-import sys
 
 import openpyxl
 import six
@@ -10,11 +10,6 @@ from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.utils.excs import Problem
-
-if sys.version_info >= (3, 0):
-    import csv
-else:
-    import csv
 
 
 class RowYielder:
@@ -93,10 +88,7 @@ def transform_file(mode, filename, data=None):
         data, got_data = process_data(rows=XLSXRowYielder(sheet))
     elif mode == "csv":
         # for python2 http://stackoverflow.com/questions/904041/reading-a-utf8-csv-file-with-python/14786752#14786752
-        if sys.version_info >= (3, 0):
-            data, got_data = py3_read_file(data, filename)
-        else:
-            data, got_data = py2_read_file(data, filename)
+        data, got_data = py3_read_file(data, filename)
     else:
         raise NotImplementedError(
             "Error! Not implemented: `TransformedData` -> "

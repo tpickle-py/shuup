@@ -43,7 +43,9 @@ class MoneyProperty:
             return self
         return self._get_value_from(instance)
 
-    def _get_value_from(self, instance, overrides={}):
+    def _get_value_from(self, instance, overrides=None):
+        if overrides is None:
+            overrides = {}
         data = {
             field: resolve(instance, path) for (field, path) in self._fields.items()
         }

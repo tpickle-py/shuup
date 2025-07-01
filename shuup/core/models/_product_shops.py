@@ -414,8 +414,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
         for _receiver, response in get_visibility_errors.send(
             ShopProduct, shop_product=self, customer=customer
         ):
-            for error in response:
-                yield error
+            yield from response
 
     def get_orderability_errors(
         self, supplier, quantity, customer, ignore_minimum=False
@@ -555,8 +554,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
         ):  # Test supplier orderability only for variation children and normal products
             errors = supplier.get_orderability_errors(self, quantity, customer=customer)
 
-        for error in errors:
-            yield error
+        yield from errors
 
     def get_orderability_errors_for_simple_variation_parent(self, supplier, customer):
         sellable = False

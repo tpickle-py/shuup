@@ -526,13 +526,11 @@ class OrderSource:
 
     def _compute_payment_method_lines(self):
         if self.payment_method:
-            for line in self.payment_method.get_lines(self):
-                yield line
+            yield from self.payment_method.get_lines(self)
 
     def _compute_shipping_method_lines(self):
         if self.shipping_method:
-            for line in self.shipping_method.get_lines(self):
-                yield line
+            yield from self.shipping_method.get_lines(self)
 
     def _add_lines_from_modifiers(self, lines):
         """
@@ -562,8 +560,7 @@ class OrderSource:
         from shuup.apps.provides import get_provide_objects
 
         for order_source_validator in get_provide_objects("order_source_validator"):
-            for error in order_source_validator.get_validation_errors(self):
-                yield error
+            yield from order_source_validator.get_validation_errors(self)
 
     def _get_suppliers(self):
         return {line.supplier for line in self.get_lines() if line.supplier}

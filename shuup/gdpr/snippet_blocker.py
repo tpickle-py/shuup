@@ -30,7 +30,7 @@ class GDPRSnippetBlocker(SnippetBlocker):
         consent_data = json.loads(
             request.COOKIES.get(settings.SHUUP_GDPR_CONSENT_COOKIE_NAME)
         )
-        consented_cookies = set(list(consent_data.get("cookies") or []))
+        consented_cookies = set(consent_data.get("cookies") or [])
 
         # the snippet can be only injected if the user consented to all cookies
         if unique_cookies & consented_cookies == unique_cookies:

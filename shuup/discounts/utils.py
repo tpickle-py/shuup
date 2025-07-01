@@ -292,7 +292,7 @@ def index_related_discount_shop_products(discounts: "Iterable[Discount]"):  # no
 
 
 def index_linked_shop_products(
-    discount, discounts_groups_ids=[], ignore_shop_products_ids=[]
+    discount, discounts_groups_ids=None, ignore_shop_products_ids=None
 ):
     """
     Reindex all shop products previously linked
@@ -301,6 +301,10 @@ def index_linked_shop_products(
     from shuup.discounts.models import ShopProductCatalogDiscountsLink
     from shuup.discounts.modules import ProductDiscountModule
 
+    if ignore_shop_products_ids is None:
+        ignore_shop_products_ids = []
+    if discounts_groups_ids is None:
+        discounts_groups_ids = []
     discounts_links = (
         ShopProductCatalogDiscountsLink.objects.select_related("shop_product")
         .filter(Q(discounts=discount), ~Q(shop_product__in=ignore_shop_products_ids))
