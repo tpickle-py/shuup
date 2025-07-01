@@ -76,7 +76,7 @@ class DashboardItem:
 
     @property
     def css_class(self):
-        return "col-md-%d" % self.size.value
+        return f"col-md-{self.size.value}"  # type: ignore
 
     def show_on_menu(self):
         """

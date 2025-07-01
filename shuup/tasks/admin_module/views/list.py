@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.shop_provider import get_shop
@@ -17,17 +15,13 @@ class TaskListView(PicotableListView):
             _("Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(
-                filter_field="name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="name", placeholder=_("Filter by name...")),
         ),
         Column(
             "creator",
             _("Creator"),
             display="get_creator_name_display",
-            filter_config=TextFilter(
-                filter_field="creator__name", placeholder=_("Filter by creator...")
-            ),
+            filter_config=TextFilter(filter_field="creator__name", placeholder=_("Filter by creator...")),
         ),
         Column(
             "status",
@@ -53,16 +47,25 @@ class TaskListView(PicotableListView):
     mass_actions_provider_key = "task_list_actions_provider"
 
     def get_comments_count(self, instance, **kwargs):
-        return instance.comments.for_contact(
-            get_person_contact(self.request.user)
-        ).count()
+        return instance.comments.for_contact(get_person_contact(self.request.user)).count()
 
     def get_queryset(self):
+        """
+        Return a queryset of Task objects filtered for the current shop.
+
+        This method retrieves the current shop from the request and returns
+        all Task instances associated with that shop using the custom
+        'for_shop' manager method.
+
+        Returns:
+            QuerySet: A queryset of Task objects for the current shop.
+        """
+
         return Task.objects.for_shop(get_shop(self.request))
 
     def get_creator_name_display(self, instance, **kwargs):
-        if not len(instance.creator.name):
-            return "No name set (id: %d)" % instance.creator.id
+        if not instance.creator or not instance.creator.name:
+            return f"No name set (id: {getattr(instance.creator, 'id', 'unknown')})"
         return instance.creator.name
 
     def get_priority_display(self, instance, **kwargs):
@@ -77,9 +80,7 @@ class TaskTypeListView(PicotableListView):
             _("Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(
-                filter_field="translations__name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="translations__name", placeholder=_("Filter by name...")),
         )
     ]
 
