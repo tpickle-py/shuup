@@ -1,5 +1,3 @@
-
-
 import bleach
 from django import forms
 from django.conf import settings
@@ -80,13 +78,13 @@ class ProductBaseFormPart(FormPart):
 class ShopProductFormPart(FormPart):
     priority = -900
 
-    def __init__(self, request, object=None):
-        super().__init__(request, object)
+    def __init__(self, request, obj=None):
+        super().__init__(request, obj)
         self.shop = request.shop
 
     def get_form_defs(self):
         yield TemplatedFormDef(
-            "shop%d" % self.shop.pk,
+            f"shop{self.shop.pk}",
             ShopProductForm,
             template_name="shuup/admin/products/_edit_shop_form.jinja",
             required=True,
@@ -100,21 +98,21 @@ class ShopProductFormPart(FormPart):
 
         # the hidden extra form template that uses ShopProductForm
         yield TemplatedFormDef(
-            "shop%d_extra" % self.shop.pk,
+            f"shop{self.shop.pk}_extra",
             forms.Form,
             template_name="shuup/admin/products/_edit_extra_shop_form.jinja",
             required=False,
         )
 
     def form_valid(self, form):
-        shop_product_form = form["shop%d" % self.shop.pk]
+        shop_product_form = form[f"shop{self.shop.pk}"]
         if not shop_product_form.changed_data:
             return
         if not shop_product_form.instance.pk:
             shop_product_form.instance.product = self.object
 
         original_quantity = shop_product_form.instance.minimum_purchase_quantity
-        rounded_quantity = self.object.sales_unit.round(original_quantity)
+        rounded_quantity = self.object.sales_unit.round(original_quantity)  # type: ignore
         if original_quantity != rounded_quantity:
             messages.info(
                 self.request,
@@ -123,17 +121,11 @@ class ShopProductFormPart(FormPart):
 
         shop_product_form.instance.minimum_purchase_quantity = rounded_quantity
         inst = shop_product_form.save()
-        messages.success(
-            self.request, _("Changes to shop instance for %s saved.") % inst.shop
-        )
+        messages.success(self.request, _("Changes to shop instance for %s saved.") % inst.shop)
 
     def get_initial(self):
-        if not self.object.pk:
-            return {
-                "suppliers": [
-                    Supplier.objects.enabled(shop=get_shop(self.request)).first()
-                ]
-            }
+        if not self.object.pk:  # type: ignore
+            return {"suppliers": [Supplier.objects.enabled(shop=get_shop(self.request)).first()]}  # type: ignore
 
     def has_perm(self):
         return True  # Right form parts are defined at init
@@ -143,14 +135,14 @@ class ProductAttributeFormPart(FormPart):
     priority = -800
 
     def get_form_defs(self):
-        if not self.object.product.get_available_attribute_queryset():
+        if not self.object.product.get_available_attribute_queryset():  # type: ignore
             return
         yield TemplatedFormDef(
             "attributes",
             ProductAttributesForm,
             template_name="shuup/admin/products/_edit_attribute_form.jinja",
             required=False,
-            kwargs={"product": self.object.product, "languages": settings.LANGUAGES},
+            kwargs={"product": self.object.product, "languages": settings.LANGUAGES},  # type: ignore
         )
 
     def form_valid(self, form):
@@ -160,24 +152,24 @@ class ProductAttributeFormPart(FormPart):
 
 class BaseProductMediaFormPart(FormPart):
     def get_form_defs(self):
-        if not self.object.pk:
+        if not self.object.pk:  # type: ignore
             return
 
         yield TemplatedFormDef(
-            self.name,
-            self.formset,
+            self.name,  # type: ignore
+            self.formset,  # type: ignore
             template_name="shuup/admin/products/_edit_media_form.jinja",
             required=False,
             kwargs={
-                "product": self.object.product,
+                "product": self.object.product,  # type: ignore
                 "languages": settings.LANGUAGES,
                 "request": self.request,
             },
         )
 
     def form_valid(self, form):
-        if self.name in form.forms:
-            frm = form.forms[self.name]
+        if self.name in form.forms:  # type: ignore
+            frm = form.forms[self.name]  # type: ignore
             frm.save()
 
 
@@ -260,9 +252,7 @@ class ProductEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
                     ]
                 )
             except ObjectDoesNotExist:
-                orderability_errors.extend(
-                    ["Error! {}: {}".format(shop.name, _("Product is not available."))]
-                )
+                orderability_errors.extend(["Error! {}: {}".format(shop.name, _("Product is not available."))])
 
             product_validator_provides = sorted(
                 get_provide_objects("admin_product_validator"),
@@ -279,29 +269,19 @@ class ProductEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
                 ):
                     if validation_issue:
                         validation_issues.append(validation_issue)
-            context["validation_issues"] = sorted(
-                validation_issues, key=lambda x: x.get_issue_type_priority()
-            )
+            context["validation_issues"] = sorted(validation_issues, key=lambda x: x.get_issue_type_priority())
 
         context["orderability_errors"] = orderability_errors
         context["product_sections"] = []
         context["tour_key"] = "product"
-        context["tour_complete"] = is_tour_complete(
-            get_shop(self.request), "product", user=self.request.user
-        )
+        context["tour_complete"] = is_tour_complete(get_shop(self.request), "product", user=self.request.user)
 
-        product_sections_provides = sorted(
-            get_provide_objects("admin_product_section"), key=lambda x: x.order
-        )
+        product_sections_provides = sorted(get_provide_objects("admin_product_section"), key=lambda x: x.order)
         for admin_product_section in product_sections_provides:
-            if admin_product_section.visible_for_object(
-                self.object.product, self.request
-            ):
+            if admin_product_section.visible_for_object(self.object.product, self.request):
                 context["product_sections"].append(admin_product_section)
-                context[admin_product_section.identifier] = (
-                    admin_product_section.get_context_data(
-                        self.object.product, self.request
-                    )
+                context[admin_product_section.identifier] = admin_product_section.get_context_data(
+                    self.object.product, self.request
                 )
 
         return context

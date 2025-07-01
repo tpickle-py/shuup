@@ -43,26 +43,24 @@ class OrderConfirmationPdfAction(PicotableFileMassAction):
         if len(ids) == 1:
             try:
                 response = get_confirmation_pdf(request, ids[0])
-                response["Content-Disposition"] = (
-                    f"attachment; filename=order_{ids[0]}_confirmation.pdf"
-                )
+                response["Content-Disposition"] = f"attachment; filename=order_{ids[0]}_confirmation.pdf"
                 return response
             except Exception as e:
-                msg = e.message if hasattr(e, "message") else e
+                msg = e.message if hasattr(e, "message") else e  # type: ignore
                 return JsonResponse({"error": force_text(msg)}, status=400)
 
         buff = BytesIO()
         archive = zipfile.ZipFile(buff, "w", zipfile.ZIP_DEFLATED)
         added = 0
         errors = []
-        for id in ids:
+        for i in ids:
             try:
-                pdf_file = get_confirmation_pdf(request, id)
-                filename = "order_%d_confirmation.pdf" % id
+                pdf_file = get_confirmation_pdf(request, i)
+                filename = f"order_{i}_confirmation.pdf"
                 archive.writestr(filename, pdf_file.content)
                 added += 1
             except Exception as e:
-                msg = e.message if hasattr(e, "message") else e
+                msg = e.message if hasattr(e, "message") else e  # type: ignore
                 errors.append(force_text(msg))
                 continue
         if added:
@@ -71,9 +69,7 @@ class OrderConfirmationPdfAction(PicotableFileMassAction):
             ret_zip = buff.getvalue()
             buff.close()
             response = HttpResponse(content_type="application/zip")
-            response["Content-Disposition"] = (
-                "attachment; filename=order_confirmation_pdf.zip"
-            )
+            response["Content-Disposition"] = "attachment; filename=order_confirmation_pdf.zip"
             response.write(ret_zip)
             return response
         return JsonResponse({"errors": errors}, status=400)
@@ -85,36 +81,30 @@ class OrderDeliveryPdfAction(PicotableFileMassAction):
 
     def process(self, request, ids):
         if isinstance(ids, six.string_types) and ids == "all":
-            return JsonResponse(
-                {"error": ugettext("Error! Selecting all is not supported.")}
-            )
-        shipment_ids = set(
-            Shipment.objects.filter(order_id__in=ids).values_list("id", flat=True)
-        )
+            return JsonResponse({"error": ugettext("Error! Selecting all is not supported.")})
+        shipment_ids = set(Shipment.objects.filter(order_id__in=ids).values_list("id", flat=True))
         if len(shipment_ids) == 1:
             try:
                 shipment_id = shipment_ids.pop()
                 response = get_delivery_pdf(request, shipment_id)
-                response["Content-Disposition"] = (
-                    f"attachment; filename=shipment_{shipment_id}_delivery.pdf"
-                )
+                response["Content-Disposition"] = f"attachment; filename=shipment_{shipment_id}_delivery.pdf"
                 return response
             except Exception as e:
-                msg = e.message if hasattr(e, "message") else e
+                msg = e.message if hasattr(e, "message") else e  # type: ignore
                 return JsonResponse({"error": force_text(msg)})
         buff = BytesIO()
         archive = zipfile.ZipFile(buff, "w", zipfile.ZIP_DEFLATED)
 
         added = 0
         errors = []
-        for id in shipment_ids:
+        for shipment_id in shipment_ids:
             try:
-                pdf_file = get_delivery_pdf(request, id)
-                filename = "shipment_%d_delivery.pdf" % id
+                pdf_file = get_delivery_pdf(request, shipment_id)
+                filename = f"shipment_{shipment_id}_delivery.pdf"
                 archive.writestr(filename, pdf_file.content)
                 added += 1
             except Exception as e:
-                msg = e.message if hasattr(e, "message") else e
+                msg = e.message if hasattr(e, "message") else e  # type: ignore
                 errors.append(force_text(msg))
                 continue
         if added:
@@ -123,9 +113,7 @@ class OrderDeliveryPdfAction(PicotableFileMassAction):
             ret_zip = buff.getvalue()
             buff.close()
             response = HttpResponse(content_type="application/zip")
-            response["Content-Disposition"] = (
-                "attachment; filename=order_delivery_pdf.zip"
-            )
+            response["Content-Disposition"] = "attachment; filename=order_delivery_pdf.zip"
             response.write(ret_zip)
             return response
         return JsonResponse({"errors": errors})
