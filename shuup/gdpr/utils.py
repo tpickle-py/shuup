@@ -47,9 +47,7 @@ def get_all_contact_data(shop, contact):
         user = None
         if isinstance(contact, PersonContact):
             user = contact.user
-        for key, data in gdpr_user_data_provider.get_user_data(
-            shop=shop, contact=contact, user=user
-        ):
+        for key, data in gdpr_user_data_provider.get_user_data(shop=shop, contact=contact, user=user):
             user_data[key] = data
 
     return user_data
@@ -88,9 +86,7 @@ def ensure_gdpr_privacy_policy(shop, force_update=False):
             "full_address": full_address,
             "store_email": address.email if address else "",
         }
-        content = loader.render_to_string(
-            template_name="shuup/admin/gdpr/privacy_policy_page.jinja", context=context
-        )
+        content = loader.render_to_string(template_name="shuup/admin/gdpr/privacy_policy_page.jinja", context=context)
         created = False
         if not gdpr_document:
             with create_revision():
@@ -99,9 +95,7 @@ def ensure_gdpr_privacy_policy(shop, force_update=False):
                     content=content,
                     available_from=now_date,
                     title=force_text(_("Privacy Policy")),
-                    url=settings.GDPR_PRIVACY_POLICY_PAGE_URLS.get(
-                        current_language, "privacy-policy"
-                    ),
+                    url=settings.GDPR_PRIVACY_POLICY_PAGE_URLS.get(current_language, "privacy-policy"),
                 )
                 created = True
             gdpr_settings = GDPRSettings.get_for_shop(shop)

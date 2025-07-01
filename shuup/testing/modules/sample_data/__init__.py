@@ -1,5 +1,3 @@
-
-
 import os
 
 from django.contrib import messages
@@ -49,16 +47,11 @@ class SampleDataAdminModule(AdminModule):
             if sample_manager.has_installed_samples(shop):
                 messages.warning(
                     request,
-                    _(
-                        "There is a sample data installed. "
-                        "Search `Sample Data` for more information."
-                    ),
+                    _("There is a sample data installed. Search `Sample Data` for more information."),
                 )
 
                 yield Notification(
-                    _(
-                        "There is a sample data installed. Click here to consolidate or delete them."
-                    ),
+                    _("There is a sample data installed. Click here to consolidate or delete them."),
                     title=_("Sample Data"),
                     kind="warning",
                     url="shuup_admin:sample_data",

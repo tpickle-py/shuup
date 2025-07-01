@@ -1,5 +1,3 @@
-
-
 from shuup.admin.menu import PRODUCTS_MENU_CATEGORY
 from shuup.core.utils.menu import MainMenuUpdater
 

@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -36,18 +34,10 @@ class ServiceWizardForm(ShuupAdminForm):
         return self.get_shipping_method()
 
     def get_payment_method(self):
-        return (
-            PaymentMethod.objects.filter(payment_processor=self.provider).first()
-            if self.provider
-            else None
-        )
+        return PaymentMethod.objects.filter(payment_processor=self.provider).first() if self.provider else None
 
     def get_shipping_method(self):
-        return (
-            ShippingMethod.objects.filter(carrier=self.provider).first()
-            if self.provider
-            else None
-        )
+        return ShippingMethod.objects.filter(carrier=self.provider).first() if self.provider else None
 
     def save(self):
         is_new = not self.instance.pk

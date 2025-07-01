@@ -1,5 +1,3 @@
-
-
 from django.conf import settings
 from django.db import models
 from django.utils.translation import activate, get_language
@@ -15,19 +13,14 @@ GDPR_ANONYMIZE_TASK_TYPE_IDENTIFIER = "gdpr_anonymize"
 
 @lang_lru_cache
 def get_setting(shop):
-    instance, created = GDPRSettings.objects.prefetch_related(
-        "translations"
-    ).get_or_create(shop=shop)
+    instance, created = GDPRSettings.objects.prefetch_related("translations").get_or_create(shop=shop)
     if created or not instance.safe_translation_getter("cookie_banner_content"):
         instance.set_default_content()
     return instance
 
 
-
 class GDPRSettings(TranslatableModel):
-    shop = models.OneToOneField(
-        "shuup.Shop", related_name="gdpr_settings", on_delete=models.CASCADE
-    )
+    shop = models.OneToOneField("shuup.Shop", related_name="gdpr_settings", on_delete=models.CASCADE)
     enabled = models.BooleanField(
         default=False,
         verbose_name=_("enabled"),
@@ -44,8 +37,7 @@ class GDPRSettings(TranslatableModel):
         null=True,
         verbose_name=_("privacy policy page"),
         help_text=_(
-            "Choose your privacy policy page here. If this page changes, customers will be "
-            "prompted for new consent."
+            "Choose your privacy policy page here. If this page changes, customers will be prompted for new consent."
         ),
     )
     consent_pages = models.ManyToManyField(
@@ -102,11 +94,8 @@ class GDPRSettings(TranslatableModel):
         return get_setting(shop)
 
 
-
 class GDPRCookieCategory(TranslatableModel):
-    shop = models.ForeignKey(
-        on_delete=models.CASCADE, to="shuup.Shop", related_name="gdpr_cookie_categories"
-    )
+    shop = models.ForeignKey(on_delete=models.CASCADE, to="shuup.Shop", related_name="gdpr_cookie_categories")
     always_active = models.BooleanField(default=False, verbose_name=_("always active"))
     default_active = models.BooleanField(
         verbose_name=_("active by default"),
@@ -126,17 +115,13 @@ class GDPRCookieCategory(TranslatableModel):
         related_name="blocked_gdpr_cookies",
         verbose_name=_("Snippets to block if not consented"),
         blank=True,
-        help_text=_(
-            "Select the snippets that shouldn't be injected if the cookie is not consented."
-        ),
+        help_text=_("Select the snippets that shouldn't be injected if the cookie is not consented."),
     )
     translations = TranslatedFields(
         name=models.CharField(max_length=64, verbose_name=_("name")),
         how_is_used=models.TextField(
             verbose_name=_("how we use"),
-            help_text=_(
-                "Describe the purpose of this category of cookies and how it is used."
-            ),
+            help_text=_("Describe the purpose of this category of cookies and how it is used."),
             blank=True,
         ),
     )
@@ -149,11 +134,8 @@ class GDPRCookieCategory(TranslatableModel):
         return _("GDPR cookie category for {}").format(self.shop)
 
 
-
 class GDPRUserConsent(models.Model):
-    created_on = models.DateTimeField(
-        auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on")
-    )
+    created_on = models.DateTimeField(auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on"))
     shop = models.ForeignKey(
         on_delete=models.CASCADE,
         to="shuup.Shop",
@@ -183,9 +165,7 @@ class GDPRUserConsent(models.Model):
         for page in consent_documents:
             Page.create_initial_revision(page)
             version = Version.objects.get_for_object(page).first()
-            consent_document = GDPRUserConsentDocument.objects.create(
-                page=page, version=version
-            )
+            consent_document = GDPRUserConsentDocument.objects.create(page=page, version=version)
             documents.append(consent_document)
 
         # ensure only one consent exists for this user in this shop
@@ -227,10 +207,7 @@ class GDPRUserConsent(models.Model):
         return not self.documents.filter(page=page, version=version).exists()
 
     def __str__(self):
-        return _("GDPR user consent in {} for user {} in shop {}").format(
-            self.created_on, self.user, self.shop
-        )
-
+        return _("GDPR user consent in {} for user {} in shop {}").format(self.created_on, self.user, self.shop)
 
 
 class GDPRUserConsentDocument(models.Model):
@@ -238,6 +215,4 @@ class GDPRUserConsentDocument(models.Model):
     version = models.ForeignKey(on_delete=models.CASCADE, to=Version)
 
     def __str__(self):
-        return _("GDPR user consent document for {} (Version: {})").format(
-            self.page, self.version
-        )
+        return _("GDPR user consent document for {} (Version: {})").format(self.page, self.version)

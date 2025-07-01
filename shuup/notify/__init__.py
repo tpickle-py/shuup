@@ -1,4 +1,3 @@
-
 from shuup.apps import AppConfig
 
 

@@ -4,8 +4,6 @@ Generate minimal requirements files from pyproject.toml
 Only includes direct dependencies, not transitive ones.
 """
 
-from pathlib import Path
-
 import tomllib
 
 

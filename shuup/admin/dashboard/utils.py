@@ -25,12 +25,8 @@ def get_activity(request, n_entries=30, cutoff_hours=10):
     cutoff_dt = now() - datetime.timedelta(hours=cutoff_hours)
     activities = []
     for module in get_modules():
-        for activity in islice(
-            module.get_activity(request, cutoff=cutoff_dt), n_entries
-        ):
-            heappush(
-                activities, (-time.mktime(activity.datetime.timetuple()), activity)
-            )
+        for activity in islice(module.get_activity(request, cutoff=cutoff_dt), n_entries):
+            heappush(activities, (-time.mktime(activity.datetime.timetuple()), activity))
     out = []
     while activities and len(out) < n_entries:
         out.append(heappop(activities)[1])

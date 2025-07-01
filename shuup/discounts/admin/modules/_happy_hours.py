@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.base import AdminModule, MenuEntry
@@ -10,9 +8,7 @@ from shuup.discounts.models import HappyHour
 
 class HappyHourModule(AdminModule):
     name = _("Discounts Happy Hours")
-    breadcrumbs_menu_entry = MenuEntry(
-        name, url="shuup_admin:discounts_happy_hour.list"
-    )
+    breadcrumbs_menu_entry = MenuEntry(name, url="shuup_admin:discounts_happy_hour.list")
 
     def get_urls(self):
         from shuup.admin.urls import admin_url
@@ -41,6 +37,4 @@ class HappyHourModule(AdminModule):
         ]
 
     def get_model_url(self, object, kind, shop=None):
-        return derive_model_url(
-            HappyHour, "shuup_admin:discounts_happy_hour", object, kind
-        )
+        return derive_model_url(HappyHour, "shuup_admin:discounts_happy_hour", object, kind)

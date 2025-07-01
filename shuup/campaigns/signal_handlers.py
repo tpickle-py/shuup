@@ -16,9 +16,7 @@ from .utils.sales_range import assign_to_group_based_on_sales
 def update_customers_groups(sender, instance, **kwargs):
     if not instance.order.customer:
         return
-    assign_to_group_based_on_sales(
-        ContactGroupSalesRange, instance.order.shop, instance.order.customer
-    )
+    assign_to_group_based_on_sales(ContactGroupSalesRange, instance.order.shop, instance.order.customer)
 
 
 def invalidate_context_condition_cache(sender, instance, **kwargs):

@@ -43,8 +43,7 @@ class BaseImageGenerator:
 
     def generate(self):  # pragma: no cover
         raise NotImplementedError(
-            "Error! Not implemented: `BaseImageGenerator` -> `generate()`. "
-            "Should be implemented in subclass, this."
+            "Error! Not implemented: `BaseImageGenerator` -> `generate()`. Should be implemented in subclass, this."
         )
 
     def draw_circle(self, x, y, w, h, color):

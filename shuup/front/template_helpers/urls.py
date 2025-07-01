@@ -1,5 +1,3 @@
-
-
 from shuup.apps.provides import get_provide_objects
 from shuup.compat import contextfunction
 from shuup.utils.django_compat import NoReverseMatch, reverse

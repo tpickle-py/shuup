@@ -1,5 +1,3 @@
-
-
 from typing import Iterable
 
 from django.conf import settings
@@ -109,9 +107,7 @@ class CampaignAdminModule(AdminModule):
 
     def get_permissions_help_texts(self) -> Iterable[str]:
         return {
-            get_object_selector_permission_name(Coupon): _(
-                "Allow the user to select coupons in admin."
-            ),
+            get_object_selector_permission_name(Coupon): _("Allow the user to select coupons in admin."),
         }
 
 

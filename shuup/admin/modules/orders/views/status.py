@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.utils.picotable import ChoicesFilter, Column, TextFilter
@@ -63,17 +61,13 @@ class OrderStatusListView(PicotableListView):
             "name",
             _("Name"),
             linked=True,
-            filter_config=TextFilter(
-                operator="startswith", filter_field="translations__name"
-            ),
+            filter_config=TextFilter(operator="startswith", filter_field="translations__name"),
         ),
         Column(
             "public_name",
             _("Public Name"),
             linked=False,
-            filter_config=TextFilter(
-                operator="startswith", filter_field="translations__name"
-            ),
+            filter_config=TextFilter(operator="startswith", filter_field="translations__name"),
         ),
         Column(
             "role",
@@ -108,11 +102,5 @@ class OrderStatusListView(PicotableListView):
     ]
 
     def get_allowed_next_statuses_display(self, instance):
-        order_status_names = [
-            order_status.name for order_status in instance.allowed_next_statuses.all()
-        ]
-        return (
-            ", ".join(order_status_names)
-            if order_status_names
-            else _("No allowed next status.")
-        )
+        order_status_names = [order_status.name for order_status in instance.allowed_next_statuses.all()]
+        return ", ".join(order_status_names) if order_status_names else _("No allowed next status.")

@@ -14,9 +14,7 @@ class ProductDiscountModule(DiscountModule):
 
     def discount_price(self, context, product, price_info):
         shop = context.shop
-        potential_discounts = get_potential_discounts_for_product(
-            context, product
-        ).values_list(
+        potential_discounts = get_potential_discounts_for_product(context, product).values_list(
             "discounted_price_value",
             "discount_amount_value",
             "discount_percentage",
@@ -33,8 +31,7 @@ class ProductDiscountModule(DiscountModule):
                     min(
                         price_info.price,
                         max(
-                            shop.create_price(discounted_price_value)
-                            * price_info.quantity,
+                            shop.create_price(discounted_price_value) * price_info.quantity,
                             shop.create_price(0),
                         ),
                     )
@@ -43,9 +40,7 @@ class ProductDiscountModule(DiscountModule):
             if discount_amount_value:  # Discount amount value per item
                 discounted_prices.append(
                     max(
-                        price_info.price
-                        - shop.create_price(discount_amount_value)
-                        * price_info.quantity,
+                        price_info.price - shop.create_price(discount_amount_value) * price_info.quantity,
                         shop.create_price(0),
                     )
                 )
@@ -66,13 +61,11 @@ class ProductDiscountModule(DiscountModule):
         )
 
         if discounted_prices:
-            product_id = (
-                product if isinstance(product, six.integer_types) else product.pk
-            )
+            product_id = product if isinstance(product, six.integer_types) else product.pk
             minimum_price_values = list(
-                ShopProduct.objects.filter(
-                    product_id=product_id, shop=shop
-                ).values_list("minimum_price_value", flat=True)
+                ShopProduct.objects.filter(product_id=product_id, shop=shop).values_list(
+                    "minimum_price_value", flat=True
+                )
             )
 
             minimum_price_value = minimum_price_values[0] if minimum_price_values else 0
@@ -82,9 +75,7 @@ class ProductDiscountModule(DiscountModule):
             )
 
         price_expiration = get_price_expiration(context, product)
-        if price_expiration and (
-            not price_info.expires_on or price_expiration < price_info.expires_on
-        ):
+        if price_expiration and (not price_info.expires_on or price_expiration < price_info.expires_on):
             new_price_info.expires_on = price_expiration
 
         return new_price_info
@@ -95,17 +86,13 @@ class ProductDiscountModule(DiscountModule):
         and through some background task.
         """
         if isinstance(shop_product, int):
-            shop_product = ShopProduct.objects.select_related("product", "shop").get(
-                pk=shop_product
-            )
+            shop_product = ShopProduct.objects.select_related("product", "shop").get(pk=shop_product)
 
         is_variation_parent = shop_product.product.is_variation_parent()
 
         # index the discounted price of all children shop products
         if is_variation_parent:
-            children_shop_product = ShopProduct.objects.select_related(
-                "product", "shop"
-            ).filter(
+            children_shop_product = ShopProduct.objects.select_related("product", "shop").filter(
                 shop=shop_product.shop, product__variation_parent=shop_product.product
             )
             for child_shop_product in children_shop_product:

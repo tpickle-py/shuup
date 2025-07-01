@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.base import AdminModule, MenuEntry
@@ -10,9 +8,7 @@ from shuup.core.models import ContactGroupPriceDisplay
 
 class ContactGroupPriceDisplayModule(AdminModule):
     name = _("Contact Group Pricing Display")
-    breadcrumbs_menu_entry = MenuEntry(
-        name, url="shuup_admin:contact_group_price_display.list"
-    )
+    breadcrumbs_menu_entry = MenuEntry(name, url="shuup_admin:contact_group_price_display.list")
 
     def get_urls(self):
         return get_edit_and_list_urls(

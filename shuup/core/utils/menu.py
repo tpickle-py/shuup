@@ -1,5 +1,3 @@
-
-
 class MainMenuUpdater:
     """
     To update items add for example

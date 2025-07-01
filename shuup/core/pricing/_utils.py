@@ -1,6 +1,3 @@
-
-
-
 from ._discounts import get_discount_modules
 from ._module import get_pricing_module
 

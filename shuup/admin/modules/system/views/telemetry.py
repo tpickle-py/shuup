@@ -18,9 +18,7 @@ class TelemetryView(TemplateView):
                 "opt_in": not telemetry.is_opt_out(),
                 "is_grace": telemetry.is_in_grace_period(),
                 "last_submission_time": telemetry.get_last_submission_time(),
-                "submission_data": telemetry.get_telemetry_data(
-                    request=self.request, indent=2
-                ),
+                "submission_data": telemetry.get_telemetry_data(request=self.request, indent=2),
                 "title": _("Telemetry"),
             }
         )
@@ -85,9 +83,7 @@ class TelemetryWizardPane(WizardPane):
             "opt_in": not telemetry.is_opt_out(),
             "is_grace": telemetry.is_in_grace_period(),
             "last_submission_time": telemetry.get_last_submission_time(),
-            "submission_data": telemetry.get_telemetry_data(
-                request=self.request, indent=2
-            ),
+            "submission_data": telemetry.get_telemetry_data(request=self.request, indent=2),
             "title": _("Telemetry"),
         }
         form_defs.append(

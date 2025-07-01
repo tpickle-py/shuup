@@ -33,12 +33,8 @@ class StockAdjustment(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("product"),
     )
-    supplier = models.ForeignKey(
-        "shuup.Supplier", on_delete=models.CASCADE, verbose_name=_("supplier")
-    )
-    created_on = models.DateTimeField(
-        auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on")
-    )
+    supplier = models.ForeignKey("shuup.Supplier", on_delete=models.CASCADE, verbose_name=_("supplier"))
+    created_on = models.DateTimeField(auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on"))
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,
@@ -66,15 +62,11 @@ class StockAdjustment(models.Model):
 
 
 class StockCount(models.Model):
-    alert_limit = QuantityField(
-        default=0, editable=False, verbose_name=_("alert limit")
-    )
+    alert_limit = QuantityField(default=0, editable=False, verbose_name=_("alert limit"))
     stock_managed = models.BooleanField(
         verbose_name=_("stock managed"),
         default=True,
-        help_text=_(
-            "Use this to override the supplier default stock behavior per product."
-        ),
+        help_text=_("Use this to override the supplier default stock behavior per product."),
     )
     product = models.ForeignKey(
         "shuup.Product",
@@ -89,17 +81,11 @@ class StockCount(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("supplier"),
     )
-    logical_count = QuantityField(
-        default=0, editable=False, verbose_name=_("logical count")
-    )
-    physical_count = QuantityField(
-        default=0, editable=False, verbose_name=_("physical count")
-    )
+    logical_count = QuantityField(default=0, editable=False, verbose_name=_("logical count"))
+    physical_count = QuantityField(default=0, editable=False, verbose_name=_("physical count"))
     stock_value_value = MoneyValueField(default=0)
     stock_value = PriceProperty("stock_value_value", "currency", "includes_tax")
-    stock_unit_price = PriceProperty(
-        "stock_unit_price_value", "currency", "includes_tax"
-    )
+    stock_unit_price = PriceProperty("stock_unit_price_value", "currency", "includes_tax")
 
     class Meta:
         unique_together = [("product", "supplier")]

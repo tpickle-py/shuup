@@ -30,9 +30,7 @@ class DashboardContentBlock(DashboardBlock):
 
     @classmethod
     def by_rendering_template(cls, id, request, template_name, context):
-        content = loader.render_to_string(
-            template_name=template_name, context=context, request=request
-        )
+        content = loader.render_to_string(template_name=template_name, context=context, request=request)
         return cls(id=id, content=content)
 
 
@@ -63,9 +61,7 @@ class DashboardMoneyBlock(DashboardValueBlock):
     def __init__(self, id, value, title, currency, **kwargs):
         self.currency = currency
         value = parse_decimal_string(value)
-        value = format_currency(
-            value, currency=self.currency, locale=get_current_babel_locale()
-        )
+        value = format_currency(value, currency=self.currency, locale=get_current_babel_locale())
         super().__init__(id, value, title, **kwargs)
 
 

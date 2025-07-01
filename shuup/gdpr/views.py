@@ -1,5 +1,3 @@
-
-
 import json
 import re
 
@@ -30,16 +28,12 @@ COOKIE_CONSENT_RE = r"cookie_category_(\d+)"
 class GDPRCookieConsentView(View):
     def post(self, request, *args, **kwargs):
         shop = request.shop
-        cookie_categories = list(
-            GDPRCookieCategory.objects.filter(shop=shop, always_active=True)
-        )
+        cookie_categories = list(GDPRCookieCategory.objects.filter(shop=shop, always_active=True))
 
         for field, value in request.POST.items():
             field_match = re.match(COOKIE_CONSENT_RE, field)
             if field_match and value.lower() in ["on", "1"]:
-                cookie_category = GDPRCookieCategory.objects.filter(
-                    shop=shop, id=field_match.groups()[0]
-                ).first()
+                cookie_category = GDPRCookieCategory.objects.filter(shop=shop, id=field_match.groups()[0]).first()
                 if cookie_category:
                     cookie_categories.append(cookie_category)
 
@@ -140,9 +134,7 @@ class GDPRAnonymizeView(View):
                 contact,
                 task_type,
                 _("GDPR: Anonymize contact"),
-                _("Customer ID {customer_id} requested to be anonymized.").format(
-                    **{"customer_id": contact.id}
-                ),
+                _("Customer ID {customer_id} requested to be anonymized.").format(**{"customer_id": contact.id}),
             )
 
             contact.is_active = False

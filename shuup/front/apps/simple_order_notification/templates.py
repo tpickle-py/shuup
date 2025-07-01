@@ -1,4 +1,3 @@
-
 MESSAGE_SUBJECT_TEMPLATE = "{{ order.shop }} - Order {{ order.identifier }} Received"
 MESSAGE_BODY_TEMPLATE = """
 Thank you for your order, {{ order.customer }}!

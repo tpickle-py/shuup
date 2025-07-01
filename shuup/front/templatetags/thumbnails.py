@@ -55,9 +55,7 @@ def thumbnail(source, alias=None, generate=True, **kwargs):
     if not source:
         return None
 
-    cache_key, cached_thumbnail_url = _get_cached_thumbnail_url(
-        source, alias=alias, generate=generate, **kwargs
-    )
+    cache_key, cached_thumbnail_url = _get_cached_thumbnail_url(source, alias=alias, generate=generate, **kwargs)
 
     if cached_thumbnail_url is not None:
         return cached_thumbnail_url
@@ -77,9 +75,7 @@ def thumbnail(source, alias=None, generate=True, **kwargs):
         options = process_thumbnailer_options(kwargs)
 
     try:
-        thumbnail_instance = thumbnailer_instance.get_thumbnail(
-            options, generate=generate
-        )
+        thumbnail_instance = thumbnailer_instance.get_thumbnail(options, generate=generate)
         thumbnail_url = thumbnail_instance.url
         if cache_key:
             cache.set(cache_key, thumbnail_url)

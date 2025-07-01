@@ -55,9 +55,7 @@ class ShuupTestingAppConfig(AppConfig):
             __name__ + ".themes:ShuupTestingTheme",
             __name__ + ".themes:ShuupTestingThemeWithCustomBase",
         ],
-        "pricing_module": [
-            "shuup.testing.supplier_pricing.pricing:SupplierPricingModule"
-        ],
+        "pricing_module": ["shuup.testing.supplier_pricing.pricing:SupplierPricingModule"],
     }
 
     def ready(self):

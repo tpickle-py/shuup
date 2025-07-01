@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.toolbar import Toolbar
@@ -26,9 +24,7 @@ class ShopListView(PicotableListView):
             _("Name"),
             sort_field="translations__name",
             display="name",
-            filter_config=TextFilter(
-                filter_field="translations__name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="translations__name", placeholder=_("Filter by name...")),
         ),
         Column("domain", _("Domain")),
         Column("identifier", _("Identifier")),

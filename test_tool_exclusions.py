@@ -30,6 +30,7 @@ def run_command(cmd, description):
         print(f"⚠️  Could not test {description}: {e}")
         return None
 
+
 def main():
     """Test various tools to ensure they exclude .venv correctly."""
     print("Testing tool configurations to ensure .venv is properly excluded...")
@@ -47,7 +48,7 @@ def main():
         results.append(result)
 
     # Summary
-    print("\n" + "="*50)
+    print("\n" + "=" * 50)
     print("SUMMARY:")
     passed = sum(1 for r in results if r is True)
     failed = sum(1 for r in results if r is False)
@@ -63,6 +64,7 @@ def main():
         sys.exit(1)
     else:
         print("\n🎉 All testable tools appear to properly exclude .venv!")
+
 
 if __name__ == "__main__":
     main()

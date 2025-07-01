@@ -30,15 +30,13 @@ class GenericThemeForm(forms.ModelForm):
         super().__init__(**kwargs)
         if self.theme.stylesheets:
             if isinstance(self.theme.stylesheets[0], dict):
-                choices = [
-                    (style["stylesheet"], style["name"])
-                    for style in self.theme.stylesheets
-                ]
+                choices = [(style["stylesheet"], style["name"]) for style in self.theme.stylesheets]
             else:
                 warnings.warn(
                     "Warning! Using list of tuples in `theme.stylesheets` will deprecate "
                     "in Shuup 0.5.7. Use list of dictionaries instead.",
-                    RemovedInFutureShuupWarning, stacklevel=2,
+                    RemovedInFutureShuupWarning,
+                    stacklevel=2,
                 )
                 choices = self.theme.stylesheets
             self.fields["stylesheet"] = forms.ChoiceField(
@@ -84,21 +82,11 @@ class FontForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super().__init__(*args, **kwargs)
-        self.fields["woff"].widget = FileDnDUploaderWidget(
-            upload_path="/admin_typography/", clearable=True
-        )
-        self.fields["woff2"].widget = FileDnDUploaderWidget(
-            upload_path="/admin_typography/", clearable=True
-        )
-        self.fields["ttf"].widget = FileDnDUploaderWidget(
-            upload_path="/admin_typography/", clearable=True
-        )
-        self.fields["svg"].widget = FileDnDUploaderWidget(
-            upload_path="/admin_typography/", clearable=True
-        )
-        self.fields["eot"].widget = FileDnDUploaderWidget(
-            upload_path="/admin_typography/", clearable=True
-        )
+        self.fields["woff"].widget = FileDnDUploaderWidget(upload_path="/admin_typography/", clearable=True)
+        self.fields["woff2"].widget = FileDnDUploaderWidget(upload_path="/admin_typography/", clearable=True)
+        self.fields["ttf"].widget = FileDnDUploaderWidget(upload_path="/admin_typography/", clearable=True)
+        self.fields["svg"].widget = FileDnDUploaderWidget(upload_path="/admin_typography/", clearable=True)
+        self.fields["eot"].widget = FileDnDUploaderWidget(upload_path="/admin_typography/", clearable=True)
 
     def save(self, commit=True):
         self.instance.shop = get_shop(self.request)

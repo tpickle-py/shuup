@@ -269,9 +269,7 @@ class ProductSelectionPlugin(TemplatedPlugin):
     template_name = "shuup/xtheme/plugins/product_selection_plugin.jinja"
     editor_form_class = ProductSelectionConfigForm
     cacheable = True
-    fields = [
-        ("title", TranslatableField(label=_("Title"), required=False, initial=""))
-    ]
+    fields = [("title", TranslatableField(label=_("Title"), required=False, initial=""))]
 
     def get_cache_key(self, context, **kwargs) -> str:
         title = self.get_translated_value("title")

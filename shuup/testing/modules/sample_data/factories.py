@@ -1,5 +1,3 @@
-
-
 import decimal
 import os
 import random
@@ -28,9 +26,7 @@ from shuup.utils.filer import filer_image_from_data
 
 
 def create_sample_category(name, description, business_segment, image_file, shop):
-    category = Category.objects.create(
-        name=name, description=description, status=CategoryStatus.VISIBLE
-    )
+    category = Category.objects.create(name=name, description=description, status=CategoryStatus.VISIBLE)
 
     image_file_path = os.path.join(SAMPLE_IMAGES_BASE_DIR, image_file)
     path = f"ProductCategories/Samples/{business_segment.capitalize()}"
@@ -59,18 +55,14 @@ def create_sample_product(name, description, business_segment, image_file, shop)
     media_file = MediaFile.objects.create(file=filer_image)
     media_file.shops.add(shop)
 
-    media = ProductMedia.objects.create(
-        product=product, kind=ProductMediaKind.IMAGE, file=filer_image
-    )
+    media = ProductMedia.objects.create(product=product, kind=ProductMediaKind.IMAGE, file=filer_image)
     media.save()
     media.shops.add(shop)
     product.primary_image = media
     product.save()
 
     # create the price and round it to the number of decimals of the currency
-    price = shop.create_price(
-        decimal.Decimal(random.random() * random.randrange(0, 500))
-    ).as_rounded()
+    price = shop.create_price(decimal.Decimal(random.random() * random.randrange(0, 500))).as_rounded()
 
     sp = ShopProduct.objects.create(
         product=product,

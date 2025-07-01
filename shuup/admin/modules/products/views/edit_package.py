@@ -1,5 +1,3 @@
-
-
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.http import HttpResponseRedirect
@@ -28,14 +26,10 @@ class ProductChildrenFormPart(ProductChildrenBaseFormPart):
         if product.mode in self.invalid_modes:
             raise ValueError("Error! Invalid mode.")
         else:
-            form = formset_factory(
-                PackageChildForm, PackageChildFormSet, extra=5, can_delete=True
-            )
+            form = formset_factory(PackageChildForm, PackageChildFormSet, extra=5, can_delete=True)
             template_name = "shuup/admin/products/package/_package_children.jinja"
 
-        form_defs = super().get_form_defs(
-            form, template_name
-        )
+        form_defs = super().get_form_defs(form, template_name)
         yield from form_defs
 
 
@@ -69,11 +63,7 @@ class ProductPackageView(ProductParentBaseView):
         parent = self.object.get_all_package_parents().first()
         if parent:
             # By default, redirect to the first parent
-            return HttpResponseRedirect(
-                reverse(
-                    "shuup_admin:shop_product.edit_package", kwargs={"pk": parent.id}
-                )
-            )
+            return HttpResponseRedirect(reverse("shuup_admin:shop_product.edit_package", kwargs={"pk": parent.id}))
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

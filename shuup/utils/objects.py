@@ -94,11 +94,7 @@ def compact(in_obj, none_only=True, deep=True):
             continue
         if not value:
             continue
-        if (
-            deep
-            and hasattr(value, "__iter__")
-            and not isinstance(value, six.string_types)
-        ):
+        if deep and hasattr(value, "__iter__") and not isinstance(value, six.string_types):
             value = compact(value, none_only=none_only, deep=True)
         if is_dict:
             out_obj[key] = value

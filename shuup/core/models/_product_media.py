@@ -23,7 +23,6 @@ class ProductMediaKind(Enum):
         SAMPLE = _("sample")
 
 
-
 class ProductMedia(TranslatableModel):
     identifier = InternalIdentifierField(unique=True)
     product = models.ForeignKey(
@@ -36,9 +35,7 @@ class ProductMedia(TranslatableModel):
         "Shop",
         related_name="product_media",
         verbose_name=_("shops"),
-        help_text=_(
-            "Select which shops you would like the product media to be visible in."
-        ),
+        help_text=_("Select which shops you would like the product media to be visible in."),
     )
     kind = EnumIntegerField(
         ProductMediaKind,
@@ -49,16 +46,12 @@ class ProductMedia(TranslatableModel):
             "Select what type the media is. It can either be a normal file, part of the documentation, or a sample."
         ),
     )
-    file = FilerFileField(
-        blank=True, null=True, verbose_name=_("file"), on_delete=models.CASCADE
-    )
+    file = FilerFileField(blank=True, null=True, verbose_name=_("file"), on_delete=models.CASCADE)
     external_url = models.URLField(
         blank=True,
         null=True,
         verbose_name=_("URL"),
-        help_text=_(
-            "Enter URL to external file. If this field is filled, the selected media doesn't apply."
-        ),
+        help_text=_("Enter URL to external file. If this field is filled, the selected media doesn't apply."),
     )
     ordering = models.IntegerField(
         default=0,
@@ -69,25 +62,19 @@ class ProductMedia(TranslatableModel):
         ),
     )
     # Status
-    enabled = models.BooleanField(
-        db_index=True, default=True, verbose_name=_("enabled")
-    )
+    enabled = models.BooleanField(db_index=True, default=True, verbose_name=_("enabled"))
     public = models.BooleanField(
         default=True,
         blank=True,
         db_index=True,
         verbose_name=_("public (shown on product page)"),
-        help_text=_(
-            "Enable this if you want this image be shown on the product page. Enabled by default."
-        ),
+        help_text=_("Enable this if you want this image be shown on the product page. Enabled by default."),
     )
     purchased = models.BooleanField(
         default=False,
         blank=True,
         verbose_name=_("purchased (shown for finished purchases)"),
-        help_text=_(
-            "Enable this if you want the product media to be shown for completed purchases."
-        ),
+        help_text=_("Enable this if you want the product media to be shown for completed purchases."),
     )
 
     translations = TranslatedFields(

@@ -1,5 +1,3 @@
-
-
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
@@ -17,9 +15,7 @@ class BaseBasket(Basket):
         shipping_methods = self.get_available_shipping_methods()
         payment_methods = self.get_available_payment_methods()
 
-        advice = _(
-            "Try to remove some products from the basket and order them separately."
-        )
+        advice = _("Try to remove some products from the basket and order them separately.")
 
         if (
             self.has_shippable_lines()
@@ -29,8 +25,6 @@ class BaseBasket(Basket):
             msg = _("Products in basket can't be shipped together. %s")
             yield ValidationError(msg % advice, code="no_common_shipping")
 
-        if not payment_methods and configuration.get(
-            self.shop, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, True
-        ):
+        if not payment_methods and configuration.get(self.shop, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, True):
             msg = _("Products in basket have no common payment method. %s")
             yield ValidationError(msg % advice, code="no_common_payment")

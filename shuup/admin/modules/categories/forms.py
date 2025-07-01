@@ -40,18 +40,13 @@ class CategoryBaseForm(ShuupAdminForm):
         self.request = request
         super().__init__(**kwargs)
         # Exclude `DELETED`. We don't want people to use that field to set a category as deleted.
-        filter_form_field_choices(
-            self.fields["status"], (CategoryStatus.DELETED.value,), invert=True
-        )
+        filter_form_field_choices(self.fields["status"], (CategoryStatus.DELETED.value,), invert=True)
 
         # Exclude current category from parents, because it cannot be its own child anyways
-        category_queryset = Category.objects.filter(shops=get_shop(request)).exclude(
-            status=CategoryStatus.DELETED
-        )
+        category_queryset = Category.objects.filter(shops=get_shop(request)).exclude(status=CategoryStatus.DELETED)
         self.fields["parent"].queryset = category_queryset
         self.fields["parent"].choices = [(None, "----")] + [
-            (category.pk, force_text(category))
-            for category in category_queryset.exclude(id=kwargs["instance"].pk)
+            (category.pk, force_text(category)) for category in category_queryset.exclude(id=kwargs["instance"].pk)
         ]
 
     def clean_parent(self):
@@ -92,8 +87,7 @@ class CategoryProductForm(forms.Form):
         self.category = category
         super().__init__(**kwargs)
         self.fields["remove_products"].choices = [(None, "-----")] + [
-            (obj.product.pk, obj.product.name)
-            for obj in category.shop_products.filter(shop=shop)
+            (obj.product.pk, obj.product.name) for obj in category.shop_products.filter(shop=shop)
         ]
 
     @atomic
@@ -101,41 +95,30 @@ class CategoryProductForm(forms.Form):
         data = self.cleaned_data
         is_visible = self.category.status == CategoryStatus.VISIBLE
         visibility_groups = self.category.visibility_groups.all()
-        primary_product_ids = [
-            int(product_id) for product_id in data.get("primary_products", [])
-        ]
+        primary_product_ids = [int(product_id) for product_id in data.get("primary_products", [])]
         for shop_product in ShopProduct.objects.filter(
             Q(shop_id=self.shop.id),
-            Q(product_id__in=primary_product_ids)
-            | Q(product__variation_parent_id__in=primary_product_ids),
+            Q(product_id__in=primary_product_ids) | Q(product__variation_parent_id__in=primary_product_ids),
         ):
             shop_product.primary_category = self.category
             shop_product.visibility = (
-                ShopProductVisibility.ALWAYS_VISIBLE
-                if is_visible
-                else ShopProductVisibility.NOT_VISIBLE
+                ShopProductVisibility.ALWAYS_VISIBLE if is_visible else ShopProductVisibility.NOT_VISIBLE
             )
             shop_product.visibility_limit = self.category.visibility.value
             shop_product.visibility_groups.set(visibility_groups)
             shop_product.save()
             shop_product.categories.add(self.category)
 
-        additional_product_ids = [
-            int(product_id) for product_id in data.get("additional_products", [])
-        ]
+        additional_product_ids = [int(product_id) for product_id in data.get("additional_products", [])]
         for shop_product in ShopProduct.objects.filter(
             Q(shop_id=self.shop.id),
-            Q(product_id__in=additional_product_ids)
-            | Q(product__variation_parent_id__in=additional_product_ids),
+            Q(product_id__in=additional_product_ids) | Q(product__variation_parent_id__in=additional_product_ids),
         ):
             shop_product.categories.add(self.category)
 
-        remove_product_ids = [
-            int(product_id) for product_id in data.get("remove_products", [])
-        ]
+        remove_product_ids = [int(product_id) for product_id in data.get("remove_products", [])]
         for shop_product in ShopProduct.objects.filter(
-            Q(product_id__in=remove_product_ids)
-            | Q(product__variation_parent_id__in=remove_product_ids)
+            Q(product_id__in=remove_product_ids) | Q(product__variation_parent_id__in=remove_product_ids)
         ):
             if shop_product.primary_category == self.category:
                 if self.category in shop_product.categories.all():

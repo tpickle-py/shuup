@@ -60,9 +60,7 @@ class CatalogCampaignListView(CampaignListView):
     def get_context_data(self, **kwargs):
         context = super(CampaignListView, self).get_context_data(**kwargs)
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(
-                self.model, return_url="catalog_campaign"
-            )
+            settings_button = SettingsActionButton.for_model(self.model, return_url="catalog_campaign")
         else:
             settings_button = None
         context["toolbar"] = Toolbar(
@@ -84,9 +82,7 @@ class BasketCampaignListView(CampaignListView):
     def get_context_data(self, **kwargs):
         context = super(CampaignListView, self).get_context_data(**kwargs)
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(
-                self.model, return_url="basket_campaign"
-            )
+            settings_button = SettingsActionButton.for_model(self.model, return_url="basket_campaign")
         else:
             settings_button = None
         context["toolbar"] = Toolbar(
@@ -134,9 +130,7 @@ class CouponListView(PicotableListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(
-                self.model, return_url="coupon"
-            )
+            settings_button = SettingsActionButton.for_model(self.model, return_url="coupon")
         else:
             settings_button = None
         context["toolbar"] = Toolbar(

@@ -82,8 +82,7 @@ class Select2MultipleField(Field):
             from django.utils.encoding import force_text
 
             self.widget.choices = [
-                (instance.pk, force_text(instance))
-                for instance in self.model.objects.filter(pk__in=values)
+                (instance.pk, force_text(instance)) for instance in self.model.objects.filter(pk__in=values)
             ]
         return values
 
@@ -246,9 +245,7 @@ class ObjectSelect2MultipleField(Select2MultipleField):
         if not value:
             return []
         elif not isinstance(value, (list, tuple)):
-            raise ValidationError(
-                self.error_messages["invalid_list"], code="invalid_list"
-            )
+            raise ValidationError(self.error_messages["invalid_list"], code="invalid_list")
         return [str(val) for val in value]
 
     def widget_attrs(self, widget):
@@ -308,16 +305,12 @@ class ObjectSelect2MultipleMainProductField(Select2MultipleMainProductField):
     """
 
     def __init__(self, model, selector=None, search_mode=None, *args, **kwargs):
-        super().__init__(
-            model, *args, **kwargs
-        )
+        super().__init__(model, *args, **kwargs)
         self.selector = selector
 
     def prepare_value(self, value):
         if self.model:
-            return super().prepare_value(
-                value
-            )
+            return super().prepare_value(value)
         return list(value or [])
 
     def to_python(self, value):
@@ -329,9 +322,7 @@ class ObjectSelect2MultipleMainProductField(Select2MultipleMainProductField):
 
     def widget_attrs(self, widget):
         if self.model:
-            attrs = super().widget_attrs(
-                widget
-            )
+            attrs = super().widget_attrs(widget)
         else:
             attrs = super(Select2MultipleField, self).widget_attrs(widget)
             attrs["data-model"] = self.selector

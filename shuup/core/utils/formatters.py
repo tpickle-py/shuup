@@ -1,5 +1,3 @@
-
-
 from shuup.core.models._addresses import Address
 from shuup.utils.django_compat import force_text
 from shuup.utils.i18n import get_current_babel_locale

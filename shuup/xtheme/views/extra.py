@@ -12,9 +12,7 @@ def clear_view_cache(**kwargs):
     _VIEW_CACHE.clear()
 
 
-setting_changed.connect(
-    clear_view_cache, dispatch_uid="shuup.xtheme.views.extra.clear_view_cache"
-)
+setting_changed.connect(clear_view_cache, dispatch_uid="shuup.xtheme.views.extra.clear_view_cache")
 
 
 def _get_view_by_name(theme, view_name):

@@ -1,5 +1,3 @@
-
-
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -32,9 +30,7 @@ class LogEntryKind(Enum):
 
 class BaseLogEntry(models.Model):
     target = None  # This will be overridden dynamically
-    created_on = models.DateTimeField(
-        auto_now_add=True, editable=False, verbose_name=_("created on")
-    )
+    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         null=True,
@@ -42,12 +38,8 @@ class BaseLogEntry(models.Model):
         verbose_name=_("user"),
     )
     message = models.CharField(max_length=1024, verbose_name=_("message"))
-    identifier = models.CharField(
-        max_length=256, db_index=True, blank=True, verbose_name=_("identifier")
-    )
-    kind = EnumIntegerField(
-        LogEntryKind, default=LogEntryKind.OTHER, verbose_name=_("log entry kind")
-    )
+    identifier = models.CharField(max_length=256, db_index=True, blank=True, verbose_name=_("identifier"))
+    kind = EnumIntegerField(LogEntryKind, default=LogEntryKind.OTHER, verbose_name=_("log entry kind"))
     extra = JSONField(null=True, blank=True, verbose_name=_("extra data"))
 
     class Meta:

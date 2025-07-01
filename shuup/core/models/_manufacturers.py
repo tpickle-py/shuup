@@ -1,5 +1,3 @@
-
-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from filer.fields.image import FilerImageField
@@ -8,7 +6,6 @@ from shuup.core.fields import InternalIdentifierField
 from shuup.utils.analog import define_log_model
 
 __all__ = ("Manufacturer",)
-
 
 
 class Manufacturer(models.Model):

@@ -27,9 +27,7 @@ class AdminShopProvider:
         if not settings.SHUUP_ENABLE_MULTIPLE_SHOPS:
             return Shop.objects.first()
 
-        permitted_shops = Shop.objects.get_for_user(request.user).filter(
-            status=ShopStatus.ENABLED
-        )
+        permitted_shops = Shop.objects.get_for_user(request.user).filter(status=ShopStatus.ENABLED)
 
         if SHOP_SESSION_KEY in request.session:
             shop = Shop.objects.filter(pk=request.session[SHOP_SESSION_KEY]).first()
@@ -53,24 +51,15 @@ class AdminShopProvider:
 
     def set_shop(self, request, shop=None):
         if not request.user.is_staff:
-            raise PermissionDenied(
-                _("You must have the Access to Admin Panel permission.")
-            )
+            raise PermissionDenied(_("You must have the Access to Admin Panel permission."))
 
         if shop:
             # only can set if the user is superuser or is the shop staff
-            if (
-                shop.staff_members.filter(pk=request.user.pk).exists()
-                or request.user.is_superuser
-            ):
+            if shop.staff_members.filter(pk=request.user.pk).exists() or request.user.is_superuser:
                 request.session[SHOP_SESSION_KEY] = shop.id
                 request._cached_admin_shop = shop
             else:
-                raise PermissionDenied(
-                    _(
-                        "You must have the Access to Admin Panel permissions to this shop."
-                    )
-                )
+                raise PermissionDenied(_("You must have the Access to Admin Panel permissions to this shop."))
 
         else:
             self.unset_shop(request)

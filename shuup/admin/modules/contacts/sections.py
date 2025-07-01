@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.base import Section
@@ -22,17 +20,13 @@ class BasicInfoContactSection(Section):
     def get_context_data(cls, contact, request=None):
         context = {}
 
-        context["groups"] = sorted(
-            contact.groups.all_except_defaults(), key=(lambda x: force_text(x))
-        )
+        context["groups"] = sorted(contact.groups.all_except_defaults(), key=(lambda x: force_text(x)))
 
         context["shops"] = sorted(contact.shops.all(), key=(lambda x: force_text(x)))
 
         context["companies"] = []
         if isinstance(contact, PersonContact):
-            context["companies"] = sorted(
-                contact.company_memberships.all(), key=(lambda x: force_text(x))
-            )
+            context["companies"] = sorted(contact.company_memberships.all(), key=(lambda x: force_text(x)))
 
         return context
 
@@ -62,9 +56,7 @@ class OrdersContactSection(Section):
 
     @classmethod
     def visible_for_object(cls, contact, request=None):
-        return bool(
-            contact.default_shipping_address_id or contact.default_billing_address_id
-        )
+        return bool(contact.default_shipping_address_id or contact.default_billing_address_id)
 
     @classmethod
     def get_context_data(cls, contact, request=None):

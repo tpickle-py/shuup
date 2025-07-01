@@ -190,9 +190,7 @@ class OrderModule(AdminModule):
         from shuup.admin.utils.permissions import has_permission
 
         if kind == "quicklink" and has_permission(request.user, "order.new"):
-            actions = [
-                {"text": _("New order"), "url": self.get_model_url(Order, "new")}
-            ]
+            actions = [{"text": _("New order"), "url": self.get_model_url(Order, "new")}]
 
             yield SimpleHelpBlock(
                 text=_("New order"),
@@ -200,9 +198,7 @@ class OrderModule(AdminModule):
                 icon_url="shuup_admin/img/product.png",
                 priority=0,
                 category=HelpBlockCategory.ORDERS,
-                done=Order.objects.filter(shop=request.shop).exists()
-                if kind == "setup"
-                else False,
+                done=Order.objects.filter(shop=request.shop).exists() if kind == "setup" else False,
             )
 
 

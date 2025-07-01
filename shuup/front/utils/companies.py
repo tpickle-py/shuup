@@ -1,5 +1,3 @@
-
-
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
@@ -12,9 +10,7 @@ def allow_company_registration(shop):
 
 
 def company_registration_requires_approval(shop):
-    return configuration.get(
-        shop, "company_registration_requires_approval", default=False
-    )
+    return configuration.get(shop, "company_registration_requires_approval", default=False)
 
 
 def validate_tax_number(shop):
@@ -28,8 +24,6 @@ class TaxNumberCleanMixin:
         tax_number = self.cleaned_data["tax_number"].strip()
         if self.request and validate_tax_number(self.request.shop) and tax_number:
             if tax_numbers.validate(tax_number) != "vat":
-                raise ValidationError(
-                    _("Tax number is not valid."), code="not_valid_tax_number"
-                )
+                raise ValidationError(_("Tax number is not valid."), code="not_valid_tax_number")
 
         return tax_number

@@ -9,8 +9,6 @@
 License header updater.
 """
 
-
-
 import argparse
 import os
 import sys
@@ -27,11 +25,7 @@ LICENSE file in the root directory of this source tree.
 """.strip()
 
 PY_HEADER = "\n".join(("# " + line).strip() for line in HEADER.splitlines())
-JS_HEADER = (
-    "/**\n"
-    + "\n".join((" * " + line).rstrip() for line in HEADER.splitlines())
-    + "\n */"
-)
+JS_HEADER = "/**\n" + "\n".join((" * " + line).rstrip() for line in HEADER.splitlines()) + "\n */"
 
 PY_HEADER_LINES = PY_HEADER.encode("utf-8").splitlines()
 JS_HEADER_LINES = JS_HEADER.encode("utf-8").splitlines()

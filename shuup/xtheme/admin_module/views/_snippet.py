@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.http.response import HttpResponseNotAllowed
 from django.utils.translation import ugettext_lazy as _
@@ -27,11 +25,7 @@ class SnippetForm(forms.ModelForm):
         self.request = kwargs.pop("request")
         super().__init__(*args, **kwargs)
 
-        themes_choices = [
-            (theme.identifier, theme.name)
-            for theme in get_provide_objects("xtheme")
-            if theme.identifier
-        ]
+        themes_choices = [(theme.identifier, theme.name) for theme in get_provide_objects("xtheme") if theme.identifier]
         self.fields["themes"] = forms.MultipleChoiceField(
             choices=themes_choices,
             required=False,
@@ -42,10 +36,7 @@ class SnippetForm(forms.ModelForm):
 
         from shuup.xtheme.resources import LOCATION_INFO
 
-        location_choices = [
-            (location_name, location["name"])
-            for location_name, location in LOCATION_INFO.items()
-        ]
+        location_choices = [(location_name, location["name"]) for location_name, location in LOCATION_INFO.items()]
         self.fields["location"] = forms.ChoiceField(
             choices=location_choices,
             help_text=_("Select the location of the page to inject the snippet."),
@@ -70,9 +61,7 @@ class SnippetEditView(CreateOrUpdateView):
         if save_form_id:
             delete_url = None
             if self.object and self.object.pk:
-                delete_url = reverse_lazy(
-                    "shuup_admin:xtheme_snippet.delete", kwargs={"pk": self.object.pk}
-                )
+                delete_url = reverse_lazy("shuup_admin:xtheme_snippet.delete", kwargs={"pk": self.object.pk})
             return get_default_edit_toolbar(self, save_form_id, delete_url=delete_url)
 
     def get_queryset(self):
@@ -98,17 +87,13 @@ class SnippetListView(PicotableListView):
         Column(
             "name",
             _("Name"),
-            filter_config=TextFilter(
-                filter_field="name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="name", placeholder=_("Filter by name...")),
         ),
         Column(
             "location",
             _("Location"),
             sort_field="location",
-            filter_config=TextFilter(
-                filter_field="location", placeholder=_("Filter by location...")
-            ),
+            filter_config=TextFilter(filter_field="location", placeholder=_("Filter by location...")),
         ),
         Column("snippet_type", _("Type"), sort_field="snippet_type"),
         Column("themes", _("Themes"), display="get_themes"),
@@ -116,11 +101,7 @@ class SnippetListView(PicotableListView):
 
     def get_themes(self, value):
         return ", ".join(
-            [
-                force_text(theme.name)
-                for theme in get_provide_objects("xtheme")
-                if theme.identifier in value.themes
-            ]
+            [force_text(theme.name) for theme in get_provide_objects("xtheme") if theme.identifier in value.themes]
         )
 
     def get_queryset(self):

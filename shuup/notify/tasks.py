@@ -9,16 +9,12 @@ from shuup.core.models import Shop
 from shuup.notify.notify_events import PasswordReset
 
 
-def send_user_reset_password_email(
-    user_id: int, shop_id: int, reset_domain_url: str, reset_url_name: str
-):
+def send_user_reset_password_email(user_id: int, shop_id: int, reset_domain_url: str, reset_url_name: str):
     shop = Shop.objects.get(pk=shop_id)
     user = get_user_model().objects.get(pk=user_id)
     uid = urlsafe_base64_encode(force_bytes(user_id))
     token = default_token_generator.make_token(user)
-    recovery_url = urljoin(
-        reset_domain_url, reverse(reset_url_name, kwargs={"uidb64": uid, "token": token})
-    )
+    recovery_url = urljoin(reset_domain_url, reverse(reset_url_name, kwargs={"uidb64": uid, "token": token}))
     context = {
         "site_name": shop.public_name,
         "uid": uid,

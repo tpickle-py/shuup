@@ -15,9 +15,7 @@ class SnippetsPlugin(Plugin):
     fields = [
         (
             "in_place",
-            forms.CharField(
-                label=_("In-Place Snippet"), widget=forms.Textarea, required=False
-            ),
+            forms.CharField(label=_("In-Place Snippet"), widget=forms.Textarea, required=False),
         ),
         (
             "head_start",

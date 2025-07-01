@@ -1,5 +1,3 @@
-
-
 import parler.models
 import six
 from django.core.exceptions import ValidationError
@@ -31,7 +29,6 @@ class ShuupModel(models.Model):
 
     class Meta:
         abstract = True
-
 
 
 class TranslatableShuupModel(ShuupModel, parler.models.TranslatableModel):
@@ -86,9 +83,7 @@ class PolyTransModelBase(PolymorphicModelBase):
 
 
 class PolymorphicTranslatableShuupModel(
-    six.with_metaclass(
-        PolyTransModelBase, PolymorphicShuupModel, TranslatableShuupModel
-    )
+    six.with_metaclass(PolyTransModelBase, PolymorphicShuupModel, TranslatableShuupModel)
 ):
     objects = _PolyTransManager()
 
@@ -99,9 +94,7 @@ class PolymorphicTranslatableShuupModel(
 class ChangeProtected:
     protected_fields = None
     unprotected_fields = []
-    change_protect_message = _(
-        "The following fields are protected and can not be changed."
-    )
+    change_protect_message = _("The following fields are protected and can not be changed.")
 
     def clean(self, *args, **kwargs):
         super().clean(*args, **kwargs)
@@ -134,13 +127,7 @@ class ChangeProtected:
             protected_fields = self.protected_fields
         else:
             protected_fields = [
-                x.name
-                for x in self._meta.get_fields()
-                if not x.is_relation and x.name not in self.unprotected_fields
+                x.name for x in self._meta.get_fields() if not x.is_relation and x.name not in self.unprotected_fields
             ]
         in_db = type(self).objects.get(pk=self.pk)
-        return [
-            field
-            for field in protected_fields
-            if getattr(self, field) != getattr(in_db, field)
-        ]
+        return [field for field in protected_fields if getattr(self, field) != getattr(in_db, field)]

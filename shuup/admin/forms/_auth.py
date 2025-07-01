@@ -48,9 +48,7 @@ class EmailAuthenticationForm(AuthenticationForm):
         password = self.cleaned_data.get("password")
 
         if username and password:
-            self.user_cache = authenticate(
-                request=self.request, username=username, password=password
-            )
+            self.user_cache = authenticate(request=self.request, username=username, password=password)
 
             # So here even with invalid login and user cache being None
             # we want to check whether the user we are trying to

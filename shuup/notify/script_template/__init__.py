@@ -1,5 +1,3 @@
-
-
 from shuup.notify.base import ScriptTemplate
 from shuup.notify.models.script import Script
 

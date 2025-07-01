@@ -19,12 +19,8 @@ def to_language_codes(languages, default_language):
         # `languages` looks like a `settings.LANGUAGES`, so fix it
         languages = [code for (code, name) in languages]
     if default_language not in languages:
-        raise ValueError(
-            f"Error! Default language `{default_language!r}` not in the list: `{languages!r}`."
-        )
-    languages = [default_language] + [
-        code for code in languages if code != default_language
-    ]
+        raise ValueError(f"Error! Default language `{default_language!r}` not in the list: `{languages!r}`.")
+    languages = [default_language] + [code for code in languages if code != default_language]
     return languages
 
 
@@ -35,24 +31,19 @@ class MultiLanguageModelForm(TranslatableModelForm):
     def _get_translation_model(self):
         warnings.warn(
             "Warning! `_get_translation_model` is deprecated in Shuup 2.x as unused for this util.",
-            DeprecationWarning, stacklevel=2,
+            DeprecationWarning,
+            stacklevel=2,
         )
         return self._meta.model._parler_meta.root_model
 
     def __init__(self, **kwargs):  # noqa (C901)
         self.default_language = kwargs.pop(
             "default_language",
-            getattr(
-                self, "language", settings.PARLER_DEFAULT_LANGUAGE_CODE
-            ),
+            getattr(self, "language", settings.PARLER_DEFAULT_LANGUAGE_CODE),
         )
-        self.languages = to_language_codes(
-            kwargs.pop("languages", ()), self.default_language
-        )
+        self.languages = to_language_codes(kwargs.pop("languages", ()), self.default_language)
 
-        self.required_languages = kwargs.pop(
-            "required_languages", [self.default_language]
-        )
+        self.required_languages = kwargs.pop("required_languages", [self.default_language])
 
         opts = self._meta
         translations_models = self._get_translation_models()
@@ -64,22 +55,15 @@ class MultiLanguageModelForm(TranslatableModelForm):
 
         for translations_model in translations_models:
             for field in translations_model._meta.get_fields():
-                if (
-                    field.name not in ("language_code", "master", "id")
-                    and field.name in self.base_fields
-                ):
+                if field.name not in ("language_code", "master", "id") and field.name in self.base_fields:
                     self.translation_fields.append(field)
 
         self.trans_field_map = defaultdict(dict)
         self.trans_name_map = defaultdict(dict)
         self.translated_field_names = []
         self.required_translated_field_names = []
-        self.non_default_languages = sorted(
-            set(self.languages) - {self.default_language}
-        )
-        self.language_names = {
-            lang: get_language_name(lang) for lang in self.languages
-        }
+        self.non_default_languages = sorted(set(self.languages) - {self.default_language})
+        self.language_names = {lang: get_language_name(lang) for lang in self.languages}
 
         for f in self.translation_fields:
             base = self.base_fields.pop(f.name, None)
@@ -88,9 +72,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
             for lang in self.languages:
                 language_field = copy.deepcopy(base)
                 language_field_name = f"{f.name}__{lang}"
-                language_field.required = language_field.required and (
-                    lang in self.required_languages
-                )
+                language_field.required = language_field.required and (lang in self.required_languages)
                 if language_field.required:
                     self.required_translated_field_names.append(language_field_name)
                 language_field.label = self._get_label(f.name, language_field, lang)
@@ -113,10 +95,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
             for lang, translations in six.iteritems(current_translations):
                 for trans in translations:
                     model_dict = model_to_dict(trans, opts.fields, opts.exclude)
-                    object_data.update(
-                        (f"{fn}__{lang}", f)
-                        for (fn, f) in six.iteritems(model_dict)
-                    )
+                    object_data.update((f"{fn}__{lang}", f) for (fn, f) in six.iteritems(model_dict))
 
         if initial is not None:
             object_data.update(initial)
@@ -127,9 +106,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
         try:
             return super().__getitem__(key)
         except KeyError:
-            return super().__getitem__(
-                key + "__" + self.default_language
-            )
+            return super().__getitem__(key + "__" + self.default_language)
 
     def clean(self):
         """
@@ -141,9 +118,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
             if not any(data.get(field_name) for field_name in field_names.values()):
                 continue  # No need to check this language further
             for field_name in field_names.values():
-                if field_name in self.required_translated_field_names and not data.get(
-                    field_name
-                ):
+                if field_name in self.required_translated_field_names and not data.get(field_name):
                     self.add_error(field_name, _("This field is required."))
         return data
 
@@ -151,23 +126,18 @@ class MultiLanguageModelForm(TranslatableModelForm):
         for translations_model in self._get_translation_models():
             current_translations = {
                 trans.language_code: trans
-                for trans in translations_model.objects.filter(
-                    master_id=instance.id, language_code__in=self.languages
-                )
+                for trans in translations_model.objects.filter(master_id=instance.id, language_code__in=self.languages)
             }
             for lang, field_map in six.iteritems(self.trans_field_map):
-                translation_fields = {
-                    src_name: data.get(src_name) for src_name in field_map
-                }
+                translation_fields = {src_name: data.get(src_name) for src_name in field_map}
                 translation = current_translations.get(lang)
                 # Add translation only if at least one translated field is given
                 if not any(translation_fields.values()):
                     if translation:
                         translation.delete()  # No translations set so delete the object also.
                     continue
-                current_translations[lang] = translation = (
-                    translation
-                    or translations_model(master=instance, language_code=lang)
+                current_translations[lang] = translation = translation or translations_model(
+                    master=instance, language_code=lang
                 )
                 for src_name, field in six.iteritems(field_map):
                     field.save_form_data(translation, translation_fields[src_name])
@@ -222,11 +192,7 @@ class MultiLanguageModelForm(TranslatableModelForm):
         Get cleaned data without translated fields.
         """
         translated_field_names = set(self.translated_field_names)
-        return {
-            k: v
-            for (k, v) in six.iteritems(self.cleaned_data)
-            if k not in translated_field_names
-        }
+        return {k: v for (k, v) in six.iteritems(self.cleaned_data) if k not in translated_field_names}
 
     def _get_label(self, field_name, field, lang):
         label = field.label

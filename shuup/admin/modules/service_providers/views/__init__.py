@@ -1,4 +1,3 @@
-
 from ._delete import ServiceProviderDeleteView
 from ._edit import ServiceProviderEditView
 from ._list import ServiceProviderListView

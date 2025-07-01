@@ -1,5 +1,3 @@
-
-
 from typing import Iterable
 
 from django.utils.translation import ugettext_lazy as _
@@ -63,9 +61,7 @@ class TaxModule(AdminModule):
         return (
             derive_model_url(Tax, "shuup_admin:tax", object, kind)
             or derive_model_url(TaxClass, "shuup_admin:tax_class", object, kind)
-            or derive_model_url(
-                CustomerTaxGroup, "shuup_admin:customer_tax_group", object, kind
-            )
+            or derive_model_url(CustomerTaxGroup, "shuup_admin:customer_tax_group", object, kind)
         )
 
     def get_extra_permissions(self) -> Iterable[str]:
@@ -80,10 +76,6 @@ class TaxModule(AdminModule):
             get_object_selector_permission_name(CustomerTaxGroup): _(
                 "Allow the user to select customer tax groups in admin."
             ),
-            get_object_selector_permission_name(Tax): _(
-                "Allow the user to select taxes in admin."
-            ),
-            get_object_selector_permission_name(TaxClass): _(
-                "Allow the user to select tax classes in admin."
-            ),
+            get_object_selector_permission_name(Tax): _("Allow the user to select taxes in admin."),
+            get_object_selector_permission_name(TaxClass): _("Allow the user to select tax classes in admin."),
         }

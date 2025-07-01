@@ -23,11 +23,7 @@ class CustomerGroupPricingModule(PricingModule):
     def get_price_info(self, context, product, quantity=1):
         shop = context.shop
         product_id = product if isinstance(product, int) else product.pk
-        shop_product = (
-            ShopProduct.objects.filter(product_id=product_id, shop=shop)
-            .only("default_price_value")
-            .first()
-        )
+        shop_product = ShopProduct.objects.filter(product_id=product_id, shop=shop).only("default_price_value").first()
 
         if not shop_product:
             return PriceInfo(
@@ -43,11 +39,7 @@ class CustomerGroupPricingModule(PricingModule):
             price_value__gt=0,
             group__in=context.customer.groups.all(),
         )
-        result = (
-            CgpPrice.objects.filter(filter)
-            .order_by("price_value")[:1]
-            .values_list("price_value", flat=True)
-        )
+        result = CgpPrice.objects.filter(filter).order_by("price_value")[:1].values_list("price_value", flat=True)
 
         if result:
             price = result[0]
@@ -64,17 +56,13 @@ class CustomerGroupPricingModule(PricingModule):
 
     def index_shop_product(self, shop_product: Union["ShopProduct", int], **kwargs):
         if isinstance(shop_product, int):
-            shop_product = ShopProduct.objects.select_related("shop", "product").get(
-                pk=shop_product
-            )
+            shop_product = ShopProduct.objects.select_related("shop", "product").get(pk=shop_product)
 
         is_variation_parent = shop_product.product.is_variation_parent()
 
         # index the price of all children shop products
         if is_variation_parent:
-            children_shop_product = ShopProduct.objects.select_related(
-                "product", "shop"
-            ).filter(
+            children_shop_product = ShopProduct.objects.select_related("product", "shop").filter(
                 shop=shop_product.shop,
                 product__variation_parent_id=shop_product.product_id,
             )
@@ -101,9 +89,7 @@ class CustomerGroupPricingModule(PricingModule):
                         shop_id=shop_product.shop_id,
                         supplier_id=supplier_id,
                         catalog_rule=catalog_rule,
-                        defaults={
-                            "price_value": customer_group_price.price_value or Decimal()
-                        },
+                        defaults={"price_value": customer_group_price.price_value or Decimal()},
                     )
 
         for supplier_id in shop_product.suppliers.values_list("pk", flat=True):
@@ -113,9 +99,7 @@ class CustomerGroupPricingModule(PricingModule):
                 shop_id=shop_product.shop_id,
                 supplier_id=supplier_id,
                 catalog_rule=None,
-                defaults={
-                    "price_value": shop_product.default_price_value or Decimal()
-                },
+                defaults={"price_value": shop_product.default_price_value or Decimal()},
             )
 
 
@@ -145,9 +129,7 @@ class CustomerGroupDiscountModule(DiscountModule):
             total_discount = cgp_discount.discount_amount * price_info.quantity
             # do not allow the discount to be greater than the price
             return PriceInfo(
-                price=max(
-                    price_info.price - total_discount, context.shop.create_price(0)
-                ),
+                price=max(price_info.price - total_discount, context.shop.create_price(0)),
                 base_price=price_info.base_price,
                 quantity=price_info.quantity,
                 expires_on=price_info.expires_on,
@@ -160,17 +142,13 @@ class CustomerGroupDiscountModule(DiscountModule):
         Index the shop product discounts
         """
         if isinstance(shop_product, int):
-            shop_product = ShopProduct.objects.select_related("shop", "product").get(
-                pk=shop_product
-            )
+            shop_product = ShopProduct.objects.select_related("shop", "product").get(pk=shop_product)
 
         is_variation_parent = shop_product.product.is_variation_parent()
 
         # index the discounted price of all children shop products
         if is_variation_parent:
-            children_shop_product = ShopProduct.objects.select_related(
-                "product", "shop"
-            ).filter(
+            children_shop_product = ShopProduct.objects.select_related("product", "shop").filter(
                 shop=shop_product.shop, product__variation_parent=shop_product.product
             )
             for child_shop_product in children_shop_product:

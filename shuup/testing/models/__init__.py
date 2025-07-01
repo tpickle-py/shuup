@@ -1,4 +1,3 @@
-
 from ._behavior_components import ExpensiveSwedenBehaviorComponent
 from ._fields import FieldsModel
 from ._filters import UltraFilter

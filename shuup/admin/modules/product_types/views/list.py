@@ -1,5 +1,3 @@
-
-
 from django.db.models import Count
 from django.utils.translation import ugettext_lazy as _
 
@@ -16,9 +14,7 @@ class ProductTypeListView(PicotableListView):
             _("Name"),
             sort_field="translations__name",
             display="name",
-            filter_config=TextFilter(
-                filter_field="translations__name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="translations__name", placeholder=_("Filter by name...")),
         ),
         Column("n_attributes", _("Number of Attributes")),
     ]

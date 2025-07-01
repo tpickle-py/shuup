@@ -1,20 +1,14 @@
-
-
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
 class HappyHour(models.Model):
-    shop = models.ForeignKey(
-        "shuup.Shop", verbose_name=_("shop"), on_delete=models.CASCADE
-    )
+    shop = models.ForeignKey("shuup.Shop", verbose_name=_("shop"), on_delete=models.CASCADE)
     name = models.CharField(
         max_length=120,
         verbose_name=_("name"),
-        help_text=_(
-            "The name for this HappyHour. Used internally with exception lists for filtering."
-        ),
+        help_text=_("The name for this HappyHour. Used internally with exception lists for filtering."),
     )
 
     def __str__(self):
@@ -23,7 +17,6 @@ class HappyHour(models.Model):
     class Meta:
         verbose_name = _("happy hour")
         verbose_name_plural = _("happy hours")
-
 
 
 class TimeRange(models.Model):
@@ -56,9 +49,7 @@ class TimeRange(models.Model):
     def save(self, **kwargs):
         if self.to_hour < self.from_hour:
             raise ValidationError(
-                _(
-                    "The value of the field `to hour` has to be later than that of `from hour`."
-                ),
+                _("The value of the field `to hour` has to be later than that of `from hour`."),
                 code="time_range_error",
             )
 

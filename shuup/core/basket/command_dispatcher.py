@@ -1,5 +1,3 @@
-
-
 import six
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect, JsonResponse
@@ -63,9 +61,7 @@ class BasketCommandDispatcher:
             handler = self.get_command_handler(command)
             if not handler or not callable(handler):
                 raise Problem(_("Error! Invalid command `%s`.") % escape(command))
-            kwargs.pop(
-                "csrfmiddlewaretoken", None
-            )  # The CSRF token should never be passed as a kwarg
+            kwargs.pop("csrfmiddlewaretoken", None)  # The CSRF token should never be passed as a kwarg
             kwargs.pop("command", None)  # Nor the command
             kwargs.update(request=self.request, basket=self.basket)
             kwargs = self.preprocess_kwargs(command, kwargs)
@@ -102,9 +98,7 @@ class BasketCommandDispatcher:
         :return: dict of arguments.
         """
 
-        for basket_command_middleware in get_provide_objects(
-            "basket_command_middleware"
-        ):
+        for basket_command_middleware in get_provide_objects("basket_command_middleware"):
             if not issubclass(basket_command_middleware, BaseBasketCommandMiddleware):
                 continue
 
@@ -131,9 +125,7 @@ class BasketCommandDispatcher:
         :return: The response to be processed and sent to the client.
         """
 
-        for basket_command_middleware in get_provide_objects(
-            "basket_command_middleware"
-        ):
+        for basket_command_middleware in get_provide_objects("basket_command_middleware"):
             if not issubclass(basket_command_middleware, BaseBasketCommandMiddleware):
                 continue
 

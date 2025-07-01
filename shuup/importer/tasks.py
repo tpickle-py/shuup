@@ -58,9 +58,7 @@ def import_file(
 
             importer_instance = file_importer.importer  # type: DataImporter
             result = {
-                "other_log_messages": [
-                    str(msg) for msg in importer_instance.other_log_messages
-                ],
+                "other_log_messages": [str(msg) for msg in importer_instance.other_log_messages],
                 "log_messages": [str(msg) for msg in importer_instance.log_messages],
             }
 
@@ -93,6 +91,4 @@ def import_file(
 
     except Exception:
         LOGGER.exception("Failed to import the file.")
-        return TaskResult(
-            error_log=_("Unexpected error while trying to import the file.")
-        )
+        return TaskResult(error_log=_("Unexpected error while trying to import the file."))

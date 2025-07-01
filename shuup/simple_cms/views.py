@@ -35,9 +35,7 @@ class PageView(DetailView):
 
         self.object.set_current_language(get_language())
         if self.object.url != self.kwargs[self.slug_url_kwarg]:  # Wrong URL, hm!
-            return HttpResponseRedirect(
-                reverse("shuup:cms_page", kwargs={"url": self.object.url})
-            )
+            return HttpResponseRedirect(reverse("shuup:cms_page", kwargs={"url": self.object.url}))
 
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)

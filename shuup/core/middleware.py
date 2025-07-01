@@ -1,5 +1,3 @@
-
-
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.http.response import JsonResponse
 from django.shortcuts import render

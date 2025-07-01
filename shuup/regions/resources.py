@@ -28,9 +28,7 @@ def add_init_fields_resource(
 
 
 def add_front_resources(context, content):
-    view_class = (
-        getattr(context["view"], "__class__", None) if context.get("view") else None
-    )
+    view_class = getattr(context["view"], "__class__", None) if context.get("view") else None
     if not view_class:
         return
 

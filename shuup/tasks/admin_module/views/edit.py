@@ -1,5 +1,3 @@
-
-
 from django.contrib import messages
 from django.db.models import Q
 from django.db.transaction import atomic
@@ -52,9 +50,7 @@ class TaskForm(ModelForm):
             "completed_by",
             "creator",
         )
-        widgets = {
-            "type": QuickAddTaskTypeSelect(editable_model="shuup_tasks.TaskType")
-        }
+        widgets = {"type": QuickAddTaskTypeSelect(editable_model="shuup_tasks.TaskType")}
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
@@ -80,9 +76,7 @@ class TaskForm(ModelForm):
 
         if not is_new and old_assigned != self.instance.assigned_to:
             self.instance.add_log_entry(
-                _(
-                    "Changed assigment from {from_contact_name} to {to_contact_name}."
-                ).format(
+                _("Changed assigment from {from_contact_name} to {to_contact_name}.").format(
                     **{
                         "from_contact_name": old_assigned,
                         "to_contact_name": self.instance.assigned_to,
@@ -146,20 +140,14 @@ class TaskEditView(BaseTaskViewMixin, CreateOrUpdateView):
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
         obj = self.get_object()
-        delete_url = (
-            reverse_lazy("shuup_admin:task.delete", kwargs={"pk": obj.pk})
-            if obj.pk
-            else None
-        )
+        delete_url = reverse_lazy("shuup_admin:task.delete", kwargs={"pk": obj.pk}) if obj.pk else None
         toolbar = get_default_edit_toolbar(self, save_form_id, delete_url=delete_url)
 
         if obj and obj.pk:
             if obj.status == TaskStatus.NEW:
                 toolbar.append(
                     PostActionButton(
-                        post_url=reverse_lazy(
-                            "shuup_admin:task.set_status", kwargs={"pk": obj.pk}
-                        ),
+                        post_url=reverse_lazy("shuup_admin:task.set_status", kwargs={"pk": obj.pk}),
                         icon="fa fa-check",
                         name="status",
                         value=TaskStatus.IN_PROGRESS.value,
@@ -170,9 +158,7 @@ class TaskEditView(BaseTaskViewMixin, CreateOrUpdateView):
             if obj.status == TaskStatus.IN_PROGRESS:
                 toolbar.append(
                     PostActionButton(
-                        post_url=reverse_lazy(
-                            "shuup_admin:task.set_status", kwargs={"pk": obj.pk}
-                        ),
+                        post_url=reverse_lazy("shuup_admin:task.set_status", kwargs={"pk": obj.pk}),
                         icon="fa fa-check",
                         name="status",
                         value=TaskStatus.COMPLETED.value,
@@ -212,9 +198,7 @@ class TaskEditView(BaseTaskViewMixin, CreateOrUpdateView):
         comments = []
         task = self.get_object()
         if task:
-            comments = task.comments.for_contact(
-                get_person_contact(self.request.user)
-            ).order_by("created_on")
+            comments = task.comments.for_contact(get_person_contact(self.request.user)).order_by("created_on")
         context["comments"] = comments
         return context
 

@@ -7,6 +7,7 @@
 """
 Scripts for Shuup setup utilities.
 """
+
 from .resource_building import Options, build_resources
 
 

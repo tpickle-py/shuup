@@ -87,9 +87,7 @@ class CompanyContactForm(forms.ModelForm):
         for field in ("name", "tax_number", "email"):
             self.fields[field].required = True
         if not kwargs.get("instance"):
-            self.fields["email"].help_text = _(
-                "Will become default user email when linked."
-            )
+            self.fields["email"].help_text = _("Will become default user email when linked.")
 
     def clean_tax_number(self):
         """
@@ -100,9 +98,7 @@ class CompanyContactForm(forms.ModelForm):
         tax_number = self.cleaned_data["tax_number"]
         company = CompanyContact.objects.filter(tax_number=tax_number).first()
         if company:
-            error_message = _(
-                "Given Tax Number already exists. Please contact support."
-            )
+            error_message = _("Given Tax Number already exists. Please contact support.")
             if not self.instance.pk:
                 raise ValidationError(error_message, code="existing_tax_number")
             elif company.pk != self.instance.pk:
@@ -112,12 +108,8 @@ class CompanyContactForm(forms.ModelForm):
 
 class SavedAddressForm(forms.Form):
     title = forms.CharField(max_length=255, label=_("Address Title"))
-    role = EnumField(SavedAddressRole, default=SavedAddressRole.SHIPPING).formfield(
-        label=_("Address Type")
-    )
-    status = EnumField(
-        SavedAddressStatus, default=SavedAddressStatus.ENABLED
-    ).formfield(label=_("Address Status"))
+    role = EnumField(SavedAddressRole, default=SavedAddressRole.SHIPPING).formfield(label=_("Address Type"))
+    status = EnumField(SavedAddressStatus, default=SavedAddressStatus.ENABLED).formfield(label=_("Address Status"))
 
 
 class CustomerInformationFormGroup(FormGroup):
@@ -144,21 +136,15 @@ class CustomerInformationFormGroup(FormGroup):
 
         if "billing" in self.forms:
             billing_address = self.forms["billing"].save()
-            if (
-                billing_address.pk != contact.default_billing_address_id
-            ):  # Identity changed due to immutability
+            if billing_address.pk != contact.default_billing_address_id:  # Identity changed due to immutability
                 contact.default_billing_address = billing_address
 
         if "shipping" in self.forms:
             shipping_address = self.forms["shipping"].save()
-            if (
-                shipping_address.pk != contact.default_shipping_address_id
-            ):  # Identity changed due to immutability
+            if shipping_address.pk != contact.default_shipping_address_id:  # Identity changed due to immutability
                 contact.default_shipping_address = shipping_address
 
-        if not bool(
-            get_company_contact(self.request.user)
-        ):  # Only update user details for non-company members
+        if not bool(get_company_contact(self.request.user)):  # Only update user details for non-company members
             user.email = contact.email
             user.first_name = contact.first_name
             user.last_name = contact.last_name
@@ -184,11 +170,7 @@ class CompanyInformationFormGroup(FormGroup):
             self.add_form_def(
                 form_name,
                 address_form_class,
-                kwargs={
-                    "instance": _get_default_address_for_contact(
-                        company, f"default_{form_name}_address", person
-                    )
-                },
+                kwargs={"instance": _get_default_address_for_contact(company, f"default_{form_name}_address", person)},
             )
         self.add_form_def("contact", CompanyContactForm, kwargs={"instance": company})
 
@@ -206,16 +188,12 @@ class CompanyInformationFormGroup(FormGroup):
 
         if "billing" in self.forms:
             billing_address = self.forms["billing"].save()
-            if (
-                billing_address.pk != company.default_billing_address_id
-            ):  # Identity changed due to immutability
+            if billing_address.pk != company.default_billing_address_id:  # Identity changed due to immutability
                 company.default_billing_address = billing_address
 
         if "shipping" in self.forms:
             shipping_address = self.forms["shipping"].save()
-            if (
-                shipping_address.pk != company.default_shipping_address_id
-            ):  # Identity changed due to immutability
+            if shipping_address.pk != company.default_shipping_address_id:  # Identity changed due to immutability
                 company.default_shipping_address = shipping_address
 
         message = _("Company information was saved.")
@@ -223,21 +201,14 @@ class CompanyInformationFormGroup(FormGroup):
         # company will be created as inactive.
         if is_new and company_registration_requires_approval(self.request.shop):
             company.is_active = False
-            message = _(
-                "Company information was saved. "
-                "Please follow the instructions sent to your email address."
-            )
+            message = _("Company information was saved. Please follow the instructions sent to your email address.")
 
         messages.success(self.request, message)
         company.save()
 
         if is_new:
-            user_registered.send(
-                sender=self.__class__, user=self.request.user, request=self.request
-            )
-            CompanyAccountCreated(contact=company, customer_email=company.email).run(
-                shop=self.request.shop
-            )
+            user_registered.send(sender=self.__class__, user=self.request.user, request=self.request)
+            CompanyAccountCreated(contact=company, customer_email=company.email).run(shop=self.request.shop)
 
         return company
 
@@ -260,12 +231,8 @@ class AddressBookFormGroup(FormGroup):
                 "title": self.instance.title,
             }
 
-        self.add_form_def(
-            "address", cached_load("SHUUP_ADDRESS_MODEL_FORM"), kwargs=address_kwargs
-        )
-        self.add_form_def(
-            "saved_address", self.saved_address_form, kwargs=saved_address_kwargs
-        )
+        self.add_form_def("address", cached_load("SHUUP_ADDRESS_MODEL_FORM"), kwargs=address_kwargs)
+        self.add_form_def("saved_address", self.saved_address_form, kwargs=saved_address_kwargs)
 
     def save(self):
         address_form = self.forms["address"]

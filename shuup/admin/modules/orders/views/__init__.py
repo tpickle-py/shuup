@@ -1,4 +1,3 @@
-
 from .addresses import OrderAddressEditView
 from .detail import OrderDetailView, OrderSetStatusView
 from .edit import OrderEditView, UpdateAdminCommentView

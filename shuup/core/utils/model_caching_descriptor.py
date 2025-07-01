@@ -1,5 +1,3 @@
-
-
 import six
 
 
@@ -25,9 +23,7 @@ class ModelCachingDescriptor:
             if current_cached and current_cached.pk != self.get_id(instance):
                 setattr(instance, self.object_name, None)
         else:
-            raise TypeError(
-                f"Error! Can't assign ID `{value!r}` in a `ModelCachingDescriptor({self.name})`."
-            )
+            raise TypeError(f"Error! Can't assign ID `{value!r}` in a `ModelCachingDescriptor({self.name})`.")
 
     def get_id(self, instance):
         return getattr(instance, self.id_name, None)
@@ -43,9 +39,7 @@ class ModelCachingDescriptor:
             setattr(instance, self.id_name, value.pk)
             setattr(instance, self.object_name, value)
         else:
-            raise TypeError(
-                f"Error! Can't assign object `{value!r}` in a `ModelCachingDescriptor({self.name})`."
-            )
+            raise TypeError(f"Error! Can't assign object `{value!r}` in a `ModelCachingDescriptor({self.name})`.")
 
     def get_object(self, instance):
         if not self.get_id(instance):

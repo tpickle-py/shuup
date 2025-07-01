@@ -1,4 +1,3 @@
-
 from shuup.xtheme.admin_module.views._snippet import SnippetDeleteView, SnippetEditView, SnippetListView
 from shuup.xtheme.admin_module.views._theme import (
     ActivationForm,

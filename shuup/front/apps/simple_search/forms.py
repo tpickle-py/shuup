@@ -1,5 +1,3 @@
-
-
 import re
 
 from django import forms
@@ -43,9 +41,7 @@ def get_compiled_query(query_string, needles):
         for needle in needles:
             q = Q(**{f"{needle}__icontains": word})
             inner_query = q if inner_query is None else inner_query | q
-        compiled_query = (
-            inner_query if compiled_query is None else compiled_query & inner_query
-        )
+        compiled_query = inner_query if compiled_query is None else compiled_query & inner_query
     return compiled_query
 
 
@@ -89,9 +85,7 @@ def get_search_product_ids(request, query, limit=settings.SHUUP_SIMPLE_SEARCH_LI
         prod_count = len(product_ids)
         if prod_count >= limit:
             break
-        product_ids += get_product_ids_for_query_str(
-            request, word.strip(), limit, product_ids
-        )
+        product_ids += get_product_ids_for_query_str(request, word.strip(), limit, product_ids)
 
     context_cache.set_cached_value(key, product_ids[:limit])
     return product_ids

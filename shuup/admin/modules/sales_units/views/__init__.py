@@ -1,4 +1,3 @@
-
 from .edit import DisplayUnitEditView, SalesUnitEditView
 from .list import DisplayUnitListView, SalesUnitListView
 

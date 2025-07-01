@@ -1,5 +1,3 @@
-
-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from jsonfield import JSONField
@@ -34,7 +32,6 @@ class ConfigurationItem(ShuupModel):
 
     def __repr__(self):
         return f'<{type(self).__name__} "{self.key}" for {self.shop!r}>'
-
 
 
 class EncryptedConfigurationItem(ShuupModel):

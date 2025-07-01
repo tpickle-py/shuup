@@ -1,4 +1,3 @@
-
 from shuup.core.models import Contact, PersonContact
 from shuup.importer.importing import DataImporter, ImporterExampleFile
 

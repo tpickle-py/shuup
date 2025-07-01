@@ -28,9 +28,7 @@ class GDPRSettingsForm(MultiLanguageModelForm):
             "auth_consent_text": TextEditorWidget(),
             "cookie_banner_content": TextEditorWidget(),
             "cookie_privacy_excerpt": TextEditorWidget(),
-            "privacy_policy_page": QuickAddPageSelect(
-                editable_model="shuup_simple_cms.Page"
-            ),
+            "privacy_policy_page": QuickAddPageSelect(editable_model="shuup_simple_cms.Page"),
             "consent_pages": QuickAddPageMultiSelect(),
         }
 
@@ -38,10 +36,7 @@ class GDPRSettingsForm(MultiLanguageModelForm):
         self.request = kwargs.pop("request")
         super().__init__(**kwargs)
         shop = get_shop(self.request)
-        choices = [
-            (p.id, p.safe_translation_getter("title"))
-            for p in get_possible_consent_pages(shop)
-        ]
+        choices = [(p.id, p.safe_translation_getter("title")) for p in get_possible_consent_pages(shop)]
         self.fields["privacy_policy_page"].choices = choices
         self.fields["consent_pages"].required = False
         self.fields["consent_pages"].choices = choices
@@ -88,12 +83,8 @@ class GDPRCookieCategoryFormSet(BaseModelFormSet):
 
     def __init__(self, *args, **kwargs):
         self.shop = kwargs.pop("shop")
-        self.default_language = kwargs.pop(
-            "default_language", settings.PARLER_DEFAULT_LANGUAGE_CODE
-        )
-        self.languages = to_language_codes(
-            kwargs.pop("languages", ()), self.default_language
-        )
+        self.default_language = kwargs.pop("default_language", settings.PARLER_DEFAULT_LANGUAGE_CODE)
+        self.languages = to_language_codes(kwargs.pop("languages", ()), self.default_language)
         kwargs.pop("empty_permitted", None)  # this is unknown to formset
         super().__init__(*args, **kwargs)
 

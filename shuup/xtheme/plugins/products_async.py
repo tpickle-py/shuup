@@ -51,9 +51,7 @@ class ProductHighlightPlugin(TemplatedPlugin):
         ),
         (
             "cache_timeout",
-            forms.IntegerField(
-                label=_("Cache timeout (seconds)"), min_value=0, initial=120
-            ),
+            forms.IntegerField(label=_("Cache timeout (seconds)"), min_value=0, initial=120),
         ),
         (
             "orderable_only",
@@ -102,9 +100,7 @@ class ProductHighlightPlugin(TemplatedPlugin):
             if plugin_type == HighlightType.NEWEST.value:
                 products = get_newest_products(context, count, orderable_only)
             elif plugin_type == HighlightType.BEST_SELLING.value:
-                products = get_best_selling_products(
-                    context, count, cutoff_days, orderable_only
-                )
+                products = get_best_selling_products(context, count, cutoff_days, orderable_only)
             elif plugin_type == HighlightType.RANDOM.value:
                 products = get_random_products(context, count, orderable_only)
 
@@ -145,9 +141,7 @@ class ProductCrossSellsPlugin(TemplatedPlugin):
         ),
         (
             "cache_timeout",
-            forms.IntegerField(
-                label=_("Cache timeout (seconds)"), min_value=0, initial=120
-            ),
+            forms.IntegerField(label=_("Cache timeout (seconds)"), min_value=0, initial=120),
         ),
         (
             "orderable_only",
@@ -267,9 +261,7 @@ class ProductsFromCategoryPlugin(TemplatedPlugin):
         ("count", forms.IntegerField(label=_("Count"), min_value=1, initial=5)),
         (
             "cache_timeout",
-            forms.IntegerField(
-                label=_("Cache timeout (seconds)"), min_value=0, initial=120
-            ),
+            forms.IntegerField(label=_("Cache timeout (seconds)"), min_value=0, initial=120),
         ),
         (
             "orderable_only",
@@ -321,9 +313,7 @@ class ProductsFromCategoryPlugin(TemplatedPlugin):
             "orderable_only": orderable_only,
             "data_url": reverse(
                 "shuup:xtheme-category-products-highlight",
-                kwargs={
-                    "category_id": category_id, "count": count, "cache_timeout": cache_timeout
-                },
+                kwargs={"category_id": category_id, "count": count, "cache_timeout": cache_timeout},
             ),
         }
 
@@ -366,9 +356,7 @@ class ProductSelectionPlugin(TemplatedPlugin):
         ("title", TranslatableField(label=_("Title"), required=False, initial="")),
         (
             "cache_timeout",
-            forms.IntegerField(
-                label=_("Cache timeout (seconds)"), min_value=0, initial=120
-            ),
+            forms.IntegerField(label=_("Cache timeout (seconds)"), min_value=0, initial=120),
         ),
     ]
 
@@ -405,10 +393,7 @@ class ProductSelectionPlugin(TemplatedPlugin):
                 "shuup:xtheme-product-selections-highlight",
                 kwargs={
                     "product_ids": ",".join(
-                        [
-                            (str(prod.pk) if hasattr(prod, "pk") else str(prod))
-                            for prod in products
-                        ]
+                        [(str(prod.pk) if hasattr(prod, "pk") else str(prod)) for prod in products]
                     ),
                     "cache_timeout": cache_timeout,
                 },

@@ -47,11 +47,7 @@ class PictureDnDUploaderWidget(Widget):
             "thumbnail": (thumbnail.url if thumbnail else None),
             "date": file.uploaded_at.isoformat(),
         }
-        return [
-            f"data-{key}='{val}'"
-            for key, val in six.iteritems(data)
-            if val is not None
-        ]
+        return [f"data-{key}='{val}'" for key, val in six.iteritems(data) if val is not None]
 
     def render(self, name, value, attrs=None, renderer=None):
         if attrs is None:
@@ -68,12 +64,7 @@ class PictureDnDUploaderWidget(Widget):
         if self.dropzone_attrs:
             # attributes passed here will be converted into keys with dz_ prefix
             # `{max-filesize: 1}` will be converted into `data-dz_max-filesize="1"`
-            file_attrs.extend(
-                [
-                    f'data-dz_{k}="{force_text(v)}"'
-                    for k, v in self.dropzone_attrs.items()
-                ]
-            )
+            file_attrs.extend([f'data-dz_{k}="{force_text(v)}"' for k, v in self.dropzone_attrs.items()])
 
         if value:
             file = File.objects.filter(pk=value).first()

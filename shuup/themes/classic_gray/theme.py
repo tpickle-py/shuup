@@ -1,4 +1,3 @@
-
 import django.conf
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -38,9 +37,7 @@ class ClassicGrayTheme(BaseThemeFieldsMixin, Theme):
     _theme_fields = [
         (
             "show_welcome_text",
-            forms.BooleanField(
-                required=False, initial=True, label=_("Show Frontpage Welcome Text")
-            ),
+            forms.BooleanField(required=False, initial=True, label=_("Show Frontpage Welcome Text")),
         )
     ]
 

@@ -74,9 +74,7 @@ class ProductListFormModifier(six.with_metaclass(abc.ABCMeta)):
         """
         pass
 
-    def sort_products_queryset(
-        self, request, queryset: "QuerySet[Product]", data: Dict
-    ):
+    def sort_products_queryset(self, request, queryset: "QuerySet[Product]", data: Dict):
         """
         Sort the products queryset
         Modify current queryset and return the new one.
@@ -92,9 +90,7 @@ class ProductListFormModifier(six.with_metaclass(abc.ABCMeta)):
         """
         pass
 
-    def get_products_queryset(
-        self, request, queryset: "QuerySet[Product]", data: Dict
-    ) -> "QuerySet[Product]":
+    def get_products_queryset(self, request, queryset: "QuerySet[Product]", data: Dict) -> "QuerySet[Product]":
         """
         Modify product queryset
 
@@ -176,9 +172,7 @@ def get_configuration(shop=None, category=None, force_category_override=False):
 
     category_config = configuration.get(None, _get_category_configuration_key(category))
     # when override_default_configuration is True, we override the default configuration
-    if category_config and (
-        category_config.get("override_default_configuration") or force_category_override
-    ):
+    if category_config and (category_config.get("override_default_configuration") or force_category_override):
         return category_config
 
     return default_configuration
@@ -225,9 +219,7 @@ def get_product_queryset(queryset, request, category, data):
     queryset_data.update({"request": request, "category": category})
 
     for extend_obj in _get_active_modifiers(request.shop, category):
-        new_queryset = extend_obj.get_products_queryset(
-            request, queryset, queryset_data
-        )
+        new_queryset = extend_obj.get_products_queryset(request, queryset, queryset_data)
         if new_queryset is not None:
             queryset = new_queryset
 
@@ -270,11 +262,7 @@ def cached_product_queryset(queryset, request, category, data):
 
 
 def _get_category_configuration_key(category):
-    return (
-        FACETED_CATEGORY_CONF_KEY_PREFIX % category.pk
-        if category and category.pk
-        else None
-    )
+    return FACETED_CATEGORY_CONF_KEY_PREFIX % category.pk if category and category.pk else None
 
 
 def _get_active_modifiers(shop=None, category=None):
@@ -307,6 +295,4 @@ def _get_active_modifiers(shop=None, category=None):
 
 
 def get_form_field_label(identifier, default):
-    return settings.SHUUP_FRONT_OVERRIDE_SORTS_AND_FILTERS_LABELS_LOGIC.get(
-        identifier, default
-    )
+    return settings.SHUUP_FRONT_OVERRIDE_SORTS_AND_FILTERS_LABELS_LOGIC.get(identifier, default)

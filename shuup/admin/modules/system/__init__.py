@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.base import AdminModule, MenuEntry, Notification
@@ -39,9 +37,7 @@ class SystemModule(AdminModule):
     def get_notifications(self, request):
         if is_telemetry_enabled() and is_in_grace_period() and not is_opt_out():
             yield Notification(
-                _(
-                    "Statistics will be periodically sent to Shuup.com after 24 hours. Click here for more information."
-                ),
+                _("Statistics will be periodically sent to Shuup.com after 24 hours. Click here for more information."),
                 title=_("Telemetry"),
                 kind="info",
                 url="shuup_admin:telemetry",

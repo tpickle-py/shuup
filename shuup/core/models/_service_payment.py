@@ -28,9 +28,7 @@ class PaymentMethod(Service):
         name=models.CharField(
             max_length=100,
             verbose_name=_("name"),
-            help_text=_(
-                "The payment method name. This name is shown to the customers on checkout."
-            ),
+            help_text=_("The payment method name. This name is shown to the customers on checkout."),
         ),
         description=models.CharField(
             max_length=500,
@@ -84,9 +82,7 @@ class PaymentProcessor(ServiceProvider):
     service_model = PaymentMethod
 
     def delete(self, *args, **kwargs):
-        PaymentMethod.objects.filter(payment_processor=self).update(
-            **{"enabled": False}
-        )
+        PaymentMethod.objects.filter(payment_processor=self).update(**{"enabled": False})
         super().delete(*args, **kwargs)
 
     def get_payment_process_response(self, service, order, urls):
@@ -120,9 +116,7 @@ class PaymentProcessor(ServiceProvider):
 
     def _create_service(self, choice_identifier, **kwargs):
         labels = kwargs.pop("labels", None)
-        service = PaymentMethod.objects.create(
-            payment_processor=self, choice_identifier=choice_identifier, **kwargs
-        )
+        service = PaymentMethod.objects.create(payment_processor=self, choice_identifier=choice_identifier, **kwargs)
         if labels:
             service.labels.set(labels)
         return service
@@ -146,12 +140,8 @@ class RoundingMode(Enum):
     ROUND_DOWN = decimal.ROUND_DOWN
 
     class Labels:
-        ROUND_HALF_UP = _(
-            "round up to the nearest number with ties going up, away from zero"
-        )
-        ROUND_HALF_DOWN = _(
-            "round to the nearest number with ties going down, towards zero"
-        )
+        ROUND_HALF_UP = _("round up to the nearest number with ties going up, away from zero")
+        ROUND_HALF_DOWN = _("round to the nearest number with ties going down, towards zero")
         ROUND_UP = _("round up, away from zero, towards the farther round number")
         ROUND_DOWN = _("round down, towards zero, towards the closest round number")
 
@@ -190,9 +180,7 @@ class CustomPaymentProcessor(PaymentProcessor):
         ]
 
     def _create_service(self, choice_identifier, **kwargs):
-        service = super()._create_service(
-            choice_identifier, **kwargs
-        )
+        service = super()._create_service(choice_identifier, **kwargs)
         if choice_identifier == "cash":
             service.behavior_components.add(StaffOnlyBehaviorComponent.objects.create())
         return service

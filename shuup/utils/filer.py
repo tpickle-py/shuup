@@ -1,4 +1,3 @@
-
 import hashlib
 
 import six
@@ -17,14 +16,9 @@ from shuup.core.models import MediaFile, MediaFolder
 
 def file_size_validator(value):
     size = getattr(value, "size", None)
-    if (
-        size
-        and settings.SHUUP_MAX_UPLOAD_SIZE
-        and settings.SHUUP_MAX_UPLOAD_SIZE < size
-    ):
+    if size and settings.SHUUP_MAX_UPLOAD_SIZE and settings.SHUUP_MAX_UPLOAD_SIZE < size:
         raise ValidationError(
-            _("Maximum file size reached (%(size)s MB).")
-            % {"size": settings.SHUUP_MAX_UPLOAD_SIZE / 1000 / 1000},
+            _("Maximum file size reached (%(size)s MB).") % {"size": settings.SHUUP_MAX_UPLOAD_SIZE / 1000 / 1000},
             code="file_max_size_reached",
         )
 
@@ -34,9 +28,7 @@ def file_size_validator(value):
 class UploadFileForm(forms.Form):
     file = forms.FileField(
         validators=[
-            FileExtensionValidator(
-                allowed_extensions=settings.SHUUP_ALLOWED_UPLOAD_EXTENSIONS
-            ),
+            FileExtensionValidator(allowed_extensions=settings.SHUUP_ALLOWED_UPLOAD_EXTENSIONS),
             file_size_validator,
         ]
     )
@@ -89,15 +81,11 @@ def _filer_file_from_upload(model, request, path, upload_data, sha1=None):
         if upload:
             return upload
 
-    file_form_cls = modelform_factory(
-        model=model, fields=("original_filename", "owner", "file")
-    )
+    file_form_cls = modelform_factory(model=model, fields=("original_filename", "owner", "file"))
     upload_form = file_form_cls(
         data={
             "original_filename": upload_data.name,
-            "owner": (
-                request.user.pk if (request and not request.user.is_anonymous) else None
-            ),
+            "owner": (request.user.pk if (request and not request.user.is_anonymous) else None),
         },
         files={"file": upload_data},
     )
@@ -127,9 +115,7 @@ def filer_file_from_upload(request, path, upload_data, sha1=None):
 
     :rtype: filer.models.filemodels.File
     """
-    return _filer_file_from_upload(
-        model=File, request=request, path=path, upload_data=upload_data, sha1=sha1
-    )
+    return _filer_file_from_upload(model=File, request=request, path=path, upload_data=upload_data, sha1=sha1)
 
 
 def filer_image_from_upload(request, path, upload_data, sha1=None):
@@ -148,9 +134,7 @@ def filer_image_from_upload(request, path, upload_data, sha1=None):
 
     :rtype: filer.models.imagemodels.Image
     """
-    return _filer_file_from_upload(
-        model=Image, request=request, path=path, upload_data=upload_data, sha1=sha1
-    )
+    return _filer_file_from_upload(model=Image, request=request, path=path, upload_data=upload_data, sha1=sha1)
 
 
 def filer_image_from_data(request, path, file_name, file_data, sha1=None):
@@ -177,9 +161,7 @@ def filer_image_from_data(request, path, file_name, file_data, sha1=None):
     if sha1 is True:
         sha1 = hashlib.sha1(file_data).hexdigest()
     upload_data = ContentFile(file_data, file_name)
-    return _filer_file_from_upload(
-        model=Image, request=request, path=path, upload_data=upload_data, sha1=sha1
-    )
+    return _filer_file_from_upload(model=Image, request=request, path=path, upload_data=upload_data, sha1=sha1)
 
 
 def filer_file_to_json_dict(file, user=None):
@@ -232,9 +214,7 @@ def filer_folder_to_json_dict(folder, children=None, user=None):
         children = folder.get_children()
 
     is_owned = subfolder_of_users_root(user=user, folder=folder)
-    extra_permissions = {
-        "folder-edit": True if has_permission(user, "media.edit-access") else False
-    }
+    extra_permissions = {"folder-edit": True if has_permission(user, "media.edit-access") else False}
     if user and not is_owned:
         if has_permission(user, "media.create-folder"):
             extra_permissions["folder-new"] = True

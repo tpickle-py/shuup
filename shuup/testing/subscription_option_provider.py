@@ -9,9 +9,7 @@ from shuup.core.utils.product_subscription import (
 
 class TestSubscriptionOptionProvider(BaseProductSubscriptionOptionProvider):
     @classmethod
-    def get_subscription_options(
-        cls, context: ProductSubscriptionContext
-    ) -> Iterable[ProductSubscriptionOption]:
+    def get_subscription_options(cls, context: ProductSubscriptionContext) -> Iterable[ProductSubscriptionOption]:
         yield ProductSubscriptionOption(
             value="mo",
             label="Monthly",

@@ -1,5 +1,3 @@
-
-
 import datetime
 import itertools
 import time
@@ -324,15 +322,11 @@ def to_timestamp(date):
 def to_datetime_range(start, end):
     for value in [start, end]:
         if not isinstance(value, datetime.date):
-            raise TypeError(
-                f"Error! Provided value `{value!r}` is neither date nor datetime."
-            )
+            raise TypeError(f"Error! Provided value `{value!r}` is neither date nor datetime.")
     start_is_datetime = isinstance(start, datetime.datetime)
     end_is_datetime = isinstance(end, datetime.datetime)
     if start_is_datetime != end_is_datetime:
-        raise TypeError(
-            f"Error! Start and end must be of the same type: `{start!r}` - `{end!r}`."
-        )
+        raise TypeError(f"Error! Start and end must be of the same type: `{start!r}` - `{end!r}`.")
     # Add +1 day to end if it's a date to make the range inclusive
     end_delta = datetime.timedelta(days=(1 if not end_is_datetime else 0))
     return (to_aware(start), to_aware(end) + end_delta)

@@ -1,5 +1,3 @@
-
-
 from django.db import models
 from django.db.models import Q
 from django.utils.safestring import mark_safe
@@ -37,11 +35,8 @@ class TaskCommentVisibility(Enum):
         ADMINS_ONLY = _("Admins Only")
 
 
-
 class TaskType(TranslatableModel):
-    identifier = InternalIdentifierField(
-        unique=False, blank=True, null=True, editable=True
-    )
+    identifier = InternalIdentifierField(unique=False, blank=True, null=True, editable=True)
     shop = models.ForeignKey(
         on_delete=models.CASCADE,
         to="shuup.Shop",
@@ -79,7 +74,6 @@ class TaskQuerySet(models.QuerySet):
         return self.filter(assigned_to=contact)
 
 
-
 class Task(models.Model):
     shop = models.ForeignKey(
         on_delete=models.CASCADE,
@@ -94,12 +88,8 @@ class Task(models.Model):
         verbose_name=_("task type"),
         related_name="tasks",
     )
-    status = EnumIntegerField(
-        TaskStatus, default=TaskStatus.NEW, verbose_name=_("status")
-    )
-    priority = models.PositiveIntegerField(
-        default=0, verbose_name=_("priority"), db_index=True
-    )
+    status = EnumIntegerField(TaskStatus, default=TaskStatus.NEW, verbose_name=_("status"))
+    priority = models.PositiveIntegerField(default=0, verbose_name=_("priority"), db_index=True)
     creator = models.ForeignKey(
         on_delete=models.CASCADE,
         to="shuup.Contact",
@@ -124,15 +114,9 @@ class Task(models.Model):
         related_name="completed_tasks",
         verbose_name=_("completed by"),
     )
-    completed_on = models.DateTimeField(
-        verbose_name=_("completed on"), null=True, blank=True
-    )
-    created_on = models.DateTimeField(
-        auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on")
-    )
-    modified_on = models.DateTimeField(
-        auto_now=True, editable=False, db_index=True, verbose_name=_("modified on")
-    )
+    completed_on = models.DateTimeField(verbose_name=_("completed on"), null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on"))
+    modified_on = models.DateTimeField(auto_now=True, editable=False, db_index=True, verbose_name=_("modified on"))
 
     objects = TaskQuerySet.as_manager()
 
@@ -150,9 +134,7 @@ class Task(models.Model):
         self.add_log_entry("Success! Deleted (soft).", kind=LogEntryKind.DELETION)
 
     def comment(self, contact, comment, visibility=TaskCommentVisibility.PUBLIC):
-        comment = TaskComment(
-            task=self, author=contact, body=comment, visibility=visibility
-        )
+        comment = TaskComment(task=self, author=contact, body=comment, visibility=visibility)
         comment.full_clean()
         comment.save()
         return comment
@@ -214,12 +196,8 @@ class TaskComment(models.Model):
         verbose_name=_("visibility"),
     )
     body = models.TextField(verbose_name=_("body"))
-    created_on = models.DateTimeField(
-        auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on")
-    )
-    modified_on = models.DateTimeField(
-        auto_now=True, editable=False, db_index=True, verbose_name=_("modified on")
-    )
+    created_on = models.DateTimeField(auto_now_add=True, editable=False, db_index=True, verbose_name=_("created on"))
+    modified_on = models.DateTimeField(auto_now=True, editable=False, db_index=True, verbose_name=_("modified on"))
 
     objects = TaskCommentQuerySet.as_manager()
 
@@ -240,8 +218,7 @@ class TaskComment(models.Model):
             return self.visibility == TaskCommentVisibility.PUBLIC
         elif not is_admin:
             return (
-                self.visibility == TaskCommentVisibility.PUBLIC
-                or self.visibility == TaskCommentVisibility.STAFF_ONLY
+                self.visibility == TaskCommentVisibility.PUBLIC or self.visibility == TaskCommentVisibility.STAFF_ONLY
             )
 
         return True

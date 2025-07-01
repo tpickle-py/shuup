@@ -7,19 +7,13 @@ class CampaignAppConfig(AppConfig):
     label = "campaigns"
     default_auto_field = "django.db.models.BigAutoField"
     provides = {
-        "admin_contact_group_form_part": [
-            "shuup.campaigns.admin_module.form_parts:SalesRangesFormPart"
-        ],
+        "admin_contact_group_form_part": ["shuup.campaigns.admin_module.form_parts:SalesRangesFormPart"],
         "discount_module": ["shuup.campaigns.modules:CatalogCampaignModule"],
-        "order_source_modifier_module": [
-            "shuup.campaigns.modules:BasketCampaignModule"
-        ],
+        "order_source_modifier_module": ["shuup.campaigns.modules:BasketCampaignModule"],
         "admin_module": [
             "shuup.campaigns.admin_module:CampaignAdminModule",
         ],
-        "admin_product_section": [
-            "shuup.campaigns.admin_module.sections:ProductCampaignsSection"
-        ],
+        "admin_product_section": ["shuup.campaigns.admin_module.sections:ProductCampaignsSection"],
         "admin_object_selector": [
             "shuup.campaigns.admin_module.object_selector.CouponAdminObjectSelector",
         ],

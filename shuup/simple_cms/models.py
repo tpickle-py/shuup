@@ -44,21 +44,12 @@ class PageQuerySet(TranslatableQuerySet):
         if not dt:
             dt = now()
 
-        available_filter = Q(
-            Q(available_from__lte=dt)
-            & (Q(available_to__gte=dt) | Q(available_to__isnull=True))
-        )
+        available_filter = Q(Q(available_from__lte=dt) & (Q(available_to__gte=dt) | Q(available_to__isnull=True)))
 
         if user and not is_anonymous(user):
             available_filter |= Q(created_by=user)
 
-        return (
-            self.not_deleted()
-            .for_shop(shop)
-            .for_user(user)
-            .filter(available_filter)
-            .distinct()
-        )
+        return self.not_deleted().for_shop(shop).for_user(user).filter(available_filter).distinct()
 
     def for_user(self, user):
         """
@@ -84,11 +75,8 @@ class PageQuerySet(TranslatableQuerySet):
 
 
 @reversion.register(follow=["translations"])
-
 class Page(MPTTModel, TranslatableModel):
-    shop = models.ForeignKey(
-        on_delete=models.CASCADE, to="shuup.Shop", verbose_name=_("shop")
-    )
+    shop = models.ForeignKey(on_delete=models.CASCADE, to="shuup.Shop", verbose_name=_("shop"))
     supplier = models.ForeignKey(
         on_delete=models.CASCADE,
         to="shuup.Supplier",
@@ -141,12 +129,8 @@ class Page(MPTTModel, TranslatableModel):
         verbose_name=_("modified by"),
     )
 
-    created_on = models.DateTimeField(
-        auto_now_add=True, editable=False, verbose_name=_("created on")
-    )
-    modified_on = models.DateTimeField(
-        auto_now=True, editable=False, verbose_name=_("modified on")
-    )
+    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
+    modified_on = models.DateTimeField(auto_now=True, editable=False, verbose_name=_("modified on"))
 
     identifier = InternalIdentifierField(
         unique=False,
@@ -157,9 +141,7 @@ class Page(MPTTModel, TranslatableModel):
     visible_in_menu = models.BooleanField(
         verbose_name=_("visible in menu"),
         default=False,
-        help_text=_(
-            "Enable this if this page should have a visible link in the top menu of the store front."
-        ),
+        help_text=_("Enable this if this page should have a visible link in the top menu of the store front."),
     )
     parent = TreeForeignKey(
         "self",
@@ -168,16 +150,12 @@ class Page(MPTTModel, TranslatableModel):
         related_name="children",
         on_delete=models.CASCADE,
         verbose_name=_("parent"),
-        help_text=_(
-            "Set this to a parent page if this page should be subcategorized (sub-menu) under another page."
-        ),
+        help_text=_("Set this to a parent page if this page should be subcategorized (sub-menu) under another page."),
     )
     list_children_on_page = models.BooleanField(
         verbose_name=_("display children on page"),
         default=False,
-        help_text=_(
-            "Enable this if this page should display all of its children pages."
-        ),
+        help_text=_("Enable this if this page should display all of its children pages."),
     )
     show_child_timestamps = models.BooleanField(
         verbose_name=_("show child page timestamps"),
@@ -193,9 +171,7 @@ class Page(MPTTModel, TranslatableModel):
         title=models.CharField(
             max_length=256,
             verbose_name=_("title"),
-            help_text=_(
-                "The page title. This is shown anywhere links to your page are shown."
-            ),
+            help_text=_("The page title. This is shown anywhere links to your page are shown."),
         ),
         url=models.CharField(
             max_length=100,
@@ -237,16 +213,12 @@ class Page(MPTTModel, TranslatableModel):
         unique_together = ("shop", "identifier")
 
     def delete(self, using=None):
-        raise NotImplementedError(
-            "Error! Not implemented: `Page` -> `delete()`. Use `soft_delete()` instead."
-        )
+        raise NotImplementedError("Error! Not implemented: `Page` -> `delete()`. Use `soft_delete()` instead.")
 
     def soft_delete(self, user=None):
         if not self.deleted:
             self.deleted = True
-            self.add_log_entry(
-                "Success! Deleted (soft).", kind=LogEntryKind.DELETION, user=user
-            )
+            self.add_log_entry("Success! Deleted (soft).", kind=LogEntryKind.DELETION, user=user)
             # Bypassing local `save()` on purpose.
             super().save(update_fields=("deleted",))
 
@@ -254,14 +226,8 @@ class Page(MPTTModel, TranslatableModel):
         url = getattr(self, "url", None)
         if url:
             page_translation = self._meta.model._parler_meta.root_model
-            shop_pages = (
-                Page.objects.for_shop(self.shop)
-                .exclude(deleted=True)
-                .values_list("id", flat=True)
-            )
-            url_checker = page_translation.objects.filter(
-                url=url, master_id__in=shop_pages
-            )
+            shop_pages = Page.objects.for_shop(self.shop).exclude(deleted=True).values_list("id", flat=True)
+            url_checker = page_translation.objects.filter(url=url, master_id__in=shop_pages)
             if self.pk:
                 url_checker = url_checker.exclude(master_id=self.pk)
             if url_checker.exists():
@@ -291,12 +257,7 @@ class Page(MPTTModel, TranslatableModel):
                 page.save()
 
     def __str__(self):
-        return force_text(
-            self.safe_translation_getter(
-                "title", any_language=True, default=_("Untitled")
-            )
-        )
-
+        return force_text(self.safe_translation_getter("title", any_language=True, default=_("Untitled")))
 
 
 class PageOpenGraph(TranslatableModel):
@@ -319,17 +280,13 @@ class PageOpenGraph(TranslatableModel):
         help_text=_("The image of your object."),
         related_name="blog_meta_image",
     )
-    og_type = EnumField(
-        PageOpenGraphType, verbose_name=_("type"), default=PageOpenGraphType.Website
-    )
+    og_type = EnumField(PageOpenGraphType, verbose_name=_("type"), default=PageOpenGraphType.Website)
     translations = TranslatedFields(
         title=models.CharField(
             max_length=100,
             blank=True,
             verbose_name=_("Title"),
-            help_text=_(
-                "The title of your object as it should appear within the graph, e.g. The Rock."
-            ),
+            help_text=_("The title of your object as it should appear within the graph, e.g. The Rock."),
         ),
         description=models.TextField(
             max_length=160,
@@ -341,25 +298,19 @@ class PageOpenGraph(TranslatableModel):
             max_length=256,
             blank=True,
             verbose_name=_("Section"),
-            help_text=_(
-                "A high-level section name, e.g. Technology. Only applicable when type is Article."
-            ),
+            help_text=_("A high-level section name, e.g. Technology. Only applicable when type is Article."),
         ),
         tags=models.CharField(
             max_length=256,
             blank=True,
             verbose_name=_("Tags"),
-            help_text=_(
-                "Tag words associated with this article. Only applicable when type is Article."
-            ),
+            help_text=_("Tag words associated with this article. Only applicable when type is Article."),
         ),
         article_author=models.CharField(
             max_length=100,
             blank=True,
             verbose_name=_("Article author"),
-            help_text=_(
-                "The name of the author for the article. Only applicable when type is Article."
-            ),
+            help_text=_("The name of the author for the article. Only applicable when type is Article."),
         ),
     )
 

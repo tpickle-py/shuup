@@ -93,9 +93,7 @@ def get_last_submission_time():
 
 def get_last_submission_data():
     try:
-        return safe_json(
-            PersistentCacheEntry.objects.get(**LAST_DATA_KWARGS).data, indent=4
-        )
+        return safe_json(PersistentCacheEntry.objects.get(**LAST_DATA_KWARGS).data, indent=4)
     except ObjectDoesNotExist:
         return None
 
@@ -109,9 +107,7 @@ def save_telemetry_submission(data):
     :param data: A blob of data.
     :type data: dict
     """
-    pce, _ = PersistentCacheEntry.objects.get_or_create(
-        defaults={"data": None}, **LAST_DATA_KWARGS
-    )
+    pce, _ = PersistentCacheEntry.objects.get_or_create(defaults={"data": None}, **LAST_DATA_KWARGS)
     pce.data = data
     pce.save()
 
@@ -132,30 +128,16 @@ def get_daily_data_for_day(date):
     today_max = datetime.combine(date, time.max)
     order_date_filter = Q(order_date__range=(today_min, today_max))
     data["orders"] = Order.objects.filter(order_date_filter).count()
-    total_sales = Order.objects.filter(order_date_filter).aggregate(
-        total_sales=Sum("taxful_total_price_value")
-    )
-    data["total_sales"] = (
-        float(total_sales["total_sales"]) if total_sales["total_sales"] else 0
-    )
+    total_sales = Order.objects.filter(order_date_filter).aggregate(total_sales=Sum("taxful_total_price_value"))
+    data["total_sales"] = float(total_sales["total_sales"]) if total_sales["total_sales"] else 0
 
     created_on_filter = Q(created_on__range=(today_min, today_max))
-    total_paid_sales = Payment.objects.filter(created_on_filter).aggregate(
-        total_paid=Sum("amount_value")
-    )
-    data["total_paid_sales"] = (
-        float(total_paid_sales["total_paid"]) if total_paid_sales["total_paid"] else 0
-    )
+    total_paid_sales = Payment.objects.filter(created_on_filter).aggregate(total_paid=Sum("amount_value"))
+    data["total_paid_sales"] = float(total_paid_sales["total_paid"]) if total_paid_sales["total_paid"] else 0
     for service_identifier in ["stripe", "checkoutfi", "paytrail"]:
-        payment_query = created_on_filter & Q(
-            order__payment_method__choice_identifier=service_identifier
-        )
-        total_sales = Payment.objects.filter(payment_query).aggregate(
-            total_sales=Sum("amount_value")
-        )
-        data["methods"][service_identifier] = (
-            float(total_sales["total_sales"]) if total_sales["total_sales"] else 0
-        )
+        payment_query = created_on_filter & Q(order__payment_method__choice_identifier=service_identifier)
+        total_sales = Payment.objects.filter(payment_query).aggregate(total_sales=Sum("amount_value"))
+        data["methods"][service_identifier] = float(total_sales["total_sales"]) if total_sales["total_sales"] else 0
 
     data["products"] = Product.objects.filter(created_on_filter).count()
     data["contacts"] = Contact.objects.filter(created_on_filter).count()
@@ -224,10 +206,7 @@ def _send_telemetry(request, max_age_hours, force_send=False):
 
     if max_age_hours is not None:
         last_send_time = get_last_submission_time()
-        if (
-            last_send_time
-            and (now() - last_send_time).total_seconds() <= max_age_hours * 60 * 60
-        ):
+        if last_send_time and (now() - last_send_time).total_seconds() <= max_age_hours * 60 * 60:
             raise TelemetryNotSent("Trying to resend too soon", "age")
 
     data = get_telemetry_data(request)
@@ -277,9 +256,7 @@ def try_send_telemetry(request=None, max_age_hours=24, raise_on_error=False):
     """
     force_send = bool(not get_last_submission_time() or not settings.DEBUG)
     try:
-        return _send_telemetry(
-            request=request, max_age_hours=max_age_hours, force_send=force_send
-        )
+        return _send_telemetry(request=request, max_age_hours=max_age_hours, force_send=force_send)
     except TelemetryNotSent:
         if raise_on_error:
             raise

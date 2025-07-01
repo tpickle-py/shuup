@@ -8,9 +8,7 @@ from shuup.xtheme.plugins.products_async import (
     ProductsFromCategoryPlugin,
 )
 
-PRODUCT_HIGHLIGHT_CACHE_KEY_PREFIX = (
-    "shuup_xtheme_proudct_highlight_cache_key_%(shop_id)s"
-)
+PRODUCT_HIGHLIGHT_CACHE_KEY_PREFIX = "shuup_xtheme_proudct_highlight_cache_key_%(shop_id)s"
 
 
 def get_category_products_highlight(request, category_id, count, cache_timeout):
@@ -40,9 +38,7 @@ def get_category_products_highlight(request, category_id, count, cache_timeout):
     return HttpResponse(html)
 
 
-def get_product_cross_sell_highlight(
-    request, product_id, relation_type, use_parents, count, cache_timeout
-):
+def get_product_cross_sell_highlight(request, product_id, relation_type, use_parents, count, cache_timeout):
     orderable_only = "orderable_only" in request.GET
     key, html = context_cache.get_cached_value(
         identifier="xtheme_product_cross_sell_highlight",

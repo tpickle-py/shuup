@@ -1,5 +1,3 @@
-
-
 from django.contrib import messages
 from django.http.response import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _

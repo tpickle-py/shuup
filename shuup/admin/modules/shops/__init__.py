@@ -1,5 +1,3 @@
-
-
 from typing import Iterable
 
 from django.conf import settings
@@ -75,9 +73,7 @@ class ShopModule(AdminModule):
                     {
                         "method": "POST",
                         "text": _("Publish shop"),
-                        "url": reverse(
-                            "shuup_admin:shop.enable", kwargs={"pk": shop.pk}
-                        ),
+                        "url": reverse("shuup_admin:shop.enable", kwargs={"pk": shop.pk}),
                         "data": {
                             "enable": True,
                             "redirect": reverse("shuup_admin:dashboard"),
@@ -106,9 +102,7 @@ class ShopModule(AdminModule):
                 yield SearchResult(
                     text=(_('Set "{}" as the active shop')).format(shop.name),
                     url=get_model_url(shop, "select"),
-                    category=(_("Available Shops [currently active: {}]")).format(
-                        request.shop.name
-                    ),
+                    category=(_("Available Shops [currently active: {}]")).format(request.shop.name),
                     relevance=relevance,
                 )
 
@@ -116,8 +110,4 @@ class ShopModule(AdminModule):
         return [get_object_selector_permission_name(Shop)]
 
     def get_permissions_help_texts(self) -> Iterable[str]:
-        return {
-            get_object_selector_permission_name(Shop): _(
-                "Allow the user to select shops in admin."
-            )
-        }
+        return {get_object_selector_permission_name(Shop): _("Allow the user to select shops in admin.")}

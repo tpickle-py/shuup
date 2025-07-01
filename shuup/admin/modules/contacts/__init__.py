@@ -14,9 +14,7 @@ from shuup.core.models import CompanyContact, Contact, PersonContact
 
 class ContactModule(AdminModule):
     name = _("Contacts")
-    breadcrumbs_menu_entry = MenuEntry(
-        text=name, url="shuup_admin:contact.list", category=CONTACTS_MENU_CATEGORY
-    )
+    breadcrumbs_menu_entry = MenuEntry(text=name, url="shuup_admin:contact.list", category=CONTACTS_MENU_CATEGORY)
 
     def get_urls(self):
         return [
@@ -80,10 +78,7 @@ class ContactModule(AdminModule):
             filters = Q(Q(name__icontains=query) | Q(email=query))
 
             # show only contacts which the shop has access
-            if (
-                settings.SHUUP_ENABLE_MULTIPLE_SHOPS
-                and settings.SHUUP_MANAGE_CONTACTS_PER_SHOP
-            ):
+            if settings.SHUUP_ENABLE_MULTIPLE_SHOPS and settings.SHUUP_MANAGE_CONTACTS_PER_SHOP:
                 filters &= Q(shops=request.shop)
 
             if not request.user.is_superuser:
@@ -111,12 +106,8 @@ class ContactModule(AdminModule):
 
     def get_permissions_help_texts(self) -> Iterable[str]:
         return {
-            get_object_selector_permission_name(Contact): _(
-                "Allow the user to select contacts in admin."
-            ),
-            get_object_selector_permission_name(PersonContact): _(
-                "Allow the user to select person contacts in admin."
-            ),
+            get_object_selector_permission_name(Contact): _("Allow the user to select contacts in admin."),
+            get_object_selector_permission_name(PersonContact): _("Allow the user to select person contacts in admin."),
             get_object_selector_permission_name(CompanyContact): _(
                 "Allow the user to select company contacts in admin."
             ),

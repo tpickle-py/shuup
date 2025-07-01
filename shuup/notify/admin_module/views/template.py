@@ -1,5 +1,3 @@
-
-
 import six
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -26,9 +24,7 @@ class ScriptTemplateView(TemplateView):
         Put all the script templates on disposal of the user.
         """
         context = super().get_context_data(**kwargs)
-        context["script_templates"] = six.iteritems(
-            get_identifier_to_object_map(SCRIPT_TEMPLATES_PROVIDE_CATEGORY)
-        )
+        context["script_templates"] = six.iteritems(get_identifier_to_object_map(SCRIPT_TEMPLATES_PROVIDE_CATEGORY))
         context["edit_mode"] = EditScriptMode.CREATE
         return context
 
@@ -41,18 +37,14 @@ class ScriptTemplateView(TemplateView):
         If no script template is found, redirect to the script list.
         """
         identifier = request.POST.get("id", None)
-        script_template_class = get_identifier_to_object_map(
-            SCRIPT_TEMPLATES_PROVIDE_CATEGORY
-        ).get(identifier)
+        script_template_class = get_identifier_to_object_map(SCRIPT_TEMPLATES_PROVIDE_CATEGORY).get(identifier)
 
         if script_template_class:
             script_template = script_template_class()
 
             # the template has a form for configuration.. lets redirect to the correct view
             if script_template.get_form():
-                return redirect(
-                    "shuup_admin:notify.script-template-config", id=identifier
-                )
+                return redirect("shuup_admin:notify.script-template-config", id=identifier)
             else:
                 shop = get_shop(request)
                 script = script_template.create_script(shop)
@@ -77,9 +69,7 @@ class ScriptTemplateConfigView(FormView):
         Get the script template class from the request kwargs.
         """
         identifier = self.kwargs.get("id", None)
-        return get_identifier_to_object_map(SCRIPT_TEMPLATES_PROVIDE_CATEGORY).get(
-            identifier, None
-        )
+        return get_identifier_to_object_map(SCRIPT_TEMPLATES_PROVIDE_CATEGORY).get(identifier, None)
 
     def dispatch(self, request, *args, **kwargs):
         """
@@ -131,9 +121,7 @@ class ScriptTemplateEditView(FormView):
         """
         Get the script template class from script instance.
         """
-        return get_identifier_to_object_map(SCRIPT_TEMPLATES_PROVIDE_CATEGORY).get(
-            self.instance.template, None
-        )
+        return get_identifier_to_object_map(SCRIPT_TEMPLATES_PROVIDE_CATEGORY).get(self.instance.template, None)
 
     def dispatch(self, request, *args, **kwargs):
         """

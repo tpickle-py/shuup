@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -32,10 +30,7 @@ class PermissionChangeFormBase(forms.ModelForm):
         if not getattr(self.changing_user, "is_superuser", False):
             self.fields.pop("is_superuser")
 
-        if not (
-            self.changing_user == self.instance
-            or getattr(self.instance, "is_superuser", False)
-        ):
+        if not (self.changing_user == self.instance or getattr(self.instance, "is_superuser", False)):
             # Only require old password when editing
             self.fields.pop("old_password")
 
@@ -70,9 +65,7 @@ class PermissionChangeFormBase(forms.ModelForm):
         )
         initial_groups = self._get_initial_groups()
         permission_groups_field.initial = [group.pk for group in initial_groups]
-        permission_groups_field.widget.choices = [
-            (group.pk, force_text(group)) for group in initial_groups
-        ]
+        permission_groups_field.widget.choices = [(group.pk, force_text(group)) for group in initial_groups]
         self.fields["permission_groups"] = permission_groups_field
 
     def _get_initial_groups(self):

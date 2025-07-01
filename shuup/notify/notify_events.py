@@ -12,9 +12,7 @@ class PasswordReset(Event):
 
     site_name = Variable(_("Site name"), type=Text)
     uid = Variable(_("User secret"), type=Text)
-    user_to_recover = Variable(
-        _("User to recover"), type=Model(settings.AUTH_USER_MODEL)
-    )
+    user_to_recover = Variable(_("User to recover"), type=Model(settings.AUTH_USER_MODEL))
     token = Variable(_("Token"), type=Text)
     recovery_url = Variable(_("Recovery URL"), type=Text)
 

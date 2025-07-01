@@ -53,13 +53,9 @@ def handle_product_post_save(sender, instance, **kwargs):
 
 def handle_shop_product_post_save(sender, instance, **kwargs):
     if isinstance(instance, Category):
-        bump_shop_product_signal_handler(
-            sender, instance.shop_products.all().values_list("pk", flat=True), **kwargs
-        )
+        bump_shop_product_signal_handler(sender, instance.shop_products.all().values_list("pk", flat=True), **kwargs)
 
-        for shop_id in set(
-            instance.shop_products.all().values_list("shop_id", flat=True)
-        ):
+        for shop_id in set(instance.shop_products.all().values_list("shop_id", flat=True)):
             bump_prices_for_shop_product(shop_id)
             context_cache_item_bumped.send(sender=Shop, shop_id=shop_id)
     else:  # ShopProduct
@@ -69,9 +65,7 @@ def handle_shop_product_post_save(sender, instance, **kwargs):
 
 
 def handle_supplier_post_save(sender, instance, **kwargs):
-    bump_shop_product_signal_handler(
-        sender, instance.shop_products.all().values_list("pk", flat=True), **kwargs
-    )
+    bump_shop_product_signal_handler(sender, instance.shop_products.all().values_list("pk", flat=True), **kwargs)
 
     for shop_id in set(instance.shop_products.all().values_list("shop_id", flat=True)):
         bump_prices_for_shop_product(shop_id)
@@ -86,17 +80,13 @@ def handle_contact_post_save(sender, instance, **kwargs):
 @receiver(order_creator_finished)
 def on_order_creator_finished(sender, order, source, **kwargs):
     # reset product prices
-    for product_id, shop_id in order.lines.exclude(product__isnull=False).values_list(
-        "product_id", "order__shop_id"
-    ):
+    for product_id, shop_id in order.lines.exclude(product__isnull=False).values_list("product_id", "order__shop_id"):
         context_cache.bump_cache_for_product(product_id, shop_id)
 
 
 @receiver(order_changed)
 def on_order_changed(sender, order, **kwargs):
-    for line in (
-        order.lines.products().only("product_id", "supplier").select_related("supplier")
-    ):
+    for line in order.lines.products().only("product_id", "supplier").select_related("supplier"):
         line.supplier.update_stock(line.product_id)
 
 
@@ -114,9 +104,7 @@ m2m_changed.connect(
     sender=ShopProduct.categories.through,
     dispatch_uid="shop_product:change_categories",
 )
-post_save.connect(
-    handle_product_post_save, sender=Product, dispatch_uid="product:bump_product_cache"
-)
+post_save.connect(handle_product_post_save, sender=Product, dispatch_uid="product:bump_product_cache")
 post_save.connect(
     handle_shop_product_post_save,
     sender=ShopProduct,

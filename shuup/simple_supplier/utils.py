@@ -44,10 +44,7 @@ def get_current_stock_value(supplier_id, product_id):
     )
     products_bought = (
         OrderLine.objects.filter(supplier_id=supplier_id, product_id=product_id)
-        .exclude(
-            Q(order__status__role=OrderStatusRole.CANCELED)
-            | Q(type=OrderLineType.REFUND)
-        )
+        .exclude(Q(order__status__role=OrderStatusRole.CANCELED) | Q(type=OrderLineType.REFUND))
         .aggregate(total=Sum("quantity"))["total"]
         or 0
     )
@@ -71,19 +68,12 @@ def get_current_stock_value(supplier_id, product_id):
         or 0
     )
 
-    logical_count = (
-        events
-        - products_bought
-        + products_refunded_before_shipment
-        + pending_incoming_shipments
-    )
+    logical_count = events - products_bought + products_refunded_before_shipment + pending_incoming_shipments
 
     # check the product shipping mode
     # if the product is shipped, it means it constrols the physical stock
     # if that is not shipped, the physical stock should be equals to the logical count
-    product_shipping_mode = (
-        Product.objects.only("shipping_mode").get(pk=product_id).shipping_mode
-    )
+    product_shipping_mode = Product.objects.only("shipping_mode").get(pk=product_id).shipping_mode
     if product_shipping_mode == ShippingMode.SHIPPED:
         products_sent = (
             ShipmentProduct.objects.filter(
@@ -127,9 +117,7 @@ def get_stock_information_html(supplier, product):
     }
     if "shuup.notify" in settings.INSTALLED_APPS:
         context["alert_limit"] = True
-    return render_to_string(
-        "shuup/simple_supplier/admin/stock_information.jinja", context
-    )
+    return render_to_string("shuup/simple_supplier/admin/stock_information.jinja", context)
 
 
 def get_stock_adjustment_div(request, supplier, product):
@@ -151,11 +139,7 @@ def get_stock_adjustment_div(request, supplier, product):
     latest_adjustment = StockAdjustment.objects.filter(
         product=product, supplier=supplier, type=StockAdjustmentType.INVENTORY
     ).last()
-    purchase_price = (
-        latest_adjustment.purchase_price.as_rounded().value
-        if latest_adjustment
-        else Decimal()
-    )
+    purchase_price = latest_adjustment.purchase_price.as_rounded().value if latest_adjustment else Decimal()
     context = {
         "product": product,
         "supplier": supplier,
@@ -167,17 +151,11 @@ def get_stock_adjustment_div(request, supplier, product):
             sales_unit=product.sales_unit,
         ),
         "stock": stock,
-        "stock_managed_form": StockManagedForm(
-            initial={"stock_managed": not stock.stock_managed}
-        ),
+        "stock_managed_form": StockManagedForm(initial={"stock_managed": not stock.stock_managed}),
     }
     if "shuup.notify" in settings.INSTALLED_APPS:
         initial_alert_limit = stock.alert_limit or Decimal()
-        precision = (
-            Decimal("0.1") ** product.sales_unit.decimals
-            if product.sales_unit.decimals
-            else Decimal("1")
-        )
+        precision = Decimal("0.1") ** product.sales_unit.decimals if product.sales_unit.decimals else Decimal("1")
         context["alert_limit_form"] = AlertLimitForm(
             initial={"alert_limit": initial_alert_limit.quantize(precision)},
             sales_unit=product.sales_unit,

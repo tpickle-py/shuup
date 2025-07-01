@@ -3,9 +3,7 @@ from typing import Optional, Union
 from shuup.core.models import AnonymousContact, Product, ProductCatalogPrice, ShopProduct, Supplier
 
 
-def index_product(
-    product: Union[Product, int], supplier: Optional[Union[Supplier, int]] = None
-):
+def index_product(product: Union[Product, int], supplier: Optional[Union[Supplier, int]] = None):
     product_id = product if not isinstance(product, Product) else product.pk
     shop_products = ShopProduct.objects.filter(product_id=product_id)
     if supplier:
@@ -18,9 +16,7 @@ def update_shop_product_stocks(shop_product: Union[ShopProduct, int], supplier_i
     from shuup.simple_supplier.module import SimpleSupplierModule
 
     if not isinstance(shop_product, ShopProduct):
-        shop_product = ShopProduct.objects.select_related("product").get(
-            pk=shop_product
-        )
+        shop_product = ShopProduct.objects.select_related("product").get(pk=shop_product)
 
     suppliers = Supplier.objects.filter(
         shop_products=shop_product.pk,
@@ -51,9 +47,7 @@ def index_shop_product(shop_product: Union[ShopProduct, int]):
     from shuup.simple_supplier.module import SimpleSupplierModule
 
     if not isinstance(shop_product, ShopProduct):
-        shop_product = ShopProduct.objects.select_related("product").get(
-            pk=shop_product
-        )
+        shop_product = ShopProduct.objects.select_related("product").get(pk=shop_product)
 
     suppliers = (
         Supplier.objects.filter(

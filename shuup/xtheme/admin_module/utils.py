@@ -1,5 +1,3 @@
-
-
 from shuup.apps.provides import get_provide_objects
 from shuup.xtheme.models import ThemeSettings
 
@@ -13,9 +11,7 @@ def get_theme_context(shop):
         if not theme.identifier:
             continue
 
-        theme_settings = ThemeSettings.objects.get_or_create(
-            theme_identifier=theme.identifier, shop=shop
-        )[0]
+        theme_settings = ThemeSettings.objects.get_or_create(theme_identifier=theme.identifier, shop=shop)[0]
         themes.append(theme)
 
         if theme_settings.active:

@@ -1,5 +1,3 @@
-
-
 import logging
 
 import six
@@ -60,12 +58,8 @@ class Step:
     @classmethod
     def unserialize(cls, step_data):
         kwargs = {
-            "conditions": [
-                Condition.unserialize(cond) for cond in step_data.get("conditions", ())
-            ],
-            "actions": [
-                Action.unserialize(action) for action in step_data.get("actions", ())
-            ],
+            "conditions": [Condition.unserialize(cond) for cond in step_data.get("conditions", ())],
+            "actions": [Action.unserialize(action) for action in step_data.get("actions", ())],
         }
         if "next" in step_data:
             kwargs["next"] = StepNext(step_data["next"])
@@ -181,7 +175,5 @@ class Context:
     def log_entry_queryset(self):
         log_entries = getattr(self._log_target, "log_entries", None)
         if log_entries is None:
-            return QuerySet(
-                BaseLogEntry
-            ).none()  # `BaseLogEntry` doesn't have `objects` as it's abstract
+            return QuerySet(BaseLogEntry).none()  # `BaseLogEntry` doesn't have `objects` as it's abstract
         return log_entries.all()

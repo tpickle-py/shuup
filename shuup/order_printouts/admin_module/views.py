@@ -17,9 +17,7 @@ from .forms import PrintoutsEmailForm
 def validate_shop_for_order(request, order):
     if get_shop(request) != order.shop:
         raise Problem(
-            _(
-                "The current shop doesn't match the order shop. Please change to the shop that is currently active."
-            )
+            _("The current shop doesn't match the order shop. Please change to the shop that is currently active.")
         )
 
 
@@ -99,9 +97,7 @@ def _get_delivery_html(request, order, shipment, html_mode=False):
     }
 
     provided_information = {}
-    for provided_info in sorted(
-        get_provide_objects("order_printouts_delivery_extra_fields")
-    ):
+    for provided_info in sorted(get_provide_objects("order_printouts_delivery_extra_fields")):
         info = provided_info(order, shipment)
         if info.provides_extra_fields():
             provided_information.update(info.extra_fields)

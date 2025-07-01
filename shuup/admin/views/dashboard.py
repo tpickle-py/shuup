@@ -22,21 +22,15 @@ class DashboardView(TemplateView):
         context["notifications"] = notifications = []
         context["blocks"] = blocks = []
         for module in get_modules():
-            if not get_missing_permissions(
-                self.request.user, module.get_required_permissions()
-            ):
+            if not get_missing_permissions(self.request.user, module.get_required_permissions()):
                 notifications.extend(module.get_notifications(request=self.request))
                 blocks.extend(module.get_dashboard_blocks(request=self.request))
 
         # sort blocks by sort order and size, trying to make them fit better
-        blocks.sort(
-            key=lambda block: (block.sort_order, DashboardBlock.SIZES.index(block.size))
-        )
+        blocks.sort(key=lambda block: (block.sort_order, DashboardBlock.SIZES.index(block.size)))
         context["activity"] = get_activity(request=self.request)
         context["tour_key"] = "dashboard"
-        context["tour_complete"] = is_tour_complete(
-            get_shop(self.request), "dashboard", user=self.request.user
-        )
+        context["tour_complete"] = is_tour_complete(get_shop(self.request), "dashboard", user=self.request.user)
         return context
 
     def get(self, request, *args, **kwargs):

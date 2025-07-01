@@ -1,4 +1,3 @@
-
 from .edit import ContactGroupPriceDisplayEditView
 from .list import ContactGroupPriceDisplayListView
 

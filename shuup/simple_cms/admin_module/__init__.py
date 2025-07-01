@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.base import AdminModule, MenuEntry
@@ -46,9 +44,7 @@ class SimpleCMSAdminModule(AdminModule):
         if kind == "quicklink":
             yield SimpleHelpBlock(
                 text=_("Add a web page"),
-                actions=[
-                    {"text": _("New page"), "url": self.get_model_url(Page, "new")}
-                ],
+                actions=[{"text": _("New page"), "url": self.get_model_url(Page, "new")}],
                 priority=100,
                 category=HelpBlockCategory.STOREFRONT,
                 icon_url="simple_cms/page.png",

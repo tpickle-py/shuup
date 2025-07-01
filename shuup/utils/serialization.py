@@ -1,4 +1,3 @@
-
 import django.core.serializers.json
 from django.utils.functional import Promise
 

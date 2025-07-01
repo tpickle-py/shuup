@@ -45,14 +45,10 @@ class ProductCopyView(DetailView):
     def get(self, request, *args, **kwargs):
         shop_product = self.get_object()
         current_supplier = None if request.user.is_superuser else get_supplier(request)
-        cloner = cached_load("SHUUP_ADMIN_PRODUCT_CLONER")(
-            request.shop, current_supplier
-        )
+        cloner = cached_load("SHUUP_ADMIN_PRODUCT_CLONER")(request.shop, current_supplier)
         copied_shop_product = cloner.clone_product(shop_product=shop_product)
         messages.success(
             request,
-            _(
-                f"{copied_shop_product.product} was successfully copied"
-            ),
+            _(f"{copied_shop_product.product} was successfully copied"),
         )
         return HttpResponseRedirect(self.get_success_url(copied_shop_product))

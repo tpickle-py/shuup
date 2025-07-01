@@ -101,12 +101,11 @@ class DataImporter:
         if request:
             warnings.warn(
                 "Warning! `request` parameter is deprecated and will be removed in next major version.",
-                DeprecationWarning, stacklevel=2,
+                DeprecationWarning,
+                stacklevel=2,
             )
 
-        return ImporterContext(
-            shop=shop, language=language, supplier=supplier, user=user, **kwargs
-        )
+        return ImporterContext(shop=shop, language=language, supplier=supplier, user=user, **kwargs)
 
     def __init__(self, data, context):
         """
@@ -181,10 +180,7 @@ class DataImporter:
                     else:
                         mapping[name] = map_base
 
-        mapping = {
-            fold_mapping_name(mname): mdata
-            for (mname, mdata) in six.iteritems(mapping)
-        }
+        mapping = {fold_mapping_name(mname): mdata for (mname, mdata) in six.iteritems(mapping)}
         self.mapping = mapping
         return mapping
 
@@ -272,10 +268,7 @@ class DataImporter:
             query = Q()
 
             for field in name_fields:
-                if (
-                    hasattr(cls, "_parler_meta")
-                    and field in cls._parler_meta.get_translated_fields()
-                ):
+                if hasattr(cls, "_parler_meta") and field in cls._parler_meta.get_translated_fields():
                     field = f"{cls._parler_meta.root_rel_name}__{field}"
                 else:
                     from django.core.exceptions import FieldDoesNotExist
@@ -294,9 +287,7 @@ class DataImporter:
         obj = self._find_matching_object(row, self.shop)
         if not obj:
             if self.import_mode == ImportMode.UPDATE:
-                self.other_log_messages.append(
-                    _("Row ignored (no existing item and creating new is not allowed).")
-                )
+                self.other_log_messages.append(_("Row ignored (no existing item and creating new is not allowed)."))
                 return (None, True)
 
             self.target_model = self.find_matching_model(row)
@@ -306,9 +297,7 @@ class DataImporter:
             new = False
             if self.import_mode == ImportMode.CREATE:
                 self.other_log_messages.append(
-                    _(
-                        "Row ignored (object already exists (%(object_name)s with id: %(object_id)s)."
-                    )
+                    _("Row ignored (object already exists (%(object_name)s with id: %(object_id)s).")
                     % {"object_name": str(obj), "object_id": obj.pk}
                 )
                 return (None, False)
@@ -345,9 +334,7 @@ class DataImporter:
             return
 
         row_session = DataImporterRowSession(self, row, obj, self.shop)
-        for fname, mapping in sorted(
-            six.iteritems(self.data_map), key=lambda x: (x[1].get("priority"), x[0])
-        ):
+        for fname, mapping in sorted(six.iteritems(self.data_map), key=lambda x: (x[1].get("priority"), x[0])):
             field = mapping.get("field")
             if not field:
                 continue
@@ -361,15 +348,11 @@ class DataImporter:
             value = self._handle_special_row_values(mapping, value)
             setter = mapping.get("setter")
             if setter:
-                value, has_related = self._handle_related_value(
-                    field, mapping, orig_value, row_session, obj, value
-                )
+                value, has_related = self._handle_related_value(field, mapping, orig_value, row_session, obj, value)
                 setter(row_session, value, mapping)
                 continue
 
-            value, has_related = self._handle_related_value(
-                field, mapping, orig_value, row_session, obj, value
-            )
+            value, has_related = self._handle_related_value(field, mapping, orig_value, row_session, obj, value)
             if has_related:
                 continue
 
@@ -380,9 +363,7 @@ class DataImporter:
 
         self.save_row(new, row_session)
 
-    def _handle_related_value(
-        self, field, mapping, orig_value, row_session, obj, value
-    ):
+    def _handle_related_value(self, field, mapping, orig_value, row_session, obj, value):
         has_related = False
         if mapping.get("fk"):
             value = self._handle_row_fk_value(field, orig_value, row_session, value)
@@ -401,9 +382,7 @@ class DataImporter:
     def _handle_special_row_values(self, mapping, value):
         if mapping.get("datatype") in ["datetime", "date"]:
             if isinstance(value, float):  # Sort of terrible
-                value = datetime.datetime(
-                    *xlrd.xldate_as_tuple(value, self.data.meta["xls_datemode"])
-                )
+                value = datetime.datetime(*xlrd.xldate_as_tuple(value, self.data.meta["xls_datemode"]))
         if isinstance(value, float):
             if int(value) == value:
                 value = int(value)
@@ -425,18 +404,14 @@ class DataImporter:
                 LOGGER.exception("Failed to convert field")
 
                 row_session.log(
-                    _(
-                        "Failed while setting value for field %(field_name)s. (%(exception)s)"
-                    )
+                    _("Failed while setting value for field %(field_name)s. (%(exception)s)")
                     % {
                         "field_name": (field.verbose_name or field.name),
                         "exception": exc,
                     }
                 )
             else:
-                value = self._meta.mutate_normal_field_set(
-                    row_session, field, value, original=orig_value
-                )
+                value = self._meta.mutate_normal_field_set(row_session, field, value, original=orig_value)
             setattr(target, field.name, value)
 
     def _get_field_choices_value(self, field, value):
@@ -478,13 +453,9 @@ class DataImporter:
             row_session.instance.full_clean()
             row_session.save()
             self._meta.postsave_hook(row_session)
-            (self.new_objects if new else self.updated_objects).append(
-                row_session.instance
-            )
+            (self.new_objects if new else self.updated_objects).append(row_session.instance)
 
-            for post_save_handler, fields in six.iteritems(
-                self._meta.post_save_handlers
-            ):
+            for post_save_handler, fields in six.iteritems(self._meta.post_save_handlers):
                 if hasattr(self._meta, post_save_handler):
                     func = getattr(self._meta, post_save_handler)
                     func(fields, row_session)
@@ -548,15 +519,8 @@ class DataImporter:
 
         :return: Found object or ``None``
         """
-        field_map_values = [
-            (fname, mapping, row.get(fname))
-            for (fname, mapping) in six.iteritems(self.unique_fields)
-        ]
-        row_keys = {
-            mapping["field"].name: value
-            for (fname, mapping, value) in field_map_values
-            if value
-        }
+        field_map_values = [(fname, mapping, row.get(fname)) for (fname, mapping) in six.iteritems(self.unique_fields)]
+        row_keys = {mapping["field"].name: value for (fname, mapping, value) in field_map_values if value}
         if row_keys:
             qs = [Q(**{fname: value}) for (fname, value) in six.iteritems(row_keys)]
             fields = [field.name for field in self.model._meta.local_fields]
@@ -640,9 +604,7 @@ class DataImporter:
         mapper = self.relation_map_cache.get(to)
 
         if not mapper:
-            self.relation_map_cache[field] = mapper = RelatedMapper(
-                handler=self, row_session=row_session, field=field
-            )
+            self.relation_map_cache[field] = mapper = RelatedMapper(handler=self, row_session=row_session, field=field)
         if reverse:
             if multi:
                 return mapper.map_instances(value)

@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.contrib import messages
 from django.http.response import HttpResponseRedirect
@@ -22,9 +20,7 @@ class OrderCreatePaymentView(UpdateView):
     form_class = forms.Form  # Augmented manually
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
-            "id", flat=True
-        )
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_context_data(self, **kwargs):
@@ -72,9 +68,7 @@ class OrderCreatePaymentView(UpdateView):
             return self.form_invalid(form)
         try:
             payment = order.create_payment(amount, description="Manual payment")
-            messages.success(
-                self.request, _("Payment %s created.") % payment.payment_identifier
-            )
+            messages.success(self.request, _("Payment %s created.") % payment.payment_identifier)
         except NoPaymentToCreateException:
             messages.error(self.request, _("Order has already been paid."))
             return self.form_invalid(form)
@@ -86,9 +80,7 @@ class OrderSetPaidView(DetailView):
     model = Order
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
-            "id", flat=True
-        )
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get(self, request, *args, **kwargs):
@@ -107,9 +99,7 @@ class OrderSetPaidView(DetailView):
             error = True
             messages.error(
                 self.request,
-                _(
-                    "Only zero price orders can be set as paid without creating a payment."
-                ),
+                _("Only zero price orders can be set as paid without creating a payment."),
             )
         if not error:
             amount = Money(0, order.shop.currency)
@@ -122,9 +112,7 @@ class OrderDeletePaymentView(BaseDeleteView):
     model = Order
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
-            "id", flat=True
-        )
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
         return Order.objects.incomplete().filter(shop_id__in=shop_ids)
 
     def delete(self, request, *args, **kwargs):

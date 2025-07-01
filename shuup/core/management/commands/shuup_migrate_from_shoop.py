@@ -1,5 +1,3 @@
-
-
 from django.core.management.base import BaseCommand
 from django.db import connection
 
@@ -147,8 +145,7 @@ class Command(BaseCommand):
                 self.stdout.write(f"Updating migrations and content types for {app}")
                 new_app = app.replace("shoop", "shuup")
                 run(
-                    "DELETE FROM django_migrations"
-                    " WHERE app=%s AND name != '0001_initial'",
+                    "DELETE FROM django_migrations WHERE app=%s AND name != '0001_initial'",
                     app,
                 )
                 run("UPDATE django_migrations SET app=%s WHERE app=%s", new_app, app)

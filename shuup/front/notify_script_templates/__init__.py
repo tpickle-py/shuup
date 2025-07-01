@@ -1,4 +1,3 @@
-
 from .generics import (
     OrderConfirmationEmailScriptTemplate,
     PaymentCreatedEmailScriptTemplate,

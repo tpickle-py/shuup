@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.contrib import messages
 from django.http.response import HttpResponseRedirect
@@ -53,9 +51,7 @@ class ThemeWizardPane(WizardPane):
         current_theme_settings = ThemeSettings.objects.get_or_create(
             shop=shop, theme_identifier=current_theme_class.identifier
         )[0]
-        context["active_stylesheet"] = current_theme_settings.data.get(
-            "settings", {}
-        ).get("stylesheet", None)
+        context["active_stylesheet"] = current_theme_settings.data.get("settings", {}).get("stylesheet", None)
 
         return [
             TemplatedWizardFormDef(
@@ -68,9 +64,7 @@ class ThemeWizardPane(WizardPane):
 
     def form_valid(self, form):
         identifier = form["theme"].cleaned_data["activate"]
-        data = {
-            "settings": {"stylesheet": form["theme"].cleaned_data["selected_style"]}
-        }
+        data = {"settings": {"stylesheet": form["theme"].cleaned_data["selected_style"]}}
         theme_settings, created = ThemeSettings.objects.get_or_create(
             theme_identifier=identifier, shop=get_shop(self.request)
         )
@@ -129,9 +123,7 @@ class ThemeConfigDetailView(CreateOrUpdateView):
         :return: Theme object.
         :rtype: shuup.xtheme.Theme
         """
-        return get_theme_by_identifier(
-            identifier=self.kwargs["theme_identifier"], shop=get_shop(self.request)
-        )
+        return get_theme_by_identifier(identifier=self.kwargs["theme_identifier"], shop=get_shop(self.request))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -144,16 +136,12 @@ class ThemeConfigDetailView(CreateOrUpdateView):
             template = loader.get_template(theme.guide_template)
             context["guide"] = template.render({}, request=self.request)
 
-        context["active_stylesheet"] = self.object.data.get("settings", {}).get(
-            "stylesheet", None
-        )
+        context["active_stylesheet"] = self.object.data.get("settings", {}).get("stylesheet", None)
         context["shop"] = shop
         return context
 
     def get_form(self, form_class=None):
-        return self.get_theme().get_configuration_form(
-            form_kwargs=self.get_form_kwargs()
-        )
+        return self.get_theme().get_configuration_form(form_kwargs=self.get_form_kwargs())
 
     def get_success_url(self):
         return reverse(
@@ -166,9 +154,7 @@ class ThemeConfigDetailView(CreateOrUpdateView):
         cache.bump_version(get_theme_cache_key(get_shop(self.request)))
 
     def get_toolbar(self):
-        toolbar = get_default_edit_toolbar(
-            self, self.get_save_form_id(), with_split_save=False
-        )
+        toolbar = get_default_edit_toolbar(self, self.get_save_form_id(), with_split_save=False)
         toolbar.append(
             URLActionButton(
                 text=_("Custom CSS/JS"),
@@ -184,9 +170,7 @@ class ThemeGuideTemplateView(TemplateView):
     template_name = None
 
     def dispatch(self, request, *args, **kwargs):
-        theme = get_theme_by_identifier(
-            kwargs["theme_identifier"], shop=get_shop(self.request)
-        )
+        theme = get_theme_by_identifier(kwargs["theme_identifier"], shop=get_shop(self.request))
         self.template_name = theme.guide_template
         return super().dispatch(request, *args, **kwargs)
 
@@ -215,9 +199,7 @@ class FontListView(PicotableListView):
             _("Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(
-                filter_field="name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="name", placeholder=_("Filter by name...")),
         ),
         Column("woff", _("Woff"), display="format_woff"),
         Column("woff2", _("Woff2"), display="format_woff2"),
@@ -255,9 +237,7 @@ class AdminThemeConfigDetailView(FormView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs["instance"] = AdminThemeSettings.objects.get_or_create(
-            shop=get_shop(self.request)
-        )[0]
+        kwargs["instance"] = AdminThemeSettings.objects.get_or_create(shop=get_shop(self.request))[0]
         return kwargs
 
     def get_success_url(self):

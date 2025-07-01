@@ -1,6 +1,3 @@
-
-
-
 from shuup.admin.utils.views import CreateOrUpdateView
 from shuup.core.models import DisplayUnit, SalesUnit
 from shuup.utils.multilanguage_model_form import MultiLanguageModelForm

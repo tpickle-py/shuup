@@ -5,8 +5,6 @@ Works by monkey patching django.utils.translation.trans_real.templatize
 with our version.
 """
 
-
-
 import datetime
 import os
 from io import BytesIO, StringIO
@@ -51,10 +49,7 @@ class Command(makemessages.Command):
             action="store_true",
             dest="no_pot_date",
             default=False,
-            help=(
-                "Don't update POT-Creation-Date if it would be "
-                "the only change to the PO file"
-            ),
+            help=("Don't update POT-Creation-Date if it would be the only change to the PO file"),
         )
 
     def handle(self, *args, **options):

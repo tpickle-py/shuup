@@ -1,6 +1,3 @@
-
-
-
 SIMPLE_INPUT_TYPES = (
     "text",
     "hidden",

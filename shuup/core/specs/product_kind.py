@@ -40,11 +40,7 @@ def get_product_kind_specs() -> Iterable[ProductKindSpec]:
     specs = []
     for product_kind_spec in get_provide_objects("product_kind_specs"):
         if product_kind_spec.value in unique_values:
-            raise ValueError(
-                _("The product kind {value} is not unique!").format(
-                    value=product_kind_spec.value
-                )
-            )
+            raise ValueError(_("The product kind {value} is not unique!").format(value=product_kind_spec.value))
         unique_values.append(product_kind_spec.value)
         specs.append(product_kind_spec)
     return specs
@@ -52,10 +48,7 @@ def get_product_kind_specs() -> Iterable[ProductKindSpec]:
 
 @lru_cache
 def get_product_kind_choices() -> Dict[int, str]:
-    return [
-        product_kind_spec.get_enum_value_label()
-        for product_kind_spec in get_product_kind_specs()
-    ]
+    return [product_kind_spec.get_enum_value_label() for product_kind_spec in get_product_kind_specs()]
 
 
 class DefaultProductKindSpec(ProductKindSpec):

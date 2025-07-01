@@ -21,14 +21,13 @@ def get_default_model_permissions(model):
     warnings.warn(
         "Warning! `get_default_model_permissions` is deprecated in Shuup 2.0. "
         "Use human readable permission strings instead.",
-        DeprecationWarning, stacklevel=2,
+        DeprecationWarning,
+        stacklevel=2,
     )
     permissions = set()
 
     for default in model._meta.default_permissions:
-        permissions.add(
-            f"{model._meta.app_label}.{default}_{model._meta.model_name}"
-        )
+        permissions.add(f"{model._meta.app_label}.{default}_{model._meta.model_name}")
 
     return permissions
 
@@ -61,15 +60,11 @@ def get_missing_permissions(user, permissions):
         group_permissions = cache.get(cache_key)
 
         if group_permissions is None:
-            group_permissions = get_permissions_from_groups(
-                user.groups.values_list("pk", flat=True)
-            )
+            group_permissions = get_permissions_from_groups(user.groups.values_list("pk", flat=True))
             cache.set(cache_key, group_permissions)
 
     if group_permissions:
-        missing_permissions = {
-            p for p in set(permissions) if p not in group_permissions
-        }
+        missing_permissions = {p for p in set(permissions) if p not in group_permissions}
     else:
         missing_permissions = set(permissions)
 
@@ -100,9 +95,7 @@ def get_permissions_for_user(user):
 
 def get_permissions_from_group(group):
     group_id = group if isinstance(group, six.integer_types) else group.pk
-    return set(
-        configuration.get(None, _get_permission_key_for_group(group_id), default=[])
-    )
+    return set(configuration.get(None, _get_permission_key_for_group(group_id), default=[]))
 
 
 def set_permissions_for_group(group, permissions):
@@ -149,7 +142,8 @@ def get_permission_object_from_string(permission_string):
     warnings.warn(
         "Warning! `get_permission_object_from_string` is deprecated in Shuup 2.0. "
         "Django permission shouldn't be needed.",
-        DeprecationWarning, stacklevel=2,
+        DeprecationWarning,
+        stacklevel=2,
     )
     app_label, codename = permission_string.split(".")
     return Permission.objects.get(content_type__app_label=app_label, codename=codename)

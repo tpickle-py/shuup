@@ -28,9 +28,7 @@ class AddNotification(Action):
         constant_use=ConstantUse.CONSTANT_ONLY,
         default=Priority.NORMAL,
     )
-    message = TemplatedBinding(
-        "Message", type=Text, constant_use=ConstantUse.CONSTANT_ONLY, required=True
-    )
+    message = TemplatedBinding("Message", type=Text, constant_use=ConstantUse.CONSTANT_ONLY, required=True)
     message_identifier = Binding(
         "Message Identifier",
         Text,

@@ -6,18 +6,10 @@ from jsonfield import JSONField
 
 
 class BackgroundTask(models.Model):
-    queue = models.CharField(
-        max_length=128, verbose_name=_("queue name"), db_index=True
-    )
-    identifier = models.CharField(
-        max_length=128, verbose_name=_("task identifier"), unique=True
-    )
-    created_on = models.DateTimeField(
-        auto_now_add=True, editable=False, verbose_name=_("created on")
-    )
-    modified_on = models.DateTimeField(
-        auto_now=True, editable=False, verbose_name=_("modified on")
-    )
+    queue = models.CharField(max_length=128, verbose_name=_("queue name"), db_index=True)
+    identifier = models.CharField(max_length=128, verbose_name=_("task identifier"), unique=True)
+    created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
+    modified_on = models.DateTimeField(auto_now=True, editable=False, verbose_name=_("modified on"))
     function = models.TextField(verbose_name=_("task function"))
     arguments = JSONField(blank=True, null=True, verbose_name=_("task arguments"))
     shop = models.ForeignKey(

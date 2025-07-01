@@ -1,5 +1,3 @@
-
-
 import inspect
 import json
 import warnings
@@ -47,9 +45,7 @@ class AdminRegexURLPattern(URLPattern):
 
         repath = re_path(regex, callback, default_args, name)
         pattern = repath.pattern
-        super().__init__(
-            pattern, callback, default_args, name
-        )
+        super().__init__(pattern, callback, default_args, name)
 
     def _get_unauth_response(self, request, reason):
         """
@@ -69,9 +65,7 @@ class AdminRegexURLPattern(URLPattern):
             # Instead of redirecting to the login page, let the user know what's wrong with
             # a helpful link.
             raise (
-                Problem(
-                    _("Can't view this page. %(reason)s") % {"reason": escape(reason)}
-                ).with_link(
+                Problem(_("Can't view this page. %(reason)s") % {"reason": escape(reason)}).with_link(
                     url=resp.url, title=_("Log in with different credentials...")
                 )
             )
@@ -89,19 +83,13 @@ class AdminRegexURLPattern(URLPattern):
             if not is_authenticated(request.user):
                 return _("Sign in to continue.")
             elif not getattr(request.user, "is_staff", False):
-                return _(
-                    "Your account must have `Access to Admin Panel` permissions to access this page."
-                )
+                return _("Your account must have `Access to Admin Panel` permissions to access this page.")
             elif not get_shop(request):
-                return _(
-                    "There is no active shop available. Contact support for more details."
-                )
+                return _("There is no active shop available. Contact support for more details.")
 
         missing_permissions = get_missing_permissions(request.user, self.permissions)
         if missing_permissions:
-            return _("You do not have the required permissions: %s") % ", ".join(
-                missing_permissions
-            )
+            return _("You do not have the required permissions: %s") % ", ".join(missing_permissions)
 
     def wrap_with_permissions(self, view_func):
         if callable(getattr(view_func, "as_view", None)):
@@ -144,9 +132,7 @@ def admin_url(
 
     if isinstance(view, six.string_types):
         if not view:
-            raise ImproperlyConfigured(
-                f"Error! Empty URL pattern view name not permitted (for pattern `{regex!r}`)."
-            )
+            raise ImproperlyConfigured(f"Error! Empty URL pattern view name not permitted (for pattern `{regex!r}`).")
         if prefix:
             view = prefix + "." + view
 
@@ -260,7 +246,8 @@ def get_model_url(
                 warnings.warn(
                     "Warning! `required_permissions` parameter will be deprecated "
                     "in Shuup 2.0 as unused for this util.",
-                    DeprecationWarning, stacklevel=2,
+                    DeprecationWarning,
+                    stacklevel=2,
                 )
                 permissions = required_permissions
             else:
@@ -277,18 +264,16 @@ def get_model_url(
             if raise_permission_denied:
                 from django.core.exceptions import PermissionDenied
 
-                reason = _(
-                    "Can't view this page. You do not have the required permission(s): `{permissions}`."
-                ).format(permissions=", ".join(missing_permissions))
+                reason = _("Can't view this page. You do not have the required permission(s): `{permissions}`.").format(
+                    permissions=", ".join(missing_permissions)
+                )
                 raise PermissionDenied(reason)
 
         except Resolver404:
             # what are you doing developer?
             return url
 
-    raise NoModelUrl(
-        f"Error! Can't get object URL of kind {kind}: {force_text(object)!r}."
-    )
+    raise NoModelUrl(f"Error! Can't get object URL of kind {kind}: {force_text(object)!r}.")
 
 
 def derive_model_url(model_class, urlname_prefix, object, kind):
@@ -308,10 +293,7 @@ def derive_model_url(model_class, urlname_prefix, object, kind):
     :return: Resolved URL or None.
     :rtype: str|None
     """
-    if not (
-        isinstance(object, model_class)
-        or (inspect.isclass(object) and issubclass(object, model_class))
-    ):
+    if not (isinstance(object, model_class) or (inspect.isclass(object) and issubclass(object, model_class))):
         return
 
     kind_to_urlnames = {

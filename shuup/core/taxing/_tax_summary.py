@@ -1,5 +1,3 @@
-
-
 from collections import defaultdict
 from decimal import Decimal
 from itertools import chain
@@ -34,9 +32,7 @@ class TaxSummary(list):
             base_amount_by_tax[line_tax.tax] += line_tax.base_amount.as_rounded()
 
         lines = [
-            TaxSummaryLine.from_tax(
-                tax, base_amount_by_tax[tax], raw_base_amount_by_tax[tax], tax_amount
-            )
+            TaxSummaryLine.from_tax(tax, base_amount_by_tax[tax], raw_base_amount_by_tax[tax], tax_amount)
             for (tax, tax_amount) in tax_amount_by_tax.items()
         ]
         if untaxed:
@@ -83,9 +79,7 @@ class TaxSummaryLine:
             tax_amount=tax_amount,
         )
 
-    def __init__(
-        self, tax_id, tax_code, tax_name, tax_rate, based_on, raw_based_on, tax_amount
-    ):
+    def __init__(self, tax_id, tax_code, tax_name, tax_rate, based_on, raw_based_on, tax_amount):
         self.tax_id = tax_id
         self.tax_code = tax_code
         self.tax_name = tax_name

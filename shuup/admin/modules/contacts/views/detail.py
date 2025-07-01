@@ -1,5 +1,3 @@
-
-
 import warnings
 
 from django.conf import settings
@@ -40,15 +38,12 @@ class ContactDetailToolbar(Toolbar):
             disable_reason = _("User has no associated email.")
 
         return PostActionButton(
-            post_url=reverse(
-                "shuup_admin:contact.reset_password", kwargs={"pk": self.contact.pk}
-            ),
+            post_url=reverse("shuup_admin:contact.reset_password", kwargs={"pk": self.contact.pk}),
             name="pk",
             value=self.contact.pk,
             text=_("Reset password"),
             tooltip=_("Send a password renewal email."),
-            confirm=_("Are you sure you wish to send a password recovery email to %s?")
-            % self.contact.email,
+            confirm=_("Are you sure you wish to send a password recovery email to %s?") % self.contact.email,
             icon="fa fa-undo",
             disable_reason=disable_reason,
             extra_css_class="dropdown-item",
@@ -82,9 +77,7 @@ class ContactDetailToolbar(Toolbar):
             name="set_is_active",
             value="0" if self.contact.is_active else "1",
             icon="fa fa-times-circle",
-            text=_("Deactivate Contact")
-            if self.contact.is_active
-            else _("Activate Contact"),
+            text=_("Deactivate Contact") if self.contact.is_active else _("Activate Contact"),
             extra_css_class="dropdown-item btn-danger",
         )
 
@@ -126,7 +119,8 @@ class ContactDetailToolbar(Toolbar):
             warnings.warn(
                 "`admin_contact_toolbar_button` provider is deprecated, "
                 "use `admin_contact_toolbar_action_item` instead.",
-                RemovedFromShuupWarning, stacklevel=2,
+                RemovedFromShuupWarning,
+                stacklevel=2,
             )
             self.append(button(self.contact))
 
@@ -135,19 +129,14 @@ class ContactDetailToolbar(Toolbar):
         current_user = self.request.user
         if isinstance(user, get_user_model()):
             has_privileges = bool(
-                getattr(current_user, "is_superuser", False)
-                or getattr(current_user, "is_staff", False)
+                getattr(current_user, "is_superuser", False) or getattr(current_user, "is_staff", False)
             )
-            can_impersonate = bool(
-                has_privileges and user.is_active and not user.is_superuser
-            )
+            can_impersonate = bool(has_privileges and user.is_active and not user.is_superuser)
 
             if can_impersonate and get_front_url() and not user.is_staff:
                 self.append(
                     PostActionButton(
-                        post_url=reverse(
-                            "shuup_admin:user.login-as", kwargs={"pk": user.pk}
-                        ),
+                        post_url=reverse("shuup_admin:user.login-as", kwargs={"pk": user.pk}),
                         text=_("Login as User"),
                         extra_css_class="btn-inverse",
                     )
@@ -155,9 +144,7 @@ class ContactDetailToolbar(Toolbar):
             elif can_impersonate and get_admin_url() and user.is_staff:
                 self.append(
                     PostActionButton(
-                        post_url=reverse(
-                            "shuup_admin:user.login-as-staff", kwargs={"pk": user.pk}
-                        ),
+                        post_url=reverse("shuup_admin:user.login-as-staff", kwargs={"pk": user.pk}),
                         text=_("Login as Staff User"),
                         extra_css_class="btn-inverse",
                     )
@@ -204,23 +191,17 @@ class ContactDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["toolbar"] = ContactDetailToolbar(
-            contact=self.object, request=self.request
-        )
+        context["toolbar"] = ContactDetailToolbar(contact=self.object, request=self.request)
         context["title"] = f"{self.object._meta.verbose_name.title()}: {force_text(self.object)}"
         context["contact_sections"] = []
 
-        contact_sections_provides = sorted(
-            get_provide_objects("admin_contact_section"), key=lambda x: x.order
-        )
+        contact_sections_provides = sorted(get_provide_objects("admin_contact_section"), key=lambda x: x.order)
         for admin_contact_section in contact_sections_provides:
             # Check whether the ContactSection should be visible for the current object
             if admin_contact_section.visible_for_object(self.object, self.request):
                 context["contact_sections"].append(admin_contact_section)
                 # add additional context data where the key is the contact_section identifier
-                section_context = admin_contact_section.get_context_data(
-                    self.object, self.request
-                )
+                section_context = admin_contact_section.get_context_data(self.object, self.request)
                 context[admin_contact_section.identifier] = section_context
 
         return context
@@ -232,17 +213,9 @@ class ContactDetailView(DetailView):
             if getattr(self.object.user, "is_superuser", False) and not getattr(
                 self.request.user, "is_superuser", False
             ):
-                raise Problem(
-                    _(
-                        "You can not deactivate a superuser. Remove superuser permission first."
-                    )
-                )
+                raise Problem(_("You can not deactivate a superuser. Remove superuser permission first."))
             if self.object.user == self.request.user:
-                raise Problem(
-                    _(
-                        "You can not deactivate yourself. Use another account to deactivate the current one."
-                    )
-                )
+                raise Problem(_("You can not deactivate yourself. Use another account to deactivate the current one."))
 
         self.object.is_active = state
         self.object.save(update_fields=("is_active",))
@@ -255,14 +228,8 @@ class ContactDetailView(DetailView):
             },
         )
 
-        if (
-            self.object.is_active
-            and self.object.is_active != old_state
-            and isinstance(self.object, CompanyContact)
-        ):
-            company_contact_activated.send(
-                sender=type(self.object), instance=self.object, request=self.request
-            )
+        if self.object.is_active and self.object.is_active != old_state and isinstance(self.object, CompanyContact):
+            company_contact_activated.send(sender=type(self.object), instance=self.object, request=self.request)
 
         return HttpResponseRedirect(self.request.path)
 

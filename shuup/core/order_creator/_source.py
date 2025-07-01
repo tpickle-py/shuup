@@ -1,5 +1,3 @@
-
-
 from collections import Counter
 
 from django.conf import settings
@@ -169,9 +167,7 @@ class OrderSource:
                 raise ValueError(
                     f"Error! Can't update `{self!r}` with key `{key!r}`, as it is not a pre-existing attribute."
                 )
-            if (
-                isinstance(getattr(self, key), dict) and value
-            ):  # (Shallowly) merge dicts
+            if isinstance(getattr(self, key), dict) and value:  # (Shallowly) merge dicts
                 getattr(self, key).update(value)
             else:
                 setattr(self, key, value)
@@ -431,11 +427,7 @@ class OrderSource:
         :rtype: int
         """
         if supplier:
-            return sum(
-                count_in_line(line)
-                for line in self.get_product_lines()
-                if line.supplier == supplier
-            )
+            return sum(count_in_line(line) for line in self.get_product_lines() if line.supplier == supplier)
         return sum(count_in_line(line) for line in self.get_product_lines())
 
     @property
@@ -515,11 +507,7 @@ class OrderSource:
         self._add_lines_from_modifiers(lines)
 
         lines.extend(
-            _collect_lines_from_signal(
-                post_compute_source_lines.send(
-                    sender=type(self), source=self, lines=lines
-                )
-            )
+            _collect_lines_from_signal(post_compute_source_lines.send(sender=type(self), source=self, lines=lines))
         )
 
         return lines
@@ -578,11 +566,7 @@ class OrderSource:
             package_children = line.product.get_package_child_to_quantity_map()
 
             # multiply the quantity by the number os packages in the line
-            package_quantity = (
-                int(line.quantity)
-                if line.product.mode == ProductMode.PACKAGE_PARENT
-                else 1
-            )
+            package_quantity = int(line.quantity) if line.product.mode == ProductMode.PACKAGE_PARENT else 1
 
             for product, quantity in iteritems(package_children):
                 q_counter[product] += quantity * package_quantity
@@ -595,11 +579,7 @@ class OrderSource:
     @property
     def total_gross_weight(self):
         product_lines = self.get_product_lines()
-        return (
-            (sum(line.product.gross_weight * line.quantity for line in product_lines))
-            if product_lines
-            else 0
-        )
+        return (sum(line.product.gross_weight * line.quantity for line in product_lines)) if product_lines else 0
 
     def _get_object(self, model, pk):
         """
@@ -622,9 +602,7 @@ class OrderSource:
         """
         :rtype: Money
         """
-        return sum(
-            (line.tax_amount for line in self.get_final_lines()), self.zero_price.amount
-        )
+        return sum((line.tax_amount for line in self.get_final_lines()), self.zero_price.amount)
 
     def get_tax_summary(self):
         """
@@ -721,19 +699,13 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
             self.tax_class = tax_class
         self.supplier = kwargs.pop("supplier", None)
         self.quantity = kwargs.pop("quantity", 0)
-        self.base_unit_price = ensure_decimal_places(
-            kwargs.pop("base_unit_price", source.zero_price)
-        )
-        self.discount_amount = ensure_decimal_places(
-            kwargs.pop("discount_amount", source.zero_price)
-        )
+        self.base_unit_price = ensure_decimal_places(kwargs.pop("base_unit_price", source.zero_price))
+        self.discount_amount = ensure_decimal_places(kwargs.pop("discount_amount", source.zero_price))
         self.sku = kwargs.pop("sku", "")
         self.text = kwargs.pop("text", "")
         self.require_verification = kwargs.pop("require_verification", False)
         self.accounting_identifier = kwargs.pop("accounting_identifier", "")
-        self.on_parent_change_behavior = kwargs.pop(
-            "on_parent_change_behavior", OrderLineBehavior.INHERIT
-        )
+        self.on_parent_change_behavior = kwargs.pop("on_parent_change_behavior", OrderLineBehavior.INHERIT)
         self.line_source = kwargs.pop("line_source", LineSource.CUSTOMER)
 
         self._taxes = None
@@ -773,9 +745,7 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
         forbidden_keys = set(dir(self)) - self._FIELDSET
         found_forbidden_keys = [key for key in kwargs if key in forbidden_keys]
         if found_forbidden_keys:
-            raise TypeError(
-                f"Error! You may not add these keys to SourceLine: `{forbidden_keys}`."
-            )
+            raise TypeError(f"Error! You may not add these keys to SourceLine: `{forbidden_keys}`.")
 
         for key, value in kwargs.items():
             if key in self._FIELDSET:
@@ -786,9 +756,7 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
     def __repr__(self):
         key_values = [(key, getattr(self, key, None)) for key in self._FIELDS]
         set_key_values = [(k, v) for (k, v) in key_values if v is not None]
-        assigns = [
-            f"{k}={v!r}" for (k, v) in (set_key_values + sorted(self._data.items()))
-        ]
+        assigns = [f"{k}={v!r}" for (k, v) in (set_key_values + sorted(self._data.items()))]
         return "<{}({!r}, {})>".format(type(self).__name__, self.source, ", ".join(assigns))
 
     def get(self, key, default=None):
@@ -807,9 +775,7 @@ class SourceLine(TaxableItem, Priceful, LineWithUnit):
         for line in self.source.get_lines():
             if line.line_id == self.parent_line_id:
                 return line
-        raise ValueError(
-            f"Error! Invalid `parent_line_id`: `{self.parent_line_id!r}`."
-        )
+        raise ValueError(f"Error! Invalid `parent_line_id`: `{self.parent_line_id!r}`.")
 
     @property
     def tax_class(self):

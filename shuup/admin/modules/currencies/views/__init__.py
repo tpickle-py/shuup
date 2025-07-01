@@ -1,4 +1,3 @@
-
 from .edit import CurrencyEditView
 from .list import CurrencyListView
 

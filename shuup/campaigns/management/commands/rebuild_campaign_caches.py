@@ -35,9 +35,7 @@ class Command(BaseCommand):
             print("Recaching filter %d / %d..." % (i + 1, entry_count))  # noqa
 
     def resave_campaigns(self):
-        campaigns = list(
-            chain(BasketCampaign.objects.all(), CatalogCampaign.objects.all())
-        )
+        campaigns = list(chain(BasketCampaign.objects.all(), CatalogCampaign.objects.all()))
 
         entry_count = len(campaigns)
 

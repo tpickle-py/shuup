@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -30,12 +28,8 @@ class CheckoutShopFormPart(FormPart):
         if not self.object.pk:
             return
         initial = {
-            "shipping_method_required": configuration.get(
-                self.object, SHIPPING_METHOD_REQUIRED_CONFIG_KEY, True
-            ),
-            "payment_method_required": configuration.get(
-                self.object, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, True
-            ),
+            "shipping_method_required": configuration.get(self.object, SHIPPING_METHOD_REQUIRED_CONFIG_KEY, True),
+            "payment_method_required": configuration.get(self.object, PAYMENT_METHOD_REQUIRED_CONFIG_KEY, True),
         }
         yield TemplatedFormDef(
             name=self.name,

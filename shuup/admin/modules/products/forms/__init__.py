@@ -1,4 +1,3 @@
-
 from .base_forms import (
     BaseProductMediaForm,
     ProductAttributesForm,

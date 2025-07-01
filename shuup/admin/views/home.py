@@ -59,9 +59,7 @@ class HomeView(TemplateView):
         shop = get_shop(self.request)
         context["blocks"] = blocks = []
         context["tour_key"] = "home"
-        context["tour_complete"] = is_tour_complete(
-            shop, "home", user=self.request.user
-        )
+        context["tour_complete"] = is_tour_complete(shop, "home", user=self.request.user)
 
         wizard_complete = setup_wizard_complete(self.request)
         wizard_url = reverse("shuup_admin:wizard")
@@ -69,9 +67,7 @@ class HomeView(TemplateView):
         if not wizard_complete:
             wizard_actions.append({"text": _("Complete wizard"), "url": wizard_url})
         else:
-            wizard_steps = load_setup_wizard_panes(
-                shop=shop, request=self.request, visible_only=False
-            )
+            wizard_steps = load_setup_wizard_panes(shop=shop, request=self.request, visible_only=False)
             for step in wizard_steps:
                 wizard_actions.append(
                     {
@@ -93,12 +89,8 @@ class HomeView(TemplateView):
             )
 
         for module in get_modules():
-            if not get_missing_permissions(
-                self.request.user, module.get_required_permissions()
-            ):
-                blocks.extend(
-                    module.get_help_blocks(request=self.request, kind="setup")
-                )
+            if not get_missing_permissions(self.request.user, module.get_required_permissions()):
+                blocks.extend(module.get_help_blocks(request=self.request, kind="setup"))
         blocks.sort(key=lambda b: b.priority)
 
         if not blocks:

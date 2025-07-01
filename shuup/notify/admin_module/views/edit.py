@@ -1,5 +1,3 @@
-
-
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
@@ -29,9 +27,7 @@ class ScriptEditView(CreateOrUpdateView):
             # this script was created through a template
             # so show an option to easily edit the template
             if self.object.template:
-                template_cls = get_identifier_to_object_map(
-                    SCRIPT_TEMPLATES_PROVIDE_CATEGORY
-                ).get(self.object.template)
+                template_cls = get_identifier_to_object_map(SCRIPT_TEMPLATES_PROVIDE_CATEGORY).get(self.object.template)
 
                 # check whether is possible to edit the script through the template editor
                 if template_cls and template_cls(self.object).can_edit_script():
@@ -73,8 +69,7 @@ class ScriptEditView(CreateOrUpdateView):
                     text=_("Delete"),
                     icon="fa fa-trash",
                     extra_css_class="btn-danger",
-                    confirm=_('Are you sure you wish to delete "%s" notification?')
-                    % self.object,
+                    confirm=_('Are you sure you wish to delete "%s" notification?') % self.object,
                     required_permissions=("notify.script.delete",),
                 ),
             )
@@ -97,8 +92,4 @@ class ScriptEditView(CreateOrUpdateView):
             return redirect("shuup_admin:notify.script.edit", pk=wf.pk)
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(shop=get_shop(self.request))
-        )
+        return super().get_queryset().filter(shop=get_shop(self.request))

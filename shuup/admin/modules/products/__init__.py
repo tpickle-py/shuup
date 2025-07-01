@@ -1,5 +1,3 @@
-
-
 from collections import Counter
 from typing import Iterable
 
@@ -90,24 +88,16 @@ class ProductModule(AdminModule):
         skus_seen = set()
         if len(query) >= minimum_query_length:
             pk_counter = Counter()
-            pk_counter.update(
-                Product.objects.filter(sku__startswith=query).values_list(
-                    "pk", flat=True
-                )
-            )
+            pk_counter.update(Product.objects.filter(sku__startswith=query).values_list("pk", flat=True))
             name_q = Q()
             for part in split_query(query, minimum_query_length):
                 name_q &= Q(name__icontains=part)
             pk_counter.update(
-                Product._parler_meta.root_model.objects.filter(name_q).values_list(
-                    "master_id", flat=True
-                )
+                Product._parler_meta.root_model.objects.filter(name_q).values_list("master_id", flat=True)
             )
             pks = [pk for (pk, count) in pk_counter.most_common(10)]
 
-            for product in Product.objects.filter(
-                pk__in=pks, shop_products__shop_id=shop.id
-            ):
+            for product in Product.objects.filter(pk__in=pks, shop_products__shop_id=shop.id):
                 relevance = 100 - pk_counter.get(product.pk, 0)
                 skus_seen.add(product.sku.lower())
                 yield SearchResult(
@@ -145,12 +135,8 @@ class ProductModule(AdminModule):
                     "url": self.get_model_url(ShopProduct, "new"),
                 }
             )
-        if "shuup.importer" in settings.INSTALLED_APPS and has_permission(
-            request.user, "importer.import.new"
-        ):
-            actions.append(
-                {"text": _("Import"), "url": reverse("shuup_admin:importer.import.new")}
-            )
+        if "shuup.importer" in settings.INSTALLED_APPS and has_permission(request.user, "importer.import.new"):
+            actions.append({"text": _("Import"), "url": reverse("shuup_admin:importer.import.new")})
 
         if actions:
             yield SimpleHelpBlock(
@@ -159,9 +145,7 @@ class ProductModule(AdminModule):
                 icon_url="shuup_admin/img/product.png",
                 priority=0,
                 category=HelpBlockCategory.PRODUCTS,
-                done=Product.objects.filter(shop_products__shop=request.shop).exists()
-                if kind == "setup"
-                else False,
+                done=Product.objects.filter(shop_products__shop=request.shop).exists() if kind == "setup" else False,
             )
 
     def get_model_url(self, object, kind, shop=None):
@@ -182,12 +166,8 @@ class ProductModule(AdminModule):
 
     def get_permissions_help_texts(self) -> Iterable[str]:
         return {
-            get_object_selector_permission_name(Product): _(
-                "Allow the user to select products in admin."
-            ),
-            get_object_selector_permission_name(ShopProduct): _(
-                "Allow the user to select shop_products in admin."
-            ),
+            get_object_selector_permission_name(Product): _("Allow the user to select products in admin."),
+            get_object_selector_permission_name(ShopProduct): _("Allow the user to select shop_products in admin."),
         }
 
 

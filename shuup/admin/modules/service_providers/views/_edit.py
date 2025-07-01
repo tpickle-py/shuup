@@ -1,6 +1,3 @@
-
-
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -74,23 +71,17 @@ class ServiceProviderEditView(CreateOrUpdateView):
         return form
 
     def get_success_url(self):
-        return reverse(
-            "shuup_admin:service_provider.edit", kwargs={"pk": self.object.pk}
-        )
+        return reverse("shuup_admin:service_provider.edit", kwargs={"pk": self.object.pk})
 
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
         object = self.get_object()
-        delete_url = reverse_lazy(
-            "shuup_admin:service_provider.delete", kwargs={"pk": object.pk}
-        )
+        delete_url = reverse_lazy("shuup_admin:service_provider.delete", kwargs={"pk": object.pk})
         toolbar = get_default_edit_toolbar(self, save_form_id, delete_url=delete_url)
         if self.object.pk:
             toolbar.append(
                 URLActionButton(
-                    text=_("Create {service_name}").format(
-                        service_name=self.object.service_model._meta.verbose_name
-                    ),
+                    text=_("Create {service_name}").format(service_name=self.object.service_model._meta.verbose_name),
                     icon="fa fa-plus",
                     url="{model_url}?provider={id}".format(
                         model_url=get_model_url(self.object.service_model, "new"),

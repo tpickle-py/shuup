@@ -1,4 +1,3 @@
-
 from shuup.utils import update_module_attributes
 
 from ._creator import OrderCreator

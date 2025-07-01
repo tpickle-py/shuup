@@ -1,5 +1,3 @@
-
-
 class FirstSupplierStrategy:
     def get_supplier(self, **kwargs):
         shop_product = kwargs["shop_product"]

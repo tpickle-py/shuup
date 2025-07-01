@@ -24,9 +24,7 @@ def wait_until_disappeared(browser, css_selector, timeout=10, frequency=1.0):
     """
     wait_until_condition(
         browser,
-        condition=lambda x: not x.driver.find_element_by_css_selector(
-            css_selector
-        ).is_displayed(),
+        condition=lambda x: not x.driver.find_element_by_css_selector(css_selector).is_displayed(),
         timeout=timeout,
         frequency=frequency,
     )
@@ -47,9 +45,7 @@ def wait_until_appeared(browser, css_selector, timeout=10, frequency=1.0):
     """
     wait_until_condition(
         browser,
-        condition=lambda x: x.driver.find_element_by_css_selector(
-            css_selector
-        ).is_displayed(),
+        condition=lambda x: x.driver.find_element_by_css_selector(css_selector).is_displayed(),
         timeout=timeout,
         frequency=frequency,
     )
@@ -117,14 +113,10 @@ def click_element(browser, css_selector, timeout=10, frequency=1.0, header_heigh
     move_to_element(browser, css_selector, header_height)
     # selenium weirdness when clicking a button that already has focus...grumble grumble
     # http://stackoverflow.com/questions/21330894/why-do-i-have-to-click-twice-to-a-submit-input-using-selenium
-    browser.execute_script(
-        'document.querySelector("{}").focus()'.format(css_selector.replace('"', '\\"'))
-    )
+    browser.execute_script('document.querySelector("{}").focus()'.format(css_selector.replace('"', '\\"')))
     wait_until_condition(
         browser,
-        condition=lambda x: EC.element_to_be_clickable((By.CSS_SELECTOR, css_selector))(
-            browser.driver
-        ),
+        condition=lambda x: EC.element_to_be_clickable((By.CSS_SELECTOR, css_selector))(browser.driver),
         timeout=timeout,
         frequency=frequency,
     )

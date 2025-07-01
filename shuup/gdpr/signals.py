@@ -1,4 +1,3 @@
-
 from django.dispatch import Signal
 
 anonymization_requested = Signal(

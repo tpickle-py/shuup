@@ -1,6 +1,3 @@
-
-
-
 def get_cached_trees(queryset):
     """
     Takes a list/queryset of model objects in MPTT left (depth-first) order and
@@ -51,9 +48,7 @@ def get_cached_trees(queryset):
             elif node_level < root_level:
                 # ``queryset`` was a list or other iterable (unable to order),
                 # and was provided in an order other than depth-first
-                raise ValueError(
-                    f"Error! Node {type(queryset)} not in depth-first order."
-                )
+                raise ValueError(f"Error! Node {type(queryset)} not in depth-first order.")
 
             # Set up the attribute on the node that will store cached children,
             # which is used by ``MPTTModel.get_children``

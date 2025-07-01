@@ -30,10 +30,7 @@ def main():
 
     # Generate new
     retcode = subprocess.call(
-        ["sphinx-apidoc", "-o", "doc/api", "shuup"]
-        + APIDOC_EXCLUDES
-        + migration_excludes
-        + sys.argv
+        ["sphinx-apidoc", "-o", "doc/api", "shuup"] + APIDOC_EXCLUDES + migration_excludes + sys.argv
     )
     raise SystemExit(retcode)
 

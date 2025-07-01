@@ -1,5 +1,3 @@
-
-
 import bleach
 from django import forms
 from django.conf import settings
@@ -34,17 +32,13 @@ class SupplierBaseForm(ShuupAdminForm):
             initial_shops = self.instance.shops.all() if self.instance.pk else []
             self.fields["shops"] = ObjectSelect2MultipleField(
                 label=_("Shops"),
-                help_text=_(
-                    "Select shops for this supplier. Keep it blank to share with all shops."
-                ),
+                help_text=_("Select shops for this supplier. Keep it blank to share with all shops."),
                 model=Shop,
                 required=False,
                 initial=initial_shops,
             )
             self.fields["shops"].choices = initial_shops
-            self.fields["shops"].widget.choices = [
-                (shop.pk, force_text(shop)) for shop in initial_shops
-            ]
+            self.fields["shops"].widget.choices = [(shop.pk, force_text(shop)) for shop in initial_shops]
         else:
             # drop shops fields
             self.fields.pop("shops", None)
@@ -59,12 +53,8 @@ class SupplierBaseForm(ShuupAdminForm):
         )
 
         if self.instance.pk:
-            supplier_shop = SupplierShop.objects.filter(
-                shop=shop, supplier=self.instance
-            ).first()
-            self.fields["is_approved"].initial = bool(
-                supplier_shop and supplier_shop.is_approved
-            )
+            supplier_shop = SupplierShop.objects.filter(shop=shop, supplier=self.instance).first()
+            self.fields["is_approved"].initial = bool(supplier_shop and supplier_shop.is_approved)
         else:
             self.fields["is_approved"].initial = False
 
@@ -88,20 +78,14 @@ class SupplierBaseForm(ShuupAdminForm):
             selected_shops = [int(shop_id) for shop_id in cleaned_data["shops"]]
             shop = get_shop(self.request)
             if cleaned_data.get("is_approved") and shop.pk not in selected_shops:
-                self.add_error(
-                    "is_approved", _("{} is not in the Shops field.").format(shop)
-                )
+                self.add_error("is_approved", _("{} is not in the Shops field.").format(shop))
 
         return cleaned_data
 
     def save(self, commit=True):
         instance = super().save(commit)
         instance.shop_products.remove(
-            *list(
-                instance.shop_products.exclude(
-                    shop_id__in=instance.shops.all()
-                ).values_list("pk", flat=True)
-            )
+            *list(instance.shop_products.exclude(shop_id__in=instance.shops.all()).values_list("pk", flat=True))
         )
 
         shop = get_shop(self.request)
@@ -115,9 +99,7 @@ class SupplierBaseForm(ShuupAdminForm):
 
     def _save_supplier_shop(self, shop, instance):
         # update the is_approved flag for this shop
-        SupplierShop.objects.filter(shop=shop, supplier=instance).update(
-            is_approved=self.cleaned_data["is_approved"]
-        )
+        SupplierShop.objects.filter(shop=shop, supplier=instance).update(is_approved=self.cleaned_data["is_approved"])
 
 
 class SupplierContactAddressForm(forms.ModelForm):

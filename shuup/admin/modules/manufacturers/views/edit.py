@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -29,16 +27,12 @@ class ManufacturerForm(ShuupAdminFormNoTranslation):
         if getattr(self.request.user, "is_superuser", False):
             self.fields["shops"] = ObjectSelect2MultipleField(
                 label=_("Shops"),
-                help_text=_(
-                    "Select shops for this manufacturer. Keep it blank to share with all shops."
-                ),
+                help_text=_("Select shops for this manufacturer. Keep it blank to share with all shops."),
                 model=Shop,
                 required=False,
             )
             initial_shops = self.instance.shops.all() if self.instance.pk else []
-            self.fields["shops"].widget.choices = [
-                (shop.pk, force_text(shop)) for shop in initial_shops
-            ]
+            self.fields["shops"].widget.choices = [(shop.pk, force_text(shop)) for shop in initial_shops]
         else:
             # drop shops fields
             self.fields.pop("shops", None)
@@ -48,9 +42,7 @@ class ManufacturerForm(ShuupAdminFormNoTranslation):
 
         # do not let any user to change shared Manufacturers
         if self.instance.pk and self.instance.shops.count() == 0 and not is_superuser:
-            raise forms.ValidationError(
-                _("You have no permission to change a shared Manufacturer.")
-            )
+            raise forms.ValidationError(_("You have no permission to change a shared Manufacturer."))
 
         instance = super().save(commit)
 
@@ -68,9 +60,7 @@ class ManufacturerEditView(CreateOrUpdateView):
     context_object_name = "manufacturer"
 
     def get_queryset(self):
-        return Manufacturer.objects.filter(
-            Q(shops=get_shop(self.request)) | Q(shops__isnull=True)
-        )
+        return Manufacturer.objects.filter(Q(shops=get_shop(self.request)) | Q(shops__isnull=True))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -79,14 +69,8 @@ class ManufacturerEditView(CreateOrUpdateView):
 
     def get_toolbar(self):
         object = self.get_object()
-        delete_url = (
-            reverse_lazy("shuup_admin:manufacturer.delete", kwargs={"pk": object.pk})
-            if object.pk
-            else None
-        )
-        return get_default_edit_toolbar(
-            self, self.get_save_form_id(), delete_url=delete_url
-        )
+        delete_url = reverse_lazy("shuup_admin:manufacturer.delete", kwargs={"pk": object.pk}) if object.pk else None
+        return get_default_edit_toolbar(self, self.get_save_form_id(), delete_url=delete_url)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -100,9 +84,7 @@ class ManufacturerDeleteView(DetailView):
     model = Manufacturer
 
     def get_queryset(self):
-        return Manufacturer.objects.filter(
-            Q(shops=get_shop(self.request)) | Q(shops__isnull=True)
-        )
+        return Manufacturer.objects.filter(Q(shops=get_shop(self.request)) | Q(shops__isnull=True))
 
     def post(self, request, *args, **kwargs):
         manufacturer = self.get_object()

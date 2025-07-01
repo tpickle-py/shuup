@@ -1,5 +1,3 @@
-
-
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -8,9 +6,7 @@ from filer.fields.folder import FilerFolderField
 
 
 class MediaFile(models.Model):
-    file = FilerFileField(
-        related_name="media_file", verbose_name=_("file"), on_delete=models.CASCADE
-    )
+    file = FilerFileField(related_name="media_file", verbose_name=_("file"), on_delete=models.CASCADE)
     shops = models.ManyToManyField(
         "shuup.Shop",
         related_name="media_files",
@@ -22,11 +18,8 @@ class MediaFile(models.Model):
         return f"{self.file}"
 
 
-
 class MediaFolder(models.Model):
-    folder = FilerFolderField(
-        related_name="media_folder", verbose_name=_("folder"), on_delete=models.CASCADE
-    )
+    folder = FilerFolderField(related_name="media_folder", verbose_name=_("folder"), on_delete=models.CASCADE)
     shops = models.ManyToManyField(
         "shuup.Shop",
         related_name="media_folders",

@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -99,10 +97,7 @@ class ContactGroupMembersFormSet(BaseFormSet):
         if members_to_add:
             add_count = len(members_to_add)
             message_parts.append(
-                ungettext(
-                    "%(count)s member added", "%(count)s members added.", add_count
-                )
-                % {"count": add_count}
+                ungettext("%(count)s member added", "%(count)s members added.", add_count) % {"count": add_count}
             )
         if members_to_remove:
             remove_count = len(members_to_remove)

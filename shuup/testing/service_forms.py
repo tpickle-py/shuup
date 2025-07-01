@@ -1,4 +1,3 @@
-
 from shuup.admin.forms import ShuupAdminForm
 
 from .models import CarrierWithCheckoutPhase, PaymentWithCheckoutPhase, PseudoPaymentProcessor

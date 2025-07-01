@@ -9,12 +9,8 @@ from shuup.core.tasks import run_task
 
 @receiver(index_catalog_shop_product)
 def on_index_catalog_shop_product(sender, shop_product, **kwargs):
-    shop_product_id = (
-        shop_product.pk if isinstance(shop_product, ShopProduct) else shop_product
-    )
-    run_task(
-        "shuup.simple_supplier.tasks.index_shop_product", shop_product=shop_product_id
-    )
+    shop_product_id = shop_product.pk if isinstance(shop_product, ShopProduct) else shop_product
+    run_task("shuup.simple_supplier.tasks.index_shop_product", shop_product=shop_product_id)
 
 
 @receiver(object_saved)
@@ -28,8 +24,4 @@ def on_object_saved(sender, object, **kwargs):
             )
         )
     if isinstance(object, Product):
-        transaction.on_commit(
-            lambda: run_task(
-                "shuup.simple_supplier.tasks.update_product_stocks", product=object.pk
-            )
-        )
+        transaction.on_commit(lambda: run_task("shuup.simple_supplier.tasks.update_product_stocks", product=object.pk))

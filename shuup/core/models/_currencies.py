@@ -1,5 +1,3 @@
-
-
 import decimal
 
 import babel
@@ -67,11 +65,7 @@ def get_currency_precision(currency):
     precision = cache.get(cache_key)
     if precision is None:
         currency_obj = Currency.objects.filter(code=currency).first()
-        precision = (
-            decimal.Decimal("0.1") ** currency_obj.decimal_places
-            if currency_obj
-            else None
-        )
+        precision = decimal.Decimal("0.1") ** currency_obj.decimal_places if currency_obj else None
         cache.set(cache_key, precision)
     return precision
 

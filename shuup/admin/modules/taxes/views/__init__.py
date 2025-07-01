@@ -1,4 +1,3 @@
-
 from .edit import CustomerTaxGroupEditView, TaxClassEditView, TaxEditView
 from .list import CustomerTaxGroupListView, TaxClassListView, TaxListView
 

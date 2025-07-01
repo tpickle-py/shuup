@@ -23,9 +23,7 @@ class VisibleMassAction(PicotableMassAction):
         else:
             query = Q(pk__in=ids, shop=shop)
 
-        ShopProduct.objects.filter(query).update(
-            visibility=ShopProductVisibility.ALWAYS_VISIBLE
-        )
+        ShopProduct.objects.filter(query).update(visibility=ShopProductVisibility.ALWAYS_VISIBLE)
         for shop_product in ShopProduct.objects.filter(query).iterator():
             context_cache.bump_cache_for_shop_product(shop_product)
 
@@ -41,9 +39,7 @@ class InvisibleMassAction(PicotableMassAction):
         else:
             query = Q(pk__in=ids, shop=shop)
 
-        ShopProduct.objects.filter(query).update(
-            visibility=ShopProductVisibility.NOT_VISIBLE
-        )
+        ShopProduct.objects.filter(query).update(visibility=ShopProductVisibility.NOT_VISIBLE)
         for shop_product in ShopProduct.objects.filter(query).iterator():
             context_cache.bump_cache_for_shop_product(shop_product)
 

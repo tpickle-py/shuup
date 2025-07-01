@@ -47,9 +47,7 @@ class CampaignEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
 
         for provide_key, form_part_class in self.effects:
             for form in get_formparts_for_provide_key(user, provide_key):
-                form_parts.append(
-                    self._get_effects_form_part(form, object, form_part_class)
-                )
+                form_parts.append(self._get_effects_form_part(form, object, form_part_class))
 
         return form_parts
 
@@ -62,20 +60,14 @@ class CampaignEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
         )
 
     def _get_effects_form_part(self, form, object, cls):
-        return cls(
-            self.request, form, f"effects_{form._meta.model.__name__.lower()}", object
-        )
+        return cls(self.request, form, f"effects_{form._meta.model.__name__.lower()}", object)
 
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
         return get_default_edit_toolbar(self, save_form_id)
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(shop=get_shop(self.request))
-        )
+        return super().get_queryset().filter(shop=get_shop(self.request))
 
 
 class CatalogCampaignEditView(BreadcrumbedView, CampaignEditView):
@@ -100,9 +92,7 @@ class CatalogCampaignEditView(BreadcrumbedView, CampaignEditView):
         return form_parts
 
     def _get_filters_form_part(self, form, object):
-        return CatalogFiltersFormPart(
-            self.request, form, f"filters_{form._meta.model.__name__.lower()}", object
-        )
+        return CatalogFiltersFormPart(self.request, form, f"filters_{form._meta.model.__name__.lower()}", object)
 
 
 class BasketCampaignEditView(BreadcrumbedView, CampaignEditView):
@@ -146,11 +136,7 @@ class CouponEditView(BreadcrumbedView, CreateOrUpdateView):
 
     def get_queryset(self):
         # get coupons for this shop or for shared shops
-        queryset = (
-            super()
-            .get_queryset()
-            .filter(shop=get_shop(self.request))
-        )
+        queryset = super().get_queryset().filter(shop=get_shop(self.request))
         supplier = get_supplier(self.request)
         if supplier:
             queryset = queryset.filter(supplier=supplier)

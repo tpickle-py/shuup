@@ -1,5 +1,3 @@
-
-
 import decimal
 
 
@@ -35,9 +33,7 @@ class UnittedDecimal(decimal.Decimal):
 
         :rtype: bool
         """
-        raise NotImplementedError(
-            "Error! Not implemented: `UnittedDecimal` -> `unit_matches_with()`."
-        )
+        raise NotImplementedError("Error! Not implemented: `UnittedDecimal` -> `unit_matches_with()`.")
 
     def new(self, value):
         """

@@ -1,5 +1,3 @@
-
-
 import warnings
 from decimal import ROUND_HALF_UP, Decimal
 from functools import lru_cache
@@ -55,9 +53,9 @@ class _ShortNameToSymbol:
     def _issue_deprecation_warning(self):
         warnings.warn(
             "Warning! `short_name` is deprecated, use `symbol` instead.",
-            DeprecationWarning, stacklevel=2,
+            DeprecationWarning,
+            stacklevel=2,
         )
-
 
 
 class SalesUnit(_ShortNameToSymbol, TranslatableShuupModel):
@@ -80,9 +78,7 @@ class SalesUnit(_ShortNameToSymbol, TranslatableShuupModel):
         verbose_name_plural = _("sales units")
 
     def __str__(self):
-        return force_text(
-            self.safe_translation_getter("name", default=self.identifier) or ""
-        )
+        return force_text(self.safe_translation_getter("name", default=self.identifier) or "")
 
     @property
     def allow_fractions(self):
@@ -120,9 +116,7 @@ class SalesUnit(_ShortNameToSymbol, TranslatableShuupModel):
 
         :rtype: DisplayUnit
         """
-        return (get_display_unit(self) if self.pk else None) or SalesUnitAsDisplayUnit(
-            self
-        )
+        return (get_display_unit(self) if self.pk else None) or SalesUnitAsDisplayUnit(self)
 
 
 class SalesUnitTranslation(_ShortNameToSymbol, TranslatedFieldsModel):
@@ -145,10 +139,7 @@ class SalesUnitTranslation(_ShortNameToSymbol, TranslatedFieldsModel):
     symbol = models.CharField(
         max_length=128,
         verbose_name=_("unit symbol"),
-        help_text=_(
-            "An abbreviated name for this sales unit that is shown "
-            "throughout admin and order invoices."
-        ),
+        help_text=_("An abbreviated name for this sales unit that is shown throughout admin and order invoices."),
     )
 
     class Meta:
@@ -216,10 +207,7 @@ class DisplayUnit(TranslatableShuupModel):
     default = models.BooleanField(
         default=False,
         verbose_name=_("use by default"),
-        help_text=_(
-            "Use this display unit by default when displaying "
-            "values of the internal unit."
-        ),
+        help_text=_("Use this display unit by default when displaying values of the internal unit."),
     )
     translations = TranslatedFields(
         name=models.CharField(
@@ -237,7 +225,6 @@ class DisplayUnit(TranslatableShuupModel):
     class Meta:
         verbose_name = _("display unit")
         verbose_name_plural = _("display units")
-
 
 
 class SalesUnitAsDisplayUnit(DisplayUnit):
@@ -264,7 +251,6 @@ class SalesUnitAsDisplayUnit(DisplayUnit):
         return force_text(self.name)
 
 
-
 class PiecesSalesUnit(SalesUnit):
     """
     An object representing `Pieces` sales unit.
@@ -276,9 +262,7 @@ class PiecesSalesUnit(SalesUnit):
         managed = False
 
     def __init__(self):
-        super().__init__(
-            identifier="_internal_pieces_unit", decimals=0
-        )
+        super().__init__(identifier="_internal_pieces_unit", decimals=0)
 
     def _get_pk_val(self, meta=None):
         return None
@@ -310,11 +294,9 @@ class UnitInterface:
         :type internal_unit: SalesUnit
         :type display_unit: DisplayUnit
         """
-        assert (
-            internal_unit is None
-            or display_unit is None
-            or (display_unit.internal_unit == internal_unit)
-        ), f"Incompatible units: {internal_unit!r}, {display_unit!r}"
+        assert internal_unit is None or display_unit is None or (display_unit.internal_unit == internal_unit), (
+            f"Incompatible units: {internal_unit!r}, {display_unit!r}"
+        )
         if display_unit:
             self.internal_unit = display_unit.internal_unit
             self.display_unit = display_unit
@@ -338,11 +320,7 @@ class UnitInterface:
 
         :rtype: str
         """
-        if (
-            allow_empty
-            and self.allow_bare_number
-            and (self.display_unit.comparison_value == 1)
-        ):
+        if allow_empty and self.allow_bare_number and (self.display_unit.comparison_value == 1):
             return ""
         return self.symbol
 
@@ -407,9 +385,7 @@ class UnitInterface:
         :rtype: str
         :return: Rendered quantity in internal unit.
         """
-        rounded = _round_to_digits(
-            Decimal(quantity), self.internal_unit.decimals, ROUND_HALF_UP
-        )
+        rounded = _round_to_digits(Decimal(quantity), self.internal_unit.decimals, ROUND_HALF_UP)
         value = format_number(rounded, self.internal_unit.decimals)
         if not force_symbol and self.allow_bare_number:
             return value

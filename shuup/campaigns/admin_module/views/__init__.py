@@ -1,4 +1,3 @@
-
 from ._edit import BasketCampaignEditView, CatalogCampaignEditView, CouponEditView
 from ._list import BasketCampaignListView, CatalogCampaignListView, CouponListView
 

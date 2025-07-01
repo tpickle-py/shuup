@@ -41,9 +41,7 @@ class ProductsInBasketConditionForm(BaseRuleModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["products"].widget = forms.SelectMultiple(
-            attrs={"data-model": "shuup.product"}
-        )
+        self.fields["products"].widget = forms.SelectMultiple(attrs={"data-model": "shuup.product"})
 
 
 class ContactGroupBasketConditionForm(BaseRuleModelForm):
@@ -81,9 +79,7 @@ class CategoryProductsBasketConditionForm(BaseRuleModelForm):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.fields["categories"].queryset = Category.objects.all_except_deleted()
-        self.fields[
-            "excluded_categories"
-        ].queryset = Category.objects.all_except_deleted()
+        self.fields["excluded_categories"].queryset = Category.objects.all_except_deleted()
 
     class Meta(BaseRuleModelForm.Meta):
         model = CategoryProductsBasketCondition

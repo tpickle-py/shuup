@@ -1,5 +1,3 @@
-
-
 import django.apps
 import django.conf
 from django.core.exceptions import ImproperlyConfigured
@@ -27,9 +25,7 @@ def collect_settings(app_name, settings_module):
 def _declare_setting(app_name, module, name, default):
     if name in _KNOWN_SETTINGS:
         other_app = _KNOWN_SETTINGS[name].app_name
-        raise ImproperlyConfigured(
-            f"Error! Apps `{other_app}` and `{app_name}` define the same setting `{name}`."
-        )
+        raise ImproperlyConfigured(f"Error! Apps `{other_app}` and `{app_name}` define the same setting `{name}`.")
     _KNOWN_SETTINGS[name] = Setting(
         name=name,
         default=default,

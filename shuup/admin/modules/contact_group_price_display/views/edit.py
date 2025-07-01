@@ -1,5 +1,3 @@
-
-
 from shuup.admin.modules.contact_group_price_display.views.forms import ContactGroupPriceDisplayForm
 from shuup.admin.utils.views import CreateOrUpdateView
 from shuup.core.models import ContactGroupPriceDisplay

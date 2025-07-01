@@ -113,9 +113,5 @@ def add_edit_resources(context):
             },
         ),
     )
-    add_resource(
-        context, "head_end", get_shuup_static_url("xtheme/editor-injection.css")
-    )
-    add_resource(
-        context, "body_end", get_shuup_static_url("xtheme/editor-injection.js")
-    )
+    add_resource(context, "head_end", get_shuup_static_url("xtheme/editor-injection.css"))
+    add_resource(context, "body_end", get_shuup_static_url("xtheme/editor-injection.js"))

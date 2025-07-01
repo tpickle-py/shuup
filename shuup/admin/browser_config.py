@@ -22,16 +22,8 @@ class DefaultBrowserConfigProvider(BaseBrowserConfigProvider):
             "edit": "shuup_admin:edit",
             "select": "shuup_admin:select",
             "object_selector": "shuup_admin:object_selector",
-            "media": (
-                "shuup_admin:media.browse"
-                if has_permission(request.user, "media.browse")
-                else None
-            ),
-            "upload": (
-                "shuup_admin:media.upload"
-                if has_permission(request.user, "media.upload")
-                else None
-            ),
+            "media": ("shuup_admin:media.browse" if has_permission(request.user, "media.browse") else None),
+            "upload": ("shuup_admin:media.upload" if has_permission(request.user, "media.upload") else None),
             "product": "shuup_admin:shop_product.list",
             "contact": "shuup_admin:contact.list",
             "setLanguage": "shuup_admin:set-language",
@@ -47,8 +39,7 @@ class DefaultBrowserConfigProvider(BaseBrowserConfigProvider):
     @classmethod
     def get_gettings(cls, request, **kwargs):
         return {
-            "minSearchInputLength": settings.SHUUP_ADMIN_MINIMUM_INPUT_LENGTH_SEARCH
-            or 1,
+            "minSearchInputLength": settings.SHUUP_ADMIN_MINIMUM_INPUT_LENGTH_SEARCH or 1,
             "dateInputFormat": settings.SHUUP_ADMIN_DATE_INPUT_FORMAT,
             "datetimeInputFormat": settings.SHUUP_ADMIN_DATETIME_INPUT_FORMAT,
             "timeInputFormat": settings.SHUUP_ADMIN_TIME_INPUT_FORMAT,

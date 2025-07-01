@@ -24,9 +24,7 @@ class QuickAddRelatedObjectBaseMixin:
 
 
 class QuickAddRelatedObjectSelectMixin(QuickAddRelatedObjectBaseMixin):
-    def __init__(
-        self, attrs=None, choices=(), editable_model=None, initial=None, model=None
-    ):
+    def __init__(self, attrs=None, choices=(), editable_model=None, initial=None, model=None):
         """
         :param initial int: primary key of the object that is initially selected
         """
@@ -36,15 +34,11 @@ class QuickAddRelatedObjectSelectMixin(QuickAddRelatedObjectBaseMixin):
         if self.model and initial:
             choices = [(initial.pk, force_text(initial))]
 
-        super().__init__(
-            attrs, choices, editable_model
-        )
+        super().__init__(attrs, choices, editable_model)
 
 
 class QuickAddRelatedObjectMultipleSelectMixin(QuickAddRelatedObjectBaseMixin):
-    def __init__(
-        self, attrs=None, choices=(), editable_model=None, initial=None, model=None
-    ):
+    def __init__(self, attrs=None, choices=(), editable_model=None, initial=None, model=None):
         """
         :param initial list[int]: list of primary keys of the objects that
             are initially selected
@@ -55,18 +49,14 @@ class QuickAddRelatedObjectMultipleSelectMixin(QuickAddRelatedObjectBaseMixin):
         if self.model and initial:
             choices = [(instance.pk, force_text(instance)) for instance in initial]
 
-        super().__init__(
-            attrs, choices, editable_model
-        )
+        super().__init__(attrs, choices, editable_model)
 
 
 class QuickAddRelatedObjectSelect(QuickAddRelatedObjectSelectMixin, Select):
     template_name = "shuup/admin/forms/widgets/quick_add_select.jinja"
 
     def get_context(self, name, value, attrs):
-        context = super().get_context(
-            name, value, attrs
-        )
+        context = super().get_context(name, value, attrs)
         context["quick_add_model"] = self.model
         try:
             context["quick_add_url"] = f"{force_text(self.url)}?mode=iframe&quick_add_target={name}"
@@ -76,16 +66,12 @@ class QuickAddRelatedObjectSelect(QuickAddRelatedObjectSelectMixin, Select):
         return context
 
 
-class QuickAddRelatedObjectMultiSelect(
-    QuickAddRelatedObjectMultipleSelectMixin, SelectMultiple
-):
+class QuickAddRelatedObjectMultiSelect(QuickAddRelatedObjectMultipleSelectMixin, SelectMultiple):
     template_name = "shuup/admin/forms/widgets/quick_add_select.jinja"
 
     def get_context(self, name, value, attrs):
         attrs["multiple"] = True
-        context = super().get_context(
-            name, value, attrs
-        )
+        context = super().get_context(name, value, attrs)
 
         try:
             context["quick_add_url"] = f"{force_text(self.url)}?mode=iframe&quick_add_target={name}"

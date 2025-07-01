@@ -147,9 +147,7 @@ class Resolvable:
                 return url
             return reverse(url)
 
-        raise TypeError(
-            f"Error! Can't resolve the object's provided value `{url!r}` to an actual URL."
-        )
+        raise TypeError(f"Error! Can't resolve the object's provided value `{url!r}` to an actual URL.")
 
     @property
     def original_url(self):
@@ -194,9 +192,7 @@ class BaseMenuEntry(Resolvable):
 
 
 class MenuEntry(BaseMenuEntry):
-    def __init__(
-        self, text, url, icon=None, category=None, ordering=99999, aliases=(), **kwargs
-    ):
+    def __init__(self, text, url, icon=None, category=None, ordering=99999, aliases=(), **kwargs):
         self.text = text
         self._url = url
         self.icon = icon
@@ -270,9 +266,7 @@ class SearchResult(Resolvable):
 class Notification(Resolvable):
     KINDS = ("info", "success", "warning", "danger")
 
-    def __init__(
-        self, text, title=None, url=None, kind="info", dismissal_url=None, datetime=None
-    ):
+    def __init__(self, text, title=None, url=None, kind="info", dismissal_url=None, datetime=None):
         """
         :param text: The notification's text.
         :type text: str
@@ -360,9 +354,7 @@ class Section:
 
 class AdminTemplateInjector:
     @classmethod
-    def get_admin_template_snippet(
-        cls, place: str, shop: "Shop", user: "User", supplier: "Optional[Supplier]"
-    ):
+    def get_admin_template_snippet(cls, place: str, shop: "Shop", user: "User", supplier: "Optional[Supplier]"):
         """
         Get snippets to be injected on base admin template.
         The `place` can be: `body_start`, `body_end`, `hear_start` or `head_end`.

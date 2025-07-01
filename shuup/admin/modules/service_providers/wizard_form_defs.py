@@ -1,5 +1,3 @@
-
-
 from django.conf import settings
 
 from shuup import configuration

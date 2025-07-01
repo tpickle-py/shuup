@@ -1,5 +1,3 @@
-
-
 import json
 
 import six
@@ -63,16 +61,12 @@ class BasePopupChoiceWidget(Widget):
         icon = f"<i class='{self.external_icon}'></i>"
 
         return mark_safe(
-
-                f'<a class="btn btn-inverse browse-text btn-sm" style="{css_style}" \
+            f'<a class="btn btn-inverse browse-text btn-sm" style="{css_style}" \
             href="{escape(url)}" target="_blank">{icon} {escape(text)}</a>'
-
         )
 
     def get_object(self, value):
-        raise NotImplementedError(
-            "Error! Not implemented: `BasePopupChoiceWidget` -> `get_object()`."
-        )
+        raise NotImplementedError("Error! Not implemented: `BasePopupChoiceWidget` -> `get_object()`.")
 
     def render(self, name, value, attrs=None, renderer=None):
         if value:
@@ -148,11 +142,7 @@ class FileDnDUploaderWidget(Widget):
             "thumbnail": (thumbnail.url if thumbnail else None),
             "date": file.uploaded_at.isoformat(),
         }
-        return [
-            f"data-{key}='{val}'"
-            for key, val in six.iteritems(data)
-            if val is not None
-        ]
+        return [f"data-{key}='{val}'" for key, val in six.iteritems(data) if val is not None]
 
     def render(self, name, value, attrs=None, renderer=None):
         if attrs is None:
@@ -172,12 +162,7 @@ class FileDnDUploaderWidget(Widget):
         if self.dropzone_attrs:
             # attributes passed here will be converted into keys with dz_ prefix
             # `{max-filesize: 1}` will be converted into `data-dz_max-filesize="1"`
-            file_attrs.extend(
-                [
-                    f'data-dz_{k}="{force_text(v)}"'
-                    for k, v in self.dropzone_attrs.items()
-                ]
-            )
+            file_attrs.extend([f'data-dz_{k}="{force_text(v)}"' for k, v in self.dropzone_attrs.items()])
 
         if value:
             file = File.objects.filter(pk=value).first()
@@ -199,7 +184,9 @@ class TextEditorWidget(Textarea):
         attrs_for_textarea["id"] += "-textarea"
         html = super().render(name, value, attrs_for_textarea)
         return mark_safe(
-            "<div id='{}-editor-wrap' class='summernote-wrap'>{}<div class='summernote-editor'>{}</div></div>".format(attrs["id"], html, value or "")
+            "<div id='{}-editor-wrap' class='summernote-wrap'>{}<div class='summernote-editor'>{}</div></div>".format(
+                attrs["id"], html, value or ""
+            )
         )
 
 
@@ -242,9 +229,7 @@ class ContactChoiceWidget(BasePopupChoiceWidget):
 
     def get_browse_markup(self):
         icon = "<i class='fa fa-user'></i>"
-        return (
-            f"<button class='browse-btn btn btn-primary btn-sm' type='button'>{icon} {self.browse_text}</button>"
-        )
+        return f"<button class='browse-btn btn btn-primary btn-sm' type='button'>{icon} {self.browse_text}</button>"
 
 
 class HexColorWidget(TextInput):
@@ -279,9 +264,7 @@ class PersonContactChoiceWidget(ContactChoiceWidget):
 
 
 class PackageProductChoiceWidget(ProductChoiceWidget):
-    filter = json.dumps(
-        {"modes": [ProductMode.NORMAL.value, ProductMode.VARIATION_CHILD.value]}
-    )
+    filter = json.dumps({"modes": [ProductMode.NORMAL.value, ProductMode.VARIATION_CHILD.value]})
 
 
 class QuickAddSupplierMultiSelect(QuickAddRelatedObjectMultiSelect):

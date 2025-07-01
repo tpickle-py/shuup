@@ -1,5 +1,3 @@
-
-
 from django.conf import settings
 from django.db.transaction import atomic
 
@@ -69,9 +67,7 @@ class CarouselEditView(FormPartsViewMixin, SaveFormPartsMixin, CreateOrUpdateVie
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
         if save_form_id:
-            return get_default_edit_toolbar(
-                self, save_form_id, delete_url="shuup_admin:carousel.delete"
-            )
+            return get_default_edit_toolbar(self, save_form_id, delete_url="shuup_admin:carousel.delete")
 
     @atomic
     def form_valid(self, form):

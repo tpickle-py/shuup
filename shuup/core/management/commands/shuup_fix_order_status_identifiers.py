@@ -1,4 +1,3 @@
-
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
 
@@ -17,16 +16,12 @@ class Command(BaseCommand):
         to_post_process = []
 
         for role, invalid_identifier, valid_identifier in data:
-            status = OrderStatus.objects.filter(
-                identifier=invalid_identifier, role=role
-            ).first()
+            status = OrderStatus.objects.filter(identifier=invalid_identifier, role=role).first()
             if not status:
                 self.stdout.write(f"No changes to {role} statuses")
                 continue
             tmp_identifier = valid_identifier + "_tmp"
-            self.stdout.write(
-                f"Updating identifier of {role} status: {status.identifier!r} -> {tmp_identifier!r}"
-            )
+            self.stdout.write(f"Updating identifier of {role} status: {status.identifier!r} -> {tmp_identifier!r}")
             status.identifier = tmp_identifier
             status.save()
             to_post_process.append(status)

@@ -1,4 +1,3 @@
-
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
@@ -26,9 +25,7 @@ class ContactGroupSalesRange(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("group"),
     )
-    shop = models.ForeignKey(
-        on_delete=models.CASCADE, to=Shop, related_name="+", verbose_name=_("shop")
-    )
+    shop = models.ForeignKey(on_delete=models.CASCADE, to=Shop, related_name="+", verbose_name=_("shop"))
     min_value = MoneyValueField(verbose_name=_("min amount"), blank=True, null=True)
     max_value = MoneyValueField(verbose_name=_("max amount"), blank=True, null=True)
 
@@ -41,20 +38,13 @@ class ContactGroupSalesRange(models.Model):
         self.clean()
         super().save(*args, **kwargs)
         if self.is_active():  # Update group members only if the range is still active
-            contact_ids = get_contacts_in_sales_range(
-                self.shop, self.min_value, self.max_value
-            )
+            contact_ids = get_contacts_in_sales_range(self.shop, self.min_value, self.max_value)
             self.group.members.set(contact_ids)
 
     def clean(self):
         super().clean()
         if self.group.is_protected:
-            raise ValidationError(
-                _("Can not add sales limits for default contact groups.")
-            )
+            raise ValidationError(_("Can not add sales limits for default contact groups."))
 
     def is_active(self):
-        return bool(
-            self.min_value is not None
-            and (self.max_value is None or self.max_value > 0)
-        )
+        return bool(self.min_value is not None and (self.max_value is None or self.max_value > 0))

@@ -66,9 +66,7 @@ class CustomerTaxGroupEditView(BreadcrumbedView, CreateOrUpdateView):
     parent_url = "shuup_admin:customer_tax_group.list"
 
 
-class TaxClassEditView(
-    SaveFormPartsMixin, FormPartsViewMixin, BreadcrumbedView, CreateOrUpdateView
-):
+class TaxClassEditView(SaveFormPartsMixin, FormPartsViewMixin, BreadcrumbedView, CreateOrUpdateView):
     model = TaxClass
     template_name = "shuup/admin/taxes/edit_tax_class.jinja"
     base_form_part_classes = [TaxClassFormPart]

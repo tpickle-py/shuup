@@ -1,5 +1,3 @@
-
-
 import time
 
 from django import forms
@@ -29,11 +27,7 @@ class ReloadMethodForm(forms.Form):
         self.reload_methods = list(self.get_viable_reload_methods())
 
         if not self.reload_methods:
-            raise Problem(
-                _(
-                    "There are no viable reload methods available. Please contact your system administrator."
-                )
-            )
+            raise Problem(_("There are no viable reload methods available. Please contact your system administrator."))
 
         self.fields["reload_method"] = forms.ChoiceField(
             choices=[(rm.identifier, rm.title) for rm in self.reload_methods],
@@ -43,11 +37,7 @@ class ReloadMethodForm(forms.Form):
         )
 
     def get_selected_reload_method(self):
-        return first(
-            rm
-            for rm in self.reload_methods
-            if rm.identifier == self.cleaned_data["reload_method"]
-        )
+        return first(rm for rm in self.reload_methods if rm.identifier == self.cleaned_data["reload_method"])
 
 
 def finalize_installation_for_enabled_apps():

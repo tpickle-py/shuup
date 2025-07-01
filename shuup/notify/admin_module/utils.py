@@ -1,4 +1,3 @@
-
 from shuup.apps.provides import get_provide_objects
 from shuup.utils.django_compat import force_text
 
@@ -15,7 +14,4 @@ def get_name_map(category_key):
 
 
 def get_enum_choices_dict(enum_class):
-    return {
-        force_text(op.value): force_text(getattr(op, "label", op.name))
-        for op in enum_class
-    }
+    return {force_text(op.value): force_text(getattr(op, "label", op.name)) for op in enum_class}

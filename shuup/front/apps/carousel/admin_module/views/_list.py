@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.shop_provider import get_shop
@@ -16,15 +14,9 @@ class CarouselListView(PicotableListView):
             _("Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(
-                filter_field="name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="name", placeholder=_("Filter by name...")),
         ),
     ]
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(shops=get_shop(self.request))
-        )
+        return super().get_queryset().filter(shops=get_shop(self.request))

@@ -56,9 +56,7 @@ class DiscountModule(six.with_metaclass(abc.ABCMeta)):
         :type steps: list[PriceInfo]
         :rtype: list[PriceInfo]
         """
-        return [
-            self.discount_price(context, product, price_info) for price_info in steps
-        ]
+        return [self.discount_price(context, product, price_info) for price_info in steps]
 
     def discount_prices(
         self,
@@ -99,10 +97,7 @@ class DiscountModule(six.with_metaclass(abc.ABCMeta)):
         :rtype: dict[int,list[PriceInfo]]
         """
         pks_and_products = ((getattr(x, "pk", x), x) for x in products)
-        return {
-            pk: self.get_pricing_steps(context, product, steps[pk])
-            for (pk, product) in pks_and_products
-        }
+        return {pk: self.get_pricing_steps(context, product, steps[pk]) for (pk, product) in pks_and_products}
 
     def index_shop_product(self, shop_product: Union["ShopProduct", int], **kwargs):
         """

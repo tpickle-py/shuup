@@ -9,10 +9,7 @@ def model_url(context, model, absolute=False, **kwargs):
         supplier = kwargs.get("supplier") or context.get("supplier")
 
         # if the supplier was passed and it supplies the product, the URL can be supplier specific
-        if (
-            isinstance(supplier, Supplier)
-            and ShopProduct.objects.filter(product=model, suppliers=supplier).exists()
-        ):
+        if isinstance(supplier, Supplier) and ShopProduct.objects.filter(product=model, suppliers=supplier).exists():
             uri = reverse(
                 "shuup:supplier-product",
                 kwargs={"pk": model.pk, "slug": model.slug, "supplier_pk": supplier.pk},
@@ -29,9 +26,7 @@ def model_url(context, model, absolute=False, **kwargs):
     if absolute:
         request = context.get("request")
         if not request:  # pragma: no cover
-            raise ValueError(
-                "Error! Unable to use `absolute=True` when request does not exist."
-            )
+            raise ValueError("Error! Unable to use `absolute=True` when request does not exist.")
         uri = request.build_absolute_uri(uri)
 
     return uri

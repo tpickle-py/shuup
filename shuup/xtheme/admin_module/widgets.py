@@ -1,5 +1,3 @@
-
-
 from django.forms import Textarea
 
 

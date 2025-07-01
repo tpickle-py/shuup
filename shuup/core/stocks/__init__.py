@@ -28,9 +28,7 @@ class ProductStockStatus(ProductCachingObject):
         else:
             self.product = product
         if not self.product_id:
-            raise ValueError(
-                "Error! `ProductStockStatus` object must be bound to Products."
-            )
+            raise ValueError("Error! `ProductStockStatus` object must be bound to Products.")
         self.logical_count = logical_count
         self.physical_count = physical_count
         self.message = message

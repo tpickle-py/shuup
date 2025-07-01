@@ -50,32 +50,22 @@ class ReportWriter:
         return self.writer_type
 
     def write_heading(self, text):
-        raise NotImplementedError(
-            "Error! Not implemented: `ReportWriter` -> `write_heading()`."
-        )
+        raise NotImplementedError("Error! Not implemented: `ReportWriter` -> `write_heading()`.")
 
     def write_text(self, text):
-        raise NotImplementedError(
-            "Error! Not implemented: `ReportWriter` -> `write_text()`."
-        )
+        raise NotImplementedError("Error! Not implemented: `ReportWriter` -> `write_text()`.")
 
     def write_data_table(self, report, report_data, has_totals=True):
-        raise NotImplementedError(
-            "Error! Not implemented: `ReportWriter` -> `write_data_table()`."
-        )
+        raise NotImplementedError("Error! Not implemented: `ReportWriter` -> `write_data_table()`.")
 
     def write_template(self, template_name, env):
-        raise NotImplementedError(
-            "Error! Not implemented: `ReportWriter` -> `write_template()`."
-        )
+        raise NotImplementedError("Error! Not implemented: `ReportWriter` -> `write_template()`.")
 
     def next_page(self):
         pass
 
     def get_rendered_output(self):
-        raise NotImplementedError(
-            "Error! Not implemented: `ReportWriter` -> `get_rendered_output()`."
-        )
+        raise NotImplementedError("Error! Not implemented: `ReportWriter` -> `get_rendered_output()`.")
 
     def _render_report(self, report):
         if not report.rendered:
@@ -96,9 +86,7 @@ class ReportWriter:
                 )
             )
             report.ensure_texts()
-            self.write_data_table(
-                report, report_data["data"], has_totals=report_data["has_totals"]
-            )
+            self.write_data_table(report, report_data["data"], has_totals=report_data["has_totals"])
 
         return self.get_rendered_output()
 
@@ -128,13 +116,9 @@ class ReportWriter:
         :return:
         :rtype:
         """
-        response = HttpResponse(
-            self._render_report(report), content_type=self.content_type
-        )
+        response = HttpResponse(self._render_report(report), content_type=self.content_type)
         if report.filename_template:
-            response["Content-Disposition"] = (
-                f"attachment; filename={self.get_filename(report)}"
-            )
+            response["Content-Disposition"] = f"attachment; filename={self.get_filename(report)}"
         return response
 
     def get_filename(self, report):
@@ -199,19 +183,12 @@ class CSVReportWriter(ReportWriter):
         self.data.append([c["title"] for c in report.schema])
         for datum in report_data:
             datum = report.read_datum(datum)
-            self.data.append(
-                [
-                    format_data(remove_unsafe_chars(data), format_iso_dates=True)
-                    for data in datum
-                ]
-            )
+            self.data.append([format_data(remove_unsafe_chars(data), format_iso_dates=True) for data in datum])
 
         if has_totals:
             for datum in report.get_totals(report_data):
                 datum = report.read_datum(datum)
-                self.data.append(
-                    [format_data(remove_unsafe_chars(data)) for data in datum]
-                )
+                self.data.append([format_data(remove_unsafe_chars(data)) for data in datum])
 
     def get_rendered_output(self):
         f = StringIO()
@@ -242,17 +219,13 @@ class ExcelReportWriter(ReportWriter):
         self.worksheet.append([c["title"] for c in report.schema])
         for datum in report_data:
             datum = report.read_datum(datum)
-            self.worksheet.append(
-                [format_data(remove_unsafe_chars(data)) for data in datum]
-            )
+            self.worksheet.append([format_data(remove_unsafe_chars(data)) for data in datum])
             self._convert_row_to_string()
 
         if has_totals:
             for datum in report.get_totals(report_data):
                 datum = report.read_datum(datum)
-                self.worksheet.append(
-                    [format_data(remove_unsafe_chars(data)) for data in datum]
-                )
+                self.worksheet.append([format_data(remove_unsafe_chars(data)) for data in datum])
                 self._convert_row_to_string()
 
     def write_page_heading(self, text):
@@ -320,11 +293,7 @@ table, th, td {
         self.output.append(mark_safe(content))
 
     def _w(self, content):
-        self.output.append(
-            bleach.clean(
-                str(format_data(content, format_money_values=True)), strip=True
-            )
-        )
+        self.output.append(bleach.clean(str(format_data(content, format_money_values=True)), strip=True))
 
     def _w_tag(self, tag, content):
         self._w_raw(f"<{tag}>")
@@ -469,9 +438,7 @@ class ReportWriterPopulator:
         """
         Iterate over all report_writer_populator provides to fill/update the report writer map
         """
-        for report_writer_populator_func in get_provide_objects(
-            "report_writer_populator"
-        ):
+        for report_writer_populator_func in get_provide_objects("report_writer_populator"):
             report_writer_populator_func(self)
 
     def register(self, writer_name, writer_class):

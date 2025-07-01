@@ -1,5 +1,3 @@
-
-
 from django.conf import settings
 from django.contrib import messages
 from django.db.transaction import atomic
@@ -115,9 +113,7 @@ class ProductMediaEditView(UpdateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         instance = kwargs.pop("instance", None)
-        kwargs["queryset"] = ProductMedia.objects.filter(product=instance).order_by(
-            "ordering"
-        )
+        kwargs["queryset"] = ProductMedia.objects.filter(product=instance).order_by("ordering")
         kwargs["product"] = instance
         return kwargs
 
@@ -140,9 +136,7 @@ class ProductMediaBulkAdderView(View):
         shop = self.request.shop
         shop_id = self.request.POST.get("shop_id", shop.pk)
         if not ids or not shop_product_id:
-            return JsonResponse(
-                {"response": "error", "message": "Error! Bad request."}, status=400
-            )
+            return JsonResponse({"response": "error", "message": "Error! Bad request."}, status=400)
         if not Shop.objects.filter(pk=shop_id).exists():
             return JsonResponse(
                 {
@@ -152,9 +146,7 @@ class ProductMediaBulkAdderView(View):
                 status=400,
             )
 
-        shop_product = ShopProduct.objects.filter(
-            pk=shop_product_id, shop_id=shop_id
-        ).first()
+        shop_product = ShopProduct.objects.filter(pk=shop_product_id, shop_id=shop_id).first()
         if not shop_product:
             return JsonResponse(
                 {

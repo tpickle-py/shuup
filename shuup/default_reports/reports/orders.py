@@ -33,9 +33,7 @@ class OrdersReport(OrderReportMixin, ShuupReportBase):
                     "order_num": order.identifier,
                     "order_date": order.order_date,
                     "status": order.status,
-                    "order_line_quantity": order.lines.filter(
-                        type=OrderLineType.PRODUCT
-                    ).count(),
+                    "order_line_quantity": order.lines.filter(type=OrderLineType.PRODUCT).count(),
                     "order_total_amount": order.taxful_total_price.amount,
                     "payment_status": order.get_payment_status_display(),
                     "shipment_status": order.get_shipping_status_display(),

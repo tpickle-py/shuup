@@ -10,10 +10,7 @@ def _is_admin_user(request):
     if getattr(user, "is_superuser", False):
         return True
 
-    return bool(
-        getattr(user, "is_staff", False)
-        and shop.staff_members.filter(id=user.id).exists()
-    )
+    return bool(getattr(user, "is_staff", False) and shop.staff_members.filter(id=user.id).exists())
 
 
 def is_admin_user(request):

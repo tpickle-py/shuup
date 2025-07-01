@@ -1,4 +1,3 @@
-
 from .list import ListSettingsView
 from .system import SystemSettingsView
 

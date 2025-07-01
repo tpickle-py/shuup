@@ -1,5 +1,3 @@
-
-
 from shuup.admin.shop_provider import get_shop
 from shuup.utils.django_compat import MiddlewareMixin
 

@@ -21,9 +21,7 @@ class SimpleSupplierModule(BaseSupplierModule):
     identifier = "simple_supplier"
     name = _("Simple Supplier")
 
-    def get_orderability_errors(
-        self, shop_product, quantity, customer, *args, **kwargs
-    ):
+    def get_orderability_errors(self, shop_product, quantity, customer, *args, **kwargs):
         """
         :param shop_product: Shop Product.
         :type shop_product: shuup.core.models.ShopProduct
@@ -43,10 +41,7 @@ class SimpleSupplierModule(BaseSupplierModule):
             yield ValidationError(stock_status.error, code="stock_error")
 
         if self.supplier.stock_managed and stock_status.stock_managed:
-            if (
-                backorder_maximum is not None
-                and quantity > stock_status.logical_count + backorder_maximum
-            ):
+            if backorder_maximum is not None and quantity > stock_status.logical_count + backorder_maximum:
                 yield ValidationError(
                     stock_status.message or _("Error! Insufficient quantity in stock."),
                     code="stock_insufficient",
@@ -109,10 +104,7 @@ class SimpleSupplierModule(BaseSupplierModule):
             supplier=self.supplier,
             product_id=product_id,
         )[0]
-        if (
-            not stock_count.stock_managed
-            or stock_count.product.kind not in self.get_supported_product_kinds_values()
-        ):
+        if not stock_count.stock_managed or stock_count.product.kind not in self.get_supported_product_kinds_values():
             # item doesn't manage stocks
             return {}
 
@@ -168,14 +160,8 @@ class SimpleSupplierModule(BaseSupplierModule):
                     from .notify_events import AlertLimitReached
 
                     for shop in self.supplier.shops.all():
-                        supplier_email = (
-                            self.supplier.contact_address.email
-                            if self.supplier.contact_address
-                            else ""
-                        )
-                        shop_email = (
-                            shop.contact_address.email if shop.contact_address else ""
-                        )
+                        supplier_email = self.supplier.contact_address.email if self.supplier.contact_address else ""
+                        shop_email = shop.contact_address.email if shop.contact_address else ""
                         AlertLimitReached(
                             supplier=self.supplier,
                             product=product,
@@ -203,15 +189,9 @@ class SimpleSupplierModule(BaseSupplierModule):
             insufficient_stocks = {}
 
             for product, quantity in product_quantities.items():
-                if (
-                    quantity > 0
-                    and product.kind in self.get_supported_product_kinds_values()
-                ):
+                if quantity > 0 and product.kind in self.get_supported_product_kinds_values():
                     stock_status = self.get_stock_status(product.pk)
-                    if (
-                        stock_status.stock_managed
-                        and stock_status.physical_count < quantity
-                    ):
+                    if stock_status.stock_managed and stock_status.physical_count < quantity:
                         insufficient_stocks[product] = stock_status.physical_count
 
             if insufficient_stocks:
@@ -221,17 +201,12 @@ class SimpleSupplierModule(BaseSupplierModule):
                     for (name, quantity) in insufficient_stocks.items()
                 ]
                 raise NoProductsToShipException(
-                    _(
-                        "Insufficient physical stock count for the following products: `%(product_counts)s`."
-                    )
+                    _("Insufficient physical stock count for the following products: `%(product_counts)s`.")
                     % {"product_counts": ", ".join(formatted_counts)}
                 )
 
         for product, quantity in product_quantities.items():
-            if (
-                quantity == 0
-                or product.kind not in self.get_supported_product_kinds_values()
-            ):
+            if quantity == 0 or product.kind not in self.get_supported_product_kinds_values():
                 continue
 
             sp = shipment.products.create(product=product, quantity=quantity)

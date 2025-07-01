@@ -1,5 +1,3 @@
-
-
 import six
 from django.utils.functional import lazy
 from django.utils.translation import ugettext_lazy as _
@@ -11,9 +9,7 @@ from shuup.utils.text import camel_case
 
 class NonEmpty(Condition):
     identifier = "non_empty"
-    description = _(
-        "Check whether the bound value `value` exists and is non-empty and non-zero."
-    )
+    description = _("Check whether the bound value `value` exists and is non-empty and non-zero.")
     name = _("Non-Empty")
     v = Binding("Value")
 

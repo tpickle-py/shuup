@@ -1,5 +1,3 @@
-
-
 from django.core.exceptions import ValidationError
 
 from shuup.core.models import ServiceBehaviorComponent, ServiceCost

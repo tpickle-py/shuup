@@ -27,9 +27,7 @@ class CompanyContactBaseFormPart(FormPart):
 
     def form_valid(self, form):
         self.object = form["base"].save()
-        return (
-            self.object
-        )  # Identity may have changed (not the original object we put in)
+        return self.object  # Identity may have changed (not the original object we put in)
 
 
 class PersonContactBaseFormPart(FormPart):
@@ -65,9 +63,7 @@ class PersonContactBaseFormPart(FormPart):
 
     def form_valid(self, form):
         self.object = form["base"].save()
-        return (
-            self.object
-        )  # Identity may have changed (not the original object we put in)
+        return self.object  # Identity may have changed (not the original object we put in)
 
 
 class ContactAddressesFormPart(FormPart):

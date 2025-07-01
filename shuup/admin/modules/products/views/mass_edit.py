@@ -16,9 +16,7 @@ from shuup.utils.django_compat import reverse
 class MassEditForm(forms.Form):
     name = forms.CharField(max_length=255, required=False)
     default_price_value = forms.DecimalField(label="Default Price", required=False)
-    visibility = EnumIntegerField(ShopProductVisibility).formfield(
-        label=_("Visibility"), required=False
-    )
+    visibility = EnumIntegerField(ShopProductVisibility).formfield(label=_("Visibility"), required=False)
     primary_category = forms.ModelChoiceField(
         label=_("Primary Category"),
         queryset=Category.objects.all_except_deleted(),
@@ -56,9 +54,7 @@ class ProductMassEditView(MassEditMixin, FormView):
                     else:
                         setattr(product, k, v)
                 if hasattr(shop_product, k):
-                    if isinstance(
-                        shop_product._meta.get_field(k), models.ManyToManyField
-                    ):
+                    if isinstance(shop_product._meta.get_field(k), models.ManyToManyField):
                         getattr(shop_product, k).set(v)
                     else:
                         setattr(shop_product, k, v)

@@ -111,9 +111,7 @@ class SimpleProductListModifier(ProductListFormModifier):
             ),
             (
                 self.ordering_key,
-                forms.IntegerField(
-                    label=self.ordering_label, initial=1, required=False
-                ),
+                forms.IntegerField(label=self.ordering_label, initial=1, required=False),
             ),
         ]
 
@@ -151,19 +149,14 @@ class SortProductListByName(SimpleProductListModifier):
         sort = data.get("sort", "name_a")
         if sort in ("name_a", "name_d"):
             reverse = bool(sort.endswith("_d"))
-            queryset = queryset.translated(get_language()).order_by(
-                f"{'-' if reverse else ''}translations__name"
-            )
+            queryset = queryset.translated(get_language()).order_by(f"{'-' if reverse else ''}translations__name")
         return queryset
 
     def get_admin_fields(self):
         default_fields = super().get_admin_fields()
-        default_fields[0][1].help_text = _(
-            "Enable this to allow products to be sortable by product name."
-        )
+        default_fields[0][1].help_text = _("Enable this to allow products to be sortable by product name.")
         default_fields[1][1].help_text = _(
-            "Use a numeric value to set the order in which the the filter will appear on the "
-            "product listing page."
+            "Use a numeric value to set the order in which the the filter will appear on the product listing page."
         )
         return default_fields
 
@@ -221,8 +214,7 @@ class SortProductListByPrice(SimpleProductListModifier):
             "Enable this to allow products to be sortable by price (from low to high; from high to low)."
         )
         default_fields[1][1].help_text = _(
-            "Use a numeric value to set the order in which the the filter will appear on the "
-            "product listing page."
+            "Use a numeric value to set the order in which the the filter will appear on the product listing page."
         )
         return default_fields
 
@@ -275,8 +267,7 @@ class SortProductListByCreatedDate(SimpleProductListModifier):
             "Enable this to allow products to be sortable from newest to oldest products."
         )
         default_fields[1][1].help_text = _(
-            "Use a numeric value to set the order in which the filter will appear on the "
-            "product listing page."
+            "Use a numeric value to set the order in which the filter will appear on the product listing page."
         )
         return default_fields
 
@@ -294,9 +285,7 @@ class SortProductListByAscendingCreatedDate(SortProductListByCreatedDate):
                 [
                     (
                         "created_date_a",
-                        get_form_field_label(
-                            "created_date_a", _("Date created - oldest first")
-                        ),
+                        get_form_field_label("created_date_a", _("Date created - oldest first")),
                     ),
                 ],
             ),
@@ -308,8 +297,7 @@ class SortProductListByAscendingCreatedDate(SortProductListByCreatedDate):
             "Enable this to allow products to be sortable from oldest to newest products."
         )
         default_fields[1][1].help_text = _(
-            "Use a numeric value to set the order in which the filter will appear on the "
-            "product listing page."
+            "Use a numeric value to set the order in which the filter will appear on the product listing page."
         )
         return default_fields
 
@@ -321,9 +309,7 @@ class ManufacturerProductListFilter(SimpleProductListModifier):
     ordering_label = _("Ordering for filter by manufacturer")
 
     def get_fields(self, request, category=None):
-        if not Manufacturer.objects.filter(
-            Q(shops__isnull=True) | Q(shops=request.shop)
-        ).exists():
+        if not Manufacturer.objects.filter(Q(shops__isnull=True) | Q(shops=request.shop)).exists():
             return
 
         shop_products_qs = ShopProduct.objects.filter(shop=request.shop).exclude(
@@ -331,9 +317,7 @@ class ManufacturerProductListFilter(SimpleProductListModifier):
         )
 
         if category:
-            shop_products_qs = shop_products_qs.filter(
-                Q(primary_category=category) | Q(categories=category)
-            )
+            shop_products_qs = shop_products_qs.filter(Q(primary_category=category) | Q(categories=category))
 
         queryset = Manufacturer.objects.filter(
             Q(product__shop_products__in=shop_products_qs),
@@ -349,9 +333,7 @@ class ManufacturerProductListFilter(SimpleProductListModifier):
                 CommaSeparatedListField(
                     required=False,
                     label=get_form_field_label("manufacturers", _("Manufacturers")),
-                    widget=FilterWidget(
-                        choices=[(mfgr.pk, mfgr.name) for mfgr in queryset]
-                    ),
+                    widget=FilterWidget(choices=[(mfgr.pk, mfgr.name) for mfgr in queryset]),
                 ),
             ),
         ]
@@ -393,9 +375,7 @@ class CategoryProductListFilter(SimpleProductListModifier):
             return val
 
         language = get_language()
-        base_queryset = Category.objects.all_visible(
-            request.customer, request.shop, language=language
-        )
+        base_queryset = Category.objects.all_visible(request.customer, request.shop, language=language)
         if category:
             q = Q(
                 Q(shop_products__categories=category),
@@ -412,9 +392,7 @@ class CategoryProductListFilter(SimpleProductListModifier):
                 CommaSeparatedListField(
                     required=False,
                     label=get_form_field_label("categories", _("Categories")),
-                    widget=FilterWidget(
-                        choices=[(cat.pk, cat.name) for cat in queryset]
-                    ),
+                    widget=FilterWidget(choices=[(cat.pk, cat.name) for cat in queryset]),
                 ),
             )
         ]
@@ -538,9 +516,7 @@ class ProductVariationFilter(SimpleProductListModifier):
                 for value in list(values):
                     # TODO: When using id this should search value for id
                     variation_query |= Q(
-                        variation_variables__values__translations__value__iexact=value.replace(
-                            "*", " "
-                        )
+                        variation_variables__values__translations__value__iexact=value.replace("*", " ")
                     )
                 queryset = queryset.filter(variation_query)
         return queryset
@@ -548,8 +524,7 @@ class ProductVariationFilter(SimpleProductListModifier):
     def get_admin_fields(self):
         default_fields = super().get_admin_fields()
         default_fields[0][1].help_text = _(
-            "Enable this to allow products to be filterable by their different variations. "
-            "For example, size or color."
+            "Enable this to allow products to be filterable by their different variations. For example, size or color."
         )
         default_fields[1][1].help_text = _(
             "Use a numeric value to set the order in which the variation filters will appear on the "
@@ -580,9 +555,7 @@ class ProductPriceFilter(SimpleProductListModifier):
         if not (min_price and max_price and range_size):
             return
 
-        choices = [(None, "-------")] + get_price_ranges(
-            request.shop, min_price, max_price, range_size
-        )
+        choices = [(None, "-------")] + get_price_ranges(request.shop, min_price, max_price, range_size)
         return [
             (
                 "price_range",
@@ -626,25 +599,19 @@ class ProductPriceFilter(SimpleProductListModifier):
             label=_("Price range minimum"),
             min_value=0,
             required=False,
-            help_text=_(
-                "Set the minimum price for the filter. The first range will be from zero to this value."
-            ),
+            help_text=_("Set the minimum price for the filter. The first range will be from zero to this value."),
         )
         max_field = forms.IntegerField(
             label=_("Price range maximum"),
             min_value=0,
             required=False,
-            help_text=_(
-                "Set the maximum price for the filter. The last range will include this value and above."
-            ),
+            help_text=_("Set the maximum price for the filter. The last range will include this value and above."),
         )
         range_step = forms.IntegerField(
             label=_("Price range step"),
             min_value=0,
             required=False,
-            help_text=_(
-                "Set the price step for each range. Each range will increment by this value."
-            ),
+            help_text=_("Set the price step for each range. Each range will increment by this value."),
         )
         return default_fields + [
             (self.range_min_key, min_field),
@@ -672,10 +639,7 @@ class AttributeProductListFilter(SimpleProductListModifier):
                         CommaSeparatedListField(
                             required=False,
                             widget=FilterWidget(
-                                choices=[
-                                    (choice.id, choice.name)
-                                    for choice in attribute.choices.all()
-                                ],
+                                choices=[(choice.id, choice.name) for choice in attribute.choices.all()],
                             ),
                             label=_(attribute.name),
                         ),
@@ -695,13 +659,9 @@ class AttributeProductListFilter(SimpleProductListModifier):
         return attributes
 
     def _get_attributes_from_category(self, shop, category):
-        category_config = shuup_config.get(
-            shop, _get_category_configuration_key(category)
-        )
+        category_config = shuup_config.get(shop, _get_category_configuration_key(category))
         attributes = Attribute.objects.all()
-        if category_config and category_config.get(
-            "override_default_configuration", False
-        ):
+        if category_config and category_config.get("override_default_configuration", False):
             filterable_attribute_pks = category_config.get(self.product_attr_key)
         else:
             config = get_configuration(shop)
@@ -726,13 +686,9 @@ class AttributeProductListFilter(SimpleProductListModifier):
         """
         Get product attribute in querystring that has truthy values
         """
-        attribute_identifiers = Attribute.objects.all().values_list(
-            "identifier", flat=True
-        )
+        attribute_identifiers = Attribute.objects.all().values_list("identifier", flat=True)
 
-        attribute_query_strings = [
-            key for key, value in data.items() if value and key in attribute_identifiers
-        ]
+        attribute_query_strings = [key for key, value in data.items() if value and key in attribute_identifiers]
 
         return attribute_query_strings
 
@@ -753,9 +709,7 @@ class AttributeProductListFilter(SimpleProductListModifier):
 
     def get_admin_fields(self):
         active, ordering = super().get_admin_fields()
-        active[1].help_text = _(
-            "Allow products to be filtered according to their attributes."
-        )
+        active[1].help_text = _("Allow products to be filtered according to their attributes.")
 
         attributes = ObjectSelect2MultipleField(
             model=Attribute,
@@ -770,9 +724,7 @@ class AttributeProductListFilter(SimpleProductListModifier):
         attribute_query_strings = self._get_product_attribute_query_strings(form.data)
 
         for attribute_query_string in attribute_query_strings:
-            form.cleaned_data[attribute_query_string] = form.data.get(
-                attribute_query_string
-            ).split(",")
+            form.cleaned_data[attribute_query_string] = form.data.get(attribute_query_string).split(",")
 
         return super().clean_hook(form)
 
@@ -783,9 +735,7 @@ def get_price_ranges(shop, min_price, max_price, range_step):
 
     ranges = []
     min_price_value = format_money(shop.create_price(min_price))
-    ranges.append(
-        (f"-{min_price}", _("Under %(min_limit)s") % {"min_limit": min_price_value})
-    )
+    ranges.append((f"-{min_price}", _("Under %(min_limit)s") % {"min_limit": min_price_value}))
 
     for range_min in range(min_price, max_price, range_step):
         range_min_price = format_money(shop.create_price(range_min))
@@ -795,13 +745,10 @@ def get_price_ranges(shop, min_price, max_price, range_step):
             ranges.append(
                 (
                     f"{range_min}-{range_max}",
-                    _("%(min)s to %(max)s")
-                    % {"min": range_min_price, "max": range_max_price},
+                    _("%(min)s to %(max)s") % {"min": range_min_price, "max": range_max_price},
                 )
             )
 
     max_price_value = format_money(shop.create_price(max_price))
-    ranges.append(
-        (f"{max_price}-", _("%(max_limit)s & Above") % {"max_limit": max_price_value})
-    )
+    ranges.append((f"{max_price}-", _("%(max_limit)s & Above") % {"max_limit": max_price_value}))
     return ranges

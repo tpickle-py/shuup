@@ -1,5 +1,3 @@
-
-
 def maintenance_mode_exempt(view_func):
     """
     Make view ignore shop maintenance mode

@@ -49,9 +49,7 @@ class EditorView(TemplateView):
             raise Problem(_("No access to editing."))
         self._populate_vars()
         if self.default_layout:
-            self.view_config.save_default_placeholder_layout(
-                self.placeholder_name, self.default_layout
-            )
+            self.view_config.save_default_placeholder_layout(self.placeholder_name, self.default_layout)
             # We saved the default layout, so get rid of the humongous GET arg and try again
             get_args = dict(self.request.GET.items())
             get_args.pop("default_config", None)
@@ -59,9 +57,7 @@ class EditorView(TemplateView):
             if global_type:
                 get_args["view"] = XTHEME_GLOBAL_VIEW_NAME
             # We are overriding the view with XTHEME_GLOBAL_VIEW_NAME if this is a global placeholder
-            return HttpResponseRedirect(
-                f"{self.request.path}?{urlencode(get_args)}"
-            )
+            return HttpResponseRedirect(f"{self.request.path}?{urlencode(get_args)}")
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):  # doccov: ignore
@@ -74,9 +70,7 @@ class EditorView(TemplateView):
             rv = dispatcher(**dispatch_kwargs)
             if rv:
                 return rv
-            self.request.method = (
-                "GET"  # At this point, we won't want to cause form validation
-            )
+            self.request.method = "GET"  # At this point, we won't want to cause form validation
             self.build_form()  # and it's not a bad idea to rebuild the form
             return super().get(request, *args, **kwargs)
 
@@ -148,17 +142,13 @@ class EditorView(TemplateView):
         self.form = LayoutCellFormGroup(**kwargs)
 
     def save_layout(self, layout=None):
-        self.view_config.save_placeholder_layout(
-            layout_data_key=self.layout_data_key, layout=(layout or self.layout)
-        )
+        self.view_config.save_placeholder_layout(layout_data_key=self.layout_data_key, layout=(layout or self.layout))
         self.changed = True
 
     def dispatch_add_cell(self, y, **kwargs):
         y = int(y)
         if len(self.layout.rows[y].cells) >= ROW_CELL_LIMIT:
-            raise ValueError(
-                _("Can't add more than %d cells in one row.") % ROW_CELL_LIMIT
-            )
+            raise ValueError(_("Can't add more than %d cells in one row.") % ROW_CELL_LIMIT)
 
         if not (0 <= y < len(self.layout.rows)):
             # No need to raise an exception, really.
@@ -197,12 +187,8 @@ class EditorView(TemplateView):
 
     def dispatch_publish(self, **kwargs):
         self.view_config.publish()
-        return HttpResponse(
-            "<html><script>parent.location.reload()</script>{}.</html>".format(_("Published"))
-        )
+        return HttpResponse("<html><script>parent.location.reload()</script>{}.</html>".format(_("Published")))
 
     def dispatch_revert(self, **kwargs):
         self.view_config.revert()
-        return HttpResponse(
-            "<html><script>parent.location.reload()</script>{}.</html>".format(_("Reverted"))
-        )
+        return HttpResponse("<html><script>parent.location.reload()</script>{}.</html>".format(_("Reverted")))

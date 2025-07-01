@@ -68,9 +68,7 @@ class XThemeAppConfig(AppConfig):
             "shuup.xtheme.object_selector:FontAdminObjectSelector",
         ],
         "xtheme_resource_injection": ["shuup.xtheme.resources:inject_global_snippet"],
-        "admin_template_injector": [
-            "shuup.xtheme.admin_injector.XthemeAdminTemplateInjector"
-        ],
+        "admin_template_injector": ["shuup.xtheme.admin_injector.XthemeAdminTemplateInjector"],
     }
 
     def ready(self):

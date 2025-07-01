@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
@@ -60,23 +58,17 @@ class CheckoutMethodPhase(CheckoutPhaseViewMixin, LoginView):
         return not self.is_visible_for_user()
 
     def is_valid(self):
-        checkout_method_choice = bool(
-            self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None) is not None
-        )
+        checkout_method_choice = bool(self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None) is not None)
         return bool(checkout_method_choice or self.request.customer)
 
     def form_valid(self, form):
         login_form = form.forms[self.login_form_key]
-        if (
-            login_form.cleaned_data
-        ):  # TODO: There is probably better way to figure out when to login
+        if login_form.cleaned_data:  # TODO: There is probably better way to figure out when to login
             return super().form_valid(login_form)
         checkout_choice_form = form.forms[self.checkout_method_choice_key]
         should_register = bool(int(checkout_choice_form.cleaned_data["register"] or 0))
         self.storage[CHECKOUT_CHOICE_STORAGE_KEY] = should_register
-        self.request.session[f"checkout_register:{CHECKOUT_CHOICE_STORAGE_KEY}"] = (
-            should_register
-        )
+        self.request.session[f"checkout_register:{CHECKOUT_CHOICE_STORAGE_KEY}"] = should_register
         return HttpResponseRedirect(self.get_success_url())
 
     def process(self):
@@ -107,18 +99,14 @@ class RegisterPhase(CheckoutPhaseViewMixin, RegistrationNoActivationView):
     template_name = "shuup/front/checkout/register.jinja"
 
     def is_visible_for_user(self):
-        checkout_method_choice_is_registered = bool(
-            self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None)
-        )
+        checkout_method_choice_is_registered = bool(self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None))
         return bool(not self.request.customer and checkout_method_choice_is_registered)
 
     def should_skip(self):
         return not self.is_visible_for_user()
 
     def is_valid(self):
-        checkout_method_choice_is_registered = bool(
-            self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None)
-        )
+        checkout_method_choice_is_registered = bool(self.storage.get(CHECKOUT_CHOICE_STORAGE_KEY, None))
         return bool(self.request.customer and checkout_method_choice_is_registered)
 
     def process(self):

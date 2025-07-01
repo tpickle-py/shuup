@@ -14,16 +14,8 @@ class UltraFilter(CatalogFilter):
     shop_products = models.ManyToManyField(ShopProduct, related_name="ultrafilter4")
 
     product = models.ForeignKey(on_delete=models.CASCADE, to=Product, null=True)
-    category = models.ForeignKey(
-        on_delete=models.CASCADE, to=Category, null=True, related_name="ultrafilte5"
-    )
-    product_type = models.ForeignKey(
-        on_delete=models.CASCADE, to=ProductType, null=True
-    )
-    derp = models.ForeignKey(
-        on_delete=models.CASCADE, to=Category, null=True, related_name="ultrafilte55"
-    )
+    category = models.ForeignKey(on_delete=models.CASCADE, to=Category, null=True, related_name="ultrafilte5")
+    product_type = models.ForeignKey(on_delete=models.CASCADE, to=ProductType, null=True)
+    derp = models.ForeignKey(on_delete=models.CASCADE, to=Category, null=True, related_name="ultrafilte55")
     contact = models.ForeignKey(on_delete=models.CASCADE, to=Contact, null=True)
-    shop_product = models.ForeignKey(
-        on_delete=models.CASCADE, to=ShopProduct, null=True
-    )
+    shop_product = models.ForeignKey(on_delete=models.CASCADE, to=ShopProduct, null=True)

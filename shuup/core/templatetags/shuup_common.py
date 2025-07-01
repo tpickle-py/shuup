@@ -7,8 +7,6 @@ Common helpers for Shuup templates.
    `shuup.core.templatetags.prices` module are available.
 """
 
-
-
 from datetime import date
 from json import dumps as json_dump
 
@@ -145,12 +143,7 @@ def safe_product_description(value):
 def cleanmeta(value):
     if isinstance(value, Undefined):
         return value
-    prepared_content = (
-        value.replace("&nbsp;", " ")
-        .replace("</p>", " ")
-        .replace("<br>", " ")
-        .replace('"', "'")
-    )
+    prepared_content = value.replace("&nbsp;", " ").replace("</p>", " ").replace("<br>", " ").replace('"', "'")
     return bleach.clean(prepared_content, tags=[], strip=True)
 
 

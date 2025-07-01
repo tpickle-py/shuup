@@ -1,5 +1,3 @@
-
-
 from django.db.models import Count, Q
 from django.utils.translation import ugettext_lazy as _
 
@@ -27,9 +25,7 @@ class ContactTypeFilter(ChoicesFilter):
         if value == "_all":
             return queryset.exclude(PersonContact___user__is_staff=True)
         elif value == "person":
-            return queryset.exclude(PersonContact___user__is_staff=True).instance_of(
-                PersonContact
-            )
+            return queryset.exclude(PersonContact___user__is_staff=True).instance_of(PersonContact)
         elif value == "company":
             return queryset.instance_of(CompanyContact)
         elif value == "staff":
@@ -54,9 +50,7 @@ class ContactListView(PicotableListView):
         Column(
             "is_active",
             _("Active"),
-            filter_config=ChoicesFilter(
-                [(False, _("no")), (True, _("yes"))], default=True
-            ),
+            filter_config=ChoicesFilter([(False, _("no")), (True, _("yes"))], default=True),
         ),
         Column(
             "n_orders",
@@ -93,31 +87,21 @@ class ContactListView(PicotableListView):
 
     def __init__(self):
         super().__init__()
-        picture_column = [
-            column for column in self.columns if column.id == "contact_picture"
-        ]
+        picture_column = [column for column in self.columns if column.id == "contact_picture"]
         if picture_column:
             picture_column[0].raw = True
 
     def get_groups(self):
-        return list(
-            ContactGroup.objects.translated()
-            .all_except_defaults()
-            .values_list("id", "translations__name")
-        )
+        return list(ContactGroup.objects.translated().all_except_defaults().values_list("id", "translations__name"))
 
     def get_shops(self):
         return list(
-            Shop.objects.get_for_user(self.request.user)
-            .translated()
-            .values_list("id", "translations__public_name")
+            Shop.objects.get_for_user(self.request.user).translated().values_list("id", "translations__public_name")
         )
 
     def get_toolbar(self):
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(
-                Contact, return_url="contact"
-            )
+            settings_button = SettingsActionButton.for_model(Contact, return_url="contact")
         else:
             settings_button = None
         return Toolbar(
@@ -146,21 +130,13 @@ class ContactListView(PicotableListView):
             qs = qs.exclude(PersonContact___user__is_superuser=True)
 
         if self.request.GET.get("shop"):
-            qs = qs.filter(
-                shops__in=Shop.objects.get_for_user(self.request.user).filter(
-                    pk=self.request.GET["shop"]
-                )
-            )
+            qs = qs.filter(shops__in=Shop.objects.get_for_user(self.request.user).filter(pk=self.request.GET["shop"]))
 
         elif request_limited(self.request):
             shop = get_shop(self.request)
             qs = qs.filter(shops=shop)
 
-        return (
-            qs.filter(query)
-            .annotate(n_orders=Count("customer_orders"))
-            .order_by("-created_on")
-        )
+        return qs.filter(query).annotate(n_orders=Count("customer_orders")).order_by("-created_on")
 
     def get_type_display(self, instance):
         if isinstance(instance, PersonContact):

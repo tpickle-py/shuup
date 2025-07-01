@@ -1,5 +1,3 @@
-
-
 from typing import Iterable
 
 from django.template import engines
@@ -25,9 +23,7 @@ class XthemeAdminModule(AdminModule):
     """
 
     name = _("Shuup Extensible Theme Engine")
-    breadcrumbs_menu_entry = MenuEntry(
-        _("Themes"), "shuup_admin:xtheme.config", category=CONTENT_MENU_CATEGORY
-    )
+    breadcrumbs_menu_entry = MenuEntry(_("Themes"), "shuup_admin:xtheme.config", category=CONTENT_MENU_CATEGORY)
 
     def get_urls(self):  # doccov: ignore
         return [
@@ -90,12 +86,8 @@ class XthemeAdminModule(AdminModule):
             engine = None
 
         if engine and isinstance(engine, Jinja2):  # The engine is what we expect...
-            if isinstance(
-                engine.env, XthemeEnvironment
-            ):  # ... and it's capable of loading themes...
-                if not (
-                    getattr(request, "theme", None) or get_current_theme(request.shop)
-                ):
+            if isinstance(engine.env, XthemeEnvironment):  # ... and it's capable of loading themes...
+                if not (getattr(request, "theme", None) or get_current_theme(request.shop)):
                     # ... but there's no theme active?!
                     # Panic!
                     yield Notification(
@@ -107,9 +99,7 @@ class XthemeAdminModule(AdminModule):
 
 class XthemeFontsAdminModule(AdminModule):
     name = _("Shuup Extensible Theme Engine Fonts")
-    breadcrumbs_menu_entry = MenuEntry(
-        _("Fonts"), "shuup_admin:xtheme.font.list", category=CONTENT_MENU_CATEGORY
-    )
+    breadcrumbs_menu_entry = MenuEntry(_("Fonts"), "shuup_admin:xtheme.font.list", category=CONTENT_MENU_CATEGORY)
 
     def get_urls(self):  # doccov: ignore
         return [
@@ -149,18 +139,12 @@ class XthemeFontsAdminModule(AdminModule):
         return [get_object_selector_permission_name(Font)]
 
     def get_permissions_help_texts(self) -> Iterable[str]:
-        return {
-            get_object_selector_permission_name(Font): _(
-                "Allow the user to select fonts in admin."
-            )
-        }
+        return {get_object_selector_permission_name(Font): _("Allow the user to select fonts in admin.")}
 
 
 class XthemeSnippetsAdminModule(AdminModule):
     name = _("Shuup Extensible Theme Engine Snippets")
-    breadcrumbs_menu_entry = MenuEntry(
-        _("Snippets"), "shuup_admin:xtheme_snippet.list", category=CONTENT_MENU_CATEGORY
-    )
+    breadcrumbs_menu_entry = MenuEntry(_("Snippets"), "shuup_admin:xtheme_snippet.list", category=CONTENT_MENU_CATEGORY)
 
     def get_urls(self):
         return get_edit_and_list_urls(

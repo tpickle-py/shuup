@@ -1,4 +1,3 @@
-
 from shuup.core.pricing import Price, TaxfulPrice, TaxlessPrice
 from shuup.utils.money import Money
 from shuup.utils.numbers import UnitMixupError
@@ -46,9 +45,7 @@ class MoneyProperty:
     def _get_value_from(self, instance, overrides=None):
         if overrides is None:
             overrides = {}
-        data = {
-            field: resolve(instance, path) for (field, path) in self._fields.items()
-        }
+        data = {field: resolve(instance, path) for (field, path) in self._fields.items()}
         data.update(overrides)
         if data["value"] is None:
             return None
@@ -143,9 +140,7 @@ def _transform_init_kwargs(cls, kwargs):
 
 def _transform_single_init_kwarg(prop, field, value, kwargs):
     if value is not None and not isinstance(value, prop.value_class):
-        raise TypeError(
-            f"Error! Expecting type `{prop.value_class.__name__}` for field `{field}` (got `{value!r}`)."
-        )
+        raise TypeError(f"Error! Expecting type `{prop.value_class.__name__}` for field `{field}` (got `{value!r}`).")
     for attr, path in prop._fields.items():
         if "." in path:
             continue  # Only set "local" fields

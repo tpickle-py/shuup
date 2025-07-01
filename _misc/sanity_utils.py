@@ -84,11 +84,7 @@ def find_files(
 ):
     # Parse .gitignore file
     gitignore_path = os.path.join(roots[0], ".gitignore")
-    gitignore_matcher = (
-        gitignore_parser.parse_gitignore(gitignore_path)
-        if os.path.exists(gitignore_path)
-        else None
-    )
+    gitignore_matcher = gitignore_parser.parse_gitignore(gitignore_path) if os.path.exists(gitignore_path) else None
 
     if generated_resources is None:
         generated_resources = set()
@@ -123,9 +119,7 @@ def _remove_ignored_directories(path, dirs, ignored_dirs, ignored_path_regexps):
         matches.update({dir for dir in dirs if fnmatch.fnmatch(dir, ignored_dir)})
 
     for ignore_re in ignored_path_regexps:
-        matches.update(
-            dir for dir in dirs if re.match(ignore_re, posixpath.join(path, dir))
-        )
+        matches.update(dir for dir in dirs if re.match(ignore_re, posixpath.join(path, dir)))
 
     for ignored_dir in matches:
         dirs.remove(ignored_dir)

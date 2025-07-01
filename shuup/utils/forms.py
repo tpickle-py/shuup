@@ -1,5 +1,3 @@
-
-
 def merged_initial_and_data(form):
     data = {}
     for name, field in form.fields.iteritems():

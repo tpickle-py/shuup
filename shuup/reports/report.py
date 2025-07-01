@@ -1,5 +1,3 @@
-
-
 from collections import OrderedDict
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -37,9 +35,7 @@ class ShuupReportBase:
         self.start_date = kwargs.get("start_date", None)
         self.end_date = kwargs.get("end_date", None)
         if self.options.get("date_range"):
-            self.start_date, self.end_date = parse_date_range(
-                self.options["date_range"]
-            )
+            self.start_date, self.end_date = parse_date_range(self.options["date_range"])
 
         if self.options.get("shop"):
             self.shop = Shop.objects.get(pk=self.options["shop"])
@@ -47,13 +43,9 @@ class ShuupReportBase:
             self.shop = None
 
         if self.start_date is None:
-            self.start_date = make_aware(
-                datetime.min + timedelta(days=1), get_current_timezone()
-            )
+            self.start_date = make_aware(datetime.min + timedelta(days=1), get_current_timezone())
         if self.end_date is None:
-            self.end_date = make_aware(
-                datetime.max - timedelta(days=1), get_current_timezone()
-            )
+            self.end_date = make_aware(datetime.max - timedelta(days=1), get_current_timezone())
 
         if self.options.get("request"):
             self.request = self.options["request"]
@@ -114,10 +106,7 @@ class ShuupReportBase:
             getter = self.dict_getter
         else:
             getter = self.cls_getter
-        return [
-            (c["getter"] if callable(c.get("getter")) else getter)(c, datum)
-            for c in self.schema
-        ]
+        return [(c["getter"] if callable(c.get("getter")) else getter)(c, datum) for c in self.schema]
 
     def get_totals(self, data):
         price_types = [TaxlessPrice, TaxfulPrice]

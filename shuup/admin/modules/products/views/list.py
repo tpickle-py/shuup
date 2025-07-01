@@ -1,5 +1,3 @@
-
-
 from django.conf import settings
 from django.db.models import Q
 from django.templatetags.static import static
@@ -75,11 +73,7 @@ class ProductListView(PicotableListView):
         Column(
             "primary_category",
             _("Primary Category"),
-            display=(
-                lambda instance: instance.primary_category.name
-                if instance.primary_category
-                else None
-            ),
+            display=(lambda instance: instance.primary_category.name if instance.primary_category else None),
             filter_config=TextFilter(
                 filter_field="primary_category__translations__name",
                 placeholder=_("Filter by category name..."),
@@ -114,11 +108,7 @@ class ProductListView(PicotableListView):
     def __init__(self):
         def get_suppliers_column(iterable):
             return first(
-                [
-                    col
-                    for col in iterable
-                    if col.id in ["suppliers", "shopproduct_suppliers"]
-                ],
+                [col for col in iterable if col.id in ["suppliers", "shopproduct_suppliers"]],
                 default=None,
             )
 
@@ -128,9 +118,7 @@ class ProductListView(PicotableListView):
                 placeholder=_("Filter by supplier name..."),
             )
 
-        if settings.SHUUP_ENABLE_MULTIPLE_SUPPLIERS and not get_suppliers_column(
-            self.default_columns
-        ):
+        if settings.SHUUP_ENABLE_MULTIPLE_SUPPLIERS and not get_suppliers_column(self.default_columns):
             self.default_columns.append(
                 Column(
                     "suppliers",
@@ -154,9 +142,7 @@ class ProductListView(PicotableListView):
     def get_columns(self):
         for column in self.columns:
             if column.id == "shop":
-                shops = Shop.objects.get_for_user(self.request.user).prefetch_related(
-                    "translations"
-                )
+                shops = Shop.objects.get_for_user(self.request.user).prefetch_related("translations")
                 column.filter_config = ChoicesFilter(choices=shops)
                 break
         return self.columns

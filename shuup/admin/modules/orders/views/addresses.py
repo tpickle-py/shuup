@@ -20,9 +20,7 @@ class OrderAddressEditView(UpdateView):
     template_name = "shuup/admin/orders/_address_edit.jinja"
 
     def get_queryset(self):
-        shop_ids = Shop.objects.get_for_user(self.request.user).values_list(
-            "id", flat=True
-        )
+        shop_ids = Shop.objects.get_for_user(self.request.user).values_list("id", flat=True)
         return Order.objects.exclude(deleted=True).filter(shop_id__in=shop_ids)
 
     def get_form(self, form_class=None):
@@ -32,20 +30,12 @@ class OrderAddressEditView(UpdateView):
         form_group.add_form_def(
             "billing_address",
             address_form_class,
-            kwargs={
-                "initial": get_data_dict(order.billing_address)
-                if order.billing_address
-                else {}
-            },
+            kwargs={"initial": get_data_dict(order.billing_address) if order.billing_address else {}},
         )
         form_group.add_form_def(
             "shipping_address",
             address_form_class,
-            kwargs={
-                "initial": get_data_dict(order.shipping_address)
-                if order.shipping_address
-                else {}
-            },
+            kwargs={"initial": get_data_dict(order.shipping_address) if order.shipping_address else {}},
         )
         return form_group
 
@@ -73,9 +63,7 @@ class OrderAddressEditView(UpdateView):
                 identifier=ADDRESS_EDITED_LOG_IDENTIFIER,
                 kind=LogEntryKind.EDIT,
             )
-            messages.success(
-                self.request, _("%(field)s were saved.") % {"field": field_title}
-            )
+            messages.success(self.request, _("%(field)s were saved.") % {"field": field_title})
 
         return HttpResponseRedirect(get_model_url(order))
 

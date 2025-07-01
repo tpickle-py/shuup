@@ -1,5 +1,3 @@
-
-
 #: Spec string for the Xtheme admin theme context.
 #:
 #: You can use this to determine logic around which themes

@@ -13,20 +13,12 @@ from shuup.discounts.utils import bump_price_expiration
 
 @receiver(object_saved, sender=Discount)
 def on_discount_object_saved(sender, object: Discount, **kwargs):
-    transaction.on_commit(
-        lambda: run_task(
-            "shuup.discounts.tasks.reindex_discount", discount_id=object.pk
-        )
-    )
+    transaction.on_commit(lambda: run_task("shuup.discounts.tasks.reindex_discount", discount_id=object.pk))
 
 
 @receiver(object_saved, sender=HappyHour)
 def on_happy_hour_object_saved(sender, object: HappyHour, **kwargs):
-    transaction.on_commit(
-        lambda: run_task(
-            "shuup.discounts.tasks.reindex_happy_hour", happy_hour_id=object.pk
-        )
-    )
+    transaction.on_commit(lambda: run_task("shuup.discounts.tasks.reindex_happy_hour", happy_hour_id=object.pk))
 
 
 def handle_discount_post_save(sender, instance, **kwargs):
@@ -62,9 +54,7 @@ def handle_generic_m2m_changed(sender, instance, **kwargs):
         bump_price_expiration([instance.shop_id])
         bump_all_price_caches([instance.shop_id])
     elif isinstance(instance, Category):
-        for shop_id in set(
-            instance.shop_products.all().values_list("shop_id", flat=True)
-        ):
+        for shop_id in set(instance.shop_products.all().values_list("shop_id", flat=True)):
             bump_price_expiration([shop_id])
             bump_all_price_caches([shop_id])
     elif isinstance(instance, Discount):
@@ -90,9 +80,7 @@ m2m_changed.connect(
 )
 
 # Bump price info and price expiration caches when Discount instances are changed
-post_save.connect(
-    handle_discount_post_save, sender=Discount, dispatch_uid="discounts:change_discount"
-)
+post_save.connect(handle_discount_post_save, sender=Discount, dispatch_uid="discounts:change_discount")
 
 # Bump price info and price expiration caches when HappyHour instances are changed or deleted
 post_save.connect(

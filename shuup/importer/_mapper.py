@@ -23,11 +23,7 @@ class RelatedMapper:
         self.fk_cache = {}
         self.explicit_uk_fields = tuple(handler._meta.fk_matchers.get(field.name) or ())
         self.is_translated = hasattr(self.to, "_parler_meta")
-        self.translated_fields = (
-            self.to._parler_meta.root_model._meta.get_fields()
-            if self.is_translated
-            else []
-        )
+        self.translated_fields = self.to._parler_meta.root_model._meta.get_fields() if self.is_translated else []
         self.translated_field_names = [f.name for f in self.translated_fields]
 
         uk_fields = {f.name: f for f in get_model_unique_fields(to)}

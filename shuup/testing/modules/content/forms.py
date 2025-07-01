@@ -1,5 +1,3 @@
-
-
 from datetime import datetime
 from logging import getLogger
 
@@ -49,17 +47,13 @@ class BehaviorWizardForm(forms.Form):
         super().__init__(**kwargs)
 
         if self._get_saved_script():
-            self.fields["order_confirm_notification"].widget = forms.CheckboxInput(
-                attrs={"disabled": True}
-            )
+            self.fields["order_confirm_notification"].widget = forms.CheckboxInput(attrs={"disabled": True})
 
     def _get_saved_script(self):
         """Returns the saved script from the DB, if it exists"""
         from shuup.notify.models.script import Script
 
-        return Script.objects.filter(
-            pk=config.get(self.shop, BEHAVIOR_ORDER_CONFIRM_KEY)
-        ).first()
+        return Script.objects.filter(pk=config.get(self.shop, BEHAVIOR_ORDER_CONFIRM_KEY)).first()
 
     def _get_send_email_action(self):
         from shuup.notify.actions import SendEmail
@@ -81,9 +75,7 @@ class BehaviorWizardForm(forms.Form):
                 action_data["template_data"][language] = {
                     "content_type": content_data.ORDER_CONFIRMATION["content_type"],
                     "subject": force_text(content_data.ORDER_CONFIRMATION["subject"]),
-                    "body": template_loader.render_to_string(
-                        content_data.ORDER_CONFIRMATION["body_template"]
-                    ).strip(),
+                    "body": template_loader.render_to_string(content_data.ORDER_CONFIRMATION["body_template"]).strip(),
                 }
 
             except Exception:
@@ -143,9 +135,7 @@ class ContentWizardForm(forms.Form):
                 label=_("Create About Us page"),
                 required=False,
                 initial=True,
-                widget=forms.CheckboxInput(
-                    attrs={"disabled": (content_data.ABOUT_US_KEY in pages)}
-                ),
+                widget=forms.CheckboxInput(attrs={"disabled": (content_data.ABOUT_US_KEY in pages)}),
             )
 
             # Set the help text for different ocasions - whether the content is installed or not.
@@ -167,9 +157,7 @@ class ContentWizardForm(forms.Form):
                 label=_("Create Privacy Policy page"),
                 required=False,
                 initial=True,
-                widget=forms.CheckboxInput(
-                    attrs={"disabled": (content_data.PRIVACY_POLICY_KEY in pages)}
-                ),
+                widget=forms.CheckboxInput(attrs={"disabled": (content_data.PRIVACY_POLICY_KEY in pages)}),
             )
             # Set the help text for different ocasions - whether the content is installed or not.
             if content_data.PRIVACY_POLICY_KEY in pages:
@@ -190,9 +178,7 @@ class ContentWizardForm(forms.Form):
                 label=_("Create Terms and Conditions page"),
                 required=False,
                 initial=True,
-                widget=forms.CheckboxInput(
-                    attrs={"disabled": (content_data.TERMS_AND_CONDITIONS_KEY in pages)}
-                ),
+                widget=forms.CheckboxInput(attrs={"disabled": (content_data.TERMS_AND_CONDITIONS_KEY in pages)}),
             )
             # Set the help text for different ocasions - whether the content is installed or not.
             if content_data.TERMS_AND_CONDITIONS_KEY in pages:
@@ -213,9 +199,7 @@ class ContentWizardForm(forms.Form):
                 label=_("Create Refund Policy page"),
                 required=False,
                 initial=True,
-                widget=forms.CheckboxInput(
-                    attrs={"disabled": (content_data.REFUND_POLICY_KEY in pages)}
-                ),
+                widget=forms.CheckboxInput(attrs={"disabled": (content_data.REFUND_POLICY_KEY in pages)}),
             )
             # Set the help text for different ocasions - whether the content is installed or not.
             if content_data.REFUND_POLICY_KEY in pages:
@@ -274,10 +258,7 @@ class ContentWizardForm(forms.Form):
         if djangoenv.has_installed("shuup.simple_cms"):
             self._handle_simple_cms_save()
 
-        if (
-            djangoenv.has_installed("shuup.xtheme")
-            and self.cleaned_data["configure_footer"]
-        ):
+        if djangoenv.has_installed("shuup.xtheme") and self.cleaned_data["configure_footer"]:
             self._handle_xtheme_save()
 
     def _handle_simple_cms_save(self):
@@ -302,9 +283,7 @@ class ContentWizardForm(forms.Form):
             # we must create the page because it is not created yet
             if create_page and page_identifier not in pages:
                 template = content_data.CMS_PAGES[page_identifier]["template"]
-                rendered_content = force_text(
-                    template_loader.render_to_string(template, context).strip()
-                )
+                rendered_content = force_text(template_loader.render_to_string(template, context).strip())
                 title = force_text(content_data.CMS_PAGES[page_identifier]["name"])
 
                 Page.objects.create(
@@ -325,9 +304,7 @@ class ContentWizardForm(forms.Form):
 
         if not svc and theme:
             context = {"shop": self.shop}
-            rendered_content = template_loader.render_to_string(
-                content_data.FOOTER_TEMPLATE, context
-            ).strip()
+            rendered_content = template_loader.render_to_string(content_data.FOOTER_TEMPLATE, context).strip()
             layout = Layout(theme, "footer-bottom")
             # adds the footer template
             layout.begin_row()

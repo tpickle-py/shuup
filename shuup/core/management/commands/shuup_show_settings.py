@@ -20,7 +20,5 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        docs = shuup.utils.settings_doc.get_known_settings_documentation(
-            only_changed=options["only_changed"]
-        )
+        docs = shuup.utils.settings_doc.get_known_settings_documentation(only_changed=options["only_changed"])
         self.stdout.write(docs)

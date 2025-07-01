@@ -1,4 +1,3 @@
-
 from django.db.models import Sum
 
 from shuup.core.models import OrderLine, OrderLineType, ProductCrossSell, ProductCrossSellType
@@ -16,9 +15,7 @@ def add_bought_with_relations_for_product(product_id, max_quantity=10):
     :param max_quantity: maximum amount of relations created
     :type max_quantity: int
     """
-    order_ids_to_check = OrderLine.objects.filter(product_id=product_id).values_list(
-        "order_id", flat=True
-    )
+    order_ids_to_check = OrderLine.objects.filter(product_id=product_id).values_list("order_id", flat=True)
 
     # Group all order lines related to given product_id
     # with product_id and calculate Sum of purchased quantities

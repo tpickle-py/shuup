@@ -1,4 +1,3 @@
-
 from .edit import ScriptEditView
 from .editor import EditScriptContentView, script_item_editor
 from .list import ScriptListView

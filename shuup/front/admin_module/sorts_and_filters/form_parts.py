@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -43,9 +41,7 @@ class ConfigurationCategoryForm(ConfigurationForm):
     override_default_configuration = forms.BooleanField(
         label=_("Override shop's default configuration"),
         required=False,
-        help_text=_(
-            "If checked, this configuration will be used instead of the shop's default configuration."
-        ),
+        help_text=_("If checked, this configuration will be used instead of the shop's default configuration."),
     )
 
 
@@ -62,11 +58,7 @@ class ConfigurationCategoryFormPart(FormPart):
             form_class=self.form,
             template_name="shuup/front/admin/sorts_and_filters_category.jinja",
             required=False,
-            kwargs={
-                "initial": get_configuration(
-                    category=self.object, force_category_override=True
-                )
-            },
+            kwargs={"initial": get_configuration(category=self.object, force_category_override=True)},
         )
 
     def form_valid(self, form):

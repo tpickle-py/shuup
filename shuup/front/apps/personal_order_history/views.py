@@ -20,9 +20,7 @@ class OrderListView(DashboardViewMixin, OrderViewMixin, django.views.generic.Lis
     context_object_name = "orders"
 
 
-class OrderDetailView(
-    DashboardViewMixin, OrderViewMixin, django.views.generic.DetailView
-):
+class OrderDetailView(DashboardViewMixin, OrderViewMixin, django.views.generic.DetailView):
     template_name = "shuup/personal_order_history/order_detail.jinja"
     context_object_name = "order"
 
@@ -59,8 +57,4 @@ def _get_reorderable_lines(order):
      * child lines, because otherwise package contents are added twice.
      * subscriptions, because those don't use normal checkout flow.
     """
-    return (
-        order.lines.products()
-        .exclude(parent_line__isnull=False)
-        .exclude(product__mode=ProductMode.SUBSCRIPTION)
-    )
+    return order.lines.products().exclude(parent_line__isnull=False).exclude(product__mode=ProductMode.SUBSCRIPTION)

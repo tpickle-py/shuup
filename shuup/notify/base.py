@@ -1,5 +1,3 @@
-
-
 import abc
 from abc import abstractmethod
 from collections import OrderedDict
@@ -79,9 +77,7 @@ class Variable:
         if callable(type):
             type = type()
         assert isinstance(type, Type), "`type` must be a Type instance"
-        assert isinstance(required, bool), (
-            f"`required` must be a bool (it's {required!r})"
-        )
+        assert isinstance(required, bool), f"`required` must be a bool (it's {required!r})"
         self.name = name
         self.type = type
         self.required = bool(required)
@@ -89,11 +85,7 @@ class Variable:
         self.attributes = attributes
 
     def get_matching_types(self, variable_dict):
-        return {
-            name
-            for name, variable in six.iteritems(variable_dict)
-            if self.type.is_coercible_from(variable.type)
-        }
+        return {name for name, variable in six.iteritems(variable_dict) if self.type.is_coercible_from(variable.type)}
 
 
 class Binding(Variable):
@@ -106,9 +98,7 @@ class Binding(Variable):
         constant_use=ConstantUse.VARIABLE_ONLY,
         default=None,
     ):
-        super().__init__(
-            name=name, type=type, required=required, help_text=help_text
-        )
+        super().__init__(name=name, type=type, required=required, help_text=help_text)
         self.constant_use = constant_use
         self.default = default
 
@@ -145,9 +135,7 @@ class TemplatedBinding(Binding):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.allow_variable:
-            raise ValueError(
-                "Error! TemplatedBindings may not allow variable binding for security reasons."
-            )
+            raise ValueError("Error! TemplatedBindings may not allow variable binding for security reasons.")
 
     def get_value(self, context, bind_data):
         value = super().get_value(context, bind_data)
@@ -194,18 +182,12 @@ class Event(Base):
         for key in sorted(variable_values.keys()):
             variable = self.variables.get(key)
             if not variable:
-                raise ValueError(
-                    f"Error! Unknown variable `{key!r}` for the event `{self.identifier}`."
-                )
-            self.variable_values[key] = variable.type.unserialize(
-                variable_values.pop(key)
-            )
+                raise ValueError(f"Error! Unknown variable `{key!r}` for the event `{self.identifier}`.")
+            self.variable_values[key] = variable.type.unserialize(variable_values.pop(key))
 
         for name, variable in six.iteritems(self.variables):
             if variable.required and name not in self.variable_values:
-                raise ValueError(
-                    f"Error! Required variable `{name!r}` missing for the event `{self.identifier}`"
-                )
+                raise ValueError(f"Error! Required variable `{name!r}` missing for the event `{self.identifier}`")
 
     def run(self, shop):
         run_event = cached_load("SHUUP_NOTIFY_SCRIPT_RUNNER")
@@ -230,9 +212,7 @@ class ScriptItem(Base):
             if binding.required and name not in self.data:
                 unbound.add(name)
         if unbound:
-            raise ValueError(
-                f"Error! Bindings unbound for {self.identifier!r}: {unbound!r}."
-            )
+            raise ValueError(f"Error! Bindings unbound for {self.identifier!r}: {unbound!r}.")
 
     def get_value(self, context, binding_name):
         """
@@ -257,10 +237,7 @@ class ScriptItem(Base):
         :return: Dict of binding name -> value
         :rtype: dict[name, value]
         """
-        return {
-            binding_name: self.get_value(context, binding_name)
-            for binding_name in self.bindings
-        }
+        return {binding_name: self.get_value(context, binding_name) for binding_name in self.bindings}
 
     @classmethod
     def unserialize(cls, data, validate=True):
@@ -283,9 +260,7 @@ class ScriptItem(Base):
     @classmethod
     def get_ui_info_map(cls):
         map = {}
-        for identifier, object in six.iteritems(
-            get_identifier_to_object_map(cls.provide_category)
-        ):
+        for identifier, object in six.iteritems(get_identifier_to_object_map(cls.provide_category)):
             map[identifier] = {
                 "identifier": str(identifier),
                 "name": force_text(object.name),
@@ -344,9 +319,7 @@ class Action(ScriptItem):
         """
 
         if self.template_use == TemplateUse.NONE:
-            raise ValueError(
-                "Error! Attempting to `get_template_values` on an action with no template use."
-            )
+            raise ValueError("Error! Attempting to `get_template_values` on an action with no template use.")
 
         template = self.get_template(context)
         fields = self.template_fields

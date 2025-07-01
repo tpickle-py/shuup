@@ -23,9 +23,7 @@ def on_user_groups_change(instance, action, model, **kwargs):
 
     # bump only the user's permission cache
     elif isinstance(instance, get_user_model()):
-        cache.bump_version(
-            f"{USER_PERMISSIONS_CACHE_NAMESPACE}:{instance.pk}"
-        )
+        cache.bump_version(f"{USER_PERMISSIONS_CACHE_NAMESPACE}:{instance.pk}")
 
 
 @receiver(object_saved)
@@ -33,17 +31,11 @@ def on_object_saved(sender, object, **kwargs):
     # make sure to index the prices of the product when a product is saved
     if isinstance(object, ShopProduct):
         transaction.on_commit(
-            lambda: run_task(
-                "shuup.core.catalog.tasks.index_shop_product", shop_product_id=object.pk
-            )
+            lambda: run_task("shuup.core.catalog.tasks.index_shop_product", shop_product_id=object.pk)
         )
 
     if isinstance(object, Product):
-        transaction.on_commit(
-            lambda: run_task(
-                "shuup.core.catalog.tasks.index_product", product_id=object.pk
-            )
-        )
+        transaction.on_commit(lambda: run_task("shuup.core.catalog.tasks.index_product", product_id=object.pk))
 
 
 order_creator_finished.connect(

@@ -66,9 +66,7 @@ class LayoutCellGeneralInfoForm(forms.Form):
             )
 
         if self.theme:
-            plugin_choices = self.theme.get_all_plugin_choices(
-                empty_label=_("No Plugin")
-            )
+            plugin_choices = self.theme.get_all_plugin_choices(empty_label=_("No Plugin"))
             plugin_field = self.fields["plugin"]
             plugin_field.choices = plugin_field.widget.choices = plugin_choices
             plugin_field.initial = self.layout_cell.plugin_identifier
@@ -85,9 +83,7 @@ class LayoutCellGeneralInfoForm(forms.Form):
         data = self.cleaned_data
         sizes = ["sm", "md"]  # TODO: Parametrize? Currently Bootstrap dependent.
         for size in sizes:
-            self.layout_cell.sizes[size] = (
-                int(data["cell_width"]) if data["cell_width"] else None
-            )
+            self.layout_cell.sizes[size] = int(data["cell_width"]) if data["cell_width"] else None
 
         self.layout_cell.align = data["cell_align"]
         self.layout_cell.extra_classes = data["cell_extra_classes"].strip()

@@ -25,9 +25,7 @@ class ProductSalesReport(OrderReportMixin, ShuupReportBase):
     ]
 
     def get_objects(self):
-        order_line_qs = OrderLine.objects.products().filter(
-            order__in=super().get_objects()
-        )
+        order_line_qs = OrderLine.objects.products().filter(order__in=super().get_objects())
         return (
             order_line_qs.select_related("product")
             .prefetch_related("taxes")
@@ -38,9 +36,7 @@ class ProductSalesReport(OrderReportMixin, ShuupReportBase):
         data = []
 
         # group products by id - que queryset must be ordered by id to make this work
-        for _key, groups in itertools.groupby(
-            self.get_objects(), lambda pl: pl.product_id
-        ):
+        for _key, groups in itertools.groupby(self.get_objects(), lambda pl: pl.product_id):
             quantity = 0
             taxful_total = TaxfulPrice(0, self.shop.currency)
             taxless_total = TaxlessPrice(0, self.shop.currency)

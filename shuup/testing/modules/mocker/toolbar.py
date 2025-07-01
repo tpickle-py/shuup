@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.toolbar import BaseToolbarButtonProvider, DropdownItem, URLActionButton

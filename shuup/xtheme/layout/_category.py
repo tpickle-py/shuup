@@ -10,9 +10,7 @@ class CategoryLayout(Layout):
         category = context.get("category")
         if not category:
             return ""
-        return _(
-            f"Content in this placeholder is shown for {category.name} category only."
-        )
+        return _(f"Content in this placeholder is shown for {category.name} category only.")
 
     def is_valid_context(self, context):
         return bool(context.get("category"))

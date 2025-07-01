@@ -16,9 +16,9 @@ def shop_product_orderability_check(sender, **kwargs):
     the project orderability signal handler has to adapt accordingly.
     """
     for shop in kwargs["shops"]:
-        for shop_product in ShopProduct.objects.filter(
-            shop=shop, product_id__in=kwargs["product_ids"]
-        ).exclude(visibility=ShopProductVisibility.NOT_VISIBLE):
+        for shop_product in ShopProduct.objects.filter(shop=shop, product_id__in=kwargs["product_ids"]).exclude(
+            visibility=ShopProductVisibility.NOT_VISIBLE
+        ):
             ensure_shop_product_visibility(shop_product)
 
 

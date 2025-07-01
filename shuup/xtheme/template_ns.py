@@ -68,10 +68,6 @@ class XthemeNamespace:
         theme = get_middleware_current_theme()
         if theme:
             helper = getattr(theme, item, None)
-            if (
-                helper
-                and callable(helper)
-                and not getattr(helper, "alters_data", False)
-            ):
+            if helper and callable(helper) and not getattr(helper, "alters_data", False):
                 return helper
         raise KeyError(f"No such template helper: {item}")

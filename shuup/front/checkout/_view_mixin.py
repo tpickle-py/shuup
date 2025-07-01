@@ -1,5 +1,3 @@
-
-
 import warnings
 
 from ._process import CheckoutProcess
@@ -16,9 +14,7 @@ class CheckoutPhaseViewMixin:
     previous_phase = None  # set as an instance variable
     request = None  # exists via being a view
 
-    def __init__(
-        self, checkout_process=None, horizontal_template=True, *args, **kwargs
-    ):
+    def __init__(self, checkout_process=None, horizontal_template=True, *args, **kwargs):
         """
         Initialize a checkout phase view.
 
@@ -92,23 +88,15 @@ class CheckoutPhaseViewMixin:
     @property
     def storage(self):
         if not hasattr(self, "_storage"):
-            self._storage = CheckoutPhaseStorage(
-                request=self.request, phase_identifier=self.identifier
-            )
+            self._storage = CheckoutPhaseStorage(request=self.request, phase_identifier=self.identifier)
         return self._storage
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["current_phase_url"] = self.get_url()
-        context["next_phase_url"] = (
-            self.next_phase.get_url() if self.next_phase else None
-        )
-        context["previous_phase_url"] = (
-            self.previous_phase.get_url() if self.previous_phase else None
-        )
-        context["phase_urls"] = {
-            phase.identifier: phase.get_url() for phase in self.phases
-        }
+        context["next_phase_url"] = self.next_phase.get_url() if self.next_phase else None
+        context["previous_phase_url"] = self.previous_phase.get_url() if self.previous_phase else None
+        context["phase_urls"] = {phase.identifier: phase.get_url() for phase in self.phases}
         return context
 
     @classmethod
@@ -124,11 +112,7 @@ class CheckoutPhaseViewMixin:
 
 def _get_dummy_checkout_process(phase):
     phase_specs = ["{0.__module__}:{0.__name__}".format(type(phase))]
-    phase_kwargs = {
-        key: getattr(phase, key)
-        for key in ["request", "args", "kwargs"]
-        if hasattr(phase, key)
-    }
+    phase_kwargs = {key: getattr(phase, key) for key in ["request", "args", "kwargs"] if hasattr(phase, key)}
     checkout_process = CheckoutProcess(phase_specs, phase_kwargs)
     checkout_process._phases = [phase]
     checkout_process.horizontal_template = phase.horizontal_template

@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.modules.contact_group_price_display.views.forms import PriceDisplayChoices, get_price_display_mode
@@ -34,9 +32,7 @@ class ContactGroupPriceDisplayListView(PicotableListView):
         return _("Unspecified")
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(
-            **kwargs
-        )
+        context = super().get_context_data(**kwargs)
         if self.request.user.is_superuser:
             settings_button = SettingsActionButton.for_model(
                 ContactGroupPriceDisplay, return_url="contact_group_price_display"
@@ -48,9 +44,7 @@ class ContactGroupPriceDisplayListView(PicotableListView):
         can_create = len(get_groups_for_price_display_create(shop))
         context["toolbar"] = Toolbar(
             [
-                NewActionButton("shuup_admin:contact_group_price_display.new")
-                if can_create
-                else None,
+                NewActionButton("shuup_admin:contact_group_price_display.new") if can_create else None,
                 settings_button,
             ],
             view=self,

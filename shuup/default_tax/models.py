@@ -1,5 +1,3 @@
-
-
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -13,11 +11,8 @@ class TaxRuleQuerySet(models.QuerySet):
         null = Q(Q(_postal_codes_min__isnull=True) | Q(_postal_codes_min=""))
         in_range = Q()
         if postalcode:
-            in_range = Q(
-                _postal_codes_min__lte=postalcode, _postal_codes_max__gte=postalcode
-            )
+            in_range = Q(_postal_codes_min__lte=postalcode, _postal_codes_max__gte=postalcode)
         return self.filter(null | in_range)
-
 
 
 class TaxRule(models.Model):
@@ -38,15 +33,9 @@ class TaxRule(models.Model):
         verbose_name=_("customer tax groups"),
         help_text=_("The customer tax groups for which this tax rule is limited."),
     )
-    country_codes_pattern = models.CharField(
-        max_length=300, blank=True, verbose_name=_("country codes pattern")
-    )
-    region_codes_pattern = models.CharField(
-        max_length=500, blank=True, verbose_name=_("region codes pattern")
-    )
-    postal_codes_pattern = models.TextField(
-        blank=True, verbose_name=_("postal codes pattern")
-    )
+    country_codes_pattern = models.CharField(max_length=300, blank=True, verbose_name=_("country codes pattern"))
+    region_codes_pattern = models.CharField(max_length=500, blank=True, verbose_name=_("region codes pattern"))
+    postal_codes_pattern = models.TextField(blank=True, verbose_name=_("postal codes pattern"))
 
     _postal_codes_min = models.CharField(max_length=100, blank=True, null=True)
     _postal_codes_max = models.CharField(max_length=100, blank=True, null=True)
@@ -91,26 +80,18 @@ class TaxRule(models.Model):
                 if taxing_context.customer_tax_group not in tax_groups:
                     return False
         if self.country_codes_pattern:
-            if not pattern_matches(
-                self.country_codes_pattern, taxing_context.country_code
-            ):
+            if not pattern_matches(self.country_codes_pattern, taxing_context.country_code):
                 return False
         if self.region_codes_pattern:
-            if not pattern_matches(
-                self.region_codes_pattern, taxing_context.region_code
-            ):
+            if not pattern_matches(self.region_codes_pattern, taxing_context.region_code):
                 return False
         if self.postal_codes_pattern:
-            if not pattern_matches(
-                self.postal_codes_pattern, taxing_context.postal_code
-            ):
+            if not pattern_matches(self.postal_codes_pattern, taxing_context.postal_code):
                 return False
         return True
 
     def save(self, *args, **kwargs):
-        min_value, max_value = Pattern(
-            self.postal_codes_pattern
-        ).get_alphabetical_limits()
+        min_value, max_value = Pattern(self.postal_codes_pattern).get_alphabetical_limits()
         self._postal_codes_min = min_value
         self._postal_codes_max = max_value
         return super().save(*args, **kwargs)

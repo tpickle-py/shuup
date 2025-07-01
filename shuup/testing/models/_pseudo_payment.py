@@ -1,5 +1,3 @@
-
-
 import hmac
 
 from django.contrib import messages
@@ -48,19 +46,13 @@ class PseudoPaymentProcessor(PaymentProcessor):
         ]
 
     def _create_service(self, choice_identifier, **kwargs):
-        service = super()._create_service(
-            choice_identifier, **kwargs
-        )
+        service = super()._create_service(choice_identifier, **kwargs)
         service.behavior_components.add(
-            WaivingCostBehaviorComponent.objects.create(
-                price_value=10, waive_limit_value=1000
-            )
+            WaivingCostBehaviorComponent.objects.create(price_value=10, waive_limit_value=1000)
         )
         if choice_identifier == "caps":
             service.behavior_components.add(
-                FixedCostBehaviorComponent.objects.create(
-                    price_value=50, description="UPPERCASING EXTRA FEE"
-                )
+                FixedCostBehaviorComponent.objects.create(price_value=50, description="UPPERCASING EXTRA FEE")
             )
         return service
 
@@ -75,10 +67,7 @@ class PseudoPaymentProcessor(PaymentProcessor):
             ("Cancel payment", urls.cancel_url),
             ("Return", urls.return_url),
         ]
-        urls_html = "\n".join(
-            f'<li><a href="{url}?mac={mac}">{transform(title)}</a></li>'
-            for (title, url) in url_list
-        )
+        urls_html = "\n".join(f'<li><a href="{url}?mac={mac}">{transform(title)}</a></li>' for (title, url) in url_list)
         html = HTML_TEMPLATE % {
             "urls": urls_html,
             "title": transform("Shuup Pseudo Payment Service"),

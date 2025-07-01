@@ -38,9 +38,7 @@ class ProductParentBaseToolbar(Toolbar):
         self.view = view
         self.parent_product = view.object
         self.request = view.request
-        get_default_edit_toolbar(
-            self.view, "product_form", with_split_save=False, toolbar=self
-        )
+        get_default_edit_toolbar(self.view, "product_form", with_split_save=False, toolbar=self)
 
 
 class ProductParentBaseView(FormPartsViewMixin, UpdateView):
@@ -55,19 +53,11 @@ class ProductParentBaseView(FormPartsViewMixin, UpdateView):
         parent = self.object.get_all_package_parents().first()
         if parent:
             # By default, redirect to the first parent
-            return HttpResponseRedirect(
-                reverse(
-                    "shuup_admin:shop_product.edit_package", kwargs={"pk": parent.id}
-                )
-            )
+            return HttpResponseRedirect(reverse("shuup_admin:shop_product.edit_package", kwargs={"pk": parent.id}))
         return super().dispatch(request, *args, **kwargs)
 
     def get_breadcrumb_parents(self):
-        return [
-            MenuEntry(
-                text=self.object, url=get_model_url(self.object, shop=self.request.shop)
-            )
-        ]
+        return [MenuEntry(text=self.object, url=get_model_url(self.object, shop=self.request.shop))]
 
     def post(self, request, *args, **kwargs):
         command = request.POST.get("command")

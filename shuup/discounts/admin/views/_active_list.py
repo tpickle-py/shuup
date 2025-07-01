@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.shop_provider import get_shop
@@ -19,9 +17,7 @@ class DiscountListView(PicotableListView):
             _("Discount Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(
-                filter_field="name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="name", placeholder=_("Filter by name...")),
         ),
         Column(
             "product__translations__name",
@@ -74,11 +70,7 @@ class DiscountListView(PicotableListView):
     mass_actions_provider_key = "discount_list_actions_provider"
 
     def get_discount_effect(self, instance):
-        if not (
-            instance.discount_amount_value
-            or instance.discounted_price_value
-            or instance.discount_percentage
-        ):
+        if not (instance.discount_amount_value or instance.discounted_price_value or instance.discount_percentage):
             return "-"
 
         effects = []
@@ -103,11 +95,7 @@ class DiscountListView(PicotableListView):
         return ",".join(effects)
 
     def format_end_datetime(self, instance, *args, **kwargs):
-        return (
-            get_locally_formatted_datetime(instance.end_datetime)
-            if instance.end_datetime
-            else ""
-        )
+        return get_locally_formatted_datetime(instance.end_datetime) if instance.end_datetime else ""
 
     def get_queryset(self):
         return Discount.objects.active(get_shop(self.request))

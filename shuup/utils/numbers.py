@@ -1,5 +1,3 @@
-
-
 import re
 from decimal import ROUND_HALF_EVEN, ROUND_HALF_UP, Decimal
 
@@ -96,18 +94,10 @@ def parse_simple_decimal(value, error=raise_exception):
     :rtype: Decimal|type(error)
     :raises ValueError: on errors by default
     """
-    decoded_value = (
-        value.decode("ascii", errors="replace")
-        if six.PY2 and isinstance(value, bytes)
-        else value
-    )
-    if not isinstance(decoded_value, six.text_type) or (
-        not _simple_decimal_rx.match(decoded_value)
-    ):
+    decoded_value = value.decode("ascii", errors="replace") if six.PY2 and isinstance(value, bytes) else value
+    if not isinstance(decoded_value, six.text_type) or (not _simple_decimal_rx.match(decoded_value)):
         if error is raise_exception:
-            raise ValueError(
-                f"Error! Value `{value!r}` can't be parsed as a simple decimal."
-            )
+            raise ValueError(f"Error! Value `{value!r}` can't be parsed as a simple decimal.")
         return error
     return Decimal(value)
 

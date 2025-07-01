@@ -35,8 +35,6 @@ TODO: document the concepts of base price and the pricing steps API.
 TODO: caching.
 """
 
-
-
 from shuup.utils import update_module_attributes
 
 from ._context import PricingContext, PricingContextable

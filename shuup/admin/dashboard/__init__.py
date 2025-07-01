@@ -1,4 +1,3 @@
-
 from .blocks import (
     DashboardBlock,
     DashboardChartBlock,

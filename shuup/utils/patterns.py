@@ -11,8 +11,7 @@ except ImportError:
 from shuup.utils.django_compat import force_text
 
 PATTERN_SYNTAX_HELP_TEXT = _(
-    "Comma-separated values or ranges, e.g. A-Z,10000-19000. "
-    "Use exclamation marks to negate (A-Z,!G will not match G)."
+    "Comma-separated values or ranges, e.g. A-Z,10000-19000. Use exclamation marks to negate (A-Z,!G will not match G)."
 )
 
 

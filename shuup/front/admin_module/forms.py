@@ -1,5 +1,3 @@
-
-
 import six
 from django import forms
 from enumfields import Enum

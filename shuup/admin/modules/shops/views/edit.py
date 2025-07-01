@@ -1,5 +1,3 @@
-
-
 from django.conf import settings
 from django.contrib import messages
 from django.db.transaction import atomic
@@ -59,9 +57,7 @@ class ContactAddressFormPart(FormPart):
 class ShopEnablerView(View):
     def post(self, request, *args, **kwargs):
         if not onboarding_complete(request):
-            messages.error(
-                request, _("There are still some pending actions to complete.")
-            )
+            messages.error(request, _("There are still some pending actions to complete."))
             return HttpResponseRedirect(reverse("shuup_admin:home"))
         enable = request.POST.get("enable", True)
         if kwargs.get("pk") == str(request.shop.pk):
@@ -89,9 +85,7 @@ class ShopEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView):
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
         with_split_save = ShuupSettings.get_setting("SHUUP_ENABLE_MULTIPLE_SHOPS")
-        toolbar = get_default_edit_toolbar(
-            self, save_form_id, with_split_save=with_split_save
-        )
+        toolbar = get_default_edit_toolbar(self, save_form_id, with_split_save=with_split_save)
 
         for button in get_provide_objects("admin_shop_edit_toolbar_button"):
             if button.visible_for_object(self.object):
@@ -112,6 +106,4 @@ class ShopSelectView(View):
         shop = Shop.objects.filter(pk=kwargs.get("pk")).first()
         set_shop(request, shop)
         messages.info(request, (_("Shop {} is now active.")).format(shop.name))
-        return HttpResponseRedirect(
-            request.META.get("HTTP_REFERER", reverse("shuup_admin:home"))
-        )
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("shuup_admin:home")))

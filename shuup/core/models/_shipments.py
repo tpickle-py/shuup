@@ -1,5 +1,3 @@
-
-
 from django.conf import settings
 from django.db import models
 from django.db.transaction import atomic
@@ -69,16 +67,10 @@ class Shipment(ShuupModel):
     )
 
     created_on = models.DateTimeField(auto_now_add=True, verbose_name=_("created on"))
-    status = EnumIntegerField(
-        ShipmentStatus, default=ShipmentStatus.NOT_SENT, verbose_name=_("status")
-    )
-    tracking_code = models.CharField(
-        max_length=64, blank=True, verbose_name=_("tracking code")
-    )
+    status = EnumIntegerField(ShipmentStatus, default=ShipmentStatus.NOT_SENT, verbose_name=_("status"))
+    tracking_code = models.CharField(max_length=64, blank=True, verbose_name=_("tracking code"))
     tracking_url = models.URLField(blank=True, verbose_name=_("tracking url"))
-    description = models.CharField(
-        max_length=255, blank=True, verbose_name=_("description")
-    )
+    description = models.CharField(max_length=255, blank=True, verbose_name=_("description"))
     volume = MeasurementField(
         unit=get_shuup_volume_unit(),
         verbose_name=format_lazy(_("volume ({})"), get_shuup_volume_unit()),
@@ -88,9 +80,7 @@ class Shipment(ShuupModel):
         verbose_name=format_lazy(_("weight ({})"), settings.SHUUP_MASS_UNIT),
     )
     identifier = InternalIdentifierField(unique=True)
-    type = EnumIntegerField(
-        ShipmentType, default=ShipmentType.OUT, verbose_name=_("type")
-    )
+    type = EnumIntegerField(ShipmentType, default=ShipmentType.OUT, verbose_name=_("type"))
 
     objects = ShipmentQueryset.as_manager()
 
@@ -116,9 +106,7 @@ class Shipment(ShuupModel):
             self.supplier.update_stock(product_id=product_id)
 
     def delete(self, using=None):
-        raise NotImplementedError(
-            "Error! Not implemented: `Shipment` -> `delete()`. Use `soft_delete()` instead."
-        )
+        raise NotImplementedError("Error! Not implemented: `Shipment` -> `delete()`. Use `soft_delete()` instead.")
 
     @atomic
     def soft_delete(self, user=None):
@@ -144,9 +132,7 @@ class Shipment(ShuupModel):
         """
         total_volume = 0
         total_weight = 0
-        for quantity, volume, weight in self.products.values_list(
-            "quantity", "unit_volume", "unit_weight"
-        ):
+        for quantity, volume, weight in self.products.values_list("quantity", "unit_volume", "unit_weight"):
             total_volume += quantity * volume
             total_weight += quantity * weight
         self.volume = total_volume
@@ -186,19 +172,14 @@ class Shipment(ShuupModel):
         if self.order:
             self.order.update_shipping_status()
         if self.type == ShipmentType.IN:
-            for product_id, quantity in self.products.values_list(
-                "product_id", "quantity"
-            ):
-                purchase_price = (
-                    purchase_prices.get(product_id, None) if purchase_prices else None
-                )
+            for product_id, quantity in self.products.values_list("product_id", "quantity"):
+                purchase_price = purchase_prices.get(product_id, None) if purchase_prices else None
                 self.supplier.adjust_stock(
                     product_id=product_id,
                     delta=quantity,
                     purchase_price=purchase_price or 0,
                     created_by=created_by,
                 )
-
 
 
 class ShipmentProduct(ShuupModel):

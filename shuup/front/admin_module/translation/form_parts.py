@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -33,11 +31,7 @@ class TranslationSettingsFormPart(FormPart):
             form_class=self.form,
             template_name="shuup/front/admin/translation.jinja",
             required=False,
-            kwargs={
-                "initial": {
-                    "available_languages": get_shop_available_languages(self.object)
-                }
-            },
+            kwargs={"initial": {"available_languages": get_shop_available_languages(self.object)}},
         )
 
     def form_valid(self, form):

@@ -1,5 +1,3 @@
-
-
 from http import HTTPStatus
 from typing import Iterable, Tuple
 
@@ -96,11 +94,7 @@ class MultiselectAjaxView(TemplateView):
 
         # if shop is informed, make sure user has access to it
         if request.GET.get("shop"):
-            query_shop = (
-                Shop.objects.get_for_user(request.user)
-                .filter(pk=request.GET["shop"])
-                .first()
-            )
+            query_shop = Shop.objects.get_for_user(request.user).filter(pk=request.GET["shop"]).first()
             if query_shop:
                 shop = query_shop
 
@@ -108,9 +102,7 @@ class MultiselectAjaxView(TemplateView):
         qs = self._filter_query(request, cls, qs, shop, search_mode)
         self.init_search_fields(cls)
         if not self.search_fields:
-            return [
-                {"id": None, "name": _("Couldn't get selections for %s.") % model_name}
-            ]
+            return [{"id": None, "name": _("Couldn't get selections for %s.") % model_name}]
 
         if request.GET.get("search"):
             query = Q()
@@ -153,16 +145,11 @@ class MultiselectAjaxView(TemplateView):
 
         sales_units = request.GET.get("salesUnits")
         if sales_units and issubclass(cls, Product):
-            qs = qs.filter(
-                sales_unit__translations__symbol__in=sales_units.strip().split(",")
-            )
+            qs = qs.filter(sales_unit__translations__symbol__in=sales_units.strip().split(","))
 
         qs = qs.distinct()
         return sorted(
-            [
-                {"id": obj.id, "name": force_text(obj)}
-                for obj in qs[: self.result_limit]
-            ],
+            [{"id": obj.id, "name": force_text(obj)} for obj in qs[: self.result_limit]],
             key=lambda x: x["name"],
         )
 
@@ -198,9 +185,7 @@ class MultiselectAjaxView(TemplateView):
         shop_related_fields = [
             field
             for field in cls._meta.get_fields()
-            if type(field) in related_fields
-            and field.related_model == Shop
-            and field.name in allowed_shop_fields
+            if type(field) in related_fields and field.related_model == Shop and field.name in allowed_shop_fields
         ]
         for shop_field in shop_related_fields:
             qs = qs.filter(**{shop_field.name: shop})
@@ -239,11 +224,7 @@ class ObjectSelectorView(TemplateView):
         user = request.user
         shop = request.GET.get("shop")
         if shop:
-            query_shop = (
-                Shop.objects.get_for_user(request.user)
-                .filter(pk=request.GET["shop"])
-                .first()
-            )
+            query_shop = Shop.objects.get_for_user(request.user).filter(pk=request.GET["shop"]).first()
             if query_shop:
                 shop = query_shop
         else:
@@ -263,9 +244,7 @@ class ObjectSelectorView(TemplateView):
             if not admin_object_selector_class.handles_selector(selector):
                 continue
 
-            admin_object_selector = admin_object_selector_class(
-                selector, shop, user, supplier
-            )
+            admin_object_selector = admin_object_selector_class(selector, shop, user, supplier)
 
             if not admin_object_selector.has_permission():
                 return JsonResponse({}, status=HTTPStatus.NOT_ACCEPTABLE)  # Error 406
@@ -304,9 +283,7 @@ class BaseAdminObjectSelector:
             return False
 
     def has_permission(self) -> bool:
-        return has_permission(
-            self.user, get_object_selector_permission_name(self.model)
-        )
+        return has_permission(self.user, get_object_selector_permission_name(self.model))
 
     def get_objects(self, search_term, *args, **kwargs) -> Iterable[Tuple[int, str]]:
         raise NotImplementedError()

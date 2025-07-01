@@ -1,4 +1,3 @@
-
 from django.forms.models import ModelForm
 from filer.fields.file import AdminFileWidget
 
@@ -11,9 +10,7 @@ class ShuupAdminForm(MultiLanguageModelForm):
         super().__init__(**kwargs)
         for field in self.fields:
             if issubclass(self.fields[field].widget.__class__, AdminFileWidget):
-                self.fields[field].widget = FileDnDUploaderWidget(
-                    upload_path="/default", kind="images", clearable=True
-                )
+                self.fields[field].widget = FileDnDUploaderWidget(upload_path="/default", kind="images", clearable=True)
 
 
 class ShuupAdminFormNoTranslation(ModelForm):
@@ -21,6 +18,4 @@ class ShuupAdminFormNoTranslation(ModelForm):
         super().__init__(**kwargs)
         for field in self.fields:
             if issubclass(self.fields[field].widget.__class__, AdminFileWidget):
-                self.fields[field].widget = FileDnDUploaderWidget(
-                    upload_path="/default", kind="images", clearable=True
-                )
+                self.fields[field].widget = FileDnDUploaderWidget(upload_path="/default", kind="images", clearable=True)

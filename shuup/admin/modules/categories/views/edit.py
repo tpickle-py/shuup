@@ -18,19 +18,13 @@ class CategoryEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
     def get_toolbar(self):
         save_form_id = self.get_save_form_id()
         object = self.get_object()
-        delete_url = (
-            reverse_lazy("shuup_admin:category.delete", kwargs={"pk": object.pk})
-            if object.pk
-            else None
-        )
+        delete_url = reverse_lazy("shuup_admin:category.delete", kwargs={"pk": object.pk}) if object.pk else None
         return get_default_edit_toolbar(self, save_form_id, delete_url=delete_url)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["tour_key"] = "category"
-        context["tour_complete"] = is_tour_complete(
-            get_shop(self.request), "category", user=self.request.user
-        )
+        context["tour_complete"] = is_tour_complete(get_shop(self.request), "category", user=self.request.user)
         if self.object.pk:
             context["title"] = self.object.name
 

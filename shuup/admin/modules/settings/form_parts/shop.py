@@ -1,5 +1,3 @@
-
-
 from decimal import Decimal
 
 import babel.core
@@ -29,9 +27,7 @@ class ShopOrderConfigurationForm(forms.Form):
         ),
     )
 
-    order_reference_number_prefix = forms.IntegerField(
-        label=_("Reference number prefix"), required=False
-    )
+    order_reference_number_prefix = forms.IntegerField(label=_("Reference number prefix"), required=False)
 
     def __init__(self, *args, **kwargs):
         from shuup.admin.modules.settings import consts
@@ -63,15 +59,11 @@ class ShopOrderConfigurationForm(forms.Form):
             OrderReferenceNumberMethod.SHOP_RUNNING.value,
         ]
 
-        self.fields[
-            consts.ORDER_REFERENCE_NUMBER_PREFIX_FIELD
-        ].disabled = self.prefix_disabled
+        self.fields[consts.ORDER_REFERENCE_NUMBER_PREFIX_FIELD].disabled = self.prefix_disabled
 
         decimal_places = 2  # default
         if shop.currency in babel.core.get_global("currency_fractions"):
-            decimal_places = babel.core.get_global("currency_fractions")[shop.currency][
-                0
-            ]
+            decimal_places = babel.core.get_global("currency_fractions")[shop.currency][0]
 
         self.fields[ORDER_MIN_TOTAL_CONFIG_KEY] = FormattedDecimalFormField(
             label=_("Order minimum total"),

@@ -1,10 +1,7 @@
-
 #: ReadtheDocs API URL
 #:
 #: URL for fetching search results via ReadtheDocs API.
-SHUUP_GUIDE_API_URL = (
-    "https://readthedocs.org/api/v2/search/?project=shoop-guide&version=latest&"
-)
+SHUUP_GUIDE_API_URL = "https://readthedocs.org/api/v2/search/?project=shoop-guide&version=latest&"
 
 #: ReadtheDocs link URL.
 #:

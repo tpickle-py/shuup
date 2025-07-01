@@ -32,11 +32,7 @@ class SupplierProductListFilter(SimpleProductListModifier):
                 Q(primary_category__in=categories) | Q(categories__in=categories)
             )
 
-        queryset = (
-            Supplier.objects.enabled(shop=request.shop)
-            .filter(shop_products__in=shop_products_qs)
-            .distinct()
-        )
+        queryset = Supplier.objects.enabled(shop=request.shop).filter(shop_products__in=shop_products_qs).distinct()
         if not queryset.exists():
             return
 
@@ -49,11 +45,7 @@ class SupplierProductListFilter(SimpleProductListModifier):
                     CommaSeparatedListField(
                         required=False,
                         label=get_form_field_label("supplier", _("Suppliers")),
-                        widget=FilterWidget(
-                            choices=[
-                                (supplier.pk, supplier.name) for supplier in queryset
-                            ]
-                        ),
+                        widget=FilterWidget(choices=[(supplier.pk, supplier.name) for supplier in queryset]),
                     ),
                 ),
             ]
@@ -82,9 +74,7 @@ class SupplierProductListFilter(SimpleProductListModifier):
 
     def get_admin_fields(self):
         default_fields = super().get_admin_fields()
-        default_fields[0][1].help_text = _(
-            "Enable this to allow products to be filterable by supplier."
-        )
+        default_fields[0][1].help_text = _("Enable this to allow products to be filterable by supplier.")
         default_fields[1][1].help_text = _(
             "Use a numeric value to set the order in which the supplier filters will appear."
         )

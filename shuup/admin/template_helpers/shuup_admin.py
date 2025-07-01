@@ -1,4 +1,3 @@
-
 """
 This module is installed as the `shuup_admin` template function namespace.
 """
@@ -53,9 +52,7 @@ def is_menu_category_active(context, category, target_url, breadcrumbs=None):
         return force_text(category.identifier) == force_text(always_active_identifier)
 
     identifiers = settings.SHUUP_ALWAYS_ACTIVE_MENU_CATEGORY_IDENTIFIERS
-    if any(
-        identifier for identifier in identifiers if does_identifier_match(identifier)
-    ):
+    if any(identifier for identifier in identifiers if does_identifier_match(identifier)):
         return True
 
     all_target_urls = get_all_target_urls(context["request"], target_url, breadcrumbs)
@@ -64,22 +61,13 @@ def is_menu_category_active(context, category, target_url, breadcrumbs=None):
 
 @contextfunction
 def is_menu_item_active(context, entry_url, target_url, breadcrumbs=None):
-    return bool(
-        entry_url in get_all_target_urls(context["request"], target_url, breadcrumbs)
-    )
+    return bool(entry_url in get_all_target_urls(context["request"], target_url, breadcrumbs))
 
 
 @contextfunction
 def get_menu_entries(context):
     return sorted(
-        itertools.chain(
-            *(
-                c.entries
-                for c in menu.get_menu_entry_categories(
-                    request=context["request"]
-                ).values()
-            )
-        ),
+        itertools.chain(*(c.entries for c in menu.get_menu_entry_categories(request=context["request"]).values())),
         key=(lambda m: m.text),
     )
 
@@ -100,9 +88,7 @@ def get_support_id(context):
 def get_browser_urls(request):
     browser_urls = {}
 
-    for admin_browser_config_provider in get_provide_objects(
-        "admin_browser_config_provider"
-    ):
+    for admin_browser_config_provider in get_provide_objects("admin_browser_config_provider"):
         browser_urls.update(admin_browser_config_provider.get_browser_urls(request))
 
     reversed_browser_urls = {}
@@ -121,9 +107,7 @@ def get_browser_urls(request):
 
 def get_settings(request):
     admin_settings = {}
-    for admin_browser_config_provider in get_provide_objects(
-        "admin_browser_config_provider"
-    ):
+    for admin_browser_config_provider in get_provide_objects("admin_browser_config_provider"):
         admin_settings.update(admin_browser_config_provider.get_gettings(request))
     return admin_settings
 
@@ -253,11 +237,7 @@ def get_logout_url(context):
     if "impersonator_user_id" in request.session:
         stop_impersonate_url = get_url("shuup_admin:stop-impersonating-staff")
 
-    return (
-        stop_impersonate_url
-        if stop_impersonate_url
-        else get_url("shuup_admin:logout") or "/logout"
-    )
+    return stop_impersonate_url if stop_impersonate_url else get_url("shuup_admin:logout") or "/logout"
 
 
 def is_authenticated(user):

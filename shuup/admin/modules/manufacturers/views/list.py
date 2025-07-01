@@ -1,5 +1,3 @@
-
-
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
@@ -26,15 +24,11 @@ class ManufacturerListView(PicotableListView):
             _("Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(
-                filter_field="name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="name", placeholder=_("Filter by name...")),
         ),
     ]
     toolbar_buttons_provider_key = "manufacturer_list_toolbar_provider"
     mass_actions_provider_key = "manufacturer_list_mass_actions_provider"
 
     def get_queryset(self):
-        return Manufacturer.objects.filter(
-            Q(shops=get_shop(self.request)) | Q(shops__isnull=True)
-        )
+        return Manufacturer.objects.filter(Q(shops=get_shop(self.request)) | Q(shops__isnull=True))

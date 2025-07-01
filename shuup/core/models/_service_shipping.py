@@ -23,16 +23,10 @@ class ShippingMethod(Service):
         name=models.CharField(
             max_length=100,
             verbose_name=_("name"),
-            help_text=_(
-                "The shipping method name. This name is shown to the customers on checkout."
-            ),
+            help_text=_("The shipping method name. This name is shown to the customers on checkout."),
         ),
-        description=models.CharField(
-            max_length=500, blank=True, verbose_name=_("description")
-        ),
-        help_text=_(
-            "The description of the shipping method. This name is shown to the customers on checkout."
-        ),
+        description=models.CharField(max_length=500, blank=True, verbose_name=_("description")),
+        help_text=_("The description of the shipping method. This name is shown to the customers on checkout."),
     )
 
     line_type = OrderLineType.SHIPPING
@@ -93,9 +87,7 @@ class Carrier(ServiceProvider):
 
     def _create_service(self, choice_identifier, **kwargs):
         labels = kwargs.pop("labels", None)
-        service = ShippingMethod.objects.create(
-            carrier=self, choice_identifier=choice_identifier, **kwargs
-        )
+        service = ShippingMethod.objects.create(carrier=self, choice_identifier=choice_identifier, **kwargs)
         if labels:
             service.labels.set(labels)
         return service

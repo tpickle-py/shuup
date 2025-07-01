@@ -18,15 +18,13 @@ class ProductCloner:
         product = shop_product.product
         new_product = copy_model_instance(product)
         new_product.sku = f"{product.sku}-{Product.objects.count()}"
-        new_product.name = (f"{product.name} - Copy")
+        new_product.name = f"{product.name} - Copy"
         new_product.save()
 
         for trans in product.translations.all():
             trans_product_data = get_data_dict(trans)
             trans_product_data["master"] = new_product
-            new_trans = Product._parler_meta.get_model_by_related_name(
-                "translations"
-            ).objects.get_or_create(
+            new_trans = Product._parler_meta.get_model_by_related_name("translations").objects.get_or_create(
                 language_code=trans.language_code, master=new_product
             )[0]
             for key, value in trans_product_data.items():
@@ -42,9 +40,9 @@ class ProductCloner:
         for trans in shop_product.translations.all():
             trans_shop_product_data = get_data_dict(trans)
             trans_shop_product_data["master"] = new_shop_product
-            ShopProduct._parler_meta.get_model_by_related_name(
-                "translations"
-            ).objects.get_or_create(**trans_shop_product_data)
+            ShopProduct._parler_meta.get_model_by_related_name("translations").objects.get_or_create(
+                **trans_shop_product_data
+            )
 
         # clone suppliers
         if self.current_supplier:
@@ -75,9 +73,9 @@ class ProductCloner:
             for trans in media.translations.all():
                 trans_product_media_data = get_data_dict(trans)
                 trans_product_media_data["master"] = new_shop_product
-                ProductMedia._parler_meta.get_model_by_related_name(
-                    "translations"
-                ).objects.create(**trans_product_media_data)
+                ProductMedia._parler_meta.get_model_by_related_name("translations").objects.create(
+                    **trans_product_media_data
+                )
             media_copy.save()
 
         product_copied.send(

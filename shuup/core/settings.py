@@ -1,5 +1,3 @@
-
-
 """
 Settings of Shuup Core.
 
@@ -7,7 +5,6 @@ See :ref:`apps-settings` (in :obj:`shuup.apps`) for general information
 about the Shuup settings system.  Especially, when inventing settings of
 your own, the :ref:`apps-naming-settings` section is an important read.
 """
-
 
 #: The home currency for the Shuup installation. All monetary values
 #: are implicitly in this currency unless somehow otherwise specified.

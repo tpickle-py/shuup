@@ -1,5 +1,3 @@
-
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.management import call_command
@@ -39,23 +37,16 @@ class ConsolidateSampleObjectsView(FormView):
 
         # uninstall products
         if form.cleaned_data.get("products", False):
-            for product in Product.objects.filter(
-                pk__in=sample_manager.get_installed_products(shop)
-            ):
+            for product in Product.objects.filter(pk__in=sample_manager.get_installed_products(shop)):
                 product.soft_delete()
 
         # uninstall categories
         if form.cleaned_data.get("categories", False):
-            for category in Category.objects.filter(
-                pk__in=sample_manager.get_installed_categories(shop)
-            ):
+            for category in Category.objects.filter(pk__in=sample_manager.get_installed_categories(shop)):
                 category.soft_delete()
 
         # uninstall carousel
-        if (
-            "shuup.front.apps.carousel" in settings.INSTALLED_APPS
-            and form.cleaned_data.get("carousel", False)
-        ):
+        if "shuup.front.apps.carousel" in settings.INSTALLED_APPS and form.cleaned_data.get("carousel", False):
             carousel = sample_manager.get_installed_carousel(shop)
             if carousel:
                 from shuup.front.apps.carousel.models import Carousel
@@ -83,9 +74,7 @@ class SampleObjectsWizardPane(WizardPane):
     identifier = "sample"
     icon = "shuup_admin/img/configure.png"
     title = _("Sample Data")
-    text = _(
-        "To start shopping right now, please install some sample data into your shop"
-    )
+    text = _("To start shopping right now, please install some sample data into your shop")
 
     def visible(self):
         return not configuration.get(None, "sample_data_wizard_completed", False)

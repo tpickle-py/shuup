@@ -1,5 +1,3 @@
-
-
 import logging
 from html import unescape
 
@@ -23,12 +21,8 @@ class SendEmail(Action):
     template_use = TemplateUse.MULTILINGUAL
     template_fields = {
         "subject": forms.CharField(required=True, label=_("Subject")),
-        "email_template": forms.ChoiceField(
-            choices=[(None, "-----")], label=_("Email Template"), required=False
-        ),
-        "body": forms.CharField(
-            required=True, label=_("Email Body"), widget=CodeEditorWithHTMLPreview
-        ),
+        "email_template": forms.ChoiceField(choices=[(None, "-----")], label=_("Email Template"), required=False),
+        "body": forms.CharField(required=True, label=_("Email Body"), widget=CodeEditorWithHTMLPreview),
         "content_type": forms.ChoiceField(
             required=True,
             label=_("Content type"),
@@ -42,9 +36,7 @@ class SendEmail(Action):
         constant_use=ConstantUse.VARIABLE_OR_CONSTANT,
         required=True,
     )
-    reply_to_address = Binding(
-        _("Reply-To"), type=Email, constant_use=ConstantUse.VARIABLE_OR_CONSTANT
-    )
+    reply_to_address = Binding(_("Reply-To"), type=Email, constant_use=ConstantUse.VARIABLE_OR_CONSTANT)
     cc = Binding(
         _("Carbon Copy (CC)"),
         type=Email,
@@ -111,10 +103,7 @@ class SendEmail(Action):
             return
 
         send_identifier = self.get_value(context, "send_identifier")
-        if (
-            send_identifier
-            and context.log_entry_queryset.filter(identifier=send_identifier).exists()
-        ):
+        if send_identifier and context.log_entry_queryset.filter(identifier=send_identifier).exists():
             context.log(
                 logging.INFO,
                 "Info! %s: Not sending mail, it was already sent (%r).",
@@ -162,9 +151,7 @@ class SendEmail(Action):
         bcc = get_email_list(self.get_value(context, "bcc"))
         cc = get_email_list(self.get_value(context, "cc"))
 
-        subject = " ".join(
-            subject.splitlines()
-        )  # Email headers may not contain newlines
+        subject = " ".join(subject.splitlines())  # Email headers may not contain newlines
         message = EmailMessage(
             subject=subject,
             body=body,
@@ -175,22 +162,14 @@ class SendEmail(Action):
             cc=cc,
         )
         message.content_subtype = content_type
-        notification_email_before_send.send(
-            sender=type(self), action=self, message=message, context=context
-        )
+        notification_email_before_send.send(sender=type(self), action=self, message=message, context=context)
         message.send()
-        context.log(
-            logging.INFO, "Info! %s: Mail sent to %s.", self.identifier, recipient
-        )
+        context.log(logging.INFO, "Info! %s: Mail sent to %s.", self.identifier, recipient)
 
-        notification_email_sent.send(
-            sender=type(self), message=message, context=context
-        )
+        notification_email_sent.send(sender=type(self), message=message, context=context)
 
         if send_identifier:
-            context.add_log_entry_on_log_target(
-                f"Info! Email sent to {recipient}: {subject}", send_identifier
-            )
+            context.add_log_entry_on_log_target(f"Info! Email sent to {recipient}: {subject}", send_identifier)
 
 
 def get_email_list(email):

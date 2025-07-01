@@ -12,9 +12,7 @@ class TestingAdminShopProvider:
 
     def set_shop(self, request, shop=None):
         if not request.user.is_staff:
-            raise PermissionDenied(
-                _("You must have the Access to Admin Panel permission.")
-            )
+            raise PermissionDenied(_("You must have the Access to Admin Panel permission."))
 
         if shop:
             request.session[SHOP_SESSION_KEY] = shop.id

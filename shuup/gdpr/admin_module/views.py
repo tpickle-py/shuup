@@ -92,9 +92,7 @@ class GDPRDownloadDataView(BaseContactView):
 
         data = json.dumps(get_all_contact_data(self.request.shop, contact))
         response = HttpResponse(data, content_type="application/json")
-        filename = "attachment; filename=user_data_{}.json".format(
-            now().strftime("%Y-%m-%d_%H:%M:%S")
-        )
+        filename = "attachment; filename=user_data_{}.json".format(now().strftime("%Y-%m-%d_%H:%M:%S"))
         response["Content-Disposition"] = filename
         return response
 
@@ -117,6 +115,4 @@ class GDPRAnonymizeView(BaseContactView):
             )
 
         messages.success(request, _("Contact was anonymized."))
-        return HttpResponseRedirect(
-            reverse("shuup_admin:contact.detail", kwargs={"pk": contact.pk})
-        )
+        return HttpResponseRedirect(reverse("shuup_admin:contact.detail", kwargs={"pk": contact.pk}))

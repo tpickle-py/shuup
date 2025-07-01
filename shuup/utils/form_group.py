@@ -1,5 +1,3 @@
-
-
 from collections import OrderedDict
 
 import six
@@ -34,9 +32,7 @@ class FormDef:
             prefix_with_dash = f"{prefix}-"
             # Only copy keys from initial that begin with this form's prefix
             new_initial = {
-                k[len(prefix_with_dash) :]: v
-                for (k, v) in group_initial.items()
-                if k.startswith(prefix_with_dash)
+                k[len(prefix_with_dash) :]: v for (k, v) in group_initial.items() if k.startswith(prefix_with_dash)
             }
             # But any explicitly passed kwargs shall be copied as-is
             new_initial.update(kwargs.get("initial", {}))
@@ -47,9 +43,7 @@ class FormDef:
 
 
 class FormGroup:
-    def __init__(
-        self, data=None, files=None, auto_id="id_%s", prefix=None, initial=None
-    ):
+    def __init__(self, data=None, files=None, auto_id="id_%s", prefix=None, initial=None):
         self.form_defs = OrderedDict()
         self.is_bound = data is not None or files is not None
         self.data = data

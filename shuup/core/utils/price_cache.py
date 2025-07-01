@@ -73,9 +73,7 @@ def cache_many_price_info(context, item, quantity, prices_infos, **context_args)
     if not all(isinstance(item, PriceInfo) for item in prices_infos):
         return
 
-    context_kwargs = _get_price_info_cache_key_params(
-        context, item, quantity, **context_args
-    )
+    context_kwargs = _get_price_info_cache_key_params(context, item, quantity, **context_args)
     key = context_cache.get_cache_key_for_context(many=True, **context_kwargs)
     context_cache.set_cached_value(key, prices_infos)
 
@@ -105,9 +103,7 @@ def get_many_cached_price_info(context, item, quantity=1, **context_args):
     :param object item
     :param float|Decimal quantity
     """
-    cache_kwargs = _get_price_info_cache_key_params(
-        context, item, quantity, many=True, **context_args
-    )
+    cache_kwargs = _get_price_info_cache_key_params(context, item, quantity, many=True, **context_args)
     key, prices_infos = context_cache.get_cached_value(**cache_kwargs)
 
     if prices_infos:
@@ -123,11 +119,7 @@ def get_many_cached_price_info(context, item, quantity=1, **context_args):
         # make sure to check all experiration dates
         for price_info in prices_infos:
             # if one price has expired, we invalidate the entire cache
-            if (
-                isinstance(price_info, PriceInfo)
-                and price_info.expires_on
-                and price_info.expires_on < now_timestamp
-            ):
+            if isinstance(price_info, PriceInfo) and price_info.expires_on and price_info.expires_on < now_timestamp:
                 return None
 
     return prices_infos
@@ -141,9 +133,7 @@ def get_cached_price_info(context, item, quantity=1, **context_args):
     :param object item
     :param float|Decimal quantity
     """
-    cache_kwargs = _get_price_info_cache_key_params(
-        context, item, quantity, **context_args
-    )
+    cache_kwargs = _get_price_info_cache_key_params(context, item, quantity, **context_args)
     key, price_info = context_cache.get_cached_value(**cache_kwargs)
 
     from django.utils.timezone import now
@@ -151,12 +141,7 @@ def get_cached_price_info(context, item, quantity=1, **context_args):
     now_ts = to_timestamp(now())
 
     # price has expired
-    if (
-        price_info
-        and isinstance(price_info, PriceInfo)
-        and price_info.expires_on
-        and price_info.expires_on < now_ts
-    ):
+    if price_info and isinstance(price_info, PriceInfo) and price_info.expires_on and price_info.expires_on < now_ts:
         price_info = None
 
     return price_info
@@ -196,11 +181,7 @@ def bump_all_price_caches(shops=None):
 def bump_prices_for_product(product_id):
     if hasattr(product_id, "pk"):
         product_id = product_id.pk
-    for shop_id in set(
-        ShopProduct.objects.filter(product_id=product_id).values_list(
-            "shop_id", flat=True
-        )
-    ):
+    for shop_id in set(ShopProduct.objects.filter(product_id=product_id).values_list("shop_id", flat=True)):
         bump_price_info_cache(shop_id)
 
 

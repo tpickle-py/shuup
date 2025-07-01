@@ -96,9 +96,7 @@ class Chart(six.with_metaclass(abc.ABCMeta)):
         # format value for each data point
         if self.data_type == ChartDataType.CURRENCY:
             for value in data:
-                formatted_data.append(
-                    format_money(Money(value, currency=self.currency).as_rounded())
-                )
+                formatted_data.append(format_money(Money(value, currency=self.currency).as_rounded()))
 
         elif self.data_type == ChartDataType.PERCENT:
             for value in data:

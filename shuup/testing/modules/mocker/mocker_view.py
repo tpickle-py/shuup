@@ -1,5 +1,3 @@
-
-
 import datetime
 import random
 
@@ -49,9 +47,7 @@ class Mockers:
         shop = kwargs.pop("shop")
 
         try:
-            return create_random_order(
-                completion_probability=1, shop=shop, create_payment_for_order_total=True
-            )
+            return create_random_order(completion_probability=1, shop=shop, create_payment_for_order_total=True)
         except Exception:
             pass
 
@@ -116,9 +112,7 @@ class MockerView(FormView):
         return [
             (
                 name,
-                force_text(
-                    getattr(self.mockers, name, None).__doc__ or name
-                ).strip(),
+                force_text(getattr(self.mockers, name, None).__doc__ or name).strip(),
             )
             for name in dir(self.mockers)
             if name.startswith("mock_")

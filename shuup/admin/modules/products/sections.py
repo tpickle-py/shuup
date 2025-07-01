@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.base import Section
@@ -21,13 +19,9 @@ class ProductOrdersSection(Section):
 
         from shuup.admin.utils.permissions import has_permission
 
-        return bool(has_product_id) and has_permission(
-            request.user, "shop_product.edit"
-        )
+        return bool(has_product_id) and has_permission(request.user, "shop_product.edit")
 
     @classmethod
     def get_context_data(cls, product, request=None):
         # TODO: restrict to first 100 orders - do pagination later
-        return (
-            Order.objects.valid().filter(lines__product_id=product.id).distinct()[:100]
-        )
+        return Order.objects.valid().filter(lines__product_id=product.id).distinct()[:100]

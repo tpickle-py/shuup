@@ -1,5 +1,3 @@
-
-
 from shuup.admin.forms import ShuupAdminForm
 from shuup.core.models import CustomCarrier, CustomPaymentProcessor
 

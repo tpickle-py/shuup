@@ -1,4 +1,3 @@
-
 from shuup.admin.form_part import FormPart, TemplatedFormDef
 from shuup.admin.modules.media.forms import MediaFolderForm
 

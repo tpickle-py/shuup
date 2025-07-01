@@ -1,5 +1,3 @@
-
-
 def media_folder_from_folder(folder):
     """
     Gets media folder from folder

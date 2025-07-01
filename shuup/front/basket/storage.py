@@ -1,5 +1,3 @@
-
-
 import logging
 
 from django.conf import settings
@@ -14,10 +12,7 @@ LOGGER = logging.getLogger(__name__)
 
 class DirectSessionBasketStorage(BasketStorage):
     def __init__(self):
-        if (
-            settings.SESSION_SERIALIZER
-            == "django.contrib.sessions.serializers.JSONSerializer"
-        ):  # pragma: no cover
+        if settings.SESSION_SERIALIZER == "django.contrib.sessions.serializers.JSONSerializer":  # pragma: no cover
             raise ImproperlyConfigured(
                 "Error! `DirectSessionBasketStorage` will not work with the JSONSerializer session serializer."
             )
@@ -114,9 +109,7 @@ class DatabaseBasketStorage(BaseDatabaseBasketStorage):
         try:
             if getattr(basket, "shop", None):
                 identifier = self._get_key_for_logs(basket)
-                basket.shop.add_log_entry(
-                    kind=kind, identifier=identifier, message=message, extra=extra
-                )
+                basket.shop.add_log_entry(kind=kind, identifier=identifier, message=message, extra=extra)
         except Exception:
             # This might get called on important checkout related flows it is not
             # good idea to interrupt the business if for some reason this logging

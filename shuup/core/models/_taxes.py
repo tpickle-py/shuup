@@ -1,5 +1,3 @@
-
-
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -16,9 +14,7 @@ from ._base import ChangeProtected, TranslatableShuupModel
 class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
     identifier_attr = "code"
 
-    change_protect_message = _(
-        "Can't change the business critical fields of the Tax that is in use."
-    )
+    change_protect_message = _("Can't change the business critical fields of the Tax that is in use.")
     unprotected_fields = ["enabled"]
 
     code = InternalIdentifierField(
@@ -32,9 +28,7 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
         name=models.CharField(
             max_length=124,
             verbose_name=_("name"),
-            help_text=_(
-                "The name of the tax. It is shown in order lines, in order invoices and confirmations."
-            ),
+            help_text=_("The name of the tax. It is shown in order lines, in order invoices and confirmations."),
         ),
     )
 
@@ -56,9 +50,7 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
         blank=True,
         null=True,
         verbose_name=_("tax amount value"),
-        help_text=_(
-            "The flat amount of the tax. Mutually exclusive with percentage rates tax."
-        ),
+        help_text=_("The flat amount of the tax. Mutually exclusive with percentage rates tax."),
     )
     currency = CurrencyField(
         default=None,
@@ -78,13 +70,9 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
         if self.rate is None and self.amount is None:
             raise ValidationError(_("Either rate or amount tax is required."))
         if self.amount is not None and self.rate is not None:
-            raise ValidationError(
-                _("Can't have both rate and amount taxes. They are mutually exclusive.")
-            )
+            raise ValidationError(_("Can't have both rate and amount taxes. They are mutually exclusive."))
         if self.amount is not None and not self.currency:
-            raise ValidationError(
-                _("Currency is required if the amount tax value is specified.")
-            )
+            raise ValidationError(_("Currency is required if the amount tax value is specified."))
 
     def calculate_amount(self, base_amount):
         """
@@ -97,9 +85,7 @@ class Tax(MoneyPropped, ChangeProtected, TranslatableShuupModel):
             return self.amount
         if self.rate is not None:
             return self.rate * base_amount
-        raise ValueError(
-            f"Error! Calculations of the tax amount failed. Improperly configured tax: {self}."
-        )
+        raise ValueError(f"Error! Calculations of the tax amount failed. Improperly configured tax: {self}.")
 
     def __str__(self):
         text = super().__str__()
@@ -123,10 +109,7 @@ class TaxClass(TranslatableShuupModel):
         name=models.CharField(
             max_length=100,
             verbose_name=_("name"),
-            help_text=_(
-                "The tax class name. "
-                "Tax classes are used to control how taxes are applied to the products."
-            ),
+            help_text=_("The tax class name. Tax classes are used to control how taxes are applied to the products."),
         ),
     )
     enabled = models.BooleanField(

@@ -1,5 +1,3 @@
-
-
 import logging
 import random
 import threading
@@ -54,9 +52,7 @@ def get_cache_duration(cache_key):
     namespace = _get_cache_key_namespace(cache_key)
     duration = settings.SHUUP_CACHE_DURATIONS.get(namespace)
     if duration is None:
-        duration = DEFAULT_CACHE_DURATIONS.get(
-            namespace, settings.SHUUP_DEFAULT_CACHE_DURATION
-        )
+        duration = DEFAULT_CACHE_DURATIONS.get(namespace, settings.SHUUP_DEFAULT_CACHE_DURATION)
     return duration
 
 
@@ -130,9 +126,7 @@ class VersionedCache:
         try:
             self._cache.set(key, value, timeout=timeout, version=version)
         except PicklingError:
-            LOGGER.exception(
-                f"Unable to set cache with key: {key}, value: {value!r}, value could not be pickled."
-            )
+            LOGGER.exception(f"Unable to set cache with key: {key}, value: {value!r}, value could not be pickled.")
 
     def get(self, key, version=None, default=None):
         """

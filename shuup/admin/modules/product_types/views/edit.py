@@ -1,6 +1,3 @@
-
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.forms.fields import ObjectSelect2MultipleField
@@ -51,11 +48,7 @@ class ProductTypeEditView(CreateOrUpdateView):
         product_type = self.get_object()
         save_form_id = self.get_save_form_id()
         delete_url = (
-            reverse_lazy(
-                "shuup_admin:product_type.delete", kwargs={"pk": product_type.pk}
-            )
-            if product_type.pk
-            else None
+            reverse_lazy("shuup_admin:product_type.delete", kwargs={"pk": product_type.pk}) if product_type.pk else None
         )
         toolbar = get_default_edit_toolbar(self, save_form_id)
         if not delete_url:

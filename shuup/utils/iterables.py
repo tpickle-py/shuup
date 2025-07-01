@@ -1,5 +1,3 @@
-
-
 def first(iterable, default=None):
     """
     Get the first item from the iterable, if possible, or return `default`.

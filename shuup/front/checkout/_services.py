@@ -1,4 +1,3 @@
-
 import abc
 
 import six
@@ -55,9 +54,7 @@ class BasicServiceCheckoutPhaseProvider(ServiceCheckoutPhaseProvider):
         assert issubclass(self.phase_class, CheckoutPhaseViewMixin)
         assert issubclass(self.service_provider_class, ServiceProvider)
         if isinstance(service.provider, self.service_provider_class):
-            return checkout_process.instantiate_phase_class(
-                self.phase_class, service=service
-            )
+            return checkout_process.instantiate_phase_class(self.phase_class, service=service)
         return None
 
 

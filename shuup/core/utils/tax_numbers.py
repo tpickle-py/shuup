@@ -1,6 +1,3 @@
-
-
-
 from .vat import VatCannotIdentifyValidationError, verify_vat
 
 

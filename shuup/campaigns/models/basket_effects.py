@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -28,9 +27,7 @@ class BasketDiscountEffect(PolymorphicShuupModel):
         :return: amount of discount to accumulate for the product
         :rtype: Price
         """
-        raise NotImplementedError(
-            "Error! Not implemented: `BasketDiscountEffect` -> `apply_for_basket()`."
-        )
+        raise NotImplementedError("Error! Not implemented: `BasketDiscountEffect` -> `apply_for_basket()`.")
 
 
 class BasketDiscountAmount(BasketDiscountEffect):
@@ -88,9 +85,7 @@ class BasketDiscountPercentage(BasketDiscountEffect):
         self.discount_percentage = value
 
     def apply_for_basket(self, order_source):
-        total_price_of_products = get_total_price_of_products(
-            order_source, self.campaign
-        )
+        total_price_of_products = get_total_price_of_products(order_source, self.campaign)
         return total_price_of_products * self.value
 
 
@@ -124,11 +119,7 @@ class DiscountPercentageFromUndiscounted(BasketDiscountEffect):
         from shuup.campaigns.models import CatalogCampaign
 
         campaign = self.campaign
-        supplier = (
-            campaign.supplier
-            if hasattr(campaign, "supplier") and campaign.supplier
-            else None
-        )
+        supplier = campaign.supplier if hasattr(campaign, "supplier") and campaign.supplier else None
         discounted_base_amount = get_total_price_of_products(order_source, campaign)
 
         context = PricingContext(order_source.shop, order_source.customer)
@@ -137,8 +128,6 @@ class DiscountPercentageFromUndiscounted(BasketDiscountEffect):
                 continue
 
             product = line.product
-            if CatalogCampaign.get_matching(
-                context, product.get_shop_instance(order_source.shop)
-            ):
+            if CatalogCampaign.get_matching(context, product.get_shop_instance(order_source.shop)):
                 discounted_base_amount -= line.price
         return discounted_base_amount * self.value

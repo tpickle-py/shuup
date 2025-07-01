@@ -33,9 +33,7 @@ class StockAdjustmentForm(forms.Form):
         self.decimals = 0
         if sales_unit:
             self.decimals = sales_unit.decimals
-            self.fields["delta"] = FormattedDecimalFormField(
-                label=_("Quantity"), decimal_places=sales_unit.decimals
-            )
+            self.fields["delta"] = FormattedDecimalFormField(label=_("Quantity"), decimal_places=sales_unit.decimals)
 
     def clean_delta(self):
         delta = self.cleaned_data.get("delta")
@@ -61,9 +59,7 @@ class AlertLimitForm(forms.Form):
         self.decimals = 0
         if sales_unit:
             self.decimals = sales_unit.decimals
-            self.fields["alert_limit"] = forms.DecimalField(
-                label=_("Alert limit"), decimal_places=sales_unit.decimals
-            )
+            self.fields["alert_limit"] = forms.DecimalField(label=_("Alert limit"), decimal_places=sales_unit.decimals)
 
     def clean_alert_limit(self):
         alert_limit = self.cleaned_data.get("alert_limit")

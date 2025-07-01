@@ -13,9 +13,7 @@ def generate_multilanguage_slugs(object, name_getter, slug_length=128):
             translation.refresh_from_db()
         except ObjectDoesNotExist:
             # For some reason the `get_translation` raises if the object is created recently
-            translation = translations_model.objects.filter(
-                master_id=object.id, language_code=language_code
-            ).first()
+            translation = translations_model.objects.filter(master_id=object.id, language_code=language_code).first()
             if not translation:
                 # Guessing the translation is deleted recently so let's just skip this language
                 continue

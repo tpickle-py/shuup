@@ -18,9 +18,7 @@ def run_event(event, shop):
     """
 
     # TODO: Add possible asynchronous implementation.
-    for script in Script.objects.filter(
-        event_identifier=event.identifier, enabled=True, shop=shop
-    ):
+    for script in Script.objects.filter(event_identifier=event.identifier, enabled=True, shop=shop):
         try:
             script.execute(context=Context.from_event(event, shop))
         except Exception:  # pragma: no cover

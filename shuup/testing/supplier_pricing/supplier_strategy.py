@@ -32,9 +32,7 @@ class CheapestSupplierPriceSupplierStrategy:
         enabled_suppliers = Supplier.objects.enabled(shop=shop)
 
         supplier_price = (
-            SupplierPrice.objects.filter(
-                shop=shop, product_id=product_id, supplier__in=enabled_suppliers
-            )
+            SupplierPrice.objects.filter(shop=shop, product_id=product_id, supplier__in=enabled_suppliers)
             .select_related("supplier")
             .order_by("amount_value")
             .first()

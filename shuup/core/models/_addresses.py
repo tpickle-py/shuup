@@ -1,5 +1,3 @@
-
-
 import six
 from django.conf import settings
 from django.db import models
@@ -16,93 +14,93 @@ from ._base import ChangeProtected, ShuupModel
 
 REGION_ISO3166 = {
     "europe": {
-            "AD",
-            "AL",
-            "AM",
-            "AT",
-            "AX",
-            "AZ",
-            "BA",
-            "BE",
-            "BG",
-            "BY",
-            "CH",
-            "CY",
-            "CZ",
-            "DE",
-            "DK",
-            "EE",
-            "ES",
-            "FI",
-            "FO",
-            "FR",
-            "GB",
-            "GE",
-            "GG",
-            "GI",
-            "GR",
-            "HR",
-            "HU",
-            "IE",
-            "IM",
-            "IS",
-            "IT",
-            "JE",
-            "KZ",
-            "LI",
-            "LT",
-            "LU",
-            "LV",
-            "MC",
-            "MD",
-            "ME",
-            "MK",
-            "MT",
-            "NL",
-            "NO",
-            "PL",
-            "PT",
-            "RO",
-            "RS",
-            "RU",
-            "SE",
-            "SI",
-            "SJ",
-            "SK",
-            "SM",
-            "TR",
-            "UA",
-            "VA",
-        },
+        "AD",
+        "AL",
+        "AM",
+        "AT",
+        "AX",
+        "AZ",
+        "BA",
+        "BE",
+        "BG",
+        "BY",
+        "CH",
+        "CY",
+        "CZ",
+        "DE",
+        "DK",
+        "EE",
+        "ES",
+        "FI",
+        "FO",
+        "FR",
+        "GB",
+        "GE",
+        "GG",
+        "GI",
+        "GR",
+        "HR",
+        "HU",
+        "IE",
+        "IM",
+        "IS",
+        "IT",
+        "JE",
+        "KZ",
+        "LI",
+        "LT",
+        "LU",
+        "LV",
+        "MC",
+        "MD",
+        "ME",
+        "MK",
+        "MT",
+        "NL",
+        "NO",
+        "PL",
+        "PT",
+        "RO",
+        "RS",
+        "RU",
+        "SE",
+        "SI",
+        "SJ",
+        "SK",
+        "SM",
+        "TR",
+        "UA",
+        "VA",
+    },
     "european-union": {
-            "AT",
-            "BE",
-            "BG",
-            "CY",
-            "CZ",
-            "DE",
-            "DK",
-            "EE",
-            "ES",
-            "FI",
-            "FR",
-            "GR",
-            "HR",
-            "HU",
-            "IE",
-            "IT",
-            "LT",
-            "LU",
-            "LV",
-            "MT",
-            "NL",
-            "PL",
-            "PT",
-            "RO",
-            "SE",
-            "SI",
-            "SK",
-        },
+        "AT",
+        "BE",
+        "BG",
+        "CY",
+        "CZ",
+        "DE",
+        "DK",
+        "EE",
+        "ES",
+        "FI",
+        "FR",
+        "GR",
+        "HR",
+        "HU",
+        "IE",
+        "IT",
+        "LT",
+        "LU",
+        "LV",
+        "MT",
+        "NL",
+        "PL",
+        "PT",
+        "RO",
+        "SE",
+        "SI",
+        "SK",
+    },
 }
 
 
@@ -135,9 +133,7 @@ class Address(NameMixin, ShuupModel):
         blank=True,
         help_text=_("The name prefix. For example, Mr, Mrs, Ms, Dr, etc."),
     )
-    name = models.CharField(
-        verbose_name=_("name"), max_length=255, help_text=_("The name for the address.")
-    )
+    name = models.CharField(verbose_name=_("name"), max_length=255, help_text=_("The name for the address."))
     suffix = models.CharField(
         verbose_name=_("name suffix"),
         max_length=64,
@@ -163,9 +159,7 @@ class Address(NameMixin, ShuupModel):
         verbose_name=_("tax number"),
         max_length=64,
         blank=True,
-        help_text=_(
-            "The business tax number. For example, EIN in the USA or VAT code in the EU."
-        ),
+        help_text=_("The business tax number. For example, EIN in the USA or VAT code in the EU."),
     )
     phone = models.CharField(
         verbose_name=_("phone"),
@@ -179,9 +173,7 @@ class Address(NameMixin, ShuupModel):
         blank=True,
         help_text=_("The primary email for the address."),
     )
-    street = models.CharField(
-        verbose_name=_("street"), max_length=255, help_text=_("The street address.")
-    )
+    street = models.CharField(verbose_name=_("street"), max_length=255, help_text=_("The street address."))
     street2 = models.CharField(
         verbose_name=_("street (2)"),
         max_length=255,
@@ -200,9 +192,7 @@ class Address(NameMixin, ShuupModel):
         blank=True,
         help_text=_("The address postal/zip code."),
     )
-    city = models.CharField(
-        verbose_name=_("city"), max_length=255, help_text=_("The address city.")
-    )
+    city = models.CharField(verbose_name=_("city"), max_length=255, help_text=_("The address city."))
     region_code = models.CharField(
         verbose_name=_("region code"),
         max_length=64,
@@ -215,15 +205,9 @@ class Address(NameMixin, ShuupModel):
         blank=True,
         help_text=_("The address region, province, or state."),
     )
-    country = CountryField(
-        verbose_name=_("country"), help_text=_("The address country.")
-    )
-    longitude = models.DecimalField(
-        null=True, blank=True, max_digits=9, decimal_places=6
-    )
-    latitude = models.DecimalField(
-        null=True, blank=True, max_digits=9, decimal_places=6
-    )
+    country = CountryField(verbose_name=_("country"), help_text=_("The address country."))
+    longitude = models.DecimalField(null=True, blank=True, max_digits=9, decimal_places=6)
+    latitude = models.DecimalField(null=True, blank=True, max_digits=9, decimal_places=6)
 
     class Meta:
         abstract = True
@@ -350,21 +334,15 @@ class SavedAddress(ShuupModel):
     Model for saving multiple addresses in an 'address book' of sorts.
     """
 
-    owner = models.ForeignKey(
-        on_delete=models.CASCADE, to="Contact", verbose_name=_("owner")
-    )
+    owner = models.ForeignKey(on_delete=models.CASCADE, to="Contact", verbose_name=_("owner"))
     address = models.ForeignKey(
         on_delete=models.CASCADE,
         to=MutableAddress,
         verbose_name=_("address"),
         related_name="saved_addresses",
     )
-    role = EnumIntegerField(
-        SavedAddressRole, verbose_name=_("role"), default=SavedAddressRole.SHIPPING
-    )
-    status = EnumIntegerField(
-        SavedAddressStatus, default=SavedAddressStatus.ENABLED, verbose_name=_("status")
-    )
+    role = EnumIntegerField(SavedAddressRole, verbose_name=_("role"), default=SavedAddressRole.SHIPPING)
+    status = EnumIntegerField(SavedAddressStatus, default=SavedAddressStatus.ENABLED, verbose_name=_("status"))
     title = models.CharField(max_length=255, blank=True, verbose_name=_("title"))
     objects = SavedAddressManager()
 

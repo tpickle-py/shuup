@@ -7,9 +7,7 @@ from shuup.testing.modules.sample_data.data import BUSINESS_SEGMENTS
 
 
 class SampleObjectsWizardForm(forms.Form):
-    BUSINESS_SEGMENT_CHOICES = sorted(
-        [(k, v["name"]) for k, v in BUSINESS_SEGMENTS.items()]
-    )
+    BUSINESS_SEGMENT_CHOICES = sorted([(k, v["name"]) for k, v in BUSINESS_SEGMENTS.items()])
 
     business_segment = forms.ChoiceField(
         label=_("Business Segment"),
@@ -39,15 +37,11 @@ class SampleObjectsWizardForm(forms.Form):
 
         if sample_manager.get_installed_categories(shop):
             self.fields["categories"].initial = True
-            self.fields["categories"].widget = forms.CheckboxInput(
-                attrs={"disabled": True}
-            )
+            self.fields["categories"].widget = forms.CheckboxInput(attrs={"disabled": True})
 
         if sample_manager.get_installed_products(shop):
             self.fields["products"].initial = True
-            self.fields["products"].widget = forms.CheckboxInput(
-                attrs={"disabled": True}
-            )
+            self.fields["products"].widget = forms.CheckboxInput(attrs={"disabled": True})
 
         # no really choices to make - change to a hidden field widget
         if len(BUSINESS_SEGMENTS) == 1:
@@ -57,15 +51,11 @@ class SampleObjectsWizardForm(forms.Form):
         installed_bs = sample_manager.get_installed_business_segment(shop)
         if installed_bs:
             self.fields["business_segment"].initial = installed_bs
-            self.fields["business_segment"].choices = [
-                (installed_bs, BUSINESS_SEGMENTS[installed_bs]["name"])
-            ]
+            self.fields["business_segment"].choices = [(installed_bs, BUSINESS_SEGMENTS[installed_bs]["name"])]
 
         # add the carousel option if its module is installed
         if "shuup.front.apps.carousel" in settings.INSTALLED_APPS:
-            has_installed_carousel = (
-                sample_manager.get_installed_carousel(shop) is not None
-            )
+            has_installed_carousel = sample_manager.get_installed_carousel(shop) is not None
             self.fields["carousel"] = forms.BooleanField(
                 label=_("Install Carousel"),
                 initial=has_installed_carousel,
@@ -86,11 +76,7 @@ class ConsolidateObjectsForm(forms.Form):
             )
 
         if sample_manager.get_installed_products(shop):
-            self.fields["products"] = forms.BooleanField(
-                label=_("Uninstall Products"), initial=False, required=False
-            )
+            self.fields["products"] = forms.BooleanField(label=_("Uninstall Products"), initial=False, required=False)
 
         if sample_manager.get_installed_carousel(shop):
-            self.fields["carousel"] = forms.BooleanField(
-                label=_("Uninstall Carousel"), initial=False, required=False
-            )
+            self.fields["carousel"] = forms.BooleanField(label=_("Uninstall Carousel"), initial=False, required=False)

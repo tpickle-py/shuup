@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.utils.picotable import Column, TextFilter, true_or_false_filter

@@ -1,5 +1,3 @@
-
-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -15,9 +13,7 @@ class CgpBase(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("product"),
     )
-    shop = models.ForeignKey(
-        "shuup.Shop", db_index=True, on_delete=models.CASCADE, verbose_name=_("shop")
-    )
+    shop = models.ForeignKey("shuup.Shop", db_index=True, on_delete=models.CASCADE, verbose_name=_("shop"))
     group = models.ForeignKey(
         "shuup.ContactGroup",
         db_index=True,
@@ -51,9 +47,7 @@ class CgpPrice(MoneyPropped, CgpBase):
 
 
 class CgpDiscount(MoneyPropped, CgpBase):
-    discount_amount = PriceProperty(
-        "discount_amount_value", "shop.currency", "shop.prices_include_tax"
-    )
+    discount_amount = PriceProperty("discount_amount_value", "shop.currency", "shop.prices_include_tax")
     discount_amount_value = MoneyValueField(verbose_name=_("discount amount"))
 
     class Meta(CgpBase.Meta):

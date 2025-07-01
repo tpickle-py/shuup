@@ -40,11 +40,7 @@ class SupplierPricingModule(PricingModule):
             supplier = supplier_strategy().get_supplier(**kwargs)
 
         # Like now in customer group pricing let's take default price from shop product
-        shop_product = (
-            ShopProduct.objects.filter(product_id=product_id, shop=shop)
-            .only("default_price_value")
-            .first()
-        )
+        shop_product = ShopProduct.objects.filter(product_id=product_id, shop=shop).only("default_price_value").first()
 
         if not shop_product:
             return PriceInfo(
@@ -64,9 +60,7 @@ class SupplierPricingModule(PricingModule):
         price = None
         if supplier:
             result = (
-                SupplierPrice.objects.filter(
-                    shop=shop, product_id=product_id, supplier=supplier
-                )
+                SupplierPrice.objects.filter(shop=shop, product_id=product_id, supplier=supplier)
                 .order_by("amount_value")[:1]
                 .values_list("amount_value", flat=True)
             )
@@ -85,9 +79,7 @@ class SupplierPricingModule(PricingModule):
     def index_shop_product(self, shop_product, **kwargs):
         is_variation_parent = shop_product.product.is_variation_parent()
         if is_variation_parent:
-            children_shop_product = ShopProduct.objects.select_related(
-                "product", "shop"
-            ).filter(
+            children_shop_product = ShopProduct.objects.select_related("product", "shop").filter(
                 shop=shop_product.shop,
                 product__variation_parent_id=shop_product.product_id,
             )
@@ -105,8 +97,5 @@ class SupplierPricingModule(PricingModule):
                     shop_id=shop_product.shop_id,
                     supplier_id=supplier_id,
                     catalog_rule=None,
-                    defaults={
-                        "price_value": supplier_price.amount_value
-                        or shop_product.default_price_value
-                    },
+                    defaults={"price_value": supplier_price.amount_value or shop_product.default_price_value},
                 )

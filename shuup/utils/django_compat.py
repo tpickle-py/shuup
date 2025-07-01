@@ -1,4 +1,3 @@
-
 try:
     from django.urls import (
         NoReverseMatch,

@@ -25,10 +25,7 @@ class ProductSelectionConfigForm(GenericPluginForm):
 
         discounts_qs = Discount.objects.filter(
             Q(shop=self.request.shop, active=True),
-            Q(
-                Q(product__isnull=False)
-                | Q(category__isnull=False, exclude_selected_category=False)
-            ),
+            Q(Q(product__isnull=False) | Q(category__isnull=False, exclude_selected_category=False)),
         )
 
         self.fields["discounts"] = forms.ModelMultipleChoiceField(
@@ -48,9 +45,7 @@ class ProductSelectionConfigForm(GenericPluginForm):
         """
         cleaned_data = super().clean()
         if cleaned_data.get("discounts"):
-            cleaned_data["discounts"] = [
-                discount.pk for discount in cleaned_data["discounts"]
-            ]
+            cleaned_data["discounts"] = [discount.pk for discount in cleaned_data["discounts"]]
         return cleaned_data
 
 
@@ -84,12 +79,9 @@ class DiscountedProductsPlugin(TemplatedPlugin):
 
         if discounts:
             # make sure to have only available discounts
-            discounts = Discount.objects.available(shop=context["request"].shop).filter(
-                pk__in=discounts
-            )
+            discounts = Discount.objects.available(shop=context["request"].shop).filter(pk__in=discounts)
             extra_filters = Q(
-                Q(product_discounts__in=discounts)
-                | Q(shop_products__categories__category_discounts__in=discounts)
+                Q(product_discounts__in=discounts) | Q(shop_products__categories__category_discounts__in=discounts)
             )
             products = get_listed_products(
                 context,

@@ -1,5 +1,3 @@
-
-
 from django.contrib import messages
 from django.forms.formsets import DEFAULT_MAX_NUM, DEFAULT_MIN_NUM
 from django.forms.models import BaseModelFormSet, ModelForm

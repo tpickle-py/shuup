@@ -1,5 +1,3 @@
-
-
 from shuup.admin.base import AdminModule, MenuEntry
 from shuup.admin.menu import SETTINGS_MENU_CATEGORY
 from shuup.admin.utils.urls import admin_url

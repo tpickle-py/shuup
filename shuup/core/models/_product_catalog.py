@@ -30,9 +30,7 @@ class ProductCatalogPriceRule(models.Model):
     Store rules for catalog prices
     """
 
-    module_identifier = models.CharField(
-        max_length=100, verbose_name=_("Pricing module identifier")
-    )
+    module_identifier = models.CharField(max_length=100, verbose_name=_("Pricing module identifier"))
     contact_group = models.ForeignKey(
         "shuup.ContactGroup",
         related_name="catalog_prices",
@@ -88,9 +86,7 @@ class ProductCatalogPrice(MoneyPropped, models.Model):
         default=False,
         db_index=True,
         editable=False,
-        help_text=_(
-            "Whether the product is available for purchasing. This status is managed by the supplier module."
-        ),
+        help_text=_("Whether the product is available for purchasing. This status is managed by the supplier module."),
     )
     catalog_rule = models.ForeignKey(
         ProductCatalogPriceRule,
@@ -113,9 +109,7 @@ class ProductCatalogDiscountedPriceRule(models.Model):
     Store rules for discounted prices
     """
 
-    module_identifier = models.CharField(
-        max_length=100, verbose_name=_("Discount module identifier")
-    )
+    module_identifier = models.CharField(max_length=100, verbose_name=_("Discount module identifier"))
     contact_group = models.ForeignKey(
         "shuup.ContactGroup",
         related_name="catalog_discounted_prices",
@@ -130,21 +124,11 @@ class ProductCatalogDiscountedPriceRule(models.Model):
         null=True,
         editable=False,
     )
-    valid_start_date = models.DateTimeField(
-        verbose_name=_("Valid start date and time"), null=True, blank=True
-    )
-    valid_end_date = models.DateTimeField(
-        verbose_name=_("Valid end date and time"), null=True, blank=True
-    )
-    valid_start_hour = models.TimeField(
-        verbose_name=_("Valid start hour"), null=True, blank=True
-    )
-    valid_end_hour = models.TimeField(
-        verbose_name=_("Valid end hour"), null=True, blank=True
-    )
-    valid_weekday = EnumIntegerField(
-        WeekDay, verbose_name=_("Valid weekday"), null=True, blank=True
-    )
+    valid_start_date = models.DateTimeField(verbose_name=_("Valid start date and time"), null=True, blank=True)
+    valid_end_date = models.DateTimeField(verbose_name=_("Valid end date and time"), null=True, blank=True)
+    valid_start_hour = models.TimeField(verbose_name=_("Valid start hour"), null=True, blank=True)
+    valid_end_hour = models.TimeField(verbose_name=_("Valid end hour"), null=True, blank=True)
+    valid_weekday = EnumIntegerField(WeekDay, verbose_name=_("Valid weekday"), null=True, blank=True)
 
     class Meta:
         indexes = [
@@ -186,9 +170,7 @@ class ProductCatalogDiscountedPrice(MoneyPropped, models.Model):
         on_delete=models.CASCADE,
         editable=False,
     )
-    discounted_price = PriceProperty(
-        "discounted_price_value", "shop.currency", "shop.prices_include_tax"
-    )
+    discounted_price = PriceProperty("discounted_price_value", "shop.currency", "shop.prices_include_tax")
     discounted_price_value = MoneyValueField(
         editable=False,
         verbose_name=_("discounted price"),
@@ -203,9 +185,7 @@ class ProductCatalogDiscountedPrice(MoneyPropped, models.Model):
     )
 
     def __str__(self):
-        return (
-            f"{self.product} ({self.shop}, {self.supplier}) = {self.discounted_price}"
-        )
+        return f"{self.product} ({self.shop}, {self.supplier}) = {self.discounted_price}"
 
     class Meta:
         unique_together = ("product", "shop", "supplier", "catalog_rule")

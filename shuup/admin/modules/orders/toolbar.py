@@ -1,5 +1,3 @@
-
-
 import warnings
 
 from django.utils.translation import ugettext_lazy as _
@@ -49,13 +47,9 @@ class OrderDetailToolbar(Toolbar):
 
     def _build_order_set_state_button(self):
         set_status_menu_items = []
-        for status in self.order.status.allowed_next_statuses.all().order_by(
-            "ordering"
-        ):
+        for status in self.order.status.allowed_next_statuses.all().order_by("ordering"):
             btn = PostActionDropdownItem(
-                post_url=reverse(
-                    "shuup_admin:order.set-status", kwargs={"pk": self.order.pk}
-                ),
+                post_url=reverse("shuup_admin:order.set-status", kwargs={"pk": self.order.pk}),
                 name="status",
                 value=status.pk,
                 text=status.name,
@@ -75,9 +69,7 @@ class OrderDetailToolbar(Toolbar):
     def _build_set_complete_button(self):
         self.append(
             PostActionButton(
-                post_url=reverse(
-                    "shuup_admin:order.set-status", kwargs={"pk": self.order.pk}
-                ),
+                post_url=reverse("shuup_admin:order.set-status", kwargs={"pk": self.order.pk}),
                 name="status",
                 value=OrderStatus.objects.get_default_complete().pk,
                 text=_("Set Complete"),
@@ -94,9 +86,7 @@ class OrderDetailToolbar(Toolbar):
     def _build_cancel_button(self):
         self.append(
             PostActionButton(
-                post_url=reverse(
-                    "shuup_admin:order.set-status", kwargs={"pk": self.order.pk}
-                ),
+                post_url=reverse("shuup_admin:order.set-status", kwargs={"pk": self.order.pk}),
                 name="status",
                 value=OrderStatus.objects.get_default_canceled().pk,
                 text=_("Cancel Order"),
@@ -115,9 +105,7 @@ class OrderDetailToolbar(Toolbar):
             URLActionButton(
                 text=_("Edit order"),
                 icon="fa fa-money",
-                disable_reason=_("This order cannot modified at this point")
-                if not self.order.can_edit()
-                else None,
+                disable_reason=_("This order cannot modified at this point") if not self.order.can_edit() else None,
                 url=reverse("shuup_admin:order.edit", kwargs={"pk": self.order.pk}),
                 extra_css_class="btn-info",
             )
@@ -128,16 +116,15 @@ class OrderDetailToolbar(Toolbar):
             warnings.warn(
                 "Warning! `admin_order_toolbar_button` provider is deprecated, "
                 "use `admin_order_toolbar_action_item` instead.",
-                RemovedFromShuupWarning, stacklevel=2,
+                RemovedFromShuupWarning,
+                stacklevel=2,
             )
             self.append(button(self.order))
 
 
 class CreatePaymentAction(DropdownItem):
     def __init__(self, object, **kwargs):
-        kwargs["url"] = reverse(
-            "shuup_admin:order.create-payment", kwargs={"pk": object.pk}
-        )
+        kwargs["url"] = reverse("shuup_admin:order.create-payment", kwargs={"pk": object.pk})
         kwargs["icon"] = "fa fa-money"
         kwargs["text"] = _("Create Payment")
         super().__init__(**kwargs)
@@ -145,32 +132,25 @@ class CreatePaymentAction(DropdownItem):
     @staticmethod
     def visible_for_object(object):
         return object.can_create_payment() and not (
-            (object.is_not_paid() or object.is_deferred())
-            and not object.taxful_total_price
+            (object.is_not_paid() or object.is_deferred()) and not object.taxful_total_price
         )
 
 
 class SetPaidAction(PostActionDropdownItem):
     def __init__(self, object, **kwargs):
-        kwargs["post_url"] = reverse(
-            "shuup_admin:order.set-paid", kwargs={"pk": object.pk}
-        )
+        kwargs["post_url"] = reverse("shuup_admin:order.set-paid", kwargs={"pk": object.pk})
         kwargs["icon"] = "fa fa-exclamation-circle"
         kwargs["text"] = _("Set Paid")
         super().__init__(**kwargs)
 
     @staticmethod
     def visible_for_object(object):
-        return (
-            object.is_not_paid() or object.is_deferred()
-        ) and not object.taxful_total_price
+        return (object.is_not_paid() or object.is_deferred()) and not object.taxful_total_price
 
 
 class CreateRefundAction(DropdownItem):
     def __init__(self, object, **kwargs):
-        kwargs["url"] = reverse(
-            "shuup_admin:order.create-refund", kwargs={"pk": object.pk}
-        )
+        kwargs["url"] = reverse("shuup_admin:order.create-refund", kwargs={"pk": object.pk})
         kwargs["icon"] = "fa fa-dollar"
         kwargs["text"] = _("Create Refund")
         super().__init__(**kwargs)
@@ -182,9 +162,7 @@ class CreateRefundAction(DropdownItem):
 
 class EditAddresses(DropdownItem):
     def __init__(self, object, **kwargs):
-        kwargs["url"] = reverse(
-            "shuup_admin:order.edit-addresses", kwargs={"pk": object.pk}
-        )
+        kwargs["url"] = reverse("shuup_admin:order.edit-addresses", kwargs={"pk": object.pk})
         kwargs["icon"] = "fa fa-address-card"
         kwargs["text"] = _("Edit Addresses")
         super().__init__(**kwargs)

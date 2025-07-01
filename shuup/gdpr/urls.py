@@ -20,9 +20,7 @@ urlpatterns = [
         GDPRDownloadDataView.as_view(),
         name="gdpr_download_data",
     ),
-    url(
-        r"^gdpr/anonymize/$", GDPRAnonymizeView.as_view(), name="gdpr_anonymize_account"
-    ),
+    url(r"^gdpr/anonymize/$", GDPRAnonymizeView.as_view(), name="gdpr_anonymize_account"),
     url(
         r"^gdpr/customer/$",
         GDPRCustomerDashboardView.as_view(),

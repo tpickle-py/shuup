@@ -1,5 +1,3 @@
-
-
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
@@ -69,9 +67,7 @@ class OrderListView(PicotableListView):
             sort_field="taxful_total_price_value",
             display="format_taxful_total_price",
             class_name="text-right",
-            filter_config=RangeFilter(
-                field_type="number", filter_field="taxful_total_price_value"
-            ),
+            filter_config=RangeFilter(field_type="number", filter_field="taxful_total_price_value"),
         ),
         Column(
             "taxless_total_price_value",
@@ -79,9 +75,7 @@ class OrderListView(PicotableListView):
             sort_field="taxless_total_price_value",
             display="format_taxless_total_price",
             class_name="text-right",
-            filter_config=RangeFilter(
-                field_type="number", filter_field="taxless_total_price_value"
-            ),
+            filter_config=RangeFilter(field_type="number", filter_field="taxless_total_price_value"),
         ),
     ]
     related_objects = [
@@ -108,12 +102,7 @@ class OrderListView(PicotableListView):
         return toolbar
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .exclude(deleted=True)
-            .filter(shop=get_shop(self.request))
-        )
+        return super().get_queryset().exclude(deleted=True).filter(shop=get_shop(self.request))
 
     def format_customer_name(self, instance, *args, **kwargs):
         return instance.get_customer_name() or ""

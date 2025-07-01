@@ -29,9 +29,7 @@ from shuup.utils.django_compat import reverse
 logger = logging.getLogger(__name__)
 
 
-IMPORTER_NAMES_MAP = {
-    importer.identifier: importer.name for importer in get_provide_objects("importers")
-}
+IMPORTER_NAMES_MAP = {importer.identifier: importer.name for importer in get_provide_objects("importers")}
 
 
 class ImporterPicotable(Picotable):
@@ -65,8 +63,7 @@ class ImportProcessView(TemplateView):
             stored=True,
             queue="data_import",
             importer=request.GET["importer"],
-            import_mode=request.POST.get("import_mode")
-            or ImportMode.CREATE_UPDATE.value,
+            import_mode=request.POST.get("import_mode") or ImportMode.CREATE_UPDATE.value,
             file_name=request.GET["n"],
             language=request.GET.get("lang"),
             shop_id=shop.pk,
@@ -89,9 +86,7 @@ class ImportProcessView(TemplateView):
         )
         file_importer.prepare()
 
-        settings_form = ImportSettingsForm(
-            data=self.request.POST if self.request.POST else None
-        )
+        settings_form = ImportSettingsForm(data=self.request.POST if self.request.POST else None)
         if settings_form.is_bound:
             settings_form.is_valid()
 
@@ -134,9 +129,7 @@ class ImportView(FormView):
         next_url = request.POST.get("next")
         importer = request.POST.get("importer")
         lang = request.POST.get("language")
-        return redirect(
-            f"{next_url}?n={import_name}&importer={importer}&lang={lang}"
-        )
+        return redirect(f"{next_url}?n={import_name}&importer={importer}&lang={lang}")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -182,9 +175,7 @@ class ExampleFileDownloadView(View):
             raise Http404(_("Invalid file name."))
 
         response = HttpResponse(content_type=example_file.content_type)
-        response["Content-Disposition"] = (
-            f"attachment; filename={example_file.file_name}"
-        )
+        response["Content-Disposition"] = f"attachment; filename={example_file.file_name}"
 
         data = importer_cls.get_example_file_content(example_file, request)
 
@@ -198,9 +189,7 @@ class ExampleFileDownloadView(View):
 
 def get_imports_queryset(request):
     # get only executions from tasks inside `data_import` queue
-    queryset = BackgroundTaskExecution.objects.select_related(
-        "task", "task__user"
-    ).filter(task__queue="data_import")
+    queryset = BackgroundTaskExecution.objects.select_related("task", "task__user").filter(task__queue="data_import")
 
     if not has_permission(request.user, "importer.show-all-imports"):
         shop = get_shop(request)
@@ -224,9 +213,7 @@ class ImportListView(PicotableListView):
             filter_config=DateRangeFilter(),
         ),
         Column("importer", _("Importer"), sortable=False, display="get_importer"),
-        Column(
-            "import_mode", _("Import mode"), sortable=False, display="get_import_mode"
-        ),
+        Column("import_mode", _("Import mode"), sortable=False, display="get_import_mode"),
         Column("user", _("User"), sort_field="task__user", display="get_user"),
         Column(
             "status",
@@ -272,9 +259,7 @@ class ImportListView(PicotableListView):
         return get_imports_queryset(self.request).defer("result", "error_log")
 
     def get_object_url(self, instance):
-        return reverse(
-            "shuup_admin:importer.import.detail", kwargs={"pk": instance.pk}
-        )
+        return reverse("shuup_admin:importer.import.detail", kwargs={"pk": instance.pk})
 
     def get_object_abstract(self, instance, item):
         return [
@@ -317,8 +302,6 @@ class ImportDetailView(DetailView):
             if updated_objects:
                 model = apps.get_model(updated_objects[0]["model"])
                 pks = [obj["pk"] for obj in updated_objects]
-                context["updated_objects"] = model.objects.filter(pk__in=pks).order_by(
-                    "pk"
-                )
+                context["updated_objects"] = model.objects.filter(pk__in=pks).order_by("pk")
 
         return context

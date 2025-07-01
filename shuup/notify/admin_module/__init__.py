@@ -1,5 +1,3 @@
-
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.http.response import JsonResponse
 from django.utils.translation import ugettext_lazy as _
@@ -81,11 +79,7 @@ class NotifyAdminModule(AdminModule):
         shop = get_shop(request)
         if request.method == "POST":
             try:
-                notif = (
-                    NotificationModel.objects.for_user(request.user)
-                    .filter(shop=shop)
-                    .get(pk=pk)
-                )
+                notif = NotificationModel.objects.for_user(request.user).filter(shop=shop).get(pk=pk)
             except ObjectDoesNotExist:
                 return JsonResponse({"error": "Error! No such notification exists."})
             notif.mark_read(request.user)
@@ -94,11 +88,7 @@ class NotifyAdminModule(AdminModule):
 
     def get_notifications(self, request):
         shop = get_shop(request)
-        notif_qs = (
-            NotificationModel.objects.unread_for_user(request.user)
-            .filter(shop=shop)
-            .order_by("-id")[:15]
-        )
+        notif_qs = NotificationModel.objects.unread_for_user(request.user).filter(shop=shop).order_by("-id")[:15]
 
         for notif in notif_qs:
             if notif.priority == Priority.HIGH:
@@ -112,9 +102,7 @@ class NotifyAdminModule(AdminModule):
                 text=notif.message,
                 url=notif.url,
                 kind=kind,
-                dismissal_url=reverse(
-                    "shuup_admin:notify.mark-read", kwargs={"pk": notif.pk}
-                ),
+                dismissal_url=reverse("shuup_admin:notify.mark-read", kwargs={"pk": notif.pk}),
                 datetime=notif.created_on,
             )
 
@@ -151,6 +139,4 @@ class EmailTemplateAdminModule(AdminModule):
         ]
 
     def get_model_url(self, object, kind, shop=None):
-        return derive_model_url(
-            EmailTemplate, "shuup_admin:notify.email_template", object, kind
-        )
+        return derive_model_url(EmailTemplate, "shuup_admin:notify.email_template", object, kind)

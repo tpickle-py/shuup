@@ -1,4 +1,3 @@
-
 import decimal
 
 from . import babel_precision_provider, numbers

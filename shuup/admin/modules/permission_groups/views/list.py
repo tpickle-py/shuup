@@ -1,5 +1,3 @@
-
-
 from django.contrib.auth.models import Group as PermissionGroup
 from django.utils.translation import ugettext_lazy as _
 
@@ -16,9 +14,7 @@ class PermissionGroupListView(PicotableListView):
             _("Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(
-                filter_field="name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="name", placeholder=_("Filter by name...")),
         ),
     ]
     toolbar_buttons_provider_key = "permission_group_list_toolbar_provider"
@@ -28,9 +24,7 @@ class PermissionGroupListView(PicotableListView):
         context = super().get_context_data(**kwargs)
         context["title"] = _("Granular Permission Groups")
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(
-                self.model, return_url="permission_group"
-            )
+            settings_button = SettingsActionButton.for_model(self.model, return_url="permission_group")
         else:
             settings_button = None
         context["toolbar"] = Toolbar(

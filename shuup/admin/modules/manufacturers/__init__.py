@@ -1,5 +1,3 @@
-
-
 from typing import Iterable
 
 from django.utils.translation import ugettext_lazy as _
@@ -47,7 +45,5 @@ class ManufacturerModule(AdminModule):
 
     def get_permissions_help_texts(self) -> Iterable[str]:
         return {
-            get_object_selector_permission_name(Manufacturer): _(
-                "Allow the user to select manufacturers in admin."
-            )
+            get_object_selector_permission_name(Manufacturer): _("Allow the user to select manufacturers in admin.")
         }

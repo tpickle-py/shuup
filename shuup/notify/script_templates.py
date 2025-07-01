@@ -1,5 +1,3 @@
-
-
 import six
 from django.utils.functional import lazy
 from django.utils.safestring import mark_safe

@@ -1,4 +1,3 @@
-
 from shuup.core.models import Shop
 
 

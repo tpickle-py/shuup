@@ -1,6 +1,3 @@
-
-
-
 from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -45,9 +42,7 @@ class WeightBasedPricingFormPart(FormPart):
     )
 
     def __init__(self, request, object):
-        self.component = object.behavior_components.instance_of(
-            WeightBasedPricingBehaviorComponent
-        ).first()
+        self.component = object.behavior_components.instance_of(WeightBasedPricingBehaviorComponent).first()
         if not self.component:
             self.component = WeightBasedPricingBehaviorComponent()
         super().__init__(request, object)

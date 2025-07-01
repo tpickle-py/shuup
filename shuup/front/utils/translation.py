@@ -21,9 +21,7 @@ def get_language_choices(shop=None):
     languages = []
 
     if shop:
-        available_languages = configuration.get(
-            shop, FRONT_AVAILABLE_LANGUAGES_CONFIG_KEY
-        )
+        available_languages = configuration.get(shop, FRONT_AVAILABLE_LANGUAGES_CONFIG_KEY)
         if available_languages:
             available_languages = available_languages.split(",")
 
@@ -44,18 +42,14 @@ def set_shop_available_languages(shop, languages):
     # validate languages
     for language in languages:
         if language not in available_codes:
-            msg = _("`{language_code}` is an invalid language code.").format(
-                language_code=language
-            )
+            msg = _("`{language_code}` is an invalid language code.").format(language_code=language)
             raise ValueError(msg)
 
     configuration.set(shop, FRONT_AVAILABLE_LANGUAGES_CONFIG_KEY, ",".join(languages))
 
 
 def get_shop_available_languages(shop):
-    available_languages = configuration.get(
-        shop, FRONT_AVAILABLE_LANGUAGES_CONFIG_KEY, ""
-    )
+    available_languages = configuration.get(shop, FRONT_AVAILABLE_LANGUAGES_CONFIG_KEY, "")
     if available_languages:
         return available_languages.split(",")
     return []

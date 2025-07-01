@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.conf import settings
 from django.contrib.auth import get_user_model, login, logout
@@ -111,9 +109,7 @@ class RecoverPasswordConfirmView(FormView):
         if not valid:
             raise Problem(_("Error! This recovery link is invalid."))
 
-        return super().dispatch(
-            request, *args, **kwargs
-        )
+        return super().dispatch(request, *args, **kwargs)
 
     @atomic
     def form_valid(self, form):

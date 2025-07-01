@@ -70,9 +70,9 @@ class CategoryLinksPlugin(TemplatedPlugin):
         selected_categories = self.config.get("categories", [])
         show_all_categories = self.config.get("show_all_categories", True)
         request = context.get("request")
-        categories = Category.objects.all_visible(
-            customer=request.customer, shop=request.shop
-        ).prefetch_related("translations")
+        categories = Category.objects.all_visible(customer=request.customer, shop=request.shop).prefetch_related(
+            "translations"
+        )
         if not show_all_categories:
             categories = categories.filter(id__in=selected_categories)
         return {

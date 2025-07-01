@@ -1,5 +1,3 @@
-
-
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
@@ -50,9 +48,7 @@ class CartListView(PicotableListView):
         Column(
             "customer",
             _("Customer"),
-            filter_config=MultiFieldTextFilter(
-                filter_fields=("customer__email", "customer__name")
-            ),
+            filter_config=MultiFieldTextFilter(filter_fields=("customer__email", "customer__name")),
         ),
         Column("product_count", _("Product count"), filter_config=RangeFilter()),
         Column(
@@ -61,9 +57,7 @@ class CartListView(PicotableListView):
             sort_field="taxful_total_price_value",
             display="format_taxful_total_price",
             class_name="text-right",
-            filter_config=RangeFilter(
-                field_type="number", filter_field="taxful_total_price_value"
-            ),
+            filter_config=RangeFilter(field_type="number", filter_field="taxful_total_price_value"),
         ),
     ]
     toolbar_buttons_provider_key = "cart_list_toolbar_provider"

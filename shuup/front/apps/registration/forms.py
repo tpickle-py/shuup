@@ -72,9 +72,7 @@ class PersonRegistrationForm(RegistrationForm):
             user = super().save(*args, **kwargs)
             contact = get_person_contact(user)
             contact.add_to_shop(self.request.shop)
-            person_registration_save.send(
-                sender=type(self), request=self.request, user=user, contact=contact
-            )
+            person_registration_save.send(sender=type(self), request=self.request, user=user, contact=contact)
         return user
 
 
@@ -88,9 +86,7 @@ class CompanyRegistrationForm(FormGroup):
         self.add_form_def("contact_person", ContactPersonForm)
         self.add_form_def("user_account", UserCreationForm)
 
-        for provider_cls in get_provide_objects(
-            "front_company_registration_form_provider"
-        ):
+        for provider_cls in get_provide_objects("front_company_registration_form_provider"):
             provider = provider_cls(self, self.request)
             for definition in provider.get_definitions():
                 self.add_form_def(
@@ -145,7 +141,5 @@ class CompanyRegistrationForm(FormGroup):
             company.add_to_shop(self.request.shop)
             company.members.add(person)
 
-        company_registration_save.send(
-            sender=type(self), request=self.request, user=user, company=company
-        )
+        company_registration_save.send(sender=type(self), request=self.request, user=user, company=company)
         return user

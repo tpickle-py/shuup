@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.forms import HiddenInput
 from django.utils.translation import ugettext_lazy as _
@@ -35,14 +33,11 @@ class ContactGroupPriceDisplayForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         shop = get_shop(self.request)
         if self.instance.pk:
-            self.fields["group"].choices = [
-                (self.instance.group.id, self.instance.group.name)
-            ]
+            self.fields["group"].choices = [(self.instance.group.id, self.instance.group.name)]
             self.fields["group"].initial = self.instance.group
         else:
             self.fields["group"].choices = [
-                (group.id, group.name)
-                for group in get_groups_for_price_display_create(shop)
+                (group.id, group.name) for group in get_groups_for_price_display_create(shop)
             ]
 
         self.fields["shop"] = forms.ModelChoiceField(
@@ -79,9 +74,7 @@ def get_price_display_mode(request, contact_group_price_display):
         return PriceDisplayChoices.NONE.value
     if contact_group.shop:
         assert contact_group.shop == shop
-    price_display = contact_group.price_display_options.for_group_and_shop(
-        contact_group, shop
-    )
+    price_display = contact_group.price_display_options.for_group_and_shop(contact_group, shop)
     taxes = price_display.show_prices_including_taxes
     hide = price_display.hide_prices
     if hide is None and taxes is None:

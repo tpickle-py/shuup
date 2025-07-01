@@ -1,6 +1,3 @@
-
-
-
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.tokens import default_token_generator
@@ -23,9 +20,7 @@ class RequestPasswordView(FormView):
         return RequestPasswordForm
 
     def get_success_url(self):
-        return "{}?email={}".format(
-            reverse("shuup_admin:recover_password"), self.request.POST.get("email")
-        )
+        return "{}?email={}".format(reverse("shuup_admin:recover_password"), self.request.POST.get("email"))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -34,9 +29,7 @@ class RequestPasswordView(FormView):
 
     def form_valid(self, form):
         form.save()
-        msg = _(
-            "A reset password email was sent. Please, follow the instructions to set a new password."
-        )
+        msg = _("A reset password email was sent. Please, follow the instructions to set a new password.")
         messages.success(self.request, msg)
         return HttpResponseRedirect(reverse("shuup_admin:login"))
 

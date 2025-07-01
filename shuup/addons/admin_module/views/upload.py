@@ -1,5 +1,3 @@
-
-
 import os
 import shutil
 import tempfile
@@ -86,11 +84,7 @@ class AddonUploadConfirmView(FormView):
 
         with zipfile.ZipFile(self.get_addon_path()) as zf:
             context["filenames"] = sorted(zf.namelist())
-            pkg_info_path = first(
-                filename
-                for filename in context["filenames"]
-                if filename.endswith("PKG-INFO")
-            )
+            pkg_info_path = first(filename for filename in context["filenames"] if filename.endswith("PKG-INFO"))
             if pkg_info_path:
                 context["pkg_info"] = zf.read(pkg_info_path).decode("UTF-8", "replace")
 

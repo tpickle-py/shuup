@@ -8,9 +8,7 @@ class ShuupSimpleSupplierAppConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     provides = {
         "supplier_module": ["shuup.simple_supplier.module:SimpleSupplierModule"],
-        "admin_product_form_part": [
-            "shuup.simple_supplier.admin_module.forms:SimpleSupplierFormPart"
-        ],
+        "admin_product_form_part": ["shuup.simple_supplier.admin_module.forms:SimpleSupplierFormPart"],
         "admin_module": ["shuup.simple_supplier.admin_module:StocksAdminModule"],
         "notify_event": ["shuup.simple_supplier.notify_events:AlertLimitReached"],
         "notify_script_template": [

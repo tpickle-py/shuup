@@ -48,12 +48,9 @@ class SlideQuerySet(TranslatableQuerySet):
         """
         if not dt:
             dt = now()
-        q = Q(available_from__lte=dt) & (
-            Q(available_to__gte=dt) | Q(available_to__isnull=True)
-        )
+        q = Q(available_from__lte=dt) & (Q(available_to__gte=dt) | Q(available_to__isnull=True))
         qs = self.filter(q)
         return qs
-
 
 
 class Carousel(ShuupModel):
@@ -74,9 +71,7 @@ class Carousel(ShuupModel):
         verbose_name=_("animation"),
         help_text=_("Animation type for cycling slides."),
     )
-    interval = models.IntegerField(
-        default=5, verbose_name=_("interval"), help_text=_("Slide interval in seconds.")
-    )
+    interval = models.IntegerField(default=5, verbose_name=_("interval"), help_text=_("Slide interval in seconds."))
     pause_on_hover = models.BooleanField(
         default=True,
         verbose_name=_("pause on hover"),
@@ -123,11 +118,8 @@ class Carousel(ShuupModel):
         return "fade" if self.animation == CarouselMode.FADE else "slide"
 
 
-
 class Slide(TranslatableShuupModel):
-    carousel = models.ForeignKey(
-        Carousel, related_name="slides", on_delete=models.CASCADE
-    )
+    carousel = models.ForeignKey(Carousel, related_name="slides", on_delete=models.CASCADE)
     name = models.CharField(
         max_length=50,
         blank=True,
@@ -141,9 +133,7 @@ class Slide(TranslatableShuupModel):
         blank=True,
         null=True,
         verbose_name=_("product link"),
-        help_text=_(
-            "Set the product detail page that should be shown when this slide is clicked, if any."
-        ),
+        help_text=_("Set the product detail page that should be shown when this slide is clicked, if any."),
         on_delete=models.CASCADE,
     )
     category_link = models.ForeignKey(
@@ -152,9 +142,7 @@ class Slide(TranslatableShuupModel):
         blank=True,
         null=True,
         verbose_name=_("category link"),
-        help_text=_(
-            "Set the product category page that should be shown when this slide is clicked, if any."
-        ),
+        help_text=_("Set the product category page that should be shown when this slide is clicked, if any."),
         on_delete=models.CASCADE,
     )
     cms_page_link = models.ForeignKey(
@@ -163,9 +151,7 @@ class Slide(TranslatableShuupModel):
         verbose_name=_("cms page link"),
         blank=True,
         null=True,
-        help_text=_(
-            "Set the web page that should be shown when the slide is clicked, if any."
-        ),
+        help_text=_("Set the web page that should be shown when the slide is clicked, if any."),
         on_delete=models.CASCADE,
     )
     ordering = models.IntegerField(
@@ -181,9 +167,7 @@ class Slide(TranslatableShuupModel):
         LinkTargetType,
         default=LinkTargetType.CURRENT,
         verbose_name=_("link target"),
-        help_text=_(
-            "Set this to current if clicking on this slide should open a new browser tab."
-        ),
+        help_text=_("Set this to current if clicking on this slide should open a new browser tab."),
     )
     available_from = models.DateTimeField(
         null=True,
@@ -242,9 +226,7 @@ class Slide(TranslatableShuupModel):
             blank=True,
             null=True,
             verbose_name=_("external link"),
-            help_text=_(
-                "Set the external site that should be shown when this slide is clicked, if any."
-            ),
+            help_text=_("Set the external site that should be shown when this slide is clicked, if any."),
         ),
         image=FilerImageField(
             blank=True,
@@ -266,9 +248,7 @@ class Slide(TranslatableShuupModel):
 
     def get_translated_field(self, attr):
         if not self.safe_translation_getter(attr):
-            return self.safe_translation_getter(
-                attr, language_code=settings.PARLER_DEFAULT_LANGUAGE_CODE
-            )
+            return self.safe_translation_getter(attr, language_code=settings.PARLER_DEFAULT_LANGUAGE_CODE)
         return getattr(self, attr)
 
     def get_link_url(self):
@@ -352,9 +332,7 @@ class Slide(TranslatableShuupModel):
         This will return None if there is no file
         :rtype: easy_thumbnails.files.ThumbnailFile|None
         """
-        kwargs.setdefault(
-            "size", (self.carousel.image_width, self.carousel.image_height)
-        )
+        kwargs.setdefault("size", (self.carousel.image_width, self.carousel.image_height))
         kwargs.setdefault("crop", True)  # sane defaults
         kwargs.setdefault("upscale", True)  # sane defaults
 

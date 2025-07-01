@@ -1,5 +1,3 @@
-
-
 import decimal
 
 from django.http import Http404
@@ -28,31 +26,21 @@ class ProductPriceView(ProductDetailView):
         if quantity is not None:
             context["quantity"] = context["product"].sales_unit.round(quantity)
         else:
-            self.template_name = (
-                "shuup/front/product/detail_order_section_no_product.jinja"
-            )
+            self.template_name = "shuup/front/product/detail_order_section_no_product.jinja"
             return context
 
         supplier_pk = self.request.GET.get("supplier")
         if supplier_pk:
-            context["supplier"] = (
-                Supplier.objects.enabled(shop=shop_product.shop)
-                .filter(pk=int(supplier_pk))
-                .first()
-            )
+            context["supplier"] = Supplier.objects.enabled(shop=shop_product.shop).filter(pk=int(supplier_pk)).first()
         else:
             context["supplier"] = shop_product.get_supplier(
                 customer=self.request.customer,
                 quantity=(quantity or shop_product.minimum_purchase_quantity),
             )
 
-        is_orderable = shop_product.is_orderable(
-            context["supplier"], self.request.customer, context["quantity"]
-        )
+        is_orderable = shop_product.is_orderable(context["supplier"], self.request.customer, context["quantity"])
         if not context["product"] or not is_orderable:
-            self.template_name = (
-                "shuup/front/product/detail_order_section_no_product.jinja"
-            )
+            self.template_name = "shuup/front/product/detail_order_section_no_product.jinja"
             return context
 
         return context
@@ -69,11 +57,7 @@ class ProductPriceView(ProductDetailView):
             return shop_product.unit.from_display(decimal.Decimal(quantity))
 
     def get_variation_variables(self):
-        return {
-            int(k.split("_")[-1]): int(v)
-            for (k, v) in self.request.GET.items()
-            if k.startswith("var_")
-        }
+        return {int(k.split("_")[-1]): int(v) for (k, v) in self.request.GET.items() if k.startswith("var_")}
 
     def get(self, request, *args, **kwargs):
         # Skipping ProductPriceView.super for a reason.

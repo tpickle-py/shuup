@@ -1,4 +1,3 @@
-
 from django.contrib.auth import get_user_model
 from enumfields.drf.fields import EnumField
 from rest_framework import serializers

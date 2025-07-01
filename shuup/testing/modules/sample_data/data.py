@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 BUSINESS_SEGMENTS = {
@@ -15,65 +13,48 @@ BUSINESS_SEGMENTS = {
         "products": [
             {
                 "name": _("USpicy Makeup Brushes"),
-                "description": _(
-                    "Professional 10 pieces makeup brush set with soft "
-                    "oval toothbrush design"
-                ),
+                "description": _("Professional 10 pieces makeup brush set with soft oval toothbrush design"),
                 "image": "default/product01.jpg",
             },
             {
                 "name": _("Precision Eyelash Curler"),
-                "description": _(
-                    "Precision Eyelash Curler is the professional choice "
-                    "of makeup artists everywhere."
-                ),
+                "description": _("Precision Eyelash Curler is the professional choice of makeup artists everywhere."),
                 "image": "default/product02.jpg",
             },
             {
                 "name": _("PureMoist Lipstick"),
                 "description": _(
-                    "PureMoist Lipstick has a moisturizing formula "
-                    "designed to quench, comfort and protect lips."
+                    "PureMoist Lipstick has a moisturizing formula designed to quench, comfort and protect lips."
                 ),
                 "image": "default/product03.jpg",
             },
             {
                 "name": _("Clinique Happy"),
-                "description": _(
-                    "A hint of citrus. A wealth of flowers. A mix of emotions."
-                ),
+                "description": _("A hint of citrus. A wealth of flowers. A mix of emotions."),
                 "image": "default/product04.jpg",
             },
             {
                 "name": _("Tommy Girld by Tommy Hilfiger Perfume"),
-                "description": _(
-                    "A refreshing and energetic floral - with low "
-                    "notes of sandalwood and heather."
-                ),
+                "description": _("A refreshing and energetic floral - with low notes of sandalwood and heather."),
                 "image": "default/product05.jpg",
             },
             {
                 "name": _("Bvlgari Omnia Crystalline Eau de Toilette"),
                 "description": _(
-                    "Give yourself over to this fragrance as "
-                    "intoxicating and pure as a woman's soul is fragile."
+                    "Give yourself over to this fragrance as intoxicating and pure as a woman's soul is fragile."
                 ),
                 "image": "default/product06.jpg",
             },
             {
                 "name": _("Still Jennifer Lopez Perfume"),
                 "description": _(
-                    "Be driven with vitality and confidence, "
-                    "as you wear the Jennifer Lopez Still fragrance."
+                    "Be driven with vitality and confidence, as you wear the Jennifer Lopez Still fragrance."
                 ),
                 "image": "default/product07.jpg",
             },
             {
                 "name": _("La Vie Est Belle"),
-                "description": _(
-                    "A captivating new scent joins the "
-                    "La vie est belle path to happiness."
-                ),
+                "description": _("A captivating new scent joins the La vie est belle path to happiness."),
                 "image": "default/product08.jpg",
             },
             {
@@ -83,10 +64,7 @@ BUSINESS_SEGMENTS = {
             },
             {
                 "name": _("Beard & Stash Oil"),
-                "description": _(
-                    "This oil is natural, and is made with the "
-                    "perfect combination of oils."
-                ),
+                "description": _("This oil is natural, and is made with the perfect combination of oils."),
                 "image": "default/product10.jpg",
             },
         ],

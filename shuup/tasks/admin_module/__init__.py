@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.base import AdminModule, MenuEntry, SearchResult
@@ -83,9 +81,7 @@ class TaskAdminModule(AdminModule):
             for task in tasks:
                 yield SearchResult(
                     text=force_text(
-                        "{task_name} [{task_status}]".format(
-                            **{"task_name": task.name, "task_status": task.status}
-                        )
+                        "{task_name} [{task_status}]".format(**{"task_name": task.name, "task_status": task.status})
                     ),
                     url=get_model_url(task, shop=shop),
                     category=_("Tasks"),

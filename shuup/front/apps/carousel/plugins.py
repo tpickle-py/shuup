@@ -55,11 +55,7 @@ class CarouselPlugin(TemplatedPlugin):
         active = self.config.get("active")
         return {
             "request": request,
-            "carousel": Carousel.objects.filter(
-                id=carousel_id, shops=request.shop
-            ).first()
-            if carousel_id
-            else None,
+            "carousel": Carousel.objects.filter(id=carousel_id, shops=request.shop).first() if carousel_id else None,
             "active": active,
             "type": "carousel",
         }

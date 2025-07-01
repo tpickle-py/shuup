@@ -13,7 +13,5 @@ class PermissionGroupAdminObjectSelector(BaseAdminObjectSelector):
         """
         Returns an iterable of tuples of (id, text)
         """
-        qs = PermissionGroup.objects.filter(name__icontains=search_term).values_list(
-            "id", "name"
-        )[: self.search_limit]
+        qs = PermissionGroup.objects.filter(name__icontains=search_term).values_list("id", "name")[: self.search_limit]
         return [{"id": id, "name": name} for id, name in list(qs)]

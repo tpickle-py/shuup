@@ -87,9 +87,7 @@ class Builder:
 
         node_modules_exists = os.path.exists(os.path.join(dir, "node_modules"))
         if not self.opts.no_install or not node_modules_exists or self.opts.production:
-            subprocess.check_call(
-                self.install_command, cwd=dir, env=self.env, shell=shell
-            )
+            subprocess.check_call(self.install_command, cwd=dir, env=self.env, shell=shell)
 
         command = self.build_command
         if self.opts.force:

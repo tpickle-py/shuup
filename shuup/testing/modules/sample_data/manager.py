@@ -1,5 +1,3 @@
-
-
 from shuup import configuration
 
 SAMPLE_BUSINESS_SEGMENT_KEY = "sample_business_segment"
@@ -58,8 +56,4 @@ def save_carousel(shop, carousel_pk):
 
 def has_installed_samples(shop):
     """Returns whether there is some sample data installed"""
-    return bool(
-        get_installed_products(shop)
-        or get_installed_categories(shop)
-        or get_installed_carousel(shop)
-    )
+    return bool(get_installed_products(shop) or get_installed_categories(shop) or get_installed_carousel(shop))

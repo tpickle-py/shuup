@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.toolbar import PostActionButton
@@ -18,9 +16,7 @@ class AnonymizeContactToolbarButton(PostActionButton):
         )
         kwargs["name"] = "download"
         kwargs["value"] = "1"
-        kwargs["post_url"] = reverse(
-            "shuup_admin:gdpr.anonymize", kwargs={"pk": object.pk}
-        )
+        kwargs["post_url"] = reverse("shuup_admin:gdpr.anonymize", kwargs={"pk": object.pk})
         super().__init__(**kwargs)
 
     @staticmethod
@@ -35,9 +31,7 @@ class DownloadDataToolbarButton(PostActionButton):
         kwargs["name"] = "download"
         kwargs["value"] = "1"
         kwargs["extra_css_class"] = "dropdown-item"
-        kwargs["post_url"] = reverse(
-            "shuup_admin:gdpr.download_data", kwargs={"pk": object.pk}
-        )
+        kwargs["post_url"] = reverse("shuup_admin:gdpr.download_data", kwargs={"pk": object.pk})
         super().__init__(**kwargs)
 
     @staticmethod

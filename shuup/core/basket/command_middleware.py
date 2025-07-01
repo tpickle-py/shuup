@@ -8,9 +8,7 @@ class BaseBasketCommandMiddleware:
     A basket command middleware to pre-process the kwargs and post-process the response.
     """
 
-    def preprocess_kwargs(
-        self, basket: BaseBasket, request: HttpRequest, command: str, kwargs: dict
-    ) -> dict:
+    def preprocess_kwargs(self, basket: BaseBasket, request: HttpRequest, command: str, kwargs: dict) -> dict:
         """
         Mutate the `kwargs` that will be passed to the `handler`.
         It is possible to raise a `ValidationError` exception if required.

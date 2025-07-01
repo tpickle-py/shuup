@@ -1,5 +1,3 @@
-
-
 from django.db.transaction import atomic
 from django.utils.translation import ugettext_lazy as _
 
@@ -87,7 +85,5 @@ class ContactEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView
         contact_type = self.get_contact_type()
         context["contact_type"] = contact_type
         if not self.object.pk:
-            context["title"] = (
-                _("New Company") if contact_type == "company" else _("New Contact")
-            )
+            context["title"] = _("New Company") if contact_type == "company" else _("New Contact")
         return context

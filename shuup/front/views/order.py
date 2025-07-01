@@ -12,14 +12,10 @@ class OrderCompleteView(DetailView):
 
     def render_to_response(self, context, **response_kwargs):
         order_complete_viewed.send(sender=self, order=self.object, request=self.request)
-        return super().render_to_response(
-            context, **response_kwargs
-        )
+        return super().render_to_response(context, **response_kwargs)
 
     def get_object(self, queryset=None):
-        return get_object_or_404(
-            self.model, pk=self.kwargs["pk"], key=self.kwargs["key"]
-        )
+        return get_object_or_404(self.model, pk=self.kwargs["pk"], key=self.kwargs["key"])
 
 
 class OrderRequiresVerificationView(DetailView):
@@ -27,9 +23,7 @@ class OrderRequiresVerificationView(DetailView):
     model = Order
 
     def get_object(self, queryset=None):
-        return get_object_or_404(
-            self.model, pk=self.kwargs["pk"], key=self.kwargs["key"]
-        )
+        return get_object_or_404(self.model, pk=self.kwargs["pk"], key=self.kwargs["key"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

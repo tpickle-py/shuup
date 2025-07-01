@@ -170,18 +170,12 @@ class Priceful:
     @property
     def raw_taxful_price(self):
         price = self.price
-        return (
-            price if price.includes_tax else TaxfulPrice(price.amount + self.tax_amount)
-        )
+        return price if price.includes_tax else TaxfulPrice(price.amount + self.tax_amount)
 
     @property
     def raw_taxless_price(self):
         price = self.price
-        return (
-            TaxlessPrice(price.amount - self.tax_amount)
-            if price.includes_tax
-            else price
-        )
+        return TaxlessPrice(price.amount - self.tax_amount) if price.includes_tax else price
 
     @property
     def taxful_price(self):
@@ -189,9 +183,7 @@ class Priceful:
         :rtype: TaxfulPrice
         """
         price = self.price
-        return (
-            price if price.includes_tax else TaxfulPrice(price.amount + self.tax_amount)
-        ).as_rounded()
+        return (price if price.includes_tax else TaxfulPrice(price.amount + self.tax_amount)).as_rounded()
 
     @property
     def taxless_price(self):
@@ -199,11 +191,7 @@ class Priceful:
         :rtype: TaxlessPrice
         """
         price = self.price
-        return (
-            TaxlessPrice(price.amount - self.tax_amount)
-            if price.includes_tax
-            else price
-        ).as_rounded()
+        return (TaxlessPrice(price.amount - self.tax_amount) if price.includes_tax else price).as_rounded()
 
     taxful_base_price = TaxfulFrom("base_price")
     taxless_base_price = TaxlessFrom("base_price")

@@ -67,12 +67,8 @@ class TaxModule(six.with_metaclass(abc.ABCMeta)):
 
     def get_context_from_data(self, **context_data):
         customer = context_data.get("customer")
-        customer_tax_group = context_data.get("customer_tax_group") or (
-            customer.tax_group if customer else None
-        )
-        customer_tax_number = context_data.get("customer_tax_number") or getattr(
-            customer, "tax_number", None
-        )
+        customer_tax_group = context_data.get("customer_tax_group") or (customer.tax_group if customer else None)
+        customer_tax_number = context_data.get("customer_tax_number") or getattr(customer, "tax_number", None)
         location = (
             context_data.get("location")
             or context_data.get("shipping_address")
@@ -100,11 +96,7 @@ class TaxModule(six.with_metaclass(abc.ABCMeta)):
             from shuup.core.models import ShippingMode
 
             # if there is some line that is shippable, use the shipping address
-            if (
-                source.lines.products()
-                .filter(product__shipping_mode=ShippingMode.SHIPPED)
-                .exists()
-            ):
+            if source.lines.products().filter(product__shipping_mode=ShippingMode.SHIPPED).exists():
                 location = source.shipping_address
             else:
                 location = source.billing_address
@@ -140,9 +132,7 @@ class TaxModule(six.with_metaclass(abc.ABCMeta)):
 
         if lines_without_tax_class:
             tax_class_proportions = get_tax_class_proportions(taxed_lines)
-            self._add_proportional_taxes(
-                context, tax_class_proportions, lines_without_tax_class
-            )
+            self._add_proportional_taxes(context, tax_class_proportions, lines_without_tax_class)
 
     def _add_proportional_taxes(self, context, tax_class_proportions, lines):
         if not tax_class_proportions:
@@ -219,19 +209,12 @@ class TaxModule(six.with_metaclass(abc.ABCMeta)):
             # Can't calculate proportions, if total is zero
             return []
 
-        return [
-            (tax_class, tax_class_total / total)
-            for (tax_class, tax_class_total) in total_by_tax_class.items()
-        ]
+        return [(tax_class, tax_class_total / total) for (tax_class, tax_class_total) in total_by_tax_class.items()]
 
-    def _refund_amount(
-        self, context, order, index, text, amount, tax_proportions, supplier=None
-    ):
+    def _refund_amount(self, context, order, index, text, amount, tax_proportions, supplier=None):
         taxes = list(
             chain.from_iterable(
-                self.get_taxed_price(
-                    context, TaxfulPrice(amount * factor), tax_class
-                ).taxes
+                self.get_taxed_price(context, TaxfulPrice(amount * factor), tax_class).taxes
                 for (tax_class, factor) in tax_proportions
             )
         )
@@ -285,9 +268,7 @@ class TaxModule(six.with_metaclass(abc.ABCMeta)):
             quantity = refund.get("quantity", 0)
             parent_line = refund.get("line", "amount")
 
-            if not settings.SHUUP_ALLOW_ARBITRARY_REFUNDS and (
-                not parent_line or parent_line == "amount"
-            ):
+            if not settings.SHUUP_ALLOW_ARBITRARY_REFUNDS and (not parent_line or parent_line == "amount"):
                 raise RefundArbitraryRefundsNotAllowedException
 
             restock_products = refund.get("restock_products")
@@ -327,28 +308,20 @@ class TaxModule(six.with_metaclass(abc.ABCMeta)):
                     from shuup.core.suppliers.enums import StockAdjustmentType
 
                     # check whether the line has a valid supplier in case products must be restocked
-                    if (
-                        parent_line.supplier
-                        and not parent_line.supplier.supplier_modules.exists()
-                    ):
+                    if parent_line.supplier and not parent_line.supplier.supplier_modules.exists():
                         raise SupplierHasNoSupplierModules(
                             "There are items to restock but the supplier has no supplier module."
                         )
 
                     # restock from the unshipped quantity first
-                    unshipped_quantity_to_restock = min(
-                        quantity, product_summary[product.pk]["unshipped"]
-                    )
+                    unshipped_quantity_to_restock = min(quantity, product_summary[product.pk]["unshipped"])
                     shipped_quantity_to_restock = min(
                         quantity - unshipped_quantity_to_restock,
-                        product_summary[product.pk]["ordered"]
-                        - product_summary[product.pk]["refunded"],
+                        product_summary[product.pk]["ordered"] - product_summary[product.pk]["refunded"],
                     )
 
                     if unshipped_quantity_to_restock > 0:
-                        product_summary[product.pk]["unshipped"] -= (
-                            unshipped_quantity_to_restock
-                        )
+                        product_summary[product.pk]["unshipped"] -= unshipped_quantity_to_restock
                         if parent_line.supplier.stock_managed:
                             parent_line.supplier.adjust_stock(
                                 product.id,
@@ -356,10 +329,7 @@ class TaxModule(six.with_metaclass(abc.ABCMeta)):
                                 created_by=created_by,
                                 type=StockAdjustmentType.RESTOCK_LOGICAL,
                             )
-                    if (
-                        shipped_quantity_to_restock > 0
-                        and parent_line.supplier.stock_managed
-                    ):
+                    if shipped_quantity_to_restock > 0 and parent_line.supplier.stock_managed:
                         parent_line.supplier.adjust_stock(
                             product.id,
                             shipped_quantity_to_restock,
@@ -368,11 +338,7 @@ class TaxModule(six.with_metaclass(abc.ABCMeta)):
                         )
                     product_summary[product.pk]["refunded"] += quantity
 
-                base_amount = (
-                    amount
-                    if order.prices_include_tax
-                    else amount / (1 + parent_line.tax_rate)
-                )
+                base_amount = amount if order.prices_include_tax else amount / (1 + parent_line.tax_rate)
 
                 from shuup.core.models import OrderLine, OrderLineType
 

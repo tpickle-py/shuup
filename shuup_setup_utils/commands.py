@@ -115,10 +115,10 @@ class GenerateRequirementsCommand(distutils.core.Command):
 
         except subprocess.CalledProcessError as e:
             print(f"❌ Error generating requirements files: {e}")
-            raise distutils.errors.DistutilsExecError("Failed to generate requirements files")
-        except FileNotFoundError:
+            raise distutils.errors.DistutilsExecError("Failed to generate requirements files") from e
+        except FileNotFoundError as exc:
             print("❌ uv not found. Please install uv first.")
-            raise distutils.errors.DistutilsExecError("uv not found")
+            raise distutils.errors.DistutilsExecError("uv not found") from exc
 
 
 class BuildCommand(du_build):

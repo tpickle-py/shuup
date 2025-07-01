@@ -11,9 +11,7 @@ class PageLayout(Layout):
         page = context.get("page")
         if not page:
             return ""
-        return _(
-            f"Content in this placeholder is shown for {page.title} only."
-        )
+        return _(f"Content in this placeholder is shown for {page.title} only.")
 
     def is_valid_context(self, context):
         return bool(context.get("page"))

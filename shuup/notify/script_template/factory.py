@@ -1,11 +1,7 @@
-
-
 from shuup.notify.script_template.generic import GenericSendEmailScriptTemplate
 
 
-def generic_send_email_script_template_factory(
-    identifier, event, name, description, help_text, initial=None
-):
+def generic_send_email_script_template_factory(identifier, event, name, description, help_text, initial=None):
     """
     A factory to create a generic script template based on `GenericSendEmailScriptTemplate` class.
 
@@ -23,6 +19,4 @@ def generic_send_email_script_template_factory(
     attrs.setdefault("description", description)
     attrs.setdefault("help_text", help_text)
     attrs.setdefault("initial", initial or {})
-    return type(
-        "GenericSendEmailScriptTemplate", (GenericSendEmailScriptTemplate,), attrs
-    )
+    return type("GenericSendEmailScriptTemplate", (GenericSendEmailScriptTemplate,), attrs)

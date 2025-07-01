@@ -1,5 +1,3 @@
-
-
 class CheckoutPhaseStorage:
     def __init__(self, request, phase_identifier):
         self.request = request

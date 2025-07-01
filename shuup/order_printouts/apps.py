@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 import shuup.apps
@@ -12,7 +10,5 @@ class AppConfig(shuup.apps.AppConfig):
 
     provides = {
         "admin_module": ["shuup.order_printouts.admin_module:PrintoutsAdminModule"],
-        "admin_order_section": [
-            "shuup.order_printouts.admin_module.section:PrintoutsSection"
-        ],
+        "admin_order_section": ["shuup.order_printouts.admin_module.section:PrintoutsSection"],
     }

@@ -50,23 +50,15 @@ class ProductSubscriptionContext:
 
 class BaseProductSubscriptionOptionProvider:
     @classmethod
-    def get_subscription_options(
-        cls, context: ProductSubscriptionContext
-    ) -> Iterable[ProductSubscriptionOption]:
+    def get_subscription_options(cls, context: ProductSubscriptionContext) -> Iterable[ProductSubscriptionOption]:
         raise NotImplementedError()
 
 
 def get_product_subscription_options(
     context: ProductSubscriptionContext, **kwargs
 ) -> Iterable[ProductSubscriptionOption]:
-    for product_subscription_option_provider in get_provide_objects(
-        "product_subscription_option_provider"
-    ):
-        if not issubclass(
-            product_subscription_option_provider, BaseProductSubscriptionOptionProvider
-        ):
+    for product_subscription_option_provider in get_provide_objects("product_subscription_option_provider"):
+        if not issubclass(product_subscription_option_provider, BaseProductSubscriptionOptionProvider):
             continue
 
-        yield from product_subscription_option_provider.get_subscription_options(
-            context
-        )
+        yield from product_subscription_option_provider.get_subscription_options(context)

@@ -20,9 +20,7 @@ class BaseThemeFieldsMixin:
         ),
         (
             "catalog_mode",
-            forms.BooleanField(
-                required=False, initial=False, label=_("Set shop in catalog mode")
-            ),
+            forms.BooleanField(required=False, initial=False, label=_("Set shop in catalog mode")),
         ),
         (
             "show_supplier_info",
@@ -30,9 +28,7 @@ class BaseThemeFieldsMixin:
                 required=False,
                 initial=False,
                 label=_("Show supplier info"),
-                help_text=_(
-                    "Show supplier name in product-box, product-detail, basket- and order-lines"
-                ),
+                help_text=_("Show supplier name in product-box, product-detail, basket- and order-lines"),
             ),
         ),
         (
@@ -41,9 +37,7 @@ class BaseThemeFieldsMixin:
                 required=False,
                 initial=True,
                 label=_("Show Product Details"),
-                help_text=_(
-                    "If you enable this, extra information will be shown on product page in frontend."
-                ),
+                help_text=_("If you enable this, extra information will be shown on product page in frontend."),
             ),
         ),
         (
@@ -52,9 +46,7 @@ class BaseThemeFieldsMixin:
                 required=False,
                 initial=False,
                 label=_("Show Variations as Buttons"),
-                help_text=_(
-                    "If you enable this, the variations will be shown as buttons instead of dropdowns."
-                ),
+                help_text=_("If you enable this, the variations will be shown as buttons instead of dropdowns."),
             ),
         ),
         (
@@ -99,9 +91,7 @@ class BaseThemeFieldsMixin:
                         initial=[tab[0] for tab in product_detail_tabs],
                         choices=product_detail_tabs,
                         label=_("Product detail tabs"),
-                        help_text=_(
-                            "Select all tabs that should be rendered in product details."
-                        ),
+                        help_text=_("Select all tabs that should be rendered in product details."),
                     ),
                 )
             ]

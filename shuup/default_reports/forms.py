@@ -1,4 +1,3 @@
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -45,10 +44,7 @@ class OrderLineReportForm(BaseReportForm):
         label=_("Order Line Type"),
         required=False,
         initial=[OrderLineType.PRODUCT.value],
-        choices=[
-            (line_type.value, line_type.name.capitalize())
-            for line_type in OrderLineType
-        ],
+        choices=[(line_type.value, line_type.name.capitalize()) for line_type in OrderLineType],
     )  # Because value of OrderLineType.PRODUCT is 1
 
     def __init__(self, *args, **kwargs):
@@ -153,9 +149,7 @@ class TaxesReportForm(OrderReportForm):
         if self.data and "tax_class" in self.data:
             tax_classes = TaxClass.objects.filter(pk__in=self.data.getlist("tax_class"))
             self.fields["tax_class"].initial = tax_classes
-            self.fields["tax_class"].widget.choices = [
-                (obj.pk, obj.name) for obj in tax_classes
-            ]
+            self.fields["tax_class"].widget.choices = [(obj.pk, obj.name) for obj in tax_classes]
 
 
 class ShippingReportForm(OrderReportForm):
@@ -177,17 +171,11 @@ class ShippingReportForm(OrderReportForm):
         super().__init__(*args, **kwargs)
 
         if self.data and "shipping_method" in self.data:
-            shipping_method = ShippingMethod.objects.filter(
-                pk__in=self.data.getlist("shipping_method")
-            )
+            shipping_method = ShippingMethod.objects.filter(pk__in=self.data.getlist("shipping_method"))
             self.fields["shipping_method"].initial = shipping_method.first()
-            self.fields["shipping_method"].widget.choices = [
-                (obj.pk, obj.name) for obj in shipping_method
-            ]
+            self.fields["shipping_method"].widget.choices = [(obj.pk, obj.name) for obj in shipping_method]
 
         if self.data and "carrier" in self.data:
             carrier = Carrier.objects.filter(pk__in=self.data.getlist("carrier"))
             self.fields["carrier"].initial = carrier
-            self.fields["carrier"].widget.choices = [
-                (obj.pk, obj.name) for obj in carrier
-            ]
+            self.fields["carrier"].widget.choices = [(obj.pk, obj.name) for obj in carrier]

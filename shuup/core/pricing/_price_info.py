@@ -1,4 +1,3 @@
-
 import numbers
 
 from ._price import Price
@@ -70,7 +69,5 @@ class PriceInfo(Priceful):
         return self.price.value != other.price.value
 
     def __repr__(self):
-        expire_str = (
-            "" if self.expires_on is None else (f", expires_on={self.expires_on!r}")
-        )
+        expire_str = "" if self.expires_on is None else (f", expires_on={self.expires_on!r}")
         return f"{type(self).__name__}({self.price!r}, {self.base_price!r}, {self.quantity!r}{expire_str})"

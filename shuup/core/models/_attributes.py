@@ -95,25 +95,18 @@ class AttributeQuerySet(TranslatableQuerySet):
         return self.exclude(visibility_mode=AttributeVisibility.HIDDEN)
 
 
-
 class Attribute(TranslatableModel):
-    identifier = InternalIdentifierField(
-        unique=True, blank=False, null=False, editable=True
-    )
+    identifier = InternalIdentifierField(unique=True, blank=False, null=False, editable=True)
     searchable = models.BooleanField(
         default=True,
         verbose_name=_("searchable"),
-        help_text=_(
-            "Searchable attributes will be used for product lookup when customers search in your store."
-        ),
+        help_text=_("Searchable attributes will be used for product lookup when customers search in your store."),
     )
     type = EnumIntegerField(
         AttributeType,
         default=AttributeType.TRANSLATED_STRING,
         verbose_name=_("type"),
-        help_text=_(
-            "The attribute data type. Attribute values can be set on the product editor page."
-        ),
+        help_text=_("The attribute data type. Attribute values can be set on the product editor page."),
     )
     min_choices = models.PositiveIntegerField(
         default=0,
@@ -182,9 +175,7 @@ class Attribute(TranslatableModel):
         :rtype: forms.Field
         """
         kwargs.setdefault("required", False)
-        kwargs.setdefault(
-            "label", self.safe_translation_getter("name", self.identifier)
-        )
+        kwargs.setdefault("label", self.safe_translation_getter("name", self.identifier))
         if self.type == AttributeType.INTEGER:
             return forms.IntegerField(**kwargs)
         elif self.type == AttributeType.DECIMAL:
@@ -216,9 +207,7 @@ class Attribute(TranslatableModel):
                 **kwargs,
             )
         else:
-            raise ValueError(
-                f"Error! `formfield` can't deal with the fields of type `{self.type!r}`."
-            )
+            raise ValueError(f"Error! `formfield` can't deal with the fields of type `{self.type!r}`.")
 
     @property
     def is_translated(self):
@@ -275,13 +264,9 @@ class AttributeChoiceOption(TranslatableModel):
 class AppliedAttribute(TranslatableModel):
     _applied_fk_field = None  # Used by the `repr` implementation
 
-    attribute = models.ForeignKey(
-        on_delete=models.CASCADE, to=Attribute, verbose_name=_("attribute")
-    )
+    attribute = models.ForeignKey(on_delete=models.CASCADE, to=Attribute, verbose_name=_("attribute"))
 
-    chosen_options = models.ManyToManyField(
-        to=AttributeChoiceOption, verbose_name=_("chosen options"), blank=True
-    )
+    chosen_options = models.ManyToManyField(to=AttributeChoiceOption, verbose_name=_("chosen options"), blank=True)
 
     numeric_value = models.DecimalField(
         null=True,
@@ -299,9 +284,7 @@ class AppliedAttribute(TranslatableModel):
         verbose_name=_("datetime value"),
         db_index=True,
     )
-    untranslated_string_value = models.TextField(
-        blank=True, verbose_name=_("untranslated value")
-    )
+    untranslated_string_value = models.TextField(blank=True, verbose_name=_("untranslated value"))
 
     # Concrete subclasses will require this TranslatedFields declaration:
     # translations = TranslatedFields(
@@ -312,27 +295,15 @@ class AppliedAttribute(TranslatableModel):
         abstract = True
 
     ATTRIBUTE_TYPE_GETTERS = {
-        AttributeType.BOOLEAN: (
-            lambda self: bool(int(self.numeric_value))
-            if self.numeric_value is not None
-            else None
-        ),
+        AttributeType.BOOLEAN: (lambda self: bool(int(self.numeric_value)) if self.numeric_value is not None else None),
         AttributeType.INTEGER: (lambda self: int(self.numeric_value)),
         AttributeType.DECIMAL: (lambda self: Decimal(self.numeric_value)),
-        AttributeType.TIMEDELTA: (
-            lambda self: datetime.timedelta(seconds=float(self.numeric_value))
-        ),
+        AttributeType.TIMEDELTA: (lambda self: datetime.timedelta(seconds=float(self.numeric_value))),
         AttributeType.DATETIME: (lambda self: self.datetime_value),
         AttributeType.DATE: (lambda self: self.datetime_value.date()),
-        AttributeType.UNTRANSLATED_STRING: (
-            lambda self: self.untranslated_string_value
-        ),
-        AttributeType.TRANSLATED_STRING: (
-            lambda self: self.translated_string_value if self.has_translation() else ""
-        ),
-        AttributeType.CHOICES: (
-            lambda self: "; ".join(option.name for option in self.chosen_options.all())
-        ),
+        AttributeType.UNTRANSLATED_STRING: (lambda self: self.untranslated_string_value),
+        AttributeType.TRANSLATED_STRING: (lambda self: self.translated_string_value if self.has_translation() else ""),
+        AttributeType.CHOICES: (lambda self: "; ".join(option.name for option in self.chosen_options.all())),
     }
 
     def _get_value(self):
@@ -394,26 +365,18 @@ class AppliedAttribute(TranslatableModel):
         if self.attribute.type == AttributeType.DATETIME:
             # Just store datetimes
             if not isinstance(new_value, datetime.datetime):
-                raise TypeError(
-                    f"Error! Can't assign `{new_value!r}` to DATETIME attribute."
-                )
+                raise TypeError(f"Error! Can't assign `{new_value!r}` to DATETIME attribute.")
             self.datetime_value = new_value
             self.numeric_value = calendar.timegm(self.datetime_value.timetuple())
             self.untranslated_string_value = self.datetime_value.isoformat()
         elif self.attribute.type == AttributeType.DATE:
             # Store dates as "date at midnight"
             date = parse_date(new_value)
-            self.datetime_value = datetime.datetime.combine(
-                date=date, time=datetime.time()
-            )
+            self.datetime_value = datetime.datetime.combine(date=date, time=datetime.time())
             self.numeric_value = date.toordinal()  # Store date ordinal as numeric value
-            self.untranslated_string_value = (
-                date.isoformat()
-            )  # Store date ISO format as string value
+            self.untranslated_string_value = date.isoformat()  # Store date ISO format as string value
 
-    def _set_choices_value(
-        self, choices: Union[str, Iterable[Union[str, int, AttributeChoiceOption]]]
-    ):
+    def _set_choices_value(self, choices: Union[str, Iterable[Union[str, int, AttributeChoiceOption]]]):
         choices_ids = []
 
         # in case `choices` is a comma-separated string, like `option a; option b`
@@ -426,9 +389,7 @@ class AppliedAttribute(TranslatableModel):
             elif isinstance(choice, int):
                 choices_ids.append(choice)
             elif isinstance(choice, str):
-                existing_choice = self.attribute.choices.filter(
-                    translations__name=choice
-                ).first()
+                existing_choice = self.attribute.choices.filter(translations__name=choice).first()
                 if existing_choice:
                     choices_ids.append(existing_choice.pk)
 
@@ -501,14 +462,10 @@ class AttributableMixin:
     def _set_cached_attribute(self, language, identifier, applied_attribute):
         if not hasattr(self, "_attr_cache"):
             self._attr_cache = {}
-        self._attr_cache[
-            (language, identifier or applied_attribute.attribute.identifier)
-        ] = applied_attribute
+        self._attr_cache[(language, identifier or applied_attribute.attribute.identifier)] = applied_attribute
 
     @classmethod
-    def cache_attributes_for_targets(
-        cls, applied_attr_cls, targets, attribute_identifiers, language
-    ):
+    def cache_attributes_for_targets(cls, applied_attr_cls, targets, attribute_identifiers, language):
         if not settings.SHUUP_ENABLE_ATTRIBUTES:  # pragma: no cover
             return targets
 
@@ -519,15 +476,10 @@ class AttributableMixin:
             "attribute__identifier__in": attribute_identifiers,
         }
 
-        for applied_attr in applied_attr_cls.objects.language(language).filter(
-            **filter_kwargs
-        ):
+        for applied_attr in applied_attr_cls.objects.language(language).filter(**filter_kwargs):
             attr_ids.add(applied_attr.attribute_id)
             applied_attrs_by_target_id[applied_attr.product_id].append(applied_attr)
-        attr_map = {
-            attr.id: attr
-            for attr in Attribute.objects.language(language).filter(id__in=attr_ids)
-        }
+        attr_map = {attr.id: attr for attr in Attribute.objects.language(language).filter(id__in=attr_ids)}
 
         for target in targets:
             for identifier in attribute_identifiers:
@@ -539,9 +491,7 @@ class AttributableMixin:
                     applied_attr.__class__.attribute.field.name,
                     attr_map.get(applied_attr.attribute_id),
                 )
-                target._set_cached_attribute(
-                    language, applied_attr.attribute.identifier, applied_attr
-                )
+                target._set_cached_attribute(language, applied_attr.attribute.identifier, applied_attr)
 
         return targets
 
@@ -565,9 +515,7 @@ class AttributableMixin:
 
         applied_attribute_qs = self.attributes.all().select_related("attribute")
         if visibility_mode is not None:
-            applied_attribute_qs = applied_attribute_qs.filter(
-                attribute__visibility_mode=visibility_mode
-            )
+            applied_attribute_qs = applied_attribute_qs.filter(attribute__visibility_mode=visibility_mode)
 
         existing_attributes = {
             aa.attribute.identifier: (all_attributes.get(aa.attribute.identifier, (aa.attribute,))[0], aa)
@@ -617,17 +565,13 @@ class AttributableMixin:
         if applied_attr is None:
             try:
                 applied_attr = (
-                    self.attributes.language(language)
-                    .select_related("attribute")
-                    .get(attribute__identifier=identifier)
+                    self.attributes.language(language).select_related("attribute").get(attribute__identifier=identifier)
                 )
             except ObjectDoesNotExist:
                 applied_attr = None
 
             if applied_attr:
-                self._set_cached_attribute(
-                    language, applied_attr.attribute.identifier, applied_attr
-                )
+                self._set_cached_attribute(language, applied_attr.attribute.identifier, applied_attr)
             else:  # Cache the miss
                 self._set_cached_attribute(language, identifier, NoSuchAttributeHere)
 
@@ -665,9 +609,7 @@ class AttributableMixin:
 
         if attr.is_translated:
             if not language:
-                raise ValueError(
-                    f"Error! `language` must be set for translated attribute {attr}."
-                )
+                raise ValueError(f"Error! `language` must be set for translated attribute {attr}.")
             applied_attr.set_current_language(language)
 
         if not attr.is_translated and attr.is_null_value(value):
@@ -700,9 +642,7 @@ class AttributableMixin:
                         choices_ids.append(existing_choice.pk)
 
             # make sure all choices are valid
-            if applied_attr.attribute.choices.filter(pk__in=choices_ids).count() != len(
-                choices_ids
-            ):
+            if applied_attr.attribute.choices.filter(pk__in=choices_ids).count() != len(choices_ids):
                 raise ValueError("Error! Invalid options set to the attribute.")
 
             if not applied_attr.pk:

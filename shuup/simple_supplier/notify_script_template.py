@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.conf import settings
 from django.template.defaultfilters import linebreaksbr
@@ -13,17 +11,12 @@ from shuup.simple_supplier.notify_events import AlertLimitReached
 
 
 class StockLimitEmailForm(forms.Form):
-    recipient = forms.EmailField(
-        label=_("Send to?"), help_text=_("Send email to whom?")
-    )
+    recipient = forms.EmailField(label=_("Send to?"), help_text=_("Send email to whom?"))
     last24hrs = forms.BooleanField(
         label=_("Do not send the same email within 24 hours."),
         initial=True,
         required=False,
-        help_text=_(
-            "If enabled, avoids sending the same email for the same "
-            "product and supplier within 24 hours."
-        ),
+        help_text=_("If enabled, avoids sending the same email for the same product and supplier within 24 hours."),
     )
 
 
@@ -31,9 +24,7 @@ class StockLimitEmailScriptTemplate(GenericSendEmailScriptTemplate):
     identifier = "stocks_limit_email"
     event = AlertLimitReached
     name = _("Send Stock Limit Alert Email")
-    description = _(
-        "Send me an email when a product stock is lower than the configured limit."
-    )
+    description = _("Send me an email when a product stock is lower than the configured limit.")
     help_text = _(
         "This script will send an email to the configured destination alerting about the "
         "a product's low stock of a supplier. You can configure to not send the same email "
@@ -57,12 +48,8 @@ class StockLimitEmailScriptTemplate(GenericSendEmailScriptTemplate):
             # since cleaned_data can be blank if the user did not change anything
             action_data["template_data"][language] = {
                 "content_type": "html",
-                "subject": form_lang.cleaned_data.get(
-                    "subject", form_lang.initial.get("subject", "")
-                ).strip(),
-                "body": form_lang.cleaned_data.get(
-                    "body", form_lang.initial.get("body", "")
-                ).strip(),
+                "subject": form_lang.cleaned_data.get("subject", form_lang.initial.get("subject", "")).strip(),
+                "body": form_lang.cleaned_data.get("body", form_lang.initial.get("body", "")).strip(),
             }
 
         send_mail_action = SendEmail(action_data)
@@ -72,36 +59,26 @@ class StockLimitEmailScriptTemplate(GenericSendEmailScriptTemplate):
                 BooleanEqual(
                     {
                         "v1": {"variable": "dispatched_last_24hs"},
-                        "v2": {
-                            "constant": (not form["base"].cleaned_data["last24hrs"])
-                        },
+                        "v2": {"constant": (not form["base"].cleaned_data["last24hrs"])},
                     }
                 )
             )
 
-        return [
-            Step(next=StepNext.STOP, actions=(send_mail_action,), conditions=conditions)
-        ]
+        return [Step(next=StepNext.STOP, actions=(send_mail_action,), conditions=conditions)]
 
     def get_initial(self):
         if self.script_instance:
             structure = self._find_expected_structure()
             if structure:
                 condition = structure["condition"]
-                last24hrs = (
-                    condition.data["v2"].get("constant", True) if condition else True
-                )
+                last24hrs = condition.data["v2"].get("constant", True) if condition else True
 
                 initial = {
                     "base-last24hrs": (not last24hrs),
-                    "base-recipient": structure["send_mail"]
-                    .data["recipient"]
-                    .get("constant"),
+                    "base-recipient": structure["send_mail"].data["recipient"].get("constant"),
                 }
 
-                for language, data in (
-                    structure["send_mail"].data["template_data"].items()
-                ):
+                for language, data in structure["send_mail"].data["template_data"].items():
                     for data_key, data_value in data.items():
                         initial[f"{language}-{data_key}"] = data_value
                 return initial
@@ -111,9 +88,7 @@ class StockLimitEmailScriptTemplate(GenericSendEmailScriptTemplate):
             default_lang = settings.PARLER_DEFAULT_LANGUAGE_CODE
 
             return {
-                default_lang + "-subject": _(
-                    "Low stock of: {{ product }} from {{ supplier }}"
-                ),
+                default_lang + "-subject": _("Low stock of: {{ product }} from {{ supplier }}"),
                 default_lang + "-body": linebreaksbr(
                     _(
                         "Hi!\n"

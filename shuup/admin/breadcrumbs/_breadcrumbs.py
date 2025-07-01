@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.base import MenuEntry
@@ -48,11 +46,7 @@ class Breadcrumbs:
 
         # See if we have a title for the synthesized entry in the context.
         view = context.get("view")  # This should be the CBV view object.
-        title = (
-            context.get("title")
-            or context.get("breadcrumb_title")
-            or (view and getattr(view, "title", None))
-        )
+        title = context.get("title") or context.get("breadcrumb_title") or (view and getattr(view, "title", None))
 
         if title:
             current_view_entry.text = force_text(title)
@@ -64,10 +58,7 @@ class Breadcrumbs:
         # See if we have the top level menu entry ("Contacts" for example).
         if url_admin_module and url_admin_module.breadcrumbs_menu_entry:
             # (But don't duplicate steps)
-            if (
-                url_admin_module.breadcrumbs_menu_entry.url != request.path
-                or not current_view_entry.text
-            ):
+            if url_admin_module.breadcrumbs_menu_entry.url != request.path or not current_view_entry.text:
                 entries.append(url_admin_module.breadcrumbs_menu_entry)
 
         # See if the view declares parents...

@@ -1,4 +1,3 @@
-
 #: The limit number of products to be returned by the search
 #:
 SHUUP_SIMPLE_SEARCH_LIMIT = 150

@@ -66,9 +66,7 @@ class GDPRFieldProvider(FormFieldProvider):
                 label=mark_safe(
                     ugettext(
                         "I have read and accept the <a href='{}' target='_blank' class='gdpr_consent_doc_check'>{}</a>"
-                    ).format(
-                        reverse("shuup:cms_page", kwargs={"url": page.url}), page.title
-                    )
+                    ).format(reverse("shuup:cms_page", kwargs={"url": page.url}), page.title)
                 ),
                 required=True,
                 error_messages={"required": self.error_message},
@@ -96,9 +94,7 @@ class GDPRAuthFieldProvider(GDPRFieldProvider):
             return []
 
         if gdpr_settings.skip_consent_on_auth:
-            auth_consent_text = gdpr_settings.safe_translation_getter(
-                "auth_consent_text"
-            )
+            auth_consent_text = gdpr_settings.safe_translation_getter("auth_consent_text")
             return [
                 FormFieldDefinition(
                     name="auth_consent_text",
@@ -116,9 +112,7 @@ class GDPRAuthFieldProvider(GDPRFieldProvider):
 
 class GDPRBaseUserDataProvider:
     @classmethod
-    def get_user_data(
-        cls, shop: Shop, user: UserModel = None, contact: Contact = None
-    ) -> Tuple[str, Dict]:
+    def get_user_data(cls, shop: Shop, user: UserModel = None, contact: Contact = None) -> Tuple[str, Dict]:
         """
         Returns a tuple of string, dictionary. The string is the key that identifies the
         data and the dict contains all the user data this provider returns.

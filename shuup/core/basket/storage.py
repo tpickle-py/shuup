@@ -1,5 +1,3 @@
-
-
 import abc
 
 import six
@@ -140,9 +138,7 @@ class BaseDatabaseBasketStorage(BasketStorage):
         basket_get_kwargs = self.get_basket_kwargs(basket)
         stored_basket = None
         if basket_get_kwargs:
-            stored_basket = self.model.objects.filter(
-                deleted=False, **basket_get_kwargs
-            ).first()
+            stored_basket = self.model.objects.filter(deleted=False, **basket_get_kwargs).first()
         if not stored_basket:
             stored_basket = self.model(
                 shop=basket.shop,
@@ -167,9 +163,7 @@ def _price_units_diff(x, y):
     if x.currency != y.currency:
         diff.append(f"currency: {x.currency!r} vs {y.currency!r}")
     if x.prices_include_tax != y.prices_include_tax:
-        diff.append(
-            f"includes_tax: {x.prices_include_tax!r} vs {y.prices_include_tax!r}"
-        )
+        diff.append(f"includes_tax: {x.prices_include_tax!r} vs {y.prices_include_tax!r}")
     return ", ".join(diff)
 
 

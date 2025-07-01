@@ -1,4 +1,3 @@
-
 from .delete import ProductDeleteView
 from .edit import ProductEditView
 from .edit_cross_sell import ProductCrossSellEditView

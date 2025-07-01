@@ -57,11 +57,7 @@ def send_activation_notification(user, request, **kwargs):
 def send_user_registered_notification(user, request, **kwargs):
     activation_url = None
     person_contact = get_person_contact(user)
-    activation_key = (
-        user.registrationprofile.activation_key
-        if hasattr(user, "registrationprofile")
-        else None
-    )
+    activation_key = user.registrationprofile.activation_key if hasattr(user, "registrationprofile") else None
     if activation_key:
         activation_path = reverse("shuup:registration_activate", args=(activation_key,))
         activation_url = request.build_absolute_uri(activation_path)
@@ -100,24 +96,16 @@ def send_reactivation_notification(user, request, **kwargs):
 
 
 def send_company_activated_first_time_notification(instance, request, **kwargs):
-    activated_once = instance.log_entries.filter(
-        identifier="company_activated"
-    ).exists()
+    activated_once = instance.log_entries.filter(identifier="company_activated").exists()
     if activated_once or not instance.is_active:
         return
     # Send email if a company was never activated before
-    instance.add_log_entry(
-        message=_("Company has been activated."), identifier="company_activated"
-    )
+    instance.add_log_entry(message=_("Company has been activated."), identifier="company_activated")
     person = instance.members.instance_of(PersonContact).first()
     user = person.user
 
     activation_url = None
-    activation_key = (
-        user.registrationprofile.activation_key
-        if hasattr(user, "registrationprofile")
-        else None
-    )
+    activation_key = user.registrationprofile.activation_key if hasattr(user, "registrationprofile") else None
     if activation_key:
         activation_path = reverse("shuup:registration_activate", args=(activation_key,))
         activation_url = request.build_absolute_uri(activation_path)
@@ -139,8 +127,7 @@ RegistrationReceivedEmailScriptTemplate = generic_send_email_script_template_fac
     name=_("Send Registration Received Email"),
     description=_("Send email when a user registers."),
     help_text=_(
-        "This script will send an email to the user or to any configured email "
-        "right after a user get registered."
+        "This script will send an email to the user or to any configured email right after a user get registered."
     ),
     initial={"en-subject": _("{{ order.shop }} - Welcome!")},
 )
@@ -151,24 +138,20 @@ AccountReactivationEmailScriptTemplate = generic_send_email_script_template_fact
     name=_("Send account reactivation email"),
     description=_("Send email when a user account gets reactivated"),
     help_text=_(
-        "This script will send an email to the user or to any configured email "
-        "when a account get's reactivated"
+        "This script will send an email to the user or to any configured email when a account get's reactivated"
     ),
     initial={"en-subject": _("{{ customer.username }} is now active again!")},
 )
 
-CompanyRegistrationReceivedEmailScriptTemplate = (
-    generic_send_email_script_template_factory(
-        identifier="company_registration_received_email",
-        event=CompanyRegistrationReceived,
-        name=_("Send Company Registration Received Email"),
-        description=_("Send email when a user registers as a company."),
-        help_text=_(
-            "This script will send an email to the user or to any configured email "
-            "right after a user get registered."
-        ),
-        initial={"en-subject": _("{{ order.shop }} - Welcome!")},
-    )
+CompanyRegistrationReceivedEmailScriptTemplate = generic_send_email_script_template_factory(
+    identifier="company_registration_received_email",
+    event=CompanyRegistrationReceived,
+    name=_("Send Company Registration Received Email"),
+    description=_("Send email when a user registers as a company."),
+    help_text=_(
+        "This script will send an email to the user or to any configured email right after a user get registered."
+    ),
+    initial={"en-subject": _("{{ order.shop }} - Welcome!")},
 )
 
 CompanyActivatedEmailScriptTemplate = generic_send_email_script_template_factory(
@@ -177,8 +160,7 @@ CompanyActivatedEmailScriptTemplate = generic_send_email_script_template_factory
     name=_("Send Company Activated Email"),
     description=_("Notify company's contact person that company account is activated"),
     help_text=_(
-        "This script will send an email to the user or to any configured email "
-        "right after a company is activated."
+        "This script will send an email to the user or to any configured email right after a company is activated."
     ),
     initial={"en-subject": _("{{ order.shop }} - Welcome!")},
 )

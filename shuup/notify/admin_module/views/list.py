@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.shop_provider import get_shop
@@ -34,9 +32,7 @@ class ScriptListView(PicotableListView):
     def get_event_identifier_text(self, instance):
         if not hasattr(self, "_event_identifier_names"):
             self._event_identifier_names = dict(get_name_map("notify_event"))
-        return self._event_identifier_names.get(
-            instance.event_identifier, instance.event_identifier
-        )
+        return self._event_identifier_names.get(instance.event_identifier, instance.event_identifier)
 
     def get_toolbar(self):
         return Toolbar(
@@ -65,8 +61,4 @@ class ScriptListView(PicotableListView):
         ]
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .filter(shop=get_shop(self.request))
-        )
+        return super().get_queryset().filter(shop=get_shop(self.request))

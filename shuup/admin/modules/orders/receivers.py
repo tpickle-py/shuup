@@ -15,9 +15,7 @@ def _create_cash_payment_for_order(order):
 
 
 def handle_custom_payment_return_requests(sender, order, *args, **kwargs):
-    payment_processor = (
-        order.payment_method.payment_processor if order.payment_method else None
-    )
+    payment_processor = order.payment_method.payment_processor if order.payment_method else None
     if isinstance(payment_processor, CustomPaymentProcessor):
         service = order.payment_method.choice_identifier
         if service == "cash":

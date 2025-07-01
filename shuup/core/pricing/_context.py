@@ -1,5 +1,3 @@
-
-
 import abc
 
 import six
@@ -48,9 +46,7 @@ class PricingContext(PricingContextable):
         :type supplier: shuup.core.models.Supplier|None
         """
         assert shop is not None, "shop is required"
-        assert customer is not None, (
-            "customer is required (may be AnonymousContact though)"
-        )
+        assert customer is not None, "customer is required (may be AnonymousContact though)"
 
         self.shop = shop
         self.customer = customer

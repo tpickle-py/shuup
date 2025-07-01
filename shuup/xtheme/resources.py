@@ -108,9 +108,7 @@ class JinjaMarkupResource:
             try:
                 return engine.env.from_string(template).render(self.context)
             except Exception:
-                LOGGER.exception(
-                    "Error! Failed to render Jinja string in Snippet plugin."
-                )
+                LOGGER.exception("Error! Failed to render Jinja string in Snippet plugin.")
                 return force_text(_("(Error while rendering.)"))
 
     def __eq__(self, other):
@@ -159,9 +157,7 @@ class ResourceContainer:
         if not resource:
             return False
         if location not in KNOWN_LOCATIONS:
-            raise ValueError(
-                f"Error! `{location!r}` is not a known xtheme resource location."
-            )
+            raise ValueError(f"Error! `{location!r}` is not a known xtheme resource location.")
         lst = self.resources.setdefault(location, [])
         if resource not in lst:
             lst.append(resource)
@@ -305,9 +301,7 @@ def valid_view(context):
     """
     Prevent adding the global snippet in admin views and in editor view.
     """
-    view_class = (
-        getattr(context["view"], "__class__", None) if context.get("view") else None
-    )
+    view_class = getattr(context["view"], "__class__", None) if context.get("view") else None
     request = context.get("request")
     if not (view_class and request):
         return False
@@ -326,9 +320,7 @@ def valid_view(context):
 
 class SnippetBlocker:
     @classmethod
-    def should_block_global_snippet_injection(
-        cls, snippet: "Snippet", context: dict
-    ) -> bool:
+    def should_block_global_snippet_injection(cls, snippet: "Snippet", context: dict) -> bool:
         raise NotImplementedError
 
 

@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.db.models.fields import BLANK_CHOICE_DASH
 from django.forms.models import model_to_dict
@@ -32,9 +30,7 @@ class CompanyForm(TaxNumberCleanMixin, forms.ModelForm):
         data = super().clean()
 
         if data.get("name") and not data.get("tax_number"):
-            self.add_error(
-                "tax_number", _("Tax number is required with the company name.")
-            )
+            self.add_error("tax_number", _("Tax number is required with the company name."))
 
         if data.get("tax_number") and not data.get("name"):
             self.add_error("name", _("Company name is required with the tax number."))
@@ -48,9 +44,7 @@ class SavedAddressForm(forms.Form):
         "billing": SavedAddressRole.BILLING,
     }
 
-    addresses = forms.ChoiceField(
-        label=_("Use a saved address"), required=False, choices=(), initial=None
-    )
+    addresses = forms.ChoiceField(label=_("Use a saved address"), required=False, choices=(), initial=None)
 
     def __init__(self, owner, kind, **kwargs):
         super().__init__(**kwargs)
@@ -59,9 +53,7 @@ class SavedAddressForm(forms.Form):
             role=self.kind_to_role_map[kind],
             status=SavedAddressStatus.ENABLED,
         )
-        saved_addr_choices = BLANK_CHOICE_DASH + [
-            (addr.pk, addr.title) for addr in saved_addr_qs
-        ]
+        saved_addr_choices = BLANK_CHOICE_DASH + [(addr.pk, addr.title) for addr in saved_addr_qs]
         self.fields["addresses"].choices = saved_addr_choices
 
 
@@ -91,9 +83,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
         for kind in self.address_kinds:
             fg.add_form_def(
                 kind,
-                form_class=self.address_form_classes.get(
-                    kind, default_address_form_class
-                ),
+                form_class=self.address_form_classes.get(kind, default_address_form_class),
             )
             fg.add_form_def(
                 f"saved_{kind}",
@@ -102,11 +92,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
                 kwargs={"kind": kind, "owner": self.basket.customer},
             )
 
-        if (
-            self.company_form_class
-            and allow_company_registration(self.request.shop)
-            and not self.request.customer
-        ):
+        if self.company_form_class and allow_company_registration(self.request.shop) and not self.request.customer:
             fg.add_form_def(
                 "company",
                 self.company_form_class,
@@ -150,9 +136,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
         else:
             self.storage["company"] = None
 
-        process_and_save_basket = any(
-            form[form_key].has_changed() for form_key in form.forms
-        )
+        process_and_save_basket = any(form[form_key].has_changed() for form_key in form.forms)
         if process_and_save_basket:
             self.process()
             self.basket.save()
@@ -170,9 +154,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
         if self.storage.get("company"):
             basket.customer = self.storage.get("company")
         elif not basket.customer:
-            basket.customer = (
-                getattr(self.request, "customer", None) or AnonymousContact()
-            )
+            basket.customer = getattr(self.request, "customer", None) or AnonymousContact()
 
         if isinstance(basket.customer, CompanyContact):
             for address_kind in self.address_kinds:
@@ -185,9 +167,7 @@ class AddressesPhase(CheckoutPhaseViewMixin, FormView):
         context = super().get_context_data(**kwargs)
 
         # generate all the available saved addresses if user wants to use some
-        saved_addr_qs = SavedAddress.objects.filter(
-            owner=self.basket.customer, status=SavedAddressStatus.ENABLED
-        )
+        saved_addr_qs = SavedAddress.objects.filter(owner=self.basket.customer, status=SavedAddressStatus.ENABLED)
         context["saved_address"] = {}
         for saved_address in saved_addr_qs:
             data = {}

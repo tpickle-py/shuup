@@ -1,6 +1,3 @@
-
-
-
 from django import forms
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -30,9 +27,7 @@ def get_service_providers_filters(request, payment_method=None):
     shop_filter = Q(Q(shops__isnull=True) | Q(shops=get_shop(request)))
     if payment_method and payment_method.pk and payment_method.supplier:
         return shop_filter & Q(
-            Q(supplier__isnull=True)
-            | Q(supplier=get_supplier(request))
-            | Q(supplier=payment_method.supplier)
+            Q(supplier__isnull=True) | Q(supplier=get_supplier(request)) | Q(supplier=payment_method.supplier)
         )
 
     return shop_filter & Q(Q(supplier__isnull=True) | Q(supplier=get_supplier(request)))
@@ -82,20 +77,14 @@ class BaseMethodForm(ShuupAdminForm):
         if not id:
             return
         return (
-            ServiceProvider.objects.filter(
-                get_service_providers_filters(self.request, self.instance)
-            )
+            ServiceProvider.objects.filter(get_service_providers_filters(self.request, self.instance))
             .filter(pk=id)
             .first()
         )
 
     @property
     def service_provider(self):
-        return (
-            getattr(self.instance, self.service_provider_attr)
-            if self.instance
-            else None
-        )
+        return getattr(self.instance, self.service_provider_attr) if self.instance else None
 
     @service_provider.setter
     def service_provider(self, value):
@@ -138,10 +127,7 @@ class ShippingMethodForm(BaseMethodForm):
         model = ShippingMethod
         fields = ["carrier"] + BaseMethodForm.Meta.base_fields
         help_texts = {
-            "carrier": _(
-                "The carrier to use for this shipping method. "
-                "Select a carrier before filling other fields."
-            )
+            "carrier": _("The carrier to use for this shipping method. Select a carrier before filling other fields.")
         }
 
     def __init__(self, *args, **kwargs):
@@ -224,23 +210,13 @@ class CountryLimitBehaviorComponentForm(forms.ModelForm):
         exclude = ["identifier"]
         help_texts = {
             "available_in_countries": _("Select accepted countries for this service."),
-            "available_in_european_countries": _(
-                "Select this to accept all countries in EU."
-            ),
-            "unavailable_in_countries": _(
-                "Select restricted countries for this service."
-            ),
-            "unavailable_in_european_countries": _(
-                "Select this to restrict this service for countries in EU"
-            ),
+            "available_in_european_countries": _("Select this to accept all countries in EU."),
+            "unavailable_in_countries": _("Select restricted countries for this service."),
+            "unavailable_in_european_countries": _("Select this to restrict this service for countries in EU"),
         }
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if self.instance and self.instance.pk:
-            self.initial["available_in_countries"] = (
-                self.instance.available_in_countries
-            )
-            self.initial["unavailable_in_countries"] = (
-                self.instance.unavailable_in_countries
-            )
+            self.initial["available_in_countries"] = self.instance.available_in_countries
+            self.initial["unavailable_in_countries"] = self.instance.unavailable_in_countries

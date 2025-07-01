@@ -26,9 +26,7 @@ def registration_complete(request):
     if settings.SHUUP_REGISTRATION_REQUIRES_ACTIVATION:
         messages.success(
             request,
-            _(
-                "Registration complete. Please follow the instructions sent to your email address."
-            ),
+            _("Registration complete. Please follow the instructions sent to your email address."),
         )
     return redirect(settings.LOGIN_REDIRECT_URL)
 
@@ -37,9 +35,7 @@ class RegistrationViewMixin:
     template_name = "shuup/registration/register.jinja"
 
     def get_success_url(self, *args, **kwargs):
-        url = self.request.GET.get(REDIRECT_FIELD_NAME) or self.request.POST.get(
-            REDIRECT_FIELD_NAME
-        )
+        url = self.request.GET.get(REDIRECT_FIELD_NAME) or self.request.POST.get(REDIRECT_FIELD_NAME)
         if url and is_safe_url(url, self.request.get_host()):
             return url
         return ("shuup:registration_complete", (), {})
@@ -56,15 +52,11 @@ class RegistrationViewMixin:
         return user
 
 
-class RegistrationNoActivationView(
-    RegistrationViewMixin, simple_views.RegistrationView
-):
+class RegistrationNoActivationView(RegistrationViewMixin, simple_views.RegistrationView):
     pass
 
 
-class RegistrationWithActivationView(
-    RegistrationViewMixin, default_views.RegistrationView
-):
+class RegistrationWithActivationView(RegistrationViewMixin, default_views.RegistrationView):
     SEND_ACTIVATION_EMAIL = False
 
 
@@ -92,10 +84,7 @@ class CompanyRegistrationView(RegistrationViewMixin, default_views.RegistrationV
     def register(self, form):
         user = super().register(form)
 
-        if (
-            settings.SHUUP_ENABLE_MULTIPLE_SHOPS
-            and settings.SHUUP_MANAGE_CONTACTS_PER_SHOP
-        ):
+        if settings.SHUUP_ENABLE_MULTIPLE_SHOPS and settings.SHUUP_MANAGE_CONTACTS_PER_SHOP:
             company = get_company_contact(user)
             company.add_to_shop(self.request.shop)
 

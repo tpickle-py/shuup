@@ -34,9 +34,7 @@ class DiscountForm(forms.ModelForm):
         exclude = ("shop", "created_by", "modified_by")
         widgets = {
             "category": QuickAddCategorySelect(editable_model="shuup.Category"),
-            "contact_group": QuickAddContactGroupSelect(
-                editable_model="shuup.ContactGroup"
-            ),
+            "contact_group": QuickAddContactGroupSelect(editable_model="shuup.ContactGroup"),
             "happy_hours": QuickAddHappyHourMultiSelect(),
         }
 
@@ -47,9 +45,7 @@ class DiscountForm(forms.ModelForm):
 
         self.fields["category"].queryset = Category.objects.filter(shops=self.shop)
         self.fields["contact"].widget = ContactChoiceWidget(clearable=True)
-        self.fields["contact_group"].queryset = ContactGroup.objects.filter(
-            Q(shop=self.shop) | Q(shop__isnull=True)
-        )
+        self.fields["contact_group"].queryset = ContactGroup.objects.filter(Q(shop=self.shop) | Q(shop__isnull=True))
         self.fields["happy_hours"].queryset = HappyHour.objects.filter(shop=self.shop)
         self.fields["product"].widget = ProductChoiceWidget(clearable=True)
         self.fields["supplier"].queryset = Supplier.objects.enabled(shop=self.shop)
@@ -94,11 +90,5 @@ class DiscountEditView(CreateOrUpdateView):
 
     def get_toolbar(self):
         object = self.get_object()
-        delete_url = (
-            reverse_lazy("shuup_admin:discounts.delete", kwargs={"pk": object.pk})
-            if object.pk
-            else None
-        )
-        return get_default_edit_toolbar(
-            self, self.get_save_form_id(), delete_url=delete_url
-        )
+        delete_url = reverse_lazy("shuup_admin:discounts.delete", kwargs={"pk": object.pk}) if object.pk else None
+        return get_default_edit_toolbar(self, self.get_save_form_id(), delete_url=delete_url)

@@ -1,6 +1,3 @@
-
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.utils.picotable import Column, TextFilter, true_or_false_filter
@@ -17,9 +14,7 @@ class ServiceListView(PicotableListView):
             "name",
             _("Name"),
             sort_field="translations__name",
-            filter_config=TextFilter(
-                filter_field="translations__name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="translations__name", placeholder=_("Filter by name...")),
         ),
         Column(
             "choice_identifier",
@@ -45,9 +40,7 @@ class ServiceListView(PicotableListView):
                     return force_text(choice.name)
 
     def get_queryset(self):
-        return (
-            super().get_queryset().filter(shop=self.request.shop)
-        )
+        return super().get_queryset().filter(shop=self.request.shop)
 
 
 class ShippingMethodListView(ServiceListView):
@@ -62,7 +55,5 @@ class PaymentMethodListView(ServiceListView):
     model = PaymentMethod
 
     def __init__(self, **kwargs):
-        self.default_columns = self.base_columns + [
-            Column("payment_processor", _("Payment Processor"))
-        ]
+        self.default_columns = self.base_columns + [Column("payment_processor", _("Payment Processor"))]
         super().__init__(**kwargs)

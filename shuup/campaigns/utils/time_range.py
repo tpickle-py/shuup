@@ -48,6 +48,4 @@ def is_in_time_range(date, hour_start, hour_end, valid_weekdays):
     if current_local_weekday not in valid_weekdays:
         return False
 
-    return any(
-        (start <= current_local_dt < end) for (start, end) in valid_date_ranges
-    )
+    return any((start <= current_local_dt < end) for (start, end) in valid_date_ranges)

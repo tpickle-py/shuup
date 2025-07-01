@@ -1,5 +1,3 @@
-
-
 import six
 from django import forms
 from django.contrib import messages
@@ -118,18 +116,14 @@ class PackageChildFormSet(ProductChildBaseFormSet):
                 "child": product,
                 "quantity": quantity,
             }
-            for (product, quantity) in six.iteritems(
-                self.parent_product.get_package_child_to_quantity_map()
-            )
+            for (product, quantity) in six.iteritems(self.parent_product.get_package_child_to_quantity_map())
         ]
         super().__init__(**kwargs)
 
     def save(self):
         parent_product = self.parent_product
         current_products = set(parent_product.get_package_child_to_quantity_map())
-        selected_products, removed_products, selected_quantities = (
-            self.get_selected_and_removed()
-        )
+        selected_products, removed_products, selected_quantities = self.get_selected_and_removed()
 
         with atomic():
             try:
@@ -138,8 +132,7 @@ class PackageChildFormSet(ProductChildBaseFormSet):
             except ImpossibleProductModeException as ipme:
                 six.raise_from(
                     Problem(
-                        _("Unable to make package %(product)s: %(error)s.")
-                        % {"product": parent_product, "error": ipme}
+                        _("Unable to make package %(product)s: %(error)s.") % {"product": parent_product, "error": ipme}
                     ),
                     ipme,
                 )
@@ -171,8 +164,7 @@ class PackageChildFormSet(ProductChildBaseFormSet):
             elif self.request and child_product == self.parent_product:
                 messages.error(
                     self.request,
-                    _("Couldn't add product %s to its own package.")
-                    % str(child_product),
+                    _("Couldn't add product %s to its own package.") % str(child_product),
                 )
             quantity = child_form.cleaned_data.get("quantity")
             selected_product_quantities[child_product] = quantity

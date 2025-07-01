@@ -118,10 +118,7 @@ class ProductCampaignMatcher:
 
     def _categories_match(self, field_name, obj):
         existing = set(getattr(obj, field_name).values_list("pk", flat=True))
-        if (
-            self.shop_product.primary_category
-            and self.shop_product.primary_category.pk in existing
-        ):
+        if self.shop_product.primary_category and self.shop_product.primary_category.pk in existing:
             return True
         cats = set(self.shop_product.categories.values_list("pk", flat=True))
         if cats.intersection(existing):
@@ -132,10 +129,7 @@ class ProductCampaignMatcher:
         attr = getattr(obj, field_name)
         if not attr:
             return False
-        if (
-            self.shop_product.primary_category
-            and self.shop_product.primary_category.pk == attr.pk
-        ):
+        if self.shop_product.primary_category and self.shop_product.primary_category.pk == attr.pk:
             return True
         return self.shop_product.categories.filter(pk=attr.pk).exists()
 

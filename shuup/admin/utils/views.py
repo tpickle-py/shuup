@@ -1,5 +1,3 @@
-
-
 import six
 from django.conf import settings
 from django.contrib import messages
@@ -53,17 +51,13 @@ class CreateOrUpdateView(UpdateView):
 
             context["iframe_close"] = bool(self.request.GET.get("iframe_close"))
             context["quick_add_target"] = self.request.GET.get("quick_add_target", "")
-            context["quick_add_callback"] = self.request.GET.get(
-                "quick_add_callback", ""
-            )
+            context["quick_add_callback"] = self.request.GET.get("quick_add_callback", "")
             context["quick_add_option_id"] = self.object.id
             context["quick_add_option_name"] = name if name else _("Unnamed")
         return context
 
     def get_save_form_id(self):
-        return getattr(
-            self, "save_form_id", None
-        ) or f"{self.get_context_object_name(self.object)}_form"
+        return getattr(self, "save_form_id", None) or f"{self.get_context_object_name(self.object)}_form"
 
     def get_return_url(self):
         return get_model_url(self.object, kind="list", shop=self.request.shop)
@@ -122,22 +116,16 @@ class CreateOrUpdateView(UpdateView):
 
         # trigger signal for extra form validations
         try:
-            view_form_valid.send(
-                sender=type(self), view=self, form=form, request=self.request
-            )
+            view_form_valid.send(sender=type(self), view=self, form=form, request=self.request)
         except ValidationError:
             return self.form_invalid(form)
 
         is_new = not self.object.pk
         self.save_form(form)
         if is_new:
-            object_created.send(
-                sender=type(self.object), object=self.object, request=self.request
-            )
+            object_created.send(sender=type(self.object), object=self.object, request=self.request)
 
-        object_saved.send(
-            sender=type(self.object), object=self.object, request=self.request
-        )
+        object_saved.send(sender=type(self.object), object=self.object, request=self.request)
         self._add_create_or_change_message(self.request, self.object, is_new=is_new)
         return HttpResponseRedirect(self.get_success_url())
 
@@ -166,15 +154,9 @@ class CreateOrUpdateView(UpdateView):
 
 def add_create_or_change_message(request, instance, is_new):
     if instance:
-        msg = (
-            instance._meta.verbose_name
-            if is_new
-            else instance._meta.verbose_name.title()
-        )
+        msg = instance._meta.verbose_name if is_new else instance._meta.verbose_name.title()
     else:
-        msg = _(
-            "Item"
-        )  # instance is not always present. For example when saving configurations.
+        msg = _("Item")  # instance is not always present. For example when saving configurations.
 
     if is_new:
         msg = _("New %s was created.") % msg
@@ -215,9 +197,7 @@ def check_and_raise_if_only_one_allowed(setting_name, obj):
     if ShuupSettings.get_setting(setting_name):
         return
     if not obj.pk and obj.__class__.objects.count() >= 1:
-        raise Problem(
-            _("Only one %(model)s permitted.") % {"model": obj._meta.verbose_name}
-        )
+        raise Problem(_("Only one %(model)s permitted.") % {"model": obj._meta.verbose_name})
 
 
 class PicotableListView(PicotableViewMixin, ListView):
@@ -235,9 +215,7 @@ class PicotableListView(PicotableViewMixin, ListView):
                 ),
             ] + self.default_columns
 
-        self.settings = ViewSettings(
-            self.model, self.default_columns, view_context=self
-        )
+        self.settings = ViewSettings(self.model, self.default_columns, view_context=self)
 
         if self.mass_actions:
             if self.settings.columns:
@@ -269,9 +247,7 @@ class PicotableListView(PicotableViewMixin, ListView):
 
         return_url = self.url_identifier if self.url_identifier else None
         if self.request.user.is_superuser:
-            settings_button = SettingsActionButton.for_model(
-                model, return_url=return_url
-            )
+            settings_button = SettingsActionButton.for_model(model, return_url=return_url)
         else:
             settings_button = None
         if settings_button:
@@ -303,9 +279,7 @@ class MassEditMixin:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
         context["edit_title"] = self.title
-        context["is_all_selected"] = bool(
-            isinstance(self.ids, six.string_types) and self.ids == "all"
-        )
+        context["is_all_selected"] = bool(isinstance(self.ids, six.string_types) and self.ids == "all")
         if not context["is_all_selected"]:
             context["item_count"] = len(self.ids)
         return context

@@ -29,9 +29,7 @@ from sanity_utils import find_files
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument(
-        "root", nargs="?", default=".", help="Root directory (defaults to %(default)s)"
-    )
+    ap.add_argument("root", nargs="?", default=".", help="Root directory (defaults to %(default)s)")
     args = ap.parse_args()
     generated_resources = set()
     paths = find_files(args.root, generated_resources)

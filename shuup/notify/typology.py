@@ -1,5 +1,3 @@
-
-
 import enumfields
 from django import forms
 from django.apps import apps
@@ -144,9 +142,7 @@ class Model(Type):
             return None
 
     def is_coercible_from(self, other_type):
-        return (
-            isinstance(other_type, Model) and self.get_model() == other_type.get_model()
-        )
+        return isinstance(other_type, Model) and self.get_model() == other_type.get_model()
 
     def get_model(self):
         """

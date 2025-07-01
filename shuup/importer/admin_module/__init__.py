@@ -1,5 +1,3 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
 from shuup.admin.base import AdminModule, MenuEntry
@@ -14,17 +12,12 @@ class ImportAdminModule(AdminModule):
 
     def get_extra_permissions(self):
         extra_permissions = ["importer.show-all-imports"]
-        importers_permissions = [
-            importer.get_permission_identifier()
-            for importer in get_provide_objects("importers")
-        ]
+        importers_permissions = [importer.get_permission_identifier() for importer in get_provide_objects("importers")]
         return extra_permissions + importers_permissions
 
     def get_permissions_help_texts(self):
         help_texts = {
-            "importer.show-all-imports": _(
-                "Allow the user to see the imports from all shops and suppliers."
-            ),
+            "importer.show-all-imports": _("Allow the user to see the imports from all shops and suppliers."),
             "importer.import_process": _("Allow the user to run importers."),
             "importer.import": _("Allow the user to list imports."),
             "importer.import.new": _("Allow the user to import a file."),

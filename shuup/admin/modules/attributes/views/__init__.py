@@ -1,4 +1,3 @@
-
 from .edit import AttributeEditView
 from .list import AttributeListView
 

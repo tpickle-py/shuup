@@ -1,6 +1,3 @@
-
-
-
 import six
 
 import shuup.core.models

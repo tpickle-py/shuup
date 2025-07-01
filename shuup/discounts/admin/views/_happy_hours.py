@@ -1,5 +1,3 @@
-
-
 import datetime
 
 from django import forms
@@ -29,9 +27,7 @@ class HappyHourListView(PicotableListView):
             _("Happy Hour Name"),
             sort_field="name",
             display="name",
-            filter_config=TextFilter(
-                filter_field="name", placeholder=_("Filter by name...")
-            ),
+            filter_config=TextFilter(filter_field="name", placeholder=_("Filter by name...")),
         )
     ]
 
@@ -106,18 +102,14 @@ class HappyHourForm(forms.ModelForm):
                 model=Discount,
                 required=False,
             )
-            initial_discounts = (
-                self.instance.discounts.all() if self.instance.pk else []
-            )
+            initial_discounts = self.instance.discounts.all() if self.instance.pk else []
             self.fields["discounts"].initial = initial_discounts
             self.fields["discounts"].widget.choices = [
                 (discount.pk, force_text(discount)) for discount in initial_discounts
             ]
 
         if self.instance.pk:
-            weekdays, from_hour, to_hour = _get_initial_data_for_time_ranges(
-                self.instance
-            )
+            weekdays, from_hour, to_hour = _get_initial_data_for_time_ranges(self.instance)
             if weekdays and from_hour and to_hour:
                 self.fields["weekdays"].initial = weekdays
                 self.fields["from_hour"].initial = from_hour
@@ -130,15 +122,11 @@ class HappyHourForm(forms.ModelForm):
         help_texts = [
             (
                 "from_hour",
-                _(
-                    "12pm is considered noon and 12am as midnight. Start hour is included to the discount."
-                ),
+                _("12pm is considered noon and 12am as midnight. Start hour is included to the discount."),
             ),
             (
                 "to_hour",
-                _(
-                    "12pm is considered noon and 12am as midnight. End hours is included to the discount."
-                ),
+                _("12pm is considered noon and 12am as midnight. End hours is included to the discount."),
             ),
             ("weekdays", _("Weekdays the happy hour is active.")),
         ]
@@ -155,9 +143,7 @@ class HappyHourForm(forms.ModelForm):
             if "discounts" in self.fields:
                 data = self.cleaned_data
                 discount_ids = data.get("discounts", [])
-                instance.discounts.set(
-                    Discount.objects.filter(shop=self.shop, id__in=discount_ids)
-                )
+                instance.discounts.set(Discount.objects.filter(shop=self.shop, id__in=discount_ids))
 
             instance.time_ranges.all().delete()
 
@@ -181,15 +167,9 @@ class HappyHourEditView(CreateOrUpdateView):
     def get_toolbar(self):
         object = self.get_object()
         delete_url = (
-            reverse_lazy(
-                "shuup_admin:discounts_happy_hour.delete", kwargs={"pk": object.pk}
-            )
-            if object.pk
-            else None
+            reverse_lazy("shuup_admin:discounts_happy_hour.delete", kwargs={"pk": object.pk}) if object.pk else None
         )
-        return get_default_edit_toolbar(
-            self, self.get_save_form_id(), delete_url=delete_url
-        )
+        return get_default_edit_toolbar(self, self.get_save_form_id(), delete_url=delete_url)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -207,6 +187,4 @@ class HappyHourDeleteView(DetailView):
         happy_hour = self.get_object()
         happy_hour.delete()
         messages.success(request, _("%s has been deleted.") % happy_hour)
-        return HttpResponseRedirect(
-            reverse_lazy("shuup_admin:discounts_happy_hour.list")
-        )
+        return HttpResponseRedirect(reverse_lazy("shuup_admin:discounts_happy_hour.list"))

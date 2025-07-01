@@ -5,8 +5,6 @@ Runs Django's makemessages for django and djangojs domains with sane
 defaults for Shuup projects (ignores and extensions).
 """
 
-
-
 from . import makemessages
 
 IGNORES = ["node_modules", "bower_components", "static", "*tests"]

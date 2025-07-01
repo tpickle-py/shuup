@@ -5,13 +5,9 @@ from shuup.notify.typology import Model, Text
 
 class AddOrderLogEntry(Action):
     identifier = "add_order_log_entry"
-    order = Binding(
-        "Order", Model("shuup.Order"), constant_use=ConstantUse.VARIABLE_ONLY
-    )
+    order = Binding("Order", Model("shuup.Order"), constant_use=ConstantUse.VARIABLE_ONLY)
     message = Binding("Message", Text, constant_use=ConstantUse.VARIABLE_OR_CONSTANT)
-    message_identifier = Binding(
-        "Message Identifier", Text, constant_use=ConstantUse.VARIABLE_OR_CONSTANT
-    )
+    message_identifier = Binding("Message Identifier", Text, constant_use=ConstantUse.VARIABLE_OR_CONSTANT)
 
     def execute(self, context):
         order = self.get_value(context, "order")

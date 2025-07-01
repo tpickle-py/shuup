@@ -23,10 +23,7 @@ _paragraph_re = re.compile(r"(?:\r\n|\r|\n){2,}")
 
 @jinja2.pass_eval_context
 def nl2br(eval_ctx, value):
-    result = "\n\n".join(
-        "<p>{}</p>".format(p.replace("\n", "<br>\n"))
-        for p in _paragraph_re.split(escape(value))
-    )
+    result = "\n\n".join("<p>{}</p>".format(p.replace("\n", "<br>\n")) for p in _paragraph_re.split(escape(value)))
     if eval_ctx.autoescape:
         result = Markup(result)
     return result
@@ -110,79 +107,79 @@ REPORT_TEMPLATE = """
 """.strip()
 
 IGNORED_FUNCTIONS = {
-        "__abs__",
-        "__add__",
-        "__all__",
-        "__and__",
-        "__builtins__",
-        "__cached__",
-        "__concat__",
-        "__contains__",
-        "__delitem__",
-        "__doc__",
-        "__eq__",
-        "__file__",
-        "__floordiv__",
-        "__ge__",
-        "__getitem__",
-        "__gt__",
-        "__iadd__",
-        "__iand__",
-        "__iconcat__",
-        "__ifloordiv__",
-        "__ilshift__",
-        "__imod__",
-        "__imul__",
-        "__index__",
-        "__inv__",
-        "__invert__",
-        "__ior__",
-        "__ipow__",
-        "__irshift__",
-        "__isub__",
-        "__itruediv__",
-        "__ixor__",
-        "__le__",
-        "__loader__",
-        "__lshift__",
-        "__lt__",
-        "__mod__",
-        "__mul__",
-        "__name__",
-        "__ne__",
-        "__neg__",
-        "__not__",
-        "__or__",
-        "__package__",
-        "__pos__",
-        "__pow__",
-        "__rshift__",
-        "__setitem__",
-        "__spec__",
-        "__sub__",
-        "__truediv__",
-        "__xor__",
-        # The usual suspects
-        "__str__",
-        "__repr__",
-        # CBV generics:
-        "dispatch",
-        "form_invalid",
-        "form_valid",
-        "get",
-        "get_context_data",
-        "get_form",
-        "get_form_class",
-        "get_form_kwargs",
-        "get_object",
-        "get_success_url",
-        "post",
-    }
+    "__abs__",
+    "__add__",
+    "__all__",
+    "__and__",
+    "__builtins__",
+    "__cached__",
+    "__concat__",
+    "__contains__",
+    "__delitem__",
+    "__doc__",
+    "__eq__",
+    "__file__",
+    "__floordiv__",
+    "__ge__",
+    "__getitem__",
+    "__gt__",
+    "__iadd__",
+    "__iand__",
+    "__iconcat__",
+    "__ifloordiv__",
+    "__ilshift__",
+    "__imod__",
+    "__imul__",
+    "__index__",
+    "__inv__",
+    "__invert__",
+    "__ior__",
+    "__ipow__",
+    "__irshift__",
+    "__isub__",
+    "__itruediv__",
+    "__ixor__",
+    "__le__",
+    "__loader__",
+    "__lshift__",
+    "__lt__",
+    "__mod__",
+    "__mul__",
+    "__name__",
+    "__ne__",
+    "__neg__",
+    "__not__",
+    "__or__",
+    "__package__",
+    "__pos__",
+    "__pow__",
+    "__rshift__",
+    "__setitem__",
+    "__spec__",
+    "__sub__",
+    "__truediv__",
+    "__xor__",
+    # The usual suspects
+    "__str__",
+    "__repr__",
+    # CBV generics:
+    "dispatch",
+    "form_invalid",
+    "form_valid",
+    "get",
+    "get_context_data",
+    "get_form",
+    "get_form_class",
+    "get_form_kwargs",
+    "get_object",
+    "get_success_url",
+    "post",
+}
 
 IGNORED_CLASSES = {
-        "Labels",
-        "Meta",
-    }
+    "Labels",
+    "Meta",
+}
 
 IGNORED_FIRST_ARGS = {"self", "cls"}  # classmethods
 
@@ -267,34 +264,24 @@ class DocInfo:
         self.node = node
         self.filename = filename
         self.directives = ""
-        directive_match = DOCCOV_DIRECTIVE_COMMENT_RE.search(
-            linecache.getline(filename, node.lineno)
-        )
+        directive_match = DOCCOV_DIRECTIVE_COMMENT_RE.search(linecache.getline(filename, node.lineno))
         if directive_match:
             self.directives = directive_match.group(1).lower()
         self.name = getattr(node, "name", None) or ""
         self.docstring = (self.parse_docstring(node) or "").strip()
-        self.named_args = (
-            [a.arg for a in node.args.args] if hasattr(node, "args") else []
-        )
+        self.named_args = [a.arg for a in node.args.args] if hasattr(node, "args") else []
         if self.named_args and self.named_args[0] in IGNORED_FIRST_ARGS:
             self.named_args.pop(0)
 
-        self.required_args = {
-            arg for arg in self.named_args if arg not in IGNORED_ARGS
-        }
+        self.required_args = {arg for arg in self.named_args if arg not in IGNORED_ARGS}
         self.mentioned_args = set(self.parse_arg_mentions(self.docstring))
         self.missing_args = self.required_args - self.mentioned_args
-        self.extraneous_args = (
-            self.mentioned_args - self.required_args - {"args", "kwargs"}
-        )
+        self.extraneous_args = self.mentioned_args - self.required_args - {"args", "kwargs"}
         self.validation_errors = list(self.validate())
         self.valid = not self.validation_errors
 
     def _prevalidate(self):
-        if (
-            "migrations" in self.filename
-        ):  # Nothing in migration files is documentation-worthwhile
+        if "migrations" in self.filename:  # Nothing in migration files is documentation-worthwhile
             return False
         if "ignore" in self.directives:
             return False
@@ -308,10 +295,7 @@ class DocInfo:
 
         for validator_class in self.validator_classes:
             validator = validator_class()
-            if any(
-                (directive in self.directives)
-                for directive in validator_class.disabling_directives
-            ):
+            if any((directive in self.directives) for directive in validator_class.disabling_directives):
                 continue
             yield from validator.validate(self)
 
@@ -443,9 +427,7 @@ class DocCov:
                 ),
                 "grand_totals": grand_totals,
                 "files": template_file_list,
-                "files_by_percentage": sorted(
-                    template_file_list, key=lambda f: (f["percentage"], f["id"])
-                ),
+                "files_by_percentage": sorted(template_file_list, key=lambda f: (f["percentage"], f["id"])),
             }
         )
 

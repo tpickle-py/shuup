@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -11,15 +9,11 @@ CART_UPDATE_DELAY_DEFAULT = 2
 
 
 def get_cart_delay_hours(shop):
-    return configuration.get(
-        shop, CART_UPDATE_DELAY_CONF_KEY, CART_UPDATE_DELAY_DEFAULT
-    )
+    return configuration.get(shop, CART_UPDATE_DELAY_CONF_KEY, CART_UPDATE_DELAY_DEFAULT)
 
 
 def set_cart_delay_hours(shop, value):
-    return configuration.set(
-        shop, CART_UPDATE_DELAY_CONF_KEY, (value or CART_UPDATE_DELAY_DEFAULT)
-    )
+    return configuration.set(shop, CART_UPDATE_DELAY_CONF_KEY, (value or CART_UPDATE_DELAY_DEFAULT))
 
 
 class CartDelayConfigurationForm(forms.Form):
@@ -27,9 +21,7 @@ class CartDelayConfigurationForm(forms.Form):
         required=False,
         min_value=0,
         label=_("Cart Inactivity Delay (hours)"),
-        help_text=_(
-            "Set the number of hours the cart must be inactive before it's displayed in Orders > Carts"
-        ),
+        help_text=_("Set the number of hours the cart must be inactive before it's displayed in Orders > Carts"),
     )
 
 

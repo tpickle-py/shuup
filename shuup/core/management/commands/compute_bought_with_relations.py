@@ -1,4 +1,3 @@
-
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
 
@@ -16,14 +15,10 @@ class Command(BaseCommand):
 
         # Handle all ordered products
         ordered_product_ids = (
-            OrderLine.objects.filter(type=OrderLineType.PRODUCT)
-            .values_list("product_id", flat=True)
-            .distinct()
+            OrderLine.objects.filter(type=OrderLineType.PRODUCT).values_list("product_id", flat=True).distinct()
         )
         for product_id in ordered_product_ids.distinct():
             add_bought_with_relations_for_product(product_id)
 
         for shop in Shop.objects.all():
-            context_cache.bump_cache_for_item(
-                cache_utils.get_cross_sells_cache_item(shop)
-            )
+            context_cache.bump_cache_for_item(cache_utils.get_cross_sells_cache_item(shop))

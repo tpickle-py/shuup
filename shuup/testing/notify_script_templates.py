@@ -1,4 +1,3 @@
-
 from shuup.notify.base import ScriptTemplate
 from shuup.notify.conditions import BooleanEqual
 from shuup.notify.models import Script

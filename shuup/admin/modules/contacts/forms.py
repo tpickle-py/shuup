@@ -45,13 +45,9 @@ class ContactBaseFormMixin:
     def init_fields(self):
         self.fields["groups"] = forms.ModelMultipleChoiceField(
             queryset=ContactGroup.objects.all_except_defaults(),
-            initial=(
-                self.instance.groups.all_except_defaults() if self.instance.pk else ()
-            ),
+            initial=(self.instance.groups.all_except_defaults() if self.instance.pk else ()),
             required=False,
-            widget=QuickAddContactGroupMultiSelect(
-                attrs={"data-model": "shuup.ContactGroup"}
-            ),
+            widget=QuickAddContactGroupMultiSelect(attrs={"data-model": "shuup.ContactGroup"}),
             label=_("Contact Groups"),
             help_text=_(
                 "The contact groups this contact belongs to. Contact groups are defined in Contacts - Contact Groups "
@@ -59,9 +55,7 @@ class ContactBaseFormMixin:
             ),
         )
         if "account_manager" in self.fields:
-            self.fields["account_manager"].widget = PersonContactChoiceWidget(
-                clearable=True
-            )
+            self.fields["account_manager"].widget = PersonContactChoiceWidget(clearable=True)
 
         if "picture" in self.fields:
             self.fields["picture"].widget = FileDnDUploaderWidget(
@@ -74,13 +68,9 @@ class ContactBaseFormMixin:
             shops_qs = Shop.objects.filter(staff_members__in=[self.request.user])
 
         if "tax_group" in self.fields:
-            self.fields["tax_group"].widget = QuickAddTaxGroupSelect(
-                editable_model="shuup.CustomerTaxGroup"
-            )
+            self.fields["tax_group"].widget = QuickAddTaxGroupSelect(editable_model="shuup.CustomerTaxGroup")
             if self.instance and self.instance.tax_group:
-                self.fields["tax_group"].widget.choices = [
-                    (self.instance.tax_group.id, self.instance.tax_group.name)
-                ]
+                self.fields["tax_group"].widget.choices = [(self.instance.tax_group.id, self.instance.tax_group.name)]
 
         self.fields["shops"] = forms.ModelMultipleChoiceField(
             queryset=shops_qs,
@@ -106,16 +96,12 @@ class PersonContactBaseForm(ContactBaseFormMixin, forms.ModelForm):
         label=_("Language"),
         required=False,
         include_blank=True,
-        help_text=_(
-            "The primary language to be used in all communications with the contact."
-        ),
+        help_text=_("The primary language to be used in all communications with the contact."),
     )
 
     class Meta:
         model = PersonContact
-        fields = list(FIELDS_BY_MODEL_NAME["PersonContact"]) + list(
-            FIELDS_BY_MODEL_NAME["Contact"]
-        )
+        fields = list(FIELDS_BY_MODEL_NAME["PersonContact"]) + list(FIELDS_BY_MODEL_NAME["Contact"])
 
     def __init__(self, user=None, *args, **kwargs):
         self.user = user
@@ -129,9 +115,7 @@ class PersonContactBaseForm(ContactBaseFormMixin, forms.ModelForm):
         self.initial["language"] = self.instance.language
 
     def save(self, commit=True):
-        self.instance.name = (
-            self.cleaned_data["first_name"] + " " + self.cleaned_data["last_name"]
-        )
+        self.instance.name = self.cleaned_data["first_name"] + " " + self.cleaned_data["last_name"]
         self.instance.language = self.cleaned_data["language"]
         obj = super().save(commit)
         if self.user and not getattr(obj, "user", None):  # Allow binding only once
@@ -143,9 +127,7 @@ class PersonContactBaseForm(ContactBaseFormMixin, forms.ModelForm):
 class CompanyContactBaseForm(ContactBaseFormMixin, forms.ModelForm):
     class Meta:
         model = CompanyContact
-        fields = list(FIELDS_BY_MODEL_NAME["CompanyContact"]) + list(
-            FIELDS_BY_MODEL_NAME["Contact"]
-        )
+        fields = list(FIELDS_BY_MODEL_NAME["CompanyContact"]) + list(FIELDS_BY_MODEL_NAME["Contact"])
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
@@ -160,30 +142,17 @@ class CompanyContactBaseForm(ContactBaseFormMixin, forms.ModelForm):
             help_text=_("The contacts that are members of this company."),
         )
         if self.instance.pk and hasattr(self.instance, "members"):
-            members_field.widget.choices = [
-                (object.pk, force_text(object))
-                for object in self.instance.members.all()
-            ]
+            members_field.widget.choices = [(object.pk, force_text(object)) for object in self.instance.members.all()]
         self.fields["members"] = members_field
 
 
 class MassEditForm(forms.Form):
-    gender = EnumField(Gender).formfield(
-        default=Gender.UNDISCLOSED, label=_("Gender"), required=False
-    )
-    merchant_notes = forms.CharField(
-        label=_("Merchant Notes"), widget=forms.Textarea, required=False
-    )
+    gender = EnumField(Gender).formfield(default=Gender.UNDISCLOSED, label=_("Gender"), required=False)
+    merchant_notes = forms.CharField(label=_("Merchant Notes"), widget=forms.Textarea, required=False)
     www = forms.URLField(required=False, label=_("Website URL"))
-    account_manager = forms.ModelChoiceField(
-        PersonContact.objects.all(), label=_("Account Manager"), required=False
-    )
-    tax_number = forms.CharField(
-        label=_("Company: Tax Number"), max_length=32, required=False
-    )
-    members = forms.ModelMultipleChoiceField(
-        Contact.objects.all(), label=_("Company: Members"), required=False
-    )
+    account_manager = forms.ModelChoiceField(PersonContact.objects.all(), label=_("Account Manager"), required=False)
+    tax_number = forms.CharField(label=_("Company: Tax Number"), max_length=32, required=False)
+    members = forms.ModelMultipleChoiceField(Contact.objects.all(), label=_("Company: Members"), required=False)
     language = LazyTypedChoiceField(
         choices=[("", _("Select Language"))] + list(countries),
         label=_("Language"),
@@ -192,6 +161,4 @@ class MassEditForm(forms.Form):
 
 
 class GroupMassEditForm(forms.Form):
-    contact_group = forms.ModelMultipleChoiceField(
-        ContactGroup.objects.all(), label=_("Contact Group"), required=False
-    )
+    contact_group = forms.ModelMultipleChoiceField(ContactGroup.objects.all(), label=_("Contact Group"), required=False)

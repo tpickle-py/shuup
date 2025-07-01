@@ -1,5 +1,3 @@
-
-
 class PrintoutDeliveryExtraInformation:
     order = 1
 
