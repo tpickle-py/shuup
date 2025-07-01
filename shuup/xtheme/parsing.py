@@ -1,5 +1,3 @@
-
-
 import six
 from jinja2.ext import Extension
 from jinja2.nodes import Const, EvalContext, ExprStmt, Impossible, Name, Output
@@ -203,9 +201,7 @@ class PlaceholderExtension(_PlaceholderManagingExtension):
             next(parser.stream)
             next(parser.stream)
         else:
-            placeholder_name = six.text_type(
-                parse_constantlike(self.environment, parser)
-            )
+            placeholder_name = six.text_type(parse_constantlike(self.environment, parser))
         self._new_layout(parser, placeholder_name)
         parser.parse_statements(["name:endplaceholder"], drop_needle=True)
         # Body parsing will have, as a side effect, populated the current layout
@@ -216,14 +212,10 @@ class PlaceholderExtension(_PlaceholderManagingExtension):
             Const(parser.name),
             Const(global_type),
         ]
-        return Output([self.call_method("_render_placeholder", args)]).set_lineno(
-            lineno
-        )
+        return Output([self.call_method("_render_placeholder", args)]).set_lineno(lineno)
 
     @contextfunction
-    def _render_placeholder(
-        self, context, placeholder_name, layout, template_name, global_type
-    ):
+    def _render_placeholder(self, context, placeholder_name, layout, template_name, global_type):
         return render_placeholder(
             context,
             placeholder_name=placeholder_name,
@@ -281,9 +273,7 @@ class LayoutPartExtension(_PlaceholderManagingExtension):
 
     def _begin_row(self, cfg, arg):
         if arg is not None:
-            raise ValueError(
-                f"Error! `row`s do not take arguments at present time (got `{arg!r}`)."
-            )
+            raise ValueError(f"Error! `row`s do not take arguments at present time (got `{arg!r}`).")
         cfg.begin_row()
 
     def _begin_column(self, cfg, arg):
@@ -294,9 +284,7 @@ class LayoutPartExtension(_PlaceholderManagingExtension):
             except Impossible as err:
                 raise ValueError(f"Error! Invalid argument for `column`: `{arg!r}`.") from err
             if not isinstance(sizes, dict):
-                raise ValueError(
-                    f"Error! Argument for `column` must be a dict: `{arg!r}`."
-                )
+                raise ValueError(f"Error! Argument for `column` must be a dict: `{arg!r}`.")
         cfg.begin_column(sizes)
 
 

@@ -23,20 +23,12 @@ class ProductDetailView(DetailView):
 
         supplier_pk = self.kwargs.get("supplier_pk")
         if supplier_pk:
-            supplier = (
-                Supplier.objects.enabled(shop=self.request.shop)
-                .filter(id=supplier_pk)
-                .first()
-            )
+            supplier = Supplier.objects.enabled(shop=self.request.shop).filter(id=supplier_pk).first()
         else:
-            shop_product = self.object.get_shop_instance(
-                self.request.shop, allow_cache=True
-            )
+            shop_product = self.object.get_shop_instance(self.request.shop, allow_cache=True)
             supplier = shop_product.get_supplier(self.request.customer)
 
-        context.update(
-            get_product_context(self.request, self.object, language, supplier)
-        )
+        context.update(get_product_context(self.request, self.object, language, supplier))
         # TODO: Maybe add hook for ProductDetailView get_context_data?
         # dispatch_hook("get_context_data", view=self, context=context)
         return context
@@ -48,18 +40,12 @@ class ProductDetailView(DetailView):
             # redirect to parent url with child pre-selected
             parent_url = reverse(
                 "shuup:product",
-                kwargs={
-                    "pk": product.variation_parent.pk, "slug": product.variation_parent.slug
-                },
+                kwargs={"pk": product.variation_parent.pk, "slug": product.variation_parent.slug},
             )
-            return HttpResponseRedirect(
-                f"{parent_url}?variation={product.sku}"
-            )
+            return HttpResponseRedirect(f"{parent_url}?variation={product.sku}")
 
         try:
-            shop_product = self.shop_product = product.get_shop_instance(
-                request.shop, allow_cache=True
-            )
+            shop_product = self.shop_product = product.get_shop_instance(request.shop, allow_cache=True)
         except ShopProduct.DoesNotExist as err:
             raise Problem(_("Error! This product is not available in this shop.")) from err
 

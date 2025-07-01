@@ -1,5 +1,3 @@
-
-
 import decimal
 import json
 import numbers
@@ -29,14 +27,10 @@ FORMATTED_DECIMAL_FIELD_MAX_DIGITS = 36
 class InternalIdentifierField(models.CharField):
     def __init__(self, **kwargs):
         if "unique" not in kwargs:
-            raise ValueError(
-                "Error! You must explicitly set the `unique` flag for `InternalIdentifierField`s."
-            )
+            raise ValueError("Error! You must explicitly set the `unique` flag for `InternalIdentifierField`s.")
         kwargs.setdefault("max_length", 64)
         kwargs.setdefault("blank", True)
-        kwargs.setdefault(
-            "null", bool(kwargs.get("blank"))
-        )  # If it's allowed to be blank, it should be null
+        kwargs.setdefault("null", bool(kwargs.get("blank")))  # If it's allowed to be blank, it should be null
         kwargs.setdefault("verbose_name", _("internal identifier"))
         kwargs.setdefault(
             "help_text",
@@ -145,9 +139,7 @@ class MeasurementField(FormattedDecimalField):
 
 
 class LanguageFieldMixin:
-    LANGUAGE_CODES = remove_extinct_languages(
-        tuple(set(babel.Locale("en").languages.keys()))
-    )
+    LANGUAGE_CODES = remove_extinct_languages(tuple(set(babel.Locale("en").languages.keys())))
 
 
 class LanguageField(LanguageFieldMixin, models.CharField):
@@ -159,10 +151,7 @@ class LanguageField(LanguageFieldMixin, models.CharField):
     def get_choices(self, include_blank=True, blank_choice=BLANK_CHOICE_DASH):
         locale = get_current_babel_locale()
         translated_choices = [
-            (code, locale.languages.get(code, code))
-            for (code, _) in super().get_choices(
-                include_blank, blank_choice
-            )
+            (code, locale.languages.get(code, code)) for (code, _) in super().get_choices(include_blank, blank_choice)
         ]
         translated_choices.sort(key=lambda pair: pair[1].lower())
         return translated_choices
@@ -177,10 +166,7 @@ class LanguageFormField(LanguageFieldMixin, forms.ChoiceField):
 
     def get_choices(self, include_blank=True, blank_choice=BLANK_CHOICE_DASH):
         locale = get_current_babel_locale()
-        translated_choices = [
-            (code, locale.languages.get(code, code))
-            for code in sorted(self.LANGUAGE_CODES)
-        ]
+        translated_choices = [(code, locale.languages.get(code, code)) for code in sorted(self.LANGUAGE_CODES)]
         translated_choices.sort(key=lambda pair: pair[1].lower())
         if include_blank:
             translated_choices = blank_choice + translated_choices
@@ -210,11 +196,7 @@ class HexColorField(models.CharField):
     def __init__(self, **kwargs):
         kwargs["max_length"] = 9
         super().__init__(**kwargs)
-        self.validators.append(
-            RegexValidator(
-                "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$", _("Invalid color")
-            )
-        )
+        self.validators.append(RegexValidator("^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$", _("Invalid color")))
 
 
 class SeparatedValuesField(models.TextField):

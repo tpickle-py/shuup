@@ -30,9 +30,7 @@ class TaskResult:
             try:
                 json.dumps(result)
             except TypeError as err:
-                raise TaskNotSerializableError(
-                    "Task result is not serializable as JSON."
-                ) from err
+                raise TaskNotSerializableError("Task result is not serializable as JSON.") from err
 
         self.result = result
         self.error_log = error_log
@@ -45,9 +43,7 @@ class Task:
     queue = "default"  # str
     kwargs = None  # Optional[Dict[str, Any]]
 
-    def __init__(
-        self, function, identifier=None, stored=False, queue="default", **kwargs
-    ):
+    def __init__(self, function, identifier=None, stored=False, queue="default", **kwargs):
         """
         :param function: A string that represents the function specification.
             It will be locaded dynamically and executed passing the given kwargs.
@@ -104,9 +100,7 @@ class DefaultTaskRunner(TaskRunner):
     This task runner will execute the tasks received synchronously.
     """
 
-    def create_task(
-        self, function, stored=False, queue="default", task_identifier=None, **kwargs
-    ) -> Task:
+    def create_task(self, function, stored=False, queue="default", task_identifier=None, **kwargs) -> Task:
         task_identifier = task_identifier or f"{queue}_{uuid4().hex}"
 
         if stored:
@@ -132,13 +126,9 @@ class DefaultTaskRunner(TaskRunner):
         task_identifier = task.identifier
         background_task_execution = None
 
-        background_task = BackgroundTask.objects.filter(
-            identifier=task_identifier
-        ).first()
+        background_task = BackgroundTask.objects.filter(identifier=task_identifier).first()
         if background_task:
-            background_task_execution = BackgroundTaskExecution.objects.create(
-                task=background_task
-            )
+            background_task_execution = BackgroundTaskExecution.objects.create(task=background_task)
 
         function = load(task.function)
         task_result = None

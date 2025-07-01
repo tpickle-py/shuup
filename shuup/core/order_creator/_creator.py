@@ -1,5 +1,3 @@
-
-
 import warnings
 from decimal import Decimal
 
@@ -37,13 +35,9 @@ class OrderProcessor:
         if product:
             order_line.product = product
             if product.sales_unit:
-                quantized_quantity = bankers_round(
-                    quantity, product.sales_unit.decimals
-                )
+                quantized_quantity = bankers_round(quantity, product.sales_unit.decimals)
                 if quantized_quantity != quantity:
-                    raise ValueError(
-                        "Error! Sales unit decimal conversion causes precision loss."
-                    )
+                    raise ValueError("Error! Sales unit decimal conversion causes precision loss.")
         else:
             order_line.product = None
 
@@ -58,17 +52,13 @@ class OrderProcessor:
             order_line.base_unit_price = source_line.base_unit_price
         if source_line.discount_amount:
             order_line.discount_amount = source_line.discount_amount
-        order_line.type = (
-            source_line.type if source_line.type is not None else OrderLineType.OTHER
-        )
+        order_line.type = source_line.type if source_line.type is not None else OrderLineType.OTHER
         order_line.accounting_identifier = text(source_line.accounting_identifier)
         order_line.require_verification = bool(source_line.require_verification)
         order_line.verified = not order_line.require_verification
         order_line.source_line = source_line
         order_line.parent_source_line = source_line.parent_line
-        extra_data = (
-            source_line.data.get("extra", {}) if hasattr(source_line, "data") else {}
-        )
+        extra_data = source_line.data.get("extra", {}) if hasattr(source_line, "data") else {}
         extra_data.update({"source_line_id": source_line.line_id})
 
         order_line.extra_data = extra_data
@@ -134,9 +124,7 @@ class OrderProcessor:
 
     def add_lines_into_order(self, order, lines):
         # Map source lines to order lines for parentage linking
-        order_line_by_source = {
-            id(order_line.source_line): order_line for order_line in lines
-        }
+        order_line_by_source = {id(order_line.source_line): order_line for order_line in lines}
 
         # Set line ordering, parentage and save the lines
         for index, order_line in enumerate(lines):
@@ -156,9 +144,7 @@ class OrderProcessor:
         # And one last pass to call the subclass hook.
         for order_line in lines:
             self.process_saved_order_line(order=order, order_line=order_line)
-            post_order_line_save.send(
-                sender=type(self), order=order, order_line=order_line
-            )
+            post_order_line_save.send(sender=type(self), order=order, order_line=order_line)
 
     def add_line_taxes(self, lines):
         for line in lines:
@@ -197,23 +183,15 @@ class OrderProcessor:
             "currency": order_source.currency,
             "prices_include_tax": order_source.prices_include_tax,
             "shipping_address": (
-                order_source.shipping_address.to_immutable()
-                if order_source.shipping_address
-                else None
+                order_source.shipping_address.to_immutable() if order_source.shipping_address else None
             ),
-            "billing_address": (
-                order_source.billing_address.to_immutable()
-                if order_source.billing_address
-                else None
-            ),
+            "billing_address": (order_source.billing_address.to_immutable() if order_source.billing_address else None),
             "customer": (order_source.customer or None),
             "orderer": (order_source.orderer or None),
             "creator": real_user_or_none(order_source.creator),
             "shipping_method": order_source.shipping_method,
             "payment_method": order_source.payment_method,
-            "customer_comment": (
-                order_source.customer_comment if order_source.customer_comment else ""
-            ),
+            "customer_comment": (order_source.customer_comment if order_source.customer_comment else ""),
             "marketing_permission": bool(order_source.marketing_permission),
             "language": order_source.language,
             "ip_address": order_source.ip_address,
@@ -278,10 +256,7 @@ class OrderProcessor:
             order.customer.save()
 
         # add shop to the customer shop list if needed
-        if (
-            settings.SHUUP_ENABLE_MULTIPLE_SHOPS
-            and settings.SHUUP_MANAGE_CONTACTS_PER_SHOP
-        ):
+        if settings.SHUUP_ENABLE_MULTIPLE_SHOPS and settings.SHUUP_MANAGE_CONTACTS_PER_SHOP:
             order.customer.add_to_shop(order.shop)
 
     def _assign_code_usages(self, order_source, order):

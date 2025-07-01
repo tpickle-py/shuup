@@ -113,11 +113,7 @@ class FileImporter:
         try:
             filename = get_import_file_path(self.file_name)
             if not os.path.isfile(filename):
-                raise ImporterError(
-                    _("{file_name} is not a valid file.").format(
-                        file_name=self.file_name
-                    )
-                )
+                raise ImporterError(_("{file_name} is not a valid file.").format(file_name=self.file_name))
         except Exception as err:
             raise ImporterError(_("The file is missing.")) from err
         try:
