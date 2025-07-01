@@ -146,6 +146,7 @@ def get_requirements():
 
 REQUIRES = get_requirements()
 
+
 if __name__ == "__main__":
     if "upload" in sys.argv:
         raise OSError("Uploading is blacklisted")

@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  shuup:
+    build:
+      context: .
+      dockerfile: Dockerfile.uv
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=shuup_workbench.settings.dev
+    tty: true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add a database service for production-like setup
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: shuup
+      POSTGRES_USER: shuup
+      POSTGRES_PASSWORD: shuup
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    profiles:
+      - with-db
+
+volumes:
+  postgres_data:

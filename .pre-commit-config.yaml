@@ -1,6 +1,17 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
+  # Update requirements files when pyproject.toml changes
+  - repo: local
+    hooks:
+      - id: generate-requirements
+        name: Generate requirements files
+        entry: ./regenerate_requirements.sh
+        language: script
+        files: ^pyproject\.toml$
+        pass_filenames: false
+        description: "Auto-generate requirements*.txt from pyproject.toml"
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:

@@ -316,7 +316,10 @@ include = [
     "README.rst",
     "LICENSE",
     "pyproject.toml",
-    "setup.py"  # Keep for backward compatibility
+    "setup.py",  # Keep for backward compatibility
+    "requirements*.txt",  # Include generated requirements files
+    "generate_requirements.py",  # Include the generator script
+    "regenerate_requirements.sh",  # Include the automation script
 ]
 
 [tool.hatch.metadata]

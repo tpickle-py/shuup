@@ -1,0 +1,28 @@
+# Generated from pyproject.toml - Development dependencies only
+# Install in editable mode
+-e .
+
+# Direct dependencies
+beautifulsoup4>=4.13.4
+black>=24.0.0
+build>=1.0.0
+codecov>=2.1.13
+coverage>=7.4.0
+flake8-pyproject>=1.2.3
+flake8>=7.0.0
+gitignore-parser>=0.1.12
+isort>=5.13.0
+pillow>=10.0.0
+pre-commit>=3.6.0
+pylint-django>=2.6.1
+pytest-cov>=4.0.0
+pytest-django>=4.8.0
+pytest-splinter>=3.3.2
+pytest>=8.0.0
+ruff>=0.12.1
+selenium>=4.15.0
+sphinx-rtd-theme>=2.0.0
+sphinx>=7.2.0
+splinter>=0.21.0
+twine>=4.0.0
+weasyprint>=61.0

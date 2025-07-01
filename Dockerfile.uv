@@ -1,0 +1,50 @@
+# Modern Dockerfile using uv for faster builds
+FROM ghcr.io/astral-sh/uv:python3.11-bookworm-slim as base
+
+# This image is optimized for development with uv
+LABEL maintainer="Shuup Commerce Inc. <support@shuup.com>"
+
+# Install system dependencies
+RUN apt-get update \
+    && apt-get --assume-yes install \
+    curl \
+    libpangocairo-1.0-0 \
+    python3-dev \
+    python3-pil \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/ /var/cache/apt/
+
+# Install Node.js for building static assets
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
+
+WORKDIR /app
+
+# Copy dependency files first for better layer caching
+COPY pyproject.toml uv.lock ./
+COPY requirements-minimal.txt ./
+
+# Install dependencies using uv (much faster than pip)
+RUN uv sync --frozen
+
+# Copy the rest of the application
+COPY . .
+
+# Build static resources
+RUN uv run shuup-build-resources
+
+# Initialize database and create superuser
+RUN uv run shuup_workbench migrate --settings=shuup_workbench.settings.dev
+RUN uv run shuup_workbench shuup_init --settings=shuup_workbench.settings.dev
+
+RUN echo '\
+    from django.contrib.auth import get_user_model\n\
+    from django.db import IntegrityError\n\
+    try:\n\
+    get_user_model().objects.create_superuser("admin", "admin@admin.com", "admin")\n\
+    except IntegrityError:\n\
+    pass\n' | uv run shuup_workbench shell --settings=shuup_workbench.settings.dev
+
+EXPOSE 8000
+
+CMD ["uv", "run", "shuup_workbench", "runserver", "0.0.0.0:8000", "--settings=shuup_workbench.settings.dev"]

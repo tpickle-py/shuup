@@ -4,12 +4,12 @@ services:
   shuup:
     build:
       context: .
-      args:
-        editable: 1
+      dockerfile: Dockerfile.uv
     ports:
       - "8000:8000"
     volumes:
       - .:/app
+      - /app/.venv  # Exclude virtual environment from volume mount
       - /app/.sqlite
       - /app/shuup/admin/static
       - /app/shuup/front/static
@@ -18,5 +18,7 @@ services:
       - /app/shuup/regions/static
       - /app/shuup/themes/classic_gray/static
       - /app/shuup/xtheme/static
+    environment:
+      - DJANGO_SETTINGS_MODULE=shuup_workbench.settings.dev
     tty: true
     restart: unless-stopped

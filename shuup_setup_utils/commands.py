@@ -15,6 +15,112 @@ from setuptools.command.build_py import build_py as st_build_py
 from . import excludes, resource_building
 
 
+class GenerateRequirementsCommand(distutils.core.Command):
+    command_name = "generate_requirements"
+    description = "generate requirements files from pyproject.toml"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        """Generate requirements files using uv and custom script"""
+        print("🔄 Generating requirements files from pyproject.toml...")
+
+        try:
+            # Generate full requirements files
+            with open("requirements.txt", "w") as f:
+                subprocess.check_call(
+                    [
+                        "uv",
+                        "export",
+                        "--no-hashes",
+                        "--no-annotate",
+                        "--format",
+                        "requirements-txt",
+                    ],
+                    stdout=f,
+                )
+
+            with open("requirements-dev.txt", "w") as f:
+                subprocess.check_call(
+                    [
+                        "uv",
+                        "export",
+                        "--group",
+                        "dev",
+                        "--no-hashes",
+                        "--no-annotate",
+                        "--format",
+                        "requirements-txt",
+                    ],
+                    stdout=f,
+                )
+
+            with open("requirements-tests.txt", "w") as f:
+                subprocess.check_call(
+                    [
+                        "uv",
+                        "export",
+                        "--group",
+                        "test",
+                        "--no-hashes",
+                        "--no-annotate",
+                        "--format",
+                        "requirements-txt",
+                    ],
+                    stdout=f,
+                )
+
+            with open("requirements-doc.txt", "w") as f:
+                subprocess.check_call(
+                    [
+                        "uv",
+                        "export",
+                        "--group",
+                        "docs",
+                        "--no-hashes",
+                        "--no-annotate",
+                        "--format",
+                        "requirements-txt",
+                    ],
+                    stdout=f,
+                )
+
+            with open("requirements-dev-ci.txt", "w") as f:
+                subprocess.check_call(
+                    [
+                        "uv",
+                        "export",
+                        "--group",
+                        "dev",
+                        "--group",
+                        "test",
+                        "--no-hashes",
+                        "--no-annotate",
+                        "--format",
+                        "requirements-txt",
+                    ],
+                    stdout=f,
+                )
+
+            # Generate minimal requirements files
+            if os.path.exists("generate_requirements.py"):
+                subprocess.check_call(["python", "generate_requirements.py"])
+
+            print("✅ Requirements files generated successfully!")
+
+        except subprocess.CalledProcessError as e:
+            print(f"❌ Error generating requirements files: {e}")
+            raise distutils.errors.DistutilsExecError("Failed to generate requirements files")
+        except FileNotFoundError:
+            print("❌ uv not found. Please install uv first.")
+            raise distutils.errors.DistutilsExecError("uv not found")
+
+
 class BuildCommand(du_build):
     command_name = "build"
 
@@ -72,9 +178,7 @@ class BuildResourcesCommand(distutils.core.Command):
             if self.mode and mode.startswith(self.mode):
                 self.mode = mode
         if self.mode not in ["development", "production"]:
-            raise distutils.errors.DistutilsArgError(
-                "Mode must be 'development' or 'production'"
-            )
+            raise distutils.errors.DistutilsArgError("Mode must be 'development' or 'production'")
 
     def run(self):
         opts = resource_building.Options()
@@ -138,5 +242,6 @@ COMMANDS = {
         BuildResourcesCommand,
         BuildProductionResourcesCommand,
         BuildMessagesCommand,
+        GenerateRequirementsCommand,
     ]
 }
