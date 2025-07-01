@@ -1996,7 +1996,7 @@ wheels = [
 
 [[package]]
 name = "shuup"
-version = "3.2.25.post0.dev0"
+version = "3.2.26"
 source = { editable = "." }
 dependencies = [
     { name = "babel" },

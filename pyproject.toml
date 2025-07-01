@@ -1,13 +1,12 @@
 [build-system]
 requires = [
-    "setuptools>=68", 
-    "wheel"
+    "hatchling>=1.21.0"
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "hatchling.build"
 
 [project]
 name = "shuup"
-version = "3.2.25.post0.dev"
+version = "3.2.26"
 description = "E-Commerce Platform"
 authors = [
     {name = "Shuup Commerce Inc.", email = "shuup@shuup.com"}
@@ -69,15 +68,6 @@ dependencies = [
 Homepage = "http://shuup.com/"
 Repository = "https://github.com/shuup/shuup"
 Documentation = "https://shuup.readthedocs.io/"
-
-[tool.setuptools.packages.find]
-exclude = ["shuup_tests", "shuup_tests.*"]
-
-[tool.setuptools.package-data]
-"*" = ["*.html", "*.txt", "*.js", "*.css", "*.png", "*.gif", "*.jpg", "*.jpeg", "*.svg", "*.ico", "*.woff", "*.woff2", "*.ttf", "*.eot"]
-
-[tool.setuptools]
-include-package-data = true
 
 [tool.black]
 exclude = '''
@@ -296,3 +286,38 @@ docs = [
 
 [project.scripts]
 shuup-build-resources = "shuup_setup_utils.scripts:build_resources_main"
+
+# Hatchling build configuration
+[tool.hatch.build]
+exclude = [
+    "shuup_tests",
+    "shuup_tests/**",
+    ".git",
+    ".tox",
+    "venv", 
+    ".venv",
+    "node_modules",
+    "*.pyc",
+    "*.pyo",
+    "__pycache__",
+    ".pytest_cache",
+    "*.egg-info",
+    "build",
+    "dist",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["shuup", "shuup_setup_utils"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "shuup",
+    "shuup_setup_utils", 
+    "README.rst",
+    "LICENSE",
+    "pyproject.toml",
+    "setup.py"  # Keep for backward compatibility
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
