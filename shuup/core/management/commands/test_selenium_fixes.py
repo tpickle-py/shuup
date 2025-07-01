@@ -4,6 +4,7 @@ Management command to test Selenium WebDriver fixes.
 This command validates that all deprecated Selenium WebDriver methods
 have been properly updated to use the new By syntax.
 """
+
 import os
 
 from django.core.management.base import BaseCommand
@@ -15,13 +16,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--verbose',
-            action='store_true',
-            help='Enable verbose output',
+            "--verbose",
+            action="store_true",
+            help="Enable verbose output",
         )
 
     def handle(self, *args, **options):
-        verbose = options.get('verbose', False)
+        verbose = options.get("verbose", False)
 
         if verbose:
             self.stdout.write("Testing Selenium WebDriver imports...")
@@ -32,8 +33,14 @@ class Command(BaseCommand):
 
             # Test that all By selectors are available
             selectors = [
-                By.ID, By.XPATH, By.LINK_TEXT, By.PARTIAL_LINK_TEXT,
-                By.NAME, By.TAG_NAME, By.CLASS_NAME, By.CSS_SELECTOR
+                By.ID,
+                By.XPATH,
+                By.LINK_TEXT,
+                By.PARTIAL_LINK_TEXT,
+                By.NAME,
+                By.TAG_NAME,
+                By.CLASS_NAME,
+                By.CSS_SELECTOR,
             ]
 
             for selector in selectors:
@@ -42,13 +49,14 @@ class Command(BaseCommand):
 
             # Test that browser utils can be imported without errors
             from shuup.testing.browser_utils import (
-                click_element,
-                initialize_front_browser_test,
-                wait_until_appeared,
-                wait_until_condition,
-                wait_until_disappeared,
-                wait_until_appeared_xpath,
+                click_element,  # noqa: F401
+                initialize_front_browser_test,  # noqa: F401
+                wait_until_appeared,  # noqa: F401
+                wait_until_appeared_xpath,  # noqa: F401
+                wait_until_condition,  # noqa: F401
+                wait_until_disappeared,  # noqa: F401
             )
+
             self.stdout.write("✓ Browser utility functions import successful")
 
             # Test that the updated functions work (without actually running a browser)
@@ -61,22 +69,22 @@ class Command(BaseCommand):
 
             # Validate that no deprecated methods are being used
             deprecated_methods = [
-                'find_element_by_id',
-                'find_element_by_name',
-                'find_element_by_xpath',
-                'find_element_by_link_text',
-                'find_element_by_partial_link_text',
-                'find_element_by_tag_name',
-                'find_element_by_class_name',
-                'find_element_by_css_selector',
-                'find_elements_by_id',
-                'find_elements_by_name',
-                'find_elements_by_xpath',
-                'find_elements_by_link_text',
-                'find_elements_by_partial_link_text',
-                'find_elements_by_tag_name',
-                'find_elements_by_class_name',
-                'find_elements_by_css_selector'
+                "find_element_by_id",
+                "find_element_by_name",
+                "find_element_by_xpath",
+                "find_element_by_link_text",
+                "find_element_by_partial_link_text",
+                "find_element_by_tag_name",
+                "find_element_by_class_name",
+                "find_element_by_css_selector",
+                "find_elements_by_id",
+                "find_elements_by_name",
+                "find_elements_by_xpath",
+                "find_elements_by_link_text",
+                "find_elements_by_partial_link_text",
+                "find_elements_by_tag_name",
+                "find_elements_by_class_name",
+                "find_elements_by_css_selector",
             ]
 
             if verbose:
@@ -88,17 +96,17 @@ class Command(BaseCommand):
 
             for root, _dirs, files in os.walk(shuup_root):
                 # Skip certain directories
-                if any(skip in root for skip in ['.git', '__pycache__', '.venv', 'node_modules']):
+                if any(skip in root for skip in [".git", "__pycache__", ".venv", "node_modules"]):
                     continue
 
                 for file in files:
-                    if file.endswith('.py'):
+                    if file.endswith(".py"):
                         file_path = os.path.join(root, file)
                         try:
-                            with open(file_path, encoding='utf-8') as f:
+                            with open(file_path, encoding="utf-8") as f:
                                 content = f.read()
                                 for method in deprecated_methods:
-                                    if f'.{method}(' in content:
+                                    if f".{method}(" in content:
                                         deprecated_found.append((file_path, method))
                         except (UnicodeDecodeError, OSError):
                             # Skip files that can't be read
