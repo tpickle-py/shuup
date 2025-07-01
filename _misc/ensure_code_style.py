@@ -12,7 +12,7 @@ class ForeignKeyVisitor(XNodeVisitor):
     def __init__(self):
         self.errors = []
 
-    def visit_call(self, node, parents):
+    def visit_Call(self, node):  # noqa
         name = dotify_ast_name(node.func)
         if any(name.endswith(suffix) for suffix in ("ForeignKey", "FilerFileField", "FilerImageField")):
             kwmap = {kw.arg: kw.value for kw in node.keywords}
@@ -24,14 +24,14 @@ class VerboseNameVisitor(XNodeVisitor):
     def __init__(self):
         self.errors = []
 
-    def visit_call(self, node, parents, context=None):  # noqa (N802)
+    def visit_Call(self, node, parents, context=None):  # noqa
         name = dotify_ast_name(node.func)
         if name == "InternalIdentifierField":
             return
         if name == "TranslatedFields":
             for kw in node.keywords:
                 if isinstance(kw.value, ast.Call):
-                    self.visit_call(kw.value, parents, context=kw.arg)
+                    self.visit_Call(kw.value, parents, context=kw.arg)  # noqa
             return
         if not any(name.endswith(suffix) for suffix in ("ForeignKey", "Field")):
             return

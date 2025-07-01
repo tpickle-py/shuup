@@ -1,5 +1,3 @@
-
-
 from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -35,21 +33,19 @@ class SalesRangesFormPart(FormPart):
     name = "contact_group_sales_ranges"
     form = SalesRangesForm
 
-    def __init__(self, request, object=None):
-        super().__init__(request, object)
+    def __init__(self, request, obj=None):
+        super().__init__(request, obj)
         self.shops = [get_shop(request)]
 
     def _get_form_name(self, shop):
-        return "%d-%s" % (shop.pk, self.name)
+        return f"{shop.pk}-{self.name}"
 
     def get_form_defs(self):
-        if not self.object.pk or self.object.is_protected:
+        if not self.object.pk or self.object.is_protected:  # type: ignore
             return
 
         for shop in self.shops:
-            instance, _ = ContactGroupSalesRange.objects.get_or_create(
-                group=self.object, shop=shop
-            )
+            instance, _ = ContactGroupSalesRange.objects.get_or_create(group=self.object, shop=shop)
             yield TemplatedFormDef(
                 name=self._get_form_name(shop),
                 form_class=self.form,
@@ -60,10 +56,10 @@ class SalesRangesFormPart(FormPart):
 
     def form_valid(self, form):
         form_names = [self._get_form_name(shop) for shop in self.shops]
-        forms = [form.forms[name] for name in form_names if name in form.forms]
-        for form in forms:
-            if form.changed_data:
-                form.save()
+        form_list = [form.forms[name] for name in form_names if name in form.forms]
+        for f in form_list:
+            if f.changed_data:
+                f.save()
 
 
 class CampaignBaseFormPart(FormPart):
@@ -123,9 +119,9 @@ class BaseFormPart(FormPart):
 
         for component in component_form.new_objects:
             if self.name.startswith("conditions"):
-                self.object.conditions.add(component)
+                self.object.conditions.add(component)  # type: ignore
             elif self.name.startswith("filters"):
-                self.object.filters.add(component)
+                self.object.filters.add(component)  # type: ignore
 
 
 class BasketConditionsFormPart(BaseFormPart):
