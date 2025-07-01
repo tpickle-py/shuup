@@ -1,4 +1,3 @@
-from functools import lru_cache
 
 from django.conf import settings
 from django.contrib import messages
@@ -20,9 +19,7 @@ from shuup.utils.django_compat import MiddlewareMixin, get_middleware_classes
 
 __all__ = ["ProblemMiddleware", "ShuupFrontMiddleware"]
 
-ProblemMiddleware = (
-    ExceptionMiddleware  # This class is only an alias for ExceptionMiddleware.
-)
+ProblemMiddleware = ExceptionMiddleware  # This class is only an alias for ExceptionMiddleware.
 
 
 class ShuupFrontMiddleware(MiddlewareMixin):
@@ -62,8 +59,7 @@ class ShuupFrontMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         if settings.DEBUG and (
-            request.path.startswith(settings.MEDIA_URL)
-            or request.path.startswith(settings.STATIC_URL)
+            request.path.startswith(settings.MEDIA_URL) or request.path.startswith(settings.STATIC_URL)
         ):
             return None
 
@@ -164,7 +160,6 @@ class ShuupFrontMiddleware(MiddlewareMixin):
         finally:
             request.user = current_user
 
-    @lru_cache
     def _get_front_urlpatterns_callbacks(self):
         from shuup.front.urls import urlpatterns
 
@@ -187,9 +182,7 @@ class ShuupFrontMiddleware(MiddlewareMixin):
         from shuup.front.utils.translation import get_language_choices
 
         current_language = translation.get_language()
-        available_languages = [
-            code for (code, name, local_name) in get_language_choices(request.shop)
-        ]
+        available_languages = [code for (code, name, local_name) in get_language_choices(request.shop)]
         if current_language not in available_languages:
             if available_languages:
                 translation.activate(available_languages[0])
@@ -201,8 +194,7 @@ class ShuupFrontMiddleware(MiddlewareMixin):
     def _get_maintenance_response(self, request, view_func):
         # Allow media and static accesses in debug mode
         if settings.DEBUG and (
-            request.path.startswith(settings.MEDIA_URL)
-            or request.path.startswith(settings.STATIC_URL)
+            request.path.startswith(settings.MEDIA_URL) or request.path.startswith(settings.STATIC_URL)
         ):
             return None
 
@@ -216,9 +208,7 @@ class ShuupFrontMiddleware(MiddlewareMixin):
 
         if request.shop.maintenance_mode and not is_admin_user(request):
             return HttpResponse(
-                loader.render_to_string(
-                    "shuup/front/maintenance.jinja", request=request
-                ),
+                loader.render_to_string("shuup/front/maintenance.jinja", request=request),
                 status=503,
             )
 

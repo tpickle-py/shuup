@@ -1,5 +1,3 @@
-
-
 import re
 
 import six
@@ -183,19 +181,19 @@ PATTERNS = {
 
 def compile_pattern(prefix, pattern):
     r = pattern.replace(" ", "")
-    for gf, gt in (
+    for gf, gt_str in (
         ("9", "[0-9]"),
         ("R", "[0-9]*"),
         ("X", "[a-z0-9]"),
         ("S", "[a-z0-9+*]"),
         ("L", "[a-z]"),
     ):
-        regex_frag = f"({gt}{{%d}})"
+        regex_frag = f"({gt_str}{{%d}})"
 
-        def gt(m):
+        def repl(m, regex_frag=regex_frag):
             return regex_frag % len(m.group(0))
 
-        r = re.sub(gf + "+", gt, r)
+        r = re.sub(gf + "+", repl, r)
 
     return re.compile("^" + prefix + r + "$", re.I)
 
@@ -236,9 +234,7 @@ def verify_vat(vat_id, default_prefix=""):
     vat_id = vat_id.replace("-", "")  # TODO: Not sure if this is a good idea
 
     prefix = vat_id[:2]
-    if (
-        prefix not in PATTERNS
-    ):  # Okay, it's unknown thus far, so try again with the default prefix if any
+    if prefix not in PATTERNS:  # Okay, it's unknown thus far, so try again with the default prefix if any
         prefix = default_prefix
 
     # Then see if we know about this prefix.
@@ -255,16 +251,12 @@ def verify_vat(vat_id, default_prefix=""):
         patterns = [patterns]
 
     for pat in patterns:
-        regexp = compile_pattern(
-            prefix, pat
-        )  # Prefix will be added to the resulting spec.
+        regexp = compile_pattern(prefix, pat)  # Prefix will be added to the resulting spec.
         match = regexp.match(vat_id)
         if match:
             return (prefix, match.groups())
 
-    raise VatInvalidValidationError(
-        "VAT ID for {country} could not be validated".format(**spec)
-    )
+    raise VatInvalidValidationError("VAT ID for {country} could not be validated".format(**spec))
 
 
 def get_vat_prefix_for_country(iso3166):

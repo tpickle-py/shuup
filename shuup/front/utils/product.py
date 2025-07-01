@@ -182,7 +182,7 @@ def get_orderable_variation_children(product, request, variation_variables, supp
             continue
 
         combo = combo_data["variable_to_value"]
-        for variable, values in six.iteritems(combo):
+        for variable, _values in six.iteritems(combo):
             if variable not in orderable_variation_children:
                 orderable_variation_children[variable] = []
 

@@ -19,18 +19,14 @@ def cache_translations(objects, languages=None, meta=None):
 
     object_map = {object.pk: object for object in objects}
     languages.update({object._current_language for object in objects})
-    master_ids = object_map.keys()
+    translation_master_ids = object_map.keys()
 
     # SQLite limits host variables to 999 (see http://www.sqlite.org/limits.html#max_variable_number),
     # so we're batching to a number around that, with enough leeway for other binds (`languages` in particular).
-    for master_ids in batch(master_ids, 950):
-        for translation in xlate_model.objects.filter(
-            master_id__in=master_ids, language_code__in=languages
-        ):
+    for master_ids in batch(translation_master_ids, 950):
+        for translation in xlate_model.objects.filter(master_id__in=master_ids, language_code__in=languages):
             master = object_map[translation.master_id]
-            master._translations_cache[xlate_model][translation.language_code] = (
-                translation
-            )
+            master._translations_cache[xlate_model][translation.language_code] = translation
             # FIXME: setattr(translation, translation.__class__.master.cache_name, master)
     return objects
 
