@@ -17,10 +17,7 @@ in shop specific configuration override the values in global
 configuration.
 """
 
-
-
 from shuup.core import cache
-from shuup.core.models import ConfigurationItem, EncryptedConfigurationItem
 
 
 def set(shop, key, value, encrypted=False):
@@ -38,14 +35,12 @@ def set(shop, key, value, encrypted=False):
     :param value: Value to set.  Note: Must be JSON serializable.
     :type value: Any
     """
+    from shuup.core.models import ConfigurationItem, EncryptedConfigurationItem  # noqa: F401
+
     if not encrypted:
-        ConfigurationItem.objects.update_or_create(
-            shop=shop, key=key, defaults={"value": value}
-        )
+        ConfigurationItem.objects.update_or_create(shop=shop, key=key, defaults={"value": value})
     else:
-        EncryptedConfigurationItem.objects.update_or_create(
-            shop=shop, key=key, defaults={"value": value}
-        )
+        EncryptedConfigurationItem.objects.update_or_create(shop=shop, key=key, defaults={"value": value})
     if shop:
         cache.set(_get_cache_key(shop), None)
     else:
@@ -116,6 +111,8 @@ def _get_configuration_from_db(shop):
     :return: Configuration as it was saved in database
     :rtype: dict
     """
+    from shuup.core.models import ConfigurationItem, EncryptedConfigurationItem  # noqa: F401 # noqa: C0415
+
     configuration = {}
     for conf_item in ConfigurationItem.objects.filter(shop=shop):
         configuration[conf_item.key] = conf_item.value

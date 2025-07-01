@@ -49,27 +49,22 @@ class XThemeSelect2ModelMultipleChoiceField(forms.MultipleChoiceField):
 
             app_label, model_name = model.split(".")
             model = apps.get_model(app_label, model_name)
-            choices = [
-                (instance.pk, force_text(instance))
-                for instance in model.objects.filter(pk__in=initial)
-            ]
+            choices = [(instance.pk, force_text(instance)) for instance in model.objects.filter(pk__in=initial)]
 
         super().__init__(
+            *args,
             choices=choices,
             required=required,
             widget=forms.SelectMultiple(attrs=widget_attrs),
             label=label,
             initial=initial,
             help_text=help_text,
-            *args,
             **kwargs,
         )
 
     def validate(self, value):
         if self.required and not value:
-            raise forms.ValidationError(
-                self.error_messages["required"], code="required"
-            )
+            raise forms.ValidationError(self.error_messages["required"], code="required")
 
 
 class XThemeSelect2ModelChoiceField(forms.ChoiceField):
@@ -100,18 +95,16 @@ class XThemeSelect2ModelChoiceField(forms.ChoiceField):
                 choices = [(instance.pk, force_text(instance))]
 
         super().__init__(
+            *args,
             choices=choices,
             required=required,
             widget=forms.Select(attrs=widget_attrs),
             label=label,
             initial=initial,
             help_text=help_text,
-            *args,
             **kwargs,
         )
 
     def validate(self, value):
         if self.required and not value:
-            raise forms.ValidationError(
-                self.error_messages["required"], code="required"
-            )
+            raise forms.ValidationError(self.error_messages["required"], code="required")
