@@ -98,15 +98,9 @@ class CartAddAllProductsView(CartViewMixin, SingleObjectMixin, View):
     def get_object(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs.get("pk"))
 
-    def _get_supplier(
-        self, shop_product, supplier_id, customer, quantity, shipping_address
-    ):
+    def _get_supplier(self, shop_product, supplier_id, customer, quantity, shipping_address):
         if supplier_id:
-            supplier = (
-                shop_product.suppliers.enabled(shop=shop_product.shop)
-                .filter(pk=supplier_id)
-                .first()
-            )
+            supplier = shop_product.suppliers.enabled(shop=shop_product.shop).filter(pk=supplier_id).first()
         else:
             supplier = shop_product.get_supplier(customer, quantity, shipping_address)
         return supplier
@@ -146,9 +140,7 @@ class CartAddAllProductsView(CartViewMixin, SingleObjectMixin, View):
             try:
                 quantity = line.get("quantity", 0)
                 quantity_added += quantity
-                product_quantity = quantity + product_ids_to_quantities.get(
-                    line["product_id"], 0
-                )
+                product_quantity = quantity + product_ids_to_quantities.get(line["product_id"], 0)
                 shop_product.raise_if_not_orderable(
                     supplier=supplier,
                     quantity=product_quantity,
@@ -161,15 +153,11 @@ class CartAddAllProductsView(CartViewMixin, SingleObjectMixin, View):
                     quantity=quantity,
                 )
             except ProductNotOrderableProblem as e:
-                errors.append(
-                    {"product": line["text"], "message": force_text(e.message)}
-                )
+                errors.append({"product": line["text"], "message": force_text(e.message)})
         return JsonResponse(
             {
                 "errors": errors,
-                "success": force_text(
-                    _("%d product(s) added to cart." % quantity_added)
-                ),
+                "success": force_text(_(f"{quantity_added} product(s) added to cart.")),
             },
             status=200,
         )

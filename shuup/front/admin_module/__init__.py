@@ -1,5 +1,3 @@
-
-
 import datetime
 
 from django.db.models import Count, Sum
@@ -33,15 +31,13 @@ def get_unfinalized_cart_block(request, days=14):
         return
 
     return DashboardMoneyBlock(
-        id="abandoned_carts_%d" % days,
+        id=f"abandoned_carts_{days}",
         color="red",
         title=_("Abandoned Cart Value"),
         value=(data.get("sum") or 0),
         currency=shop.currency,
         icon="fa fa-calculator",
-        subtitle=_("Based on {b} carts over the last {d} days").format(
-            b=data.get("count"), d=days
-        ),
+        subtitle=_("Based on %(b)s carts over the last %(d)s days") % {"b": data.get("count"), "d": days},
     )
 
 

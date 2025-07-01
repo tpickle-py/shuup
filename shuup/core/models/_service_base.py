@@ -157,6 +157,16 @@ class ServiceChoice:
 
 class ServiceQuerySet(TranslatableQuerySet):
     def enabled(self):
+        """
+        Return a queryset of objects that are enabled and have an enabled provider.
+
+        This method excludes objects where the provider attribute is None, and filters
+        the queryset to include only those objects where both the provider's 'enabled'
+        attribute and the object's own 'enabled' attribute are True.
+
+        Returns:
+            QuerySet: A filtered queryset containing only enabled objects with enabled providers.
+        """
         no_provider_filter = {
             self.model.provider_attr: None,
         }
@@ -167,6 +177,15 @@ class ServiceQuerySet(TranslatableQuerySet):
         return self.exclude(**no_provider_filter).filter(**enabled_filter)
 
     def for_shop(self, shop):
+        """
+        Filter the queryset to include only objects associated with the given shop.
+
+        Args:
+            shop (Shop): The shop instance to filter by.
+
+        Returns:
+            QuerySet: A queryset filtered by the specified shop.
+        """
         return self.filter(shop=shop)
 
     def available_ids(self, shop, products):
