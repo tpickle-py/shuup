@@ -36,9 +36,7 @@ class PluginForm(forms.Form):
                 for language_code in languages:
                     key = f"{name}_{language_code}"
                     new_fields[key] = deepcopy(field)
-                    new_fields[key].initial = self.plugin.get_translated_value(
-                        name, language=language_code
-                    )
+                    new_fields[key].initial = self.plugin.get_translated_value(name, language=language_code)
                     new_fields[key].required = False
             elif field:
                 self.monolingual_field_names.append(name)
@@ -66,7 +64,7 @@ class PluginForm(forms.Form):
                 continue
             if self.fields[name].initial is not None:
                 self.cleaned_data[name] = self.fields[name].initial
-        self.cleaned_data
+        _ = self.cleaned_data
 
     def get_config(self):
         """

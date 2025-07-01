@@ -50,14 +50,14 @@ def flatten_const_node_list(environment, node_list):
     eval_ctx = EvalContext(environment)
     for node in node_list:
         if isinstance(node, Output):  # pragma: no branch
-            for node in node.nodes:
+            for child_node in node.nodes:
                 try:
-                    const = node.as_const(eval_ctx=eval_ctx)
+                    const = child_node.as_const(eval_ctx=eval_ctx)
                     if not isinstance(const, six.text_type):
                         raise Unflattenable(const)
                     output.append(const)
                 except Impossible as err:
-                    raise Unflattenable(node) from err
+                    raise Unflattenable(child_node) from err
         else:
             # Very unlikely, but you know.
             raise Unflattenable(node)  # pragma: no cover

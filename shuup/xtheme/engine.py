@@ -1,5 +1,3 @@
-
-
 import six
 from django.conf import settings
 from jinja2.environment import Environment, Template
@@ -28,16 +26,11 @@ class XthemeTemplate(Template):
         ctx = self.new_context(vars)
         try:
             content = concat(self.root_render_func(ctx))
-            if (
-                ctx
-                and ctx.name
-                and ctx.name
-                in settings.SHUUP_XTHEME_EXCLUDE_TEMPLATES_FROM_RESOUCE_INJECTION
-            ):
+            if ctx and ctx.name and ctx.name in settings.SHUUP_XTHEME_EXCLUDE_TEMPLATES_FROM_RESOUCE_INJECTION:
                 return content
 
             return self._postprocess(ctx, content)
-        except:
+        except Exception:
             return self.environment.handle_exception()
 
     def _postprocess(self, context, content):
@@ -86,9 +79,7 @@ class XthemeEnvironment(Environment):
         :rtype: shuup.xtheme.engine.XthemeTemplate
         """
         # Redirect to `get_or_select_template` to support live theme loading.
-        return self.get_or_select_template(
-            self._get_themed_template_names(name), parent=parent, globals=globals
-        )
+        return self.get_or_select_template(self._get_themed_template_names(name), parent=parent, globals=globals)
 
     @internalcode
     def get_or_select_template(self, template_name_or_list, parent=None, globals=None):
@@ -107,14 +98,10 @@ class XthemeEnvironment(Environment):
         """
         # Overridden to redirect calls to super.
         if isinstance(template_name_or_list, six.string_types):
-            return super().get_template(
-                template_name_or_list, parent, globals
-            )
+            return super().get_template(template_name_or_list, parent, globals)
         elif isinstance(template_name_or_list, Template):
             return template_name_or_list
-        return super().select_template(
-            template_name_or_list, parent, globals
-        )
+        return super().select_template(template_name_or_list, parent, globals)
 
     def _get_themed_template_names(self, name):
         """
@@ -141,13 +128,5 @@ class XthemeEnvironment(Environment):
         if not theme:
             return name
         theme_template = f"{theme.template_dir or theme.identifier}/{name}"
-        default_template = (
-            (f"{theme.default_template_dir}/{name}")
-            if theme.default_template_dir
-            else None
-        )
-        return (
-            [theme_template, default_template, name]
-            if default_template
-            else [theme_template, name]
-        )
+        default_template = (f"{theme.default_template_dir}/{name}") if theme.default_template_dir else None
+        return [theme_template, default_template, name] if default_template else [theme_template, name]
