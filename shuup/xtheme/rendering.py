@@ -1,5 +1,3 @@
-
-
 from django.utils.text import slugify
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
@@ -104,14 +102,10 @@ class PlaceholderRenderer:
         self.context = context
         self.view_config = get_view_config(context, global_type=global_type)
         self.placeholder_name = placeholder_name
-        self.template_name = (
-            "_xtheme_global_template_name" if global_type else template_name
-        )
+        self.template_name = "_xtheme_global_template_name" if global_type else template_name
         self.default_layout = default_layout
         # Fetch all layouts for this placeholder context combination
-        self.layouts = self.view_config.get_placeholder_layouts(
-            context, placeholder_name, self.default_layout
-        )
+        self.layouts = self.view_config.get_placeholder_layouts(context, placeholder_name, self.default_layout)
         self.global_type = global_type
         # For non-global placeholders, editing is only available for placeholders in the "base" template, i.e.
         # one that is not an `extend` parent.  Declaring placeholders in `include`d templates is fine,
@@ -140,19 +134,15 @@ class PlaceholderRenderer:
             write = buffer.append
             self._render_layout(write, layout)
             content = "".join(buffer)
-            layout_content = "{wrapper_start}{content}{wrapper_end}".format(
-                wrapper_start=wrapper_start,
-                content=content,
-                wrapper_end="</div>",
-            )
+
+            layout_content = f"{wrapper_start}{content}</div>"
+
             full_content += layout_content
 
         return Markup(f'<div class="placeholder-edit-wrap">{full_content}</div>')
 
     def _get_wrapper_attrs(self, layout):
-        layout_data_key = get_layout_data_key(
-            self.placeholder_name, layout, self.context
-        )
+        layout_data_key = get_layout_data_key(self.placeholder_name, layout, self.context)
         attrs = {
             "class": [
                 "xt-ph",
@@ -171,9 +161,7 @@ class PlaceholderRenderer:
             attrs["data-xt-layout-data-key"] = layout_data_key
             attrs["data-xt-placeholder-name"] = self.placeholder_name
             attrs["data-xt-global-type"] = "global" if self.global_type else None
-            attrs["title"] = (
-                _("Click to edit placeholder: %s") % self.placeholder_name.title()
-            )
+            attrs["title"] = _("Click to edit placeholder: %s") % self.placeholder_name.title()
         return attrs
 
     def _render_layout(self, write, layout):
@@ -207,31 +195,27 @@ class PlaceholderRenderer:
         """
         row_attrs = {"class": [layout.row_class, "xt-ph-row"]}
         if self.edit:
-            row_attrs["data-xt-row"] = str(y)
+            row_attrs["data-xt-row"] = [str(y)]
         write(f"<div{get_html_attrs(row_attrs)}>")
 
         language = get_language()
         saved_view_config = self.view_config.saved_view_config
 
         for x, cell in enumerate(row):
-            cache_key_prefix = slugify(
-                "{x}_{y}_{pk}_{status}_{modified_on}_{lang}_{placeholder}_{data_key}".format(
-                    x=x,
-                    y=y,
-                    pk=(saved_view_config.pk if saved_view_config else ""),
-                    status=(saved_view_config.status if saved_view_config else ""),
-                    modified_on=(
-                        saved_view_config.modified_on.isoformat()
-                        if saved_view_config and saved_view_config.modified_on
-                        else ""
-                    ),
-                    lang=language,
-                    placeholder=self.placeholder_name,
-                    data_key=get_layout_data_key(
-                        self.placeholder_name, layout, self.context
-                    ),
-                )
+            pk = ((saved_view_config.pk if saved_view_config else ""),)
+            status = ((saved_view_config.status if saved_view_config else ""),)
+            modified_on = (
+                (
+                    saved_view_config.modified_on.isoformat()
+                    if saved_view_config and saved_view_config.modified_on
+                    else ""
+                ),
             )
+            lang = (language,)
+            placeholder = (self.placeholder_name,)
+            data_key = (get_layout_data_key(self.placeholder_name, layout, self.context),)
+            lookup_key = f"{x}_{y}_{pk}_{status}_{modified_on}_{lang}_{placeholder}_{data_key}"
+            cache_key_prefix = slugify(lookup_key)
             self._render_cell(write, layout, x, cell, cache_key_prefix)
 
         write("</div>\n")
@@ -248,19 +232,13 @@ class PlaceholderRenderer:
         :type cell: shuup.xtheme.view_config.LayoutCell
         """
         classes = ["xt-ph-cell"]
-        for breakpoint, width in cell.sizes.items():
+        for bp, width in cell.sizes.items():
             if width is None or width == 0:
                 continue
             if width < 0:
-                classes.append(
-                    layout.hide_cell_class_template
-                    % {"breakpoint": breakpoint, "width": width}
-                )
+                classes.append(layout.hide_cell_class_template % {"breakpoint": bp, "width": width})
             else:
-                classes.append(
-                    layout.cell_class_template
-                    % {"breakpoint": breakpoint, "width": width}
-                )
+                classes.append(layout.cell_class_template % {"breakpoint": bp, "width": width})
 
         classes.append(cell.align)
         if cell.extra_classes:
@@ -268,7 +246,7 @@ class PlaceholderRenderer:
 
         cell_attrs = {"class": classes}
         if self.edit:
-            cell_attrs.update({"data-xt-cell": str(x)})
+            cell_attrs["data-xt-cell"] = [str(x)]
         write(f"<div{get_html_attrs(cell_attrs)}>")
         content = cell.render(self.context, cache_key_prefix=cache_key_prefix)
         if content is not None:  # pragma: no branch
@@ -277,13 +255,11 @@ class PlaceholderRenderer:
 
     def _render_default_layout_script_tag(self, write):
         # This script tag is read by editor.js
-        write(
-            "<script{}>".format(get_html_attrs({"class": "xt-ph-default-layout", "type": "text/plain"}))
-        )
+        write(f"<script{get_html_attrs({'class': 'xt-ph-default-layout', 'type': 'text/plain'})}>".format())
         layout = self.default_layout
-        if hasattr(layout, "serialize"):
+        if layout is not None and hasattr(layout, "serialize"):
             layout = layout.serialize()
         # TODO: Might have to do something about ..
         # TODO: .. http://www.w3.org/TR/html5/scripting-1.html#restrictions-for-contents-of-script-elements
-        write(TaggedJSONEncoder(separators=",:").encode(layout))
+        write(TaggedJSONEncoder(separators=(",", ":")).encode(layout))
         write("</script>")
