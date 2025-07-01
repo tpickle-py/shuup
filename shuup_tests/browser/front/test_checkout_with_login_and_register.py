@@ -8,9 +8,9 @@ import os
 import time
 
 from django.test.utils import override_settings
-from selenium.webdriver.common.by import By
 
 import pytest
+from selenium.webdriver.common.by import By
 
 from shuup.core import cache
 from shuup.core.models import Order, OrderStatus, OrderStatusRole, PersonContact, Product
