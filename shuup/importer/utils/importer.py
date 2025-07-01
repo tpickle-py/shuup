@@ -133,4 +133,4 @@ class FileImporter:
             return transform_file(mode, filename)
 
         except (Exception, RuntimeError) as e:
-            raise ImporterError(str(e))
+            raise ImporterError(str(e)) from e

@@ -58,8 +58,8 @@ def flatten_const_node_list(environment, node_list):
                     if not isinstance(const, six.text_type):
                         raise Unflattenable(const)
                     output.append(const)
-                except Impossible:
-                    raise Unflattenable(node)
+                except Impossible as err:
+                    raise Unflattenable(node) from err
         else:
             # Very unlikely, but you know.
             raise Unflattenable(node)  # pragma: no cover
@@ -85,8 +85,8 @@ def parse_constantlike(environment, parser):
         return expr.name
     try:
         return expr.as_const(EvalContext(environment))
-    except Impossible:
-        raise NonConstant(f"Error! Expression `{expr!r}` is not constant.")
+    except Impossible as err:
+        raise NonConstant(f"Error! Expression `{expr!r}` is not constant.") from err
 
 
 class _PlaceholderManagingExtension(Extension):
@@ -291,8 +291,8 @@ class LayoutPartExtension(_PlaceholderManagingExtension):
         if arg is not None:
             try:
                 sizes = arg.as_const(eval_ctx=EvalContext(self.environment))
-            except Impossible:
-                raise ValueError(f"Error! Invalid argument for `column`: `{arg!r}`.")
+            except Impossible as err:
+                raise ValueError(f"Error! Invalid argument for `column`: `{arg!r}`.") from err
             if not isinstance(sizes, dict):
                 raise ValueError(
                     f"Error! Argument for `column` must be a dict: `{arg!r}`."
@@ -342,7 +342,7 @@ class PluginExtension(_PlaceholderManagingExtension):
             except Unflattenable as uf:
                 raise NonConstant(
                     f"Error! A `plugin` block may only contain static layout (found: `{uf.args[0]!r}`)."
-                )
+                ) from uf
             config = toml.loads(config)
         layout.add_plugin(name, config)
         return noop_node(lineno)

@@ -132,7 +132,7 @@ class Notification(models.Model):
 
         try:
             reverse(**reverse_kwargs)
-        except NoReverseMatch:  # pragma: no cover
-            raise ValueError("Error! Invalid reverse URL parameters.")
+        except NoReverseMatch as err:  # pragma: no cover
+            raise ValueError("Error! Invalid reverse URL parameters.") from err
 
         self.data["_url"] = reverse_kwargs
