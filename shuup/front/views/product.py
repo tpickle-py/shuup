@@ -60,8 +60,8 @@ class ProductDetailView(DetailView):
             shop_product = self.shop_product = product.get_shop_instance(
                 request.shop, allow_cache=True
             )
-        except ShopProduct.DoesNotExist:
-            raise Problem(_("Error! This product is not available in this shop."))
+        except ShopProduct.DoesNotExist as err:
+            raise Problem(_("Error! This product is not available in this shop.")) from err
 
         errors = list(shop_product.get_visibility_errors(customer=request.customer))
 

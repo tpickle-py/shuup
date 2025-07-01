@@ -59,8 +59,8 @@ def get_default_product_context(request, product, language=None, supplier=None):
         try:
             selected_variation = product.variation_children.get(sku=variation_sku)
             context["selected_variation"] = selected_variation
-        except Product.DoesNotExist:
-            raise Http404
+        except Product.DoesNotExist as err:
+            raise Http404 from err
 
     if product.mode == ProductMode.SIMPLE_VARIATION_PARENT:
         context["variation_children"] = cache_product_things(

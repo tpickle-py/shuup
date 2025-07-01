@@ -48,7 +48,7 @@ class DataImporterRowSession:
             self.importer.other_log_messages.append(_("Row import failed (%s).") % msg)
             raise ImporterError(
                 "Error! Row import failed (cannot save).", code="save-failed"
-            )
+            ) from e
 
         self._handle_deferred()
         self._handle_postsave_objects()

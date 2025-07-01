@@ -107,7 +107,7 @@ class FileImporter:
             self.importer.do_import(self.import_mode)
         except Exception as exc:
             LOGGER.exception("Failed to run importer.")
-            raise ImporterError(_("Failed to import data: {}.").format(str(exc)))
+            raise ImporterError(_("Failed to import data: {}.").format(str(exc))) from exc
 
     def _transform_request_file(self):
         try:
@@ -118,8 +118,8 @@ class FileImporter:
                         file_name=self.file_name
                     )
                 )
-        except Exception:
-            raise ImporterError(_("The file is missing."))
+        except Exception as err:
+            raise ImporterError(_("The file is missing.")) from err
         try:
             mode = "xls"
             if filename.endswith("xlsx"):
