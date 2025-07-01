@@ -1,22 +1,9 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
-
+import argparse
 import ast
 import sys
 from itertools import chain
 
-import click
-from sanity_utils import (
-    IGNORED_DIRS,
-    XNodeVisitor,
-    dotify_ast_name,
-    find_files,
-    get_assign_first_target,
-)
+from sanity_utils import IGNORED_DIRS, XNodeVisitor, dotify_ast_name, find_files, get_assign_first_target
 
 KNOWN_ACRONYMS = ("SKU", "GTIN", "URL", "IP")
 
@@ -25,32 +12,26 @@ class ForeignKeyVisitor(XNodeVisitor):
     def __init__(self):
         self.errors = []
 
-    def visit_Call(self, node, parents):  # noqa (N802)
+    def visit_call(self, node, parents):
         name = dotify_ast_name(node.func)
-        if any(
-            name.endswith(suffix)
-            for suffix in ("ForeignKey", "FilerFileField", "FilerImageField")
-        ):
+        if any(name.endswith(suffix) for suffix in ("ForeignKey", "FilerFileField", "FilerImageField")):
             kwmap = {kw.arg: kw.value for kw in node.keywords}
             if "on_delete" not in kwmap:
-                self.errors.append(
-                    "Error! %d: %s call missing explicit `on_delete`."
-                    % (node.lineno, name)
-                )
+                self.errors.append(f"Error! {node.lineno}: {name} call missing explicit `on_delete`.")
 
 
 class VerboseNameVisitor(XNodeVisitor):
     def __init__(self):
         self.errors = []
 
-    def visit_Call(self, node, parents, context=None):  # noqa (N802)
+    def visit_call(self, node, parents, context=None):  # noqa (N802)
         name = dotify_ast_name(node.func)
         if name == "InternalIdentifierField":
             return
         if name == "TranslatedFields":
             for kw in node.keywords:
                 if isinstance(kw.value, ast.Call):
-                    self.visit_Call(kw.value, parents, context=kw.arg)
+                    self.visit_call(kw.value, parents, context=kw.arg)
             return
         if not any(name.endswith(suffix) for suffix in ("ForeignKey", "Field")):
             return
@@ -73,10 +54,7 @@ class VerboseNameVisitor(XNodeVisitor):
         if not kw_value:
             if node.kwargs:  # Assume dynamic use (has **kwargs)
                 return
-            self.errors.append(
-                "Error! %d: %s call missing verbose_name or label (ctx: %s)."
-                % (node.lineno, name, context)
-            )
+            self.errors.append(f"Error! {node.lineno}: {name} call missing verbose_name or label (ctx: {context}).")
             return
 
         if isinstance(kw_value, ast.BinOp) and isinstance(kw_value.op, ast.Mod):
@@ -86,22 +64,16 @@ class VerboseNameVisitor(XNodeVisitor):
         if isinstance(kw_value, ast.Call) and dotify_ast_name(kw_value.func) == "_":
             arg = kw_value.args[0]
             if isinstance(arg, ast.Str) and needle == "verbose_name":
-                if not arg.s[0].islower() and not any(
-                    arg.s.startswith(acronym) for acronym in KNOWN_ACRONYMS
-                ):
+                if not arg.s[0].islower() and not any(arg.s.startswith(acronym) for acronym in KNOWN_ACRONYMS):
                     self.errors.append(
-                        "Error! %d: %s `%s` not lower-case (value: %r) (ctx: %s)."
-                        % (node.lineno, name, needle, arg.s, context)
+                        f"Error! {node.lineno}: {name} `{needle}` not lower-case (value: {arg.s!r}) (ctx: {context})."
                     )
             return
 
         if isinstance(kw_value, ast.Name):  # It's a variable
             return
 
-        self.errors.append(
-            "Error! %d: %s `%s` present but not translatable (ctx: %s)."
-            % (node.lineno, name, needle, context)
-        )
+        self.errors.append(f"Error! {node.lineno}: {name} `{needle}` present but not translatable (ctx: {context}).")
 
 
 def process_file(path, checkers):
@@ -114,43 +86,61 @@ def process_file(path, checkers):
             yield f"{checker_class.__name__}: {err}"
 
 
-def add_checker(ctx, param, value):
-    ctx.params.setdefault("checkers", set()).add(param.name)
+def create_parser():
+    parser = argparse.ArgumentParser(description="Check code style with various validators")
+    parser.add_argument(
+        "--fks",
+        action="store_true",
+        help="check foreign keys"
+    )
+    parser.add_argument(
+        "--vns",
+        action="store_true",
+        help="check verbose names"
+    )
+    parser.add_argument(
+        "-f",
+        "--file",
+        dest="filenames",
+        action="append",
+        default=[],
+        help="specific files to check"
+    )
+    parser.add_argument(
+        "-d",
+        "--dir",
+        dest="dirnames",
+        action="append",
+        default=[],
+        help="directories to check"
+    )
+    parser.add_argument(
+        "-g",
+        "--group",
+        action="store_true",
+        help="group errors by file"
+    )
+    return parser
 
 
-@click.command()
-@click.option(
-    "--fks",
-    "ForeignKeyVisitor",
-    help="check foreign keys",
-    callback=add_checker,
-    is_flag=True,
-    expose_value=False,
-)
-@click.option(
-    "--vns",
-    "VerboseNameVisitor",
-    help="check verbose names",
-    callback=add_checker,
-    is_flag=True,
-    expose_value=False,
-)
-@click.option(
-    "-f",
-    "--file",
-    "filenames",
-    type=click.Path(exists=True, dir_okay=False),
-    multiple=True,
-)
-@click.option(
-    "-d",
-    "--dir",
-    "dirnames",
-    type=click.Path(exists=True, file_okay=False),
-    multiple=True,
-)
-@click.option("-g", "--group/--no-group")
-def command(filenames, dirnames, checkers, group=False):
+def main():
+    parser = create_parser()
+    args = parser.parse_args()
+    
+    # Build checkers list based on arguments
+    checkers = []
+    if args.fks:
+        checkers.append(ForeignKeyVisitor)
+    if args.vns:
+        checkers.append(VerboseNameVisitor)
+    
+    # If no checkers specified, use all of them
+    if not checkers:
+        checkers = [ForeignKeyVisitor, VerboseNameVisitor]
+    
+    # If no directories specified, use current directory
+    dirnames = args.dirnames if args.dirnames else ['.']
+    
     error_count = 0
     all_filenames = chain(
         find_files(
@@ -158,27 +148,28 @@ def command(filenames, dirnames, checkers, group=False):
             allowed_extensions=(".py",),
             ignored_dirs=IGNORED_DIRS + ["migrations"],
         ),
-        filenames,
+        args.filenames,
     )
-    checkers = [globals()[name] for name in checkers]
+    
     for filename in all_filenames:
         file_errors = list(process_file(filename, checkers))
         if not file_errors:
             continue
-        if group:
-            print("%s:" % filename, file=sys.stderr)  # noqa
+        if args.group:
+            print(f"{filename}:", file=sys.stderr)
             for error in file_errors:
-                print("    %s" % error, file=sys.stderr)  # noqa
+                print(f"    {error}", file=sys.stderr)
                 error_count += 1
             continue
         for error in file_errors:
-            print("%s:%s" % (filename, error), file=sys.stderr)  # noqa
+            print(f"{filename}:{error}", file=sys.stderr)
             error_count += 1
 
     print("###########################")  # noqa
-    print("Total errors to handle: %d" % error_count)  # noqa
+    print(f"Total errors to handle: {error_count}")
     print("###########################")  # noqa
 
 
+
 if __name__ == "__main__":
-    command()
+    main()
