@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-17 10:49+0000\n"
+"POT-Creation-Date: 2025-07-01 03:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en <LL@li.org>\n"
@@ -550,8 +550,7 @@ msgstr ""
 msgid "Folder was renamed."
 msgstr ""
 
-#, python-format
-msgid "Folder can't be renamed to %s."
+msgid "Folder can't be renamed to {}."
 msgstr ""
 
 msgid ""
@@ -1134,7 +1133,7 @@ msgid "Edit products"
 msgstr ""
 
 #, python-brace-format
-msgid "{product_name} was successfully copied"
+msgid "{copied_shop_product.product} was successfully copied"
 msgstr ""
 
 msgid "Minimum Purchase Quantity has been rounded to match Sales Unit."
@@ -1311,8 +1310,8 @@ msgstr ""
 msgid "Provider"
 msgstr ""
 
-#, python-format
-msgid "Please activate at least one %s."
+#, python-brace-format
+msgid "Please activate at least one {self.provider_label}."
 msgstr ""
 
 msgid "Carrier"
@@ -1788,8 +1787,8 @@ msgstr ""
 msgid "Info! User bound to contact %(contact)s."
 msgstr ""
 
-#, python-format
-msgid "You've been added as an admin user to `%s`."
+#, python-brace-format
+msgid "You've been added as an admin user to `{shop_url}`."
 msgstr ""
 
 msgid "User"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-17 10:49+0000\n"
+"POT-Creation-Date: 2025-07-01 03:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en <LL@li.org>\n"
@@ -22,16 +22,18 @@ msgstr ""
 msgid "Error! Invalid command `%s`."
 msgstr ""
 
-#, python-format
-msgid "Error! The quantity `%f` is not allowed. Please use an integer value."
+#, python-brace-format
+msgid ""
+"Error! The quantity {quantity} is not allowed. Please use an integer value."
 msgstr ""
 
-#, python-format
-msgid "Error! The quantity `%s` is not valid."
+#, python-brace-format
+msgid "Error! The quantity {quantity} is not valid."
 msgstr ""
 
-#, python-format
-msgid "Error! The quantity `%s` is not valid, should be bigger than zero."
+#, python-brace-format
+msgid ""
+"Error! The quantity {quantity} is not valid, should be bigger than zero."
 msgstr ""
 
 msgid "Error! This variation is not available."
@@ -1125,12 +1127,12 @@ msgstr ""
 msgid "All rows requiring verification have been verified."
 msgstr ""
 
-#, python-format
-msgid "New shipping status is set to: %(shipping_status)s."
+#, python-brace-format
+msgid "New shipping status is set to: {self.shipping_status}."
 msgstr ""
 
-#, python-format
-msgid "New payment status is set to: %(payment_status)s."
+#, python-brace-format
+msgid "New payment status is set to: {self.payment_status}."
 msgstr ""
 
 msgid "Error! Can not change to this status"
@@ -2560,11 +2562,15 @@ msgstr ""
 msgid "An unexpeted error occurred."
 msgstr ""
 
-#, python-format
-msgid "Refund for %s"
+#, python-brace-format
+msgid "Refund for {line_tax.name}"
 msgstr ""
 
 msgid "Misc refund"
+msgstr ""
+
+#, python-brace-format
+msgid "Refund for {parent_line.text}"
 msgstr ""
 
 msgid "Untaxed"

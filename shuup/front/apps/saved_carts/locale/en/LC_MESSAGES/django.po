@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-22 17:54+0000\n"
+"POT-Creation-Date: 2025-07-01 03:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,6 +71,6 @@ msgstr ""
 msgid "Invalid supplier."
 msgstr ""
 
-#, python-format
-msgid "%d product(s) added to cart."
+#, python-brace-format
+msgid "{quantity_added} product(s) added to cart."
 msgstr ""

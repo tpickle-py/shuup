@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-03 16:47+0000\n"
+"POT-Creation-Date: 2025-07-01 03:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en <LL@li.org>\n"
@@ -153,9 +153,8 @@ msgstr ""
 msgid "Content in this box is shown to all user types without limitations."
 msgstr ""
 
-#, python-format
-msgid ""
-"Content in this placeholder is shown for %(category_name)s category only."
+#, python-brace-format
+msgid "Content in this placeholder is shown for {category.name} category only."
 msgstr ""
 
 msgid "Content in this box is shown to guests (anonymous users) only."
@@ -172,8 +171,8 @@ msgstr ""
 msgid "Content in this box is shown to person contacts only."
 msgstr ""
 
-#, python-format
-msgid "Content in this placeholder is shown for %(product_name)s only."
+#, python-brace-format
+msgid "Content in this placeholder is shown for {product.name} only."
 msgstr ""
 
 msgid "Shop '{}' has no active theme"

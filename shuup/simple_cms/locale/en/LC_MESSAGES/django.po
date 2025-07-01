@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-09 17:10+0000\n"
+"POT-Creation-Date: 2025-07-01 03:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en <LL@li.org>\n"
@@ -78,8 +78,8 @@ msgstr ""
 msgid "Content in this placeholder is shown for this page only."
 msgstr ""
 
-#, python-format
-msgid "Content in this placeholder is shown for %(title)s only."
+#, python-brace-format
+msgid "Content in this placeholder is shown for {page.title} only."
 msgstr ""
 
 msgid "Website"
