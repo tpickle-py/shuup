@@ -88,59 +88,32 @@ def process_file(path, checkers):
 
 def create_parser():
     parser = argparse.ArgumentParser(description="Check code style with various validators")
-    parser.add_argument(
-        "--fks",
-        action="store_true",
-        help="check foreign keys"
-    )
-    parser.add_argument(
-        "--vns",
-        action="store_true",
-        help="check verbose names"
-    )
-    parser.add_argument(
-        "-f",
-        "--file",
-        dest="filenames",
-        action="append",
-        default=[],
-        help="specific files to check"
-    )
-    parser.add_argument(
-        "-d",
-        "--dir",
-        dest="dirnames",
-        action="append",
-        default=[],
-        help="directories to check"
-    )
-    parser.add_argument(
-        "-g",
-        "--group",
-        action="store_true",
-        help="group errors by file"
-    )
+    parser.add_argument("--fks", action="store_true", help="check foreign keys")
+    parser.add_argument("--vns", action="store_true", help="check verbose names")
+    parser.add_argument("-f", "--file", dest="filenames", action="append", default=[], help="specific files to check")
+    parser.add_argument("-d", "--dir", dest="dirnames", action="append", default=[], help="directories to check")
+    parser.add_argument("-g", "--group", action="store_true", help="group errors by file")
     return parser
 
 
 def main():
     parser = create_parser()
     args = parser.parse_args()
-    
+
     # Build checkers list based on arguments
     checkers = []
     if args.fks:
         checkers.append(ForeignKeyVisitor)
     if args.vns:
         checkers.append(VerboseNameVisitor)
-    
+
     # If no checkers specified, use all of them
     if not checkers:
         checkers = [ForeignKeyVisitor, VerboseNameVisitor]
-    
+
     # If no directories specified, use current directory
-    dirnames = args.dirnames if args.dirnames else ['.']
-    
+    dirnames = args.dirnames if args.dirnames else ["."]
+
     error_count = 0
     all_filenames = chain(
         find_files(
@@ -150,7 +123,7 @@ def main():
         ),
         args.filenames,
     )
-    
+
     for filename in all_filenames:
         file_errors = list(process_file(filename, checkers))
         if not file_errors:
@@ -168,7 +141,6 @@ def main():
     print("###########################")  # noqa
     print(f"Total errors to handle: {error_count}")
     print("###########################")  # noqa
-
 
 
 if __name__ == "__main__":
