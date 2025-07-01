@@ -64,7 +64,7 @@ jobs:
     - name: Run tests
       run: uv run pytest --nomigrations shuup_tests --cov shuup --cov-config=.coveragerc
     - name: Run compilemessages
-      run: uv run python -m shuup_workbench compilemessages
+      run: uv run python -m shuup_workbench compilemessages --ignore=**/site-packages/**
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
@@ -113,9 +113,6 @@ jobs:
     - name: Create virtual environment
       run: uv venv .venv
 
-    - name: Install build dependencies
-      run: uv add --dev setuptools wheel
-
     - name: Install dependencies (without editable)
       run: uv sync --dev
 
@@ -126,7 +123,7 @@ jobs:
       run: uv run shuup-build-resources
 
     - name: Compile messages
-      run: uv run python -m shuup_workbench compilemessages
+      run: uv run python shuup_workbench compilemessages --ignore=**/site-packages/**
 
     - name: Create logs folder
       run: mkdir .unit_tests
