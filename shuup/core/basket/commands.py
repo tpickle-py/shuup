@@ -1,5 +1,3 @@
-
-
 import decimal
 
 import six
@@ -53,22 +51,16 @@ def handle_add(  # noqa (C901)
 
     try:
         shop_product = product.get_shop_instance(shop=request.shop)
-    except ShopProduct.DoesNotExist:
+    except ShopProduct.DoesNotExist as exc:
         raise ValidationError(
             "Error! Product is not available in this shop.",
             code="product_not_available_in_shop",
-        )
+        ) from exc
 
     if supplier_id:
-        supplier = (
-            shop_product.suppliers.enabled(shop=shop_product.shop)
-            .filter(pk=supplier_id)
-            .first()
-        )
+        supplier = shop_product.suppliers.enabled(shop=shop_product.shop).filter(pk=supplier_id).first()
     else:
-        supplier = shop_product.get_supplier(
-            basket.customer, quantity, basket.shipping_address
-        )
+        supplier = shop_product.get_supplier(basket.customer, quantity, basket.shipping_address)
 
     if not supplier:
         raise ValidationError("Error! Invalid supplier.", code="invalid_supplier")
@@ -77,27 +69,27 @@ def handle_add(  # noqa (C901)
         quantity = parse_decimal_string(quantity)
         if unit_type == "display":
             quantity = shop_product.unit.from_display(quantity)
+
         if not product.sales_unit.allow_fractions:
-            if quantity % 1 != 0:
-                msg = (
-                    _(
-                        "Error! The quantity `%f` is not allowed. "
-                        "Please use an integer value."
-                    )
-                    % quantity
-                )
-                raise ValidationError(msg, code="invalid_quantity")
-            quantity = int(quantity)
-    except (ValueError, decimal.InvalidOperation):
+            if isinstance(quantity, decimal.Decimal):
+                if quantity != quantity.to_integral_value():
+                    msg = _(f"Error! The quantity {quantity} is not allowed. Please use an integer value.")
+                    raise ValidationError(msg, code="invalid_quantity")
+                quantity = int(quantity)
+            else:
+                if quantity != int(quantity):
+                    msg = _(f"Error! The quantity {quantity} is not allowed. Please use an integer value.")
+                    raise ValidationError(msg, code="invalid_quantity")
+                quantity = int(quantity)
+    except (ValueError, decimal.InvalidOperation) as exc:
         raise ValidationError(
-            _("Error! The quantity `%s` is not valid.") % quantity,
+            _(f"Error! The quantity {quantity} is not valid."),
             code="invalid_quantity",
-        )
+        ) from exc
 
     if quantity <= 0:
         raise ValidationError(
-            _("Error! The quantity `%s` is not valid, should be bigger than zero.")
-            % quantity,
+            _(f"Error! The quantity {quantity} is not valid, should be bigger than zero."),
             code="invalid_quantity",
         )
 
@@ -111,17 +103,15 @@ def handle_add(  # noqa (C901)
 
     # If the product is a package parent, also check child products
     if product.is_package_parent():
-        for child_product, child_quantity in six.iteritems(
-            product.get_package_child_to_quantity_map()
-        ):
-            already_in_basket_qty = product_ids_and_quantities.get(child_product.id, 0)
+        for child_product, child_quantity in six.iteritems(product.get_package_child_to_quantity_map()):
+            already_in_basket_qty = product_ids_and_quantities.get(child_product.pk, 0)
             total_child_quantity = quantity * child_quantity
             try:
                 sp = child_product.get_shop_instance(shop=request.shop)
-            except ShopProduct.DoesNotExist:
+            except ShopProduct.DoesNotExist as exc:
                 raise ProductNotOrderableProblem(
                     f"Error! Product {child_product} is not available in shop {request.shop}."
-                )
+                ) from exc
 
             sp.raise_if_not_orderable(
                 supplier=supplier,
@@ -154,9 +144,7 @@ def handle_add(  # noqa (C901)
     }
 
 
-def handle_add_var(
-    request, basket, product_id, quantity=1, unit_type="internal", **kwargs
-):
+def handle_add_var(request, basket, product_id, quantity=1, unit_type="internal", **kwargs):
     """
     Handle adding a complex variable product into the basket by resolving the combination variables.
     This actually uses `kwargs`, expecting `var_XXX=YYY` to exist there, where `XXX` is the PK
@@ -167,11 +155,7 @@ def handle_add_var(
     """
 
     # Resolve the combination...
-    vars = {
-        int(k.split("_")[-1]): int(v)
-        for (k, v) in six.iteritems(kwargs)
-        if k.startswith("var_")
-    }
+    vars = {int(k.split("_")[-1]): int(v) for (k, v) in six.iteritems(kwargs) if k.startswith("var_")}
     var_product = ProductVariationResult.resolve(product_id, combination=vars)
     if not var_product:
         raise ValidationError(
@@ -238,25 +222,17 @@ def handle_set_customer(request, basket, customer, orderer=None):  # noqa (C901)
             customer_shops = customer.shops.all()
             if customer_shops and basket.shop not in customer_shops:
                 raise ValidationError(
-                    _(
-                        "Shop does not have all the necessary permissions for this customer."
-                    ),
+                    _("Shop does not have all the necessary permissions for this customer."),
                     code="invalid_customer_shop",
                 )
 
         if is_authenticated(request.user):
-            request_contact = (
-                PersonContact.objects.filter(user=request.user).first()
-                or AnonymousContact()
-            )
+            request_contact = PersonContact.objects.filter(user=request.user).first() or AnonymousContact()
         else:
             request_contact = AnonymousContact()
 
         is_superuser = getattr(request.user, "is_superuser", False)
-        is_staff = (
-            getattr(request.user, "is_staff", False)
-            and request.user in basket.shop.staff_members.all()
-        )
+        is_staff = getattr(request.user, "is_staff", False) and request.user in basket.shop.staff_members.all()
 
         if isinstance(customer, PersonContact):
             # to set a customer different from the current one
@@ -265,9 +241,7 @@ def handle_set_customer(request, basket, customer, orderer=None):  # noqa (C901)
             if customer != request_contact and is_authenticated(request.user):
                 if not (is_superuser or is_staff):
                     raise ValidationError(
-                        _(
-                            "You don't have the required permission to assign this customer."
-                        ),
+                        _("You don't have the required permission to assign this customer."),
                         code="no_permission",
                     )
 
@@ -293,13 +267,8 @@ def handle_set_customer(request, basket, customer, orderer=None):  # noqa (C901)
                     code="orderer_not_company_member",
                 )
 
-            elif (
-                not (is_superuser or is_staff)
-                and request_contact not in company_members
-            ):
-                raise ValidationError(
-                    _("You are not a member of the company."), code="not_company_member"
-                )
+            elif not (is_superuser or is_staff) and request_contact not in company_members:
+                raise ValidationError(_("You are not a member of the company."), code="not_company_member")
 
             basket.orderer = orderer
 
@@ -315,9 +284,7 @@ def handle_update(request, basket, **kwargs):
     This dispatches further to whatever is declared by the `SHUUP_BASKET_UPDATE_METHODS_SPEC`
     configuration entry.
     """
-    methods = cached_load("SHUUP_BASKET_UPDATE_METHODS_SPEC")(
-        request=request, basket=basket
-    )
+    methods = cached_load("SHUUP_BASKET_UPDATE_METHODS_SPEC")(request=request, basket=basket)
     prefix_method_dict = methods.get_prefix_to_method_map()
     basket_changed = False
     # If any POST items match a prefix defined in prefix_method_dict, call the appropriate model method.
