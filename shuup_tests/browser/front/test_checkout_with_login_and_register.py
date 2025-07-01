@@ -8,6 +8,7 @@ import os
 import time
 
 from django.test.utils import override_settings
+from selenium.webdriver.common.by import By
 
 import pytest
 
@@ -225,7 +226,7 @@ def register_test(browser, live_server, test_username, test_email, test_password
 def login_and_finish_up_the_checkout(
     browser, live_server, test_username, test_email, test_password
 ):
-    fields = browser.driver.find_elements_by_name("login-username")
+    fields = browser.driver.find_elements(By.NAME, "login-username")
     # there should be only a single username field
     assert len(fields) == 1
 

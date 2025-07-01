@@ -59,6 +59,8 @@ jobs:
       run: uv pip install -e .
     - name: Create logs folder
       run: mkdir .unit_tests
+    - name: Validate Selenium WebDriver fixes
+      run: uv run shuup_workbench test_selenium_fixes
     - name: Run makemessages
       run: uv run python -m shuup_workbench shuup_makemessages -l en
     - name: Run tests
@@ -127,6 +129,9 @@ jobs:
 
     - name: Create logs folder
       run: mkdir .unit_tests
+
+    - name: Validate Selenium WebDriver fixes
+      run: uv run shuup_workbench test_selenium_fixes
 
     - name: Run tests
       run: uv run pytest -v --nomigrations shuup_tests/browser/front shuup_tests/browser/admin --splinter-headless --splinter-screenshot-dir=.unit_tests/

@@ -24,7 +24,7 @@ def wait_until_disappeared(browser, css_selector, timeout=10, frequency=1.0):
     """
     wait_until_condition(
         browser,
-        condition=lambda x: not x.driver.find_element_by_css_selector(css_selector).is_displayed(),
+        condition=lambda x: not x.driver.find_element(By.CSS_SELECTOR, css_selector).is_displayed(),
         timeout=timeout,
         frequency=frequency,
     )
@@ -45,7 +45,7 @@ def wait_until_appeared(browser, css_selector, timeout=10, frequency=1.0):
     """
     wait_until_condition(
         browser,
-        condition=lambda x: x.driver.find_element_by_css_selector(css_selector).is_displayed(),
+        condition=lambda x: x.driver.find_element(By.CSS_SELECTOR, css_selector).is_displayed(),
         timeout=timeout,
         frequency=frequency,
     )
@@ -54,7 +54,7 @@ def wait_until_appeared(browser, css_selector, timeout=10, frequency=1.0):
 def wait_until_appeared_xpath(browser, xpath, timeout=10, frequency=1.0):
     wait_until_condition(
         browser,
-        condition=lambda x: x.driver.find_element_by_xpath(xpath).is_displayed(),
+        condition=lambda x: x.driver.find_element(By.XPATH, xpath).is_displayed(),
         timeout=timeout,
         frequency=frequency,
     )
@@ -92,7 +92,7 @@ def move_to_element(browser, css_selector, header_height=155):
     :type css_selector: str
     """
     wait_until_condition(browser, lambda x: x.is_element_present_by_css(css_selector))
-    element = browser.driver.find_element_by_css_selector(css_selector)
+    element = browser.driver.find_element(By.CSS_SELECTOR, css_selector)
     y = element.location["y"] - header_height
     browser.execute_script(f"window.scrollTo(0, {y})")
 
