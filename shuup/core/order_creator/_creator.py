@@ -110,11 +110,11 @@ class OrderProcessor:
         order = order_line.order
         try:
             shop_product = order_line.product.get_shop_instance(order.shop)
-        except ShopProduct.DoesNotExist:
+        except ShopProduct.DoesNotExist as err:
             raise ValidationError(
                 f"Error! {order_line.product} is not available in {order.shop}.",
                 code="invalid_shop",
-            )
+            ) from err
 
         shop_product.raise_if_not_orderable(
             supplier=order_line.supplier,

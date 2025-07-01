@@ -267,8 +267,8 @@ class PolymorphicJSONField(JSONField):
                     if isinstance(value, six.string_types):
                         try:
                             return json.loads(value, **self.load_kwargs)
-                        except ValueError:
-                            raise ValidationError(_("Enter a valid JSON."))
+                        except ValueError as err:
+                            raise ValidationError(_("Enter a valid JSON.")) from err
         except AttributeError:
             # south fake meta class doesn't create proper attributes
             # see this:

@@ -133,5 +133,5 @@ def map_relation_type(relation_type):
     attr_name = force_ascii(relation_type).upper()
     try:
         return getattr(ProductCrossSellType, attr_name)
-    except AttributeError:
-        raise LookupError(f"Unknown ProductCrossSellType {relation_type!r}")
+    except AttributeError as err:
+        raise LookupError(f"Unknown ProductCrossSellType {relation_type!r}") from err

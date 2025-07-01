@@ -29,10 +29,10 @@ class TaskResult:
         if result:
             try:
                 json.dumps(result)
-            except TypeError:
+            except TypeError as err:
                 raise TaskNotSerializableError(
                     "Task result is not serializable as JSON."
-                )
+                ) from err
 
         self.result = result
         self.error_log = error_log
@@ -69,8 +69,8 @@ class Task:
 
         try:
             json.dumps(kwargs)
-        except TypeError:
-            raise TaskNotSerializableError("Task kwargs is not serializable as JSON.")
+        except TypeError as err:
+            raise TaskNotSerializableError("Task kwargs is not serializable as JSON.") from err
 
         self.function = function
         self.identifier = identifier
