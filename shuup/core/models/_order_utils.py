@@ -3,7 +3,7 @@ import datetime
 from django.conf import settings
 
 from shuup import configuration
-from shuup.admin.modules.settings.consts import (
+from shuup.core.constants import (
     ORDER_REFERENCE_NUMBER_LENGTH_FIELD,
     ORDER_REFERENCE_NUMBER_METHOD_FIELD,
     ORDER_REFERENCE_NUMBER_PREFIX_FIELD,
