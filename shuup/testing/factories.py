@@ -10,8 +10,9 @@ import six
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as PermissionGroup
+from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
-from django.core.validators import ValidationError, validate_email
+from django.core.validators import validate_email
 from django.db.transaction import atomic
 from django.utils.text import slugify
 from django.utils.timezone import now
