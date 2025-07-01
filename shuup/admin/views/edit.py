@@ -6,6 +6,7 @@ from django.views.generic import View
 
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.utils.urls import NoModelUrl, get_model_url
+from shuup.utils.django_compat import force_text
 from shuup.utils.excs import Problem
 
 
@@ -49,14 +50,12 @@ class EditObjectView(View):
                     except NoModelUrl:
                         pass
             except PermissionDenied as exception:
-                from shuup.utils.django_compat import force_text
-
-                raise Problem(force_text(exception))
+                raise Problem(force_text(exception)) from exception
 
             if url:
                 # forward the mode param
                 if request.GET.get("mode"):
-                    url = "{}?mode={}".format(url, request.GET["mode"])
+                    url = f"{url}?mode={request.GET['mode']}"
 
                 return HttpResponseRedirect(url)
 

@@ -55,8 +55,7 @@ AUTHOR = "Shuup Commerce Inc."
 AUTHOR_EMAIL = "shuup@shuup.com"
 URL = "http://shuup.com/"
 DOWNLOAD_URL_TEMPLATE = (
-    "https://github.com/tpickle-py/shuup/releases/download/"
-    "v{version}/shuup-{version}-py3-none-any.whl"
+    "https://github.com/tpickle-py/shuup/releases/download/v{version}/shuup-{version}-py3-none-any.whl"
 )
 LICENSE = "OSL-3.0"  # https://spdx.org/licenses/
 CLASSIFIERS = """
@@ -163,7 +162,7 @@ if __name__ == "__main__":
         try:
             with open(LONG_DESCRIPTION_FILE, encoding="utf-8") as f:
                 long_description = f.read()
-        except:
+        except:  # noqa: E722
             long_description = DESCRIPTION
         packages = setuptools.find_packages(exclude=EXCLUDED_PACKAGES)
         cmdclass = {}

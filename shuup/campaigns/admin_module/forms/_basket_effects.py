@@ -56,18 +56,17 @@ class FreeProductLineForm(BaseEffectModelForm):
         if self.cleaned_data.get("DELETE"):
             return
         campaign = self.cleaned_data["campaign"]
-        for product_id in self.cleaned_data.get("products"):
+        products = self.cleaned_data.get("products", [])
+        for product_id in products:
             product = Product.objects.get(pk=product_id)
             try:
                 shop_product = product.get_shop_instance(campaign.shop)
-            except ShopProduct.DoesNotExist:
+            except ShopProduct.DoesNotExist as exc:
                 raise ValidationError(
                     _("Product %(product)s is not available in the %(shop)s shop.")
-                    % {"product": product.name, "shop": campaign.shop.name}
-                )
-            for error in shop_product.get_quantity_errors(
-                self.cleaned_data["quantity"], False
-            ):
+                    % {"product": product, "shop": campaign.shop.name}
+                ) from exc
+            for error in shop_product.get_quantity_errors(self.cleaned_data["quantity"], False):
                 raise ValidationError({"quantity": error.message})
 
 
