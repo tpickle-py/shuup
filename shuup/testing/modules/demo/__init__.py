@@ -1,5 +1,3 @@
-
-
 import random
 
 from babel.dates import format_date
@@ -45,18 +43,20 @@ class DemoModule(AdminModule):
         return [
             MenuEntry(
                 text=random_title(),
-                icon="fa {}".format(random.choice(
-                    [
-                        "fa-flash",
-                        "fa-folder",
-                        "fa-eye",
-                        "fa-dollar",
-                        "fa-paw",
-                        "fa-cloud",
-                    ]
-                )),
+                icon="fa {}".format(
+                    random.choice(
+                        [
+                            "fa-flash",
+                            "fa-folder",
+                            "fa-eye",
+                            "fa-dollar",
+                            "fa-paw",
+                            "fa-cloud",
+                        ]
+                    )
+                ),
                 url="https://google.com/",
-                category="Test %d" % random.randint(1, 6),
+                category=f"Test {random.randint(1, 6)}",
             )
             for x in range(30)
         ]
@@ -67,9 +67,7 @@ class DemoModule(AdminModule):
         for word in query.split():
             if word:
                 yield SearchResult(word, url=f"https://google.com/?q={word}")
-                yield SearchResult(
-                    word[::-1], url=f"https://google.com/?q={word[::-1]}"
-                )
+                yield SearchResult(word[::-1], url=f"https://google.com/?q={word[::-1]}")
         yield SearchResult(
             f"Create test: {query}",
             url="http://about:blank",
@@ -83,12 +81,10 @@ class DemoModule(AdminModule):
         yield Notification(text=f"Your IP is {get_client_ip(request)}")
         yield Notification(
             title="Dice",
-            text="Your lucky number is %d" % random.randint(1, 43),
+            text=f"Your lucky number is {random.randint(1, 43)}",
             kind="success",
         )
-        yield Notification(
-            title="Stock Alert", text="Items X, Y, Z are running low", kind="warning"
-        )
+        yield Notification(title="Stock Alert", text="Items X, Y, Z are running low", kind="warning")
         yield Notification(
             title="Outstanding Orders",
             text="10 orders have not been touched in 7 days",
@@ -123,9 +119,7 @@ class DemoModule(AdminModule):
             value=1240,
             icon="fa fa-user",
         )
-        yield DashboardNumberBlock(
-            id="test-x", color="orange", title="Orders", value=32, icon="fa fa-inbox"
-        )
+        yield DashboardNumberBlock(id="test-x", color="orange", title="Orders", value=32, icon="fa fa-inbox")
         yield DashboardMoneyBlock(
             id="test-x",
             color="green",
