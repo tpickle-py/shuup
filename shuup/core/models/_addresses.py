@@ -219,7 +219,10 @@ class Address(NameMixin, ShuupModel):
     def is_home(self):
         if not settings.SHUUP_ADDRESS_HOME_COUNTRY:
             return False
-        return self.country.code == settings.SHUUP_ADDRESS_HOME_COUNTRY.upper()
+        code = getattr(self.country, "code", None)
+        if not code:
+            return False
+        return code.upper() == settings.SHUUP_ADDRESS_HOME_COUNTRY.upper()
 
     @property
     def is_european_union(self):
@@ -230,7 +233,7 @@ class Address(NameMixin, ShuupModel):
 
     def as_string_list(self, locale=None):
         formatter = cached_load("SHUUP_ADDRESS_FORMATTER_SPEC")
-        return formatter().address_as_string_list(self, locale)
+        return formatter().address_as_string_list(self, locale)  # type: ignore
 
     def __iter__(self):
         return iter(self.as_string_list())
@@ -341,8 +344,8 @@ class SavedAddress(ShuupModel):
         verbose_name=_("address"),
         related_name="saved_addresses",
     )
-    role = EnumIntegerField(SavedAddressRole, verbose_name=_("role"), default=SavedAddressRole.SHIPPING)
-    status = EnumIntegerField(SavedAddressStatus, default=SavedAddressStatus.ENABLED, verbose_name=_("status"))
+    role = EnumIntegerField(SavedAddressRole, verbose_name=_("role"), default=SavedAddressRole.SHIPPING)  # type: ignore
+    status = EnumIntegerField(SavedAddressStatus, default=SavedAddressStatus.ENABLED, verbose_name=_("status"))  # type: ignore
     title = models.CharField(max_length=255, blank=True, verbose_name=_("title"))
     objects = SavedAddressManager()
 
@@ -362,7 +365,24 @@ class SavedAddress(ShuupModel):
         This method should be used instead of accessing the `title` field
         directly when displaying `SavedAddress` objects.
         """
-        return self.title.strip() if self.title else six.text_type(self.address)
+        if self.title:
+            return str(self.title).strip()
+        if self.address:
+            # If no title is set, use the address as a fallback
+            # This is useful for displaying addresses without a custom title
+            if isinstance(self.address, MutableAddress):
+                return (
+                    self.address.as_string_list()[0] if self.address.as_string_list() else six.text_type(self.address)
+                )
+            elif isinstance(self.address, ImmutableAddress):
+                return (
+                    self.address.as_string_list()[0] if self.address.as_string_list() else six.text_type(self.address)
+                )
+        # Fallback to the address if no title is set
+        if self.address and hasattr(self.address, "address"):
+            # If the address has an 'address' attribute, use it
+            return self.address.address.strip() if self.address.address else six.text_type(self.address)
+        return six.text_type(self.address) if self.address else _("No address set")
 
 
 SavedAddressLogEntry = define_log_model(SavedAddress)

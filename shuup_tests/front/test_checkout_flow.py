@@ -1,9 +1,3 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
 import random
 
 import pytest
@@ -11,9 +5,8 @@ import pytest
 from shuup.core import cache
 from shuup.core.models import Order, PaymentStatus, Product
 from shuup.front.signals import checkout_complete
-from shuup.testing.factories import (
+from shuup.testing.factories import (  # create_product,
     create_default_order_statuses,
-    create_product,
     get_address,
     get_default_payment_method,
     get_default_shipping_method,
@@ -40,7 +33,7 @@ def fill_address_inputs(soup, with_company=False):
                 bit = key.split("-")[1]
                 value = getattr(test_address, bit, None)
             if not value and "email" in key:
-                value = "test%d@example.shuup.com" % random.random()
+                value = f"test{random.randint(0,9999)}@example.shuup.com"
             if not value:
                 value = "test"
         inputs[key] = value or ""  # prevent None as data
@@ -164,6 +157,8 @@ def test_basic_order_flow(with_company, with_signal):
     assert n_orders_post > n_orders_pre, "order was created"
 
     order = Order.objects.first()
+    if not order:
+        pytest.fail("No order was created")
     expected_ip = "127.0.0.2" if with_signal else "127.0.0.1"
     assert order.ip_address == expected_ip
 
@@ -266,7 +261,8 @@ def test_order_flow_with_phases(
     assert response.status_code == 302, "Confirm should redirect forth"
 
     order = Order.objects.first()
-
+    if not order:
+        pytest.fail("No order was created")
     if cancel_order:
         order.set_canceled()
         process_payment_path = reverse(
@@ -277,7 +273,7 @@ def test_order_flow_with_phases(
         )
         response = c.get(process_payment_path)
         assert response.status_code == 302, "Payment page should redirect back"
-        assert response.url.endswith(process_payment_return_path)
+        assert response["Location"].endswith(process_payment_return_path)
         return
 
     if isinstance(shipping_method.carrier, CarrierWithCheckoutPhase):

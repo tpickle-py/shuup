@@ -78,8 +78,8 @@ class ProductBaseFormPart(FormPart):
 class ShopProductFormPart(FormPart):
     priority = -900
 
-    def __init__(self, request, obj=None):
-        super().__init__(request, obj)
+    def __init__(self, request, **kwargs):
+        super().__init__(request, **kwargs)
         self.shop = request.shop
 
     def get_form_defs(self):

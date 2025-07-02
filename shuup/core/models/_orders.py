@@ -11,7 +11,7 @@ from django.db import models
 from django.db.models import Q
 from django.db.transaction import atomic
 from django.utils.crypto import get_random_string
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from jsonfield import JSONField
 from parler.managers import TranslatableQuerySet
@@ -157,11 +157,11 @@ class OrderStatus(TranslatableModel):
     )
     role = EnumIntegerField(
         OrderStatusRole,
-        db_index=True,
         default=OrderStatusRole.NONE,
+        db_index=True,
         verbose_name=_("role"),
         help_text=_("The role of this status. One role can have multiple order statuses."),
-    )
+    )  # type: ignore
     default = models.BooleanField(
         default=False,
         db_index=True,
@@ -260,34 +260,34 @@ class OrderStatusManager:
     def __init__(self):
         self.default_statuses = [
             {
-                "name": DefaultOrderStatus.INITIAL.label,
-                "public_name": DefaultOrderStatus.INITIAL.label,
+                "name": DefaultOrderStatus.INITIAL,
+                "public_name": DefaultOrderStatus.INITIAL,
                 "role": OrderStatusRole.INITIAL,
-                "identifier": DefaultOrderStatus.INITIAL.value,
+                "identifier": DefaultOrderStatus.INITIAL,
                 "default": True,
                 "is_active": True,
             },
             {
-                "name": DefaultOrderStatus.PROCESSING.label,
-                "public_name": DefaultOrderStatus.PROCESSING.label,
+                "name": DefaultOrderStatus.PROCESSING,
+                "public_name": DefaultOrderStatus.PROCESSING,
                 "role": OrderStatusRole.PROCESSING,
-                "identifier": DefaultOrderStatus.PROCESSING.value,
+                "identifier": DefaultOrderStatus.PROCESSING,
                 "default": True,
                 "is_active": True,
             },
             {
-                "name": DefaultOrderStatus.COMPLETE.label,
-                "public_name": DefaultOrderStatus.COMPLETE.label,
+                "name": DefaultOrderStatus.COMPLETE,
+                "public_name": DefaultOrderStatus.COMPLETE,
                 "role": OrderStatusRole.COMPLETE,
-                "identifier": DefaultOrderStatus.COMPLETE.value,
+                "identifier": DefaultOrderStatus.COMPLETE,
                 "default": True,
                 "is_active": True,
             },
             {
-                "name": DefaultOrderStatus.CANCELED.label,
-                "public_name": DefaultOrderStatus.CANCELED.label,
+                "name": DefaultOrderStatus.CANCELED,
+                "public_name": DefaultOrderStatus.CANCELED,
                 "role": OrderStatusRole.CANCELED,
-                "identifier": DefaultOrderStatus.CANCELED.value,
+                "identifier": DefaultOrderStatus.CANCELED,
                 "default": True,
                 "is_active": True,
             },
@@ -306,11 +306,11 @@ class OrderStatusManager:
         """
         # These values are based on the old Shuup data
         update_map = {
-            "none": DefaultOrderStatus.NONE.value,
-            "recv": DefaultOrderStatus.INITIAL.value,
-            "prog": DefaultOrderStatus.PROCESSING.value,
-            "comp": DefaultOrderStatus.COMPLETE.value,
-            "canc": DefaultOrderStatus.CANCELED.value,
+            "none": DefaultOrderStatus.NONE,
+            "recv": DefaultOrderStatus.INITIAL,
+            "prog": DefaultOrderStatus.PROCESSING,
+            "comp": DefaultOrderStatus.COMPLETE,
+            "canc": DefaultOrderStatus.CANCELED,
         }
 
         for status in OrderStatus.objects.all():
@@ -343,16 +343,16 @@ class OrderStatusManager:
             order_status_qs = OrderStatus.objects.all()
             for order_status in order_status_qs:
                 allowed_status_list = []
-                if order_status.identifier == DefaultOrderStatus.INITIAL.value:
+                if order_status.identifier == DefaultOrderStatus.INITIAL:
                     allowed_status_list = [
-                        DefaultOrderStatus.PROCESSING.value,
-                        DefaultOrderStatus.COMPLETE.value,
-                        DefaultOrderStatus.CANCELED.value,
+                        DefaultOrderStatus.PROCESSING,
+                        DefaultOrderStatus.COMPLETE,
+                        DefaultOrderStatus.CANCELED,
                     ]
-                elif order_status.identifier == DefaultOrderStatus.PROCESSING.value:
+                elif order_status.identifier == DefaultOrderStatus.PROCESSING:
                     allowed_status_list = [
-                        DefaultOrderStatus.COMPLETE.value,
-                        DefaultOrderStatus.CANCELED.value,
+                        DefaultOrderStatus.COMPLETE,
+                        DefaultOrderStatus.CANCELED,
                     ]
 
                 if allowed_status_list:
@@ -501,17 +501,14 @@ class Order(MoneyPropped, models.Model):
     deleted = models.BooleanField(db_index=True, default=False, verbose_name=_("deleted"))
     status = UnsavedForeignKey("OrderStatus", verbose_name=_("status"), on_delete=models.PROTECT)
     payment_status = EnumIntegerField(
-        PaymentStatus,
-        db_index=True,
-        default=PaymentStatus.NOT_PAID,
-        verbose_name=_("payment status"),
-    )
+        PaymentStatus, db_index=True, default=PaymentStatus.NOT_PAID, verbose_name=_("payment status")
+    )  # type: ignore
     shipping_status = EnumIntegerField(
         ShippingStatus,
         db_index=True,
         default=ShippingStatus.NOT_SHIPPED,
         verbose_name=_("shipping status"),
-    )
+    )  # type: ignore
 
     # Methods
     payment_method = UnsavedForeignKey(

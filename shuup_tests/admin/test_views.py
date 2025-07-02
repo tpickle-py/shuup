@@ -195,10 +195,10 @@ def test_product_edit_view(rf, admin_user, settings):
     parent = create_product(
         "ComplexVarParent", shop=shop, supplier=get_default_supplier()
     )
-    sizes = [("%sL" % ("X" * x)) for x in range(4)]
+    sizes = [(f"{x}L" % ("X" * x)) for x in range(4)]
     for size in sizes:
         child = create_product(
-            "ComplexVarChild-%s" % size, shop=shop, supplier=get_default_supplier()
+            f"ComplexVarChild-{size}", shop=shop, supplier=get_default_supplier()
         )
         child.link_to_parent(parent, variables={"size": size})
     shop_product = parent.get_shop_instance(shop)

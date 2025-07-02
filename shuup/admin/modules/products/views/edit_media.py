@@ -75,13 +75,15 @@ class ProductMediaEditView(UpdateView):
     model = Product
     template_name = "shuup/admin/products/edit_media.jinja"
     context_object_name = "product"
-    form_class = ProductMediaFormSet
+    form_class = ProductMediaForm
 
     def get_breadcrumb_parents(self):
+        obj = self.get_object()
+
         return [
             MenuEntry(
-                text=f"{self.object}",
-                url=get_model_url(self.object, shop=self.request.shop),
+                text=f"{obj}",
+                url=get_model_url(obj, shop=self.request.shop),
             )
         ]
 
@@ -96,7 +98,7 @@ class ProductMediaEditView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = _("Edit Media: %s") % self.object
+        context["title"] = _(f"Edit Media: {context.get('product') or self.get_object()}")
         context["toolbar"] = Toolbar(
             [
                 PostActionButton(

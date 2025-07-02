@@ -469,6 +469,7 @@ class BaseProductMediaFormSet(BaseModelFormSet):
     extra = 0
 
     allowed_media_kinds = []
+    # form_class = BaseProductMediaForm
 
     def __init__(self, *args, **kwargs):
         self.product = kwargs.pop("product")
@@ -491,10 +492,23 @@ class BaseProductMediaFormSet(BaseModelFormSet):
         return self.form_class(**kwargs)
 
     def save(self, commit=True):
-        forms = self.forms or []
-        for form in forms:
-            form.request = self.request
+        form_list = self.forms or []
+        for i, form in enumerate(form_list):
+            if hasattr(form, "request"):
+                continue
+            form_list[i] = form.__class__(**{**form.initial, "request": self.request, "instance": form.instance})
         super().save(commit)
+
+    @property
+    def empty_form(self):
+        # Use the documented approach: pass total_form_count() to _construct_form
+        form = self._construct_form(self.total_form_count())
+        form.empty_permitted = True
+        return form
+
+    @property
+    def can_delete_extra(self):
+        return False
 
 
 class ProductMediaForm(BaseProductMediaForm):

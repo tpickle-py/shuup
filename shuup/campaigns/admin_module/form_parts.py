@@ -33,8 +33,8 @@ class SalesRangesFormPart(FormPart):
     name = "contact_group_sales_ranges"
     form = SalesRangesForm
 
-    def __init__(self, request, obj=None):
-        super().__init__(request, obj)
+    def __init__(self, request, **kwargs):
+        super().__init__(request, **kwargs)
         self.shops = [get_shop(request)]
 
     def _get_form_name(self, shop):
