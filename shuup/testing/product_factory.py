@@ -2,12 +2,10 @@ import factory
 import factory.fuzzy as fuzzy
 from factory.django import DjangoModelFactory
 
-from shuup.core.models import Manufacturer, Product, ProductType, SalesUnit, TaxClass
+from shuup.core.models import Product
 from shuup.testing.text_data import random_title
 
-from ..shop_factory import ShopFactory
-from . import get_default_product_type, get_default_sales_unit, get_default_supplier, get_default_tax_class
-from .category_factory import CategoryFactory
+from . import get_default_product_type, get_default_sales_unit, get_default_tax_class
 
 
 class FuzzyName(fuzzy.FuzzyText):
