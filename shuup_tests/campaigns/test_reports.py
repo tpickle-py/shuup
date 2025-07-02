@@ -16,12 +16,11 @@ from babel.dates import format_date
 from shuup.campaigns.models.basket_effects import BasketDiscountAmount
 from shuup.campaigns.models.campaigns import BasketCampaign, Coupon
 from shuup.campaigns.reports import CouponsUsageReport
-from shuup.core.models import Order
+from shuup.core.models import Order, OrderLineType
 from shuup.core.order_creator import OrderCreator
 from shuup.reports.forms import DateRangeChoices
 from shuup.reports.writer import get_writer_instance
 from shuup.testing.factories import (
-    OrderLineType,
     create_random_person,
     get_address,
     get_default_payment_method,

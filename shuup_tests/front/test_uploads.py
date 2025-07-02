@@ -1,34 +1,13 @@
-# This file is part of Shuup.
-#
-# Copyright (c) 2012-2021, Shuup Commerce Inc. All rights reserved.
-#
-# This source code is licensed under the OSL-3.0 license found in the
-# LICENSE file in the root directory of this source tree.
-
-
 import json
 import tempfile
 
-from django import forms
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import check_password
-from django.shortcuts import resolve_url
 from django.test import override_settings
 
 import pytest
 
-from shuup import configuration
-from shuup.core.models import CompanyContact, get_company_contact, get_person_contact
-from shuup.core.utils.users import force_anonymous_contact_for_user
-from shuup.front.apps.customer_information.forms import PersonContactForm
-from shuup.front.views.dashboard import DashboardView
-from shuup.testing.factories import create_random_user, generate_image, get_default_shop
-from shuup.testing.soup_utils import extract_form_fields
-from shuup.testing.utils import apply_request_middleware
+from shuup.testing.image_generator import generate_image
 from shuup.utils.django_compat import reverse
-from shuup_tests.utils import SmartClient
-from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME, regular_user
+from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME
 
 
 @pytest.mark.django_db

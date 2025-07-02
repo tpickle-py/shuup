@@ -20,7 +20,14 @@ from babel.dates import format_date
 from pytz import timezone
 
 from shuup.apps.provides import override_provides
-from shuup.core.models import CustomCarrier, FixedCostBehaviorComponent, Order, OrderLine, get_person_contact
+from shuup.core.models import (
+    CustomCarrier,
+    FixedCostBehaviorComponent,
+    Order,
+    OrderLine,
+    OrderLineType,
+    get_person_contact,
+)
 from shuup.core.order_creator import OrderCreator
 from shuup.default_reports.reports import (
     CustomerSalesReport,
@@ -40,7 +47,6 @@ from shuup.reports.forms import DateRangeChoices
 from shuup.reports.writer import get_writer_instance
 from shuup.testing.factories import (
     CompanyFactory,
-    OrderLineType,
     UserFactory,
     create_order_with_product,
     create_product,

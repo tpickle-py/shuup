@@ -23,12 +23,13 @@ from shuup.core.models import CompanyContact, get_company_contact, get_person_co
 from shuup.core.utils.users import force_anonymous_contact_for_user
 from shuup.front.apps.customer_information.forms import PersonContactForm
 from shuup.front.views.dashboard import DashboardView
-from shuup.testing.factories import create_random_user, generate_image, get_default_shop
+from shuup.testing.factories import create_random_user, get_default_shop
+from shuup.testing.image_generator import generate_image
 from shuup.testing.soup_utils import extract_form_fields
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse
 from shuup_tests.utils import SmartClient
-from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME, regular_user
+from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERNAME
 
 User = get_user_model()
 
@@ -53,13 +54,13 @@ def default_company_data():
 
 def default_address_data(address_type):
     return {
-        "{}-name".format(address_type): "Fakerr",
-        "{}-phone".format(address_type): "11-111-111-1110",
-        "{}-email".format(address_type): "captain@shuup.local",
-        "{}-street".format(address_type): "123 Fake St.",
-        "{}-postal_code".format(address_type): "1234567",
-        "{}-city".format(address_type): "Shuupville",
-        "{}-country".format(address_type): "US",
+        f"{address_type}-name": "Fakerr",
+        f"{address_type}-phone": "11-111-111-1110",
+        f"{address_type}-email": "captain@shuup.local",
+        f"{address_type}-street": "123 Fake St.",
+        f"{address_type}-postal_code": "1234567",
+        f"{address_type}-city": "Shuupville",
+        f"{address_type}-country": "US",
     }
 
 

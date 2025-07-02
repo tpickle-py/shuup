@@ -152,4 +152,4 @@ __all__ = [
     "create_package_product",
     "create_default_order_statuses",
 ]
-__all__.extend(factory_class.__name__ for factory_class in FACTORY_CLASSES if factory_class.__name__ not in __all__)  # type: ignore
+__all__.extend(fclass.__name__ for fclass in FACTORY_CLASSES if fclass.__name__ not in __all__)  # type: ignore

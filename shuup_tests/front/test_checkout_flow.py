@@ -277,10 +277,12 @@ def test_order_flow_with_phases(
         return
 
     if isinstance(shipping_method.carrier, CarrierWithCheckoutPhase):
-        assert order.shipping_data.get("input_value") == "20540"
+        shipping_data = order.shipping_data if isinstance(order.shipping_data, dict) else {}
+        assert shipping_data.get("input_value") == "20540"
 
     if isinstance(payment_method.payment_processor, PaymentWithCheckoutPhase):
-        assert order.payment_data.get("input_value")
+        payment_data = order.payment_data if isinstance(order.payment_data, dict) else {}
+        assert payment_data.get("input_value")
         assert order.payment_status == PaymentStatus.NOT_PAID
         # Resolve order specific paths (payment and complete)
         process_payment_path = reverse(
@@ -295,19 +297,20 @@ def test_order_flow_with_phases(
         )
 
         # Check confirm redirection to payment page
-        assert response.url.endswith(process_payment_path), (
+        assert response.status_code == 302
+        assert response["Location"].endswith(process_payment_path), (
             "Confirm should have redirected to payment page"
         )
 
         # Visit payment page
         response = c.get(process_payment_path)
         assert response.status_code == 302, "Payment page should redirect forth"
-        assert response.url.endswith(process_payment_return_path)
+        assert response["Location"].endswith(process_payment_return_path)
 
         # Check payment return
         response = c.get(process_payment_return_path)
         assert response.status_code == 302, "Payment return should redirect forth"
-        assert response.url.endswith(order_complete_path)
+        assert response["Location"].endswith(order_complete_path)
 
         # Check payment status has changed to DEFERRED
         order = Order.objects.get(pk=order.pk)  # reload
@@ -315,10 +318,9 @@ def test_order_flow_with_phases(
 
 
 @pytest.mark.django_db
-def test_checkout_empty_basket(rf):
+def test_checkout_empty_basket():
     cache.clear()
     create_default_order_statuses()
-    n_orders_pre = Order.objects.count()
     populate_if_required()
     c = SmartClient()
     product_ids = _populate_client_basket(c)

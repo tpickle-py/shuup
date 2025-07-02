@@ -8,7 +8,6 @@ import json
 import tempfile
 from unittest import mock
 
-import django
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models import ProtectedError
 from django.http import JsonResponse
@@ -23,7 +22,8 @@ from six import BytesIO
 from shuup.admin.modules.media.views import MediaBrowserView
 from shuup.admin.utils.permissions import set_permissions_for_group
 from shuup.testing import factories
-from shuup.testing.factories import generate_image, get_default_shop
+from shuup.testing.factories import get_default_shop
+from shuup.testing.image_generator import generate_image
 from shuup.testing.utils import apply_request_middleware
 from shuup.utils.django_compat import reverse
 from shuup.utils.filer import can_see_root_folder, ensure_media_folder, get_or_create_folder
