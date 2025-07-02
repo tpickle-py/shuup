@@ -12,6 +12,7 @@ class FuzzyName(fuzzy.FuzzyText):
     def fuzz(self):
         return random_title(prefix=self.prefix, suffix=self.suffix)
 
+
 class ProductFactory(DjangoModelFactory):
     class Meta:
         model = Product

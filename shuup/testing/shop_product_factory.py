@@ -16,12 +16,14 @@ class ShopProductFactory(DjangoModelFactory):
         model = ShopProduct
 
     purchasable = fuzzy.FuzzyAttribute(lambda: True)
-    visibility = fuzzy.FuzzyChoice([
-        0,  # NOT_VISIBLE
-        1,  # LISTED
-        2,  # SEARCHABLE
-        3,  # ALWAYS_VISIBLE
-    ])
+    visibility = fuzzy.FuzzyChoice(
+        [
+            0,  # NOT_VISIBLE
+            1,  # LISTED
+            2,  # SEARCHABLE
+            3,  # ALWAYS_VISIBLE
+        ]
+    )
     default_price_value = fuzzy.FuzzyDecimal(0, 500)
 
     @factory.post_generation
