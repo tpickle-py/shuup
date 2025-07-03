@@ -3,7 +3,7 @@
     "dockerComposeFile": "../docker-compose-dev.yml",
     "service": "shuup",
     "workspaceFolder": "/app",
-    
+
     // Configure tool-specific properties.
     "customizations": {
         "vscode": {
@@ -16,38 +16,38 @@
                 "ms-python.pylint",
                 "ms-python.mypy-type-checker",
                 "ms-toolsai.jupyter",
-                
+
                 // Django Development
                 "batisteo.vscode-django",
                 "thebarkman.vscode-djaneiro",
                 "bibhasdn.django-html",
                 "bibhasdn.django-snippets",
-                
+
                 // JavaScript/Node.js Development
                 "dbaeumer.vscode-eslint",
                 "esbenp.prettier-vscode",
-                
+
                 // Docker & Containers
                 "ms-azuretools.vscode-docker",
-                
+
                 // Database
                 "mtxr.sqltools",
                 "mtxr.sqltools-driver-sqlite",
                 "mtxr.sqltools-driver-pg",
-                
+
                 // Version Control
                 "eamodio.gitlens",
                 "github.vscode-pull-request-github",
                 "mhutchie.git-graph",
-                
+
                 // Testing
                 "littlefoxteam.vscode-python-test-adapter",
                 "hbenl.vscode-test-explorer",
-                
+
                 // Code Quality & Analysis
                 "davidanson.vscode-markdownlint",
                 "streetsidesoftware.code-spell-checker",
-                
+
                 // Productivity
                 "ms-vscode.vscode-json",
                 "redhat.vscode-yaml",
@@ -55,12 +55,12 @@
                 "yzhang.markdown-all-in-one",
                 "christian-kohler.path-intellisense",
                 "visualstudioexptteam.vscodeintellicode",
-                
+
                 // Documentation
                 "njpwerner.autodocstring",
                 "stkb.rewrap"
             ],
-            
+
             "settings": {
                 "python.defaultInterpreterPath": "/app/.venv/bin/python",
                 "python.terminal.activateEnvironment": true,
@@ -69,7 +69,7 @@
             }
         }
     },
-    
+
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     "forwardPorts": [8000],
     "portsAttributes": {
@@ -78,20 +78,20 @@
             "onAutoForward": "notify"
         }
     },
-    
+
     // Use 'postCreateCommand' to run commands after the container is created.
     "postCreateCommand": "bash .devcontainer/post-create.sh",
-    
+
     // Use 'postStartCommand' to run commands after the container starts.
     "postStartCommand": "bash .devcontainer/post-start.sh",
-    
+
     // Configure container options
     "containerEnv": {
         "DJANGO_SETTINGS_MODULE": "shuup_workbench.settings.dev",
         "PYTHONPATH": "/app:/app/shuup",
         "DEBUG": "1"
     },
-    
+
     // Features to add to the dev container
     "features": {
         "ghcr.io/devcontainers/features/git:1": {},
@@ -101,12 +101,12 @@
             "version": "lts"
         }
     },
-    
+
     // Mount the workspace and preserve file permissions
     "mounts": [
         "source=${localWorkspaceFolder},target=/app,type=bind,consistency=delegated"
     ],
-    
+
     // Set the user to use inside the container (prevents permission issues)
     "remoteUser": "root"
 }
