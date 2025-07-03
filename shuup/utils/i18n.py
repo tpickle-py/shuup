@@ -58,7 +58,7 @@ def get_current_babel_locale(fallback="en-US-POSIX"):
     locale_string = translation.get_language()
     if not locale_string:  # Handle None case from translation.override(None)
         locale_string = fallback
-    
+
     locale = get_babel_locale(locale_string=locale_string)
     if not locale:
         if fallback:
