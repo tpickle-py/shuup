@@ -113,17 +113,14 @@ COUNTRY_CODES = sorted(COUNTRIES.keys())
 
 def get_initial_order_status():
     create_default_order_statuses()
-    # Confirmed: get_default_initial exists and works in Django 3+
     return OrderStatus.objects.get_default_initial()
 
 
 def get_completed_order_status():
     create_default_order_statuses()
-    # Confirmed: get_default_complete exists and works in Django 3+
     return OrderStatus.objects.get_default_complete()
 
 
-# Shared helper functions moved from factories.py
 def default_by_identifier(model):
     return model.objects.filter(identifier=DEFAULT_IDENTIFIER).first()
 
@@ -540,7 +537,7 @@ def get_random_email(fake):
     return email
 
 
-def create_random_address(fake=None, save=True, **values):
+def create_random_address(fake=None, save=True, **values) -> MutableAddress:
     if not fake:
         fake = get_faker(["person", "address"])
     # Use fake.format('provider') for compatibility with linters and runtime
@@ -561,7 +558,7 @@ def get_address(**overrides):
     return MutableAddress.from_data(data)
 
 
-def create_random_company(shop=None):
+def create_random_company(shop=None) -> CompanyContact:
     fake = get_faker(["company", "person", "internet"])
     name = fake.format("company")
     email = get_random_email(fake)
@@ -589,7 +586,7 @@ def create_random_order(
     random_products=True,
     create_payment_for_order_total=False,
     order_date=None,
-):
+) -> Order:
     if not customer:
         customer = Contact.objects.all().order_by("?").first()
     if not customer:
@@ -600,40 +597,40 @@ def create_random_order(
     source = OrderSource(shop)
     source.customer = customer
     source.customer_comment = "Mock Order"
-    # Confirmed: billing_address and shipping_address assignment works in Django 3+
-    if getattr(customer, "default_billing_address", None) and getattr(customer, "default_shipping_address", None):
+    default_billing_address = getattr(customer, "default_billing_address", None)
+    default_shipping_address = getattr(customer, "default_shipping_address", None)
+    if default_billing_address:
         source.billing_address = customer.default_billing_address
+    if default_shipping_address:
         source.shipping_address = customer.default_shipping_address
-    else:
+    if not source.billing_address or not source.shipping_address:
         source.billing_address = create_random_address()
         source.shipping_address = create_random_address()
     source.order_date = order_date or (now() - datetime.timedelta(days=random.uniform(0, 400)))
     source.status = get_initial_order_status()
-    # Confirmed: Product.objects.listed() method works in Django 3+
     if not products:
         try:
             products = list(Product.objects.listed(source.shop, customer).order_by("?")[:40])
         except Exception:
             products = list(Product.objects.all().order_by("?")[:40])
     if random_products:
-        quantity = random.randint(3, 10)
+        num_lines = random.randint(3, 10)
     else:
-        quantity = len(products)
-    for i in range(quantity):
+        num_lines = len(products)
+    for i in range(num_lines):
         if random_products:
             product = random.choice(products)
         else:
             product = products[i]
-        quantity = random.randint(1, 5)
-        price_info = product.get_price_info(pricing_context, quantity=quantity)
+        line_quantity = random.randint(1, 5)
+        price_info = product.get_price_info(pricing_context, quantity=line_quantity)
         shop_product = product.get_shop_instance(source.shop)
-        # Confirmed: ShopProduct.get_supplier() method works in Django 3+
-        supplier = shop_product.get_supplier(source.customer, quantity, source.shipping_address)
+        supplier = shop_product.get_supplier(source.customer, line_quantity, source.shipping_address)
         line = source.add_line(
             type=OrderLineType.PRODUCT,
             product=product,
             supplier=supplier,
-            quantity=quantity,
+            quantity=line_quantity,
             base_unit_price=price_info.base_unit_price,
             discount_amount=price_info.discount_amount,
             sku=product.sku,
@@ -644,21 +641,19 @@ def create_random_order(
         oc = OrderCreator()
         order = oc.create_order(source)
         if random.random() < completion_probability:
-            # Confirmed: Order.lines attribute works in Django 3+
-            try:
-                suppliers = {line.supplier for line in order.lines.filter(supplier__isnull=False, quantity__gt=0)}
-            except Exception:
-                suppliers = set()
+            lines = getattr(order, "lines", None)
+            if not lines:
+                raise ValueError("Order has no lines to complete.")
+            suppliers = {line.supplier for line in lines.filter(supplier__isnull=False, quantity__gt=0)}
             for supplier in suppliers:
                 order.create_shipment_of_all_products(supplier=supplier)
             if create_payment_for_order_total:
                 order.create_payment(order.taxful_total_price)
-            # also set complete
             order.save()
-            # Confirmed: Contact.user attribute exists in Django 3+
             next_status = get_completed_order_status()
-            if next_status is not None and hasattr(customer, "user"):
-                order.change_status(next_status=next_status, user=customer.user)
+            user = getattr(customer, "user", None)
+            if next_status is not None and user and hasattr(customer, "user"):
+                order.change_status(next_status=next_status, user=user)
         return order
 
 
@@ -708,10 +703,9 @@ def get_basket(shop=None):
 def create_random_contact_group(shop=None):
     fake = get_faker(["job"])
     name = fake.format("job")
-    identifier = "{}-{}".format(
-        ContactGroup.objects.count() + 1,
-        name.lower().replace(" ", "-"),
-    )
+    idx = ContactGroup.objects.filter(name=name).count() + 1
+    name_lower = name.lower().replace(" ", "-")
+    identifier = f"{idx}-{name_lower}"
     if not shop:
         shop = get_default_shop()
     return ContactGroup.objects.create(
@@ -883,8 +877,8 @@ def create_order_with_product(
 def create_package_product(sku, shop=None, supplier=None, default_price=None, children=4, **attrs):
     package_product = create_product(sku, shop, supplier, default_price, **attrs)
     assert not package_product.get_package_child_to_quantity_map()
-    children = [create_product(f"PackageChild-{x}", shop=shop, supplier=supplier) for x in range(children)]
-    package_def = {child: 1 + idx for (idx, child) in enumerate(children)}
+    children_products = [create_product(f"PackageChild-{x}", shop=shop, supplier=supplier) for x in range(children)]
+    package_def = {child: 1 + idx for (idx, child) in enumerate(children_products)}
     package_product.make_package(package_def)
     assert package_product.is_package_parent()
     package_product.save()
