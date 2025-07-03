@@ -1,3 +1,5 @@
+from typing import Any, List, Optional, Tuple, Union
+
 from django.core.exceptions import ValidationError
 from django.db.transaction import atomic
 from django.http import HttpResponseRedirect
@@ -30,10 +32,10 @@ class FormPart:
 
 
 class FormPartsViewMixin:
-    fields = ()  # Dealt with by the FormGroup
-    request = None
-    form_part_class_provide_key = None
-    base_form_part_classes = ()
+    fields: Union[Tuple, List] = ()  # Dealt with by the FormGroup
+    request: Optional[Any] = None
+    form_part_class_provide_key: Optional[str] = None
+    base_form_part_classes: Union[Tuple, List] = ()
 
     def get_form_class(self):
         return None  # Dealt with by `get_form`; this will just squelch Django warnings

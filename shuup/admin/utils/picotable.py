@@ -1,5 +1,6 @@
 import datetime
 import json
+from typing import Optional
 
 import six
 from django.core.paginator import EmptyPage, Paginator
@@ -475,8 +476,8 @@ class PicotableViewMixin:
     picotable_class = Picotable
     related_objects = []
     template_name = "shuup/admin/base_picotable.jinja"
-    toolbar_buttons_provider_key = None
-    mass_actions_provider_key = None
+    toolbar_buttons_provider_key: Optional[str] = None
+    mass_actions_provider_key: Optional[str] = None
 
     def process_picotable(self, query_json):
         mass_actions = self.load_mass_actions()

@@ -18,4 +18,4 @@ class CouponAdminObjectSelector(BaseAdminObjectSelector):
         if self.supplier:
             qs = qs.filter(supplier=self.supplier)
         qs = qs.values_list("id", "code")[: self.search_limit]
-        return [{"id": id, "name": name} for id, name in list(qs)]
+        return list(qs)  # type: ignore[return-value,arg-type]

@@ -1,3 +1,5 @@
+from typing import Any, Optional, Type
+
 from django.conf import settings
 from django.forms import BaseModelFormSet
 
@@ -13,8 +15,8 @@ from shuup.utils.multilanguage_model_form import TranslatableModelForm
 
 
 class BaseFormset(BaseModelFormSet):
-    form_class = None  # Set in initialization
-    model = None  # Override this in subclass
+    form_class: Optional[Type[Any]] = None  # Set in initialization
+    model = None  # type: ignore[assignment]  # Override this in subclass
 
     validate_min = False
     min_num = 0
@@ -47,7 +49,7 @@ class BaseFormset(BaseModelFormSet):
 
 
 class BasketConditionsFormSet(BaseFormset):
-    model = BasketCondition
+    model = BasketCondition  # type: ignore[assignment]
 
     def get_queryset(self):
         return self.owner.conditions.instance_of(self._get_actual_model())
@@ -70,21 +72,21 @@ class EffectsFormset(BaseFormset):
 
 
 class BasketDiscountEffectsFormSet(EffectsFormset):
-    model = BasketDiscountEffect
+    model = BasketDiscountEffect  # type: ignore[assignment]
 
     def get_queryset(self):
         return self.owner.discount_effects.instance_of(self._get_actual_model())
 
 
 class BasketLineEffectsFormSet(EffectsFormset):
-    model = BasketLineEffect
+    model = BasketLineEffect  # type: ignore[assignment]
 
     def get_queryset(self):
         return self.owner.line_effects.instance_of(self._get_actual_model())
 
 
 class CatalogConditionsFormSet(BaseFormset):
-    model = ContextCondition
+    model = ContextCondition  # type: ignore[assignment]
 
     def get_queryset(self):
         return self.owner.conditions.instance_of(self._get_actual_model())
@@ -101,14 +103,14 @@ class CatalogConditionsFormSet(BaseFormset):
 
 
 class CatalogFiltersFormSet(BaseFormset):
-    model = CatalogFilter
+    model = CatalogFilter  # type: ignore[assignment]
 
     def get_queryset(self):
         return self.owner.filters.instance_of(self._get_actual_model())
 
 
 class CatalogEffectsFormSet(EffectsFormset):
-    model = ProductDiscountEffect
+    model = ProductDiscountEffect  # type: ignore[assignment]
 
     def get_queryset(self):
         return self.owner.effects.instance_of(self._get_actual_model())

@@ -1,3 +1,5 @@
+from typing import Any, Optional, Type
+
 from django import forms
 from django.db.models import ManyToManyField
 from django.utils.translation import gettext_lazy as _
@@ -11,7 +13,7 @@ from shuup.utils.django_compat import reverse_lazy
 
 class BaseCampaignForm(ShuupAdminForm):
     class Meta:
-        model = None
+        model: Optional[Type[Any]] = None
         exclude = ["identifier", "created_by", "modified_by", "conditions"]
 
     def __init__(self, **kwargs):

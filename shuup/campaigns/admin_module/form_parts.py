@@ -1,3 +1,5 @@
+from typing import Any, Optional, Type
+
 from django import forms
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -64,7 +66,7 @@ class SalesRangesFormPart(FormPart):
 
 class CampaignBaseFormPart(FormPart):
     priority = -1000  # Show this first
-    form = None  # Override in subclass
+    form: Optional[Type[Any]] = None  # Override in subclass
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -96,7 +98,7 @@ class BasketBaseFormPart(CampaignBaseFormPart):
 
 
 class BaseFormPart(FormPart):
-    formset = None
+    formset: Optional[Type[Any]] = None
     template_name = "shuup/campaigns/admin/_edit_form.jinja"
 
     def __init__(self, request, form, name, owner):

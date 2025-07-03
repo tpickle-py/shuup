@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Iterable, Tuple
+from typing import Any, Iterable, Optional, Tuple, Type
 
 from django.apps import apps
 from django.contrib.auth import get_user_model
@@ -257,7 +257,7 @@ class ObjectSelectorView(TemplateView):
 
 class BaseAdminObjectSelector:
     search_limit = 20
-    model = None
+    model: Optional[Type[Any]] = None
 
     def __init__(self, selector, shop, user, supplier=None, *args, **kwargs):
         self.selector = selector

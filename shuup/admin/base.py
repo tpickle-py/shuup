@@ -1,8 +1,8 @@
 import hashlib
-from typing import TYPE_CHECKING, Dict, Iterable, Optional
+from typing import TYPE_CHECKING, Any, Dict, Iterable, Optional, Union
 
 import six
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes, force_str
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import override
 
@@ -68,7 +68,7 @@ class AdminModule:
         :rtype: list[str]
         """
         with override(language="en"):
-            return [force_text(self.name)]
+            return [force_str(self.name)]
 
     def get_extra_permissions(self) -> Iterable[str]:
         """
@@ -81,7 +81,7 @@ class AdminModule:
         """
         return ()
 
-    def get_permissions_help_texts(self) -> Dict[str, str]:
+    def get_permissions_help_texts(self) -> Union[Dict[str, str], Iterable[str]]:
         """
         Returns a dictionary where the keys is the permission identifier
         and the value is a help text that can help the user to understand
@@ -254,10 +254,10 @@ class SearchResult(Resolvable):
 
     def to_json(self):
         return {
-            "text": force_text(self.text),
+            "text": force_str(self.text),
             "url": self.url,
             "icon": self.icon,
-            "category": force_text(self.category),
+            "category": force_str(self.category),
             "isAction": self.is_action,
             "relevance": self.relevance,
             "target": self.target,
@@ -290,7 +290,7 @@ class Notification(Resolvable):
         self.dismissal_url = dismissal_url
         self.kind = kind
         self.datetime = datetime
-        bits = [force_text(v) for (k, v) in sorted(vars(self).items())]
+        bits = [force_str(v) for (k, v) in sorted(vars(self).items())]
         self.id = hashlib.md5(force_bytes("+".join(bits))).hexdigest()
 
 
@@ -316,12 +316,12 @@ class Section:
     `order` the order.
     """
 
-    identifier = ""
-    name = ""
-    icon = ""
-    template = ""
-    extra_js = ""
-    order = 0
+    identifier: str = ""
+    name: Union[str, Any] = ""  # Allow translation strings
+    icon: str = ""
+    template: str = ""
+    extra_js: str = ""
+    order: int = 0
 
     @classmethod
     def visible_for_object(cls, obj, request):
