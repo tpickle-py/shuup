@@ -47,7 +47,7 @@ def add_product_to_order_django3(
 
     # Create and link taxes - confirmed to work in Django 3+
     if tax_rate > 0:
-        from shuup.testing.factories.shared import get_test_tax
+        from shuup.testing.factories.tax_factory import get_test_tax
 
         taxes = [get_test_tax(tax_rate)]
         price = quantity * base_unit_price

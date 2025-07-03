@@ -1,9 +1,45 @@
 from .category_factory import CategoryFactory
 from .company_factory import CompanyFactory
+
+# Import from contact factory
+from .contact_factory import (
+    create_random_company,
+    create_random_contact_group,
+    create_random_person,
+    create_random_user,
+    get_default_customer_group,
+    get_default_permission_group,
+    get_default_staff_user,
+)
+
+# Import from order factory
+from .order_factory import (
+    add_product_to_order,
+    create_empty_order,
+    create_order_with_product,
+    create_random_order,
+    get_basket,
+    get_completed_order_status,
+    get_initial_order_status,
+)
 from .person_contact_factory import PersonContactFactory
 from .product_factory import ProductFactory
 from .product_type_factory import ProductTypeFactory
 from .sales_unit_factory import SalesUnitFactory
+
+# Import from service factory
+from .service_factory import (
+    get_custom_carrier,
+    get_custom_payment_processor,
+    get_default_payment_method,
+    get_default_shipping_method,
+    get_payment_method,
+    get_payment_processor_with_checkout_phase,
+    get_shipping_method,
+)
+
+# Import from shared utilities
+# Import remaining functions from shared (to be moved to product/shop factories)
 from .shared import (
     ATTR_SPECS,
     DEFAULT_CURRENCY,
@@ -11,62 +47,44 @@ from .shared import (
     DEFAULT_NAME,
     _generate_product_image,
     _get_pricing_context,
-    add_product_to_order,
     complete_product,
     create_attribute_with_options,
-    create_default_order_statuses,
-    create_default_tax_rule,
-    create_empty_order,
-    create_order_with_product,
     create_package_product,
     create_product,
     create_random_address,
-    create_random_company,
-    create_random_contact_group,
-    create_random_order,
-    create_random_person,
     create_random_product_attribute,
-    create_random_user,
     default_by_identifier,
     get_address,
     get_all_seeing_key,
-    get_basket,
-    get_completed_order_status,
     get_currency,
-    get_custom_carrier,
-    get_custom_payment_processor,
     get_default_attribute_set,
     get_default_category,
     get_default_currency,
-    get_default_customer_group,
     get_default_manufacturer,
-    get_default_payment_method,
-    get_default_permission_group,
     get_default_product,
     get_default_product_type,
     get_default_sales_unit,
-    get_default_shipping_method,
     get_default_shop,
     get_default_shop_product,
-    get_default_staff_user,
     get_default_supplier,
-    get_default_tax,
-    get_default_tax_class,
     get_faker,
     get_fractional_sales_unit,
-    get_initial_order_status,
-    get_payment_method,
-    get_payment_processor_with_checkout_phase,
     get_random_email,
     get_random_filer_image,
-    get_shipping_method,
     get_shop,
     get_supplier,
-    get_tax,
-    get_test_tax,
 )
 from .shop_factory import ShopFactory
 from .shop_product_factory import ShopProductFactory
+
+# Import from tax factory
+from .tax_factory import (
+    create_default_tax_rule,
+    get_default_tax,
+    get_default_tax_class,
+    get_tax,
+    get_test_tax,
+)
 from .user_factory import UserFactory
 
 # Add more as you break them out

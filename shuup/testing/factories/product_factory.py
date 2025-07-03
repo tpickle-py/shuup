@@ -5,7 +5,8 @@ from factory.django import DjangoModelFactory
 from shuup.core.models import Product
 from shuup.testing.text_data import random_title
 
-from .shared import get_default_product_type, get_default_sales_unit, get_default_tax_class
+from .shared import get_default_product_type, get_default_sales_unit
+from .tax_factory import get_default_tax_class
 
 
 class FuzzyName(fuzzy.FuzzyText):
