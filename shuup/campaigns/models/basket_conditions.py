@@ -1,3 +1,5 @@
+from typing import Any, Optional, Type
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -14,7 +16,7 @@ from shuup.utils.properties import MoneyPropped, PriceProperty
 
 
 class BasketCondition(PolymorphicModel):
-    model = None
+    model: Optional[Type[Any]] = None
     active = models.BooleanField(default=True)
     name = _("Basket condition")
 

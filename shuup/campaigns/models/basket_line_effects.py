@@ -1,3 +1,4 @@
+from typing import Any, Optional, Type
 from uuid import uuid4
 
 from django.db import models
@@ -9,9 +10,9 @@ from shuup.core.order_creator._source import LineSource
 
 
 class BasketLineEffect(PolymorphicShuupModel):
-    identifier = None
-    model = None
-    admin_form_class = None
+    identifier: Optional[str] = None
+    model: Optional[Type[Any]] = None
+    admin_form_class: Optional[Type[Any]] = None
 
     campaign = models.ForeignKey(
         on_delete=models.CASCADE,

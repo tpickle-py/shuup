@@ -1,3 +1,5 @@
+from typing import Any, Optional, Type
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -8,7 +10,7 @@ from shuup.core.models import AnonymousContact, Contact, ContactGroup
 
 
 class ContextCondition(PolymorphicModel):
-    model = None
+    model: Optional[Type[Any]] = None
     identifier = "context_condition"
     name = _("Context Condition")
     description = _("Context Condition")

@@ -1,3 +1,5 @@
+from typing import Any, Optional, Type
+
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
@@ -7,7 +9,7 @@ from shuup.core.models import Category, Product, ProductType, Shop, ShopProduct
 
 
 class CatalogFilter(PolymorphicModel):
-    model = None
+    model: Optional[Type[Any]] = None
 
     identifier = "base_catalog_filter"
     name = _("Base Catalog Filter")
