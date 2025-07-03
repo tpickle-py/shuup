@@ -4,8 +4,9 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.test import override_settings
+
+import pytest
 
 from shuup.core import cache
 from shuup.core.models import Manufacturer
@@ -42,9 +43,7 @@ def test_manufacturer_filter_get_fields(rf):
     assert form_field is not None
     assert form_field.label == "Manufacturers"
 
-    with override_settings(
-        SHUUP_FRONT_OVERRIDE_SORTS_AND_FILTERS_LABELS_LOGIC={"manufacturers": "Brands"}
-    ):
+    with override_settings(SHUUP_FRONT_OVERRIDE_SORTS_AND_FILTERS_LABELS_LOGIC={"manufacturers": "Brands"}):
         form_field = ManufacturerProductListFilter().get_fields(request, category)[0][1]
         assert form_field is not None
         assert form_field.label == "Brands"

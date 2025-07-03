@@ -31,9 +31,7 @@ def test_order_product_summary_with_multiple_suppliers():
     shop_product2 = product1.get_shop_instance(shop=shop)
     shop_product2.suppliers.set([supplier1, supplier2])
 
-    product3 = create_product(
-        "sku3", shop=shop, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED
-    )
+    product3 = create_product("sku3", shop=shop, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED)
     shop_product3 = product1.get_shop_instance(shop=shop)
     shop_product3.suppliers.set([supplier3])
 
@@ -51,26 +49,20 @@ def test_order_product_summary_with_multiple_suppliers():
     order.save()
 
     # Add product 3 to order for supplier 3
-    add_product_to_order(
-        order, supplier3, product3, get_quantity(supplier3, product3), 8
-    )
+    add_product_to_order(order, supplier3, product3, get_quantity(supplier3, product3), 8)
     assert order.get_product_ids_and_quantities()[product3.pk] == 50
     assert not order.has_products_requiring_shipment()
     assert not order.has_products_requiring_shipment(supplier3)
 
     # Add product 2 to order for supplier 1
-    add_product_to_order(
-        order, supplier1, product2, get_quantity(supplier1, product2), 7
-    )
+    add_product_to_order(order, supplier1, product2, get_quantity(supplier1, product2), 7)
     assert order.get_product_ids_and_quantities()[product2.pk] == 6
     assert order.has_products_requiring_shipment()
     assert order.has_products_requiring_shipment(supplier1)
     assert not order.has_products_requiring_shipment(supplier3)
 
     # Add product 2 to order for supplier 2
-    add_product_to_order(
-        order, supplier2, product2, get_quantity(supplier2, product2), 6
-    )
+    add_product_to_order(order, supplier2, product2, get_quantity(supplier2, product2), 6)
     assert order.get_product_ids_and_quantities()[product2.pk] == 19
     assert order.has_products_requiring_shipment()
     assert order.has_products_requiring_shipment(supplier1)
@@ -78,9 +70,7 @@ def test_order_product_summary_with_multiple_suppliers():
     assert not order.has_products_requiring_shipment(supplier3)
 
     # Add product 1 to order for supplier 3
-    add_product_to_order(
-        order, supplier3, product1, get_quantity(supplier3, product1), 5
-    )
+    add_product_to_order(order, supplier3, product1, get_quantity(supplier3, product1), 5)
     assert order.get_product_ids_and_quantities()[product1.pk] == 1
     assert order.has_products_requiring_shipment()
     assert order.has_products_requiring_shipment(supplier1)
@@ -88,12 +78,8 @@ def test_order_product_summary_with_multiple_suppliers():
     assert order.has_products_requiring_shipment(supplier3)
 
     # Add product 1 for supplier 1 and 3
-    add_product_to_order(
-        order, supplier1, product1, get_quantity(supplier1, product1), 4
-    )
-    add_product_to_order(
-        order, supplier2, product1, get_quantity(supplier2, product1), 3
-    )
+    add_product_to_order(order, supplier1, product1, get_quantity(supplier1, product1), 4)
+    add_product_to_order(order, supplier2, product1, get_quantity(supplier2, product1), 3)
     assert order.get_product_ids_and_quantities()[product1.pk] == 9
 
     product_summary = order.get_product_summary()
@@ -207,9 +193,7 @@ def test_order_product_summary_with_multiple_suppliers():
     _assert_product_summary(product_summary, product2.pk, 19, 1, 18, 0)
 
     # Refund the last product and see all falling in place
-    line_to_refund = order.lines.filter(
-        product_id=product2.pk, supplier=supplier1
-    ).first()
+    line_to_refund = order.lines.filter(product_id=product2.pk, supplier=supplier1).first()
     order.create_refund(
         [
             {
@@ -236,12 +220,8 @@ def test_order_product_summary_with_multiple_suppliers():
         0,
         suppliers=[supplier1, supplier2, supplier3],
     )
-    _assert_product_summary(
-        product_summary, product2.pk, 19, 0, 18, 1, suppliers=[supplier1, supplier2]
-    )
-    _assert_product_summary(
-        product_summary, product3.pk, 50, 0, 0, 50, suppliers=[supplier3]
-    )
+    _assert_product_summary(product_summary, product2.pk, 19, 0, 18, 1, suppliers=[supplier1, supplier2])
+    _assert_product_summary(product_summary, product3.pk, 50, 0, 0, 50, suppliers=[supplier3])
 
     # Order prodcuts and quantities still match, right?
     order_products_and_quantities = order.get_product_ids_and_quantities()
@@ -256,9 +236,7 @@ def test_order_product_summary_with_multiple_suppliers():
     assert order.has_products_requiring_shipment(supplier3)
 
 
-def _assert_product_summary(
-    product_summary, product_pk, ordered, unshipped, shipped, refunded, suppliers=None
-):
+def _assert_product_summary(product_summary, product_pk, ordered, unshipped, shipped, refunded, suppliers=None):
     assert product_summary[product_pk]["ordered"] == ordered
     assert product_summary[product_pk]["unshipped"] == unshipped
     assert product_summary[product_pk]["shipped"] == shipped

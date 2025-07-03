@@ -6,19 +6,16 @@
 # LICENSE file in the root directory of this source tree.
 import datetime
 import json
-import pytest
+
 from django.http.response import Http404
 from django.test import override_settings
 from django.utils.timezone import now
 
+import pytest
+
 from shuup.admin.shop_provider import set_shop
 from shuup.core.models import Shop
-from shuup.discounts.admin.views import (
-    ArchivedDiscountListView,
-    DiscountDeleteView,
-    DiscountEditView,
-    DiscountListView,
-)
+from shuup.discounts.admin.views import ArchivedDiscountListView, DiscountDeleteView, DiscountEditView, DiscountListView
 from shuup.discounts.models import Discount
 from shuup.testing import factories
 from shuup.testing.utils import apply_request_middleware
@@ -48,9 +45,7 @@ def test_discount_admin_edit_view(rf, staff_user, admin_user):
         product = factories.create_product("test", shop=shop)
         discount_percentage = 20
         data = {"product": product.pk, "discount_percentage": discount_percentage}
-        request = apply_request_middleware(
-            rf.post("/", data=data), user=staff_user, shop=shop
-        )
+        request = apply_request_middleware(rf.post("/", data=data), user=staff_user, shop=shop)
         set_shop(request, shop)
         assert request.shop == shop
         view_func = DiscountEditView.as_view()
@@ -64,9 +59,7 @@ def test_discount_admin_edit_view(rf, staff_user, admin_user):
 
         # Test with superuser and with different shop
         shop2 = factories.get_shop(enabled=True)
-        request = apply_request_middleware(
-            rf.post("/", data=data), user=admin_user, shop=shop2
-        )
+        request = apply_request_middleware(rf.post("/", data=data), user=admin_user, shop=shop2)
         set_shop(request, shop2)
         view_func = DiscountEditView.as_view()
         response = view_func(request)
@@ -91,9 +84,7 @@ def _test_discount_list_view(rf, index):
     staff_user = factories.create_random_user(is_staff=True)
     shop.staff_members.add(staff_user)
 
-    discount1 = Discount.objects.create(
-        identifier="discount_without_effects_%s" % index, shop=shop
-    )
+    discount1 = Discount.objects.create(identifier="discount_without_effects_%s" % index, shop=shop)
     discount2 = Discount.objects.create(
         shop=shop,
         identifier="discount_with_amount_value_only_%s" % index,
@@ -162,11 +153,7 @@ def test_discount_admin_list_view(rf, admin_user):
             _test_discount_list_view(rf, x)
 
         # Superuser gets same data as shop staff
-        shop = (
-            Shop.objects.exclude(identifier=factories.DEFAULT_IDENTIFIER)
-            .order_by("?")
-            .first()
-        )
+        shop = Shop.objects.exclude(identifier=factories.DEFAULT_IDENTIFIER).order_by("?").first()
         request = apply_request_middleware(
             rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}),
             user=admin_user,
@@ -181,14 +168,9 @@ def test_discount_admin_list_view(rf, admin_user):
         # In active 3 discounts to see that those are filtered out
         payload = {
             "action": "archive_discounts",
-            "values": [
-                discount.pk
-                for discount in Discount.objects.filter(shop=shop).order_by("?")[:3]
-            ],
+            "values": [discount.pk for discount in Discount.objects.filter(shop=shop).order_by("?")[:3]],
         }
-        archive_request = apply_request_middleware(
-            rf.post("/"), user=admin_user, shop=shop
-        )
+        archive_request = apply_request_middleware(rf.post("/"), user=admin_user, shop=shop)
         set_shop(archive_request, shop)
         archive_request._body = json.dumps(payload).encode("UTF-8")
         view = DiscountListView.as_view()
@@ -220,9 +202,7 @@ def test_discount_admin_list_view(rf, admin_user):
 
         # Unarchive all discounts
         payload = {"action": "unarchive_discounts", "values": "all"}
-        unarchive_request = apply_request_middleware(
-            rf.post("/"), user=admin_user, shop=shop
-        )
+        unarchive_request = apply_request_middleware(rf.post("/"), user=admin_user, shop=shop)
         set_shop(unarchive_request, shop)
         unarchive_request._body = json.dumps(payload).encode("UTF-8")
         view = ArchivedDiscountListView.as_view()
@@ -235,9 +215,7 @@ def test_discount_admin_list_view(rf, admin_user):
 
         # Re-archive all discounts
         payload = {"action": "archive_discounts", "values": "all"}
-        archive_request = apply_request_middleware(
-            rf.post("/"), user=admin_user, shop=shop
-        )
+        archive_request = apply_request_middleware(rf.post("/"), user=admin_user, shop=shop)
         set_shop(archive_request, shop)
         archive_request._body = json.dumps(payload).encode("UTF-8")
         view = DiscountListView.as_view()
@@ -251,14 +229,9 @@ def test_discount_admin_list_view(rf, admin_user):
         # Unarchive just one discount
         payload = {
             "action": "unarchive_discounts",
-            "values": [
-                discount.pk
-                for discount in Discount.objects.filter(shop=shop).order_by("?")[:1]
-            ],
+            "values": [discount.pk for discount in Discount.objects.filter(shop=shop).order_by("?")[:1]],
         }
-        unarchive_request = apply_request_middleware(
-            rf.post("/"), user=admin_user, shop=shop
-        )
+        unarchive_request = apply_request_middleware(rf.post("/"), user=admin_user, shop=shop)
         set_shop(unarchive_request, shop)
         unarchive_request._body = json.dumps(payload).encode("UTF-8")
         view = ArchivedDiscountListView.as_view()
@@ -272,14 +245,9 @@ def test_discount_admin_list_view(rf, admin_user):
         # Delete one archived discount
         payload = {
             "action": "delete_discounts",
-            "values": [
-                discount.pk
-                for discount in Discount.objects.archived(shop).order_by("?")[:1]
-            ],
+            "values": [discount.pk for discount in Discount.objects.archived(shop).order_by("?")[:1]],
         }
-        delete_request = apply_request_middleware(
-            rf.post("/"), user=admin_user, shop=shop
-        )
+        delete_request = apply_request_middleware(rf.post("/"), user=admin_user, shop=shop)
         set_shop(delete_request, shop)
         delete_request._body = json.dumps(payload).encode("UTF-8")
         view = ArchivedDiscountListView.as_view()
@@ -292,9 +260,7 @@ def test_discount_admin_list_view(rf, admin_user):
 
         # Delete all for this shop only
         payload = {"action": "delete_discounts", "values": "all"}
-        delete_request = apply_request_middleware(
-            rf.post("/"), user=admin_user, shop=shop
-        )
+        delete_request = apply_request_middleware(rf.post("/"), user=admin_user, shop=shop)
         set_shop(delete_request, shop)
         delete_request._body = json.dumps(payload).encode("UTF-8")
         view = ArchivedDiscountListView.as_view()
@@ -303,9 +269,7 @@ def test_discount_admin_list_view(rf, admin_user):
             response.render()
 
         assert response.status_code == 200
-        assert (
-            Discount.objects.filter(shop=shop).count() == 1
-        )  # Since only archived can be deleted with mass action
+        assert Discount.objects.filter(shop=shop).count() == 1  # Since only archived can be deleted with mass action
         assert Discount.objects.available(shop).count() == 1
         assert Discount.objects.archived(shop).count() == 0
         assert Discount.objects.count() == 9

@@ -27,8 +27,4 @@ class Migration(migrations.Migration):
         ("shuup", "0016_currency"),
     ]
 
-    operations = [
-        migrations.RunPython(
-            ensure_default_currencies_exists, migrations.RunPython.noop
-        )
-    ]
+    operations = [migrations.RunPython(ensure_default_currencies_exists, migrations.RunPython.noop)]

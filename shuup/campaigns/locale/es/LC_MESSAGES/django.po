@@ -1,11 +1,11 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Pablo Burgos <hispar@gmail.com>, 2020
 # Panu Tulimäki <panu@shuup.com>, 2020
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""

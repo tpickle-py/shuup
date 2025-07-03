@@ -28,9 +28,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "categories",
-                    models.ManyToManyField(
-                        related_name="ultrafilter2", to="shuup.Category"
-                    ),
+                    models.ManyToManyField(related_name="ultrafilter2", to="shuup.Category"),
                 ),
                 (
                     "category",
@@ -43,9 +41,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "contact",
-                    models.ForeignKey(
-                        to="shuup.Contact", on_delete=models.CASCADE, null=True
-                    ),
+                    models.ForeignKey(to="shuup.Contact", on_delete=models.CASCADE, null=True),
                 ),
                 (
                     "derp",
@@ -58,39 +54,27 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "product",
-                    models.ForeignKey(
-                        to="shuup.Product", on_delete=models.CASCADE, null=True
-                    ),
+                    models.ForeignKey(to="shuup.Product", on_delete=models.CASCADE, null=True),
                 ),
                 (
                     "product_type",
-                    models.ForeignKey(
-                        to="shuup.ProductType", on_delete=models.CASCADE, null=True
-                    ),
+                    models.ForeignKey(to="shuup.ProductType", on_delete=models.CASCADE, null=True),
                 ),
                 (
                     "product_types",
-                    models.ManyToManyField(
-                        related_name="ultrafilter3", to="shuup.ProductType"
-                    ),
+                    models.ManyToManyField(related_name="ultrafilter3", to="shuup.ProductType"),
                 ),
                 (
                     "products",
-                    models.ManyToManyField(
-                        related_name="ultrafilter1", to="shuup.Product"
-                    ),
+                    models.ManyToManyField(related_name="ultrafilter1", to="shuup.Product"),
                 ),
                 (
                     "shop_product",
-                    models.ForeignKey(
-                        to="shuup.ShopProduct", on_delete=models.CASCADE, null=True
-                    ),
+                    models.ForeignKey(to="shuup.ShopProduct", on_delete=models.CASCADE, null=True),
                 ),
                 (
                     "shop_products",
-                    models.ManyToManyField(
-                        related_name="ultrafilter4", to="shuup.ShopProduct"
-                    ),
+                    models.ManyToManyField(related_name="ultrafilter4", to="shuup.ShopProduct"),
                 ),
             ],
             options={

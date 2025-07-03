@@ -5,6 +5,7 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import json
+
 import pytest
 
 from shuup.simple_cms.admin_module.views import PageDeleteView, PageListView
@@ -38,9 +39,7 @@ def test_ensure_deleted_inlist(rf, admin_user):
     page = create_page(url="bacon", shop=get_default_shop())
 
     list_view = PageListView.as_view()
-    request = apply_request_middleware(
-        rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user
-    )
+    request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user)
 
     response = list_view(request)
     data = json.loads(response.content.decode("utf-8"))

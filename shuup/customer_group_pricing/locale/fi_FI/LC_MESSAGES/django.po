@@ -2,13 +2,13 @@
 # Copyright (C) 2015 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-# 
+#
 # Translators:
 # Tuomas Suutari <tuomas.suutari@anders.fi>, 2016
 # Janne Tammi <janne@shuup.com>, 2016
 # Ville-Pekka Altti <ville-pekka.altti@anders.fi>, 2017
 # Panu Tulimäki <panu@shuup.com>, 2018
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""

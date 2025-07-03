@@ -16,9 +16,7 @@ from shuup.testing.browser_utils import initialize_front_browser_test, wait_unti
 from shuup.testing.factories import create_product, get_default_category, get_default_shop, get_default_supplier
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.django_db
@@ -45,20 +43,13 @@ def test_product_descriptions(browser, live_server, reindex_catalog):
     # view product detail page
     url = reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug})
     browser.visit("%s%s" % (live_server, url))
-    wait_until_condition(
-        browser, lambda x: x.is_text_present(product.short_description)
-    )
+    wait_until_condition(browser, lambda x: x.is_text_present(product.short_description))
     assert product.description in browser.html
 
     # product preview
     url = reverse("shuup:all-categories")
     browser.visit("%s%s" % (live_server, url))
     product_div_name = "product-{}".format(product.pk)
-    wait_until_condition(
-        browser, lambda x: x.find_by_css("#{} button.btn".format(product_div_name))
-    )
+    wait_until_condition(browser, lambda x: x.find_by_css("#{} button.btn".format(product_div_name)))
     browser.execute_script("$('#{} button.btn').click();".format(product_div_name))
-    assert (
-        product.short_description
-        == browser.find_by_css("#{} p.description".format(product_div_name))[0].html
-    )
+    assert product.short_description == browser.find_by_css("#{} p.description".format(product_div_name))[0].html

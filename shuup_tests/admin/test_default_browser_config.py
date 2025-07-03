@@ -38,8 +38,6 @@ def test_browser_config_as_shop_staff(rf):
     urls = get_browser_urls(request)
     assert urls["media"] == reverse("shuup_admin:media.browse")
 
-    media_module_permission_urls = set(
-        get_permissions_from_urls(MediaModule().get_urls())
-    )
+    media_module_permission_urls = set(get_permissions_from_urls(MediaModule().get_urls()))
     assert "media.browse" in media_module_permission_urls
     assert "shuup_admin:media.browse" not in media_module_permission_urls

@@ -6,7 +6,6 @@
 # LICENSE file in the root directory of this source tree.
 
 
-
 import decimal
 import json
 
@@ -95,20 +94,14 @@ def _get_order_with_coupon(request, initial_status, condition_product_count=1):
     shop = request.shop
     basket = get_basket(request)
     supplier = get_default_supplier(shop)
-    product = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price="50"
-    )
+    product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price="50")
     basket.add_product(supplier=supplier, shop=shop, product=product, quantity=1)
     basket.shipping_method = get_shipping_method(shop=shop)  # For shippable products
 
     dc = Coupon.objects.create(code="TEST", active=True)
-    campaign = BasketCampaign.objects.create(
-        shop=shop, name="test", public_name="test", coupon=dc, active=True
-    )
+    campaign = BasketCampaign.objects.create(shop=shop, name="test", public_name="test", coupon=dc, active=True)
 
-    BasketDiscountAmount.objects.create(
-        discount_amount=shop.create_price("20"), campaign=campaign
-    )
+    BasketDiscountAmount.objects.create(discount_amount=shop.create_price("20"), campaign=campaign)
 
     rule = BasketTotalProductAmountCondition.objects.create(value=1)
     campaign.conditions.add(rule)
@@ -129,9 +122,7 @@ def _encode_address(address):
 
 
 def _get_frontend_order_state(shop, contact):
-    tax = Tax.objects.create(
-        code="test_code", rate=decimal.Decimal("0.20"), name="Default"
-    )
+    tax = Tax.objects.create(code="test_code", rate=decimal.Decimal("0.20"), name="Default")
     tax_class = TaxClass.objects.create(identifier="test_tax_class", name="Default")
     rule = TaxRule.objects.create(tax=tax)
     rule.tax_classes.add(tax_class)
@@ -154,12 +145,8 @@ def _get_frontend_order_state(shop, contact):
     state = {
         "customer": {
             "id": contact.id if contact else None,
-            "billingAddress": _encode_address(contact.default_billing_address)
-            if contact
-            else {},
-            "shippingAddress": _encode_address(contact.default_shipping_address)
-            if contact
-            else {},
+            "billingAddress": _encode_address(contact.default_billing_address) if contact else {},
+            "shippingAddress": _encode_address(contact.default_shipping_address) if contact else {},
         },
         "lines": lines,
         "methods": {

@@ -42,9 +42,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="product",
             name="kind",
-            field=models.IntegerField(
-                choices=[(1, "Product")], db_index=True, default=1
-            ),
+            field=models.IntegerField(choices=[(1, "Product")], db_index=True, default=1),
         ),
         migrations.AddField(
             model_name="supplier",

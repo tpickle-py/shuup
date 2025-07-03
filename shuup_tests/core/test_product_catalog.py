@@ -18,15 +18,9 @@ from shuup.testing import factories
 def test_product_catalog_simple_list():
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()
-    product1 = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=Decimal("30")
-    )
-    product2 = factories.create_product(
-        "p2", shop=shop, supplier=supplier, default_price=Decimal("10")
-    )
-    product3 = factories.create_product(
-        "p3", shop=shop, supplier=supplier, default_price=Decimal("20")
-    )
+    product1 = factories.create_product("p1", shop=shop, supplier=supplier, default_price=Decimal("30"))
+    product2 = factories.create_product("p2", shop=shop, supplier=supplier, default_price=Decimal("10"))
+    product3 = factories.create_product("p3", shop=shop, supplier=supplier, default_price=Decimal("20"))
 
     catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
     ProductCatalog.index_product(product1)
@@ -58,12 +52,8 @@ def test_product_catalog_simple_list():
 def test_product_catalog_purchasable():
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()
-    product1 = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=Decimal("30")
-    )
-    product2 = factories.create_product(
-        "p2", shop=shop, supplier=supplier, default_price=Decimal("10")
-    )
+    product1 = factories.create_product("p1", shop=shop, supplier=supplier, default_price=Decimal("30"))
+    product2 = factories.create_product("p2", shop=shop, supplier=supplier, default_price=Decimal("10"))
 
     supplier.stock_managed = True
     supplier.save()
@@ -76,27 +66,17 @@ def test_product_catalog_purchasable():
     ProductCatalog.index_product(product2)
 
     _assert_products_queryset(catalog, [(product1.pk, Decimal("30"), None)])
-    _assert_shop_products_queryset(
-        catalog, [(product1.get_shop_instance(shop).pk, Decimal("30"), None)]
-    )
+    _assert_shop_products_queryset(catalog, [(product1.get_shop_instance(shop).pk, Decimal("30"), None)])
 
 
 @pytest.mark.django_db
 def test_product_catalog_variations():
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()
-    parent = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=Decimal("10")
-    )
-    child1 = factories.create_product(
-        "p2", shop=shop, supplier=supplier, default_price=Decimal("20")
-    )
-    child2 = factories.create_product(
-        "p3", shop=shop, supplier=supplier, default_price=Decimal("40")
-    )
-    child3 = factories.create_product(
-        "p4", shop=shop, supplier=supplier, default_price=Decimal("50")
-    )
+    parent = factories.create_product("p1", shop=shop, supplier=supplier, default_price=Decimal("10"))
+    child1 = factories.create_product("p2", shop=shop, supplier=supplier, default_price=Decimal("20"))
+    child2 = factories.create_product("p3", shop=shop, supplier=supplier, default_price=Decimal("40"))
+    child3 = factories.create_product("p4", shop=shop, supplier=supplier, default_price=Decimal("50"))
 
     child1.link_to_parent(parent)
     child2.link_to_parent(parent)
@@ -133,12 +113,8 @@ def test_product_catalog_variations():
 def test_product_catalog_availability():
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()
-    product1 = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=Decimal("30")
-    )
-    product2 = factories.create_product(
-        "p2", shop=shop, supplier=supplier, default_price=Decimal("10")
-    )
+    product1 = factories.create_product("p1", shop=shop, supplier=supplier, default_price=Decimal("30"))
+    product2 = factories.create_product("p2", shop=shop, supplier=supplier, default_price=Decimal("10"))
 
     supplier.stock_managed = True
     supplier.save()
@@ -146,15 +122,9 @@ def test_product_catalog_availability():
     # add 10 products to product1 stock
     supplier.adjust_stock(product1.pk, delta=10)
 
-    catalog_available_only = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=True)
-    )
-    catalog_visible_only = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=False)
-    )
-    catalog_all = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=False, visible_only=False)
-    )
+    catalog_available_only = ProductCatalog(context=ProductCatalogContext(purchasable_only=True))
+    catalog_visible_only = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
+    catalog_all = ProductCatalog(context=ProductCatalogContext(purchasable_only=False, visible_only=False))
     ProductCatalog.index_product(product1)
     ProductCatalog.index_product(product2)
 
@@ -179,19 +149,11 @@ def test_product_catalog_visibilities():
     contact = factories.create_random_person()
     group = factories.create_random_contact_group(shop)
     contact.groups.add(group)
-    product = factories.create_product(
-        "p", shop=shop, supplier=supplier, default_price=Decimal("10")
-    )
+    product = factories.create_product("p", shop=shop, supplier=supplier, default_price=Decimal("10"))
 
-    catalog_visible_only = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=False)
-    )
-    catalog_visible_contact = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=False, contact=contact)
-    )
-    catalog_all = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=False, visible_only=False)
-    )
+    catalog_visible_only = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
+    catalog_visible_contact = ProductCatalog(context=ProductCatalogContext(purchasable_only=False, contact=contact))
+    catalog_all = ProductCatalog(context=ProductCatalogContext(purchasable_only=False, visible_only=False))
     ProductCatalog.index_product(product)
 
     assert catalog_visible_only.get_products_queryset().count() == 1
@@ -236,9 +198,7 @@ def _assert_products_queryset(catalog, expected_prices):
 
 def _assert_shop_products_queryset(catalog, expected_prices):
     shop_products_qs = catalog.get_shop_products_queryset().order_by("catalog_price")
-    values = shop_products_qs.values_list(
-        "pk", "catalog_price", "catalog_discounted_price"
-    )
+    values = shop_products_qs.values_list("pk", "catalog_price", "catalog_discounted_price")
     assert shop_products_qs.count() == len(expected_prices)
     for index, value in enumerate(values):
         assert value == expected_prices[index]

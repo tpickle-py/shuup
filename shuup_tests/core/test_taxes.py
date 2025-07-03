@@ -93,9 +93,7 @@ def test_broken_order(admin_user):
     expected_based_on = expected / 1.5
 
     # Shuup is calculating taxes per line so there will be some "errors"
-    expected_based_on = ensure_decimal_places(
-        Decimal("%s" % (expected_based_on + 0.01))
-    )
+    expected_based_on = ensure_decimal_places(Decimal("%s" % (expected_based_on + 0.01)))
 
     shop = get_default_shop()
 
@@ -156,17 +154,13 @@ def test_broken_order(admin_user):
     assert summary.taxful.value == source.taxful_total_price.value
 
     assert summary.tax_amount == Money(
-        bankers_round(
-            source.taxful_total_price.value - source.taxless_total_price.value
-        ),
+        bankers_round(source.taxful_total_price.value - source.taxless_total_price.value),
         currency,
     )
     assert summary.taxful == summary.raw_based_on + summary.tax_amount
 
     assert summary.tax_rate == tax.rate
-    assert summary.taxful.value == (
-        summary.based_on + summary.tax_amount
-    ).value - Decimal("%s" % 0.01)
+    assert summary.taxful.value == (summary.based_on + summary.tax_amount).value - Decimal("%s" % 0.01)
 
     # create order from basket
     creator = OrderCreator()

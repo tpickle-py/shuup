@@ -32,9 +32,7 @@ def test_product_price(client):
         supplier = Supplier.objects.create(name=name)
         supplier.shops.add(shop)
         shop_product.suppliers.add(supplier)
-        SupplierPrice.objects.create(
-            supplier=supplier, shop=shop, product=product, amount_value=product_price
-        )
+        SupplierPrice.objects.create(supplier=supplier, shop=shop, product=product, amount_value=product_price)
 
     strategy = "shuup.testing.supplier_pricing.supplier_strategy:CheapestSupplierPriceSupplierStrategy"
     with override_settings(

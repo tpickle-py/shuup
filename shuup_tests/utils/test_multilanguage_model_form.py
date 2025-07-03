@@ -19,9 +19,7 @@ from shuup_tests.utils.forms import get_form_data
 
 
 @pytest.mark.django_db
-@override_settings(
-    **{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "fi"}
-)
+@override_settings(**{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "fi"})
 def test_default_language_finnish():
     activate("en")
     test_name_en = "Test shop"
@@ -54,9 +52,7 @@ def test_default_language_finnish():
 
 
 @pytest.mark.django_db
-@override_settings(
-    **{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "en"}
-)
+@override_settings(**{"LANGUAGES": (("en", "en"), ("fi", "fi")), "PARLER_DEFAULT_LANGUAGE_CODE": "en"})
 def test_default_language_english():
     activate("en")
     test_name_en = "Test shop"
@@ -90,9 +86,7 @@ def test_model_form_partially_translated(rf, admin_user):
         payment_method.name = test_name_en
         payment_method.save()
 
-        form = PaymentMethodForm(
-            instance=payment_method, request=request, languages=settings.LANGUAGES
-        )
+        form = PaymentMethodForm(instance=payment_method, request=request, languages=settings.LANGUAGES)
         data = get_form_data(form, prepared=True)
         assert data.get("name__en") == test_name_en
         assert not data.get("name__fi")

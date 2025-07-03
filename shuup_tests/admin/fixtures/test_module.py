@@ -78,8 +78,4 @@ class ARestrictedTestModule(ATestModule):
     name = _("RestrictedTest")
 
     def get_menu_entries(self, request):
-        return [
-            MenuEntry(
-                text="OK", url="/OK", category="RestrictedTest", aliases=("spooky",)
-            )
-        ]
+        return [MenuEntry(text="OK", url="/OK", category="RestrictedTest", aliases=("spooky",))]

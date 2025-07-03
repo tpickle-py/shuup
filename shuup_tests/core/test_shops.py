@@ -9,12 +9,7 @@ import pytest
 from filer.models import Folder, Image
 
 from shuup.core.models import Shop, ShopStatus
-from shuup.testing.factories import (
-    DEFAULT_IDENTIFIER,
-    DEFAULT_NAME,
-    create_random_user,
-    get_shop,
-)
+from shuup.testing.factories import DEFAULT_IDENTIFIER, DEFAULT_NAME, create_random_user, get_shop
 
 caching_was_enabled = None
 

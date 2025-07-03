@@ -30,15 +30,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "min_price_value",
-                    shuup.core.fields.MoneyValueField(
-                        blank=True, decimal_places=9, max_digits=36, null=True
-                    ),
+                    shuup.core.fields.MoneyValueField(blank=True, decimal_places=9, max_digits=36, null=True),
                 ),
                 (
                     "max_price_value",
-                    shuup.core.fields.MoneyValueField(
-                        blank=True, decimal_places=9, max_digits=36, null=True
-                    ),
+                    shuup.core.fields.MoneyValueField(blank=True, decimal_places=9, max_digits=36, null=True),
                 ),
             ],
             options={

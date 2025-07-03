@@ -119,9 +119,7 @@ def test_order_creator(rf, admin_user):
         extra={"runner": "runner"},
     )
 
-    the_line = [
-        sl for sl in source.get_lines() if sl.accounting_identifier == "strawberries"
-    ]
+    the_line = [sl for sl in source.get_lines() if sl.accounting_identifier == "strawberries"]
     assert the_line[0].data["extra"]["runner"] == "runner"
 
     creator = OrderCreator()
@@ -166,17 +164,11 @@ def test_order_creator(rf, admin_user):
 
     with pytest.raises(NoPaymentToCreateException):
         order.create_payment(order.get_total_unpaid_amount())
-        order.create_payment(
-            order.get_total_unpaid_amount() + Money(10, order.currency)
-        )
-        order.create_payment(
-            order.get_total_unpaid_amount() - Money(10, order.currency)
-        )
+        order.create_payment(order.get_total_unpaid_amount() + Money(10, order.currency))
+        order.create_payment(order.get_total_unpaid_amount() - Money(10, order.currency))
 
     assert get_data_dict(source.billing_address) == get_data_dict(order.billing_address)
-    assert get_data_dict(source.shipping_address) == get_data_dict(
-        order.shipping_address
-    )
+    assert get_data_dict(source.shipping_address) == get_data_dict(order.shipping_address)
     customer = source.customer
     assert customer == order.customer
     assert customer.groups.count() == 1
@@ -187,12 +179,7 @@ def test_order_creator(rf, admin_user):
     assert source.payment_method == order.payment_method
     assert source.shipping_method == order.shipping_method
     assert order.pk
-    assert (
-        order.lines.filter(accounting_identifier="strawberries")
-        .first()
-        .extra_data["runner"]
-        == "runner"
-    )
+    assert order.lines.filter(accounting_identifier="strawberries").first().extra_data["runner"] == "runner"
 
 
 @pytest.mark.django_db
@@ -203,9 +190,7 @@ def test_order_creator_with_package_product(rf, admin_user):
 
     shop = get_default_shop()
     supplier = get_simple_supplier()
-    package_product = create_package_product(
-        "Package-Product-Test", shop=shop, supplier=supplier, children=2
-    )
+    package_product = create_package_product("Package-Product-Test", shop=shop, supplier=supplier, children=2)
     shop_product = package_product.get_shop_instance(shop)
     quantity_map = package_product.get_package_child_to_quantity_map()
     product_1, product_2 = quantity_map.keys()
@@ -405,9 +390,7 @@ def test_order_creator_min_total(rf, admin_user):
 
 @pytest.mark.django_db
 def test_order_creator_contact_multishop():
-    with override_settings(
-        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
-    ):
+    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
         user = create_random_user()
         customer = create_random_person("en")
         customer.user = user
@@ -430,9 +413,7 @@ def test_order_creator_contact_multishop():
 
 @pytest.mark.django_db
 def test_order_creator_company_multishop():
-    with override_settings(
-        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
-    ):
+    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
         company = create_random_company()
         shop = get_shop(identifier="random-shop", enabled=True)
 
@@ -477,9 +458,7 @@ def test_order_customer_groups(rf, admin_user):
     creator = OrderCreator()
     order = creator.create_order(source)
     assert get_data_dict(source.billing_address) == get_data_dict(order.billing_address)
-    assert get_data_dict(source.shipping_address) == get_data_dict(
-        order.shipping_address
-    )
+    assert get_data_dict(source.shipping_address) == get_data_dict(order.shipping_address)
     customer = source.customer
     assert customer == order.customer
     assert customer.groups.count() == 2
@@ -517,9 +496,7 @@ def test_order_creator_account_manager():
     )
     creator = OrderCreator()
     order = creator.create_order(source)
-    assert (
-        order.account_manager is None
-    )  # Company contact doesn't have account manager field
+    assert order.account_manager is None  # Company contact doesn't have account manager field
 
     person = create_random_person()
     person.account_manager = create_random_person()

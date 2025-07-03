@@ -4,8 +4,9 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.test.utils import override_settings
+
+import pytest
 
 from shuup.core.models import ShopProduct
 from shuup.testing.factories import (
@@ -33,9 +34,5 @@ def test_new_shop_product_suppliers_init(rf, admin_user, multiple_suppliers):
         client = SmartClient()
         client.login(username="admin", password="password")
         soup = client.soup(reverse("shuup_admin:shop_product.new"))
-        supplier_select = soup.find(
-            "select", attrs={"name": "shop%s-suppliers" % shop.id}
-        )
-        assert len(supplier_select.find_all("option")) == (
-            0 if multiple_suppliers else 1
-        )
+        supplier_select = soup.find("select", attrs={"name": "shop%s-suppliers" % shop.id})
+        assert len(supplier_select.find_all("option")) == (0 if multiple_suppliers else 1)

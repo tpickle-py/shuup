@@ -9,9 +9,7 @@ def create_supplier_shops(apps, schema_editor):
 
     for supplier in Supplier.objects.all():
         for shop in supplier.shops.all():
-            SupplierShop.objects.create(
-                supplier=supplier, shop=shop, is_approved=supplier.is_approved
-            )
+            SupplierShop.objects.create(supplier=supplier, shop=shop, is_approved=supplier.is_approved)
 
 
 class Migration(migrations.Migration):
@@ -19,6 +17,4 @@ class Migration(migrations.Migration):
         ("shuup", "0074_supplier_shops"),
     ]
 
-    operations = [
-        migrations.RunPython(create_supplier_shops, migrations.RunPython.noop)
-    ]
+    operations = [migrations.RunPython(create_supplier_shops, migrations.RunPython.noop)]

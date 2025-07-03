@@ -30,18 +30,12 @@ def test_supplier_price_without_selected_supplier(rf):
     ):
         customer = AnonymousContact()
         pricing_mod = get_pricing_module()
-        supplier1_ctx = pricing_mod.get_context_from_data(
-            shop, customer, supplier=supplier1
-        )
-        supplier2_ctx = pricing_mod.get_context_from_data(
-            shop, customer, supplier=supplier2
-        )
+        supplier1_ctx = pricing_mod.get_context_from_data(shop, customer, supplier=supplier1)
+        supplier2_ctx = pricing_mod.get_context_from_data(shop, customer, supplier=supplier2)
 
         # Supplied by both suppliers
         product1_default_price = 10
-        product1 = factories.create_product(
-            "sku1", shop=shop, supplier=supplier1, default_price=product1_default_price
-        )
+        product1 = factories.create_product("sku1", shop=shop, supplier=supplier1, default_price=product1_default_price)
         shop_product1 = product1.get_shop_instance(shop)
         shop_product1.suppliers.add(supplier2)
 

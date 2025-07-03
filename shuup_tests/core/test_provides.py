@@ -46,17 +46,10 @@ def test_provides():
         ],
     ):
         objects = get_provide_objects(category)
-        assert set(objects) == set(
-            (IdentifiedObject, UnidentifiedObject, VeryUnidentifiedObject)
-        )
+        assert set(objects) == set((IdentifiedObject, UnidentifiedObject, VeryUnidentifiedObject))
         assert get_identifier_to_object_map(category)["identifier"] == IdentifiedObject
-        assert (
-            get_identifier_to_spec_map(category)["identifier"] == IDENTIFIED_OBJECT_SPEC
-        )
-        assert (
-            get_provide_specs_and_objects(category)[IDENTIFIED_OBJECT_SPEC]
-            == IdentifiedObject
-        )
+        assert get_identifier_to_spec_map(category)["identifier"] == IDENTIFIED_OBJECT_SPEC
+        assert get_provide_specs_and_objects(category)[IDENTIFIED_OBJECT_SPEC] == IdentifiedObject
 
     # Test the context manager clears things correctly
     assert empty_iterable(get_provide_objects(category))
@@ -68,19 +61,12 @@ def test_provides():
 def test_blacklist_provides():
     with override_settings(
         INSTALLED_APPS=["shuup_tests.core"],
-        SHUUP_PROVIDES_BLACKLIST={
-            "module_test_module": [
-                "shuup_tests.core.module_test_module:ModuleTestModule"
-            ]
-        },
+        SHUUP_PROVIDES_BLACKLIST={"module_test_module": ["shuup_tests.core.module_test_module:ModuleTestModule"]},
     ):
         from shuup.apps.provides import clear_provides_cache
 
         clear_provides_cache()
-        provides = [
-            module.__name__
-            for module in list(get_provide_objects("module_test_module"))
-        ]
+        provides = [module.__name__ for module in list(get_provide_objects("module_test_module"))]
         assert "AnotherModuleTestModule" in provides
         assert "ModuleTestModule" not in provides
 
@@ -94,15 +80,11 @@ def test_blacklist_provides():
 
 
 def test_load_module():
-    with override_settings(
-        INSTALLED_APPS=["shuup_tests.core"], MODULE_TEST_MODULE="mtm1"
-    ):
+    with override_settings(INSTALLED_APPS=["shuup_tests.core"], MODULE_TEST_MODULE="mtm1"):
         mtm = load_module("MODULE_TEST_MODULE", "module_test_module")
         assert mtm.greeting == "Hello"
 
-    with override_settings(
-        INSTALLED_APPS=["shuup_tests.core"], MODULE_TEST_MODULE="mtm2"
-    ):
+    with override_settings(INSTALLED_APPS=["shuup_tests.core"], MODULE_TEST_MODULE="mtm2"):
         mtm = load_module("MODULE_TEST_MODULE", "module_test_module")
         assert mtm.greeting == "Hola"
 

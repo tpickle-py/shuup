@@ -58,13 +58,9 @@ def test_behavior_form():
     lang = translation.get_language()
     assert action_data["fallback_language"]["constant"] == lang
     assert action_data["template_data"][lang]["content_type"] == "html"
-    assert action_data["template_data"][lang]["subject"] == force_text(
-        data.ORDER_CONFIRMATION["subject"]
-    )
+    assert action_data["template_data"][lang]["subject"] == force_text(data.ORDER_CONFIRMATION["subject"])
     context = {"shop": shop}
-    content = loader.render_to_string(
-        data.ORDER_CONFIRMATION["body_template"], context
-    ).strip()
+    content = loader.render_to_string(data.ORDER_CONFIRMATION["body_template"], context).strip()
     assert action_data["template_data"][lang]["body"] == content
 
     # the widget must be disabled
@@ -129,9 +125,7 @@ def test_content_form(settings):
     assert SavedViewConfig.objects.count() == 0
     about_us_page = Page.objects.get(identifier=data.ABOUT_US_KEY)
     assert about_us_page.title == data.CMS_PAGES[data.ABOUT_US_KEY]["name"]
-    content = loader.render_to_string(
-        data.CMS_PAGES[data.ABOUT_US_KEY]["template"], context
-    ).strip()
+    content = loader.render_to_string(data.CMS_PAGES[data.ABOUT_US_KEY]["template"], context).strip()
     assert about_us_page.content == content
     assert about_us_page.available_from is not None
 
@@ -142,9 +136,7 @@ def test_content_form(settings):
     assert SavedViewConfig.objects.count() == 0
     priv_poli_page = Page.objects.get(identifier=data.PRIVACY_POLICY_KEY)
     assert priv_poli_page.title == data.CMS_PAGES[data.PRIVACY_POLICY_KEY]["name"]
-    content = loader.render_to_string(
-        data.CMS_PAGES[data.PRIVACY_POLICY_KEY]["template"], context
-    ).strip()
+    content = loader.render_to_string(data.CMS_PAGES[data.PRIVACY_POLICY_KEY]["template"], context).strip()
     assert priv_poli_page.content == content
     assert priv_poli_page.available_from is not None
 
@@ -155,9 +147,7 @@ def test_content_form(settings):
     assert SavedViewConfig.objects.count() == 0
     refund_page = Page.objects.get(identifier=data.REFUND_POLICY_KEY)
     assert refund_page.title == data.CMS_PAGES[data.REFUND_POLICY_KEY]["name"]
-    content = loader.render_to_string(
-        data.CMS_PAGES[data.REFUND_POLICY_KEY]["template"], context
-    ).strip()
+    content = loader.render_to_string(data.CMS_PAGES[data.REFUND_POLICY_KEY]["template"], context).strip()
     assert refund_page.content == content
     assert refund_page.available_from is not None
 
@@ -168,9 +158,7 @@ def test_content_form(settings):
     assert SavedViewConfig.objects.count() == 0
     terms_page = Page.objects.get(identifier=data.TERMS_AND_CONDITIONS_KEY)
     assert terms_page.title == data.CMS_PAGES[data.TERMS_AND_CONDITIONS_KEY]["name"]
-    content = loader.render_to_string(
-        data.CMS_PAGES[data.TERMS_AND_CONDITIONS_KEY]["template"], context
-    ).strip()
+    content = loader.render_to_string(data.CMS_PAGES[data.TERMS_AND_CONDITIONS_KEY]["template"], context).strip()
     assert terms_page.content == content
     assert terms_page.available_from is not None
 
@@ -185,23 +173,13 @@ def test_content_form(settings):
     assert svc.view_name == XTHEME_GLOBAL_VIEW_NAME
     assert svc.status == SavedViewConfigStatus.PUBLIC
     content = loader.render_to_string(data.FOOTER_TEMPLATE, context).strip()
-    assert (
-        svc.get_layout_data("footer-bottom")["rows"][0]["cells"][0]["plugin"]
-        == "snippets"
-    )
-    assert (
-        svc.get_layout_data("footer-bottom")["rows"][0]["cells"][0]["config"][
-            "in_place"
-        ]
-        == content
-    )
+    assert svc.get_layout_data("footer-bottom")["rows"][0]["cells"][0]["plugin"] == "snippets"
+    assert svc.get_layout_data("footer-bottom")["rows"][0]["cells"][0]["config"]["in_place"] == content
 
 
 @pytest.mark.django_db
 def test_content_wizard_pane(rf, admin_user, settings):
-    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = [
-        "shuup.testing.modules.content.views.ContentWizardPane"
-    ]
+    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = ["shuup.testing.modules.content.views.ContentWizardPane"]
     shop = get_default_shop()
 
     pane_data = {
@@ -284,9 +262,7 @@ def test_content_wizard_pane(rf, admin_user, settings):
 
 @pytest.mark.django_db
 def test_content_wizard_pane2(rf, admin_user, settings):
-    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = [
-        "shuup.testing.modules.content.views.ContentWizardPane"
-    ]
+    settings.SHUUP_SETUP_WIZARD_PANE_SPEC = ["shuup.testing.modules.content.views.ContentWizardPane"]
 
     shop = get_default_shop()
     request = apply_request_middleware(rf.get("/"), user=admin_user)

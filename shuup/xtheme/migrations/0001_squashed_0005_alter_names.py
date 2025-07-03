@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import enumfields.fields
 from django.db import migrations, models
+
+import enumfields.fields
 
 import shuup.core.fields
 import shuup.xtheme.models
@@ -45,15 +46,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "theme_identifier",
-                    models.CharField(
-                        verbose_name="theme identifier", db_index=True, max_length=64
-                    ),
+                    models.CharField(verbose_name="theme identifier", db_index=True, max_length=64),
                 ),
                 (
                     "view_name",
-                    models.CharField(
-                        verbose_name="view name", db_index=True, max_length=64
-                    ),
+                    models.CharField(verbose_name="view name", db_index=True, max_length=64),
                 ),
                 (
                     "created_on",
@@ -69,9 +66,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "_data",
-                    shuup.core.fields.TaggedJSONField(
-                        db_column="data", verbose_name="internal data", default=dict
-                    ),
+                    shuup.core.fields.TaggedJSONField(db_column="data", verbose_name="internal data", default=dict),
                 ),
             ],
         ),
@@ -98,21 +93,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "theme_identifier",
-                    models.CharField(
-                        db_index=True, verbose_name="theme identifier", max_length=64
-                    ),
+                    models.CharField(db_index=True, verbose_name="theme identifier", max_length=64),
                 ),
                 (
                     "active",
-                    models.BooleanField(
-                        db_index=True, verbose_name="active", default=False
-                    ),
+                    models.BooleanField(db_index=True, verbose_name="active", default=False),
                 ),
                 (
                     "data",
-                    shuup.core.fields.TaggedJSONField(
-                        db_column="data", verbose_name="data", default=dict
-                    ),
+                    shuup.core.fields.TaggedJSONField(db_column="data", verbose_name="data", default=dict),
                 ),
             ],
         ),

@@ -22,15 +22,11 @@ from shuup.utils.django_compat import reverse
 from shuup.xtheme import get_current_theme
 from shuup.xtheme.models import Snippet
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
 def test_xtheme_snippet_injection(browser, admin_user, live_server, settings):
     shop = factories.get_default_shop()
     initialize_admin_browser_test(browser, live_server, settings)
@@ -39,9 +35,7 @@ def test_xtheme_snippet_injection(browser, admin_user, live_server, settings):
     browser.visit("%s%s" % (live_server, url))
     wait_until_condition(browser, lambda x: x.is_text_present("New Snippet"))
     browser.execute_script("$(\"[name='location']\").val('body_end').trigger('change')")
-    browser.execute_script(
-        "$(\"[name='snippet_type']\").val('inline_js').trigger('change')"
-    )
+    browser.execute_script("$(\"[name='snippet_type']\").val('inline_js').trigger('change')")
     browser.execute_script(
         "window.ShuupCodeMirror.editors[document.getElementById('id_snippet-snippet')].setValue('alert(\"works\")');"
     )
@@ -87,6 +81,4 @@ def test_xtheme_snippet_injection(browser, admin_user, live_server, settings):
 
     click_element(browser, ".shuup-toolbar button.btn.btn-danger")
     browser.get_alert().accept()
-    wait_until_condition(
-        browser, lambda x: not Snippet.objects.filter(shop=shop).exists()
-    )
+    wait_until_condition(browser, lambda x: not Snippet.objects.filter(shop=shop).exists())

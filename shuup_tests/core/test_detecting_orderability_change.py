@@ -49,8 +49,6 @@ def test_product_visibility_change_basic(hide_unorderable_product):
             dispatch_uid="shop_product_orderability_check",
         )
     else:
-        assert shop_product.is_visible(
-            contact
-        )  # Still visible in front but not purchasable or orderable
+        assert shop_product.is_visible(contact)  # Still visible in front but not purchasable or orderable
         assert not shop_product.is_purchasable(supplier, contact, 1)
         assert not shop_product.is_orderable(supplier, contact, 1)

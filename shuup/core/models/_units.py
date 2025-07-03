@@ -294,9 +294,9 @@ class UnitInterface:
         :type internal_unit: SalesUnit
         :type display_unit: DisplayUnit
         """
-        assert internal_unit is None or display_unit is None or (display_unit.internal_unit == internal_unit), (
-            f"Incompatible units: {internal_unit!r}, {display_unit!r}"
-        )
+        assert (
+            internal_unit is None or display_unit is None or (display_unit.internal_unit == internal_unit)
+        ), f"Incompatible units: {internal_unit!r}, {display_unit!r}"
         if display_unit:
             self.internal_unit = display_unit.internal_unit
             self.display_unit = display_unit

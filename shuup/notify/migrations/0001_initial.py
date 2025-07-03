@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import enumfields.fields
-import jsonfield.fields
 from django.conf import settings
 from django.db import migrations, models
+
+import enumfields.fields
+import jsonfield.fields
 
 import shuup.core.fields
 import shuup.notify.enums
@@ -71,9 +72,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "_data",
-                    jsonfield.fields.JSONField(
-                        db_column="data", blank=True, null=True, editable=False
-                    ),
+                    jsonfield.fields.JSONField(db_column="data", blank=True, null=True, editable=False),
                 ),
                 (
                     "marked_read",
@@ -86,9 +85,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "marked_read_on",
-                    models.DateTimeField(
-                        blank=True, verbose_name="marked read on", null=True
-                    ),
+                    models.DateTimeField(blank=True, verbose_name="marked read on", null=True),
                 ),
                 (
                     "marked_read_by",
@@ -129,9 +126,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "event_identifier",
-                    models.CharField(
-                        db_index=True, max_length=64, verbose_name="event identifier"
-                    ),
+                    models.CharField(db_index=True, max_length=64, verbose_name="event identifier"),
                 ),
                 (
                     "identifier",
@@ -150,9 +145,7 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=64, verbose_name="name")),
                 (
                     "enabled",
-                    models.BooleanField(
-                        verbose_name="enabled", db_index=True, default=False
-                    ),
+                    models.BooleanField(verbose_name="enabled", db_index=True, default=False),
                 ),
                 (
                     "_step_data",

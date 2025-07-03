@@ -3,11 +3,12 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
+from django.conf import settings
+from django.db import migrations, models
+
 import enumfields.fields
 import jsonfield.fields
 import parler.models
-from django.conf import settings
-from django.db import migrations, models
 
 import shuup.core.fields
 import shuup.tasks.models
@@ -46,27 +47,19 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "priority",
-                    models.PositiveIntegerField(
-                        db_index=True, default=0, verbose_name="priority"
-                    ),
+                    models.PositiveIntegerField(db_index=True, default=0, verbose_name="priority"),
                 ),
                 (
                     "completed_on",
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name="completed on"
-                    ),
+                    models.DateTimeField(blank=True, null=True, verbose_name="completed on"),
                 ),
                 (
                     "created_on",
-                    models.DateTimeField(
-                        auto_now_add=True, db_index=True, verbose_name="created on"
-                    ),
+                    models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="created on"),
                 ),
                 (
                     "modified_on",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="modified on"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="modified on"),
                 ),
                 (
                     "assigned_to",
@@ -136,15 +129,11 @@ class Migration(migrations.Migration):
                 ("body", models.TextField(verbose_name="body")),
                 (
                     "created_on",
-                    models.DateTimeField(
-                        auto_now_add=True, db_index=True, verbose_name="created on"
-                    ),
+                    models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="created on"),
                 ),
                 (
                     "modified_on",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="modified on"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="modified on"),
                 ),
                 (
                     "author",
@@ -187,9 +176,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(max_length=256, verbose_name="message")),
                 (
                     "identifier",
-                    models.CharField(
-                        blank=True, max_length=64, verbose_name="identifier"
-                    ),
+                    models.CharField(blank=True, max_length=64, verbose_name="identifier"),
                 ),
                 (
                     "kind",
@@ -201,9 +188,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        blank=True, null=True, verbose_name="extra data"
-                    ),
+                    jsonfield.fields.JSONField(blank=True, null=True, verbose_name="extra data"),
                 ),
                 (
                     "target",
@@ -280,9 +265,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 ("name", models.TextField(verbose_name="name")),
                 (

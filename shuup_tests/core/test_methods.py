@@ -96,9 +96,7 @@ def test_methods(admin_user, country):
 
     for line in final_lines:
         if line.type == OrderLineType.SHIPPING:
-            if (
-                country == "SE"
-            ):  # We _are_ using Expenseefe-a Svedee Sheepping after all.
+            if country == "SE":  # We _are_ using Expenseefe-a Svedee Sheepping after all.
                 assert line.price == source.create_price("5.00")
             else:
                 assert line.price == source.create_price("4.00")
@@ -128,9 +126,7 @@ def test_fixed_cost_with_waiving_costs():
 
     sm.behavior_components.add(
         *[
-            WaivingCostBehaviorComponent.objects.create(
-                price_value=p, waive_limit_value=w
-            )
+            WaivingCostBehaviorComponent.objects.create(price_value=p, waive_limit_value=w)
             for (p, w) in [(3, 5), (7, 10), (10, 30)]
         ]
     )
@@ -200,9 +196,7 @@ def test_translations_of_method_and_component():
     sm.name = "Toimitus"
     sm.save()
 
-    cost = FixedCostBehaviorComponent.objects.language("fi").create(
-        price_value=10, description="kymppi"
-    )
+    cost = FixedCostBehaviorComponent.objects.language("fi").create(price_value=10, description="kymppi")
     cost.set_current_language("en")
     cost.description = "ten bucks"
     cost.save()
@@ -212,17 +206,13 @@ def test_translations_of_method_and_component():
     source.shipping_method = sm
 
     translation.activate("fi")
-    shipping_lines = [
-        line for line in source.get_final_lines() if line.type == OrderLineType.SHIPPING
-    ]
+    shipping_lines = [line for line in source.get_final_lines() if line.type == OrderLineType.SHIPPING]
     assert len(shipping_lines) == 1
     assert shipping_lines[0].text == "Toimitus: kymppi"
 
     translation.activate("en")
     source.uncache()
-    shipping_lines = [
-        line for line in source.get_final_lines() if line.type == OrderLineType.SHIPPING
-    ]
+    shipping_lines = [line for line in source.get_final_lines() if line.type == OrderLineType.SHIPPING]
     assert len(shipping_lines) == 1
     assert shipping_lines[0].text == "Shipping: ten bucks"
 
@@ -230,12 +220,8 @@ def test_translations_of_method_and_component():
 @pytest.mark.django_db
 def test_weight_limits():
     carrier = CustomCarrier.objects.create()
-    sm = carrier.create_service(
-        None, shop=get_default_shop(), enabled=True, tax_class=get_default_tax_class()
-    )
-    sm.behavior_components.add(
-        WeightLimitsBehaviorComponent.objects.create(min_weight=100, max_weight=500)
-    )
+    sm = carrier.create_service(None, shop=get_default_shop(), enabled=True, tax_class=get_default_tax_class())
+    sm.behavior_components.add(WeightLimitsBehaviorComponent.objects.create(min_weight=100, max_weight=500))
     source = BasketishOrderSource(get_default_shop())
     assert any(ve.code == "min_weight" for ve in sm.get_unavailability_reasons(source))
     source.add_line(type=OrderLineType.PRODUCT, weight=600)
@@ -249,19 +235,13 @@ def test_limited_methods():
     """
     unique_shipping_method = get_shipping_method(name="unique", price=0)
     shop = get_default_shop()
-    common_product = create_product(
-        sku="SH_COMMON", shop=shop
-    )  # A product that does not limit shipping methods
-    unique_product = create_product(
-        sku="SH_UNIQUE", shop=shop
-    )  # A product that only supports unique_shipping_method
+    common_product = create_product(sku="SH_COMMON", shop=shop)  # A product that does not limit shipping methods
+    unique_product = create_product(sku="SH_UNIQUE", shop=shop)  # A product that only supports unique_shipping_method
     unique_shop_product = unique_product.get_shop_instance(shop)
     unique_shop_product.limit_shipping_methods = True
     unique_shop_product.shipping_methods.add(unique_shipping_method)
     unique_shop_product.save()
-    impossible_product = create_product(
-        sku="SH_IMP", shop=shop
-    )  # A product that can't be shipped at all
+    impossible_product = create_product(sku="SH_IMP", shop=shop)  # A product that can't be shipped at all
     imp_shop_product = impossible_product.get_shop_instance(shop)
     imp_shop_product.limit_shipping_methods = True
     imp_shop_product.save()
@@ -285,9 +265,7 @@ def test_limited_methods():
         ),
     ]:
         product_ids = set(product_ids)
-        assert ShippingMethod.objects.available_ids(
-            shop=shop, products=product_ids
-        ) == set(method_ids)
+        assert ShippingMethod.objects.available_ids(shop=shop, products=product_ids) == set(method_ids)
 
 
 def get_total_price_value(lines):
@@ -312,16 +290,12 @@ def test_source_lines_with_multiple_fixed_costs():
     assert len(lines) == 1
     assert get_total_price_value(lines) == Decimal("0")
 
-    sm.behavior_components.add(
-        FixedCostBehaviorComponent.objects.create(price_value=10)
-    )
+    sm.behavior_components.add(FixedCostBehaviorComponent.objects.create(price_value=10))
     lines = list(sm.get_lines(source))
     assert len(lines) == 1
     assert get_total_price_value(lines) == Decimal("10")
 
-    sm.behavior_components.add(
-        FixedCostBehaviorComponent.objects.create(price_value=15, description="extra")
-    )
+    sm.behavior_components.add(FixedCostBehaviorComponent.objects.create(price_value=15, description="extra"))
     lines = list(sm.get_lines(source))
     assert len(lines) == 2
     assert get_total_price_value(lines) == Decimal("25")
@@ -340,9 +314,7 @@ def test_source_lines_with_multiple_fixed_costs():
         (get_payment_processor_with_checkout_phase, PaymentStatus.DEFERRED),
     ],
 )
-def test_process_payment_return_request(
-    rf, get_payment_processor, expected_final_payment_status
-):
+def test_process_payment_return_request(rf, get_payment_processor, expected_final_payment_status):
     """
     Order payment with default payment method with ``CustomPaymentProcessor``
     provider should remain NOT_PAID.

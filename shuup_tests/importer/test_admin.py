@@ -28,9 +28,7 @@ from shuup.utils.django_compat import reverse
 from shuup_tests.utils import SmartClient
 
 
-def do_importing(
-    sku, name, lang, shop, import_mode=ImportMode.CREATE_UPDATE, client=None
-):
+def do_importing(sku, name, lang, shop, import_mode=ImportMode.CREATE_UPDATE, client=None):
     is_update = True
     import_path = reverse("shuup_admin:importer.import.new")
     process_path = reverse("shuup_admin:importer.import_process")
@@ -128,14 +126,10 @@ def test_admin(rf, admin_user):
     client = do_importing("123", "test-en", "en", shop, client=client)
 
     # cannot update
-    client = do_importing(
-        "123", "test", "en", shop, import_mode=ImportMode.CREATE, client=client
-    )
+    client = do_importing("123", "test", "en", shop, import_mode=ImportMode.CREATE, client=client)
 
     # can update
-    do_importing(
-        "123", "test", "en", shop, import_mode=ImportMode.UPDATE, client=client
-    )
+    do_importing("123", "test", "en", shop, import_mode=ImportMode.UPDATE, client=client)
 
 
 @pytest.mark.django_db
@@ -382,14 +376,9 @@ def test_download_examples(rf, admin_user):
         importer_cls = get_importer(importer)
 
         if importer_cls.has_example_file():
-            import_response = client.get(
-                "{}?importer={}".format(import_url, importer_cls.identifier)
-            )
+            import_response = client.get("{}?importer={}".format(import_url, importer_cls.identifier))
             assert import_response.status_code == 200
-            assert (
-                "This importer provides example files"
-                in import_response.content.decode("utf-8")
-            )
+            assert "This importer provides example files" in import_response.content.decode("utf-8")
 
             for example_file in importer_cls.example_files:
                 assert example_file.file_name in import_response.content.decode("utf-8")
@@ -418,13 +407,8 @@ def test_download_examples(rf, admin_user):
                     if example_file.template_name:
                         from django.template.loader import get_template
 
-                        template_file = get_template(
-                            example_file.template_name
-                        ).template.filename
-                        assert (
-                            open(template_file, "r").read().strip()
-                            == response.content.decode("utf-8").strip()
-                        )
+                        template_file = get_template(example_file.template_name).template.filename
+                        assert open(template_file, "r").read().strip() == response.content.decode("utf-8").strip()
                     else:
                         assert response.content
 
@@ -467,12 +451,7 @@ def test_custom_file_transformer_import(admin_user):
         }
         response = client.post(process_submit_path, data=data)
         assert response.status_code == 302
-        assert (
-            "The import was queued!" in list(response.wsgi_request._messages)[0].message
-        )
+        assert "The import was queued!" in list(response.wsgi_request._messages)[0].message
         task_execution = BackgroundTaskExecution.objects.last()
         assert task_execution.status == BackgroundTaskExecutionStatus.ERROR
-        assert (
-            "Error! Not implemented: `DataImporter` -> `transform_file()`."
-            in task_execution.error_log
-        )
+        assert "Error! Not implemented: `DataImporter` -> `transform_file()`." in task_execution.error_log

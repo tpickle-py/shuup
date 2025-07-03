@@ -4,11 +4,13 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from decimal import Decimal, InvalidOperation
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.backends.utils import format_number
+
+import pytest
 
 from shuup.admin.forms.fields import PercentageField
 

@@ -3,10 +3,11 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import enumfields.fields
-import jsonfield.fields
 from django.conf import settings
 from django.db import migrations, models
+
+import enumfields.fields
+import jsonfield.fields
 
 import shuup.utils.analog
 
@@ -37,9 +38,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(max_length=256, verbose_name="message")),
                 (
                     "identifier",
-                    models.CharField(
-                        blank=True, max_length=64, verbose_name="identifier"
-                    ),
+                    models.CharField(blank=True, max_length=64, verbose_name="identifier"),
                 ),
                 (
                     "kind",
@@ -51,9 +50,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        blank=True, null=True, verbose_name="extra data"
-                    ),
+                    jsonfield.fields.JSONField(blank=True, null=True, verbose_name="extra data"),
                 ),
                 (
                     "target",

@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2015 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Дмитрий Черный <bl0x61ck@gmail.com>, 2016
 # Алекс Прометеев <promet.alex@gmail.com>, 2017

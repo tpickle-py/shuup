@@ -128,10 +128,7 @@ COMPLEX_TAX_GROUPS = [
 @pytest.mark.parametrize("price", [tlprice("100"), tfprice("216.6813")])
 def test_compounded_added_taxes_complex(price):
     result = calculate_compounded_added_taxes(price, COMPLEX_TAX_GROUPS)
-    result_taxes = [
-        (line_tax.tax.code, line_tax.amount, line_tax.base_amount)
-        for line_tax in result.taxes
-    ]
+    result_taxes = [(line_tax.tax.code, line_tax.amount, line_tax.base_amount) for line_tax in result.taxes]
     expected_taxes = [
         # code, tax_amount, base_amount
         ("1A", money("50.0"), money("100")),

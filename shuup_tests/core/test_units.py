@@ -1,5 +1,3 @@
-
-
 from decimal import Decimal
 
 from django.utils import translation
@@ -80,25 +78,23 @@ def test_unit_interface_init_unit_compatibility_check():
     UnitInterface(su1, du)  # OK
     with pytest.raises(AssertionError) as exc_info:
         UnitInterface(su2, du)
-    assert str(exc_info.value) == (
-        "Incompatible units: <SalesUnit:None-SU2>, <DisplayUnit:None>"
-    )
+    assert str(exc_info.value) == ("Incompatible units: <SalesUnit:None-SU2>, <DisplayUnit:None>")
 
 
 def test_unit_interface_display_precision():
     sales_unit = SalesUnit(symbol="t")
-    assert UnitInterface(
-        display_unit=DisplayUnit(internal_unit=sales_unit, decimals=9)
-    ).display_precision == Decimal("0.000000001")
-    assert UnitInterface(
-        display_unit=DisplayUnit(internal_unit=sales_unit, decimals=4)
-    ).display_precision == Decimal("0.0001")
-    assert UnitInterface(
-        display_unit=DisplayUnit(internal_unit=sales_unit, decimals=2)
-    ).display_precision == Decimal("0.01")
-    assert UnitInterface(
-        display_unit=DisplayUnit(internal_unit=sales_unit, decimals=0)
-    ).display_precision == Decimal("1")
+    assert UnitInterface(display_unit=DisplayUnit(internal_unit=sales_unit, decimals=9)).display_precision == Decimal(
+        "0.000000001"
+    )
+    assert UnitInterface(display_unit=DisplayUnit(internal_unit=sales_unit, decimals=4)).display_precision == Decimal(
+        "0.0001"
+    )
+    assert UnitInterface(display_unit=DisplayUnit(internal_unit=sales_unit, decimals=2)).display_precision == Decimal(
+        "0.01"
+    )
+    assert UnitInterface(display_unit=DisplayUnit(internal_unit=sales_unit, decimals=0)).display_precision == Decimal(
+        "1"
+    )
 
 
 def test_unit_interface_to_display():
@@ -211,9 +207,7 @@ def test_unit_interface_render_quantity_translations():
 
 
 trans_key = (
-    "Display the value with the unit symbol (with or without space) "
-    "\x04"
-    "{value}{symbol}"
+    "Display the value with the unit symbol (with or without space) " "\x04" "{value}{symbol}"
 )  # Gettext context separator
 
 

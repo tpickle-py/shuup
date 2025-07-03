@@ -12,8 +12,4 @@ class Migration(migrations.Migration):
         ("shuup_gdpr", "0002_consent_document"),
     ]
 
-    operations = [
-        migrations.RenameField(
-            model_name="gdpruserconsent", old_name="consents", new_name="documents"
-        )
-    ]
+    operations = [migrations.RenameField(model_name="gdpruserconsent", old_name="consents", new_name="documents")]

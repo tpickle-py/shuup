@@ -5,23 +5,16 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import decimal
+
 import pytest
 
 from shuup.campaigns.exceptions import CampaignsInvalidInstanceForCacheUpdate
 from shuup.campaigns.models import BasketCampaign
-from shuup.campaigns.models.basket_conditions import (
-    CategoryProductsBasketCondition,
-    ComparisonOperator,
-)
+from shuup.campaigns.models.basket_conditions import CategoryProductsBasketCondition, ComparisonOperator
 from shuup.campaigns.models.basket_line_effects import DiscountFromCategoryProducts
 from shuup.campaigns.signal_handlers import update_filter_cache
 from shuup.front.basket import get_basket
-from shuup.testing.factories import (
-    create_product,
-    get_default_category,
-    get_default_supplier,
-    get_shipping_method,
-)
+from shuup.testing.factories import create_product, get_default_category, get_default_supplier, get_shipping_method
 from shuup_tests.campaigns import initialize_test
 
 
@@ -31,18 +24,14 @@ def test_category_product_in_basket_condition(rf):
     basket = get_basket(request)
     supplier = get_default_supplier(shop)
     category = get_default_category()
-    product = create_product(
-        "The Product", shop=shop, default_price="200", supplier=supplier
-    )
+    product = create_product("The Product", shop=shop, default_price="200", supplier=supplier)
     basket.add_product(supplier=supplier, shop=shop, product=product, quantity=1)
     basket.shipping_method = get_shipping_method(shop=shop)
 
     shop_product = product.get_shop_instance(shop)
     assert category not in shop_product.categories.all()
 
-    condition = CategoryProductsBasketCondition.objects.create(
-        operator=ComparisonOperator.EQUALS, quantity=1
-    )
+    condition = CategoryProductsBasketCondition.objects.create(operator=ComparisonOperator.EQUALS, quantity=1)
     condition.categories.add(category)
 
     # No match the product does not have the category
@@ -78,9 +67,7 @@ def test_category_products_effect_with_amount(rf):
     discount_amount_value = "10"
     quantity = 5
 
-    product = create_product(
-        "The product", shop=shop, supplier=supplier, default_price=single_product_price
-    )
+    product = create_product("The product", shop=shop, supplier=supplier, default_price=single_product_price)
     shop_product = product.get_shop_instance(shop)
     shop_product.categories.add(category)
 
@@ -88,14 +75,10 @@ def test_category_products_effect_with_amount(rf):
     basket.shipping_method = get_shipping_method(shop=shop)
     basket.save()
 
-    rule = CategoryProductsBasketCondition.objects.create(
-        operator=ComparisonOperator.EQUALS, quantity=quantity
-    )
+    rule = CategoryProductsBasketCondition.objects.create(operator=ComparisonOperator.EQUALS, quantity=quantity)
     rule.categories.add(category)
 
-    campaign = BasketCampaign.objects.create(
-        active=True, shop=shop, name="test", public_name="test"
-    )
+    campaign = BasketCampaign.objects.create(active=True, shop=shop, name="test", public_name="test")
     campaign.conditions.add(rule)
 
     DiscountFromCategoryProducts.objects.create(
@@ -126,9 +109,7 @@ def test_category_products_effect_with_percentage(rf):
     discount_percentage = decimal.Decimal("0.10")
     quantity = 5
 
-    product = create_product(
-        "The product", shop=shop, supplier=supplier, default_price=single_product_price
-    )
+    product = create_product("The product", shop=shop, supplier=supplier, default_price=single_product_price)
     shop_product = product.get_shop_instance(shop)
     shop_product.categories.add(category)
 
@@ -136,14 +117,10 @@ def test_category_products_effect_with_percentage(rf):
     basket.shipping_method = get_shipping_method(shop=shop)
     basket.save()
 
-    rule = CategoryProductsBasketCondition.objects.create(
-        operator=ComparisonOperator.EQUALS, quantity=quantity
-    )
+    rule = CategoryProductsBasketCondition.objects.create(operator=ComparisonOperator.EQUALS, quantity=quantity)
     rule.categories.add(category)
 
-    campaign = BasketCampaign.objects.create(
-        active=True, shop=shop, name="test", public_name="test"
-    )
+    campaign = BasketCampaign.objects.create(active=True, shop=shop, name="test", public_name="test")
     campaign.conditions.add(rule)
 
     DiscountFromCategoryProducts.objects.create(
@@ -155,9 +132,7 @@ def test_category_products_effect_with_percentage(rf):
     final_lines = basket.get_final_lines()
 
     assert len(final_lines) == 2  # no new lines since the effect touches original lines
-    expected_discount_amount = (
-        quantity * basket.create_price(single_product_price) * discount_percentage
-    )
+    expected_discount_amount = quantity * basket.create_price(single_product_price) * discount_percentage
     original_price = basket.create_price(single_product_price) * quantity
     line = final_lines[0]
     assert line.discount_amount == expected_discount_amount

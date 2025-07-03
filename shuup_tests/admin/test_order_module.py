@@ -47,16 +47,12 @@ from shuup.testing.utils import apply_request_middleware
 
 @pytest.mark.django_db
 def test_order_set_status_completed_works(admin_user, rf):
-    order = create_random_order(
-        customer=create_random_person(), products=(get_default_product(),)
-    )
+    order = create_random_order(customer=create_random_person(), products=(get_default_product(),))
     order.create_shipment_of_all_products()  # Need to be shipped to set complete
     assert order.status.role == OrderStatusRole.INITIAL
     complete_status = OrderStatus.objects.get_default_complete()
     view = OrderSetStatusView.as_view()
-    request = apply_request_middleware(
-        rf.post("/", {"status": complete_status.pk}), user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", {"status": complete_status.pk}), user=admin_user)
     response = view(request, pk=order.pk)
     assert response.status_code < 400
     order = Order.objects.get(pk=order.pk)
@@ -66,16 +62,12 @@ def test_order_set_status_completed_works(admin_user, rf):
 
 @pytest.mark.django_db
 def test_order_set_status_canceled_works(admin_user, rf):
-    order = create_random_order(
-        customer=create_random_person(), products=(get_default_product(),)
-    )
+    order = create_random_order(customer=create_random_person(), products=(get_default_product(),))
     assert order.shipping_status == ShippingStatus.NOT_SHIPPED
     assert order.status.role == OrderStatusRole.INITIAL
     canceled_status = OrderStatus.objects.get_default_canceled()
     view = OrderSetStatusView.as_view()
-    request = apply_request_middleware(
-        rf.post("/", {"status": canceled_status.pk}), user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", {"status": canceled_status.pk}), user=admin_user)
     response = view(request, pk=order.pk)
     assert response.status_code < 400
     order = Order.objects.get(pk=order.pk)
@@ -85,15 +77,11 @@ def test_order_set_status_canceled_works(admin_user, rf):
 
 @pytest.mark.django_db
 def test_add_order_log_entry(admin_user, rf):
-    order = create_random_order(
-        customer=create_random_person(), products=(get_default_product(),)
-    )
+    order = create_random_order(customer=create_random_person(), products=(get_default_product(),))
     assert not OrderLogEntry.objects.filter(target=order).exists()
     view = NewLogEntryView.as_view()
     test_message = "test_order"
-    request = apply_request_middleware(
-        rf.post("/", {"message": test_message}), user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", {"message": test_message}), user=admin_user)
     response = view(request, pk=order.pk)
     assert response.status_code < 400
     assert OrderLogEntry.objects.filter(target=order).exists()
@@ -102,15 +90,11 @@ def test_add_order_log_entry(admin_user, rf):
 
 @pytest.mark.django_db
 def test_update_order_admin_comment(admin_user, rf):
-    order = create_random_order(
-        customer=create_random_person(), products=(get_default_product(),)
-    )
+    order = create_random_order(customer=create_random_person(), products=(get_default_product(),))
     assert order.admin_comment == ""
     view = UpdateAdminCommentView.as_view()
     comment = "updated admin comment"
-    request = apply_request_middleware(
-        rf.post("/", {"comment": comment}), user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", {"comment": comment}), user=admin_user)
     response = view(request, pk=order.pk)
     assert response.status_code < 400
     order.refresh_from_db()
@@ -124,16 +108,12 @@ def test_delete_payment(admin_user, rf):
     shop_product.default_price_value = 20
     shop_product.save()
 
-    order = create_random_order(
-        customer=create_random_person(), products=(product,), completion_probability=0
-    )
+    order = create_random_order(customer=create_random_person(), products=(product,), completion_probability=0)
     payment_amount = order.taxful_total_price_value
 
     # create a payment
     view = OrderCreatePaymentView.as_view()
-    request = apply_request_middleware(
-        rf.post("/", {"amount": payment_amount}), user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", {"amount": payment_amount}), user=admin_user)
     response = view(request, pk=order.pk)
     assert response.status_code == 302
 
@@ -143,9 +123,7 @@ def test_delete_payment(admin_user, rf):
     # delete the payment
     payment = order.payments.last()
     view = OrderDeletePaymentView.as_view()
-    request = apply_request_middleware(
-        rf.post("/", {"payment": payment.pk}), user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", {"payment": payment.pk}), user=admin_user)
     response = view(request, pk=order.pk)
     assert response.status_code == 302
 
@@ -206,22 +184,14 @@ def test_view_availability(admin_user, rf):
     with pytest.raises(Http404):
         test_view(NewLogEntryView, order, shop_two, calle, {"message": "message here"})
 
-    test_view(
-        UpdateAdminCommentView, order, shop_one, simone, {"comment": "comment here"}
-    )
-    test_view(
-        UpdateAdminCommentView, order, shop_one, peter, {"comment": "comment here"}
-    )
+    test_view(UpdateAdminCommentView, order, shop_one, simone, {"comment": "comment here"})
+    test_view(UpdateAdminCommentView, order, shop_one, peter, {"comment": "comment here"})
     with pytest.raises(Http404):
-        test_view(
-            UpdateAdminCommentView, order, shop_two, calle, {"comment": "comment here"}
-        )
+        test_view(UpdateAdminCommentView, order, shop_two, calle, {"comment": "comment here"})
 
     def test_shipment_view(order, shop, supplier, user):
         request = apply_request_middleware(rf.get("/"), user=user, shop=shop)
-        response = OrderCreateShipmentView.as_view()(
-            request, pk=order.pk, supplier_pk=supplier.pk
-        )
+        response = OrderCreateShipmentView.as_view()(request, pk=order.pk, supplier_pk=supplier.pk)
 
     test_shipment_view(order, shop_one, supplier, simone)
     test_shipment_view(order, shop_one, supplier, peter)
@@ -233,9 +203,7 @@ def test_view_availability(admin_user, rf):
 
     def test_shipment_delete_view(shipment, shop, user):
         request = apply_request_middleware(rf.post("/"), user=user, shop=shop)
-        response = ShipmentDeleteView.as_view()(
-            request, pk=shipment.pk, supplier_pk=supplier.pk
-        )
+        response = ShipmentDeleteView.as_view()(request, pk=shipment.pk, supplier_pk=supplier.pk)
 
     test_shipment_delete_view(shipment, shop_one, simone)
     test_shipment_delete_view(shipment, shop_one, peter)

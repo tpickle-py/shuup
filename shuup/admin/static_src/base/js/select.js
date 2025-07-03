@@ -63,7 +63,7 @@ export function activateSelect($select, model, searchMode, extraFilters = null, 
     } else {
         url = window.ShuupAdminConfig.browserUrls.select;
     }
-    
+
     return $select.select2(Object.assign({
         language,
         minimumInputLength: window.ShuupAdminConfig.settings.minSearchInputLength,

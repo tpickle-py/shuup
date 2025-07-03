@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
+from django.db import migrations, models
+
 import enumfields.fields
 import filer.fields.image
 import parler.models
-from django.db import migrations, models
 
 import shuup.front.apps.carousel.models
 
@@ -70,15 +71,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "is_arrows_visible",
-                    models.BooleanField(
-                        default=True, verbose_name="show navigation arrows"
-                    ),
+                    models.BooleanField(default=True, verbose_name="show navigation arrows"),
                 ),
                 (
                     "use_dot_navigation",
-                    models.BooleanField(
-                        default=True, verbose_name="show navigation dots"
-                    ),
+                    models.BooleanField(default=True, verbose_name="show navigation dots"),
                 ),
                 (
                     "image_width",
@@ -126,9 +123,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "ordering",
-                    models.IntegerField(
-                        null=True, default=0, verbose_name="ordering", blank=True
-                    ),
+                    models.IntegerField(null=True, default=0, verbose_name="ordering", blank=True),
                 ),
                 (
                     "target",
@@ -140,15 +135,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "available_from",
-                    models.DateTimeField(
-                        null=True, verbose_name="available from", blank=True
-                    ),
+                    models.DateTimeField(null=True, verbose_name="available from", blank=True),
                 ),
                 (
                     "available_to",
-                    models.DateTimeField(
-                        null=True, verbose_name="available to", blank=True
-                    ),
+                    models.DateTimeField(null=True, verbose_name="available to", blank=True),
                 ),
                 (
                     "carousel",
@@ -213,25 +204,18 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        max_length=15, verbose_name="Language", db_index=True
-                    ),
+                    models.CharField(max_length=15, verbose_name="Language", db_index=True),
                 ),
                 (
                     "caption",
-                    models.CharField(
-                        null=True, max_length=80, verbose_name="caption", blank=True
-                    ),
+                    models.CharField(null=True, max_length=80, verbose_name="caption", blank=True),
                 ),
                 (
                     "caption_text",
                     models.TextField(
                         null=True,
                         verbose_name="caption text",
-                        help_text=(
-                            "When displayed in banner box mode, "
-                            "caption text is shown as a tooltip"
-                        ),
+                        help_text=("When displayed in banner box mode, " "caption text is shown as a tooltip"),
                         blank=True,
                     ),
                 ),
@@ -352,10 +336,7 @@ class Migration(migrations.Migration):
                 null=True,
                 verbose_name="category link",
                 related_name="+",
-                help_text=(
-                    "Set the product category page that should be shown "
-                    "when this slide is clicked, if any."
-                ),
+                help_text=("Set the product category page that should be shown " "when this slide is clicked, if any."),
                 to="shuup.Category",
                 blank=True,
                 on_delete=models.CASCADE,
@@ -368,10 +349,7 @@ class Migration(migrations.Migration):
                 null=True,
                 verbose_name="cms page link",
                 related_name="+",
-                help_text=(
-                    "Set the web page that should be shown when the slide "
-                    "is clicked, if any."
-                ),
+                help_text=("Set the web page that should be shown when the slide " "is clicked, if any."),
                 to="shuup_simple_cms.Page",
                 blank=True,
                 on_delete=models.CASCADE,
@@ -398,10 +376,7 @@ class Migration(migrations.Migration):
                 null=True,
                 verbose_name="product link",
                 related_name="+",
-                help_text=(
-                    "Set the product detail page that should be shown "
-                    "when this slide is clicked, if any."
-                ),
+                help_text=("Set the product detail page that should be shown " "when this slide is clicked, if any."),
                 to="shuup.Product",
                 blank=True,
                 on_delete=models.CASCADE,
@@ -413,10 +388,7 @@ class Migration(migrations.Migration):
             field=enumfields.fields.EnumIntegerField(
                 default=0,
                 verbose_name="link target",
-                help_text=(
-                    "Set this to current if clicking on this slide "
-                    "should open a new browser tab."
-                ),
+                help_text=("Set this to current if clicking on this slide " "should open a new browser tab."),
                 enum=shuup.front.apps.carousel.models.LinkTargetType,
             ),
         ),
@@ -427,9 +399,7 @@ class Migration(migrations.Migration):
                 null=True,
                 max_length=80,
                 verbose_name="caption",
-                help_text=(
-                    "Text that describes the image. Used for search engine purposes."
-                ),
+                help_text=("Text that describes the image. Used for search engine purposes."),
                 blank=True,
             ),
         ),
@@ -440,10 +410,7 @@ class Migration(migrations.Migration):
                 null=True,
                 max_length=160,
                 verbose_name="external link",
-                help_text=(
-                    "Set the external site that should be shown when "
-                    "this slide is clicked, if any."
-                ),
+                help_text=("Set the external site that should be shown when " "this slide is clicked, if any."),
                 blank=True,
             ),
         ),

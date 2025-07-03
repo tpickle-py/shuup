@@ -2,9 +2,10 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import parler.models
 from django.conf import settings
 from django.db import migrations, models
+
+import parler.models
 
 import shuup.core.fields
 import shuup.utils.properties
@@ -51,15 +52,11 @@ class Migration(migrations.Migration):
                 ("active", models.BooleanField(verbose_name="active", default=False)),
                 (
                     "start_datetime",
-                    models.DateTimeField(
-                        blank=True, verbose_name="start date and time", null=True
-                    ),
+                    models.DateTimeField(blank=True, verbose_name="start date and time", null=True),
                 ),
                 (
                     "end_datetime",
-                    models.DateTimeField(
-                        blank=True, verbose_name="end date and time", null=True
-                    ),
+                    models.DateTimeField(blank=True, verbose_name="end date and time", null=True),
                 ),
                 (
                     "created_on",
@@ -103,9 +100,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 (
                     "public_name",
@@ -215,15 +210,11 @@ class Migration(migrations.Migration):
                 ("active", models.BooleanField(verbose_name="active", default=False)),
                 (
                     "start_datetime",
-                    models.DateTimeField(
-                        blank=True, verbose_name="start date and time", null=True
-                    ),
+                    models.DateTimeField(blank=True, verbose_name="start date and time", null=True),
                 ),
                 (
                     "end_datetime",
-                    models.DateTimeField(
-                        blank=True, verbose_name="end date and time", null=True
-                    ),
+                    models.DateTimeField(blank=True, verbose_name="end date and time", null=True),
                 ),
                 (
                     "created_on",
@@ -259,9 +250,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 ("public_name", models.CharField(max_length=120, blank=True)),
                 (
@@ -716,9 +705,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "categories",
-                    models.ManyToManyField(
-                        verbose_name="categories", to="shuup.Category"
-                    ),
+                    models.ManyToManyField(verbose_name="categories", to="shuup.Category"),
                 ),
             ],
             options={
@@ -790,9 +777,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "contact_groups",
-                    models.ManyToManyField(
-                        verbose_name="contact groups", to="shuup.ContactGroup"
-                    ),
+                    models.ManyToManyField(verbose_name="contact groups", to="shuup.ContactGroup"),
                 ),
             ],
             options={
@@ -816,9 +801,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "contact_groups",
-                    models.ManyToManyField(
-                        verbose_name="contact groups", to="shuup.ContactGroup"
-                    ),
+                    models.ManyToManyField(verbose_name="contact groups", to="shuup.ContactGroup"),
                 ),
             ],
             options={
@@ -1005,9 +988,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "products",
-                    models.ManyToManyField(
-                        blank=True, verbose_name="products", to="shuup.Product"
-                    ),
+                    models.ManyToManyField(blank=True, verbose_name="products", to="shuup.Product"),
                 ),
             ],
             options={
@@ -1031,9 +1012,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "product_types",
-                    models.ManyToManyField(
-                        verbose_name="product Types", to="shuup.ProductType"
-                    ),
+                    models.ManyToManyField(verbose_name="product Types", to="shuup.ProductType"),
                 ),
             ],
             options={
@@ -1087,9 +1066,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="catalogcampaign",
             name="conditions",
-            field=models.ManyToManyField(
-                blank=True, related_name="campaign", to="campaigns.ContextCondition"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="campaign", to="campaigns.ContextCondition"),
         ),
         migrations.AddField(
             model_name="catalogcampaign",
@@ -1106,9 +1083,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="catalogcampaign",
             name="filters",
-            field=models.ManyToManyField(
-                blank=True, related_name="campaign", to="campaigns.CatalogFilter"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="campaign", to="campaigns.CatalogFilter"),
         ),
         migrations.AddField(
             model_name="catalogcampaign",
@@ -1188,9 +1163,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="basketcampaign",
             name="conditions",
-            field=models.ManyToManyField(
-                blank=True, related_name="campaign", to="campaigns.BasketCondition"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="campaign", to="campaigns.BasketCondition"),
         ),
         migrations.AddField(
             model_name="basketcampaign",

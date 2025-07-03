@@ -25,8 +25,6 @@ def test_cache_api():
         cache.set(key, value)
         assert cache.get(key) == value
         cache.bump_version(key)
-        assert (
-            cache.get(key, default="derp") == "derp"
-        )  # version was bumped, so no way this is there
+        assert cache.get(key, default="derp") == "derp"  # version was bumped, so no way this is there
         cache.set(key, value)
         assert cache.get(key) == value

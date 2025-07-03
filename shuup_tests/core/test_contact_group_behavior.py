@@ -89,9 +89,7 @@ def _assign_component_for_service(service, groups):
 def _get_source_for_contact(user, payment_method):
     source = seed_source(user)
     supplier = get_default_supplier()
-    product = create_product(
-        sku="random", shop=source.shop, supplier=supplier, default_price=3.33
-    )
+    product = create_product(sku="random", shop=source.shop, supplier=supplier, default_price=3.33)
     source.add_line(
         type=OrderLineType.PRODUCT,
         product=product,

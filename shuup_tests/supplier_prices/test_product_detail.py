@@ -38,9 +38,7 @@ def test_product_detail(client):
         supplier = Supplier.objects.create(name=name)
         supplier.shops.add(shop)
         shop_product.suppliers.add(supplier)
-        SupplierPrice.objects.create(
-            supplier=supplier, shop=shop, product=product, amount_value=product_price
-        )
+        SupplierPrice.objects.create(supplier=supplier, shop=shop, product=product, amount_value=product_price)
 
     strategy = "shuup.testing.supplier_pricing.supplier_strategy:CheapestSupplierPriceSupplierStrategy"
     with override_settings(
@@ -50,9 +48,7 @@ def test_product_detail(client):
         # Ok so cheapest price should be default supplier
         expected_supplier = shop_product.get_supplier()
         assert expected_supplier.name == "Simon Inc"
-        with override_current_theme_class(
-            ClassicGrayTheme, shop
-        ):  # Ensure settings is refreshed from DB
+        with override_current_theme_class(ClassicGrayTheme, shop):  # Ensure settings is refreshed from DB
             soup = _get_product_detail_soup(client, product)
 
             _assert_supplier_subtitle(soup, expected_supplier)
@@ -60,9 +56,9 @@ def test_product_detail(client):
 
             # Bonus! Let's say Johnny gets mad and starts to supply this product for 5 euros
             johnny_the_supplier = Supplier.objects.filter(name="Johnny Inc").first()
-            SupplierPrice.objects.filter(
-                supplier=johnny_the_supplier, shop=shop, product=product
-            ).update(amount_value=5)
+            SupplierPrice.objects.filter(supplier=johnny_the_supplier, shop=shop, product=product).update(
+                amount_value=5
+            )
 
             # This means that product detail get new default supplier and new price
             assert shop_product.get_supplier() == johnny_the_supplier
@@ -92,9 +88,7 @@ def test_supplier_product_detail(client):
         supplier = Supplier.objects.create(name=name)
         supplier.shops.add(shop)
         shop_product.suppliers.add(supplier)
-        SupplierPrice.objects.create(
-            supplier=supplier, shop=shop, product=product, amount_value=product_price
-        )
+        SupplierPrice.objects.create(supplier=supplier, shop=shop, product=product, amount_value=product_price)
 
     strategy = "shuup.testing.supplier_pricing.supplier_strategy:CheapestSupplierPriceSupplierStrategy"
     with override_settings(
@@ -104,9 +98,7 @@ def test_supplier_product_detail(client):
         # Ok so cheapest price should be default supplier
         expected_supplier = shop_product.get_supplier()
         assert expected_supplier.name == "Simon Inc"
-        with override_current_theme_class(
-            ClassicGrayTheme, shop
-        ):  # Ensure settings is refreshed from DB
+        with override_current_theme_class(ClassicGrayTheme, shop):  # Ensure settings is refreshed from DB
             johnny = Supplier.objects.filter(name="Johnny Inc").first()
             soup = _get_supplier_product_detail_soup(client, product, johnny)
             _assert_supplier_subtitle(soup, johnny)

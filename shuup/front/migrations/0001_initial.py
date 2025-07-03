@@ -38,33 +38,23 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_on",
-                    models.DateTimeField(
-                        auto_now_add=True, verbose_name="created on", db_index=True
-                    ),
+                    models.DateTimeField(auto_now_add=True, verbose_name="created on", db_index=True),
                 ),
                 (
                     "updated_on",
-                    models.DateTimeField(
-                        verbose_name="updated on", auto_now=True, db_index=True
-                    ),
+                    models.DateTimeField(verbose_name="updated on", auto_now=True, db_index=True),
                 ),
                 (
                     "persistent",
-                    models.BooleanField(
-                        verbose_name="persistent", db_index=True, default=False
-                    ),
+                    models.BooleanField(verbose_name="persistent", db_index=True, default=False),
                 ),
                 (
                     "deleted",
-                    models.BooleanField(
-                        verbose_name="deleted", db_index=True, default=False
-                    ),
+                    models.BooleanField(verbose_name="deleted", db_index=True, default=False),
                 ),
                 (
                     "finished",
-                    models.BooleanField(
-                        verbose_name="finished", db_index=True, default=False
-                    ),
+                    models.BooleanField(verbose_name="finished", db_index=True, default=False),
                 ),
                 (
                     "title",
@@ -95,9 +85,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "currency",
-                    shuup.core.fields.CurrencyField(
-                        max_length=4, verbose_name="currency"
-                    ),
+                    shuup.core.fields.CurrencyField(max_length=4, verbose_name="currency"),
                 ),
                 (
                     "prices_include_tax",
@@ -142,15 +130,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "products",
-                    models.ManyToManyField(
-                        blank=True, verbose_name="products", to="shuup.Product"
-                    ),
+                    models.ManyToManyField(blank=True, verbose_name="products", to="shuup.Product"),
                 ),
                 (
                     "shop",
-                    models.ForeignKey(
-                        verbose_name="shop", to="shuup.Shop", on_delete=models.CASCADE
-                    ),
+                    models.ForeignKey(verbose_name="shop", to="shuup.Shop", on_delete=models.CASCADE),
                 ),
             ],
             bases=(shuup.utils.properties.MoneyPropped, models.Model),

@@ -20,12 +20,8 @@ from shuup_tests.utils import printable_gibberish
 def test_mass_edit_products(rf, admin_user):
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product1 = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price="50"
-    )
-    product2 = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price="501"
-    )
+    product1 = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price="50")
+    product2 = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price="501")
 
     category = get_default_category()
     shop_product1 = product1.get_shop_instance(shop)
@@ -36,9 +32,7 @@ def test_mass_edit_products(rf, admin_user):
     assert shop_product2.primary_category is None
 
     request = apply_request_middleware(
-        rf.post(
-            "/", data={"primary_category": category.pk, "categories": [category.pk]}
-        ),
+        rf.post("/", data={"primary_category": category.pk, "categories": [category.pk]}),
         user=admin_user,
     )
     request.session["mass_action_ids"] = [shop_product1.pk, shop_product2.pk]
@@ -55,12 +49,8 @@ def test_mass_edit_products(rf, admin_user):
 def test_mass_edit_products2(rf, admin_user):
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product1 = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price="50"
-    )
-    product2 = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price="501"
-    )
+    product1 = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price="50")
+    product2 = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price="501")
 
     shop_product1 = product1.get_shop_instance(shop)
     shop_product2 = product2.get_shop_instance(shop)
@@ -78,7 +68,4 @@ def test_mass_edit_products2(rf, admin_user):
     response = view(request=request)
     assert response.status_code == 200
     for product in Product.objects.all():
-        assert (
-            product.get_shop_instance(shop).visibility
-            == ShopProductVisibility.NOT_VISIBLE
-        )
+        assert product.get_shop_instance(shop).visibility == ShopProductVisibility.NOT_VISIBLE

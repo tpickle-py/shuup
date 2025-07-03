@@ -19,9 +19,7 @@ from shuup.testing.browser_utils import (
     wait_until_condition,
 )
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.django_db
@@ -36,9 +34,7 @@ def test_dashbord_tour(browser, admin_user, live_server, settings):
     shop.staff_members.add(admin_user_2)
 
     # test with admin_user 1
-    initialize_admin_browser_test(
-        browser, live_server, settings, shop=shop, tour_complete=False
-    )
+    initialize_admin_browser_test(browser, live_server, settings, shop=shop, tour_complete=False)
     wait_until_condition(browser, lambda x: x.is_text_present("Welcome!"))
     wait_until_condition(browser, lambda x: x.is_text_present("Quicklinks"))
     wait_until_condition(browser, lambda x: x.is_element_present_by_css("#menu-button"))
@@ -47,16 +43,10 @@ def test_dashbord_tour(browser, admin_user, live_server, settings):
         lambda x: x.is_text_present("This is the dashboard for your store."),
         timeout=30,
     )
-    wait_until_condition(
-        browser, lambda x: x.is_element_present_by_css(".shepherd-button.btn-primary")
-    )
+    wait_until_condition(browser, lambda x: x.is_element_present_by_css(".shepherd-button.btn-primary"))
     click_element(browser, ".shepherd-button.btn-primary")
-    wait_until_condition(
-        browser, lambda x: not x.is_element_present_by_css(".shepherd-button")
-    )
-    wait_until_condition(
-        browser, lambda x: is_tour_complete(shop, "dashboard", admin_user)
-    )
+    wait_until_condition(browser, lambda x: not x.is_element_present_by_css(".shepherd-button"))
+    wait_until_condition(browser, lambda x: is_tour_complete(shop, "dashboard", admin_user))
 
     browser.visit(live_server + "/logout")
     browser.visit(live_server + "/sa")
@@ -77,16 +67,10 @@ def test_dashbord_tour(browser, admin_user, live_server, settings):
         lambda x: x.is_text_present("This is the dashboard for your store."),
         timeout=30,
     )
-    wait_until_condition(
-        browser, lambda x: x.is_element_present_by_css(".shepherd-button.btn-primary")
-    )
+    wait_until_condition(browser, lambda x: x.is_element_present_by_css(".shepherd-button.btn-primary"))
     click_element(browser, ".shepherd-button.btn-primary")
-    wait_until_condition(
-        browser, lambda x: not x.is_element_present_by_css(".shepherd-button")
-    )
-    wait_until_condition(
-        browser, lambda x: is_tour_complete(shop, "dashboard", admin_user_2)
-    )
+    wait_until_condition(browser, lambda x: not x.is_element_present_by_css(".shepherd-button"))
+    wait_until_condition(browser, lambda x: is_tour_complete(shop, "dashboard", admin_user_2))
 
     # check whether the tour is shown again
     browser.visit(live_server + "/sa")
@@ -100,9 +84,7 @@ def test_dashbord_tour(browser, admin_user, live_server, settings):
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
 def test_home_tour(browser, admin_user, live_server, settings):
     shop = factories.get_default_shop()
     shop2 = factories.get_shop(identifier="shop2")
@@ -114,15 +96,11 @@ def test_home_tour(browser, admin_user, live_server, settings):
     shop.staff_members.add(admin_user_2)
 
     for user in [admin_user, admin_user_2]:
-        initialize_admin_browser_test(
-            browser, live_server, settings, username=user.username, tour_complete=False
-        )
+        initialize_admin_browser_test(browser, live_server, settings, username=user.username, tour_complete=False)
         wait_until_condition(browser, lambda x: x.is_text_present("Welcome!"))
         browser.visit(live_server + "/sa/home")
 
-        wait_until_condition(
-            browser, lambda x: x.is_text_present("Hi, new shop owner!"), timeout=30
-        )
+        wait_until_condition(browser, lambda x: x.is_text_present("Hi, new shop owner!"), timeout=30)
         wait_until_condition(
             browser,
             lambda x: x.is_element_present_by_css(".shepherd-button.btn-primary"),
@@ -147,25 +125,19 @@ def test_home_tour(browser, admin_user, live_server, settings):
             move_to_element(browser, ".shepherd-button.btn-primary")
             browser.find_by_css(".shepherd-button.btn-primary").last.click()
 
-        wait_until_condition(
-            browser, lambda x: x.is_text_present("We're done!"), timeout=30
-        )
+        wait_until_condition(browser, lambda x: x.is_text_present("We're done!"), timeout=30)
         move_to_element(browser, ".shepherd-button.btn-primary")
         browser.find_by_css(".shepherd-button.btn-primary").last.click()
         wait_until_condition(browser, lambda x: is_tour_complete(shop, "home", user))
 
         # check whether the tour is shown again
         browser.visit(live_server + "/sa/home")
-        wait_until_condition(
-            browser, lambda x: not x.is_text_present("Hi, new shop owner!")
-        )
+        wait_until_condition(browser, lambda x: not x.is_text_present("Hi, new shop owner!"))
 
         browser.visit(live_server + "/logout")
         browser.visit(live_server + "/sa")
 
-        wait_until_condition(
-            browser, lambda x: not x.is_text_present("Hi, new shop owner!")
-        )
+        wait_until_condition(browser, lambda x: not x.is_text_present("Hi, new shop owner!"))
 
         assert is_tour_complete(shop2, "home", user) is False
 
@@ -184,15 +156,11 @@ def test_product_tour(browser, admin_user, live_server, settings):
     shop.staff_members.add(admin_user_2)
 
     for user in [admin_user, admin_user_2]:
-        initialize_admin_browser_test(
-            browser, live_server, settings, username=user.username, tour_complete=False
-        )
+        initialize_admin_browser_test(browser, live_server, settings, username=user.username, tour_complete=False)
         wait_until_condition(browser, lambda x: x.is_text_present("Welcome!"))
         browser.visit(live_server + "/sa/products/%d/" % shop_product.pk)
 
-        wait_until_condition(
-            browser, lambda x: x.is_text_present(shop_product.product.name)
-        )
+        wait_until_condition(browser, lambda x: x.is_text_present(shop_product.product.name))
         # as this is added through javascript, add an extra timeout
         wait_until_condition(
             browser,
@@ -226,15 +194,11 @@ def test_product_tour(browser, admin_user, live_server, settings):
             time.sleep(0.25)
 
             try:
-                wait_until_condition(
-                    browser, lambda x: x.is_element_present_by_css(target)
-                )
+                wait_until_condition(browser, lambda x: x.is_element_present_by_css(target))
                 browser.find_by_css(".shepherd-button.btn-primary").last.click()
             except ElementNotInteractableException:
                 move_to_element(browser, ".shepherd-button.btn-primary")
-                wait_until_condition(
-                    browser, lambda x: x.is_element_present_by_css(target)
-                )
+                wait_until_condition(browser, lambda x: x.is_element_present_by_css(target))
                 browser.find_by_css(".shepherd-button.btn-primary").last.click()
 
         wait_until_condition(browser, lambda x: is_tour_complete(shop, "product", user))
@@ -265,9 +229,7 @@ def test_category_tour(browser, admin_user, live_server, settings):
     shop.staff_members.add(admin_user_2)
 
     for user in [admin_user, admin_user_2]:
-        initialize_admin_browser_test(
-            browser, live_server, settings, username=user.username, tour_complete=False
-        )
+        initialize_admin_browser_test(browser, live_server, settings, username=user.username, tour_complete=False)
         wait_until_condition(browser, lambda x: x.is_text_present("Welcome!"))
         browser.visit(live_server + "/sa/categories/new")
 
@@ -281,18 +243,12 @@ def test_category_tour(browser, admin_user, live_server, settings):
             lambda x: x.is_element_present_by_css(".shepherd-button.btn-primary"),
         )
         click_element(browser, ".shepherd-button.btn-primary")
-        wait_until_condition(
-            browser, lambda x: not x.is_element_present_by_css(".shepherd-button")
-        )
-        wait_until_condition(
-            browser, lambda x: is_tour_complete(shop, "category", user)
-        )
+        wait_until_condition(browser, lambda x: not x.is_element_present_by_css(".shepherd-button"))
+        wait_until_condition(browser, lambda x: is_tour_complete(shop, "category", user))
 
         # check whether the tour is shown again
         browser.visit(live_server + "/sa/categories/new")
-        wait_until_condition(
-            browser, lambda x: not x.is_text_present("Add a new product category")
-        )
+        wait_until_condition(browser, lambda x: not x.is_text_present("Add a new product category"))
 
         browser.visit(live_server + "/logout")
         browser.visit(live_server + "/sa")

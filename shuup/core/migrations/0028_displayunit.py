@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import parler.models
 from django.db import migrations, models
+
+import parler.models
 
 import shuup.core.fields
 import shuup.core.models._units
@@ -24,9 +25,7 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "id",
-                    models.AutoField(
-                        auto_created=True, primary_key=True, serialize=False
-                    ),
+                    models.AutoField(auto_created=True, primary_key=True, serialize=False),
                 ),
                 (
                     "internal_unit",
@@ -42,9 +41,7 @@ class Migration(migrations.Migration):
                         default=1,
                         max_digits=36,
                         decimal_places=9,
-                        validators=[
-                            shuup.core.models._units.validate_positive_not_zero
-                        ],
+                        validators=[shuup.core.models._units.validate_positive_not_zero],
                     ),
                 ),
                 ("decimals", models.PositiveSmallIntegerField(default=0)),
@@ -54,9 +51,7 @@ class Migration(migrations.Migration):
                         default=1,
                         max_digits=36,
                         decimal_places=9,
-                        validators=[
-                            shuup.core.models._units.validate_positive_not_zero
-                        ],
+                        validators=[shuup.core.models._units.validate_positive_not_zero],
                     ),
                 ),
                 ("allow_bare_number", models.BooleanField(default=False)),
@@ -73,9 +68,7 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "id",
-                    models.AutoField(
-                        auto_created=True, primary_key=True, serialize=False
-                    ),
+                    models.AutoField(auto_created=True, primary_key=True, serialize=False),
                 ),
                 ("language_code", models.CharField(max_length=15, db_index=True)),
                 ("name", models.CharField(max_length=150)),
@@ -106,8 +99,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="shopproduct",
             name="display_unit",
-            field=models.ForeignKey(
-                to="shuup.DisplayUnit", blank=True, null=True, on_delete=models.CASCADE
-            ),
+            field=models.ForeignKey(to="shuup.DisplayUnit", blank=True, null=True, on_delete=models.CASCADE),
         ),
     ]

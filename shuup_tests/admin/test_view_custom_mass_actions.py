@@ -18,9 +18,7 @@ from shuup.testing.utils import apply_request_middleware
 @pytest.mark.django_db
 def test_view_custom_mass_actions(rf, admin_user):
     factories.get_default_shop()
-    request = apply_request_middleware(
-        rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user
-    )
+    request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user)
     list_view_func = ManufacturerListView.as_view()
 
     # no mass actions

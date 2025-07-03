@@ -6,17 +6,13 @@
 # LICENSE file in the root directory of this source tree.
 
 import decimal
-import pytest
+
 from django.conf import settings
 
+import pytest
+
 from shuup.core.excs import NoProductsToShipException
-from shuup.core.models import (
-    Shipment,
-    ShipmentProduct,
-    ShipmentStatus,
-    ShippingMode,
-    ShippingStatus,
-)
+from shuup.core.models import Shipment, ShipmentProduct, ShipmentStatus, ShippingMode, ShippingStatus
 from shuup.testing.factories import (
     add_product_to_order,
     create_empty_order,
@@ -40,9 +36,7 @@ def test_shipment_identifier():
         assert order.shipments.count() == int(line.quantity)
     order.shipments.update(status=ShipmentStatus.SENT)
     order.update_shipping_status()
-    assert (
-        order.shipping_status == ShippingStatus.FULLY_SHIPPED
-    )  # Check that order is now fully shipped
+    assert order.shipping_status == ShippingStatus.FULLY_SHIPPED  # Check that order is now fully shipped
     assert not order.can_edit()
 
 
@@ -55,9 +49,7 @@ def test_shipment_creation_from_unsaved_shipment():
     for line in product_lines:
         for i in range(0, int(line.quantity)):
             unsaved_shipment = Shipment(order=order, supplier=supplier)
-            shipment = order.create_shipment(
-                {line.product: 1}, shipment=unsaved_shipment
-            )
+            shipment = order.create_shipment({line.product: 1}, shipment=unsaved_shipment)
             expected_key_start = "%s/%s" % (order.pk, i)
             assert shipment.identifier.startswith(expected_key_start)
         assert order.shipments.count() == int(line.quantity)
@@ -178,16 +170,12 @@ def test_shipment_with_unshippable_products():
     shop = get_default_shop()
     supplier = get_default_supplier()
 
-    product = create_product(
-        "unshippable", shop=shop, supplier=supplier, default_price=5.55
-    )
+    product = create_product("unshippable", shop=shop, supplier=supplier, default_price=5.55)
     product.shipping_mode = ShippingMode.NOT_SHIPPED
     product.save()
     order = _get_order(shop, supplier, stocked=False)
     initial_product_line_count = order.lines.products().count()
-    add_product_to_order(
-        order, supplier, product, quantity=4, taxless_base_unit_price=3
-    )
+    add_product_to_order(order, supplier, product, quantity=4, taxless_base_unit_price=3)
     order.cache_prices()
     order.check_all_verified()
     order.save()
@@ -199,10 +187,7 @@ def test_shipment_with_unshippable_products():
     assert order.lines.products().count() == initial_product_line_count + 1
 
     assert order.shipments.count() == 1
-    assert (
-        ShipmentProduct.objects.filter(shipment__order_id=order.id).count()
-        == initial_product_line_count
-    )
+    assert ShipmentProduct.objects.filter(shipment__order_id=order.id).count() == initial_product_line_count
 
     # mark all shipments as sent
     order.shipments.update(status=ShipmentStatus.SENT)
@@ -221,14 +206,10 @@ def test_order_with_only_unshippable_products():
     order.full_clean()
     order.save()
 
-    product = create_product(
-        "unshippable", shop=shop, supplier=supplier, default_price=5.55
-    )
+    product = create_product("unshippable", shop=shop, supplier=supplier, default_price=5.55)
     product.shipping_mode = ShippingMode.NOT_SHIPPED
     product.save()
-    add_product_to_order(
-        order, supplier, product, quantity=4, taxless_base_unit_price=3
-    )
+    add_product_to_order(order, supplier, product, quantity=4, taxless_base_unit_price=3)
     order.cache_prices()
     order.check_all_verified()
     order.save()
@@ -250,9 +231,7 @@ def _get_order(shop, supplier, stocked=False):
             default_price=3.33,
             **product_data,
         )
-        add_product_to_order(
-            order, supplier, product, quantity=quantity, taxless_base_unit_price=1
-        )
+        add_product_to_order(order, supplier, product, quantity=quantity, taxless_base_unit_price=1)
     order.cache_prices()
     order.check_all_verified()
     order.save()

@@ -23,9 +23,7 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "id",
-                    models.AutoField(
-                        auto_created=True, primary_key=True, serialize=False
-                    ),
+                    models.AutoField(auto_created=True, primary_key=True, serialize=False),
                 ),
                 (
                     "key",
@@ -99,9 +97,7 @@ class Migration(migrations.Migration):
                 ("products", models.ManyToManyField(blank=True, to="shuup.Product")),
                 (
                     "shop",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="shuup.Shop"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="shuup.Shop"),
                 ),
             ],
             options={

@@ -1,10 +1,10 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Jiechao Li <jiechao.li@sesamechat.com>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""

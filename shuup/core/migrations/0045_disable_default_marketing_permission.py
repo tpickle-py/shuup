@@ -23,8 +23,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="order",
             name="marketing_permission",
-            field=models.BooleanField(
-                default=False, verbose_name="marketing permission"
-            ),
+            field=models.BooleanField(default=False, verbose_name="marketing permission"),
         ),
     ]

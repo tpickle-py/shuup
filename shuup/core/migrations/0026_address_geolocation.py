@@ -14,29 +14,21 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="immutableaddress",
             name="latitude",
-            field=models.DecimalField(
-                decimal_places=6, max_digits=9, null=True, blank=True
-            ),
+            field=models.DecimalField(decimal_places=6, max_digits=9, null=True, blank=True),
         ),
         migrations.AddField(
             model_name="immutableaddress",
             name="longitude",
-            field=models.DecimalField(
-                decimal_places=6, max_digits=9, null=True, blank=True
-            ),
+            field=models.DecimalField(decimal_places=6, max_digits=9, null=True, blank=True),
         ),
         migrations.AddField(
             model_name="mutableaddress",
             name="latitude",
-            field=models.DecimalField(
-                decimal_places=6, max_digits=9, null=True, blank=True
-            ),
+            field=models.DecimalField(decimal_places=6, max_digits=9, null=True, blank=True),
         ),
         migrations.AddField(
             model_name="mutableaddress",
             name="longitude",
-            field=models.DecimalField(
-                decimal_places=6, max_digits=9, null=True, blank=True
-            ),
+            field=models.DecimalField(decimal_places=6, max_digits=9, null=True, blank=True),
         ),
     ]

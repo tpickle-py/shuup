@@ -5,8 +5,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import datetime
-import pytest
+
 from django.utils.timezone import now
+
+import pytest
 
 from shuup.simple_cms.models import Page
 from shuup.testing.factories import get_default_shop
@@ -49,9 +51,7 @@ def test_future_page_not_visible():
 @pytest.mark.django_db
 def test_current_page_is_visible():
     today = now()
-    page = create_page(
-        available_from=today, available_to=today, shop=get_default_shop()
-    )
+    page = create_page(available_from=today, available_to=today, shop=get_default_shop())
 
     assert Page.objects.visible(get_default_shop(), today).filter(pk=page.pk).exists()
     assert page.is_visible(today)

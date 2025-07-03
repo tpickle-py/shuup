@@ -27,10 +27,7 @@ def set_reference_method(rf, admin_user, reference_method, shop=None):
     data = {"order_settings-order_reference_number_method": reference_method.value}
     request = apply_request_middleware(rf.post("/", data=data), user=admin_user)
     view_func(request)
-    assert (
-        configuration.get(None, consts.ORDER_REFERENCE_NUMBER_METHOD_FIELD)
-        == reference_method.value
-    )
+    assert configuration.get(None, consts.ORDER_REFERENCE_NUMBER_METHOD_FIELD) == reference_method.value
     return shop
 
 

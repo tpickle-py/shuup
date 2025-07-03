@@ -14,9 +14,7 @@ def convert_shop_themes(*args):
     for theme_setting in ThemeSettings.objects.filter(shop__isnull=True):
         for index, shop in enumerate(Shop.objects.all()):
             # already exists.. ignore
-            if ThemeSettings.objects.filter(
-                shop=shop, theme_identifier=theme_setting.theme_identifier
-            ).exists():
+            if ThemeSettings.objects.filter(shop=shop, theme_identifier=theme_setting.theme_identifier).exists():
                 continue
 
             # the first shop received the original object, the other, are just copies
@@ -29,9 +27,7 @@ def convert_shop_themes(*args):
     for saved_config in SavedViewConfig.objects.filter(shop__isnull=True):
         for index, shop in enumerate(Shop.objects.all()):
             # already exists.. ignore
-            if SavedViewConfig.objects.filter(
-                shop=shop, theme_identifier=saved_config.theme_identifier
-            ).exists():
+            if SavedViewConfig.objects.filter(shop=shop, theme_identifier=saved_config.theme_identifier).exists():
                 continue
 
             # the first shop received the original object, the other, are just copies

@@ -44,17 +44,13 @@ def test_all_categories_view(rf, reindex_catalog):
 
     new_product_count = random.randint(1, 3) + 1
     for i in range(1, new_product_count):
-        product = create_product(
-            "sku-%s" % i, shop=shop, supplier=supplier, default_price=10
-        )
+        product = create_product("sku-%s" % i, shop=shop, supplier=supplier, default_price=10)
         shop_product = product.get_shop_instance(shop)
 
         # Add random categories expect default category which we will make
         # hidden to make sure that products linked to hidden categories are
         # not listed
-        shop_product.categories.set(
-            Category.objects.exclude(id=category.pk).order_by("?")[:i]
-        )
+        shop_product.categories.set(Category.objects.exclude(id=category.pk).order_by("?")[:i])
 
     reindex_catalog()
 

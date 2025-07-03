@@ -20,7 +20,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9", 
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -136,7 +136,7 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 markers = [
     "slow: marks tests as slow",
-    "integration: marks tests as integration tests", 
+    "integration: marks tests as integration tests",
     "unit: marks tests as unit tests",
     "browser: marks tests that require browser functionality",
 ]
@@ -201,7 +201,7 @@ target-version = "py38"
 exclude = [
     "migrations",
     "venv",
-    ".venv", 
+    ".venv",
     ".git",
     ".tox",
     "dist",
@@ -216,7 +216,7 @@ exclude = [
 [tool.ruff.lint]
 select = [
     "E",   # pycodestyle errors
-    "W",   # pycodestyle warnings  
+    "W",   # pycodestyle warnings
     "F",   # pyflakes
     "I",   # isort
     "B",   # flake8-bugbear
@@ -267,7 +267,7 @@ dev = [
 
 test = [
     "pytest>=8.0.0",
-    "pytest-django>=4.8.0", 
+    "pytest-django>=4.8.0",
     "pytest-cov>=4.0.0",
     "pytest-splinter>=3.3.2",
     "coverage>=7.4.0",
@@ -294,7 +294,7 @@ exclude = [
     "shuup_tests/**",
     ".git",
     ".tox",
-    "venv", 
+    "venv",
     ".venv",
     "node_modules",
     "*.pyc",
@@ -312,7 +312,7 @@ packages = ["shuup", "shuup_setup_utils"]
 [tool.hatch.build.targets.sdist]
 include = [
     "shuup",
-    "shuup_setup_utils", 
+    "shuup_setup_utils",
     "README.rst",
     "LICENSE",
     "pyproject.toml",

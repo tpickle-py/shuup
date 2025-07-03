@@ -5,15 +5,14 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import os
-import pytest
-import six
+
 from django.utils.translation import activate
 
+import pytest
+import six
+
 from shuup.core.models._addresses import MutableAddress
-from shuup.default_importer.importers.contact import (
-    CompanyContactImporter,
-    PersonContactImporter,
-)
+from shuup.default_importer.importers.contact import CompanyContactImporter, PersonContactImporter
 from shuup.importer.transforms import transform_file
 from shuup.importer.utils.importer import ImportMode
 from shuup.testing.factories import get_default_shop
@@ -30,9 +29,7 @@ def test_customer_sample(rf):
 
     importer = PersonContactImporter(
         transformed_data,
-        CompanyContactImporter.get_importer_context(
-            rf.get("/"), shop=shop, language="en"
-        ),
+        CompanyContactImporter.get_importer_context(rf.get("/"), shop=shop, language="en"),
     )
     importer.process_data()
     assert len(importer.unmatched_fields) == 0
@@ -85,9 +82,7 @@ def test_company_sample(rf):
 
     importer = CompanyContactImporter(
         transformed_data,
-        CompanyContactImporter.get_importer_context(
-            rf.get("/"), shop=shop, language="en"
-        ),
+        CompanyContactImporter.get_importer_context(rf.get("/"), shop=shop, language="en"),
     )
     importer.process_data()
     assert len(importer.unmatched_fields) == 0

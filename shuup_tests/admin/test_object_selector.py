@@ -51,9 +51,7 @@ def get_model_selector(model):
     return "%s.%s" % (model._meta.app_label, model._meta.model_name)
 
 
-def get_object_selector_results(
-    model, shop, user, search_term, supplier=None, **kwargs
-):
+def get_object_selector_results(model, shop, user, search_term, supplier=None, **kwargs):
     selector = get_model_selector(model)
     if not selector:
         selector = model
@@ -64,9 +62,7 @@ def get_object_selector_results(
     ):
         if not admin_object_selector_class.handles_selector(selector):
             continue
-        admin_object_selector = admin_object_selector_class(
-            model, shop=shop, user=user, supplier=supplier
-        )
+        admin_object_selector = admin_object_selector_class(model, shop=shop, user=user, supplier=supplier)
 
         if not admin_object_selector.has_permission():
             return None
@@ -111,18 +107,14 @@ def test_coupon_selector(admin_user):
 @pytest.mark.django_db
 def test_attribute_selector(admin_user):
     shop = get_default_shop()
-    Attribute.objects.create(
-        type=AttributeType.INTEGER, identifier="test-1", name="Test attribute"
-    )
+    Attribute.objects.create(type=AttributeType.INTEGER, identifier="test-1", name="Test attribute")
     assert get_object_selector_results(Attribute, shop, admin_user, "test attribute")
 
 
 @pytest.mark.django_db
 def test_attribute_selector(admin_user):
     shop = get_default_shop()
-    Attribute.objects.create(
-        type=AttributeType.INTEGER, identifier="test-1", name="Test attribute"
-    )
+    Attribute.objects.create(type=AttributeType.INTEGER, identifier="test-1", name="Test attribute")
     assert get_object_selector_results(Attribute, shop, admin_user, "test attribute")
 
 
@@ -172,9 +164,7 @@ def test_payment_method_selector(admin_user):
 def test_shipping_method_selector(admin_user):
     tax_class = TaxClass.objects.create(name="test class")
     shop = get_default_shop()
-    ShippingMethod.objects.create(
-        name="shipping method", shop=shop, tax_class=tax_class
-    )
+    ShippingMethod.objects.create(name="shipping method", shop=shop, tax_class=tax_class)
 
     assert get_object_selector_results(ShippingMethod, shop, admin_user, "shipping")
 
@@ -196,9 +186,7 @@ def test_supplier_selector(admin_user):
 @pytest.mark.django_db
 def test_tax_selector(admin_user):
     shop = get_default_shop()
-    tax = Tax.objects.create(
-        code="any", rate=0.1, name="Tax for any customer", enabled=False
-    )
+    tax = Tax.objects.create(code="any", rate=0.1, name="Tax for any customer", enabled=False)
     assert get_object_selector_results(Tax, shop, admin_user, "Tax") == []
     tax.enabled = True
     tax.save()

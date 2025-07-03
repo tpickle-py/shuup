@@ -22,22 +22,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="countrylimitbehaviorcomponent",
             name="available_in_european_countries",
-            field=models.BooleanField(
-                default=False, verbose_name="available in european union"
-            ),
+            field=models.BooleanField(default=False, verbose_name="available in european union"),
         ),
         migrations.AlterField(
             model_name="countrylimitbehaviorcomponent",
             name="unavailable_in_european_countries",
-            field=models.BooleanField(
-                default=False, verbose_name="unavailable in european union"
-            ),
+            field=models.BooleanField(default=False, verbose_name="unavailable in european union"),
         ),
         migrations.AlterField(
             model_name="order",
             name="tax_number",
-            field=models.CharField(
-                blank=True, max_length=64, verbose_name="tax number"
-            ),
+            field=models.CharField(blank=True, max_length=64, verbose_name="tax number"),
         ),
     ]

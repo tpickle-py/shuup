@@ -14,25 +14,17 @@ from shuup.utils.django_compat import reverse
 def test_category_page(client):
     factories.get_default_shop()
     category = factories.get_default_category()
-    response = client.get(
-        reverse("shuup:category", kwargs={"pk": category.pk, "slug": category.slug})
-    )
-    assert b"no such element" not in response.content, (
-        "All items are not rendered correctly"
-    )
+    response = client.get(reverse("shuup:category", kwargs={"pk": category.pk, "slug": category.slug}))
+    assert b"no such element" not in response.content, "All items are not rendered correctly"
 
 
 @pytest.mark.django_db
 def test_resolve_product_url():
     shop = factories.get_default_shop()
-    product = factories.create_product(
-        "product", shop, factories.get_default_supplier(), "10"
-    )
+    product = factories.create_product("product", shop, factories.get_default_supplier(), "10")
     from shuup.front.template_helpers.urls import model_url
 
-    product_url = reverse(
-        "shuup:product", kwargs=dict(pk=product.pk, slug=product.slug)
-    )
+    product_url = reverse("shuup:product", kwargs=dict(pk=product.pk, slug=product.slug))
     assert model_url({}, product) == product_url
 
     # create a new supplier and use it

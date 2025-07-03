@@ -6,7 +6,6 @@
 # LICENSE file in the root directory of this source tree.
 
 
-
 from collections import defaultdict
 from decimal import Decimal
 
@@ -30,9 +29,7 @@ def setup_module(module):
     set_precision_provider(babel_precision_provider.get_precision)
 
     global settings_overrider
-    settings_overrider = override_settings(
-        SHUUP_CALCULATE_TAXES_AUTOMATICALLY_IF_POSSIBLE=False
-    )
+    settings_overrider = override_settings(SHUUP_CALCULATE_TAXES_AUTOMATICALLY_IF_POSSIBLE=False)
     settings_overrider.__enter__()
 
 
@@ -58,16 +55,12 @@ def test_1prod(taxes):
 
     if taxes == "taxful":
         #    Name    Rate    Base amount     Tax amount         Taxful
-        assert get_pretty_tax_summary(source) == [
-            "Tax-A   0.25  144.000000000   36.000000000  180.000000000"
-        ]
+        assert get_pretty_tax_summary(source) == ["Tax-A   0.25  144.000000000   36.000000000  180.000000000"]
         assert get_pretty_line_taxes_of_discount_lines(source) == [
             ["Tax-A   0.25  -16.000000000   -4.000000000  -20.000000000"]
         ]
     else:
-        assert get_pretty_tax_summary(source) == [
-            "Tax-A   0.25  180.000000000   45.000000000  225.000000000"
-        ]
+        assert get_pretty_tax_summary(source) == ["Tax-A   0.25  180.000000000   45.000000000  225.000000000"]
         assert get_pretty_line_taxes_of_discount_lines(source) == [
             ["Tax-A   0.25  -20.000000000   -5.000000000  -25.000000000"]
         ]
@@ -457,9 +450,7 @@ def test_no_products(taxes):
     assert get_price_by_tax_class(source) == {"": 40}
 
     #    Name    Rate    Base amount     Tax amount         Taxful
-    assert get_pretty_tax_summary(source) == [
-        "Untaxed 0.00   40.000000000    0.000000000   40.000000000"
-    ]
+    assert get_pretty_tax_summary(source) == ["Untaxed 0.00   40.000000000    0.000000000   40.000000000"]
     assert get_pretty_line_taxes_of_discount_lines(source) == [[], []]
 
 
@@ -530,9 +521,7 @@ def create_assigned_tax_class(name, rates_to_assign):
     """
     tax_class = TaxClass.objects.create(name="TC-%s" % name)
     for n, tax_rate in enumerate(rates_to_assign, 1):
-        tax_name = (
-            "Tax-%s" % name if len(rates_to_assign) == 1 else "Tax-%s-%d" % (name, n)
-        )
+        tax_name = "Tax-%s" % name if len(rates_to_assign) == 1 else "Tax-%s-%d" % (name, n)
         tax = Tax.objects.create(rate=tax_rate, name=tax_name)
         TaxRule.objects.create(tax=tax).tax_classes.add(tax_class)
     return tax_class
@@ -626,9 +615,7 @@ def get_pretty_tax_summary(source):
     ]
     total_base = source.taxless_total_price.value
     total_taxful = source.taxful_total_price.value
-    total_tax_amount = sum(
-        x.tax_amount.value for x in summary
-    )  # Like it was read from db
+    total_tax_amount = sum(x.tax_amount.value for x in summary)  # Like it was read from db
     total_line = TAX_DISTRIBUTION_LINE_FORMAT.format(
         n="Total",
         r=((total_tax_amount / total_base) if abs(total_base) > 0.0001 else 0),
@@ -658,11 +645,7 @@ def get_tax_summary(source):
 
 
 def get_pretty_line_taxes_of_discount_lines(source):
-    return [
-        prettify_line_taxes(line)
-        for line in source.get_final_lines()
-        if line.tax_class is None
-    ]
+    return [prettify_line_taxes(line) for line in source.get_final_lines() if line.tax_class is None]
 
 
 def prettify_line_taxes(line):
@@ -690,25 +673,19 @@ def _check_taxless_price(source):
         assert line.discount_amount == line.base_price - line.price
         if line.base_price:
             assert line.discount_rate == (1 - (line.price / line.base_price))
-            assert line.discount_percentage == 100 * (
-                1 - (line.price / line.base_price)
-            )
+            assert line.discount_percentage == 100 * (1 - (line.price / line.base_price))
         if line.quantity:
             assert line.unit_discount_amount == line.discount_amount / line.quantity
 
 
 def _check_taxful_price(source):
     for line in source.get_lines():
-        from_components = bankers_round(
-            line.taxful_base_unit_price * line.quantity - line.taxful_discount_amount, 2
-        )
+        from_components = bankers_round(line.taxful_base_unit_price * line.quantity - line.taxful_discount_amount, 2)
         assert from_components == line.taxful_price
         assert line.price == line.base_unit_price * line.quantity - line.discount_amount
         assert line.discount_amount == line.base_price - line.price
         if line.base_price:
             assert line.discount_rate == (1 - (line.price / line.base_price))
-            assert line.discount_percentage == 100 * (
-                1 - (line.price / line.base_price)
-            )
+            assert line.discount_percentage == 100 * (1 - (line.price / line.base_price))
         if line.quantity:
             assert line.unit_discount_amount == line.discount_amount / line.quantity

@@ -44,12 +44,7 @@ def test_serialize_data():
     front_baskets = []
 
     for basket_customer in [customer, company]:
-        orders.extend(
-            [
-                factories.create_random_order(basket_customer, [product])
-                for order in range(3)
-            ]
-        )
+        orders.extend([factories.create_random_order(basket_customer, [product]) for order in range(3)])
 
         front_baskets.append(
             StoredBasket.objects.create(
@@ -79,14 +74,8 @@ def test_serialize_data():
     person_data = GDPRPersonContactSerializer(customer).data
     assert person_data["name"] == customer.name
     assert person_data["phone"] == customer.phone
-    assert (
-        person_data["default_billing_address"]["street"]
-        == customer.default_billing_address.street
-    )
-    assert (
-        person_data["default_shipping_address"]["street"]
-        == customer.default_shipping_address.street
-    )
+    assert person_data["default_billing_address"]["street"] == customer.default_billing_address.street
+    assert person_data["default_shipping_address"]["street"] == customer.default_shipping_address.street
     assert person_data["user"]["id"] == customer.user.id
     assert person_data["user"]["username"] == customer.user.username
     assert person_data["company_memberships"][0]["name"] == company.name

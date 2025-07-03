@@ -24,7 +24,7 @@ Three Jinja2 extensions manage parsing placeholders and default plugin layouts:
     The TOML is parsed during Jinja2 parse time into a dict, which in turn is folded into the layout description
     object.  This means only the initial parsing of the template incurs whatever performance hit there is in
     parsing TOML; the Jinja2 bccache should take care of the rest.
-    
+
 In addition, there's a [special](http://i.imgur.com/dFpwkCb.jpg) postprocessing mechanism in
 `shuup.xtheme.engine.XthemeTemplate` which processes HTML source to add injected additional resources.  This can't
 be done via simple tags, as we don't want to go to two-or-more-pass rendering to first figure out a set of resources,

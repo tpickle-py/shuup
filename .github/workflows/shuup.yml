@@ -104,7 +104,7 @@ jobs:
     - name: Install gettext
       run: sudo apt-get -y install gettext
 
-    - name: Install system dependencies  
+    - name: Install system dependencies
       run: sudo apt-get -y install libffi-dev
 
     - name: Setup Node.js

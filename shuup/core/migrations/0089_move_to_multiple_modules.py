@@ -10,11 +10,7 @@ def move_to_multiple_modules(apps, schema_editor):
     SupplierModuleModel = apps.get_model("shuup", "SupplierModule")
 
     for supplier in Supplier.objects.exclude(module_identifier=""):
-        supplier.supplier_modules.add(
-            SupplierModuleModel.objects.get(
-                module_identifier=supplier.module_identifier
-            )
-        )
+        supplier.supplier_modules.add(SupplierModuleModel.objects.get(module_identifier=supplier.module_identifier))
 
 
 def move_to_single_module(apps, schema_editor):

@@ -13,8 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="producttranslation",
             name="slug",
-            field=models.SlugField(
-                null=True, verbose_name="slug", blank=True, max_length=255
-            ),
+            field=models.SlugField(null=True, verbose_name="slug", blank=True, max_length=255),
         ),
     ]

@@ -26,15 +26,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "show_pricing",
-                    models.BooleanField(
-                        default=True, verbose_name="show as pricing option"
-                    ),
+                    models.BooleanField(default=True, verbose_name="show as pricing option"),
                 ),
                 (
                     "show_prices_including_taxes",
-                    models.NullBooleanField(
-                        default=None, verbose_name="show prices including taxes"
-                    ),
+                    models.NullBooleanField(default=None, verbose_name="show prices including taxes"),
                 ),
                 (
                     "hide_prices",

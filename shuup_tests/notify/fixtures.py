@@ -20,9 +20,7 @@ from shuup.testing.text_data import random_title
 TEST_STEP_DATA = [
     {
         "next": "continue",
-        "actions": [
-            {"identifier": "set_debug_flag", "flag_name": {"constant": "success"}}
-        ],
+        "actions": [{"identifier": "set_debug_flag", "flag_name": {"constant": "success"}}],
         "conditions": [
             {
                 "identifier": "language_equal",
@@ -110,9 +108,7 @@ def get_initialized_test_event(identifier=None):
     get_default_product()
     customer = create_random_person()
     order = create_random_order(customer)
-    return ATestEvent(
-        order_language=order.language, order=order, just_some_text=random_title()
-    )
+    return ATestEvent(order_language=order.language, order=order, just_some_text=random_title())
 
 
 def get_test_template():

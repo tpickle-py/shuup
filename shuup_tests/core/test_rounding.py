@@ -28,9 +28,7 @@ PRICE_SPEC = [
     ([101.74363, 12.99346, 4222.57422]),
     ([112.93549, 199.2446, 422.29234]),
     ([1994.49654, 940.23452, 425.24566]),
-    (
-        [1994.496541234566, 940.2345298765, 425.2456612334]
-    ),  # Those prices that will be cut when put in DB
+    ([1994.496541234566, 940.2345298765, 425.2456612334]),  # Those prices that will be cut when put in DB
 ]
 
 
@@ -61,9 +59,7 @@ def test_rounding(prices):
         assert order_line.base_unit_price == order.shop.create_price(price)
 
         # make sure the line taxless price is rounded
-        assert order_line.taxless_price == order.shop.create_price(
-            bankers_round(price, 2)
-        )
+        assert order_line.taxless_price == order.shop.create_price(bankers_round(price, 2))
 
         # Check that total prices calculated from priceful parts still matches
         assert _get_taxless_price(order_line) == order_line.taxless_price
@@ -73,9 +69,7 @@ def test_rounding(prices):
         assert order_line.price == order.shop.create_price(price)
 
     # make sure order total is rounded
-    assert order.taxless_total_price == order.shop.create_price(
-        bankers_round(expected, 2)
-    )
+    assert order.taxless_total_price == order.shop.create_price(bankers_round(expected, 2))
 
 
 @pytest.mark.parametrize("prices", PRICE_SPEC)
@@ -109,9 +103,7 @@ def test_order_source_rounding(prices):
         assert order_source.base_unit_price == source.shop.create_price(price)
 
         # make sure the line taxless price is rounded
-        assert order_source.taxless_price == source.shop.create_price(
-            bankers_round(price, 2)
-        )
+        assert order_source.taxless_price == source.shop.create_price(bankers_round(price, 2))
 
         # Check that total prices calculated from priceful parts still matches
         assert _get_taxless_price(order_source) == order_source.taxless_price
@@ -121,9 +113,7 @@ def test_order_source_rounding(prices):
         assert order_source.price == source.shop.create_price(price)
 
     # make sure order total is rounded
-    assert source.taxless_total_price == source.shop.create_price(
-        bankers_round(expected, 2)
-    )
+    assert source.taxless_total_price == source.shop.create_price(bankers_round(expected, 2))
 
 
 @pytest.mark.parametrize("prices", PRICE_SPEC)
@@ -150,19 +140,12 @@ def test_rounding_with_taxes(prices):
         # Check that total prices calculated from priceful parts still matches
         assert _get_taxless_price(order_line) == order_line.taxless_price
         assert _get_taxful_price(order_line) == order_line.taxful_price
-        assert order_line.price == (
-            order_line.base_unit_price * order_line.quantity
-            - order_line.discount_amount
-        )
+        assert order_line.price == (order_line.base_unit_price * order_line.quantity - order_line.discount_amount)
 
 
 def _get_taxless_price(line):
-    return bankers_round(
-        line.taxless_base_unit_price * line.quantity - line.taxless_discount_amount, 2
-    )
+    return bankers_round(line.taxless_base_unit_price * line.quantity - line.taxless_discount_amount, 2)
 
 
 def _get_taxful_price(line):
-    return bankers_round(
-        line.taxful_base_unit_price * line.quantity - line.taxful_discount_amount, 2
-    )
+    return bankers_round(line.taxful_base_unit_price * line.quantity - line.taxful_discount_amount, 2)

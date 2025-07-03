@@ -91,9 +91,7 @@ def create_order(request, creator, customer, product):
         assert order.taxless_total_price.amount == base - discount
         assert order.taxful_total_price.amount == base + tax_value - discount
     else:
-        assert_almost_equal(
-            order.taxless_total_price.amount, base - tax_value - discount
-        )
+        assert_almost_equal(order.taxless_total_price.amount, base - tax_value - discount)
         assert_almost_equal(order.taxful_total_price.amount, base - discount)
 
     assert not order.is_fully_shipped()

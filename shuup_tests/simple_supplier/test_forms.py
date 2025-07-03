@@ -17,9 +17,7 @@ def test_adjustment_form(rf, admin_user):
     """
     Test StockAdjustmentForm.
     """
-    partial_sales_unit = SalesUnit.objects.create(
-        identifier="test-sales-partial", decimals=2, name="Partial unit"
-    )
+    partial_sales_unit = SalesUnit.objects.create(identifier="test-sales-partial", decimals=2, name="Partial unit")
     form = StockAdjustmentForm(
         data={
             "purchase_price": 10,
@@ -29,9 +27,7 @@ def test_adjustment_form(rf, admin_user):
     )
     assert form.is_valid()
 
-    integer_sales_unit = SalesUnit.objects.create(
-        identifier="test-sales-integer", decimals=0, name="Integer unit"
-    )
+    integer_sales_unit = SalesUnit.objects.create(identifier="test-sales-integer", decimals=0, name="Integer unit")
     form = StockAdjustmentForm(
         data={
             "purchase_price": 10,
@@ -47,16 +43,10 @@ def test_alet_form(rf, admin_user):
     """
     Test AlertLimitForm.
     """
-    partial_sales_unit = SalesUnit.objects.create(
-        identifier="test-sales-partial", decimals=2, name="Partial unit"
-    )
-    integer_sales_unit = SalesUnit.objects.create(
-        identifier="test-sales-integer", decimals=0, name="Integer unit"
-    )
+    partial_sales_unit = SalesUnit.objects.create(identifier="test-sales-partial", decimals=2, name="Partial unit")
+    integer_sales_unit = SalesUnit.objects.create(identifier="test-sales-integer", decimals=0, name="Integer unit")
 
-    form = AlertLimitForm(
-        data={"alert_limit": Decimal("10.43")}, sales_unit=partial_sales_unit
-    )
+    form = AlertLimitForm(data={"alert_limit": Decimal("10.43")}, sales_unit=partial_sales_unit)
     assert form.is_valid()
 
     form = StockAdjustmentForm(data={"alert_limit": 1.2}, sales_unit=integer_sales_unit)

@@ -62,9 +62,7 @@ def _get_order(shop, supplier, has_price):
     for product_data in _get_product_data(has_price):
         quantity = product_data.pop("quantity")
         tax_rate = product_data.pop("tax_rate")
-        product = create_product(
-            sku=product_data.pop("sku"), shop=shop, supplier=supplier, **product_data
-        )
+        product = create_product(sku=product_data.pop("sku"), shop=shop, supplier=supplier, **product_data)
         add_product_to_order(
             order,
             supplier,

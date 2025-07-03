@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Fabrizio Arzeni <fabrizio.arz@gmail.com>, 2016
 # Marco Badan <marco.badan@gmail.com>, 2016
 # Luisa Masciello <l.masciello@zigozago.it>, 2020
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""

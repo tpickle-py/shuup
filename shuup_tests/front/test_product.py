@@ -19,12 +19,8 @@ from shuup.utils.django_compat import reverse
 def test_product_page(client):
     get_default_shop()
     product = get_default_product()
-    response = client.get(
-        reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug})
-    )
-    assert b"no such element" not in response.content, (
-        "All items are not rendered correctly"
-    )
+    response = client.get(reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug}))
+    assert b"no such element" not in response.content, "All items are not rendered correctly"
     # TODO test purchase_multiple and  sales_unit.allow_fractions
 
     product_mode_forms = [
@@ -49,18 +45,10 @@ def test_product_page(client):
             product.mode = product_mode
             product.save()
 
-            response = client.get(
-                reverse(
-                    "shuup:product", kwargs={"pk": product.pk, "slug": product.slug}
-                )
-            )
-            assert b"no such element" not in response.content, (
-                "All items are not rendered correctly"
-            )
+            response = client.get(reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug}))
+            assert b"no such element" not in response.content, "All items are not rendered correctly"
             if product_mode == ProductMode.SUBSCRIPTION:
-                assert b"This is different" in response.content, (
-                    "DifferentProductOrderForm not rendered properly"
-                )
+                assert b"This is different" in response.content, "DifferentProductOrderForm not rendered properly"
             # TODO test purchase_multiple and  sales_unit.allow_fractions
 
 
@@ -72,12 +60,8 @@ def test_package_product_page(client):
     parent.make_package({child: 2})
     assert parent.is_package_parent()
 
-    response = client.get(
-        reverse("shuup:product", kwargs={"pk": parent.pk, "slug": parent.slug})
-    )
-    assert b"no such element" not in response.content, (
-        "All items are not rendered correctly"
-    )
+    response = client.get(reverse("shuup:product", kwargs={"pk": parent.pk, "slug": parent.slug}))
+    assert b"no such element" not in response.content, "All items are not rendered correctly"
 
 
 class ExtraContextTest(ProductContextExtra):

@@ -3,9 +3,10 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import filer.fields.image
 from django.conf import settings
 from django.db import migrations
+
+import filer.fields.image
 
 
 class Migration(migrations.Migration):

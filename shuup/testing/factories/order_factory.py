@@ -7,16 +7,7 @@ from django.db.transaction import atomic
 from django.utils.timezone import now
 
 from shuup.core.defaults.order_statuses import create_default_order_statuses
-from shuup.core.models import (
-    Basket,
-    Contact,
-    Order,
-    OrderLine,
-    OrderLineTax,
-    OrderLineType,
-    OrderStatus,
-    Product,
-)
+from shuup.core.models import Basket, Contact, Order, OrderLine, OrderLineTax, OrderLineType, OrderStatus, Product
 from shuup.core.order_creator import OrderCreator, OrderSource
 from shuup.core.shortcuts import update_order_line_from_product
 from shuup.core.taxing.utils import stacked_value_added_taxes

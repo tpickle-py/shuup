@@ -8,10 +8,11 @@
 Tests for utils.price_display and the price filters.
 """
 
-import pytest
-import pytz
 from datetime import datetime
 from unittest.mock import patch
+
+import pytest
+import pytz
 
 from shuup.core.models import get_person_contact
 from shuup.core.utils import context_cache
@@ -38,10 +39,7 @@ def test_bump_caches_signal(rf):
                 item=sp,
                 context={"customer": contact},
                 supplier=factories.get_default_supplier(),
-                stock_managed=bool(
-                    factories.get_default_supplier()
-                    and factories.get_default_supplier().stock_managed
-                ),
+                stock_managed=bool(factories.get_default_supplier() and factories.get_default_supplier().stock_managed),
                 quantity=1,
                 allow_cache=True,
             )
@@ -69,18 +67,8 @@ def test_bump_caches_signal(rf):
         shop_product1 = product1.shop_products.filter(shop=shop1).first()
         shop_product2 = product2.shop_products.filter(shop=shop2).first()
 
-        assert (
-            shop_product1.is_orderable(
-                factories.get_default_supplier(shop1), contact, 1
-            )
-            is True
-        )
-        assert (
-            shop_product2.is_orderable(
-                factories.get_default_supplier(shop2), contact, 1
-            )
-            is True
-        )
+        assert shop_product1.is_orderable(factories.get_default_supplier(shop1), contact, 1) is True
+        assert shop_product2.is_orderable(factories.get_default_supplier(shop2), contact, 1) is True
 
         # Test single product id bumping
         context_cache.bump_cache_for_product(product2.id, shop=shop2)

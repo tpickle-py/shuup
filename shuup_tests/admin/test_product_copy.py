@@ -41,9 +41,7 @@ def test_product_copy(rf, admin_user):
     supplier = factories.get_default_supplier()
     request = apply_request_middleware(rf.get("/", {}), user=admin_user)
     price = 10
-    product = factories.create_product(
-        "product", shop=shop, supplier=supplier, default_price=price
-    )
+    product = factories.create_product("product", shop=shop, supplier=supplier, default_price=price)
 
     attribute_key = "author"
     attribute_value = "batman"

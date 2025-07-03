@@ -6,17 +6,15 @@
 # LICENSE file in the root directory of this source tree.
 import datetime
 import json
-import pytest
+
 from django.http.response import Http404
 from django.test import override_settings
 
+import pytest
+
 from shuup.admin.shop_provider import set_shop
 from shuup.core.models import Shop
-from shuup.discounts.admin.views import (
-    HappyHourDeleteView,
-    HappyHourEditView,
-    HappyHourListView,
-)
+from shuup.discounts.admin.views import HappyHourDeleteView, HappyHourEditView, HappyHourListView
 from shuup.discounts.models import Discount, HappyHour
 from shuup.testing import factories
 from shuup.testing.utils import apply_request_middleware
@@ -49,9 +47,7 @@ def test_happy_hours_admin_edit_view(rf, staff_user, admin_user):
             "from_hour": datetime.time(hour=14, minute=0),
             "to_hour": datetime.time(hour=14, minute=0),
         }
-        request = apply_request_middleware(
-            rf.post("/", data=data), user=staff_user, shop=shop
-        )
+        request = apply_request_middleware(rf.post("/", data=data), user=staff_user, shop=shop)
         set_shop(request, shop)
         assert request.shop == shop
         view_func = HappyHourEditView.as_view()
@@ -63,15 +59,11 @@ def test_happy_hours_admin_edit_view(rf, staff_user, admin_user):
         happy_hour1 = HappyHour.objects.first()
         assert happy_hour1 is not None
         assert happy_hour1.shop == shop
-        assert (
-            happy_hour1.time_ranges.count() == 1
-        )  # Since happy hour starts and ends on same day
+        assert happy_hour1.time_ranges.count() == 1  # Since happy hour starts and ends on same day
 
         # Test with superuser and with different shop
         shop2 = factories.get_shop(enabled=True)
-        request = apply_request_middleware(
-            rf.post("/", data=data), user=admin_user, shop=shop2
-        )
+        request = apply_request_middleware(rf.post("/", data=data), user=admin_user, shop=shop2)
         set_shop(request, shop2)
         view_func = HappyHourEditView.as_view()
         response = view_func(request)
@@ -108,9 +100,7 @@ def test_happy_hours_admin_edit_view_over_midnight(rf, staff_user, admin_user):
         "from_hour": from_hour,
         "to_hour": to_hour,
     }  # Tue
-    request = apply_request_middleware(
-        rf.post("/", data=data), user=staff_user, shop=shop
-    )
+    request = apply_request_middleware(rf.post("/", data=data), user=staff_user, shop=shop)
     set_shop(request, shop)
     assert request.shop == shop
     view_func = HappyHourEditView.as_view()
@@ -123,19 +113,11 @@ def test_happy_hours_admin_edit_view_over_midnight(rf, staff_user, admin_user):
     happy_hour = HappyHour.objects.first()
     assert happy_hour is not None
     assert happy_hour.shop == shop
-    assert (
-        happy_hour.time_ranges.count() == 2
-    )  # Since happy hour starts and ends on different day
+    assert happy_hour.time_ranges.count() == 2  # Since happy hour starts and ends on different day
     assert happy_hour.time_ranges.filter(weekday=1).exists()
-    assert happy_hour.time_ranges.filter(
-        weekday=1, from_hour=from_hour, to_hour=datetime.time(23, 59)
-    ).exists()
-    assert happy_hour.time_ranges.filter(
-        weekday=2, from_hour=datetime.time(0), to_hour=to_hour
-    ).exists()
-    _assert_view_get(
-        rf, happy_hour, shop, staff_user
-    )  # Viewing the edit should also still work
+    assert happy_hour.time_ranges.filter(weekday=1, from_hour=from_hour, to_hour=datetime.time(23, 59)).exists()
+    assert happy_hour.time_ranges.filter(weekday=2, from_hour=datetime.time(0), to_hour=to_hour).exists()
+    _assert_view_get(rf, happy_hour, shop, staff_user)  # Viewing the edit should also still work
 
 
 @pytest.mark.django_db
@@ -154,9 +136,7 @@ def test_happy_hours_admin_edit_view_just_before_midnight(rf, staff_user, admin_
         "from_hour": from_hour,
         "to_hour": to_hour,
     }  # Tue
-    request = apply_request_middleware(
-        rf.post("/", data=data), user=staff_user, shop=shop
-    )
+    request = apply_request_middleware(rf.post("/", data=data), user=staff_user, shop=shop)
     set_shop(request, shop)
     assert request.shop == shop
     view_func = HappyHourEditView.as_view()
@@ -171,12 +151,8 @@ def test_happy_hours_admin_edit_view_just_before_midnight(rf, staff_user, admin_
     assert happy_hour.shop == shop
     assert happy_hour.time_ranges.count() == 1
     assert happy_hour.time_ranges.filter(weekday=1).exists()
-    assert happy_hour.time_ranges.filter(
-        weekday=1, from_hour=from_hour, to_hour=datetime.time(23, 58)
-    ).exists()
-    _assert_view_get(
-        rf, happy_hour, shop, staff_user
-    )  # Viewing the edit should also still work
+    assert happy_hour.time_ranges.filter(weekday=1, from_hour=from_hour, to_hour=datetime.time(23, 58)).exists()
+    _assert_view_get(rf, happy_hour, shop, staff_user)  # Viewing the edit should also still work
 
 
 @pytest.mark.django_db
@@ -191,9 +167,7 @@ def test_happy_hours_admin_edit_form_set_discount(rf, staff_user, admin_user):
         "from_hour": datetime.time(hour=14, minute=0),
         "to_hour": datetime.time(hour=14, minute=0),
     }
-    request = apply_request_middleware(
-        rf.post("/", data=data), user=staff_user, shop=shop
-    )
+    request = apply_request_middleware(rf.post("/", data=data), user=staff_user, shop=shop)
     set_shop(request, shop)
     assert request.shop == shop
     view_func = HappyHourEditView.as_view()
@@ -204,9 +178,7 @@ def test_happy_hours_admin_edit_form_set_discount(rf, staff_user, admin_user):
     assert response.status_code == 302
     happy_hour = HappyHour.objects.first()
     data.update({"discounts": [discount]})
-    request = apply_request_middleware(
-        rf.post("/", data=data), user=staff_user, shop=shop
-    )
+    request = apply_request_middleware(rf.post("/", data=data), user=staff_user, shop=shop)
     view_func = HappyHourEditView.as_view()
     response = view_func(request, pk=happy_hour.pk)
     if hasattr(response, "render"):
@@ -215,9 +187,7 @@ def test_happy_hours_admin_edit_form_set_discount(rf, staff_user, admin_user):
     assert response.status_code == 302
     discount = Discount.objects.first()
 
-    request = apply_request_middleware(
-        rf.post("/", data=data), user=staff_user, shop=shop
-    )
+    request = apply_request_middleware(rf.post("/", data=data), user=staff_user, shop=shop)
     view_func = HappyHourEditView.as_view()
     response = view_func(request, pk=happy_hour.pk)
     if hasattr(response, "render"):
@@ -264,11 +234,7 @@ def test_discount_admin_list_view(rf, admin_user):
             _test_happy_hours_list_view(rf, x)
 
         # Superuser gets same data as shop staff
-        shop = (
-            Shop.objects.exclude(identifier=factories.DEFAULT_IDENTIFIER)
-            .order_by("?")
-            .first()
-        )
+        shop = Shop.objects.exclude(identifier=factories.DEFAULT_IDENTIFIER).order_by("?").first()
         request = apply_request_middleware(
             rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}),
             user=admin_user,

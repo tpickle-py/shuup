@@ -66,9 +66,7 @@ def get_order_and_source(admin_user, product, language, language_fallback):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "lang_code", ["en", "fi", "sv", "ja", "zh-hans", "pt-br", "it"]
-)
+@pytest.mark.parametrize("lang_code", ["en", "fi", "sv", "ja", "zh-hans", "pt-br", "it"])
 def test_order_language_fallbacks(rf, admin_user, lang_code):
     product = get_default_product()
 

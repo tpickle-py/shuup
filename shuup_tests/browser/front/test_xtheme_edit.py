@@ -20,19 +20,13 @@ from shuup.testing.browser_utils import (
 )
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
 def test_xtheme_edit_front(admin_user, browser, live_server, settings):
-    browser = initialize_admin_browser_test(
-        browser, live_server, settings
-    )  # Login to admin as admin user
+    browser = initialize_admin_browser_test(browser, live_server, settings)  # Login to admin as admin user
     browser.visit(live_server + "/")
     wait_until_condition(browser, lambda x: x.is_text_present("Welcome to Default!"))
 
@@ -82,15 +76,9 @@ def test_xtheme_edit_front(admin_user, browser, live_server, settings):
     # Go to home and check content for anonymous contacts
     browser.visit(live_server + "/")
     wait_until_condition(browser, lambda x: x.is_text_present("Welcome to Default!"))
-    wait_until_condition(
-        browser, lambda x: x.is_text_present(anonymous_contact_text_content)
-    )
-    wait_until_condition(
-        browser, lambda x: not x.is_text_present(person_contact_text_content)
-    )
-    wait_until_condition(
-        browser, lambda x: not x.is_text_present(company_contact_text_content)
-    )
+    wait_until_condition(browser, lambda x: x.is_text_present(anonymous_contact_text_content))
+    wait_until_condition(browser, lambda x: not x.is_text_present(person_contact_text_content))
+    wait_until_condition(browser, lambda x: not x.is_text_present(company_contact_text_content))
 
     # Create user login and got check the content for person contact
     user = factories.create_random_user()
@@ -104,15 +92,9 @@ def test_xtheme_edit_front(admin_user, browser, live_server, settings):
     browser.find_by_css("ul.login button[type='submit']").click()
 
     wait_until_condition(browser, lambda x: x.is_text_present("Welcome to Default!"))
-    wait_until_condition(
-        browser, lambda x: x.is_text_present(person_contact_text_content)
-    )
-    wait_until_condition(
-        browser, lambda x: not x.is_text_present(anonymous_contact_text_content)
-    )
-    wait_until_condition(
-        browser, lambda x: not x.is_text_present(company_contact_text_content)
-    )
+    wait_until_condition(browser, lambda x: x.is_text_present(person_contact_text_content))
+    wait_until_condition(browser, lambda x: not x.is_text_present(anonymous_contact_text_content))
+    wait_until_condition(browser, lambda x: not x.is_text_present(company_contact_text_content))
 
     # Logout
     click_element(browser, "div.top-nav i.menu-icon.fa.fa-user")
@@ -128,35 +110,21 @@ def test_xtheme_edit_front(admin_user, browser, live_server, settings):
     browser.find_by_css("ul.login button[type='submit']").click()
 
     wait_until_condition(browser, lambda x: x.is_text_present("Welcome to Default!"))
-    wait_until_condition(
-        browser, lambda x: x.is_text_present(company_contact_text_content)
-    )
-    wait_until_condition(
-        browser, lambda x: not x.is_text_present(anonymous_contact_text_content)
-    )
-    wait_until_condition(
-        browser, lambda x: not x.is_text_present(person_contact_text_content)
-    )
+    wait_until_condition(browser, lambda x: x.is_text_present(company_contact_text_content))
+    wait_until_condition(browser, lambda x: not x.is_text_present(anonymous_contact_text_content))
+    wait_until_condition(browser, lambda x: not x.is_text_present(person_contact_text_content))
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
 def test_xtheme_edit_product(admin_user, browser, live_server, settings):
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()
     products = []
     for x in range(3):
-        products.append(
-            factories.create_product(
-                "test%s" % x, shop=shop, supplier=supplier, default_price=10
-            )
-        )
+        products.append(factories.create_product("test%s" % x, shop=shop, supplier=supplier, default_price=10))
 
-    browser = initialize_admin_browser_test(
-        browser, live_server, settings
-    )  # Login to admin as admin user
+    browser = initialize_admin_browser_test(browser, live_server, settings)  # Login to admin as admin user
 
     browser.visit(live_server + "/")
     wait_until_condition(browser, lambda x: x.is_text_present("Welcome to Default!"))
@@ -168,15 +136,11 @@ def test_xtheme_edit_product(admin_user, browser, live_server, settings):
     first_product = products.pop()
     first_product_url = "%s%s" % (
         live_server,
-        reverse(
-            "shuup:product", kwargs={"pk": first_product.pk, "slug": first_product.slug}
-        ),
+        reverse("shuup:product", kwargs={"pk": first_product.pk, "slug": first_product.slug}),
     )
     browser.visit(first_product_url)
 
-    first_product_text_content = (
-        "This text is only visible for product %s." % first_product.name
-    )
+    first_product_text_content = "This text is only visible for product %s." % first_product.name
     _edit_layout(
         browser,
         "product_extra_1",
@@ -195,9 +159,7 @@ def test_xtheme_edit_product(admin_user, browser, live_server, settings):
     )
     browser.visit(second_product_url)
 
-    second_product_text_content = (
-        "This text is only visible for product %s." % second_product.name
-    )
+    second_product_text_content = "This text is only visible for product %s." % second_product.name
     _edit_layout(
         browser,
         "product_extra_1",
@@ -209,16 +171,12 @@ def test_xtheme_edit_product(admin_user, browser, live_server, settings):
     third_product = products.pop()
     third_product_url = "%s%s" % (
         live_server,
-        reverse(
-            "shuup:product", kwargs={"pk": third_product.pk, "slug": third_product.slug}
-        ),
+        reverse("shuup:product", kwargs={"pk": third_product.pk, "slug": third_product.slug}),
     )
     browser.visit(third_product_url)
 
     common_text_content = "This text is visible for all products."
-    _edit_layout(
-        browser, "product_extra_1", "#xt-ph-product_extra_1", common_text_content
-    )
+    _edit_layout(browser, "product_extra_1", "#xt-ph-product_extra_1", common_text_content)
 
     # Close edit
     click_element(browser, ".xt-edit-toggle button[type='submit']")
@@ -230,40 +188,24 @@ def test_xtheme_edit_product(admin_user, browser, live_server, settings):
     # Let's revisit the product details as anonymous and check the placeholder content
     browser.visit(first_product_url)
     wait_until_condition(browser, lambda x: x.is_text_present(common_text_content))
-    wait_until_condition(
-        browser, lambda x: x.is_text_present(first_product_text_content)
-    )
-    wait_until_condition(
-        browser, lambda x: not x.is_text_present(second_product_text_content)
-    )
+    wait_until_condition(browser, lambda x: x.is_text_present(first_product_text_content))
+    wait_until_condition(browser, lambda x: not x.is_text_present(second_product_text_content))
 
     browser.visit(second_product_url)
     wait_until_condition(browser, lambda x: x.is_text_present(common_text_content))
-    wait_until_condition(
-        browser, lambda x: not x.is_text_present(first_product_text_content)
-    )
-    wait_until_condition(
-        browser, lambda x: x.is_text_present(second_product_text_content)
-    )
+    wait_until_condition(browser, lambda x: not x.is_text_present(first_product_text_content))
+    wait_until_condition(browser, lambda x: x.is_text_present(second_product_text_content))
 
     browser.visit(third_product_url)
     wait_until_condition(browser, lambda x: x.is_text_present(common_text_content))
-    wait_until_condition(
-        browser, lambda x: not x.is_text_present(first_product_text_content)
-    )
-    wait_until_condition(
-        browser, lambda x: not x.is_text_present(second_product_text_content)
-    )
+    wait_until_condition(browser, lambda x: not x.is_text_present(first_product_text_content))
+    wait_until_condition(browser, lambda x: not x.is_text_present(second_product_text_content))
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
 def test_xtheme_edit_save_and_publish(admin_user, browser, live_server, settings):
-    browser = initialize_admin_browser_test(
-        browser, live_server, settings
-    )  # Login to admin as admin user
+    browser = initialize_admin_browser_test(browser, live_server, settings)  # Login to admin as admin user
     browser.visit(live_server + "/")
     wait_until_condition(browser, lambda x: x.is_text_present("Welcome to Default!"))
 
@@ -275,33 +217,23 @@ def test_xtheme_edit_save_and_publish(admin_user, browser, live_server, settings
     layout_selector = "#xt-ph-front_content-xtheme-person-contact-layout"
     placeholder_name = "front_content"
 
-    wait_until_condition(
-        browser, lambda x: x.is_element_present_by_css(layout_selector)
-    )
+    wait_until_condition(browser, lambda x: x.is_element_present_by_css(layout_selector))
     click_element(browser, layout_selector)
     with browser.get_iframe("xt-edit-sidebar-iframe") as iframe:
         wait_until_condition(
             iframe,
             lambda x: x.is_text_present("Edit Placeholder: %s" % placeholder_name),
         )
-        wait_until_condition(
-            iframe, lambda x: x.is_element_present_by_css("button.layout-add-row-btn")
-        )
+        wait_until_condition(iframe, lambda x: x.is_element_present_by_css("button.layout-add-row-btn"))
         click_element(iframe, "button.layout-add-row-btn")
         time.sleep(1)
         wait_until_condition(iframe, lambda x: page_has_loaded(x))
 
         try:
-            wait_until_condition(
-                iframe, lambda x: x.is_element_present_by_css("div.layout-cell")
-            )
-        except (
-            selenium.common.exceptions.TimeoutException
-        ) as e:  # Give the "Add new row" second chance
+            wait_until_condition(iframe, lambda x: x.is_element_present_by_css("div.layout-cell"))
+        except selenium.common.exceptions.TimeoutException as e:  # Give the "Add new row" second chance
             click_element(iframe, "button.layout-add-row-btn")
-            wait_until_condition(
-                iframe, lambda x: x.is_element_present_by_css("div.layout-cell")
-            )
+            wait_until_condition(iframe, lambda x: x.is_element_present_by_css("div.layout-cell"))
 
         click_element(iframe, "div.layout-cell")
 
@@ -311,9 +243,7 @@ def test_xtheme_edit_save_and_publish(admin_user, browser, live_server, settings
         )
         iframe.select("general-plugin", "text")
 
-        wait_until_condition(
-            iframe, lambda x: x.is_element_present_by_css("div.note-editable")
-        )
+        wait_until_condition(iframe, lambda x: x.is_element_present_by_css("div.note-editable"))
         wait_until_condition(
             iframe,
             lambda x: x.is_element_present_by_css("#id_plugin-text_en-editor-wrap"),
@@ -325,18 +255,13 @@ def test_xtheme_edit_save_and_publish(admin_user, browser, live_server, settings
 
         click_element(iframe, "button.publish-btn")
         alert = iframe.get_alert()
-        assert (
-            alert.text == "Are you sure you wish to publish changes made to this view?"
-        )
+        assert alert.text == "Are you sure you wish to publish changes made to this view?"
         alert.accept()
 
         time.sleep(1)
 
         alert = iframe.get_alert()
-        assert (
-            alert.text
-            == "You have changed the form. Do you want to save them before publishing?"
-        )
+        assert alert.text == "You have changed the form. Do you want to save them before publishing?"
         alert.accept()
 
     wait_until_condition(browser, lambda x: x.is_text_present("Welcome to Default!"))
@@ -344,18 +269,14 @@ def test_xtheme_edit_save_and_publish(admin_user, browser, live_server, settings
 
 
 def _edit_layout(browser, placeholder_name, layout_selector, text_content):
-    wait_until_condition(
-        browser, lambda x: x.is_element_present_by_css(layout_selector)
-    )
+    wait_until_condition(browser, lambda x: x.is_element_present_by_css(layout_selector))
     click_element(browser, layout_selector)
     with browser.get_iframe("xt-edit-sidebar-iframe") as iframe:
         wait_until_condition(
             iframe,
             lambda x: x.is_text_present("Edit Placeholder: %s" % placeholder_name),
         )
-        wait_until_condition(
-            iframe, lambda x: x.is_element_present_by_css("button.layout-add-row-btn")
-        )
+        wait_until_condition(iframe, lambda x: x.is_element_present_by_css("button.layout-add-row-btn"))
         click_element(iframe, "button.layout-add-row-btn")
 
         # Well the second click here makes it so that the next
@@ -366,16 +287,10 @@ def _edit_layout(browser, placeholder_name, layout_selector, text_content):
         click_element(iframe, "button.layout-add-row-btn")
 
         try:
-            wait_until_condition(
-                iframe, lambda x: x.is_element_present_by_css("div.layout-cell")
-            )
-        except (
-            selenium.common.exceptions.TimeoutException
-        ) as e:  # Give the "Add new row" second chance
+            wait_until_condition(iframe, lambda x: x.is_element_present_by_css("div.layout-cell"))
+        except selenium.common.exceptions.TimeoutException as e:  # Give the "Add new row" second chance
             click_element(iframe, "button.layout-add-row-btn")
-            wait_until_condition(
-                iframe, lambda x: x.is_element_present_by_css("div.layout-cell")
-            )
+            wait_until_condition(iframe, lambda x: x.is_element_present_by_css("div.layout-cell"))
 
         click_element(iframe, "div.layout-cell")
 
@@ -385,9 +300,7 @@ def _edit_layout(browser, placeholder_name, layout_selector, text_content):
         )
         iframe.select("general-plugin", "text")
 
-        wait_until_condition(
-            iframe, lambda x: x.is_element_present_by_css("div.note-editable")
-        )
+        wait_until_condition(iframe, lambda x: x.is_element_present_by_css("div.note-editable"))
         wait_until_condition(
             iframe,
             lambda x: x.is_element_present_by_css("#id_plugin-text_en-editor-wrap"),
@@ -403,6 +316,4 @@ def _edit_layout(browser, placeholder_name, layout_selector, text_content):
         alert = iframe.get_alert()
         alert.accept()
 
-    wait_until_condition(
-        browser, lambda x: not x.is_element_present_by_css("#xt-edit-sidebar-iframe")
-    )
+    wait_until_condition(browser, lambda x: not x.is_element_present_by_css("#xt-edit-sidebar-iframe"))

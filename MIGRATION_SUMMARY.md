@@ -41,7 +41,7 @@
 
 **Updated Tool Versions:**
 - Black >= 24.0.0
-- pytest >= 8.0.0  
+- pytest >= 8.0.0
 - mypy >= 1.8.0
 - All other tools to latest compatible versions
 
@@ -50,7 +50,7 @@
 **`.python-version`**
 - Sets default Python version to 3.11
 
-**`.pre-commit-config.yaml`** 
+**`.pre-commit-config.yaml`**
 - Modern pre-commit hooks including Ruff
 - Automatic code formatting and linting
 

@@ -85,9 +85,7 @@ def test_comment_visibility(admin_user):
         "This is only visibile for staff only",
         TaskCommentVisibility.STAFF_ONLY,
     )
-    task.comment(
-        normal_contact, "This is visibile for everyone", TaskCommentVisibility.PUBLIC
-    )
+    task.comment(normal_contact, "This is visibile for everyone", TaskCommentVisibility.PUBLIC)
 
     # admin see all comments
     assert task.comments.for_contact(admin_contact).count() == 3

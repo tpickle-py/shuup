@@ -1,11 +1,11 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Translator HIO.E <translater@hiqe.ru>, 2017
 # An Nesterov <arch.nesterov@gmail.com>, 2021
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""

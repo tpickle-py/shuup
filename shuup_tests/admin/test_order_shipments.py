@@ -30,22 +30,16 @@ from shuup.testing.utils import apply_request_middleware
 @pytest.mark.django_db
 def test_order_shipments(rf, admin_user):
     shop = get_default_shop()
-    supplier1 = get_supplier(
-        module_identifier="simple_supplier", identifier="1", name="supplier1"
-    )
+    supplier1 = get_supplier(module_identifier="simple_supplier", identifier="1", name="supplier1")
     supplier1.shops.add(shop)
-    supplier2 = get_supplier(
-        module_identifier="simple_supplier", identifier="2", name="supplier1"
-    )
+    supplier2 = get_supplier(module_identifier="simple_supplier", identifier="2", name="supplier1")
     supplier2.shops.add(shop)
 
     product1 = create_product("sku1", shop=shop, default_price=10)
     shop_product1 = product1.get_shop_instance(shop=shop)
     shop_product1.suppliers.set([supplier1])
 
-    product2 = create_product(
-        "sku3", shop=shop, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED
-    )
+    product2 = create_product("sku3", shop=shop, default_price=10, shipping_mode=ShippingMode.NOT_SHIPPED)
     shop_product2 = product1.get_shop_instance(shop=shop)
     shop_product2.suppliers.set([supplier2])
 
@@ -65,17 +59,13 @@ def test_order_shipments(rf, admin_user):
     request = apply_request_middleware(rf.get("/"), user=admin_user, shop=shop)
 
     # Add product 3 to order for supplier 2
-    add_product_to_order(
-        order, supplier2, product2, get_quantity(supplier2, product2), 8
-    )
+    add_product_to_order(order, supplier2, product2, get_quantity(supplier2, product2), 8)
 
     # Product is not shippable so order section should not be available
     assert not ShipmentSection.visible_for_object(order, request)
 
     # Add product 2 to order for supplier 1
-    add_product_to_order(
-        order, supplier1, product1, get_quantity(supplier1, product1), 7
-    )
+    add_product_to_order(order, supplier1, product1, get_quantity(supplier1, product1), 7)
 
     # Now we should see the shipment section
     assert ShipmentSection.visible_for_object(order, request)

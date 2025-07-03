@@ -21,9 +21,7 @@ def test_parsing():
 
 def test_nonconstant_placeholder_name_fails():
     with pytest.raises(NonConstant):
-        get_jinja2_engine().from_string(
-            """{% placeholder "foo" ~ foo %}{% endplaceholder %}"""
-        )
+        get_jinja2_engine().from_string("""{% placeholder "foo" ~ foo %}{% endplaceholder %}""")
 
 
 def test_bare_placeholder_name_succeeds():

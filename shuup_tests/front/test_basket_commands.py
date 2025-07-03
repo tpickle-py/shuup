@@ -75,14 +75,10 @@ def test_add_and_remove_and_clear():
         basket,
         **{"product_id": product.pk, "quantity": 1, "supplier_id": supplier.pk},
     )
-    basket_commands.handle_add(
-        request, basket, **{"product_id": product.pk, "quantity": 2}
-    )
+    basket_commands.handle_add(request, basket, **{"product_id": product.pk, "quantity": 2})
 
     # Fractions should also be supported
-    basket_commands.handle_add(
-        request, basket, **{"product_id": product.pk, "quantity": 0.75}
-    )
+    basket_commands.handle_add(request, basket, **{"product_id": product.pk, "quantity": 0.75})
 
     # ... so there will be 3 products but one line
     assert basket.product_count == 3.75
@@ -186,15 +182,11 @@ def test_variation():
     child.link_to_parent(parent, variables={"test": "very"})
     attr = parent.variation_variables.get(identifier="test")
     val = attr.values.get(identifier="very")
-    basket_commands.handle_add_var(
-        request, basket, parent.id, **{"var_%s" % attr.id: val.id}
-    )
+    basket_commands.handle_add_var(request, basket, parent.id, **{"var_%s" % attr.id: val.id})
     assert basket.get_product_ids_and_quantities()[child.pk] == 1
 
     with pytest.raises(ValidationError):
-        basket_commands.handle_add_var(
-            request, basket, parent.id, **{"var_%s" % attr.id: (val.id + 1)}
-        )
+        basket_commands.handle_add_var(request, basket, parent.id, **{"var_%s" % attr.id: (val.id + 1)})
 
 
 @pytest.mark.django_db
@@ -205,32 +197,20 @@ def test_complex_variation():
     supplier = get_default_supplier()
 
     parent = create_product("SuperComplexVarParent", shop=shop, supplier=supplier)
-    color_var = ProductVariationVariable.objects.create(
-        product=parent, identifier="color"
-    )
-    size_var = ProductVariationVariable.objects.create(
-        product=parent, identifier="size"
-    )
+    color_var = ProductVariationVariable.objects.create(product=parent, identifier="color")
+    size_var = ProductVariationVariable.objects.create(product=parent, identifier="size")
 
-    ProductVariationVariableValue.objects.create(
-        variable=color_var, identifier="yellow"
-    )
+    ProductVariationVariableValue.objects.create(variable=color_var, identifier="yellow")
     ProductVariationVariableValue.objects.create(variable=size_var, identifier="small")
 
     combinations = list(parent.get_all_available_combinations())
     for combo in combinations:
-        child = create_product(
-            "xyz-%s" % combo["sku_part"], shop=shop, supplier=supplier
-        )
+        child = create_product("xyz-%s" % combo["sku_part"], shop=shop, supplier=supplier)
         child.link_to_parent(parent, combo["variable_to_value"])
 
     # Elided product should not yield a result
-    yellow_color_value = ProductVariationVariableValue.objects.get(
-        variable=color_var, identifier="yellow"
-    )
-    small_size_value = ProductVariationVariableValue.objects.get(
-        variable=size_var, identifier="small"
-    )
+    yellow_color_value = ProductVariationVariableValue.objects.get(variable=color_var, identifier="yellow")
+    small_size_value = ProductVariationVariableValue.objects.get(variable=size_var, identifier="small")
     # add to basket yellow + small
     kwargs = {
         "var_%d" % color_var.pk: yellow_color_value.pk,
@@ -268,9 +248,7 @@ def test_basket_partial_quantity_update():
     basket = request.basket
     product = get_default_product()
 
-    sales_unit = SalesUnit.objects.create(
-        identifier="test-sales-partial", decimals=2, name="Partial unit"
-    )
+    sales_unit = SalesUnit.objects.create(identifier="test-sales-partial", decimals=2, name="Partial unit")
     product.sales_unit = sales_unit  # Set the sales unit for the product
     product.save()
 
@@ -300,24 +278,14 @@ def test_basket_partial_quantity_update_all_product_counts():
     request = get_request_with_basket()
     basket = request.basket
 
-    pieces = SalesUnit.objects.create(
-        identifier="pieces", decimals=0, name="Pieces", symbol="pc."
-    )
-    kilograms = SalesUnit.objects.create(
-        identifier="kilograms", decimals=3, name="Kilograms", symbol="kg"
-    )
-    cup = create_product(
-        sku="COFFEE-CUP-123", sales_unit=pieces, shop=shop, supplier=supplier
-    )
-    beans = create_product(
-        sku="COFFEEBEANS3", sales_unit=kilograms, shop=shop, supplier=supplier
-    )
+    pieces = SalesUnit.objects.create(identifier="pieces", decimals=0, name="Pieces", symbol="pc.")
+    kilograms = SalesUnit.objects.create(identifier="kilograms", decimals=3, name="Kilograms", symbol="kg")
+    cup = create_product(sku="COFFEE-CUP-123", sales_unit=pieces, shop=shop, supplier=supplier)
+    beans = create_product(sku="COFFEEBEANS3", sales_unit=kilograms, shop=shop, supplier=supplier)
     beans_shop_product = beans.get_shop_instance(shop)
     beans_shop_product.minimum_purchase_quantity = Decimal("0.1")
     beans_shop_product.save()
-    pears = create_product(
-        sku="PEARS-27", sales_unit=kilograms, shop=shop, supplier=supplier
-    )
+    pears = create_product(sku="PEARS-27", sales_unit=kilograms, shop=shop, supplier=supplier)
 
     add = basket_commands.handle_add
     update = basket_commands.handle_update
@@ -394,9 +362,7 @@ def test_basket_update_with_package_product():
     basket = request.basket
     shop = get_default_shop()
     supplier = get_simple_supplier()
-    parent, child = get_unstocked_package_product_and_stocked_child(
-        shop, supplier, child_logical_quantity=2
-    )
+    parent, child = get_unstocked_package_product_and_stocked_child(shop, supplier, child_logical_quantity=2)
 
     # There should be enough stock for 1 parent and 1 extra child, each of quantity 1
     basket_commands.handle_add(request, basket, product_id=parent.pk, quantity=1)
@@ -410,46 +376,32 @@ def test_basket_update_with_package_product():
     extra_child_line = basket_lines[child.id]
 
     # Trying to increase package product line quantity should fail, with error message
-    basket_commands.handle_update(
-        request, basket, **{"q_%s" % package_line.line_id: "2"}
-    )
+    basket_commands.handle_update(request, basket, **{"q_%s" % package_line.line_id: "2"})
     assert basket.product_count == 2
     assert len(messages.get_messages(request)) == 1
 
     # So should increasing the extra child line quantity
-    basket_commands.handle_update(
-        request, basket, **{"q_%s" % extra_child_line.line_id: "2"}
-    )
+    basket_commands.handle_update(request, basket, **{"q_%s" % extra_child_line.line_id: "2"})
     assert basket.product_count == 2
     assert len(messages.get_messages(request)) == 2
 
     # However, if we delete the parent line, we can increase the extra child
-    basket_commands.handle_update(
-        request, basket, **{"delete_%s" % package_line.line_id: "1"}
-    )
+    basket_commands.handle_update(request, basket, **{"delete_%s" % package_line.line_id: "1"})
     assert basket.product_count == 1
-    basket_commands.handle_update(
-        request, basket, **{"q_%s" % extra_child_line.line_id: "2"}
-    )
+    basket_commands.handle_update(request, basket, **{"q_%s" % extra_child_line.line_id: "2"})
     assert basket.product_count == 2
 
     # Resetting to original basket contents
-    basket_commands.handle_update(
-        request, basket, **{"q_%s" % extra_child_line.line_id: "1"}
-    )
+    basket_commands.handle_update(request, basket, **{"q_%s" % extra_child_line.line_id: "1"})
     basket_commands.handle_add(request, basket, product_id=parent.pk, quantity=1)
     basket_lines = {line.product.id: line for line in basket.get_lines()}
     package_line = basket_lines[parent.id]  # Package line will have a new ID
     assert basket.product_count == 2
 
     # Like above, delete the child line and we can now increase the parent
-    basket_commands.handle_update(
-        request, basket, **{"delete_%s" % extra_child_line.line_id: "1"}
-    )
+    basket_commands.handle_update(request, basket, **{"delete_%s" % extra_child_line.line_id: "1"})
     assert basket.product_count == 1
-    basket_commands.handle_update(
-        request, basket, **{"q_%s" % package_line.line_id: "2"}
-    )
+    basket_commands.handle_update(request, basket, **{"q_%s" % package_line.line_id: "2"})
     assert basket.product_count == 2
 
     # Clear basket
@@ -483,9 +435,7 @@ def test_custom_basket_command():
 
     old_n_receivers = len(get_basket_command_handler.receivers)
     try:
-        get_basket_command_handler.connect(
-            get_custom_command, dispatch_uid="test_custom_basket_command"
-        )
+        get_basket_command_handler.connect(get_custom_command, dispatch_uid="test_custom_basket_command")
         commands = get_basket_command_dispatcher(request=get_request_with_basket())
         commands.handle("test_custom_basket_command")
         assert ok  # heh.
@@ -511,18 +461,12 @@ def test_parallel_baskets(rf):
     product_one = get_default_product()
     product_two = get_default_product()
     product_two.sku = "derpy-hooves"
-    sales_unit = SalesUnit.objects.create(
-        identifier="test-sales-partial", decimals=2, name="Partial unit"
-    )
+    sales_unit = SalesUnit.objects.create(identifier="test-sales-partial", decimals=2, name="Partial unit")
     product_two.sales_unit = sales_unit  # Set the sales unit for the product
     product_two.save()
 
-    basket_commands.handle_add(
-        request, basket_one, product_id=product_one.pk, quantity=1
-    )
-    basket_commands.handle_add(
-        request, basket_two, product_id=product_two.pk, quantity=3.5
-    )
+    basket_commands.handle_add(request, basket_one, product_id=product_one.pk, quantity=1)
+    basket_commands.handle_add(request, basket_two, product_id=product_two.pk, quantity=3.5)
 
     assert basket_one.product_count == 1
     assert basket_two.product_count == 3.5
@@ -543,14 +487,10 @@ def test_basket_update_with_discount():
     )
     discount_amount_value = 4
     basket_rule1 = BasketTotalAmountCondition.objects.create(value="2")
-    campaign = BasketCampaign.objects.create(
-        shop=basket.shop, public_name="test", name="test", active=True
-    )
+    campaign = BasketCampaign.objects.create(shop=basket.shop, public_name="test", name="test", active=True)
     campaign.conditions.add(basket_rule1)
     campaign.save()
-    BasketDiscountAmount.objects.create(
-        campaign=campaign, discount_amount=discount_amount_value
-    )
+    BasketDiscountAmount.objects.create(campaign=campaign, discount_amount=discount_amount_value)
     # basket_commands.handle_add(request, basket, product_id=product.pk, quantity=1)
     basket.add_line(
         line_id="product-line",

@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import mptt.fields
-import parler.models
 from django.conf import settings
 from django.db import migrations, models
+
+import mptt.fields
+import parler.models
 
 import shuup.core.fields
 
@@ -30,15 +31,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "available_from",
-                    models.DateTimeField(
-                        blank=True, verbose_name="available from", null=True
-                    ),
+                    models.DateTimeField(blank=True, verbose_name="available from", null=True),
                 ),
                 (
                     "available_to",
-                    models.DateTimeField(
-                        blank=True, verbose_name="available to", null=True
-                    ),
+                    models.DateTimeField(blank=True, verbose_name="available to", null=True),
                 ),
                 (
                     "created_on",
@@ -64,9 +61,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "list_children_on_page",
-                    models.BooleanField(
-                        verbose_name="list children on page", default=False
-                    ),
+                    models.BooleanField(verbose_name="list children on page", default=False),
                 ),
                 ("lft", models.PositiveIntegerField(editable=False, db_index=True)),
                 ("rght", models.PositiveIntegerField(editable=False, db_index=True)),
@@ -127,9 +122,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 ("title", models.CharField(max_length=256, verbose_name="title")),
                 (

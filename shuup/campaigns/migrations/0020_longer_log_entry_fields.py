@@ -12,9 +12,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="basketcampaignlogentry",
             name="identifier",
-            field=models.CharField(
-                blank=True, db_index=True, max_length=256, verbose_name="identifier"
-            ),
+            field=models.CharField(blank=True, db_index=True, max_length=256, verbose_name="identifier"),
         ),
         migrations.AlterField(
             model_name="basketcampaignlogentry",
@@ -24,9 +22,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="catalogcampaignlogentry",
             name="identifier",
-            field=models.CharField(
-                blank=True, db_index=True, max_length=256, verbose_name="identifier"
-            ),
+            field=models.CharField(blank=True, db_index=True, max_length=256, verbose_name="identifier"),
         ),
         migrations.AlterField(
             model_name="catalogcampaignlogentry",
@@ -36,9 +32,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="couponlogentry",
             name="identifier",
-            field=models.CharField(
-                blank=True, db_index=True, max_length=256, verbose_name="identifier"
-            ),
+            field=models.CharField(blank=True, db_index=True, max_length=256, verbose_name="identifier"),
         ),
         migrations.AlterField(
             model_name="couponlogentry",
@@ -48,9 +42,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="couponusagelogentry",
             name="identifier",
-            field=models.CharField(
-                blank=True, db_index=True, max_length=256, verbose_name="identifier"
-            ),
+            field=models.CharField(blank=True, db_index=True, max_length=256, verbose_name="identifier"),
         ),
         migrations.AlterField(
             model_name="couponusagelogentry",

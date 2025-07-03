@@ -33,9 +33,7 @@ INITIAL_PRODUCT_QUANTITY = 10
 
 
 def check_stock_counts(supplier, product, physical, logical):
-    physical_count = supplier.get_stock_statuses([product.id])[
-        product.id
-    ].physical_count
+    physical_count = supplier.get_stock_statuses([product.id])[product.id].physical_count
     logical_count = supplier.get_stock_statuses([product.id])[product.id].logical_count
     assert physical_count == physical
     assert logical_count == logical
@@ -79,21 +77,15 @@ def _get_other_line_data():
 
 
 def _add_basket_campaign(shop):
-    campaign = BasketCampaign.objects.create(
-        shop=shop, name="test", public_name="test", active=True
-    )
-    BasketDiscountAmount.objects.create(
-        discount_amount=shop.create_price("10"), campaign=campaign
-    )
+    campaign = BasketCampaign.objects.create(shop=shop, name="test", public_name="test", active=True)
+    BasketDiscountAmount.objects.create(discount_amount=shop.create_price("10"), campaign=campaign)
     rule = BasketTotalProductAmountCondition.objects.create(value=1)
     campaign.conditions.add(rule)
     campaign.save()
 
 
 def _add_catalog_campaign(shop):
-    campaign = CatalogCampaign.objects.create(
-        shop=shop, name="test", public_name="test", active=True
-    )
+    campaign = CatalogCampaign.objects.create(shop=shop, name="test", public_name="test", active=True)
     category_filter = CategoryFilter.objects.create()
     category_filter.categories.add(get_default_category())
     category_filter.save()
@@ -167,9 +159,7 @@ def test_create_full_refund(prices_include_tax):
     order.create_full_refund(restock_products=True)
 
     for line in order.lines.products():
-        check_stock_counts(
-            supplier, line.product, INITIAL_PRODUCT_QUANTITY, INITIAL_PRODUCT_QUANTITY
-        )
+        check_stock_counts(supplier, line.product, INITIAL_PRODUCT_QUANTITY, INITIAL_PRODUCT_QUANTITY)
 
     assert order.has_refunds()
     assert not order.can_create_refund()
@@ -227,9 +217,7 @@ def test_create_refund_line_by_line(prices_include_tax):
         )
 
     for line in order.lines.products():
-        check_stock_counts(
-            supplier, line.product, INITIAL_PRODUCT_QUANTITY, INITIAL_PRODUCT_QUANTITY
-        )
+        check_stock_counts(supplier, line.product, INITIAL_PRODUCT_QUANTITY, INITIAL_PRODUCT_QUANTITY)
 
     assert order.has_refunds()
     assert not order.can_create_refund()

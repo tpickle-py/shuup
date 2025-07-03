@@ -40,7 +40,6 @@ if hasattr(setuptools, "PackageFinder"):
         kwargs.setdefault("exclude", excludes.get_exclude_patterns())
         return FastFindPackages.find(*args, **kwargs)
 
-
 else:
 
     def find_packages(*args, **kwargs):

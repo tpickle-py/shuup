@@ -39,56 +39,20 @@ def test_get_suppliable_products():
 
     # Make sure supplier now omits unorderable product
     assert not list(supplier.get_suppliable_products(shop, customer=customer))
-    assert (
-        len(
-            list(
-                supplier.get_orderability_errors(
-                    shop_product, quantity=1, customer=customer
-                )
-            )
-        )
-        == 1
-    )
+    assert len(list(supplier.get_orderability_errors(shop_product, quantity=1, customer=customer))) == 1
 
     shop_product.backorder_maximum = 10
     shop_product.save()
 
     assert len(list(supplier.get_suppliable_products(shop, customer=customer))) == 1
-    assert (
-        len(
-            list(
-                supplier.get_orderability_errors(
-                    shop_product, quantity=10, customer=customer
-                )
-            )
-        )
-        == 0
-    )
-    assert (
-        len(
-            list(
-                supplier.get_orderability_errors(
-                    shop_product, quantity=11, customer=customer
-                )
-            )
-        )
-        == 1
-    )
+    assert len(list(supplier.get_orderability_errors(shop_product, quantity=10, customer=customer))) == 0
+    assert len(list(supplier.get_orderability_errors(shop_product, quantity=11, customer=customer))) == 1
 
     shop_product.backorder_maximum = None
     shop_product.save()
 
     assert len(list(supplier.get_suppliable_products(shop, customer=customer))) == 1
-    assert (
-        len(
-            list(
-                supplier.get_orderability_errors(
-                    shop_product, quantity=1000, customer=customer
-                )
-            )
-        )
-        == 0
-    )
+    assert len(list(supplier.get_orderability_errors(shop_product, quantity=1000, customer=customer))) == 0
 
 
 @pytest.mark.django_db

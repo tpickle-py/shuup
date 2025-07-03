@@ -12,12 +12,8 @@ from shuup.front.providers import FormDefinition, FormDefProvider, FormFieldDefi
 from shuup.testing.factories import create_package_product
 
 
-def get_unstocked_package_product_and_stocked_child(
-    shop, supplier, child_logical_quantity=1
-):
-    package_product = create_package_product(
-        "Package-Product-Test", shop=shop, supplier=supplier, children=1
-    )
+def get_unstocked_package_product_and_stocked_child(shop, supplier, child_logical_quantity=1):
+    package_product = create_package_product("Package-Product-Test", shop=shop, supplier=supplier, children=1)
 
     quantity_map = package_product.get_package_child_to_quantity_map()
     assert len(quantity_map.keys()) == 1
@@ -41,9 +37,7 @@ class FieldTestProvider(FormFieldProvider):
     error_msg = "Error! You must accept this in order to register or authenticate."
 
     def get_fields(self, **kwargs):
-        field = forms.BooleanField(
-            label=_(self.label), error_messages=dict(required=_(self.error_msg))
-        )
+        field = forms.BooleanField(label=_(self.label), error_messages=dict(required=_(self.error_msg)))
         definition = FormFieldDefinition(name=self.key, field=field)
         return [definition]
 

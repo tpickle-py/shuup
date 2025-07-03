@@ -5,10 +5,12 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import math
-import pytest
 from decimal import ROUND_FLOOR, ROUND_HALF_DOWN, Decimal
-from django.conf import settings
 from unittest.mock import patch
+
+from django.conf import settings
+
+import pytest
 
 from shuup.utils import babel_precision_provider, money
 from shuup.utils.money import Money, set_precision_provider
@@ -89,9 +91,7 @@ def test_as_rounded_returns_same_type():
     assert amount.as_rounded().is_cool
 
 
-@pytest.mark.parametrize(
-    "currency,digits", [("USD", 2), ("EUR", 2), ("JPY", 0), ("CLF", 4), ("BRL", 2)]
-)
+@pytest.mark.parametrize("currency,digits", [("USD", 2), ("EUR", 2), ("JPY", 0), ("CLF", 4), ("BRL", 2)])
 def test_as_rounded_values(currency, digits):
     set_precision_provider(babel_precision_provider.get_precision)
 

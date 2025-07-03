@@ -220,18 +220,20 @@ class ProductCrossSellsPlugin(TemplatedPlugin):
             "title": self.get_translated_value("title"),
             "products": products,
             "orderable_only": self.config.get("orderable_only", False),
-            "data_url": reverse(
-                "shuup:xtheme-product-cross-sells-highlight",
-                kwargs={
-                    "product_id": product.id if isinstance(product, Product) else product,
-                    "relation_type": relation_type.label,
-                    "use_parents": (1 if use_variation_parents else 0),
-                    "count": count,
-                    "cache_timeout": cache_timeout,
-                },
-            )
-            if product
-            else "/",
+            "data_url": (
+                reverse(
+                    "shuup:xtheme-product-cross-sells-highlight",
+                    kwargs={
+                        "product_id": product.id if isinstance(product, Product) else product,
+                        "relation_type": relation_type.label,
+                        "use_parents": (1 if use_variation_parents else 0),
+                        "count": count,
+                        "cache_timeout": cache_timeout,
+                    },
+                )
+                if product
+                else "/"
+            ),
         }
 
 

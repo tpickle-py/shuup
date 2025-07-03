@@ -49,9 +49,7 @@ def test_printouts(rf):
         assert response.status_code == 200
 
     test_delivery_and_confirmation_pdf(shop, supplier)  # Should be fine for first shop
-    with pytest.raises(
-        Problem
-    ):  # Second shop should fail since request shop does not match
+    with pytest.raises(Problem):  # Second shop should fail since request shop does not match
         new_shop = get_shop(True, "USD", enabled=True)
         supplier.shops.add(new_shop)
         test_delivery_and_confirmation_pdf(new_shop, supplier)

@@ -2,8 +2,9 @@
 
 import django.core.validators
 import django.db.models.deletion
-import filer.fields.file
 from django.db import migrations, models
+
+import filer.fields.file
 
 
 class Migration(migrations.Migration):
@@ -187,9 +188,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "active",
-                    models.BooleanField(
-                        db_index=True, default=False, verbose_name="active"
-                    ),
+                    models.BooleanField(db_index=True, default=False, verbose_name="active"),
                 ),
                 (
                     "admin_body_font",

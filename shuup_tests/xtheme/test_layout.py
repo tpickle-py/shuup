@@ -80,18 +80,10 @@ def test_layout_rendering_with_global_type(rf):
             (template, layout, gibberish, ctx) = get_test_template_bits(request)
 
             global_class = "xt-global-ph"
-            result = six.text_type(
-                render_placeholder(
-                    ctx, "test", layout, template.template.name, global_type=True
-                )
-            )
+            result = six.text_type(render_placeholder(ctx, "test", layout, template.template.name, global_type=True))
             assert global_class in result
 
-            result = six.text_type(
-                render_placeholder(
-                    ctx, "test", layout, template.template.name, global_type=False
-                )
-            )
+            result = six.text_type(render_placeholder(ctx, "test", layout, template.template.name, global_type=False))
             assert global_class not in result
 
 

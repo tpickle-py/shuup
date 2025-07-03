@@ -56,12 +56,7 @@ def test_multilingual_plugin_form(settings, rf):
     )
     assert form.is_valid()
     config = form.get_config()
-    assert all(
-        [
-            form.fields.get("text_%s" % language[0], "")
-            for language in settings.LANGUAGES
-        ]
-    )
+    assert all([form.fields.get("text_%s" % language[0], "") for language in settings.LANGUAGES])
     assert "text_*" in form.fields
     assert config["exist"] == True
     assert config["untranslated_field"] == "untranslated"

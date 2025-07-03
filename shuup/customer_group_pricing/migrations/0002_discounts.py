@@ -29,9 +29,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "discount_amount_value",
-                    shuup.core.fields.MoneyValueField(
-                        decimal_places=9, max_digits=36, verbose_name="discount amount"
-                    ),
+                    shuup.core.fields.MoneyValueField(decimal_places=9, max_digits=36, verbose_name="discount amount"),
                 ),
                 (
                     "group",

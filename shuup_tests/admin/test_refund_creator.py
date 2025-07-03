@@ -28,12 +28,8 @@ from shuup.utils.django_compat import force_text
 def test_create_refund_view(rf, admin_user):
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product = create_product(
-        sku="test-sku", shop=shop, supplier=supplier, default_price=3.33
-    )
-    order = create_order_with_product(
-        product, supplier, quantity=1, taxless_base_unit_price=1, shop=shop
-    )
+    product = create_product(sku="test-sku", shop=shop, supplier=supplier, default_price=3.33)
+    order = create_order_with_product(product, supplier, quantity=1, taxless_base_unit_price=1, shop=shop)
     order.cache_prices()
     order.save()
 
@@ -69,12 +65,8 @@ def test_create_refund_view(rf, admin_user):
 def test_create_full_refund_view(rf, admin_user):
     shop = get_default_shop()
     supplier = get_default_supplier(shop)
-    product = create_product(
-        sku="test-sku", shop=shop, supplier=supplier, default_price=3.33
-    )
-    order = create_order_with_product(
-        product, supplier, quantity=1, taxless_base_unit_price=1, shop=shop
-    )
+    product = create_product(sku="test-sku", shop=shop, supplier=supplier, default_price=3.33)
+    order = create_order_with_product(product, supplier, quantity=1, taxless_base_unit_price=1, shop=shop)
     order.cache_prices()
 
     original_total_price = order.taxful_total_price
@@ -104,12 +96,8 @@ def test_create_full_refund_view(rf, admin_user):
 def test_arbitrary_refund_availability(rf, admin_user):
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product = create_product(
-        sku="test-sku", shop=shop, supplier=supplier, default_price=3.33
-    )
-    order = create_order_with_product(
-        product, supplier, quantity=1, taxless_base_unit_price=1, shop=shop
-    )
+    product = create_product(sku="test-sku", shop=shop, supplier=supplier, default_price=3.33)
+    order = create_order_with_product(product, supplier, quantity=1, taxless_base_unit_price=1, shop=shop)
     order.cache_prices()
     order.save()
 
@@ -182,13 +170,4 @@ def test_order_refunds_with_other_lines(rf, admin_user):
     refund_soup = get_refund_view_content()
     refund_options = refund_soup.find(id="id_form-0-line_number").findAll("option")
     assert len(refund_options) == 4  # 1 empty line, 1 for arbitrary and 2 for lines
-    assert (
-        len(
-            [
-                option
-                for option in refund_options
-                if "Special service 100$/h" in force_text(option)
-            ]
-        )
-        == 1
-    )
+    assert len([option for option in refund_options if "Special service 100$/h" in force_text(option)]) == 1

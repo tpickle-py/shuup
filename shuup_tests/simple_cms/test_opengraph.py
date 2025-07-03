@@ -20,9 +20,7 @@ def test_opengrah_admin(admin_user):
     client.login(username=admin_user.username, password="password")
 
     assert Page.objects.count() == 0
-    response, soup = client.response_and_soup(
-        reverse("shuup_admin:simple_cms.page.new")
-    )
+    response, soup = client.response_and_soup(reverse("shuup_admin:simple_cms.page.new"))
     assert response.status_code == 200
 
     # save simple page
@@ -42,15 +40,11 @@ def test_opengrah_admin(admin_user):
     page_url = reverse("shuup:cms_page", kwargs=dict(url=page.url))
     response, soup = client.response_and_soup(page_url)
     assert response.status_code == 200
-    assert soup.find(
-        "meta", attrs={"property": "og:site_name", "content": shop.public_name}
-    )
+    assert soup.find("meta", attrs={"property": "og:site_name", "content": shop.public_name})
     assert soup.find("meta", attrs={"property": "og:url"})
     assert soup.find("meta", attrs={"property": "og:title", "content": page.title})
     assert soup.find("meta", attrs={"property": "og:type", "content": "website"})
-    assert soup.find(
-        "meta", attrs={"property": "og:description", "content": page.content}
-    )
+    assert soup.find("meta", attrs={"property": "og:description", "content": page.content})
 
     # set some open graph info
     random_image = factories.get_random_filer_image()
@@ -89,9 +83,7 @@ def test_opengrah_admin(admin_user):
         "meta",
         attrs={"property": "og:title", "content": payload["opengraph-title__en"]},
     )
-    assert soup.find(
-        "meta", attrs={"property": "og:type", "content": payload["opengraph-og_type"]}
-    )
+    assert soup.find("meta", attrs={"property": "og:type", "content": payload["opengraph-og_type"]})
     assert soup.find(
         "meta",
         attrs={
@@ -99,9 +91,7 @@ def test_opengrah_admin(admin_user):
             "content": payload["opengraph-description__en"],
         },
     )
-    assert soup.find(
-        "meta", attrs={"property": "og:type", "content": payload["opengraph-og_type"]}
-    )
+    assert soup.find("meta", attrs={"property": "og:type", "content": payload["opengraph-og_type"]})
     assert soup.find(
         "meta",
         attrs={"property": "article:tag", "content": payload["opengraph-tags__en"]},

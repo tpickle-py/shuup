@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import enumfields.fields
-import jsonfield.fields
 from django.conf import settings
 from django.db import migrations, models
+
+import enumfields.fields
+import jsonfield.fields
 
 import shuup.core.fields
 import shuup.notify.enums
@@ -77,9 +78,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "_data",
-                    jsonfield.fields.JSONField(
-                        blank=True, null=True, editable=False, db_column="data"
-                    ),
+                    jsonfield.fields.JSONField(blank=True, null=True, editable=False, db_column="data"),
                 ),
                 (
                     "marked_read",
@@ -92,9 +91,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "marked_read_on",
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name="marked read on"
-                    ),
+                    models.DateTimeField(blank=True, null=True, verbose_name="marked read on"),
                 ),
                 (
                     "marked_read_by",
@@ -135,9 +132,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "event_identifier",
-                    models.CharField(
-                        verbose_name="event identifier", db_index=True, max_length=64
-                    ),
+                    models.CharField(verbose_name="event identifier", db_index=True, max_length=64),
                 ),
                 (
                     "identifier",
@@ -156,9 +151,7 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(verbose_name="name", max_length=64)),
                 (
                     "enabled",
-                    models.BooleanField(
-                        default=False, verbose_name="enabled", db_index=True
-                    ),
+                    models.BooleanField(default=False, verbose_name="enabled", db_index=True),
                 ),
                 (
                     "_step_data",
@@ -169,9 +162,7 @@ class Migration(migrations.Migration):
                     models.CharField(
                         default=None,
                         max_length=64,
-                        help_text=(
-                            "the template identifier used to create this script"
-                        ),
+                        help_text=("the template identifier used to create this script"),
                         blank=True,
                         verbose_name="template identifier",
                         null=True,

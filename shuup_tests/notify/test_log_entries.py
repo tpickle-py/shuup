@@ -28,9 +28,7 @@ def test_log_entries():
 @pytest.mark.parametrize("target_obj", (None, object()))
 def test_log_entry_on_unloggable_object(target_obj):
     event = get_initialized_test_event()
-    event.variable_values["order"] = (
-        target_obj  # invalidate log target _before_ creating context
-    )
+    event.variable_values["order"] = target_obj  # invalidate log target _before_ creating context
     ctx = Context.from_event(event, shop=factories.get_default_shop())
     n_log_entries = ctx.log_entry_queryset.count()
     ctx.add_log_entry_on_log_target("blap", "blorr")

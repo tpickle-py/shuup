@@ -18,15 +18,11 @@ from shuup.testing.browser_utils import (
 from shuup.testing.factories import create_empty_order, get_default_shop
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
 def test_orders_list_view(browser, admin_user, live_server, settings):
     shop = get_default_shop()
     for i in range(0, 9):
@@ -91,7 +87,5 @@ def _change_status_filter(browser, to_value):
     click_element(browser, "#dropdownFilter")
     click_element(browser, "#picotable div.choice-filter")
     target = "#picotable div.choice-filter option[value='%s']" % to_value
-    click_element(
-        browser, target
-    )  # TODO: Travis is not able to do this click. There is nothing wrong with the filter.
+    click_element(browser, target)  # TODO: Travis is not able to do this click. There is nothing wrong with the filter.
     browser.find_by_css("h1").first.click()

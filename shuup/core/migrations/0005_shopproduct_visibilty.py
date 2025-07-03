@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import enumfields.fields
 from django.db import migrations, models
+
+import enumfields.fields
 
 from shuup.core.models._product_shops import ShopProductVisibility
 
@@ -67,9 +68,7 @@ class Migration(migrations.Migration):
                 default=0,
             ),
         ),
-        migrations.RunPython(
-            shop_product_visibility, reverse_code=reverse_shop_product_visibility
-        ),
+        migrations.RunPython(shop_product_visibility, reverse_code=reverse_shop_product_visibility),
         migrations.RemoveField(
             model_name="shopproduct",
             name="visible",

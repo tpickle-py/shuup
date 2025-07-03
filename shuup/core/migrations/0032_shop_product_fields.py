@@ -27,15 +27,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 (
                     "name",
-                    models.CharField(
-                        blank=True, max_length=256, null=True, verbose_name="name"
-                    ),
+                    models.CharField(blank=True, max_length=256, null=True, verbose_name="name"),
                 ),
                 (
                     "description",

@@ -32,16 +32,10 @@ def test_xtheme_extra_views(rf):
             request.shop = get_default_shop()
             # Simulate /xtheme/greeting
             response = extra_view_dispatch(request, "greeting")
-            assert (
-                force_text(response.content)
-                == "So long, and thanks for all the fish, Arthur Dent"
-            )
+            assert force_text(response.content) == "So long, and thanks for all the fish, Arthur Dent"
             # Try that again (to exercise the _VIEW_CACHE code path):
             response = extra_view_dispatch(request, "greeting")
-            assert (
-                force_text(response.content)
-                == "So long, and thanks for all the fish, Arthur Dent"
-            )
+            assert force_text(response.content) == "So long, and thanks for all the fish, Arthur Dent"
             # Now test that CBVs work
             assert not extra_view_dispatch(request, "faux").content
 

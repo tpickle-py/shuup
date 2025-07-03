@@ -31,9 +31,7 @@ from shuup.testing.factories import (
     "choice_identifier, expected_payment_status",
     [("cash", PaymentStatus.FULLY_PAID), ("manual", PaymentStatus.NOT_PAID)],
 )
-def test_custom_payment_processor_cash_service(
-    choice_identifier, expected_payment_status
-):
+def test_custom_payment_processor_cash_service(choice_identifier, expected_payment_status):
     shop = get_default_shop()
     product = get_default_product()
     supplier = get_default_supplier()
@@ -68,14 +66,10 @@ def test_custom_payment_processor_cash_service(
     "choice_identifier, default_behavior_components",
     [("cash", [StaffOnlyBehaviorComponent]), ("manual", [])],
 )
-def test_custom_payment_processor_defaults(
-    choice_identifier, default_behavior_components
-):
+def test_custom_payment_processor_defaults(choice_identifier, default_behavior_components):
     shop = get_default_shop()
     processor = CustomPaymentProcessor.objects.create()
-    service = processor.create_service(
-        choice_identifier, shop=shop, tax_class=get_default_tax_class()
-    )
+    service = processor.create_service(choice_identifier, shop=shop, tax_class=get_default_tax_class())
 
     assert service.behavior_components.count() == len(default_behavior_components)
     for behavior in default_behavior_components:

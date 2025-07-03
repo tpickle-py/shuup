@@ -66,9 +66,7 @@ def test_order_modifier(rf, admin_user):
     source.shipping_address = MutableAddress.objects.create(name="New Shipping")
 
     modifier = OrderModifier()
-    modifier.update_order_from_source(
-        source, order
-    )  # new param to edit order from source
+    modifier.update_order_from_source(source, order)  # new param to edit order from source
 
     assert Order.objects.count() == 1
 
@@ -122,9 +120,7 @@ def test_order_cannot_be_created():
 @pytest.mark.django_db
 def test_modify_order_with_package_product(admin_user):
     package_children = 4
-    package = create_package_product(
-        "parent", get_default_shop(), get_default_supplier(), 100, package_children
-    )
+    package = create_package_product("parent", get_default_shop(), get_default_supplier(), 100, package_children)
     order, source = get_order_and_source(admin_user, package)
     source.add_line(
         type=OrderLineType.OTHER,

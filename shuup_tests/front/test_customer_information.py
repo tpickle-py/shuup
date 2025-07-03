@@ -67,9 +67,7 @@ def default_address_data(address_type):
 @pytest.mark.django_db
 @pytest.mark.parametrize("allow_image_uploads", (False, True))
 def test_new_user_information_edit(allow_image_uploads):
-    with override_settings(
-        SHUUP_CUSTOMER_INFORMATION_ALLOW_PICTURE_UPLOAD=allow_image_uploads
-    ):
+    with override_settings(SHUUP_CUSTOMER_INFORMATION_ALLOW_PICTURE_UPLOAD=allow_image_uploads):
         client = SmartClient()
         get_default_shop()
         # create new user
@@ -89,9 +87,7 @@ def test_new_user_information_edit(allow_image_uploads):
         soup = client.soup(customer_edit_url)
 
         assert soup.find(attrs={"name": "contact-email"})["value"] == user.email
-        assert (
-            soup.find(attrs={"name": "contact-first_name"})["value"] == user.first_name
-        )
+        assert soup.find(attrs={"name": "contact-first_name"})["value"] == user.first_name
         assert soup.find(attrs={"name": "contact-last_name"})["value"] == user.last_name
 
         # Test POSTing
@@ -133,10 +129,7 @@ def test_new_user_information_edit(allow_image_uploads):
             # Fetch page and check that the picture rendered there
             customer_edit_url = reverse("shuup:customer_edit")
             soup = client.soup(customer_edit_url)
-            assert (
-                int(soup.find(attrs={"id": "id_contact-picture-dropzone"})["data-id"])
-                == file_id
-            )
+            assert int(soup.find(attrs={"id": "id_contact-picture-dropzone"})["data-id"]) == file_id
         else:
             assert contact.picture is None
 
@@ -268,9 +261,7 @@ def test_company_tax_number_limitations(regular_user, allow_company_registration
         # another company tries to use same tax number
         new_user_password = "derpy"
         new_user_username = "derpy"
-        user = User.objects.create_user(
-            new_user_username, "derpy@shuup.com", new_user_password
-        )
+        user = User.objects.create_user(new_user_username, "derpy@shuup.com", new_user_password)
         person = get_person_contact(user=user)
         assert not get_company_contact(user)
 

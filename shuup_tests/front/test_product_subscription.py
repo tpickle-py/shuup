@@ -25,30 +25,16 @@ def test_product_subscription_options():
         "product_subscription_option_provider",
         ["shuup.testing.subscription_option_provider.TestSubscriptionOptionProvider"],
     ):
-        response = client.soup(
-            reverse("shuup:product", kwargs=dict(pk=product.pk, slug=product.slug))
-        )
-        purchase_options = response.find(
-            "ul", {"class": "product-purchase-options-list-group"}
-        )
+        response = client.soup(reverse("shuup:product", kwargs=dict(pk=product.pk, slug=product.slug)))
+        purchase_options = response.find("ul", {"class": "product-purchase-options-list-group"})
 
         # there is an option for one-time purchase
-        one_time_purchase = purchase_options.find_all(
-            "li", {"class": "list-group-item"}
-        )[0]
-        assert one_time_purchase.find(
-            "input", {"name": "purchase-option", "value": "one-time"}
-        )
+        one_time_purchase = purchase_options.find_all("li", {"class": "list-group-item"})[0]
+        assert one_time_purchase.find("input", {"name": "purchase-option", "value": "one-time"})
 
         # there is an option for subscription purchase
         subscription = purchase_options.find_all("li", {"class": "list-group-item"})[1]
-        assert subscription.find(
-            "input", {"name": "purchase-option", "value": "subscription"}
-        )
+        assert subscription.find("input", {"name": "purchase-option", "value": "subscription"})
         # the subscription options should be yr and mo, according to the TestSubscriptionOptionProvider
-        assert subscription.find_all(
-            "input", {"name": "subscription-option", "value": "mo"}
-        )
-        assert subscription.find_all(
-            "input", {"name": "subscription-option", "value": "yr"}
-        )
+        assert subscription.find_all("input", {"name": "subscription-option", "value": "mo"})
+        assert subscription.find_all("input", {"name": "subscription-option", "value": "yr"})

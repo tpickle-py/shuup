@@ -1,6 +1,5 @@
 import json
 
-import jinja2
 from django.conf import settings
 from django_jinja import library
 

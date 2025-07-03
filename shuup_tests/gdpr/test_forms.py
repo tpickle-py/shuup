@@ -64,9 +64,7 @@ def test_authenticate_form(client):
         },
     )
     assert response.status_code == 200
-    assert "You must accept this in order to authenticate." in response.content.decode(
-        "utf-8"
-    )
+    assert "You must accept this in order to authenticate." in response.content.decode("utf-8")
 
     response = client.post(
         reverse("shuup:login"),
@@ -150,9 +148,7 @@ def test_register_form(client):
         },
     )
     assert response.status_code == 200
-    assert "You must accept this in order to register." in response.content.decode(
-        "utf-8"
-    )
+    assert "You must accept this in order to register." in response.content.decode("utf-8")
 
     response = client.post(
         reverse("shuup:registration_register"),
@@ -206,9 +202,7 @@ def test_pageform_urls(rf, admin_user):
         )
         assert not form.is_valid()
         assert not form.is_url_valid("en", "url__en", en_url)
-        assert form.is_url_valid(
-            "fi", "url__fi", fi_url
-        )  # no changes in finnish, should be valid
+        assert form.is_url_valid("fi", "url__fi", fi_url)  # no changes in finnish, should be valid
 
         form = PageForm(
             request=request,

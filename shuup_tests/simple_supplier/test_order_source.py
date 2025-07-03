@@ -38,19 +38,9 @@ def test_order_source(rf, admin_user):
     product = create_product("simple-test-product", shop, supplier)
     quantity = 345
     supplier.adjust_stock(product.pk, quantity)
-    assert (
-        supplier.get_stock_statuses([product.id])[product.id].logical_count == quantity
-    )
-    assert not list(
-        supplier.get_orderability_errors(
-            product.get_shop_instance(shop), quantity, customer=None
-        )
-    )
-    assert list(
-        supplier.get_orderability_errors(
-            product.get_shop_instance(shop), quantity + 1, customer=None
-        )
-    )
+    assert supplier.get_stock_statuses([product.id])[product.id].logical_count == quantity
+    assert not list(supplier.get_orderability_errors(product.get_shop_instance(shop), quantity, customer=None))
+    assert list(supplier.get_orderability_errors(product.get_shop_instance(shop), quantity + 1, customer=None))
 
     source = seed_source(admin_user, shop)
     source.add_line(

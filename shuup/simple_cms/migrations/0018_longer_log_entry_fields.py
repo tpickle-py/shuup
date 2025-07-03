@@ -12,9 +12,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="pagelogentry",
             name="identifier",
-            field=models.CharField(
-                blank=True, db_index=True, max_length=256, verbose_name="identifier"
-            ),
+            field=models.CharField(blank=True, db_index=True, max_length=256, verbose_name="identifier"),
         ),
         migrations.AlterField(
             model_name="pagelogentry",

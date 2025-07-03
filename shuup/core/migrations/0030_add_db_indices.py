@@ -14,22 +14,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="order",
             name="order_date",
-            field=models.DateTimeField(
-                db_index=True, editable=False, verbose_name="order date"
-            ),
+            field=models.DateTimeField(db_index=True, editable=False, verbose_name="order date"),
         ),
         migrations.AlterField(
             model_name="product",
             name="created_on",
-            field=models.DateTimeField(
-                auto_now_add=True, db_index=True, verbose_name="created on"
-            ),
+            field=models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="created on"),
         ),
         migrations.AlterField(
             model_name="shop",
             name="modified_on",
-            field=models.DateTimeField(
-                auto_now=True, db_index=True, verbose_name="modified on"
-            ),
+            field=models.DateTimeField(auto_now=True, db_index=True, verbose_name="modified on"),
         ),
     ]

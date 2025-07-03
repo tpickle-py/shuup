@@ -68,9 +68,7 @@ class FauxTheme2(Theme):
 
 
 def greeting_view(request):
-    return HttpResponse(
-        "So long, and thanks for all the fish, %s" % request.GET.get("name", "Humanity")
-    )
+    return HttpResponse("So long, and thanks for all the fish, %s" % request.GET.get("name", "Humanity"))
 
 
 class H2G2Theme(Theme):
@@ -78,9 +76,7 @@ class H2G2Theme(Theme):
     identifier = "h2g2"
 
     def get_view(self, view_name):
-        return {"greeting": greeting_view, "faux": FauxView, "true": True}.get(
-            view_name
-        )
+        return {"greeting": greeting_view, "faux": FauxView, "true": True}.get(view_name)
 
 
 def get_test_template_bits(request, pass_view=True, **extra_ctx):

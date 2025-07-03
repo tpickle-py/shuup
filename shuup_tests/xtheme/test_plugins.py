@@ -145,9 +145,7 @@ def test_category_links_plugin_with_customer(rf, show_all_categories):
 
     vars = {"request": request}
     context = get_jinja_context(**vars)
-    plugin = CategoryLinksPlugin(
-        {"categories": [category.pk], "show_all_categories": show_all_categories}
-    )
+    plugin = CategoryLinksPlugin({"categories": [category.pk], "show_all_categories": show_all_categories})
     assert category.is_visible(customer)
     assert category in plugin.get_context_data(context)["categories"]
 
@@ -223,9 +221,7 @@ def test_product_selection_plugin_v1(rf, reindex_catalog):
     reindex_catalog()
     context = get_context(rf)
 
-    plugin = ProductSelectionPlugin(
-        {"products": [sp1.product.pk, sp2.product.pk, sp3.product.pk]}
-    )
+    plugin = ProductSelectionPlugin({"products": [sp1.product.pk, sp2.product.pk, sp3.product.pk]})
     context_products = plugin.get_context_data(context)["products"]
     assert p1 in context_products
     assert p2 in context_products
@@ -236,9 +232,7 @@ def test_product_selection_plugin_v1(rf, reindex_catalog):
     with override_current_theme_class(None):
         theme = get_current_theme(get_default_shop())
         cell = LayoutCell(theme, ProductSelectionPlugin.identifier, sizes={"md": 8})
-        lcfg = LayoutCellFormGroup(
-            layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/"))
-        )
+        lcfg = LayoutCellFormGroup(layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/")))
         # not valid, products are required
         assert not lcfg.is_valid()
 
@@ -279,9 +273,7 @@ def test_product_hightlight_plugin(rf, highlight_type, orderable, reindex_catalo
     sp4.save()
 
     context = get_context(rf)
-    plugin = ProductHighlightPlugin(
-        {"type": highlight_type, "count": 4, "orderable_only": orderable}
-    )
+    plugin = ProductHighlightPlugin({"type": highlight_type, "count": 4, "orderable_only": orderable})
     reindex_catalog()
     context_products = plugin.get_context_data(context)["products"]
 
@@ -308,9 +300,7 @@ def test_product_selection_plugin_v2(rf, reindex_catalog):
 
     reindex_catalog()
     context = get_context(rf)
-    plugin = ProductSelectionPlugin(
-        {"products": [sp1.product.pk, sp2.product.pk, sp3.product.pk]}
-    )
+    plugin = ProductSelectionPlugin({"products": [sp1.product.pk, sp2.product.pk, sp3.product.pk]})
     context_products = plugin.get_context_data(context)["products"]
     assert p1 in context_products
     assert p2 in context_products
@@ -321,9 +311,7 @@ def test_product_selection_plugin_v2(rf, reindex_catalog):
     with override_current_theme_class(None):
         theme = get_current_theme(get_default_shop())
         cell = LayoutCell(theme, ProductSelectionPlugin.identifier, sizes={"md": 8})
-        lcfg = LayoutCellFormGroup(
-            layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/"))
-        )
+        lcfg = LayoutCellFormGroup(layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/")))
         # not valid, products are required
         assert not lcfg.is_valid()
 
@@ -375,9 +363,7 @@ def test_product_from_category_plugin(rf, reindex_catalog):
     with override_current_theme_class(None):
         theme = get_current_theme(get_default_shop())
         cell = LayoutCell(theme, ProductsFromCategoryPlugin.identifier, sizes={"md": 8})
-        lcfg = LayoutCellFormGroup(
-            layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/"))
-        )
+        lcfg = LayoutCellFormGroup(layout_cell=cell, theme=theme, request=apply_request_middleware(rf.get("/")))
         assert not lcfg.is_valid()
 
         lcfg = LayoutCellFormGroup(

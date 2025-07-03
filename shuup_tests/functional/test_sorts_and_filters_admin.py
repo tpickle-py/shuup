@@ -30,15 +30,10 @@ def test_sorts_and_filter_in_shop_edit(rf, admin_user):
     cache.clear()
     activate("en")
     with override_settings(SHUUP_ENABLE_MULTIPLE_SHOPS=False):
-        with override_provides(
-            "front_extend_product_list_form", DEFAULT_FORM_MODIFIERS
-        ):
+        with override_provides("front_extend_product_list_form", DEFAULT_FORM_MODIFIERS):
             shop = get_default_shop()
             view = ShopEditView.as_view()
-            assert (
-                get_configuration(shop=shop)
-                == settings.SHUUP_FRONT_DEFAULT_SORT_CONFIGURATION
-            )
+            assert get_configuration(shop=shop) == settings.SHUUP_FRONT_DEFAULT_SORT_CONFIGURATION
             data = {
                 "base-name__en": shop.name,
                 "base-public_name__en": shop.public_name,
@@ -78,15 +73,10 @@ def test_sorts_and_filter_in_category_edit(rf, admin_user):
     cache.clear()
     activate("en")
     with override_settings(SHUUP_ENABLE_MULTIPLE_SHOPS=False):
-        with override_provides(
-            "front_extend_product_list_form", DEFAULT_FORM_MODIFIERS
-        ):
+        with override_provides("front_extend_product_list_form", DEFAULT_FORM_MODIFIERS):
             category = get_default_category()
             view = CategoryEditView.as_view()
-            assert (
-                get_configuration(category=category)
-                == settings.SHUUP_FRONT_DEFAULT_SORT_CONFIGURATION
-            )
+            assert get_configuration(category=category) == settings.SHUUP_FRONT_DEFAULT_SORT_CONFIGURATION
             data = {
                 "base-name__en": category.name,
                 "base-status": category.status.value,
@@ -105,10 +95,7 @@ def test_sorts_and_filter_in_category_edit(rf, admin_user):
                 response.render()
             assert response.status_code in [200, 302]
             # not overriding
-            assert (
-                get_configuration(category=category)
-                == settings.SHUUP_FRONT_DEFAULT_SORT_CONFIGURATION
-            )
+            assert get_configuration(category=category) == settings.SHUUP_FRONT_DEFAULT_SORT_CONFIGURATION
 
             data["product_list_facets-override_default_configuration"] = True
             request = apply_request_middleware(rf.post("/", data=data), user=admin_user)

@@ -1,11 +1,11 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Christian Hess, 2021
 # Melanie Missbach <melanie@buyhappy.de>, 2021
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""

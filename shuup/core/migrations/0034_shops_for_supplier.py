@@ -22,8 +22,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="supplier",
             name="shops",
-            field=models.ManyToManyField(
-                blank=True, related_name="suppliers", to="shuup.Shop"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="suppliers", to="shuup.Shop"),
         ),
     ]

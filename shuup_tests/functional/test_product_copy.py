@@ -29,9 +29,7 @@ def test_copy_works_without_simple_supplier(rf, admin_user, settings):
     supplier = factories.get_default_supplier()
     request = apply_request_middleware(rf.get("/", {}), user=admin_user)
     price = 10
-    product = factories.create_product(
-        "product", shop=shop, supplier=supplier, default_price=price
-    )
+    product = factories.create_product("product", shop=shop, supplier=supplier, default_price=price)
 
     shop_product = product.get_shop_instance(shop)
 
@@ -53,9 +51,7 @@ def test_product_copy_stock_managed(rf, admin_user):
     supplier = get_simple_supplier()
     request = apply_request_middleware(rf.get("/", {}), user=admin_user)
     price = 10
-    product = factories.create_product(
-        "product", shop=shop, supplier=supplier, default_price=price
-    )
+    product = factories.create_product("product", shop=shop, supplier=supplier, default_price=price)
 
     shop_product = product.get_shop_instance(shop)
 
@@ -73,16 +69,9 @@ def test_product_copy_stock_managed(rf, admin_user):
     assert new_product.name == product.name
     assert new_shop_product
     assert new_shop_product.suppliers.first() == shop_product.suppliers.first()
-    origin_product_stock_count = StockCount.objects.get_or_create(
-        supplier=supplier, product=product
-    )[0]
-    new_product_stock_count = StockCount.objects.get_or_create(
-        supplier=supplier, product=new_product
-    )[0]
-    assert (
-        origin_product_stock_count.stock_managed
-        == new_product_stock_count.stock_managed
-    )
+    origin_product_stock_count = StockCount.objects.get_or_create(supplier=supplier, product=product)[0]
+    new_product_stock_count = StockCount.objects.get_or_create(supplier=supplier, product=new_product)[0]
+    assert origin_product_stock_count.stock_managed == new_product_stock_count.stock_managed
 
     # Make stock not managed and re-copy original product
     assert bool(origin_product_stock_count.stock_managed)  # stock managed True
@@ -97,9 +86,7 @@ def test_product_copy_stock_managed(rf, admin_user):
 
     assert Product.objects.count() == 3
     new_product = Product.objects.first()
-    new_product_stock_count = StockCount.objects.get_or_create(
-        supplier=supplier, product=new_product
-    )[0]
+    new_product_stock_count = StockCount.objects.get_or_create(supplier=supplier, product=new_product)[0]
     assert not bool(new_product_stock_count.stock_managed)
 
 
@@ -109,15 +96,11 @@ def test_product_copy_customer_group_pricing(rf, admin_user):
     supplier = factories.get_default_supplier()
     request = apply_request_middleware(rf.get("/", {}), user=admin_user)
     price = 10
-    product = factories.create_product(
-        "product", shop=shop, supplier=supplier, default_price=price
-    )
+    product = factories.create_product("product", shop=shop, supplier=supplier, default_price=price)
 
     group = factories.get_default_customer_group()
     group_price_value = 9999
-    CgpPrice.objects.create(
-        product=product, shop=shop, group=group, price_value=group_price_value
-    )
+    CgpPrice.objects.create(product=product, shop=shop, group=group, price_value=group_price_value)
     shop_product = product.get_shop_instance(shop)
 
     assert Product.objects.count() == 1
@@ -132,7 +115,5 @@ def test_product_copy_customer_group_pricing(rf, admin_user):
     assert new_product
     assert new_product.pk != product.pk
 
-    group_price = CgpPrice.objects.filter(
-        product=new_product, shop=shop, group=group
-    ).first()
+    group_price = CgpPrice.objects.filter(product=new_product, shop=shop, group=group).first()
     assert group_price.price_value == group_price_value

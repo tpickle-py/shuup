@@ -4,8 +4,9 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.test import override_settings
+
+import pytest
 
 from shuup.admin.modules.shops.views.edit import ShopEditView
 from shuup.testing.factories import get_default_shop

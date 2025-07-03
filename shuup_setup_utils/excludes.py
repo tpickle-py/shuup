@@ -15,7 +15,6 @@ _EXCLUDE_PATTERNS = [
 
 
 def add_exclude_patters(excludes):
-    global _EXCLUDE_PATTERNS
     for exclude in excludes:
         if exclude not in _EXCLUDE_PATTERNS:
             _EXCLUDE_PATTERNS.append(exclude)

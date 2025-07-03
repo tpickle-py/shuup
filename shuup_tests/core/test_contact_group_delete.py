@@ -5,21 +5,16 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-import pytest
 from django.db.models import ProtectedError
 
+import pytest
+
 from shuup.core.models import AnonymousContact, ContactGroup
-from shuup.testing.factories import (
-    create_random_company,
-    create_random_person,
-    get_default_customer_group,
-)
+from shuup.testing.factories import create_random_company, create_random_person, get_default_customer_group
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "contact", [AnonymousContact, create_random_company, create_random_person]
-)
+@pytest.mark.parametrize("contact", [AnonymousContact, create_random_company, create_random_person])
 def test_protected_default_groups(contact):
     protected_group = contact().get_default_group()
     assert not protected_group.can_delete()

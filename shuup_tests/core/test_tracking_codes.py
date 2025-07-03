@@ -40,9 +40,7 @@ def test_tracking_codes():
     product_lines = order.lines.exclude(product_id=None)
     assert len(product_lines) == 3
     for line in product_lines:
-        shipment = order.create_shipment(
-            {line.product: line.quantity}, supplier=supplier
-        )
+        shipment = order.create_shipment({line.product: line.quantity}, supplier=supplier)
         if line.quantity != 3:
             shipment.tracking_code = "123FI"
             shipment.save()
@@ -50,16 +48,7 @@ def test_tracking_codes():
     tracking_codes = order.get_tracking_codes()
     code_count = len(product_lines) - 1  # We skipped that one
     assert len(tracking_codes) == code_count
-    assert (
-        len(
-            [
-                tracking_code
-                for tracking_code in tracking_codes
-                if tracking_code == "123FI"
-            ]
-        )
-        == code_count
-    )
+    assert len([tracking_code for tracking_code in tracking_codes if tracking_code == "123FI"]) == code_count
 
 
 def _add_product_to_order(order, sku, quantity, shop, supplier):
@@ -69,6 +58,4 @@ def _add_product_to_order(order, sku, quantity, shop, supplier):
         supplier=supplier,
         default_price=3.33,
     )
-    add_product_to_order(
-        order, supplier, product, quantity=quantity, taxless_base_unit_price=1
-    )
+    add_product_to_order(order, supplier, product, quantity=quantity, taxless_base_unit_price=1)

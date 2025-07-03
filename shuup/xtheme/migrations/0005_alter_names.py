@@ -14,8 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="themesettings",
             name="theme_identifier",
-            field=models.CharField(
-                db_index=True, max_length=64, verbose_name="theme identifier"
-            ),
+            field=models.CharField(db_index=True, max_length=64, verbose_name="theme identifier"),
         ),
     ]

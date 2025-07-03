@@ -5,6 +5,7 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import json
+
 import pytest
 
 from shuup.admin.shop_provider import set_shop
@@ -28,16 +29,12 @@ def _add_products_to_basket(basket, product_count):
             supplier=supplier,
             default_price=50,
         )
-        basket.add_product(
-            supplier=supplier, shop=basket.shop, product=product, quantity=1
-        )
+        basket.add_product(supplier=supplier, shop=basket.shop, product=product, quantity=1)
 
     return basket
 
 
-def _create_cart_with_products(
-    rf, shop, user, customer, person, product_count, save_address=True
-):
+def _create_cart_with_products(rf, shop, user, customer, person, product_count, save_address=True):
     factories.get_default_payment_method()
     factories.get_default_shipping_method()
     request = rf.post("/", {"title": "test"})
@@ -46,9 +43,7 @@ def _create_cart_with_products(
     request.person = person
     request.customer = customer
     basket = get_basket(request)
-    request = apply_request_middleware(
-        request, user=user, person=person, customer=customer, basket=basket
-    )
+    request = apply_request_middleware(request, user=user, person=person, customer=customer, basket=basket)
     basket = _add_products_to_basket(basket, product_count)
 
     assert basket.customer == customer
@@ -142,9 +137,7 @@ def test_stored_basket_detail_view(rf, regular_user, admin_user):
 def test_anonymous_stored_basket_detail_view(rf, regular_user, admin_user):
     shop = factories.get_default_shop()
 
-    cart = _create_cart_with_products(
-        rf, shop, AnonymousUser(), AnonymousContact(), AnonymousContact(), 2, False
-    )
+    cart = _create_cart_with_products(rf, shop, AnonymousUser(), AnonymousContact(), AnonymousContact(), 2, False)
     assert cart
     assert cart.product_count == 2
     stored_basket = StoredBasket.objects.first()

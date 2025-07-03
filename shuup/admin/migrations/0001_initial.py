@@ -50,7 +50,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(
-            create_dashboard_permissions, delete_dashboard_permissions
-        ),
+        migrations.RunPython(create_dashboard_permissions, delete_dashboard_permissions),
     ]

@@ -4,15 +4,13 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.test.utils import override_settings
 from django.utils.translation import activate, get_language
 
+import pytest
+
 from shuup.core import cache
-from shuup.front.utils.translation import (
-    get_shop_available_languages,
-    set_shop_available_languages,
-)
+from shuup.front.utils.translation import get_shop_available_languages, set_shop_available_languages
 from shuup.testing import factories
 from shuup.utils.django_compat import reverse
 from shuup_tests.utils import SmartClient

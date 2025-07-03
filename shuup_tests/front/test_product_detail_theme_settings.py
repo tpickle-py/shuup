@@ -30,9 +30,7 @@ def test_product_detail_theme_configs(client):
     theme_settings = ThemeSettings.objects.first()
     theme_settings.update_settings({"product_detail_tabs": ["description"]})
 
-    with override_current_theme_class(
-        ClassicGrayTheme, shop
-    ):  # Ensure settings is refreshed from DB
+    with override_current_theme_class(ClassicGrayTheme, shop):  # Ensure settings is refreshed from DB
         soup = _get_product_detail_soup(client, product)
         assert soup.find("div", attrs={"class": "product-tabs"})
         tabs = soup.find_all("ul", attrs={"class": "nav-tabs"})[0].find_all("li")

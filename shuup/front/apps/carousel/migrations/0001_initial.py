@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
+from django.db import migrations, models
+
 import enumfields.fields
 import filer.fields.image
 import parler.models
-from django.db import migrations, models
 
 import shuup.front.apps.carousel.models
 
@@ -65,15 +66,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "is_arrows_visible",
-                    models.BooleanField(
-                        verbose_name="show navigation arrows", default=True
-                    ),
+                    models.BooleanField(verbose_name="show navigation arrows", default=True),
                 ),
                 (
                     "use_dot_navigation",
-                    models.BooleanField(
-                        verbose_name="show navigation dots", default=True
-                    ),
+                    models.BooleanField(verbose_name="show navigation dots", default=True),
                 ),
                 (
                     "image_width",
@@ -121,9 +118,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "ordering",
-                    models.IntegerField(
-                        verbose_name="ordering", blank=True, default=0, null=True
-                    ),
+                    models.IntegerField(verbose_name="ordering", blank=True, default=0, null=True),
                 ),
                 (
                     "target",
@@ -135,15 +130,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "available_from",
-                    models.DateTimeField(
-                        verbose_name="available from", blank=True, null=True
-                    ),
+                    models.DateTimeField(verbose_name="available from", blank=True, null=True),
                 ),
                 (
                     "available_to",
-                    models.DateTimeField(
-                        verbose_name="available to", blank=True, null=True
-                    ),
+                    models.DateTimeField(verbose_name="available to", blank=True, null=True),
                 ),
                 (
                     "carousel",
@@ -208,15 +199,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", max_length=15, db_index=True
-                    ),
+                    models.CharField(verbose_name="Language", max_length=15, db_index=True),
                 ),
                 (
                     "caption",
-                    models.CharField(
-                        verbose_name="caption", blank=True, max_length=80, null=True
-                    ),
+                    models.CharField(verbose_name="caption", blank=True, max_length=80, null=True),
                 ),
                 (
                     "caption_text",

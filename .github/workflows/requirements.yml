@@ -5,12 +5,12 @@ on:
   pull_request:
     branches: [ main, master ]
     paths: [ 'pyproject.toml' ]
-  
+
   # Run on pushes to main
   push:
     branches: [ main, master ]
     paths: [ 'pyproject.toml' ]
-  
+
   # Allow manual triggering
   workflow_dispatch:
 
@@ -18,7 +18,7 @@ jobs:
   check-requirements:
     name: Check Requirements Files
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -27,35 +27,35 @@ jobs:
         fetch-depth: 0
         # Use a token that can push to protected branches
         token: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: Install uv
       uses: astral-sh/setup-uv@v3
       with:
         version: "latest"
         enable-cache: true
-    
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.9'
-    
+
     - name: Install dependencies
       run: |
         uv venv .venv --python 3.9
         source .venv/bin/activate
         uv pip install -e .
-    
+
     - name: Check if requirements files are up-to-date
       id: check-requirements
       run: |
         # Generate fresh requirements files
         ./regenerate_requirements.sh
-        
+
         # Check if there are any changes
         if ! git diff --quiet requirements*.txt; then
           echo "Requirements files are out of date"
           echo "needs_update=true" >> $GITHUB_OUTPUT
-          
+
           # Show the diff for debugging
           echo "Changes detected:"
           git diff requirements*.txt
@@ -63,7 +63,7 @@ jobs:
           echo "Requirements files are up-to-date"
           echo "needs_update=false" >> $GITHUB_OUTPUT
         fi
-    
+
     - name: Commit updated requirements (on push to main)
       if: steps.check-requirements.outputs.needs_update == 'true' && github.event_name == 'push'
       run: |
@@ -72,7 +72,7 @@ jobs:
         git add requirements*.txt
         git commit -m "Auto-update requirements files from pyproject.toml [skip ci]"
         git push
-    
+
     - name: Fail if requirements are outdated (on PR)
       if: steps.check-requirements.outputs.needs_update == 'true' && github.event_name == 'pull_request'
       run: |
@@ -87,7 +87,7 @@ jobs:
         echo "2. Commit the updated requirements*.txt files"
         echo "3. Push the changes"
         exit 1
-    
+
     - name: Create PR comment (if requirements outdated)
       if: steps.check-requirements.outputs.needs_update == 'true' && github.event_name == 'pull_request'
       uses: actions/github-script@v7
@@ -113,38 +113,38 @@ jobs:
     name: Test Generated Requirements
     runs-on: ubuntu-latest
     needs: check-requirements
-    
+
     strategy:
       matrix:
-        requirements-file: 
+        requirements-file:
           - requirements.txt
           - requirements-dev.txt
           - requirements-minimal.txt
           - requirements-dev-minimal.txt
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Install uv
       uses: astral-sh/setup-uv@v3
       with:
         version: "latest"
         enable-cache: true
-    
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.9'
-    
+
     - name: Test requirements file installation
       run: |
         uv venv test-env --python 3.9
         source test-env/bin/activate
-        
+
         echo "Testing installation of ${{ matrix.requirements-file }}"
         uv pip install -r ${{ matrix.requirements-file }}
-        
+
         # Basic smoke test - try importing shuup
         if [[ "${{ matrix.requirements-file }}" == *"minimal"* ]]; then
           echo "Testing minimal requirements - checking core dependencies"

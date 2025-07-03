@@ -26,9 +26,7 @@ def test_attribute_edit_view(rf, admin_user):
         "base-visibility_mode": 1,
         "base-ordering": 0,
     }
-    request = apply_request_middleware(
-        rf.post("/", data=data), shop=shop, user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data=data), shop=shop, user=admin_user)
     response = AttributeEditView.as_view()(request)
     assert response.status_code == 302
     attribute = Attribute.objects.get(identifier="attr-id")
@@ -44,15 +42,11 @@ def test_attribute_edit_view(rf, admin_user):
             "choice_options-1-name__en": "Option B",
         }
     )
-    request = apply_request_middleware(
-        rf.post("/", data=data), shop=shop, user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data=data), shop=shop, user=admin_user)
     response = AttributeEditView.as_view()(request, pk=attribute.pk)
     assert response.status_code == 302
 
-    options = list(
-        sorted(attribute.choices.values_list("translations__name", flat=True))
-    )
+    options = list(sorted(attribute.choices.values_list("translations__name", flat=True)))
     assert options[0] == "Option A"
     assert options[1] == "Option B"
 
@@ -69,16 +63,12 @@ def test_attribute_edit_view(rf, admin_user):
             "choice_options-2-name__en": "Option C",  # new one
         }
     )
-    request = apply_request_middleware(
-        rf.post("/", data=data), shop=shop, user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data=data), shop=shop, user=admin_user)
     response = AttributeEditView.as_view()(request, pk=attribute.pk)
     assert response.status_code == 302
 
     attribute = Attribute.objects.get(identifier="attr-id")
-    options = list(
-        sorted(attribute.choices.values_list("translations__name", flat=True))
-    )
+    options = list(sorted(attribute.choices.values_list("translations__name", flat=True)))
     assert options[0] == "Option AZ"
     assert options[1] == "Option C"
     assert len(options) == 2

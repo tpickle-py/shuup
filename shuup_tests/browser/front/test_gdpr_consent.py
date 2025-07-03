@@ -18,9 +18,7 @@ from shuup.testing.browser_utils import (
 from shuup.testing.factories import get_default_shop
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.django_db
@@ -41,9 +39,5 @@ def test_gdpr_consent(browser, live_server, settings):
     assert len(browser.find_by_css(".gdpr-consent-preferences")) == 1
     click_element(browser, "#agree-btn")
 
-    wait_until_condition(
-        browser, lambda x: len(x.find_by_css(".gdpr-consent-warn-bar")) == 0
-    )
-    wait_until_condition(
-        browser, lambda x: len(x.find_by_css(".gdpr-consent-preferences")) == 0
-    )
+    wait_until_condition(browser, lambda x: len(x.find_by_css(".gdpr-consent-warn-bar")) == 0)
+    wait_until_condition(browser, lambda x: len(x.find_by_css(".gdpr-consent-preferences")) == 0)

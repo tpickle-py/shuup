@@ -25,16 +25,12 @@ def test_simple_variation():
     children = [create_product("SimpleVarChild-%d" % x) for x in range(10)]
     for child in children:
         child.link_to_parent(parent)
-        sp = ShopProduct.objects.create(
-            shop=shop, product=child, visibility=ShopProductVisibility.ALWAYS_VISIBLE
-        )
+        sp = ShopProduct.objects.create(shop=shop, product=child, visibility=ShopProductVisibility.ALWAYS_VISIBLE)
         assert child.is_variation_child()
         assert not sp.is_list_visible()  # Variation children are not list visible
 
     assert parent.mode == ProductMode.SIMPLE_VARIATION_PARENT
-    assert not list(
-        parent.get_all_available_combinations()
-    )  # Simple variations can't have these.
+    assert not list(parent.get_all_available_combinations())  # Simple variations can't have these.
 
     # Validation tests
 
@@ -63,9 +59,7 @@ def test_simple_variation():
 @pytest.mark.django_db
 def test_variable_variation():
     parent = create_product("ComplexVarParent")
-    sizes_and_children = [
-        ("%sL" % ("X" * x), create_product("ComplexVarChild-%d" % x)) for x in range(4)
-    ]
+    sizes_and_children = [("%sL" % ("X" * x), create_product("ComplexVarChild-%d" % x)) for x in range(4)]
     for size, child in sizes_and_children:
         child.link_to_parent(parent, variables={"size": size})
     assert parent.mode == ProductMode.VARIABLE_VARIATION_PARENT
@@ -97,17 +91,11 @@ def test_variable_variation():
 @pytest.mark.django_db
 def test_multivariable_variation():
     parent = create_product("SuperComplexVarParent")
-    color_var = ProductVariationVariable.objects.create(
-        product=parent, identifier="color"
-    )
-    size_var = ProductVariationVariable.objects.create(
-        product=parent, identifier="size"
-    )
+    color_var = ProductVariationVariable.objects.create(product=parent, identifier="color")
+    size_var = ProductVariationVariable.objects.create(product=parent, identifier="size")
 
     for color in ("yellow", "blue", "brown"):
-        ProductVariationVariableValue.objects.create(
-            variable=color_var, identifier=color
-        )
+        ProductVariationVariableValue.objects.create(variable=color_var, identifier=color)
 
     for size in ("small", "medium", "large", "huge"):
         ProductVariationVariableValue.objects.create(variable=size_var, identifier=size)
@@ -127,22 +115,12 @@ def test_multivariable_variation():
     assert parent.mode == ProductMode.VARIABLE_VARIATION_PARENT
 
     # Elided product should not yield a result
-    yellow_color_value = ProductVariationVariableValue.objects.get(
-        variable=color_var, identifier="yellow"
-    )
-    small_size_value = ProductVariationVariableValue.objects.get(
-        variable=size_var, identifier="small"
-    )
-    assert not ProductVariationResult.resolve(
-        parent, {color_var: yellow_color_value, size_var: small_size_value}
-    )
+    yellow_color_value = ProductVariationVariableValue.objects.get(variable=color_var, identifier="yellow")
+    small_size_value = ProductVariationVariableValue.objects.get(variable=size_var, identifier="small")
+    assert not ProductVariationResult.resolve(parent, {color_var: yellow_color_value, size_var: small_size_value})
     # Anything else should
-    brown_color_value = ProductVariationVariableValue.objects.get(
-        variable=color_var, identifier="brown"
-    )
-    result1 = ProductVariationResult.resolve(
-        parent, {color_var: brown_color_value, size_var: small_size_value}
-    )
+    brown_color_value = ProductVariationVariableValue.objects.get(variable=color_var, identifier="brown")
+    result1 = ProductVariationResult.resolve(parent, {color_var: brown_color_value, size_var: small_size_value})
     result2 = ProductVariationResult.resolve(
         parent, {color_var.pk: brown_color_value.pk, size_var.pk: small_size_value.pk}
     )
@@ -159,9 +137,7 @@ def test_parent_mode_changes_to_normal_when_no_valid_children():
     children = [create_product("SimpleVarChild-%d" % x) for x in range(10)]
     for child in children:
         child.link_to_parent(parent)
-        ShopProduct.objects.create(
-            shop=shop, product=child, visibility=ShopProductVisibility.ALWAYS_VISIBLE
-        )
+        ShopProduct.objects.create(shop=shop, product=child, visibility=ShopProductVisibility.ALWAYS_VISIBLE)
     parent.verify_mode()
     assert parent.variation_children.count() == 10
     assert parent.mode == ProductMode.SIMPLE_VARIATION_PARENT

@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Frank Wickström <frwickst@gmail.com>, 2017
 # Panu Tulimäki <panu@shuup.com>, 2020
 # William Lindholm <william.lindholm@shuup.com>, 2020
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""

@@ -3,10 +3,11 @@ from __future__ import unicode_literals
 
 import django.db.migrations.operations.special
 import django.db.models.deletion
-import mptt.fields
-import parler.models
 from django.conf import settings
 from django.db import migrations, models
+
+import mptt.fields
+import parler.models
 
 import shuup.core.fields
 
@@ -37,15 +38,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "available_from",
-                    models.DateTimeField(
-                        null=True, blank=True, verbose_name="available from"
-                    ),
+                    models.DateTimeField(null=True, blank=True, verbose_name="available from"),
                 ),
                 (
                     "available_to",
-                    models.DateTimeField(
-                        null=True, blank=True, verbose_name="available to"
-                    ),
+                    models.DateTimeField(null=True, blank=True, verbose_name="available to"),
                 ),
                 (
                     "created_on",
@@ -71,9 +68,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "list_children_on_page",
-                    models.BooleanField(
-                        default=False, verbose_name="list children on page"
-                    ),
+                    models.BooleanField(default=False, verbose_name="list children on page"),
                 ),
                 ("lft", models.PositiveIntegerField(db_index=True, editable=False)),
                 ("rght", models.PositiveIntegerField(db_index=True, editable=False)),
@@ -134,9 +129,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 ("title", models.CharField(max_length=256, verbose_name="title")),
                 (
@@ -170,9 +163,7 @@ class Migration(migrations.Migration):
                 "verbose_name": "page Translation",
             },
         ),
-        migrations.AlterUniqueTogether(
-            name="pagetranslation", unique_together=set([("language_code", "master")])
-        ),
+        migrations.AlterUniqueTogether(name="pagetranslation", unique_together=set([("language_code", "master")])),
         migrations.AlterField(
             model_name="page",
             name="available_from",
@@ -222,20 +213,14 @@ class Migration(migrations.Migration):
                 null=True,
                 related_name="children",
                 on_delete=models.CASCADE,
-                help_text=(
-                    "Set this to a parent page if this page should be "
-                    "subcategorized under another page."
-                ),
+                help_text=("Set this to a parent page if this page should be " "subcategorized under another page."),
             ),
         ),
         migrations.AlterField(
             model_name="page",
             name="visible_in_menu",
             field=models.BooleanField(
-                help_text=(
-                    "Check this if this page should have a link in the top "
-                    "menu of the store front."
-                ),
+                help_text=("Check this if this page should have a link in the top " "menu of the store front."),
                 default=False,
                 verbose_name="visible in menu",
             ),
@@ -245,8 +230,7 @@ class Migration(migrations.Migration):
             name="content",
             field=models.TextField(
                 help_text=(
-                    "The page content. This is the text that is displayed "
-                    "when customers click on your page link."
+                    "The page content. This is the text that is displayed " "when customers click on your page link."
                 ),
                 verbose_name="content",
             ),
@@ -256,10 +240,7 @@ class Migration(migrations.Migration):
             name="title",
             field=models.CharField(
                 max_length=256,
-                help_text=(
-                    "The page title. This is shown anywhere links to your "
-                    "page are shown."
-                ),
+                help_text=("The page title. This is shown anywhere links to your " "page are shown."),
                 verbose_name="title",
             ),
         ),

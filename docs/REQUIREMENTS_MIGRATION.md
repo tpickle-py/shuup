@@ -66,7 +66,7 @@ As of the uv/Hatchling migration, all requirements files are now generated from 
 uv export --no-hashes --no-annotate --format requirements-txt > requirements.txt
 uv export --group dev --no-hashes --no-annotate --format requirements-txt > requirements-dev.txt
 
-# Minimal requirements  
+# Minimal requirements
 uv run python generate_requirements.py
 ```
 

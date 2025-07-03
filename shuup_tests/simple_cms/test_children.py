@@ -5,8 +5,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import datetime
-import pytest
+
 from django.utils.encoding import force_text
+
+import pytest
 
 from shuup.simple_cms.views import PageView
 from shuup.testing.factories import get_default_shop
@@ -82,13 +84,9 @@ def test_invisible_children(rf):
     request = apply_request_middleware(rf.get("/"))
 
     parent_content = "Parent content"
-    page = create_page(
-        available_from=datetime.date(1988, 1, 1), content=parent_content, shop=shop
-    )
+    page = create_page(available_from=datetime.date(1988, 1, 1), content=parent_content, shop=shop)
     children_content = "Children content"
-    create_page(
-        content=children_content, parent=page, shop=shop, available_from=None
-    )  # Create invisible children
+    create_page(content=children_content, parent=page, shop=shop, available_from=None)  # Create invisible children
 
     assert page.list_children_on_page == False
     check_children_content(request, page, children_content, False)

@@ -4,10 +4,11 @@ from __future__ import unicode_literals
 
 import django.db.models.deletion
 import django.utils.timezone
-import filer.fields.image
-import jsonfield.fields
 from django.conf import settings
 from django.db import migrations, models
+
+import filer.fields.image
+import jsonfield.fields
 
 
 class Migration(migrations.Migration):
@@ -31,9 +32,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 (
                     "description",
@@ -105,9 +104,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="supplier",
             name="options",
-            field=jsonfield.fields.JSONField(
-                blank=True, null=True, verbose_name="options"
-            ),
+            field=jsonfield.fields.JSONField(blank=True, null=True, verbose_name="options"),
         ),
         migrations.AddField(
             model_name="suppliertranslation",

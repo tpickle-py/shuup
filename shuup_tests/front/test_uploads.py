@@ -14,9 +14,7 @@ from shuup_tests.utils.fixtures import REGULAR_USER_PASSWORD, REGULAR_USER_USERN
 @pytest.mark.parametrize("allow_image_uploads", (False, True))
 def test_uploads_allowed_setting(client, allow_image_uploads, regular_user):
     client.login(username=REGULAR_USER_USERNAME, password=REGULAR_USER_PASSWORD)
-    with override_settings(
-        SHUUP_CUSTOMER_INFORMATION_ALLOW_PICTURE_UPLOAD=allow_image_uploads
-    ):
+    with override_settings(SHUUP_CUSTOMER_INFORMATION_ALLOW_PICTURE_UPLOAD=allow_image_uploads):
         if allow_image_uploads:
             tmp_file = tempfile.NamedTemporaryFile(suffix=".jpg")
             generate_image(120, 120).save(tmp_file)

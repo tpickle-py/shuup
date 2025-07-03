@@ -116,5 +116,3 @@ Tabs consist of three different items:
 * the template for the form which shows the merchant what you are up to.
 
 You can visit :doc:`../ref/provides` to see which views are supported.
-
-

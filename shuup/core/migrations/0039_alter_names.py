@@ -4,14 +4,15 @@ from __future__ import unicode_literals
 
 import django.core.validators
 import django.db.models.deletion
+from django.conf import settings
+from django.db import migrations, models
+
 import django_countries.fields
 import enumfields.fields
 import filer.fields.image
 import jsonfield.fields
 import mptt.fields
 import timezone_field.fields
-from django.conf import settings
-from django.db import migrations, models
 
 import shuup.core.fields
 import shuup.core.models
@@ -67,9 +68,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="basket",
             name="created_on",
-            field=models.DateTimeField(
-                auto_now_add=True, db_index=True, verbose_name="created on"
-            ),
+            field=models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="created on"),
         ),
         migrations.AlterField(
             model_name="basket",
@@ -86,9 +85,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="basket",
             name="currency",
-            field=shuup.core.fields.CurrencyField(
-                max_length=4, verbose_name="currency"
-            ),
+            field=shuup.core.fields.CurrencyField(max_length=4, verbose_name="currency"),
         ),
         migrations.AlterField(
             model_name="basket",
@@ -110,23 +107,17 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="basket",
             name="deleted",
-            field=models.BooleanField(
-                db_index=True, default=False, verbose_name="deleted"
-            ),
+            field=models.BooleanField(db_index=True, default=False, verbose_name="deleted"),
         ),
         migrations.AlterField(
             model_name="basket",
             name="finished",
-            field=models.BooleanField(
-                db_index=True, default=False, verbose_name="finished"
-            ),
+            field=models.BooleanField(db_index=True, default=False, verbose_name="finished"),
         ),
         migrations.AlterField(
             model_name="basket",
             name="id",
-            field=models.AutoField(
-                auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
-            ),
+            field=models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID"),
         ),
         migrations.AlterField(
             model_name="basket",
@@ -154,9 +145,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="basket",
             name="persistent",
-            field=models.BooleanField(
-                db_index=True, default=False, verbose_name="persistent"
-            ),
+            field=models.BooleanField(db_index=True, default=False, verbose_name="persistent"),
         ),
         migrations.AlterField(
             model_name="basket",
@@ -171,9 +160,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="basket",
             name="products",
-            field=models.ManyToManyField(
-                blank=True, to="shuup.Product", verbose_name="products"
-            ),
+            field=models.ManyToManyField(blank=True, to="shuup.Product", verbose_name="products"),
         ),
         migrations.AlterField(
             model_name="basket",
@@ -216,9 +203,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="basket",
             name="updated_on",
-            field=models.DateTimeField(
-                auto_now=True, db_index=True, verbose_name="updated on"
-            ),
+            field=models.DateTimeField(auto_now=True, db_index=True, verbose_name="updated on"),
         ),
         migrations.AlterField(
             model_name="category",
@@ -1001,16 +986,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="contact",
             name="modified_on",
-            field=models.DateTimeField(
-                auto_now=True, db_index=True, null=True, verbose_name="modified on"
-            ),
+            field=models.DateTimeField(auto_now=True, db_index=True, null=True, verbose_name="modified on"),
         ),
         migrations.AlterField(
             model_name="contact",
             name="name",
-            field=models.CharField(
-                help_text="The contact name", max_length=256, verbose_name="name"
-            ),
+            field=models.CharField(help_text="The contact name", max_length=256, verbose_name="name"),
         ),
         migrations.AlterField(
             model_name="contact",
@@ -1096,30 +1077,22 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="countrylimitbehaviorcomponent",
             name="available_in_countries",
-            field=jsonfield.fields.JSONField(
-                blank=True, null=True, verbose_name="available in countries"
-            ),
+            field=jsonfield.fields.JSONField(blank=True, null=True, verbose_name="available in countries"),
         ),
         migrations.AlterField(
             model_name="countrylimitbehaviorcomponent",
             name="available_in_european_countries",
-            field=models.BooleanField(
-                default=False, verbose_name="available in european countries"
-            ),
+            field=models.BooleanField(default=False, verbose_name="available in european countries"),
         ),
         migrations.AlterField(
             model_name="countrylimitbehaviorcomponent",
             name="unavailable_in_countries",
-            field=jsonfield.fields.JSONField(
-                blank=True, null=True, verbose_name="unavailable in countries"
-            ),
+            field=jsonfield.fields.JSONField(blank=True, null=True, verbose_name="unavailable in countries"),
         ),
         migrations.AlterField(
             model_name="countrylimitbehaviorcomponent",
             name="unavailable_in_european_countries",
-            field=models.BooleanField(
-                default=False, verbose_name="unavailable in european countries"
-            ),
+            field=models.BooleanField(default=False, verbose_name="unavailable in european countries"),
         ),
         migrations.AlterField(
             model_name="currency",
@@ -1182,9 +1155,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="displayunit",
             name="id",
-            field=models.AutoField(
-                auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
-            ),
+            field=models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID"),
         ),
         migrations.AlterField(
             model_name="displayunit",
@@ -1212,16 +1183,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="displayunittranslation",
             name="id",
-            field=models.AutoField(
-                auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
-            ),
+            field=models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID"),
         ),
         migrations.AlterField(
             model_name="displayunittranslation",
             name="language_code",
-            field=models.CharField(
-                db_index=True, max_length=15, verbose_name="Language"
-            ),
+            field=models.CharField(db_index=True, max_length=15, verbose_name="Language"),
         ),
         migrations.AlterField(
             model_name="displayunittranslation",
@@ -1272,9 +1239,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="immutableaddress",
             name="city",
-            field=models.CharField(
-                help_text="The address city.", max_length=255, verbose_name="city"
-            ),
+            field=models.CharField(help_text="The address city.", max_length=255, verbose_name="city"),
         ),
         migrations.AlterField(
             model_name="immutableaddress",
@@ -1375,9 +1340,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="immutableaddress",
             name="street",
-            field=models.CharField(
-                help_text="The street address.", max_length=255, verbose_name="street"
-            ),
+            field=models.CharField(help_text="The street address.", max_length=255, verbose_name="street"),
         ),
         migrations.AlterField(
             model_name="immutableaddress",
@@ -1442,9 +1405,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="mutableaddress",
             name="city",
-            field=models.CharField(
-                help_text="The address city.", max_length=255, verbose_name="city"
-            ),
+            field=models.CharField(help_text="The address city.", max_length=255, verbose_name="city"),
         ),
         migrations.AlterField(
             model_name="mutableaddress",
@@ -1545,9 +1506,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="mutableaddress",
             name="street",
-            field=models.CharField(
-                help_text="The street address.", max_length=255, verbose_name="street"
-            ),
+            field=models.CharField(help_text="The street address.", max_length=255, verbose_name="street"),
         ),
         migrations.AlterField(
             model_name="mutableaddress",
@@ -1592,9 +1551,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="order",
             name="modified_on",
-            field=models.DateTimeField(
-                auto_now=True, db_index=True, verbose_name="modified on"
-            ),
+            field=models.DateTimeField(auto_now=True, db_index=True, verbose_name="modified on"),
         ),
         migrations.AlterField(
             model_name="ordertotallimitbehaviorcomponent",

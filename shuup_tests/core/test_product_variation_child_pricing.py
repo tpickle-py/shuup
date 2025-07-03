@@ -6,18 +6,8 @@
 # LICENSE file in the root directory of this source tree.
 import pytest
 
-from shuup.core.models import (
-    AnonymousContact,
-    ContactGroup,
-    ProductVisibility,
-    get_person_contact,
-)
-from shuup.testing.factories import (
-    create_product,
-    get_default_product,
-    get_default_shop,
-    get_default_supplier,
-)
+from shuup.core.models import AnonymousContact, ContactGroup, ProductVisibility, get_person_contact
+from shuup.testing.factories import create_product, get_default_product, get_default_shop, get_default_supplier
 from shuup.testing.utils import apply_request_middleware
 
 
@@ -26,10 +16,7 @@ def init_test(request, shop, prices):
     parent = create_product("parent_product", shop=shop)
     supplier = get_default_supplier(shop)
     children = [
-        create_product(
-            "child-%d" % price, shop=shop, supplier=supplier, default_price=price
-        )
-        for price in prices
+        create_product("child-%d" % price, shop=shop, supplier=supplier, default_price=price) for price in prices
     ]
     for child in children:
         child.link_to_parent(parent)

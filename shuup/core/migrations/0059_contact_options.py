@@ -16,8 +16,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="contact",
             name="options",
-            field=shuup.core.fields.PolymorphicJSONField(
-                blank=True, null=True, verbose_name="options"
-            ),
+            field=shuup.core.fields.PolymorphicJSONField(blank=True, null=True, verbose_name="options"),
         ),
     ]

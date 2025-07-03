@@ -100,20 +100,20 @@ Shuup now uses `uv <https://docs.astral.sh/uv/>`_ for fast dependency management
 
     # Install uv (if not already installed)
     curl -LsSf https://astral.sh/uv/install.sh | sh
-    
+
     # Clone and setup the project
     git clone https://github.com/shuup/shuup.git
     cd shuup
-    
+
     # Create virtual environment and install dependencies
     uv sync
-    
+
     # Run the development server
     uv run shuup_workbench runserver 0.0.0.0:8000 --settings=shuup_workbench.settings.dev
-    
+
     # Run tests
     uv run pytest shuup_tests -v
-    
+
     # Build static resources
     uv run shuup-build-resources
 
@@ -127,7 +127,7 @@ Shuup uses **pyproject.toml** as the single source of truth for all dependencies
 The requirements files are automatically generated in several scenarios:
 
 1. **Pre-commit hooks** - When pyproject.toml changes, pre-commit automatically regenerates requirements
-2. **Make commands** - Running ``make build`` or ``make requirements`` updates all requirements files  
+2. **Make commands** - Running ``make build`` or ``make requirements`` updates all requirements files
 3. **CI/CD pipeline** - GitHub Actions automatically checks and updates requirements files
 4. **Manual generation** - Use ``./regenerate_requirements.sh`` or ``python -m shuup_setup_utils generate_requirements``
 
@@ -137,7 +137,7 @@ The requirements files are automatically generated in several scenarios:
 
     # Regenerate all requirements files
     ./regenerate_requirements.sh
-    
+
     # Or use make
     make requirements
 
@@ -151,7 +151,7 @@ This creates both full (with transitive dependencies) and minimal (direct depend
 Never edit requirements*.txt files directly! Instead:
 
 1. Add dependencies to pyproject.toml in the appropriate section
-2. Run ``make requirements`` to regenerate all requirements files  
+2. Run ``make requirements`` to regenerate all requirements files
 3. Commit both pyproject.toml and the updated requirements*.txt files
 
 **For Docker/Containers:**
@@ -173,7 +173,7 @@ Use uv for semantic versioning:
 
     uv version                    # Show current version
     uv version --bump patch       # Bump patch version
-    uv version --bump minor       # Bump minor version  
+    uv version --bump minor       # Bump minor version
     uv version --bump major       # Bump major version
 
 Legacy Setup

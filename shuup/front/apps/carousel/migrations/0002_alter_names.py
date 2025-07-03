@@ -3,10 +3,11 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import enumfields.fields
-import filer.fields.image
 from django.conf import settings
 from django.db import migrations, models
+
+import enumfields.fields
+import filer.fields.image
 
 import shuup.front.apps.carousel.models
 

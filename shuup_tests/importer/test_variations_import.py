@@ -36,9 +36,7 @@ def _create_random_media_file(shop, file_path):
     pil_image = generate_image(2, 2)
     sio = BytesIO()
     pil_image.save(sio, "JPEG", quality=45)
-    filer_file = filer_image_from_data(
-        request=None, path=path, file_name=name, file_data=sio.getvalue()
-    )
+    filer_file = filer_image_from_data(request=None, path=path, file_name=name, file_data=sio.getvalue())
     media_file = MediaFile.objects.create(file=filer_file)
     media_file.shops.add(shop)
     return media_file
@@ -81,9 +79,7 @@ def test_variatins_import(rf):
 
     supplier = Supplier.objects.first()
     assert supplier and supplier.stock_managed
-    assert supplier.supplier_modules.filter(
-        module_identifier="simple_supplier"
-    ).exists()
+    assert supplier.supplier_modules.filter(module_identifier="simple_supplier").exists()
     assert ShopProduct.objects.filter(suppliers=supplier).count() == 42
 
     parent1 = Product.objects.filter(sku=1).first()
@@ -196,9 +192,7 @@ def test_variatins_import(rf):
     assert len(updated_products) == 4
 
     for log_message in importer.log_messages:
-        assert (
-            "Parent SKU set for the row, but no variation" in log_message["messages"][0]
-        )
+        assert "Parent SKU set for the row, but no variation" in log_message["messages"][0]
 
     # check that both variation products still looks correct
     parent1 = Product.objects.filter(sku=1).first()

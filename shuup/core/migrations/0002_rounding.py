@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import enumfields.fields
 from decimal import Decimal
+
 from django.db import migrations, models
+
+import enumfields.fields
 
 import shuup.core.models._service_payment
 

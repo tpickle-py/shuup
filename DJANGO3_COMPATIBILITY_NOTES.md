@@ -23,7 +23,7 @@
    - **Composition over inheritance** pattern
 3. **Downgrade Django** to 3.1 (not recommended)
 
-**Impact**: 
+**Impact**:
 - Blocks testing of complex workflows
 - Core functionality may still work
 - Prevents production readiness assessment
@@ -46,7 +46,7 @@
 - **Location**: Lines 436-443 in factories.py.moved
 - **Status**: In Progress
 
-### OrderLine Field Issues  
+### OrderLine Field Issues
 - **Issue**: base_unit_price and taxes field access patterns
 - **Location**: Lines 507-528 in factories.py.moved
 - **Status**: Pending

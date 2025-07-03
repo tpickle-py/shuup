@@ -6,11 +6,13 @@
 # LICENSE file in the root directory of this source tree.
 # test that admin actually saves catalog
 import json
-import pytest
-from bs4 import BeautifulSoup
+
 from django.http.response import Http404
 from django.test import override_settings
 from django.utils.translation import activate
+
+import pytest
+from bs4 import BeautifulSoup
 
 from shuup.admin.supplier_provider import get_supplier
 from shuup.admin.views.select import MultiselectAjaxView
@@ -74,9 +76,7 @@ def test_coupon_creation_for_supplier(rf, admin_user):
             assert new_coupon
 
             # Another superuser shouldn't see this campaign
-            request = apply_request_middleware(
-                rf.post("/", data=data), user=another_superuser
-            )
+            request = apply_request_middleware(rf.post("/", data=data), user=another_superuser)
             assert get_supplier(request) == supplier2
             with pytest.raises(Http404):
                 response = view(request, pk=new_coupon.pk)
@@ -98,12 +98,8 @@ def test_coupon_list_for_suppliers(rf, admin_user):
     supplier_provider = "shuup.testing.supplier_provider.UsernameSupplierProvider"
     with override_settings(LANGUAGES=[("en", "en")]):
         with override_settings(SHUUP_ADMIN_SUPPLIER_PROVIDER_SPEC=supplier_provider):
-            code1 = Coupon.objects.create(
-                code="1", active=True, shop=shop, supplier=supplier1
-            )
-            code2 = Coupon.objects.create(
-                code="2", active=True, shop=shop, supplier=supplier2
-            )
+            code1 = Coupon.objects.create(code="1", active=True, shop=shop, supplier=supplier1)
+            code2 = Coupon.objects.create(code="2", active=True, shop=shop, supplier=supplier2)
 
             view = CouponListView()
             request = apply_request_middleware(rf.get("/"), user=superuser1, shop=shop)
@@ -139,9 +135,7 @@ def test_coupon_with_supplier_filter(rf, admin_user):
 
     supplier_provider = "shuup.testing.supplier_provider.UsernameSupplierProvider"
     with override_settings(SHUUP_ADMIN_SUPPLIER_PROVIDER_SPEC=supplier_provider):
-        code = Coupon.objects.create(
-            code="LEAFS", active=True, shop=shop, supplier=supplier1
-        )
+        code = Coupon.objects.create(code="LEAFS", active=True, shop=shop, supplier=supplier1)
         results = _get_search_results(rf, view, "campaigns.Coupon", "LEAFS", superuser1)
         assert len(results) == 1
         assert results[0].get("id") == code.id

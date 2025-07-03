@@ -5,9 +5,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 # test that admin actually saves catalog
-import pytest
 from django.core.exceptions import ValidationError
 from django.test import override_settings
+
+import pytest
 
 from shuup.apps.provides import override_provides
 from shuup.campaigns.admin_module.form_parts import BasketBaseFormPart
@@ -39,12 +40,8 @@ DEFAULT_LINE_EFFECT_FORMS = [
 
 def get_form_parts(request, view, object):
     with override_provides("campaign_basket_condition", DEFAULT_CONDITION_FORMS):
-        with override_provides(
-            "campaign_basket_discount_effect_form", DEFAULT_DISCOUNT_EFFECT_FORMS
-        ):
-            with override_provides(
-                "campaign_basket_line_effect_form", DEFAULT_LINE_EFFECT_FORMS
-            ):
+        with override_provides("campaign_basket_discount_effect_form", DEFAULT_DISCOUNT_EFFECT_FORMS):
+            with override_provides("campaign_basket_line_effect_form", DEFAULT_LINE_EFFECT_FORMS):
                 initialized_view = view(request=request, kwargs={"pk": object.pk})
                 return initialized_view.get_form_parts(object)
 
@@ -54,9 +51,7 @@ def test_admin_campaign_edit_view_works(rf, admin_user):
     shop = get_default_shop()
     view_func = BasketCampaignEditView.as_view()
     request = apply_request_middleware(rf.get("/"), user=admin_user)
-    campaign = BasketCampaign.objects.create(
-        name="test campaign", active=True, shop=shop
-    )
+    campaign = BasketCampaign.objects.create(name="test campaign", active=True, shop=shop)
     response = view_func(request, pk=campaign.pk)
     assert campaign.name in response.rendered_content
 
@@ -115,9 +110,7 @@ def test_campaign_edit_save(rf, admin_user):
     """
     with override_settings(LANGUAGES=[("en", "en")]):
         shop = get_default_shop()
-        object = BasketCampaign.objects.create(
-            name="test campaign", active=True, shop=shop
-        )
+        object = BasketCampaign.objects.create(name="test campaign", active=True, shop=shop)
         object.save()
         view = BasketCampaignEditView.as_view()
         new_name = "Test Campaign"
@@ -134,9 +127,7 @@ def test_campaign_edit_save(rf, admin_user):
         with override_provides("campaign_basket_condition", []):
             with override_provides("campaign_basket_discount_effect_form", []):
                 with override_provides("campaign_basket_line_effect_form", []):
-                    request = apply_request_middleware(
-                        rf.post("/", data=data), user=admin_user
-                    )
+                    request = apply_request_middleware(rf.post("/", data=data), user=admin_user)
                     response = view(request, pk=object.pk)
                     assert response.status_code in [200, 302]
 
@@ -153,9 +144,7 @@ def test_rules_and_effects(rf, admin_user):
     get_default_shop()
     with override_settings(LANGUAGES=[("en", "en")]):
         shop = get_default_shop()
-        object = BasketCampaign.objects.create(
-            name="test campaign", active=True, shop=shop
-        )
+        object = BasketCampaign.objects.create(name="test campaign", active=True, shop=shop)
         assert object.conditions.count() == 0
         assert object.discount_effects.count() == 0
         view = BasketCampaignEditView.as_view()
@@ -168,9 +157,7 @@ def test_rules_and_effects(rf, admin_user):
         }
         with override_provides(
             "campaign_basket_condition",
-            [
-                "shuup.campaigns.admin_module.forms:BasketTotalProductAmountConditionForm"
-            ],
+            ["shuup.campaigns.admin_module.forms:BasketTotalProductAmountConditionForm"],
         ):
             with override_provides(
                 "campaign_basket_discount_effect_form",
@@ -179,9 +166,7 @@ def test_rules_and_effects(rf, admin_user):
                 with override_provides("campaign_basket_line_effect_form", []):
                     data.update(get_products_in_basket_data())
                     data.update(get_free_product_data(object))
-                    request = apply_request_middleware(
-                        rf.post("/", data=data), user=admin_user
-                    )
+                    request = apply_request_middleware(rf.post("/", data=data), user=admin_user)
                     view(request, pk=object.pk)
 
         object.refresh_from_db()
@@ -219,9 +204,7 @@ def test_free_product_line_form(rf, admin_user):
     with override_settings(LANGUAGES=[("en", "en")]):
         shop = get_default_shop()
         prod = get_default_product()
-        object = BasketCampaign.objects.create(
-            name="test campaign", active=True, shop=shop
-        )
+        object = BasketCampaign.objects.create(name="test campaign", active=True, shop=shop)
         object.save()
         data = {"campaign": object, "quantity": 0, "products": [prod.pk]}
         form = FreeProductLineForm()

@@ -193,9 +193,7 @@ def test_company_contact_edit_form_2(rf, admin_user):
 
 @pytest.mark.django_db
 def test_contact_edit_multishop(rf):
-    with override_settings(
-        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
-    ):
+    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -204,9 +202,7 @@ def test_contact_edit_multishop(rf):
         shop1.staff_members.add(staff_user)
         shop2.staff_members.add(staff_user)
 
-        contact = create_random_person(
-            locale="en_US", minimum_name_comp_len=5, shop=shop2
-        )
+        contact = create_random_person(locale="en_US", minimum_name_comp_len=5, shop=shop2)
         # only available in shop2
         assert contact.registered_in(shop2)
         assert contact.in_shop(shop2)
@@ -230,9 +226,7 @@ def test_contact_edit_multishop(rf):
 
 @pytest.mark.django_db
 def test_contact_company_edit_multishop(rf):
-    with override_settings(
-        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
-    ):
+    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -242,9 +236,7 @@ def test_contact_company_edit_multishop(rf):
         shop2.staff_members.add(staff_user)
 
         # only available in shop2
-        contact = create_random_person(
-            locale="en_US", minimum_name_comp_len=5, shop=shop2
-        )
+        contact = create_random_person(locale="en_US", minimum_name_comp_len=5, shop=shop2)
 
         # only available in shop1
         company = create_random_company(shop1)
@@ -322,9 +314,7 @@ def test_contact_company_edit_multishop(rf):
 
 @pytest.mark.django_db
 def test_contact_detail_multishop(rf):
-    with override_settings(
-        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
-    ):
+    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -333,9 +323,7 @@ def test_contact_detail_multishop(rf):
         shop1.staff_members.add(staff_user)
         shop2.staff_members.add(staff_user)
 
-        contact = create_random_person(
-            locale="en_US", minimum_name_comp_len=5, shop=shop2
-        )
+        contact = create_random_person(locale="en_US", minimum_name_comp_len=5, shop=shop2)
 
         view = ContactDetailView.as_view()
 
@@ -351,9 +339,7 @@ def test_contact_detail_multishop(rf):
 
 @pytest.mark.django_db
 def test_company_contact_detail_multishop(rf):
-    with override_settings(
-        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
-    ):
+    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -380,9 +366,7 @@ def test_company_contact_detail_multishop(rf):
 
 @pytest.mark.django_db
 def test_contact_company_list_multishop(rf):
-    with override_settings(
-        SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True
-    ):
+    with override_settings(SHUUP_MANAGE_CONTACTS_PER_SHOP=True, SHUUP_ENABLE_MULTIPLE_SHOPS=True):
         staff_user = create_random_user(is_staff=True)
 
         shop1 = get_shop(identifier="shop-1", enabled=True)
@@ -392,9 +376,7 @@ def test_contact_company_list_multishop(rf):
         shop2.staff_members.add(staff_user)
 
         # only available in shop2
-        contact = create_random_person(
-            locale="en_US", minimum_name_comp_len=5, shop=shop2
-        )
+        contact = create_random_person(locale="en_US", minimum_name_comp_len=5, shop=shop2)
 
         # only available in shop1
         company = create_random_company()

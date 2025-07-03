@@ -20,9 +20,7 @@ from shuup.testing.browser_utils import (
 from shuup.testing.factories import create_product, create_random_person, get_default_shop, get_default_supplier
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 def create_contacts(shop):
@@ -94,15 +92,11 @@ def _test_pagination(browser):
     ellipses = "\u22ef"
 
     items = _get_pagination_content(browser)
-    _assert_pagination_content(
-        items, ["Previous", "1", "2", "3", ellipses, "10", "Next"]
-    )
+    _assert_pagination_content(items, ["Previous", "1", "2", "3", ellipses, "10", "Next"])
 
     _goto_page(browser, 3)
     items = _get_pagination_content(browser)
-    _assert_pagination_content(
-        items, ["Previous", "1", "2", "3", "4", "5", ellipses, "10", "Next"]
-    )
+    _assert_pagination_content(items, ["Previous", "1", "2", "3", "4", "5", ellipses, "10", "Next"])
 
     _goto_page(browser, 5)
     items = _get_pagination_content(browser)
@@ -113,21 +107,15 @@ def _test_pagination(browser):
 
     _goto_page(browser, 7)
     items = _get_pagination_content(browser)
-    _assert_pagination_content(
-        items, ["Previous", "1", ellipses, "5", "6", "7", "8", "9", "10", "Next"]
-    )
+    _assert_pagination_content(items, ["Previous", "1", ellipses, "5", "6", "7", "8", "9", "10", "Next"])
 
     _goto_page(browser, 9)
     items = _get_pagination_content(browser)
-    _assert_pagination_content(
-        items, ["Previous", "1", ellipses, "7", "8", "9", "10", "Next"]
-    )
+    _assert_pagination_content(items, ["Previous", "1", ellipses, "7", "8", "9", "10", "Next"])
 
     _goto_page(browser, 10)
     items = _get_pagination_content(browser)
-    _assert_pagination_content(
-        items, ["Previous", "1", ellipses, "8", "9", "10", "Next"]
-    )
+    _assert_pagination_content(items, ["Previous", "1", ellipses, "8", "9", "10", "Next"])
 
 
 def _get_pagination_content(browser):
@@ -167,12 +155,8 @@ def _set_settings(browser, setting_type, creator):
     for idx, (index_key, text) in enumerate(addable_fields):
         expected_index = default_column_count + 1 + idx
         assert browser.is_text_present(text)
-        browser.find_by_xpath(
-            "//ul[@id='source-sortable']/li[%d]/button" % index_key
-        ).first.click()
-        wait_until_appeared_xpath(
-            browser, "//ul[@id='target-sortable']/li[%d]/button" % expected_index
-        )
+        browser.find_by_xpath("//ul[@id='source-sortable']/li[%d]/button" % index_key).first.click()
+        wait_until_appeared_xpath(browser, "//ul[@id='target-sortable']/li[%d]/button" % expected_index)
 
     # save settings
     # scroll to top
@@ -208,7 +192,5 @@ def _check_picotable_item_info(browser, creator):
     else:
         wait_until_condition(
             browser,
-            condition=lambda x: x.is_text_present(
-                "There are no granular permission groups to show"
-            ),
+            condition=lambda x: x.is_text_present("There are no granular permission groups to show"),
         )

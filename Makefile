@@ -1,5 +1,5 @@
 # Shuup Makefile - Common development tasks
-# 
+#
 # This Makefile provides convenient shortcuts for common development tasks
 # using the modern uv and hatchling workflow.
 
@@ -50,7 +50,7 @@ build: clean requirements
 	uv build
 	@echo "✓ Package built successfully"
 
-# Testing targets  
+# Testing targets
 test:
 	uv run pytest shuup_tests -v --tb=short --cov=shuup --cov-report=html --cov-report=term
 

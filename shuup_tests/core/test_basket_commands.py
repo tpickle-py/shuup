@@ -32,9 +32,7 @@ def test_add_product(rf):
     with override_settings(**CORE_BASKET_SETTINGS):
         shop = factories.get_default_shop()
         user = factories.create_random_user()
-        product = factories.create_product(
-            "product", shop, factories.get_default_supplier(), 10
-        )
+        product = factories.create_product("product", shop, factories.get_default_supplier(), 10)
         request = apply_request_middleware(rf.get("/"), user=user)
         basket = get_basket(request, "basket")
         basket.customer = get_person_contact(user)
@@ -53,17 +51,13 @@ def test_add_product_new_line(rf):
     with override_settings(**CORE_BASKET_SETTINGS):
         shop = factories.get_default_shop()
         user = factories.create_random_user()
-        product = factories.create_product(
-            "product", shop, factories.get_default_supplier(), 10
-        )
+        product = factories.create_product("product", shop, factories.get_default_supplier(), 10)
         request = apply_request_middleware(rf.get("/"), user=user)
         basket = get_basket(request, "basket")
         basket.customer = get_person_contact(user)
 
         for _ in range(3):
-            cmd_response = basket_commands.handle_add(
-                request, basket, product.id, 1, force_new_line=True
-            )
+            cmd_response = basket_commands.handle_add(request, basket, product.id, 1, force_new_line=True)
             assert cmd_response["ok"]
             assert cmd_response["line_id"]
             assert cmd_response["added"] == 1
@@ -79,16 +73,12 @@ def test_add_product_with_extra_parent_line(rf):
     with override_settings(**CORE_BASKET_SETTINGS):
         shop = factories.get_default_shop()
         user = factories.create_random_user()
-        product = factories.create_product(
-            "product", shop, factories.get_default_supplier(), 10
-        )
+        product = factories.create_product("product", shop, factories.get_default_supplier(), 10)
         request = apply_request_middleware(rf.get("/"), user=user)
         basket = get_basket(request, "basket")
         basket.customer = get_person_contact(user)
 
-        cmd_response = basket_commands.handle_add(
-            request, basket, product.id, 1, extra={"more": "stuff"}
-        )
+        cmd_response = basket_commands.handle_add(request, basket, product.id, 1, extra={"more": "stuff"})
         line_id1 = cmd_response["line_id"]
         assert cmd_response["ok"]
         line1 = basket.get_basket_line(line_id1)
@@ -116,12 +106,7 @@ def test_set_from_customer_to_anonymous(rf):
         request = apply_request_middleware(rf.get("/"), user=user)
         basket = get_basket(request, "basket")
         basket.customer = get_person_contact(user)
-        assert (
-            basket_commands.handle_set_customer(request, basket, AnonymousContact())[
-                "ok"
-            ]
-            is True
-        )
+        assert basket_commands.handle_set_customer(request, basket, AnonymousContact())["ok"] is True
         assert basket.customer == AnonymousContact()
         assert basket.orderer == AnonymousContact()
         assert basket.creator == user
@@ -136,12 +121,7 @@ def test_set_from_admin_to_anonymous(admin_user, rf):
         request = apply_request_middleware(rf.get("/"), user=admin_user)
         basket = get_basket(request, "basket")
         basket.customer = get_person_contact(admin_user)
-        assert (
-            basket_commands.handle_set_customer(request, basket, AnonymousContact())[
-                "ok"
-            ]
-            is True
-        )
+        assert basket_commands.handle_set_customer(request, basket, AnonymousContact())["ok"] is True
         assert basket.customer == AnonymousContact()
         assert basket.orderer == AnonymousContact()
         assert basket.creator == admin_user
@@ -158,9 +138,7 @@ def test_set_from_anonymous_to_customer_not_auth(rf):
         basket.customer = AnonymousContact()
 
         customer = factories.create_random_person()
-        assert (
-            basket_commands.handle_set_customer(request, basket, customer)["ok"] is True
-        )
+        assert basket_commands.handle_set_customer(request, basket, customer)["ok"] is True
         assert basket.customer == customer
 
 
@@ -177,18 +155,11 @@ def test_set_from_anonymous_to_customer_auth(rf):
 
         # can not set the customer for something different as the request customer
         with pytest.raises(ValidationError) as exc:
-            basket_commands.handle_set_customer(
-                request, basket, factories.create_random_person()
-            )
+            basket_commands.handle_set_customer(request, basket, factories.create_random_person())
         assert exc.value.code == "no_permission"
         assert basket.customer == AnonymousContact()
 
-        assert (
-            basket_commands.handle_set_customer(
-                request, basket, get_person_contact(user)
-            )["ok"]
-            is True
-        )
+        assert basket_commands.handle_set_customer(request, basket, get_person_contact(user))["ok"] is True
         assert basket.customer == get_person_contact(user)
 
 
@@ -267,9 +238,7 @@ def test_set_different_customer(rf):
         person2 = factories.create_random_person()
         superuser = factories.create_random_user(is_superuser=True)
         request = apply_request_middleware(rf.get("/"), user=superuser)
-        assert (
-            basket_commands.handle_set_customer(request, basket, person2)["ok"] is True
-        )
+        assert basket_commands.handle_set_customer(request, basket, person2)["ok"] is True
         assert basket.customer == person2
         assert basket.orderer == person2
 
@@ -288,9 +257,7 @@ def test_set_different_customer(rf):
         staff_member = factories.create_random_user(is_staff=True)
         basket.shop.staff_members.add(staff_member)
         request = apply_request_middleware(rf.get("/"), user=staff_member)
-        assert (
-            basket_commands.handle_set_customer(request, basket, person4)["ok"] is True
-        )
+        assert basket_commands.handle_set_customer(request, basket, person4)["ok"] is True
         assert basket.customer == person4
         assert basket.orderer == person4
 
@@ -338,12 +305,7 @@ def test_set_company_customer(rf):
             basket.orderer = None
 
             request = apply_request_middleware(rf.get("/"), user=user)
-            assert (
-                basket_commands.handle_set_customer(request, basket, company, person)[
-                    "ok"
-                ]
-                is True
-            )
+            assert basket_commands.handle_set_customer(request, basket, company, person)["ok"] is True
             assert basket.customer == company
             assert basket.orderer == person
 
@@ -381,9 +343,7 @@ def test_command_middleware(rf):
         ):
             shop = factories.get_default_shop()
             user = factories.create_random_user()
-            product = factories.create_product(
-                "product", shop, factories.get_default_supplier(), 10
-            )
+            product = factories.create_product("product", shop, factories.get_default_supplier(), 10)
             request = apply_request_middleware(rf.get("/"), user=user)
             basket = get_basket(request, "basket")
             basket.customer = get_person_contact(user)

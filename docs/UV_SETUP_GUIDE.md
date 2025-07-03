@@ -148,7 +148,7 @@ Now your code will be automatically formatted and checked before each commit.
 # Add a runtime dependency
 uv add package-name
 
-# Add a development dependency  
+# Add a development dependency
 uv add --dev package-name
 
 # Add to a specific dependency group

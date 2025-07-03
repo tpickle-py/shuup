@@ -28,9 +28,7 @@ def test_computing_simple_product_relations(rf):
     related_product = create_product("simple-related-product", shop)
     quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     for quantity in quantities:
-        order = create_order_with_product(
-            product, supplier, quantity=1, taxless_base_unit_price=6, shop=shop
-        )
+        order = create_order_with_product(product, supplier, quantity=1, taxless_base_unit_price=6, shop=shop)
         add_product_to_order(
             order,
             supplier,
@@ -48,9 +46,7 @@ def test_computing_simple_product_relations(rf):
 
     add_bought_with_relations_for_product(related_product.id)
     assert ProductCrossSell.objects.count() == 2
-    cross_sell_product = ProductCrossSell.objects.filter(
-        product1=related_product
-    ).first()
+    cross_sell_product = ProductCrossSell.objects.filter(product1=related_product).first()
     assert cross_sell_product.product2 == product
     assert cross_sell_product.weight == len(quantities)
 
@@ -62,9 +58,7 @@ def test_product_relations_max_quantity(rf):
     product = create_product("simple-test-product", shop)
     quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     for i, quantity in enumerate(quantities):
-        order = create_order_with_product(
-            product, supplier, quantity=1, taxless_base_unit_price=6, shop=shop
-        )
+        order = create_order_with_product(product, supplier, quantity=1, taxless_base_unit_price=6, shop=shop)
         add_product_to_order(
             order,
             supplier,
@@ -109,12 +103,8 @@ def _init_test_with_variations():
 
     black_t_shirt = Product.objects.filter(sku="t-shirt-black").first()
     black_hoodie = Product.objects.filter(sku="hoodie-black").first()
-    order = create_order_with_product(
-        black_t_shirt, supplier, quantity=1, taxless_base_unit_price=6, shop=shop
-    )
-    add_product_to_order(
-        order, supplier, black_hoodie, quantity=1, taxless_base_unit_price=6
-    )
+    order = create_order_with_product(black_t_shirt, supplier, quantity=1, taxless_base_unit_price=6, shop=shop)
+    add_product_to_order(order, supplier, black_hoodie, quantity=1, taxless_base_unit_price=6)
 
     return black_t_shirt, black_hoodie
 

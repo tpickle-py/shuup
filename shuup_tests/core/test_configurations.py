@@ -54,12 +54,8 @@ def test_simple_set_and_get_without_shop():
 
         configuration.set(None, "encrypted-key", "encrypted-value", encrypted=True)
         assert configuration.get(None, "encrypted-key") == "encrypted-value"
-        assert EncryptedConfigurationItem.objects.filter(
-            shop=None, key="encrypted-key"
-        ).exists()
-        assert not ConfigurationItem.objects.filter(
-            shop=None, key="encrypted-key"
-        ).exists()
+        assert EncryptedConfigurationItem.objects.filter(shop=None, key="encrypted-key").exists()
+        assert not ConfigurationItem.objects.filter(shop=None, key="encrypted-key").exists()
 
 
 @pytest.mark.django_db
@@ -131,9 +127,7 @@ def test_configuration_set_and_get():
         # Get the configuration via configuration API
         assert configuration.get(shop, "key") == test_conf_data
         # Check that configuration is saved to database
-        assert (
-            ConfigurationItem.objects.get(shop=shop, key="key").value == test_conf_data
-        )
+        assert ConfigurationItem.objects.get(shop=shop, key="key").value == test_conf_data
 
 
 @pytest.mark.django_db

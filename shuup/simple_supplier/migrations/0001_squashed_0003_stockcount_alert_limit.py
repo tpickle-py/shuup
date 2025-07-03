@@ -2,9 +2,10 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import enumfields.fields
 from django.conf import settings
 from django.db import migrations, models
+
+import enumfields.fields
 
 import shuup.core.fields
 import shuup.core.suppliers.enums
@@ -37,21 +38,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_on",
-                    models.DateTimeField(
-                        verbose_name="created on", db_index=True, auto_now_add=True
-                    ),
+                    models.DateTimeField(verbose_name="created on", db_index=True, auto_now_add=True),
                 ),
                 (
                     "delta",
-                    shuup.core.fields.QuantityField(
-                        verbose_name="delta", max_digits=36, decimal_places=9, default=0
-                    ),
+                    shuup.core.fields.QuantityField(verbose_name="delta", max_digits=36, decimal_places=9, default=0),
                 ),
                 (
                     "purchase_price_value",
-                    shuup.core.fields.MoneyValueField(
-                        max_digits=36, decimal_places=9, default=0
-                    ),
+                    shuup.core.fields.MoneyValueField(max_digits=36, decimal_places=9, default=0),
                 ),
                 (
                     "created_by",
@@ -125,9 +120,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "stock_value_value",
-                    shuup.core.fields.MoneyValueField(
-                        max_digits=36, decimal_places=9, default=0
-                    ),
+                    shuup.core.fields.MoneyValueField(max_digits=36, decimal_places=9, default=0),
                 ),
                 (
                     "product",
@@ -160,7 +153,5 @@ class Migration(migrations.Migration):
                 ),
             ],
         ),
-        migrations.AlterUniqueTogether(
-            name="stockcount", unique_together=set([("product", "supplier")])
-        ),
+        migrations.AlterUniqueTogether(name="stockcount", unique_together=set([("product", "supplier")])),
     ]

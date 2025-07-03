@@ -18,15 +18,11 @@ from shuup.testing.browser_utils import (
 from shuup.testing.factories import create_product, get_default_shop
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
 def test_product_detail(browser, admin_user, live_server, settings):
     shop = get_default_shop()
     product = create_product("test_sku", shop, default_price=10)
@@ -48,9 +44,7 @@ def test_product_detail(browser, admin_user, live_server, settings):
 
     # Here saving the product seems to take some time occasionally so it
     # should be worth to wait until the save goes through
-    wait_until_condition(
-        browser, condition=lambda x: x.is_text_present("Product was edited"), timeout=50
-    )
+    wait_until_condition(browser, condition=lambda x: x.is_text_present("Product was edited"), timeout=50)
 
     product.refresh_from_db()
     check_product_name(browser, product, new_sku)

@@ -3,9 +3,10 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import parler.models
 from django.conf import settings
 from django.db import migrations, models
+
+import parler.models
 
 
 class Migration(migrations.Migration):
@@ -70,9 +71,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 ("name", models.CharField(max_length=64, verbose_name="name")),
                 (
@@ -151,9 +150,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 (
                     "cookie_banner_content",
@@ -204,9 +201,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_on",
-                    models.DateTimeField(
-                        auto_now_add=True, verbose_name="created on", db_index=True
-                    ),
+                    models.DateTimeField(auto_now_add=True, verbose_name="created on", db_index=True),
                 ),
                 (
                     "documents",

@@ -14,8 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="order",
             name="created_on",
-            field=models.DateTimeField(
-                auto_now_add=True, db_index=True, verbose_name="created on"
-            ),
+            field=models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="created on"),
         ),
     ]

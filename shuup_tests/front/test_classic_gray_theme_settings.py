@@ -31,9 +31,7 @@ def test_classic_gray_theme_settings(admin_user):
         cache.init_cache()
         shop = get_default_shop()
 
-        with override_provides(
-            "xtheme", ["shuup.themes.classic_gray.theme:ClassicGrayTheme"]
-        ):
+        with override_provides("xtheme", ["shuup.themes.classic_gray.theme:ClassicGrayTheme"]):
             set_current_theme(ClassicGrayTheme.identifier, shop)
             theme = _get_current_theme(shop)
             assert isinstance(theme, ClassicGrayTheme)

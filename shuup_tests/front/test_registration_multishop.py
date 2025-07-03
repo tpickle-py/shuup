@@ -21,12 +21,8 @@ def test_registration_person_multiple_shops(django_user_model, client):
     if "shuup.front.apps.registration" not in settings.INSTALLED_APPS:
         pytest.skip("shuup.front.apps.registration required in installed apps")
 
-    shop1 = Shop.objects.create(
-        identifier="shop1", status=ShopStatus.ENABLED, domain="shop1.shuup.com"
-    )
-    shop2 = Shop.objects.create(
-        identifier="shop2", status=ShopStatus.ENABLED, domain="shop2.shuup.com"
-    )
+    shop1 = Shop.objects.create(identifier="shop1", status=ShopStatus.ENABLED, domain="shop1.shuup.com")
+    shop2 = Shop.objects.create(identifier="shop2", status=ShopStatus.ENABLED, domain="shop2.shuup.com")
 
     with override_settings(
         SHUUP_REGISTRATION_REQUIRES_ACTIVATION=False,
@@ -63,12 +59,8 @@ def test_registration_company_multiple_shops(django_user_model, client):
     configuration.set(None, "allow_company_registration", True)
     configuration.set(None, "company_registration_requires_approval", False)
 
-    shop1 = Shop.objects.create(
-        identifier="shop1", status=ShopStatus.ENABLED, domain="shop1.shuup.com"
-    )
-    shop2 = Shop.objects.create(
-        identifier="shop2", status=ShopStatus.ENABLED, domain="shop2.shuup.com"
-    )
+    shop1 = Shop.objects.create(identifier="shop1", status=ShopStatus.ENABLED, domain="shop1.shuup.com")
+    shop2 = Shop.objects.create(identifier="shop2", status=ShopStatus.ENABLED, domain="shop2.shuup.com")
     username = "u-%d" % uuid.uuid4().time
     email = "%s@shuup.local" % username
 

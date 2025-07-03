@@ -60,9 +60,7 @@ def test_formatted_decimal_field():
         form = TestModelForm(instance=product)
 
 
-@pytest.mark.parametrize(
-    "decimal_places, expected_step", [(2, "0.01"), (3, "0.001"), (0, "1"), (6, "any")]
-)
+@pytest.mark.parametrize("decimal_places, expected_step", [(2, "0.01"), (3, "0.001"), (0, "1"), (6, "any")])
 def test_formatted_decimal_field_step(decimal_places, expected_step):
     field = FormattedDecimalFormField(max_digits=10, decimal_places=decimal_places)
 
@@ -75,9 +73,7 @@ def test_formatted_decimal_field_step(decimal_places, expected_step):
 
 
 def test_formatted_decimal_field_overridden_step():
-    field = FormattedDecimalFormField(
-        max_digits=10, decimal_places=10, widget=NumberInput(attrs={"step": "0.1"})
-    )
+    field = FormattedDecimalFormField(max_digits=10, decimal_places=10, widget=NumberInput(attrs={"step": "0.1"}))
 
     class TestForm(Form):
         f = field

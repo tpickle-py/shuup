@@ -36,9 +36,7 @@ def test_price_info_cache_bump(rf):
 
     def assert_cache_product():
         cache_price_info(request, product, 1, product.get_price_info(request))
-        assert get_cached_price_info(request, product, 1).price == shop.create_price(
-            initial_price
-        )
+        assert get_cached_price_info(request, product, 1).price == shop.create_price(initial_price)
 
     def assert_nothing_is_cached():
         # nothing is cached
@@ -90,12 +88,8 @@ def test_many_price_info_cache_bump(rf):
         supplier=factories.get_default_supplier(),
         default_price=initial_price,
     )
-    child1 = factories.create_product(
-        "child1", shop=shop, supplier=factories.get_default_supplier(), default_price=5
-    )
-    child2 = factories.create_product(
-        "child2", shop=shop, supplier=factories.get_default_supplier(), default_price=9
-    )
+    child1 = factories.create_product("child1", shop=shop, supplier=factories.get_default_supplier(), default_price=5)
+    child2 = factories.create_product("child2", shop=shop, supplier=factories.get_default_supplier(), default_price=9)
     child1.link_to_parent(product, variables={"color": "red"})
     child2.link_to_parent(product, variables={"color": "blue"})
 
@@ -105,12 +99,8 @@ def test_many_price_info_cache_bump(rf):
 
     def assert_cache_products():
         cache_many_price_info(request, product, 1, [child1_pi, child2_pi])
-        assert (
-            get_many_cached_price_info(request, product, 1)[0].price == child1_pi.price
-        )
-        assert (
-            get_many_cached_price_info(request, product, 1)[1].price == child2_pi.price
-        )
+        assert get_many_cached_price_info(request, product, 1)[0].price == child1_pi.price
+        assert get_many_cached_price_info(request, product, 1)[1].price == child2_pi.price
 
     def assert_nothing_is_cached():
         # nothing is cached

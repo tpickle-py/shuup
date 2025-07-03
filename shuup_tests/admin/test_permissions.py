@@ -68,9 +68,7 @@ def test_permissions_for_menu_entries(rf, admin_user):
         assert categories
 
         # Make sure category is displayed if user has correct permissions
-        test_category_menu_entries = [
-            cat for cat in categories if cat.name == "RestrictedTest"
-        ][0]
+        test_category_menu_entries = [cat for cat in categories if cat.name == "RestrictedTest"][0]
         assert any(me.text == "OK" for me in test_category_menu_entries)
 
         # No menu items should be displayed if user has no permissions
@@ -109,9 +107,7 @@ def test_valid_permissions_for_all_modules():
     ],
 )
 def test_toolbar_button_permissions(rf, button_class, kwargs):
-    permissions = set(
-        ["shuup.add_product", "shuup.delete_product", "shuup.change_product"]
-    )
+    permissions = set(["shuup.add_product", "shuup.delete_product", "shuup.change_product"])
 
     request = rf.get("/")
     request.user = factories.get_default_staff_user()

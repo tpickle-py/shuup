@@ -3,8 +3,9 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import jsonfield.fields
 from django.db import migrations, models
+
+import jsonfield.fields
 
 
 class Migration(migrations.Migration):

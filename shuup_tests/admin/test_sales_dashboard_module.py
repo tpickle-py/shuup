@@ -44,9 +44,7 @@ def get_order_for_date(dt, product):
 @pytest.mark.django_db
 def test_order_chart_works(rf, admin_user):
     get_default_shop()
-    order = create_random_order(
-        customer=create_random_person(), products=(get_default_product(),)
-    )
+    order = create_random_order(customer=create_random_person(), products=(get_default_product(),))
     request = apply_request_middleware(rf.get("/"), user=admin_user)
     chart = OrderValueChartDashboardBlock("test", request=request).get_chart()
     assert len(chart.datasets[0]) > 0
@@ -85,38 +83,22 @@ def test_shop_overview_block(rf, data, admin_user):
 
         for shop in [shop1, shop2]:
             request = apply_request_middleware(rf.get("/"), user=admin_user, shop=shop)
-            block = get_shop_overview_block(
-                request, currency=DEFAULT_CURRENCY, for_date=today
-            )
+            block = get_shop_overview_block(request, currency=DEFAULT_CURRENCY, for_date=today)
             soup = BeautifulSoup(block.content)
             _, today_sales, mtd, ytd, totals = soup.find_all("tr")
 
             if shop == shop1:
-                assert today_sales.find_all("td")[
-                    NUM_ORDERS_COLUMN_INDEX
-                ].string == str(expected_today)
-                assert today_sales.find_all("td")[
-                    NUM_CUSTOMERS_COLUMN_INDEX
-                ].string == str(expected_today)
-                assert mtd.find_all("td")[NUM_ORDERS_COLUMN_INDEX].string == str(
-                    expected_mtd
-                )
-                assert mtd.find_all("td")[NUM_CUSTOMERS_COLUMN_INDEX].string == str(
-                    expected_mtd
-                )
-                assert ytd.find_all("td")[NUM_ORDERS_COLUMN_INDEX].string == str(
-                    expected_ytd
-                )
-                assert ytd.find_all("td")[NUM_CUSTOMERS_COLUMN_INDEX].string == str(
-                    expected_ytd
-                )
+                assert today_sales.find_all("td")[NUM_ORDERS_COLUMN_INDEX].string == str(expected_today)
+                assert today_sales.find_all("td")[NUM_CUSTOMERS_COLUMN_INDEX].string == str(expected_today)
+                assert mtd.find_all("td")[NUM_ORDERS_COLUMN_INDEX].string == str(expected_mtd)
+                assert mtd.find_all("td")[NUM_CUSTOMERS_COLUMN_INDEX].string == str(expected_mtd)
+                assert ytd.find_all("td")[NUM_ORDERS_COLUMN_INDEX].string == str(expected_ytd)
+                assert ytd.find_all("td")[NUM_CUSTOMERS_COLUMN_INDEX].string == str(expected_ytd)
                 assert totals.find_all("td")[NUM_ORDERS_COLUMN_INDEX].string == "5"
                 assert totals.find_all("td")[NUM_CUSTOMERS_COLUMN_INDEX].string == "5"
             else:
                 assert today_sales.find_all("td")[NUM_ORDERS_COLUMN_INDEX].string == "0"
-                assert (
-                    today_sales.find_all("td")[NUM_CUSTOMERS_COLUMN_INDEX].string == "0"
-                )
+                assert today_sales.find_all("td")[NUM_CUSTOMERS_COLUMN_INDEX].string == "0"
                 assert mtd.find_all("td")[NUM_ORDERS_COLUMN_INDEX].string == "0"
                 assert mtd.find_all("td")[NUM_CUSTOMERS_COLUMN_INDEX].string == "0"
                 assert ytd.find_all("td")[NUM_ORDERS_COLUMN_INDEX].string == "0"

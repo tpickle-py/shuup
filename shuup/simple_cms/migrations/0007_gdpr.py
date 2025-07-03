@@ -3,10 +3,11 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import enumfields.fields
-import jsonfield.fields
 from django.conf import settings
 from django.db import migrations, models
+
+import enumfields.fields
+import jsonfield.fields
 from enumfields import Enum
 
 import shuup.simple_cms.models
@@ -43,9 +44,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(max_length=256, verbose_name="message")),
                 (
                     "identifier",
-                    models.CharField(
-                        blank=True, max_length=64, verbose_name="identifier"
-                    ),
+                    models.CharField(blank=True, max_length=64, verbose_name="identifier"),
                 ),
                 (
                     "kind",
@@ -57,9 +56,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        blank=True, null=True, verbose_name="extra data"
-                    ),
+                    jsonfield.fields.JSONField(blank=True, null=True, verbose_name="extra data"),
                 ),
             ],
             options={
@@ -74,9 +71,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="page",
             name="page_type",
-            field=enumfields.fields.EnumIntegerField(
-                db_index=True, default=0, enum=NullEnum, verbose_name="page type"
-            ),
+            field=enumfields.fields.EnumIntegerField(db_index=True, default=0, enum=NullEnum, verbose_name="page type"),
         ),
         migrations.AddField(
             model_name="pagelogentry",

@@ -14,26 +14,16 @@ from .fixtures import ATestEvent
 
 
 def test_simple_type_matching():
-    assert Binding("x", type=Language).get_matching_types(ATestEvent.variables) == {
-        "order_language"
-    }
+    assert Binding("x", type=Language).get_matching_types(ATestEvent.variables) == {"order_language"}
 
 
 def test_text_type_matches_all():
-    assert Binding("x", type=Text).get_matching_types(ATestEvent.variables) == set(
-        ATestEvent.variables.keys()
-    )
+    assert Binding("x", type=Text).get_matching_types(ATestEvent.variables) == set(ATestEvent.variables.keys())
 
 
 def test_model_type_matching():
-    assert empty_iterable(
-        Binding("x", type=Model("shuup.Contact")).get_matching_types(
-            ATestEvent.variables
-        )
-    )
-    assert Binding("x", type=Model("shuup.Order")).get_matching_types(
-        ATestEvent.variables
-    ) == {"order"}
+    assert empty_iterable(Binding("x", type=Model("shuup.Contact")).get_matching_types(ATestEvent.variables))
+    assert Binding("x", type=Model("shuup.Order")).get_matching_types(ATestEvent.variables) == {"order"}
 
 
 def test_enum_type():

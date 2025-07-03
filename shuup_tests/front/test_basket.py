@@ -47,9 +47,7 @@ def test_basket(rf):
     supplier = get_default_supplier()
     products_and_quantities = []
     for quantity in quantities:
-        product = create_product(
-            printable_gibberish(), shop=shop, supplier=supplier, default_price=50
-        )
+        product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
         products_and_quantities.append((product, quantity))
 
     for product, q in products_and_quantities:
@@ -60,9 +58,7 @@ def test_basket(rf):
         basket = get_basket(request)
         assert basket == request.basket
         assert basket.product_count == 0
-        line = basket.add_product(
-            supplier=supplier, shop=shop, product=product, quantity=q
-        )
+        line = basket.add_product(supplier=supplier, shop=shop, product=product, quantity=q)
         basket.shipping_method = get_shipping_method(shop=shop)  # For shippable product
         assert line.quantity == q
         assert basket.get_lines()
@@ -74,9 +70,7 @@ def test_basket(rf):
         assert basket.get_product_ids_and_quantities().get(product.pk) == q
 
         # Since ordering the latest basket is first in line
-        product_ids = set(
-            StoredBasket.objects.first().products.values_list("id", flat=True)
-        )
+        product_ids = set(StoredBasket.objects.first().products.values_list("id", flat=True))
         assert product_ids == set([product.pk])
 
     stats = StoredBasket.objects.all().aggregate(
@@ -96,9 +90,7 @@ def test_basket(rf):
 def test_basket_dirtying_with_fnl(rf):
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price=50
-    )
+    product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
     request = rf.get("/")
     request.session = {}
     request.shop = shop
@@ -142,19 +134,13 @@ def test_basket_shipping_error(rf):
     basket = get_basket(request)
 
     # With a shipped product but no shipping methods, we oughta get an error
-    basket.add_product(
-        supplier=supplier, shop=shop, product=shipped_product, quantity=1
-    )
+    basket.add_product(supplier=supplier, shop=shop, product=shipped_product, quantity=1)
     assert any(ve.code == "no_common_shipping" for ve in basket.get_validation_errors())
     basket.clear_all()
 
     # But with an unshipped product, we should not
-    basket.add_product(
-        supplier=supplier, shop=shop, product=unshipped_product, quantity=1
-    )
-    assert not any(
-        ve.code == "no_common_shipping" for ve in basket.get_validation_errors()
-    )
+    basket.add_product(supplier=supplier, shop=shop, product=unshipped_product, quantity=1)
+    assert not any(ve.code == "no_common_shipping" for ve in basket.get_validation_errors())
 
 
 @pytest.mark.django_db
@@ -183,9 +169,7 @@ def test_basket_orderability_change(rf):
     StoredBasket.objects.all().delete()
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price=50
-    )
+    product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
     request = rf.get("/")
     request.session = {}
     request.shop = shop
@@ -213,9 +197,7 @@ def test_basket_orderability_change_shop_product(rf):
     StoredBasket.objects.all().delete()
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price=50
-    )
+    product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
     request = rf.get("/")
     request.session = {}
     request.shop = shop
@@ -247,9 +229,7 @@ def test_basket_package_product_orderability_change(rf):
     StoredBasket.objects.all().delete()
     shop = get_default_shop()
     supplier = get_simple_supplier()
-    product, child = get_unstocked_package_product_and_stocked_child(
-        shop, supplier, child_logical_quantity=2
-    )
+    product, child = get_unstocked_package_product_and_stocked_child(shop, supplier, child_logical_quantity=2)
     request = rf.get("/")
     request.session = {}
     request.shop = shop
@@ -303,9 +283,7 @@ def test_basket_clearing(rf):
     StoredBasket.objects.all().delete()
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price=50
-    )
+    product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
     request = rf.get("/")
     request.session = {}
     request.shop = shop
@@ -337,9 +315,7 @@ def test_basket_store_addresses(rf):
     StoredBasket.objects.all().delete()
     shop = get_default_shop()
     supplier = get_default_supplier()
-    product = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price=50
-    )
+    product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
     request = apply_request_middleware(rf.get("/"), shop=shop)
     basket = get_basket(request)
     assert not basket.billing_address

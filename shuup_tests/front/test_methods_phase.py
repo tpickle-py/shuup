@@ -5,9 +5,10 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
+from django.utils.translation import activate
+
 import pytest
 from bs4 import BeautifulSoup
-from django.utils.translation import activate
 
 from shuup.core.models import get_person_contact
 from shuup.front.basket import get_basket
@@ -67,16 +68,12 @@ def test_method_phase_basic(rf, admin_user, get_method, data, method_id):
 
     # add product to bakset
     supplier = get_default_supplier()
-    product = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price=50
-    )
+    product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=50)
     basket.add_product(supplier=supplier, shop=shop, product=product, quantity=2)
     assert basket.product_count, "basket has products"
 
     basket.save()
-    request = apply_request_middleware(
-        request, user=admin_user, person=person, customer=person, basket=basket
-    )
+    request = apply_request_middleware(request, user=admin_user, person=person, customer=person, basket=basket)
 
     # request = apply_request_middleware(rf.get("/"))
     response = view(request=request, phase="methods")

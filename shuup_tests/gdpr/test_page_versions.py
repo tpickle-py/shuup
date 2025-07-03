@@ -53,9 +53,7 @@ def test_page_form(rf, admin_user):
         assert original_consent.pk == new_consent.pk
 
         version = versions[0]
-        assert GDPRUserConsentDocument.objects.filter(
-            page=original_gdpr_page, version=version
-        ).exists()
+        assert GDPRUserConsentDocument.objects.filter(page=original_gdpr_page, version=version).exists()
 
         assert is_documents_consent_in_sync(shop, user)
 

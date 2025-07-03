@@ -34,9 +34,7 @@ def test_product_attributes_form():
 
     # English is missing on purpose from the languages list; it'll still be available
     # for `genre` as it has an extant value.
-    paf = ProductAttributesForm(
-        product=product, languages=("fi", "sv"), default_language="sv"
-    )
+    paf = ProductAttributesForm(product=product, languages=("fi", "sv"), default_language="sv")
     assert paf.languages[0] == "sv"
 
     assert compare_partial_dicts(
@@ -57,14 +55,10 @@ def test_product_attributes_form():
             "bogomips": "",
             "release_date": "",
             "awesome": "True",
-            "important_datetime": make_aware(
-                datetime.datetime(2000, 1, 1, 1, 2, 3), utc
-            ),
+            "important_datetime": make_aware(datetime.datetime(2000, 1, 1, 1, 2, 3), utc),
         }
     )
-    paf = ProductAttributesForm(
-        product=product, languages=("fi", "sv"), default_language="sv", data=form_data
-    )
+    paf = ProductAttributesForm(product=product, languages=("fi", "sv"), default_language="sv", data=form_data)
     paf.full_clean()
     assert not paf.errors
     paf.save()
@@ -73,18 +67,13 @@ def test_product_attributes_form():
         # Value should be gone
         assert not product.get_attribute_value(identifier)
         # ... and so should the actual product attribute object
-        assert not ProductAttribute.objects.filter(
-            attribute__identifier=identifier, product=product
-        ).exists()
+        assert not ProductAttribute.objects.filter(attribute__identifier=identifier, product=product).exists()
 
     # Those other values got updated, right?
     assert product.get_attribute_value("genre", "en") == form_data["genre__en"]
     assert product.get_attribute_value("genre", "sv") == form_data["genre__sv"]
     assert product.get_attribute_value("awesome") is True
-    assert (
-        str(product.get_attribute_value("important_datetime"))
-        == "2000-01-01 01:02:03+00:00"
-    )
+    assert str(product.get_attribute_value("important_datetime")) == "2000-01-01 01:02:03+00:00"
 
 
 @pytest.mark.django_db
@@ -94,9 +83,7 @@ def test_product_options_attributes_form():
     """
 
     product_type = ProductType.objects.create(name="Default Product Type")
-    options_attribute = create_attribute_with_options(
-        "attribute1", ["A", "B", "C"], 1, 3
-    )
+    options_attribute = create_attribute_with_options("attribute1", ["A", "B", "C"], 1, 3)
     product_type.attributes.add(options_attribute)
 
     product = create_product("TestProduct", shop=get_default_shop(), type=product_type)
@@ -104,16 +91,12 @@ def test_product_options_attributes_form():
     option_a, option_b, option_c = choices
     product.set_attribute_value("attribute1", [option_c.pk])
 
-    paf = ProductAttributesForm(
-        product=product, languages=("en"), default_language="en"
-    )
+    paf = ProductAttributesForm(product=product, languages=("en"), default_language="en")
     assert compare_partial_dicts(paf.initial, {"attribute1": [option_c.pk]})
     form_data = get_form_data(paf)
     form_data.update({"attribute1": [option_b.pk]})
 
-    paf = ProductAttributesForm(
-        product=product, languages=("en"), default_language="en", data=form_data
-    )
+    paf = ProductAttributesForm(product=product, languages=("en"), default_language="en", data=form_data)
     paf.full_clean()
     assert not paf.errors
     paf.save()

@@ -5,37 +5,26 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 
-import pytest
 from decimal import Decimal
+
 from django.test import override_settings
 from django.test.client import RequestFactory
 
+import pytest
+
 from shuup.campaigns.models import BasketCampaign, BasketLineEffect, CatalogCampaign
-from shuup.campaigns.models.basket_conditions import (
-    CategoryProductsBasketCondition,
-    ComparisonOperator,
-)
-from shuup.campaigns.models.basket_line_effects import (
-    DiscountFromCategoryProducts,
-    DiscountFromProduct,
-)
+from shuup.campaigns.models.basket_conditions import CategoryProductsBasketCondition, ComparisonOperator
+from shuup.campaigns.models.basket_line_effects import DiscountFromCategoryProducts, DiscountFromProduct
 from shuup.campaigns.models.catalog_filters import ProductFilter
 from shuup.campaigns.models.product_effects import ProductDiscountPercentage
 from shuup.front.basket import get_basket
-from shuup.testing.factories import (
-    create_product,
-    get_default_category,
-    get_default_supplier,
-    get_shipping_method,
-)
+from shuup.testing.factories import create_product, get_default_category, get_default_supplier, get_shipping_method
 from shuup_tests.campaigns import initialize_test
 from shuup_tests.utils import printable_gibberish
 
 
 @pytest.mark.django_db
-@override_settings(
-    SHUUP_DISCOUNT_MODULES=["customer_group_discount", "catalog_campaigns"]
-)
+@override_settings(SHUUP_DISCOUNT_MODULES=["customer_group_discount", "catalog_campaigns"])
 def test_multiple_campaigns_cheapest_price():
     rf = RequestFactory()
     request, shop, group = initialize_test(rf, False)
@@ -45,44 +34,30 @@ def test_multiple_campaigns_cheapest_price():
     discount_amount_value = "10"
     total_discount_amount = "50"
 
-    expected_total = price(product_price) - (
-        Decimal(discount_percentage) * price(product_price)
-    )
+    expected_total = price(product_price) - (Decimal(discount_percentage) * price(product_price))
     matching_expected_total = price(product_price) - price(total_discount_amount)
 
     category = get_default_category()
     supplier = get_default_supplier(shop)
-    product = create_product(
-        printable_gibberish(), shop=shop, supplier=supplier, default_price=product_price
-    )
+    product = create_product(printable_gibberish(), shop=shop, supplier=supplier, default_price=product_price)
     shop_product = product.get_shop_instance(shop)
     shop_product.categories.add(category)
 
     # create catalog campaign
     catalog_filter = ProductFilter.objects.create()
     catalog_filter.products.add(product)
-    catalog_campaign = CatalogCampaign.objects.create(
-        shop=shop, active=True, name="test"
-    )
+    catalog_campaign = CatalogCampaign.objects.create(shop=shop, active=True, name="test")
     catalog_campaign.filters.add(catalog_filter)
 
-    cdp = ProductDiscountPercentage.objects.create(
-        campaign=catalog_campaign, discount_percentage=discount_percentage
-    )
+    cdp = ProductDiscountPercentage.objects.create(campaign=catalog_campaign, discount_percentage=discount_percentage)
 
     # create basket campaign
-    condition = CategoryProductsBasketCondition.objects.create(
-        operator=ComparisonOperator.EQUALS, quantity=1
-    )
+    condition = CategoryProductsBasketCondition.objects.create(operator=ComparisonOperator.EQUALS, quantity=1)
     condition.categories.add(category)
-    basket_campaign = BasketCampaign.objects.create(
-        shop=shop, public_name="test", name="test", active=True
-    )
+    basket_campaign = BasketCampaign.objects.create(shop=shop, public_name="test", name="test", active=True)
     basket_campaign.conditions.add(condition)
 
-    effect = DiscountFromProduct.objects.create(
-        campaign=basket_campaign, discount_amount=discount_amount_value
-    )
+    effect = DiscountFromProduct.objects.create(campaign=basket_campaign, discount_amount=discount_amount_value)
     effect.products.add(product)
 
     # add product to basket
@@ -99,9 +74,7 @@ def test_multiple_campaigns_cheapest_price():
     catalog_campaign.save()  # save to bump caches
     basket_campaign.save()  # save to bump caches
 
-    assert (
-        basket.total_price == matching_expected_total
-    )  # discount is now bigger than the original
+    assert basket.total_price == matching_expected_total  # discount is now bigger than the original
 
     effect.delete()  # remove effect
     basket.uncache()
@@ -124,6 +97,4 @@ def test_multiple_campaigns_cheapest_price():
     basket.uncache()
     catalog_campaign.save()  # save to bump caches
     basket_campaign.save()  # save to bump caches
-    assert (
-        basket.total_price == matching_expected_total
-    )  # discount is now bigger than the original
+    assert basket.total_price == matching_expected_total  # discount is now bigger than the original

@@ -33,9 +33,7 @@ from shuup.testing.factories import (
     ],
 )
 @pytest.mark.django_db
-def test_product_query(
-    visibility, show_in_list, show_in_search, admin_user, regular_user
-):
+def test_product_query(visibility, show_in_list, show_in_search, admin_user, regular_user):
     shop = get_default_shop()
     supplier = get_default_supplier(shop)
     product = create_product("test-sku", shop=shop, supplier=supplier)
@@ -52,12 +50,8 @@ def test_product_query(
     # Anonymous contact should be the same as no contact
     assert (product in Product.objects.listed(shop=shop)) == show_in_list
     assert (product in Product.objects.searchable(shop=shop)) == show_in_search
-    assert (
-        product in Product.objects.listed(shop=shop, customer=anon_contact)
-    ) == show_in_list
-    assert (
-        product in Product.objects.searchable(shop=shop, customer=anon_contact)
-    ) == show_in_search
+    assert (product in Product.objects.listed(shop=shop, customer=anon_contact)) == show_in_list
+    assert (product in Product.objects.searchable(shop=shop, customer=anon_contact)) == show_in_search
 
     # Admin should see all non-deleted results
     configuration.set(None, get_all_seeing_key(admin_contact), True)
@@ -95,27 +89,13 @@ def test_product_query_with_group_visibility(regular_user):
     shop_product.visibility_groups.add(default_group)
     regular_contact = get_person_contact(regular_user)
 
-    assert (
-        not Product.objects.listed(shop=shop, customer=regular_contact)
-        .filter(pk=product.pk)
-        .exists()
-    )
+    assert not Product.objects.listed(shop=shop, customer=regular_contact).filter(pk=product.pk).exists()
     regular_contact.groups.add(default_group)
-    assert (
-        Product.objects.listed(shop=shop, customer=regular_contact)
-        .filter(pk=product.pk)
-        .count()
-        == 1
-    )
+    assert Product.objects.listed(shop=shop, customer=regular_contact).filter(pk=product.pk).count() == 1
 
     shop_product.visibility_groups.add(regular_contact.get_default_group())
     # Multiple visibility groups for shop product shouldn't cause duplicate matches
-    assert (
-        Product.objects.listed(shop=shop, customer=regular_contact)
-        .filter(pk=product.pk)
-        .count()
-        == 1
-    )
+    assert Product.objects.listed(shop=shop, customer=regular_contact).filter(pk=product.pk).count() == 1
 
 
 @pytest.mark.django_db
@@ -161,15 +141,9 @@ def test_product_available(admin_user, regular_user, available_until, visible):
 
     assert (product in Product.objects.listed(shop=shop)) == visible
     assert (product in Product.objects.searchable(shop=shop)) == visible
-    assert (
-        product in Product.objects.listed(shop=shop, customer=admin_contact)
-    ) == visible
-    assert (
-        product in Product.objects.searchable(shop=shop, customer=admin_contact)
-    ) == visible
-    assert (
-        product in Product.objects.searchable(shop=shop, customer=regular_contact)
-    ) == visible
+    assert (product in Product.objects.listed(shop=shop, customer=admin_contact)) == visible
+    assert (product in Product.objects.searchable(shop=shop, customer=admin_contact)) == visible
+    assert (product in Product.objects.searchable(shop=shop, customer=regular_contact)) == visible
 
     configuration.set(None, get_all_seeing_key(admin_contact), True)
     assert product in Product.objects.listed(shop=shop, customer=admin_contact)

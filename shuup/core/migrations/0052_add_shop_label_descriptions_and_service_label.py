@@ -3,8 +3,9 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import parler.models
 from django.db import migrations, models
+
+import parler.models
 
 import shuup.core.fields
 
@@ -43,9 +44,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "modified_on",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="modified on"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="modified on"),
                 ),
             ],
             options={
@@ -68,9 +67,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 ("name", models.CharField(max_length=64, verbose_name="name")),
                 (
@@ -114,16 +111,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="paymentmethod",
             name="labels",
-            field=models.ManyToManyField(
-                blank=True, to="shuup.Label", verbose_name="labels"
-            ),
+            field=models.ManyToManyField(blank=True, to="shuup.Label", verbose_name="labels"),
         ),
         migrations.AddField(
             model_name="shippingmethod",
             name="labels",
-            field=models.ManyToManyField(
-                blank=True, to="shuup.Label", verbose_name="labels"
-            ),
+            field=models.ManyToManyField(blank=True, to="shuup.Label", verbose_name="labels"),
         ),
         migrations.AddField(
             model_name="shop",

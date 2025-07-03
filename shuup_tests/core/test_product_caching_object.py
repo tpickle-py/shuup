@@ -52,9 +52,7 @@ def test_product_caching_object():
     assert pco.product is product
     assert pco.product_id == product.pk
     assert ProductCachingObject().product != pco.product  # Assert PCOs are separate
-    assert (
-        pco._product_cache == pco.product
-    )  # This private property is courtesy of ModelCachingDescriptor
+    assert pco._product_cache == pco.product  # This private property is courtesy of ModelCachingDescriptor
 
     pco = ProductCachingObject()
     pco.product_id = product.pk

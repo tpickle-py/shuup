@@ -38,21 +38,13 @@ def test_run():
     script.save()
     event.run(factories.get_default_shop())
     # The script is disabled by default, of course it won't run
-    assert (
-        not event.variable_values["order"]
-        .log_entries.filter(identifier="test_run")
-        .exists()
-    )
+    assert not event.variable_values["order"].log_entries.filter(identifier="test_run").exists()
 
     # Let's try that again.
     script.enabled = True
     script.save()
     event.run(factories.get_default_shop())
-    assert (
-        event.variable_values["order"]
-        .log_entries.filter(identifier="test_run")
-        .exists()
-    )
+    assert event.variable_values["order"].log_entries.filter(identifier="test_run").exists()
     script.delete()
 
 
@@ -73,25 +65,15 @@ def test_run_multishop():
         ],
         next=StepNext.STOP,
     )
-    script = Script(
-        event_identifier=event.identifier, name="Test Script", shop=shop2, enabled=True
-    )
+    script = Script(event_identifier=event.identifier, name="Test Script", shop=shop2, enabled=True)
     script.set_steps([step])
     script.save()
 
     # runs for shop1 - no script exists
     event.run(shop1)
-    assert (
-        not event.variable_values["order"]
-        .log_entries.filter(identifier="test_run")
-        .exists()
-    )
+    assert not event.variable_values["order"].log_entries.filter(identifier="test_run").exists()
 
     # run for shop2 - ok
     event.run(shop2)
-    assert (
-        event.variable_values["order"]
-        .log_entries.filter(identifier="test_run")
-        .exists()
-    )
+    assert event.variable_values["order"].log_entries.filter(identifier="test_run").exists()
     script.delete()

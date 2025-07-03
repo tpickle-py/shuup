@@ -21,19 +21,13 @@ from shuup.testing.browser_utils import (
     wait_until_condition,
 )
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.parametrize("default_language", ["it", "pt-br", "fi"])
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
-def test_xtheme_plugin_form_language_order(
-    admin_user, browser, live_server, settings, default_language
-):
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
+def test_xtheme_plugin_form_language_order(admin_user, browser, live_server, settings, default_language):
     """
     Test that the first language option is the Parler default
 
@@ -55,9 +49,7 @@ def test_xtheme_plugin_form_language_order(
 
         placeholder_selector = "#xt-ph-front_content-xtheme-person-contact-layout"
         placeholder_name = "front_content"
-        wait_until_condition(
-            browser, lambda x: x.is_element_present_by_css(placeholder_selector)
-        )
+        wait_until_condition(browser, lambda x: x.is_element_present_by_css(placeholder_selector))
         click_element(browser, placeholder_selector)
 
         with browser.get_iframe("xt-edit-sidebar-iframe") as iframe:
@@ -88,12 +80,8 @@ def test_xtheme_plugin_form_language_order(
             click_element(iframe, "#select2-id_general-plugin-container")
             wait_until_appeared(iframe, "input.select2-search__field")
             iframe.find_by_css("input.select2-search__field").first.value = "Text"
-            wait_until_appeared(
-                browser, ".select2-results__option:not([aria-live='assertive'])"
-            )
-            iframe.execute_script(
-                '$($(".select2-results__option")[1]).trigger({type: "mouseup"})'
-            )
+            wait_until_appeared(browser, ".select2-results__option:not([aria-live='assertive'])")
+            iframe.execute_script('$($(".select2-results__option")[1]).trigger({type: "mouseup"})')
 
             time.sleep(1)
             wait_until_condition(iframe, lambda x: page_has_loaded(x), timeout=20)
@@ -106,18 +94,12 @@ def test_xtheme_plugin_form_language_order(
 
 @pytest.mark.parametrize("language", ["it", "pt-br", "fi", "en"])
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
-def test_xtheme_plugin_form_selected_language_pane(
-    admin_user, browser, live_server, settings, language
-):
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
+def test_xtheme_plugin_form_selected_language_pane(admin_user, browser, live_server, settings, language):
     """
     Test that the current language is selected by default
     """
-    browser = initialize_admin_browser_test(
-        browser, live_server, settings, language=language
-    )
+    browser = initialize_admin_browser_test(browser, live_server, settings, language=language)
     browser.visit(live_server + "/")
 
     # Start edit
@@ -126,9 +108,7 @@ def test_xtheme_plugin_form_selected_language_pane(
     click_element(browser, ".xt-edit-toggle button[type='submit']")
 
     placeholder_selector = "#xt-ph-front_content-xtheme-person-contact-layout"
-    wait_until_condition(
-        browser, lambda x: x.is_element_present_by_css(placeholder_selector)
-    )
+    wait_until_condition(browser, lambda x: x.is_element_present_by_css(placeholder_selector))
     click_element(browser, placeholder_selector)
 
     with browser.get_iframe("xt-edit-sidebar-iframe") as iframe:
@@ -156,12 +136,8 @@ def test_xtheme_plugin_form_selected_language_pane(
         click_element(iframe, "#select2-id_general-plugin-container")
         wait_until_appeared(iframe, "input.select2-search__field")
         iframe.find_by_css("input.select2-search__field").first.value = "Text"
-        wait_until_appeared(
-            browser, ".select2-results__option:not([aria-live='assertive'])"
-        )
-        iframe.execute_script(
-            '$($(".select2-results__option")[1]).trigger({type: "mouseup"})'
-        )
+        wait_until_appeared(browser, ".select2-results__option:not([aria-live='assertive'])")
+        iframe.execute_script('$($(".select2-results__option")[1]).trigger({type: "mouseup"})')
         time.sleep(1)
         wait_until_condition(iframe, lambda x: page_has_loaded(x), timeout=20)
         wait_until_appeared(iframe, "ul.editor-tabs")
@@ -171,9 +147,7 @@ def test_xtheme_plugin_form_selected_language_pane(
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
 def test_xtheme_editor_form_picture(admin_user, browser, live_server, settings):
     """
     Test that is is possible to add image fron media browser
@@ -186,9 +160,7 @@ def test_xtheme_editor_form_picture(admin_user, browser, live_server, settings):
     click_element(browser, ".xt-edit-toggle button[type='submit']")
 
     placeholder_selector = "#xt-ph-front_content-xtheme-person-contact-layout"
-    wait_until_condition(
-        browser, lambda x: x.is_element_present_by_css(placeholder_selector)
-    )
+    wait_until_condition(browser, lambda x: x.is_element_present_by_css(placeholder_selector))
     click_element(browser, placeholder_selector)
 
     with browser.get_iframe("xt-edit-sidebar-iframe") as iframe:
@@ -220,12 +192,8 @@ def test_xtheme_editor_form_picture(admin_user, browser, live_server, settings):
 
         filer_image = factories.get_random_filer_image()
 
-        wait_until_appeared(
-            browser, "#id_plugin-text_en-editor-wrap button[aria-label='Picture']"
-        )
-        click_element(
-            browser, "#id_plugin-text_en-editor-wrap button[aria-label='Picture']"
-        )
+        wait_until_appeared(browser, "#id_plugin-text_en-editor-wrap button[aria-label='Picture']")
+        click_element(browser, "#id_plugin-text_en-editor-wrap button[aria-label='Picture']")
         wait_until_condition(browser, lambda b: len(b.windows) == 2, timeout=20)
 
         # change to the media browser window
@@ -242,7 +210,6 @@ def test_xtheme_editor_form_picture(admin_user, browser, live_server, settings):
         # make sure the image was added to the editor
         wait_until_appeared(
             browser,
-            "#id_plugin-text_en-editor-wrap .note-editable img[src='%s']"
-            % filer_image.url,
+            "#id_plugin-text_en-editor-wrap .note-editable img[src='%s']" % filer_image.url,
             timeout=20,
         )

@@ -1,7 +1,7 @@
 # English translations for PROJECT.
 # Copyright (C) 2015 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# 
+#
 # Translators:
 # An Nesterov <arch.nesterov@gmail.com>, 2021
 # George Voronin <sonictorment@gmail.com>, 2017

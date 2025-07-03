@@ -6,18 +6,14 @@ from django.db import migrations, models
 
 
 def copy_category_to_categories(apps, schema_editor):
-    CategoryProductsBasketCondition = apps.get_model(
-        "campaigns", "CategoryProductsBasketCondition"
-    )
+    CategoryProductsBasketCondition = apps.get_model("campaigns", "CategoryProductsBasketCondition")
     for condition in CategoryProductsBasketCondition.objects.all():
         if condition.category:
             condition.categories.add(condition.category)
 
 
 def copy_first_categories_to_category(apps, schema_editor):
-    CategoryProductsBasketCondition = apps.get_model(
-        "campaigns", "CategoryProductsBasketCondition"
-    )
+    CategoryProductsBasketCondition = apps.get_model("campaigns", "CategoryProductsBasketCondition")
     for condition in CategoryProductsBasketCondition.objects.all():
         first_category = condition.categories.first()
         if first_category:
@@ -37,9 +33,7 @@ class Migration(migrations.Migration):
             name="categories",
             field=models.ManyToManyField(to="shuup.Category"),
         ),
-        migrations.RunPython(
-            copy_category_to_categories, reverse_code=copy_first_categories_to_category
-        ),
+        migrations.RunPython(copy_category_to_categories, reverse_code=copy_first_categories_to_category),
         migrations.RemoveField(
             model_name="categoryproductsbasketcondition",
             name="category",

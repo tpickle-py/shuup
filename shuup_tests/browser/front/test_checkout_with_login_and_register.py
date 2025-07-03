@@ -30,17 +30,13 @@ from shuup.testing.factories import (
 )
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 def create_orderable_product(name, sku, price):
     supplier = get_default_supplier()
     shop = get_default_shop()
-    product = create_product(
-        sku=sku, shop=shop, supplier=supplier, default_price=price, name=name
-    )
+    product = create_product(sku=sku, shop=shop, supplier=supplier, default_price=price, name=name)
     return product
 
 
@@ -56,9 +52,7 @@ def test_checkout_with_login_and_register(browser, live_server, reindex_catalog)
     get_default_shipping_method()
     product = create_orderable_product(product_name, "test-123", price=100)
     reindex_catalog()
-    OrderStatus.objects.create(
-        identifier="initial", role=OrderStatusRole.INITIAL, name="initial", default=True
-    )
+    OrderStatus.objects.create(identifier="initial", role=OrderStatusRole.INITIAL, name="initial", default=True)
 
     # Initialize test and go to front page
     browser = initialize_front_browser_test(browser, live_server)
@@ -77,20 +71,14 @@ def test_checkout_with_login_and_register(browser, live_server, reindex_catalog)
     register_test(browser, live_server, test_username, test_email, test_password)
 
     wait_until_condition(browser, lambda x: x.is_text_present("Checkout Method"))
-    login_and_finish_up_the_checkout(
-        browser, live_server, test_username, test_email, test_password
-    )
+    login_and_finish_up_the_checkout(browser, live_server, test_username, test_email, test_password)
 
 
 @override_settings(SHUUP_REGISTRATION_REQUIRES_ACTIVATION=False)
 @pytest.mark.urls("shuup.testing.single_page_checkout_with_login_and_register_conf")
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
-def test_single_page_checkout_with_login_and_register(
-    browser, live_server, reindex_catalog
-):
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
+def test_single_page_checkout_with_login_and_register(browser, live_server, reindex_catalog):
     cache.clear()  # Avoid caches from past tests
 
     # initialize
@@ -100,9 +88,7 @@ def test_single_page_checkout_with_login_and_register(
     get_default_shipping_method()
     product = create_orderable_product(product_name, "test-123", price=100)
     reindex_catalog()
-    OrderStatus.objects.create(
-        identifier="initial", role=OrderStatusRole.INITIAL, name="initial", default=True
-    )
+    OrderStatus.objects.create(identifier="initial", role=OrderStatusRole.INITIAL, name="initial", default=True)
 
     # Initialize test and go to front page
     browser = initialize_front_browser_test(browser, live_server)
@@ -117,9 +103,7 @@ def test_single_page_checkout_with_login_and_register(
     test_password = "test_password"
     register_test(browser, live_server, test_username, test_email, test_password)
 
-    login_and_finish_up_the_checkout(
-        browser, live_server, test_username, test_email, test_password
-    )
+    login_and_finish_up_the_checkout(browser, live_server, test_username, test_email, test_password)
 
 
 def navigate_to_checkout(browser, product):
@@ -127,24 +111,16 @@ def navigate_to_checkout(browser, product):
     wait_until_condition(browser, lambda x: x.is_text_present(product.name))
 
     click_element(browser, "#product-%s" % product.pk)  # open product from product list
-    click_element(
-        browser, "#add-to-cart-button-%s" % product.pk
-    )  # add product to basket
+    click_element(browser, "#add-to-cart-button-%s" % product.pk)  # add product to basket
 
     time.sleep(1)
 
-    click_element(
-        browser, "#navigation-basket-partial"
-    )  # open upper basket navigation menu
+    click_element(browser, "#navigation-basket-partial")  # open upper basket navigation menu
     click_element(browser, "a[href='/basket/']")  # click the link to basket in dropdown
     time.sleep(1)
 
-    wait_until_condition(
-        browser, lambda x: x.is_text_present("Shopping cart")
-    )  # we are in basket page
-    wait_until_condition(
-        browser, lambda x: x.is_text_present(product.name)
-    )  # product is in basket
+    wait_until_condition(browser, lambda x: x.is_text_present("Shopping cart"))  # we are in basket page
+    wait_until_condition(browser, lambda x: x.is_text_present(product.name))  # product is in basket
 
     click_element(browser, "a[href='/checkout/']")  # click link that leads to checkout
 
@@ -209,13 +185,9 @@ def register_test(browser, live_server, test_username, test_email, test_password
 
     # There is no products on basket anymore so let's add one
     product = Product.objects.first()
-    product_url = reverse(
-        "shuup:product", kwargs={"pk": product.pk, "slug": product.slug}
-    )
+    product_url = reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug})
     browser.visit("%s%s" % (live_server, product_url))
-    click_element(
-        browser, "#add-to-cart-button-%s" % product.pk
-    )  # add product to basket
+    click_element(browser, "#add-to-cart-button-%s" % product.pk)  # add product to basket
 
     wait_until_appeared(browser, ".cover-wrap")
     wait_until_disappeared(browser, ".cover-wrap")
@@ -223,9 +195,7 @@ def register_test(browser, live_server, test_username, test_email, test_password
     browser.visit("%s%s" % (live_server, "/checkout/"))
 
 
-def login_and_finish_up_the_checkout(
-    browser, live_server, test_username, test_email, test_password
-):
+def login_and_finish_up_the_checkout(browser, live_server, test_username, test_email, test_password):
     fields = browser.driver.find_elements(By.NAME, "login-username")
     # there should be only a single username field
     assert len(fields) == 1
@@ -259,9 +229,7 @@ def login_and_finish_up_the_checkout(
     wait_until_appeared(browser, "select[name='billing-region_code']")
     browser.select("billing-region_code", customer_region)
 
-    click_element(
-        browser, "#addresses button[type='submit']"
-    )  # Shouldn't submit since required fields
+    click_element(browser, "#addresses button[type='submit']")  # Shouldn't submit since required fields
 
     browser.fill("shipping-name", customer_name)
     browser.fill("shipping-street", customer_street)
@@ -277,20 +245,12 @@ def login_and_finish_up_the_checkout(
     pm = get_default_payment_method()
     sm = get_default_shipping_method()
 
-    wait_until_condition(
-        browser, lambda x: x.is_text_present(sm.name)
-    )  # shipping method name is present
-    wait_until_condition(
-        browser, lambda x: x.is_text_present(pm.name)
-    )  # payment method name is present
+    wait_until_condition(browser, lambda x: x.is_text_present(sm.name))  # shipping method name is present
+    wait_until_condition(browser, lambda x: x.is_text_present(pm.name))  # payment method name is present
 
-    click_element(
-        browser, ".btn.btn-primary.btn-lg.pull-right"
-    )  # click "continue" on methods page
+    click_element(browser, ".btn.btn-primary.btn-lg.pull-right")  # click "continue" on methods page
 
-    wait_until_condition(
-        browser, lambda x: x.is_text_present("Confirmation")
-    )  # we are indeed in confirmation page
+    wait_until_condition(browser, lambda x: x.is_text_present("Confirmation"))  # we are indeed in confirmation page
     product = Product.objects.first()
 
     # See that all expected texts are present
@@ -306,22 +266,15 @@ def login_and_finish_up_the_checkout(
     wait_until_condition(browser, lambda x: x.is_text_present(customer_city))
     wait_until_condition(browser, lambda x: x.is_text_present("United States"))
 
-    browser.execute_script(
-        'document.getElementById("id_accept_terms").checked=true'
-    )  # click accept terms
+    browser.execute_script('document.getElementById("id_accept_terms").checked=true')  # click accept terms
     click_element(browser, ".btn.btn-primary.btn-lg")  # click "place order"
 
-    wait_until_condition(
-        browser, lambda x: x.is_text_present("Thank you for your order!")
-    )  # order succeeded
+    wait_until_condition(browser, lambda x: x.is_text_present("Thank you for your order!"))  # order succeeded
 
     # Let's make sure the order now has a customer
     assert Order.objects.count() == 1
     order = Order.objects.first()
-    assert (
-        order.customer
-        == PersonContact.objects.filter(user__username=test_username).first()
-    )
+    assert order.customer == PersonContact.objects.filter(user__username=test_username).first()
     assert order.customer.name == customer_name
     assert order.customer.default_shipping_address is not None
     assert order.customer.default_billing_address is not None

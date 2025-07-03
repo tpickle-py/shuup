@@ -30,9 +30,7 @@ from shuup.testing.utils import apply_request_middleware
 @pytest.mark.django_db
 def test_order_shipments(rf, admin_user):
     shop = get_default_shop()
-    supplier = get_supplier(
-        module_identifier="simple_supplier", identifier="1", name="supplier"
-    )
+    supplier = get_supplier(module_identifier="simple_supplier", identifier="1", name="supplier")
     supplier.shops.add(shop)
 
     product = create_product("sku1", shop=shop, default_price=10)
@@ -74,19 +72,12 @@ def test_order_shipments(rf, admin_user):
         OrderHistorySection.template,
         context={
             OrderHistorySection.identifier: context,
-            "order_status_history": OrderStatusHistory.objects.filter(
-                order=order
-            ).order_by("-created_on"),
+            "order_status_history": OrderStatusHistory.objects.filter(order=order).order_by("-created_on"),
         },
     )
 
-    assert (
-        force_text(OrderStatus.objects.get_default_initial().name) in rendered_content
-    )
-    assert (
-        force_text(OrderStatus.objects.get_default_processing().name)
-        in rendered_content
-    )
+    assert force_text(OrderStatus.objects.get_default_initial().name) in rendered_content
+    assert force_text(OrderStatus.objects.get_default_processing().name) in rendered_content
 
     client = Client()
     client.force_login(admin_user)

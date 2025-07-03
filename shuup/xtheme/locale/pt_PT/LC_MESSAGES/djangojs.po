@@ -1,7 +1,7 @@
 # English translations for PROJECT.
 # Copyright (C) 2015 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# 
+#
 # Translators:
 # João Gaspar Monteiro <joao.monteiro@qintera.pt>, 2021
 msgid ""

@@ -37,16 +37,12 @@ DEFAULT_BEHAVIOR_FORMS = [
     "shuup.admin.modules.services.forms.WeightLimitsBehaviorComponentForm",
 ]
 
-DEFAULT_BEHAVIOR_FORM_PARTS = [
-    "shuup.admin.modules.services.weight_based_pricing.WeightBasedPricingFormPart"
-]
+DEFAULT_BEHAVIOR_FORM_PARTS = ["shuup.admin.modules.services.weight_based_pricing.WeightBasedPricingFormPart"]
 
 
 def get_form_parts(request, view, object):
     with override_provides("service_behavior_component_form", DEFAULT_BEHAVIOR_FORMS):
-        with override_provides(
-            "service_behavior_component_form_part", DEFAULT_BEHAVIOR_FORM_PARTS
-        ):
+        with override_provides("service_behavior_component_form_part", DEFAULT_BEHAVIOR_FORM_PARTS):
             initialized_view = view(request=request, kwargs={"pk": object.pk})
             return initialized_view.get_form_parts(object)
 
@@ -65,9 +61,7 @@ def test_services_edit_view_formsets(rf, admin_user, view, get_object):
     request = apply_request_middleware(rf.get("/"), user=admin_user)
     form_parts = get_form_parts(request, view, object)
     # form parts should include forms, form parts and plus one for the base form
-    assert len(form_parts) == (
-        len(DEFAULT_BEHAVIOR_FORMS) + len(DEFAULT_BEHAVIOR_FORM_PARTS) + 1
-    )
+    assert len(form_parts) == (len(DEFAULT_BEHAVIOR_FORMS) + len(DEFAULT_BEHAVIOR_FORM_PARTS) + 1)
 
 
 @pytest.mark.django_db
@@ -88,9 +82,7 @@ def test_services_edit_view_formsets_in_new_mode(rf, admin_user, view):
         (ShippingMethodForm, get_default_shipping_method, "carrier"),
     ],
 )
-def test_choice_identifier_in_method_form(
-    rf, admin_user, form_class, get_object, service_provider_attr
-):
+def test_choice_identifier_in_method_form(rf, admin_user, form_class, get_object, service_provider_attr):
     object = get_object()
     assert object.pk
 
@@ -99,9 +91,7 @@ def test_choice_identifier_in_method_form(
 
     form = form_class(instance=object, languages=settings.LANGUAGES, request=request)
     assert "choice_identifier" in form.fields
-    assert len(form.fields["choice_identifier"].choices) == len(
-        service_provider.get_service_choices()
-    )
+    assert len(form.fields["choice_identifier"].choices) == len(service_provider.get_service_choices())
     assert form.fields["choice_identifier"].widget.__class__ == forms.Select
 
     assert getattr(object, service_provider_attr)
@@ -110,9 +100,7 @@ def test_choice_identifier_in_method_form(
     # No service provider so no choice_identifier-field
     form = form_class(instance=object, languages=settings.LANGUAGES, request=request)
     assert "choice_identifier" in form.fields
-    assert (
-        len(form.fields["choice_identifier"].choices) == 0
-    )  # Choices for default provider
+    assert len(form.fields["choice_identifier"].choices) == 0  # Choices for default provider
 
 
 @pytest.mark.django_db
@@ -128,9 +116,7 @@ def test_choice_identifier_in_method_form(
         (ShippingMethodEditView, ShippingMethod, "carrier", get_custom_carrier),
     ],
 )
-def test_method_creation(
-    rf, admin_user, view, model, service_provider_attr, get_provider
-):
+def test_method_creation(rf, admin_user, view, model, service_provider_attr, get_provider):
     """
     To make things little bit more simple let's use only english as
     an language.
@@ -170,9 +156,7 @@ def test_method_creation(
         (ShippingMethodEditView, ShippingMethod, "carrier", get_custom_carrier),
     ],
 )
-def test_method_creation_with_labels(
-    rf, admin_user, view, model, service_provider_attr, get_provider
-):
+def test_method_creation_with_labels(rf, admin_user, view, model, service_provider_attr, get_provider):
     """
     To make things little bit more simple let's use only english as
     an language.
@@ -228,9 +212,7 @@ def test_method_creation_with_labels(
         ),
     ],
 )
-def test_method_edit_save(
-    rf, admin_user, view, model, get_object, service_provider_attr
-):
+def test_method_edit_save(rf, admin_user, view, model, get_object, service_provider_attr):
     """
     To make things little bit more simple let's use only english as
     an language.
@@ -254,9 +236,7 @@ def test_method_edit_save(
         # Behavior components is tested at shuup.tests.admin.test_service_behavior_components
         with override_provides("service_behavior_component_form", []):
             with override_provides("service_behavior_component_form_part", []):
-                request = apply_request_middleware(
-                    rf.post("/", data=data), user=admin_user
-                )
+                request = apply_request_middleware(rf.post("/", data=data), user=admin_user)
                 response = view(request, pk=object.pk)
                 if hasattr(response, "render"):
                     response.render()
@@ -316,9 +296,7 @@ def test_delete_toolbar_button(rf, admin_user, view_cls, get_method, method_attr
         (ShippingMethodEditView, ShippingMethod, "carrier", get_custom_carrier),
     ],
 )
-def test_method_creation_with_supplier(
-    rf, admin_user, view, model, service_provider_attr, get_provider
-):
+def test_method_creation_with_supplier(rf, admin_user, view, model, service_provider_attr, get_provider):
     provider = get_provider()
     supplier = get_default_supplier()
 

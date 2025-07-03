@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shuup_front', '0003_add_supplier_and_basket_class_spec_to_stored_basket'),
+        ("shuup_front", "0003_add_supplier_and_basket_class_spec_to_stored_basket"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='storedbasket',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            model_name="storedbasket",
+            name="id",
+            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID"),
         ),
     ]

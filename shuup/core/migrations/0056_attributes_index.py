@@ -14,9 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="productattribute",
             name="datetime_value",
-            field=models.DateTimeField(
-                blank=True, db_index=True, null=True, verbose_name="datetime value"
-            ),
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name="datetime value"),
         ),
         migrations.AlterField(
             model_name="productattribute",

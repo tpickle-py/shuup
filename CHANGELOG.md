@@ -23,7 +23,7 @@ List all changes after the last release here (newer on top). Each change on a se
 
 ### Known Issues
 
-- Django 3.2+ compatibility: django-polymorphic causes recursion errors in complex Contact model deletion workflows. 
+- Django 3.2+ compatibility: django-polymorphic causes recursion errors in complex Contact model deletion workflows.
   Tests `test_order_customer_groups` and `test_order_creator_account_manager` temporarily skipped. Core e-commerce functionality unaffected.
 
 ## [3.1.0] - 2021-08-17

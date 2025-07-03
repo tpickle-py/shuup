@@ -28,15 +28,9 @@ def test_product_catalog_category_discount():
     group = PersonContact.get_default_group()
     category = factories.get_default_category()
     contact.groups.add(group)
-    product1 = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=Decimal("10")
-    )
-    product2 = factories.create_product(
-        "p2", shop=shop, supplier=supplier, default_price=Decimal("20")
-    )
-    product3 = factories.create_product(
-        "p3", shop=shop, supplier=supplier, default_price=Decimal("30")
-    )
+    product1 = factories.create_product("p1", shop=shop, supplier=supplier, default_price=Decimal("10"))
+    product2 = factories.create_product("p2", shop=shop, supplier=supplier, default_price=Decimal("20"))
+    product3 = factories.create_product("p3", shop=shop, supplier=supplier, default_price=Decimal("30"))
     product1.get_shop_instance(shop).categories.add(category)
     product3.get_shop_instance(shop).categories.add(category)
 
@@ -79,12 +73,8 @@ def test_product_catalog_category_discount():
 def test_product_catalog_product_discount():
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()
-    product1 = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=Decimal("10")
-    )
-    product2 = factories.create_product(
-        "p2", shop=shop, supplier=supplier, default_price=Decimal("20")
-    )
+    product1 = factories.create_product("p1", shop=shop, supplier=supplier, default_price=Decimal("10"))
+    product2 = factories.create_product("p2", shop=shop, supplier=supplier, default_price=Decimal("20"))
 
     # create a $5 discount for the product
     Discount.objects.create(
@@ -121,12 +111,8 @@ def test_product_catalog_product_discount():
 def test_product_catalog_happy_hour_discount():
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()
-    product1 = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=Decimal("10")
-    )
-    product2 = factories.create_product(
-        "p2", shop=shop, supplier=supplier, default_price=Decimal("20")
-    )
+    product1 = factories.create_product("p1", shop=shop, supplier=supplier, default_price=Decimal("10"))
+    product2 = factories.create_product("p2", shop=shop, supplier=supplier, default_price=Decimal("20"))
 
     # create a 20% discount for a happy hour (should be in range of 8pm-9pm)
     discount = Discount.objects.create(
@@ -137,9 +123,7 @@ def test_product_catalog_happy_hour_discount():
     )
     happy_hour = HappyHour.objects.create(name="Super Happy", shop=shop)
     # the happy hour is on Mondays from 8-9pm
-    TimeRange.objects.create(
-        from_hour=time(20, 0), to_hour=time(21, 0), weekday=0, happy_hour=happy_hour
-    )
+    TimeRange.objects.create(from_hour=time(20, 0), to_hour=time(21, 0), weekday=0, happy_hour=happy_hour)
     discount.happy_hours.add(happy_hour)
 
     catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
@@ -147,9 +131,7 @@ def test_product_catalog_happy_hour_discount():
     ProductCatalog.index_product(product2)
 
     # Monday, 12pm
-    with patch.object(
-        timezone, "now", return_value=datetime(2021, 1, 4, 12, 0, tzinfo=pytz.utc)
-    ):
+    with patch.object(timezone, "now", return_value=datetime(2021, 1, 4, 12, 0, tzinfo=pytz.utc)):
         _assert_products_queryset(
             catalog,
             [
@@ -168,9 +150,7 @@ def test_product_catalog_happy_hour_discount():
         _assert_price(product2, shop, Decimal("20"), Decimal("20"))
 
     # Monday, 8:30pm
-    with patch.object(
-        timezone, "now", return_value=datetime(2021, 1, 4, 20, 30, tzinfo=pytz.utc)
-    ):
+    with patch.object(timezone, "now", return_value=datetime(2021, 1, 4, 20, 30, tzinfo=pytz.utc)):
         _assert_products_queryset(
             catalog,
             [
@@ -196,9 +176,7 @@ def test_product_catalog_happy_hour_timezone_discount():
     """
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()
-    product1 = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=Decimal("10")
-    )
+    product1 = factories.create_product("p1", shop=shop, supplier=supplier, default_price=Decimal("10"))
 
     discount = Discount.objects.create(
         shop=shop,
@@ -208,18 +186,14 @@ def test_product_catalog_happy_hour_timezone_discount():
     )
     happy_hour = HappyHour.objects.create(name="Super Happy", shop=shop)
     # the happy hour is available on Mondays, from 2am-4am (UTC)
-    TimeRange.objects.create(
-        from_hour=time(2, 0), to_hour=time(4, 0), weekday=0, happy_hour=happy_hour
-    )
+    TimeRange.objects.create(from_hour=time(2, 0), to_hour=time(4, 0), weekday=0, happy_hour=happy_hour)
     discount.happy_hours.add(happy_hour)
 
     catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
     ProductCatalog.index_product(product1)
 
     # Monday, 2am UTC - valid discounts
-    with patch.object(
-        timezone, "now", return_value=datetime(2021, 1, 4, 2, 0, tzinfo=pytz.utc)
-    ):
+    with patch.object(timezone, "now", return_value=datetime(2021, 1, 4, 2, 0, tzinfo=pytz.utc)):
         _assert_price(product1, shop, Decimal("9"), Decimal("10"))
         _assert_products_queryset(catalog, [(product1.pk, Decimal("10"), Decimal("9"))])
 
@@ -234,9 +208,7 @@ def test_product_catalog_happy_hour_timezone_discount():
         _assert_products_queryset(catalog, [(product1.pk, Decimal("10"), None)])
 
     # it's Monday, 2:58am in Brazil on Monday, the discount shouldn't be valid
-    with patch.object(
-        timezone, "now", return_value=sao_paulo_tz.localize(datetime(2021, 1, 4, 2, 58))
-    ):
+    with patch.object(timezone, "now", return_value=sao_paulo_tz.localize(datetime(2021, 1, 4, 2, 58))):
         _assert_price(product1, shop, Decimal("10"), Decimal("10"))
         _assert_products_queryset(catalog, [(product1.pk, Decimal("10"), None)])
 
@@ -267,9 +239,7 @@ def _assert_products_queryset(catalog, expected_prices):
 
 def _assert_shop_products_queryset(catalog, expected_prices):
     shop_products_qs = catalog.get_shop_products_queryset().order_by("catalog_price")
-    values = shop_products_qs.values_list(
-        "pk", "catalog_price", "catalog_discounted_price"
-    )
+    values = shop_products_qs.values_list("pk", "catalog_price", "catalog_discounted_price")
     assert shop_products_qs.count() == len(expected_prices)
     for index, value in enumerate(values):
         assert value == expected_prices[index]

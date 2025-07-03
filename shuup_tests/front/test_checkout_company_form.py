@@ -26,15 +26,11 @@ def test_required_fields(rf, admin_user):
 
 def test_clean(rf, admin_user):
     shop = factories.get_default_shop()
-    request = apply_request_middleware(
-        rf.get("/"), shop=shop, customer=get_person_contact(admin_user), user=admin_user
-    )
+    request = apply_request_middleware(rf.get("/"), shop=shop, customer=get_person_contact(admin_user), user=admin_user)
     form = CompanyForm(data={"name": "Test Oy"}, request=request)
     form.full_clean()
     assert not form.is_valid()
-    assert (
-        "Tax number is required with the company name." in form.errors["tax_number"][0]
-    )
+    assert "Tax number is required with the company name." in form.errors["tax_number"][0]
 
     form = CompanyForm(data={"tax_number": "123"}, request=request)
     form.full_clean()
@@ -48,22 +44,14 @@ def test_clean(rf, admin_user):
     form = CompanyForm(data={"name": "Test Oy", "tax_number": "123"}, request=request)
     form.full_clean()
     assert not form.is_valid()
-    assert (
-        len(form.errors["tax_number"]) == 2
-    )  # One for missing tax number and one for failing validation
+    assert len(form.errors["tax_number"]) == 2  # One for missing tax number and one for failing validation
 
     # Test with invalid vat-like tax number
-    form = CompanyForm(
-        data={"name": "Test Oy", "tax_number": "FI123456789"}, request=request
-    )
+    form = CompanyForm(data={"name": "Test Oy", "tax_number": "FI123456789"}, request=request)
     form.full_clean()
     assert not form.is_valid()
-    assert (
-        len(form.errors["tax_number"]) == 2
-    )  # One for missing tax number and one for failing validation
+    assert len(form.errors["tax_number"]) == 2  # One for missing tax number and one for failing validation
 
-    form = CompanyForm(
-        data={"name": "Test Oy", "tax_number": "FI12345678"}, request=request
-    )
+    form = CompanyForm(data={"name": "Test Oy", "tax_number": "FI12345678"}, request=request)
     form.full_clean()
     assert form.is_valid()

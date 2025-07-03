@@ -72,9 +72,7 @@ def test_menu_save_arrange_view(rf):
         url = reverse("shuup_admin:menu.arrange_supplier")
 
         menu_request = apply_request_middleware(rf.get(url), user=supplier_user)
-        admin_menu_before_save = [
-            m.to_dict() for m in get_menu_entry_categories(menu_request)
-        ]
+        admin_menu_before_save = [m.to_dict() for m in get_menu_entry_categories(menu_request)]
         new_data = admin_menu_before_save[::-1]
         new_data[0]["entries"][0]["name"] = "Menu Arrange"
         data = {"menus": json.dumps(new_data)}
@@ -84,17 +82,13 @@ def test_menu_save_arrange_view(rf):
         assert response.status_code == 302
 
         menu_request = apply_request_middleware(rf.get(url), user=supplier_user)
-        admin_menu_after_save = [
-            m.to_dict() for m in get_menu_entry_categories(menu_request)
-        ]
+        admin_menu_after_save = [m.to_dict() for m in get_menu_entry_categories(menu_request)]
         assert admin_menu_after_save == new_data
 
         # Make sure other staff has same menu after save
         another_supplier_user = get_supplier_user()
         menu_request = apply_request_middleware(rf.get(url), user=supplier_user)
-        admin_menu_after_save = [
-            m.to_dict() for m in get_menu_entry_categories(menu_request)
-        ]
+        admin_menu_after_save = [m.to_dict() for m in get_menu_entry_categories(menu_request)]
         assert admin_menu_after_save == new_data
 
         # Test that different languages are also customizable
@@ -106,17 +100,13 @@ def test_menu_save_arrange_view(rf):
         assert response.status_code == 302
 
         menu_request = apply_request_middleware(rf.get(url), user=supplier_user)
-        admin_menu_after_save = [
-            m.to_dict() for m in get_menu_entry_categories(menu_request)
-        ]
+        admin_menu_after_save = [m.to_dict() for m in get_menu_entry_categories(menu_request)]
         assert admin_menu_after_save == new_data
 
         # Back in english menu title should still be "Menu Arrange"
         activate("en")
         menu_request = apply_request_middleware(rf.get(url), user=supplier_user)
-        admin_menu_after_save = [
-            m.to_dict() for m in get_menu_entry_categories(menu_request)
-        ]
+        admin_menu_after_save = [m.to_dict() for m in get_menu_entry_categories(menu_request)]
         assert admin_menu_after_save[0]["entries"][0]["name"] == "Menu Arrange"
 
     # Make sure staff does not receive this menu as long as the get_supplier provider
@@ -136,27 +126,17 @@ def test_menu_reset_view(rf):
         supplier_user = get_supplier_user()
         arrange_url = reverse("shuup_admin:menu.arrange_supplier")
         menu_request = apply_request_middleware(rf.get(arrange_url), user=supplier_user)
-        admin_menu_before_save = [
-            m.to_dict() for m in get_menu_entry_categories(menu_request)
-        ]
+        admin_menu_before_save = [m.to_dict() for m in get_menu_entry_categories(menu_request)]
         new_data = [m.to_dict() for m in get_menu_entry_categories(menu_request)][::-1]
         new_data[0]["entries"][0]["name"] = "Menu Arrange"
         data = {"menus": json.dumps(new_data)}
-        SupplierMenuArrangeView.as_view()(
-            apply_request_middleware(
-                rf.post(arrange_url, data=data), user=supplier_user
-            )
-        )
-        admin_menu_after_save = [
-            m.to_dict() for m in get_menu_entry_categories(menu_request)
-        ]
+        SupplierMenuArrangeView.as_view()(apply_request_middleware(rf.post(arrange_url, data=data), user=supplier_user))
+        admin_menu_after_save = [m.to_dict() for m in get_menu_entry_categories(menu_request)]
         assert admin_menu_after_save == new_data
 
         reset_url = reverse("shuup_admin:menu.reset_supplier")
         request = apply_request_middleware(rf.get(reset_url), user=supplier_user)
         response = SupplierMenuResetView.as_view()(request)
         assert response.status_code == 302
-        admin_menu_after_reset = [
-            m.to_dict() for m in get_menu_entry_categories(menu_request)
-        ]
+        admin_menu_after_reset = [m.to_dict() for m in get_menu_entry_categories(menu_request)]
         assert admin_menu_after_reset == admin_menu_before_save

@@ -61,9 +61,7 @@ def test_task_admin(admin_user):
 
     # List Tasks
     list_task_url = reverse("shuup_admin:task.list")
-    list_data = {
-        "jq": json.dumps({"sort": None, "perPage": 20, "page": 1, "filters": {}})
-    }
+    list_data = {"jq": json.dumps({"sort": None, "perPage": 20, "page": 1, "filters": {}})}
     response = client.get(list_task_url, data=list_data)
     assert task.name in response.content.decode("utf-8")
 
@@ -85,12 +83,8 @@ def test_task_admin(admin_user):
     response = client.get(edit_task_url)
     assert "Set In Progress" in response.content.decode("utf-8")
 
-    set_task_status_url = reverse(
-        "shuup_admin:task.set_status", kwargs=dict(pk=task.pk)
-    )
-    response = client.post(
-        set_task_status_url, dict(status=TaskStatus.IN_PROGRESS.value)
-    )
+    set_task_status_url = reverse("shuup_admin:task.set_status", kwargs=dict(pk=task.pk))
+    response = client.post(set_task_status_url, dict(status=TaskStatus.IN_PROGRESS.value))
     assert response.status_code == 302
     task.refresh_from_db()
 
@@ -169,16 +163,12 @@ def test_task_type_admin(admin_user):
 
     # List task types
     list_task_type_url = reverse("shuup_admin:task_type.list")
-    list_data = {
-        "jq": json.dumps({"sort": None, "perPage": 20, "page": 1, "filters": {}})
-    }
+    list_data = {"jq": json.dumps({"sort": None, "perPage": 20, "page": 1, "filters": {}})}
     response = client.get(list_task_type_url, data=list_data)
     assert task_type.name in response.content.decode("utf-8")
 
     # Edit task type
-    edit_task_type_url = reverse(
-        "shuup_admin:task_type.edit", kwargs=dict(pk=task_type.pk)
-    )
+    edit_task_type_url = reverse("shuup_admin:task_type.edit", kwargs=dict(pk=task_type.pk))
 
     soup = client.soup(edit_task_type_url)
     payload = extract_form_fields(soup)

@@ -2,6 +2,7 @@
 
 import django.db.models.deletion
 from django.db import migrations, models
+
 from shuup_mirage_field.fields import EncryptedCharField
 
 

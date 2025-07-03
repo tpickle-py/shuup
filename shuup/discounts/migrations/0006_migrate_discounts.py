@@ -15,9 +15,7 @@ def migrate_data(apps, schema_editor):
     Shop = apps.get_model("shuup", "Shop")
 
     Discount.objects.filter(
-        Q(availability_exceptions__isnull=False)
-        | Q(coupon_code__isnull=False)
-        | Q(exclude_selected_contact_group=True)
+        Q(availability_exceptions__isnull=False) | Q(coupon_code__isnull=False) | Q(exclude_selected_contact_group=True)
     ).update(active=False)
 
     # populate shop

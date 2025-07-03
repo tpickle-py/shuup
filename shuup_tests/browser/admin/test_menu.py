@@ -14,15 +14,11 @@ from shuup.testing.browser_utils import initialize_admin_browser_test, wait_unti
 from shuup.testing.factories import get_default_shop
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
 def test_menu(browser, admin_user, live_server, settings):
     get_default_shop()
     initialize_admin_browser_test(browser, live_server, settings)
@@ -92,30 +88,22 @@ def test_menu_toggle(browser, admin_user, live_server, settings):
         browser.find_by_css("#menu-button").first.click()
     except selenium.common.exceptions.TimeoutException:
         browser.find_by_css("#menu-button").first.click()
-    wait_until_condition(
-        browser, lambda x: x.is_element_present_by_css(".desktop-menu-closed")
-    )
+    wait_until_condition(browser, lambda x: x.is_element_present_by_css(".desktop-menu-closed"))
 
     url = reverse("shuup_admin:order.list")
     browser.visit("%s%s" % (live_server, url))
     wait_until_condition(browser, condition=lambda x: x.is_text_present("Orders"))
 
     # Should be closed after page load
-    wait_until_condition(
-        browser, lambda x: x.is_element_present_by_css(".desktop-menu-closed")
-    )
+    wait_until_condition(browser, lambda x: x.is_element_present_by_css(".desktop-menu-closed"))
 
     # Open menu
     browser.find_by_css("#menu-button").first.click()
-    wait_until_condition(
-        browser, lambda x: not x.is_element_present_by_css(".desktop-menu-closed")
-    )
+    wait_until_condition(browser, lambda x: not x.is_element_present_by_css(".desktop-menu-closed"))
 
     url = reverse("shuup_admin:shop_product.list")
     browser.visit("%s%s" % (live_server, url))
     wait_until_condition(browser, condition=lambda x: x.is_text_present("Products"))
 
     # Should be still open after page load
-    wait_until_condition(
-        browser, lambda x: not x.is_element_present_by_css(".desktop-menu-closed")
-    )
+    wait_until_condition(browser, lambda x: not x.is_element_present_by_css(".desktop-menu-closed"))

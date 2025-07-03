@@ -126,9 +126,7 @@ def test_normalize_spaces(rf, reindex_catalog):
     view = SearchView.as_view()
     shop = get_default_shop()
     supplier = get_default_supplier(shop)
-    create_product(
-        sku=UNLIKELY_STRING, name="Savage Garden", shop=shop, supplier=supplier
-    )
+    create_product(sku=UNLIKELY_STRING, name="Savage Garden", shop=shop, supplier=supplier)
     reindex_catalog()
     query = "\t Savage \t \t \n \r Garden \n"
 
@@ -147,9 +145,7 @@ def test_simple_search_no_results(rf):
         resp = view(apply_request_middleware(rf.get("/", {"q": UNLIKELY_STRING})))
         assert NO_RESULTS_FOUND_STRING in resp.rendered_content
         resp = view(apply_request_middleware(rf.get("/")))
-        assert NO_RESULTS_FOUND_STRING in resp.rendered_content, (
-            "No query string no results"
-        )
+        assert NO_RESULTS_FOUND_STRING in resp.rendered_content, "No query string no results"
 
 
 @pytest.mark.django_db
@@ -159,9 +155,7 @@ def test_simple_search_with_non_public_products(rf, reindex_catalog):
     supplier = get_default_supplier(shop)
     customer = create_random_person()
     name = "Some Test Name For Product"
-    product = create_product(
-        "sku", name=name, shop=shop, supplier=supplier, default_price=10
-    )
+    product = create_product("sku", name=name, shop=shop, supplier=supplier, default_price=10)
     shop_product = product.get_shop_instance(shop)
     shop_product.visibility = ShopProductVisibility.SEARCHABLE
     shop_product.visibility_limit = ProductVisibility.VISIBLE_TO_LOGGED_IN
@@ -169,8 +163,6 @@ def test_simple_search_with_non_public_products(rf, reindex_catalog):
     reindex_catalog()
 
     view = SearchView.as_view()
-    request = apply_request_middleware(
-        rf.get("/", {"q": "Test name"}), customer=customer
-    )
+    request = apply_request_middleware(rf.get("/", {"q": "Test name"}), customer=customer)
     resp = view(request)
     assert name in resp.rendered_content

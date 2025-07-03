@@ -24,8 +24,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="supplier",
             name="modified_on",
-            field=models.DateTimeField(
-                auto_now=True, db_index=True, verbose_name="modified on"
-            ),
+            field=models.DateTimeField(auto_now=True, db_index=True, verbose_name="modified on"),
         ),
     ]

@@ -23,9 +23,7 @@ def test_product_view_prices_and_basket_visibility(rf):
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()
     default_price = 11
-    product = factories.create_product(
-        product_sku, shop=shop, supplier=supplier, default_price=default_price
-    )
+    product = factories.create_product(product_sku, shop=shop, supplier=supplier, default_price=default_price)
 
     assert ThemeSettings.objects.count() == 1
     theme_settings = ThemeSettings.objects.first()
@@ -35,37 +33,25 @@ def test_product_view_prices_and_basket_visibility(rf):
     assert not theme_settings.get_setting("hide_prices")
     assert not theme_settings.get_setting("catalog_mode")
 
-    with override_current_theme_class(
-        ClassicGrayTheme, shop
-    ):  # Ensure settings is refreshed from DB
+    with override_current_theme_class(ClassicGrayTheme, shop):  # Ensure settings is refreshed from DB
         c = SmartClient()
-        soup = c.soup(
-            reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug})
-        )
+        soup = c.soup(reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug}))
         assert _is_basket_in_soup(soup)
         assert _is_price_in_soup(soup, default_price)
         assert _is_add_to_basket_button_in_soup(soup)
 
     theme_settings.update_settings({"catalog_mode": True})
-    with override_current_theme_class(
-        ClassicGrayTheme, shop
-    ):  # Ensure settings is refreshed from DB
+    with override_current_theme_class(ClassicGrayTheme, shop):  # Ensure settings is refreshed from DB
         c = SmartClient()
-        soup = c.soup(
-            reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug})
-        )
+        soup = c.soup(reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug}))
         assert not _is_basket_in_soup(soup)
         assert not _is_add_to_basket_button_in_soup(soup)
         assert _is_price_in_soup(soup, default_price)
 
     theme_settings.update_settings({"hide_prices": True, "catalog_mode": False})
-    with override_current_theme_class(
-        ClassicGrayTheme, shop
-    ):  # Ensure settings is refreshed from DB
+    with override_current_theme_class(ClassicGrayTheme, shop):  # Ensure settings is refreshed from DB
         c = SmartClient()
-        soup = c.soup(
-            reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug})
-        )
+        soup = c.soup(reverse("shuup:product", kwargs={"pk": product.pk, "slug": product.slug}))
         assert not _is_add_to_basket_button_in_soup(soup)
         assert not _is_basket_in_soup(soup)
         assert not _is_price_in_soup(soup, default_price)

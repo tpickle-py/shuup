@@ -14,9 +14,7 @@ class modify(object):
         self.old_attrs = {}
 
     def __enter__(self):
-        self.old_attrs = dict(
-            (key, getattr(self.target, key, None)) for key in self.attrs
-        )
+        self.old_attrs = dict((key, getattr(self.target, key, None)) for key in self.attrs)
         for key, value in self.attrs.items():
             setattr(self.target, key, value)
         if self.save:

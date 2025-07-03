@@ -4,9 +4,10 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
+from django.utils.encoding import force_text
+
 import pytest
 from bs4 import BeautifulSoup
-from django.utils.encoding import force_text
 
 from shuup.admin.module_registry import replace_modules
 from shuup.admin.utils.permissions import set_permissions_for_group
@@ -56,10 +57,7 @@ def test_reports_admin_permissions(rf):
                 response.render()
                 assert response.content
                 soup = BeautifulSoup(response.content)
-                assert (
-                    soup.find("div", {"class": "content-block"}).text
-                    == "No reports available"
-                )
+                assert soup.find("div", {"class": "content-block"}).text == "No reports available"
                 expected_report_identifiers = []
                 for report_cls in [SalesReport, TotalSales, SalesPerHour]:
                     expected_report_identifiers.append(report_cls.identifier)
@@ -69,7 +67,5 @@ def test_reports_admin_permissions(rf):
                     response.render()
                     assert response.content
                     soup = BeautifulSoup(response.content)
-                    for option in soup.find("select", {"id": "id_report"}).findAll(
-                        "option"
-                    ):
+                    for option in soup.find("select", {"id": "id_report"}).findAll("option"):
                         assert option["value"] in expected_report_identifiers

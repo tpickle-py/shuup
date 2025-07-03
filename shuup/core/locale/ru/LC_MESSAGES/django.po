@@ -1,6 +1,6 @@
 # Copyright (C) 2015 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # An Nesterov <arch.nesterov@gmail.com>, 2021
 # Christian Hess, 2021

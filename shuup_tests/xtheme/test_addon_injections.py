@@ -20,9 +20,7 @@ from shuup_tests.xtheme.utils import FauxView, get_jinja2_engine, get_request
 
 
 def add_test_injection(context, content):
-    add_resource(
-        context, "body_end", InlineScriptResource("window.injectedFromAddon=true;")
-    )
+    add_resource(context, "body_end", InlineScriptResource("window.injectedFromAddon=true;"))
 
 
 @pytest.mark.django_db
@@ -44,11 +42,7 @@ def test_simple_addon_injection():
             head, body = output.split("</head>", 1)
             assert "window.injectedFromAddon=true;" in body
 
-            with override_settings(
-                SHUUP_XTHEME_EXCLUDE_TEMPLATES_FROM_RESOUCE_INJECTION=[
-                    "resinject.jinja"
-                ]
-            ):
+            with override_settings(SHUUP_XTHEME_EXCLUDE_TEMPLATES_FROM_RESOUCE_INJECTION=["resinject.jinja"]):
                 output = template.render(request=request)
                 head, body = output.split("</head>", 1)
                 assert "window.injectedFromAddon=true;" not in body
@@ -63,9 +57,7 @@ def test_global_snippet_resource_injection():
     request.resolver_match = MagicMock(app_name="shuup")
     context = dict(view=FauxView, request=request)
 
-    with override_provides(
-        "xtheme_resource_injection", ["shuup.xtheme.resources:inject_global_snippet"]
-    ):
+    with override_provides("xtheme_resource_injection", ["shuup.xtheme.resources:inject_global_snippet"]):
         with override_current_theme_class():
             output = template.render(context, request=request)
             assert "<div>1</div>" not in output

@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from decimal import Decimal
+
 import django.core.validators
 import django.db.models.deletion
+from django.conf import settings
+from django.db import migrations, models
+
 import django_countries.fields
 import enumfields.fields
 import filer.fields.file
@@ -11,9 +16,6 @@ import jsonfield.fields
 import mptt.fields
 import parler.models
 import timezone_field.fields
-from decimal import Decimal
-from django.conf import settings
-from django.db import migrations, models
 
 import shuup.core.fields
 import shuup.core.models
@@ -26,9 +28,7 @@ import shuup.utils.analog
 import shuup.utils.migrations
 import shuup.utils.properties
 
-LANGUAGE_CHOICES = [
-    (code, code) for code in sorted(shuup.core.fields.LanguageFieldMixin.LANGUAGE_CODES)
-]
+LANGUAGE_CHOICES = [(code, code) for code in sorted(shuup.core.fields.LanguageFieldMixin.LANGUAGE_CODES)]
 
 
 def ensure_default_currencies_exists(apps, schema_editor):
@@ -172,9 +172,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -186,9 +184,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -227,9 +223,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -282,33 +276,23 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_on",
-                    models.DateTimeField(
-                        verbose_name="created on", db_index=True, auto_now_add=True
-                    ),
+                    models.DateTimeField(verbose_name="created on", db_index=True, auto_now_add=True),
                 ),
                 (
                     "updated_on",
-                    models.DateTimeField(
-                        verbose_name="updated on", db_index=True, auto_now=True
-                    ),
+                    models.DateTimeField(verbose_name="updated on", db_index=True, auto_now=True),
                 ),
                 (
                     "persistent",
-                    models.BooleanField(
-                        verbose_name="persistent", db_index=True, default=False
-                    ),
+                    models.BooleanField(verbose_name="persistent", db_index=True, default=False),
                 ),
                 (
                     "deleted",
-                    models.BooleanField(
-                        verbose_name="deleted", db_index=True, default=False
-                    ),
+                    models.BooleanField(verbose_name="deleted", db_index=True, default=False),
                 ),
                 (
                     "finished",
-                    models.BooleanField(
-                        verbose_name="finished", db_index=True, default=False
-                    ),
+                    models.BooleanField(verbose_name="finished", db_index=True, default=False),
                 ),
                 (
                     "title",
@@ -339,9 +323,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "currency",
-                    shuup.core.fields.CurrencyField(
-                        verbose_name="currency", max_length=4
-                    ),
+                    shuup.core.fields.CurrencyField(verbose_name="currency", max_length=4),
                 ),
                 (
                     "prices_include_tax",
@@ -388,9 +370,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -402,9 +382,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "user",
@@ -532,9 +510,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -546,9 +522,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -587,9 +561,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -654,9 +626,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -668,9 +638,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "user",
@@ -823,9 +791,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "name_ext",
-                    models.CharField(
-                        verbose_name="name extension", max_length=256, blank=True
-                    ),
+                    models.CharField(verbose_name="name extension", max_length=256, blank=True),
                 ),
                 (
                     "email",
@@ -874,15 +840,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "show_pricing",
-                    models.BooleanField(
-                        verbose_name="show as pricing option", default=True
-                    ),
+                    models.BooleanField(verbose_name="show as pricing option", default=True),
                 ),
                 (
                     "show_prices_including_taxes",
-                    models.NullBooleanField(
-                        verbose_name="show prices including taxes", default=None
-                    ),
+                    models.NullBooleanField(verbose_name="show prices including taxes", default=None),
                 ),
                 (
                     "hide_prices",
@@ -914,9 +876,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -928,9 +888,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -969,9 +927,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -1075,9 +1031,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -1089,9 +1043,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -1165,9 +1117,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -1179,9 +1129,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -1220,9 +1168,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -1268,9 +1214,7 @@ class Migration(migrations.Migration):
                     shuup.core.fields.QuantityField(
                         help_text="Size of the display unit in internal unit.  E.g. if internal unit is kilogram and display unit is gram, ratio is 0.001.",
                         decimal_places=9,
-                        validators=[
-                            shuup.core.models._units.validate_positive_not_zero
-                        ],
+                        validators=[shuup.core.models._units.validate_positive_not_zero],
                         verbose_name="ratio",
                         default=1,
                         max_digits=36,
@@ -1289,9 +1233,7 @@ class Migration(migrations.Migration):
                     shuup.core.fields.QuantityField(
                         help_text="Value to use when displaying unit prices.  E.g. if the display unit is g and the comparison value is 100, then unit prices are shown per 100g, like: $2.95 per 100g.",
                         decimal_places=9,
-                        validators=[
-                            shuup.core.models._units.validate_positive_not_zero
-                        ],
+                        validators=[shuup.core.models._units.validate_positive_not_zero],
                         verbose_name="comparison value",
                         default=1,
                         max_digits=36,
@@ -1334,9 +1276,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -1387,9 +1327,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "description",
@@ -1563,15 +1501,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "longitude",
-                    models.DecimalField(
-                        decimal_places=6, null=True, max_digits=9, blank=True
-                    ),
+                    models.DecimalField(decimal_places=6, null=True, max_digits=9, blank=True),
                 ),
                 (
                     "latitude",
-                    models.DecimalField(
-                        decimal_places=6, null=True, max_digits=9, blank=True
-                    ),
+                    models.DecimalField(decimal_places=6, null=True, max_digits=9, blank=True),
                 ),
             ],
             options={
@@ -1654,9 +1588,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -1668,9 +1600,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -1849,15 +1779,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "longitude",
-                    models.DecimalField(
-                        decimal_places=6, null=True, max_digits=9, blank=True
-                    ),
+                    models.DecimalField(decimal_places=6, null=True, max_digits=9, blank=True),
                 ),
                 (
                     "latitude",
-                    models.DecimalField(
-                        decimal_places=6, null=True, max_digits=9, blank=True
-                    ),
+                    models.DecimalField(decimal_places=6, null=True, max_digits=9, blank=True),
                 ),
             ],
             options={
@@ -1885,9 +1811,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "modified_on",
-                    models.DateTimeField(
-                        verbose_name="modified on", db_index=True, auto_now=True
-                    ),
+                    models.DateTimeField(verbose_name="modified on", db_index=True, auto_now=True),
                 ),
                 (
                     "identifier",
@@ -1902,9 +1826,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "label",
-                    models.CharField(
-                        verbose_name="label", db_index=True, max_length=32
-                    ),
+                    models.CharField(verbose_name="label", db_index=True, max_length=32),
                 ),
                 (
                     "key",
@@ -1923,9 +1845,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "tax_number",
-                    models.CharField(
-                        verbose_name="tax number", max_length=20, blank=True
-                    ),
+                    models.CharField(verbose_name="tax number", max_length=20, blank=True),
                 ),
                 (
                     "phone",
@@ -1933,15 +1853,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "email",
-                    models.EmailField(
-                        verbose_name="email address", max_length=128, blank=True
-                    ),
+                    models.EmailField(verbose_name="email address", max_length=128, blank=True),
                 ),
                 (
                     "deleted",
-                    models.BooleanField(
-                        verbose_name="deleted", db_index=True, default=False
-                    ),
+                    models.BooleanField(verbose_name="deleted", db_index=True, default=False),
                 ),
                 (
                     "payment_status",
@@ -1972,9 +1888,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "payment_data",
-                    jsonfield.fields.JSONField(
-                        verbose_name="payment data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="payment data", null=True, blank=True),
                 ),
                 (
                     "shipping_method_name",
@@ -1987,15 +1901,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "shipping_data",
-                    jsonfield.fields.JSONField(
-                        verbose_name="shipping data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="shipping data", null=True, blank=True),
                 ),
                 (
                     "extra_data",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "taxful_total_price_value",
@@ -2019,9 +1929,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "currency",
-                    shuup.core.fields.CurrencyField(
-                        verbose_name="currency", max_length=4
-                    ),
+                    shuup.core.fields.CurrencyField(verbose_name="currency", max_length=4),
                 ),
                 (
                     "prices_include_tax",
@@ -2029,9 +1937,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "display_currency",
-                    shuup.core.fields.CurrencyField(
-                        verbose_name="display currency", max_length=4, blank=True
-                    ),
+                    shuup.core.fields.CurrencyField(verbose_name="display currency", max_length=4, blank=True),
                 ),
                 (
                     "display_currency_rate",
@@ -2044,21 +1950,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "ip_address",
-                    models.GenericIPAddressField(
-                        verbose_name="IP address", null=True, blank=True
-                    ),
+                    models.GenericIPAddressField(verbose_name="IP address", null=True, blank=True),
                 ),
                 (
                     "order_date",
-                    models.DateTimeField(
-                        verbose_name="order date", db_index=True, editable=False
-                    ),
+                    models.DateTimeField(verbose_name="order date", db_index=True, editable=False),
                 ),
                 (
                     "payment_date",
-                    models.DateTimeField(
-                        verbose_name="payment date", editable=False, null=True
-                    ),
+                    models.DateTimeField(verbose_name="payment date", editable=False, null=True),
                 ),
                 (
                     "language",
@@ -2079,27 +1979,19 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "require_verification",
-                    models.BooleanField(
-                        verbose_name="requires verification", default=False
-                    ),
+                    models.BooleanField(verbose_name="requires verification", default=False),
                 ),
                 (
                     "all_verified",
-                    models.BooleanField(
-                        verbose_name="all lines verified", default=False
-                    ),
+                    models.BooleanField(verbose_name="all lines verified", default=False),
                 ),
                 (
                     "marketing_permission",
-                    models.BooleanField(
-                        verbose_name="marketing permission", default=True
-                    ),
+                    models.BooleanField(verbose_name="marketing permission", default=True),
                 ),
                 (
                     "_codes",
-                    jsonfield.fields.JSONField(
-                        verbose_name="codes", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="codes", null=True, blank=True),
                 ),
                 (
                     "billing_address",
@@ -2154,22 +2046,16 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "sku",
-                    models.CharField(
-                        verbose_name="line SKU", max_length=48, blank=True
-                    ),
+                    models.CharField(verbose_name="line SKU", max_length=48, blank=True),
                 ),
                 ("text", models.CharField(verbose_name="line text", max_length=256)),
                 (
                     "accounting_identifier",
-                    models.CharField(
-                        verbose_name="accounting identifier", max_length=32, blank=True
-                    ),
+                    models.CharField(verbose_name="accounting identifier", max_length=32, blank=True),
                 ),
                 (
                     "require_verification",
-                    models.BooleanField(
-                        verbose_name="require verification", default=False
-                    ),
+                    models.BooleanField(verbose_name="require verification", default=False),
                 ),
                 (
                     "verified",
@@ -2177,9 +2063,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra_data",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "quantity",
@@ -2260,9 +2144,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -2274,9 +2156,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -2316,9 +2196,7 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(verbose_name="tax name", max_length=200)),
                 (
                     "amount_value",
-                    shuup.core.fields.MoneyValueField(
-                        verbose_name="tax amount", decimal_places=9, max_digits=36
-                    ),
+                    shuup.core.fields.MoneyValueField(verbose_name="tax amount", decimal_places=9, max_digits=36),
                 ),
                 (
                     "base_amount_value",
@@ -2368,9 +2246,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -2382,9 +2258,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -2428,9 +2302,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -2442,9 +2314,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -2550,9 +2420,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -2611,15 +2479,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "payment_identifier",
-                    models.CharField(
-                        verbose_name="identifier", unique=True, max_length=96
-                    ),
+                    models.CharField(verbose_name="identifier", unique=True, max_length=96),
                 ),
                 (
                     "amount_value",
-                    shuup.core.fields.MoneyValueField(
-                        verbose_name="amount", decimal_places=9, max_digits=36
-                    ),
+                    shuup.core.fields.MoneyValueField(verbose_name="amount", decimal_places=9, max_digits=36),
                 ),
                 (
                     "foreign_amount_value",
@@ -2644,9 +2508,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "description",
-                    models.CharField(
-                        verbose_name="description", max_length=256, blank=True
-                    ),
+                    models.CharField(verbose_name="description", max_length=256, blank=True),
                 ),
                 (
                     "order",
@@ -2683,9 +2545,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -2697,9 +2557,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -2756,9 +2614,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "choice_identifier",
-                    models.CharField(
-                        verbose_name="choice identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="choice identifier", max_length=64, blank=True),
                 ),
                 ("old_module_identifier", models.CharField(max_length=64, blank=True)),
                 ("old_module_data", jsonfield.fields.JSONField(null=True, blank=True)),
@@ -2788,9 +2644,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -2802,9 +2656,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -2843,9 +2695,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -2902,9 +2752,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -2916,9 +2764,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "user",
@@ -2975,9 +2821,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -2989,9 +2833,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "user",
@@ -3021,9 +2863,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_on",
-                    models.DateTimeField(
-                        verbose_name="created on", db_index=True, auto_now_add=True
-                    ),
+                    models.DateTimeField(verbose_name="created on", db_index=True, auto_now_add=True),
                 ),
                 (
                     "modified_on",
@@ -3094,21 +2934,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "accounting_identifier",
-                    models.CharField(
-                        verbose_name="bookkeeping account", max_length=32, blank=True
-                    ),
+                    models.CharField(verbose_name="bookkeeping account", max_length=32, blank=True),
                 ),
                 (
                     "profit_center",
-                    models.CharField(
-                        verbose_name="profit center", max_length=32, blank=True
-                    ),
+                    models.CharField(verbose_name="profit center", max_length=32, blank=True),
                 ),
                 (
                     "cost_center",
-                    models.CharField(
-                        verbose_name="cost center", max_length=32, blank=True
-                    ),
+                    models.CharField(verbose_name="cost center", max_length=32, blank=True),
                 ),
                 (
                     "width",
@@ -3213,9 +3047,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "datetime_value",
-                    models.DateTimeField(
-                        verbose_name="datetime value", null=True, blank=True
-                    ),
+                    models.DateTimeField(verbose_name="datetime value", null=True, blank=True),
                 ),
                 (
                     "untranslated_string_value",
@@ -3260,9 +3092,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "translated_string_value",
@@ -3349,9 +3179,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -3363,9 +3191,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -3441,9 +3267,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "enabled",
-                    models.BooleanField(
-                        verbose_name="enabled", db_index=True, default=True
-                    ),
+                    models.BooleanField(verbose_name="enabled", db_index=True, default=True),
                 ),
                 (
                     "public",
@@ -3507,9 +3331,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -3521,9 +3343,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -3562,9 +3382,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "title",
@@ -3657,9 +3475,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -3794,9 +3610,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -3933,9 +3747,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 ("name", models.CharField(verbose_name="name", max_length=128)),
                 (
@@ -4011,9 +3823,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 ("value", models.CharField(verbose_name="value", max_length=128)),
                 (
@@ -4090,9 +3900,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -4197,9 +4005,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -4211,9 +4017,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -4306,9 +4110,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -4353,15 +4155,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "tracking_code",
-                    models.CharField(
-                        verbose_name="tracking code", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="tracking code", max_length=64, blank=True),
                 ),
                 (
                     "description",
-                    models.CharField(
-                        verbose_name="description", max_length=255, blank=True
-                    ),
+                    models.CharField(verbose_name="description", max_length=255, blank=True),
                 ),
                 (
                     "volume",
@@ -4437,9 +4235,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -4451,9 +4247,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -4562,9 +4356,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -4576,9 +4368,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -4635,9 +4425,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "choice_identifier",
-                    models.CharField(
-                        verbose_name="choice identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="choice identifier", max_length=64, blank=True),
                 ),
                 ("old_module_identifier", models.CharField(max_length=64, blank=True)),
                 ("old_module_data", jsonfield.fields.JSONField(null=True, blank=True)),
@@ -4667,9 +4455,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -4681,9 +4467,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -4722,9 +4506,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -4736,9 +4518,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "description",
-                    models.CharField(
-                        verbose_name="description", max_length=500, blank=True
-                    ),
+                    models.CharField(verbose_name="description", max_length=500, blank=True),
                 ),
                 (
                     "master",
@@ -4777,9 +4557,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "modified_on",
-                    models.DateTimeField(
-                        verbose_name="modified on", db_index=True, auto_now=True
-                    ),
+                    models.DateTimeField(verbose_name="modified on", db_index=True, auto_now=True),
                 ),
                 (
                     "identifier",
@@ -4813,9 +4591,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "options",
-                    jsonfield.fields.JSONField(
-                        verbose_name="options", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="options", null=True, blank=True),
                 ),
                 (
                     "currency",
@@ -4906,9 +4682,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -4920,9 +4694,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -4971,9 +4743,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "purchasable",
-                    models.BooleanField(
-                        verbose_name="purchasable", db_index=True, default=True
-                    ),
+                    models.BooleanField(verbose_name="purchasable", db_index=True, default=True),
                 ),
                 (
                     "visibility_limit",
@@ -5164,9 +4934,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -5178,9 +4946,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -5219,9 +4985,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -5285,9 +5049,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -5402,9 +5164,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -5416,9 +5176,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -5501,9 +5259,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "module_data",
-                    jsonfield.fields.JSONField(
-                        verbose_name="module data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="module data", null=True, blank=True),
                 ),
                 (
                     "shops",
@@ -5540,9 +5296,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -5554,9 +5308,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -5712,9 +5464,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -5726,9 +5476,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -5767,9 +5515,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -5817,9 +5563,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", max_length=64, blank=True
-                    ),
+                    models.CharField(verbose_name="identifier", max_length=64, blank=True),
                 ),
                 (
                     "kind",
@@ -5831,9 +5575,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -5872,9 +5614,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "name",
@@ -5917,9 +5657,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "description",
@@ -6005,9 +5743,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        verbose_name="Language", db_index=True, max_length=15
-                    ),
+                    models.CharField(verbose_name="Language", db_index=True, max_length=15),
                 ),
                 (
                     "description",
@@ -6124,27 +5860,19 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "available_in_countries",
-                    jsonfield.fields.JSONField(
-                        verbose_name="available in countries", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="available in countries", null=True, blank=True),
                 ),
                 (
                     "available_in_european_countries",
-                    models.BooleanField(
-                        verbose_name="available in european countries", default=False
-                    ),
+                    models.BooleanField(verbose_name="available in european countries", default=False),
                 ),
                 (
                     "unavailable_in_countries",
-                    jsonfield.fields.JSONField(
-                        verbose_name="unavailable in countries", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="unavailable in countries", null=True, blank=True),
                 ),
                 (
                     "unavailable_in_european_countries",
-                    models.BooleanField(
-                        verbose_name="unavailable in european countries", default=False
-                    ),
+                    models.BooleanField(verbose_name="unavailable in european countries", default=False),
                 ),
             ],
             options={
@@ -6459,9 +6187,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="suppliedproduct",
             name="supplier",
-            field=models.ForeignKey(
-                verbose_name="supplier", to="shuup.Supplier", on_delete=models.CASCADE
-            ),
+            field=models.ForeignKey(verbose_name="supplier", to="shuup.Supplier", on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name="shopproduct",
@@ -6509,9 +6235,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="shippingmethod",
             name="behavior_components",
-            field=models.ManyToManyField(
-                verbose_name="behavior components", to="shuup.ServiceBehaviorComponent"
-            ),
+            field=models.ManyToManyField(verbose_name="behavior components", to="shuup.ServiceBehaviorComponent"),
         ),
         migrations.AddField(
             model_name="shippingmethod",
@@ -6601,9 +6325,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="savedaddress",
             name="owner",
-            field=models.ForeignKey(
-                verbose_name="owner", to="shuup.Contact", on_delete=models.CASCADE
-            ),
+            field=models.ForeignKey(verbose_name="owner", to="shuup.Contact", on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name="productmedia",
@@ -6679,9 +6401,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="paymentmethod",
             name="behavior_components",
-            field=models.ManyToManyField(
-                verbose_name="behavior components", to="shuup.ServiceBehaviorComponent"
-            ),
+            field=models.ManyToManyField(verbose_name="behavior components", to="shuup.ServiceBehaviorComponent"),
         ),
         migrations.AddField(
             model_name="paymentmethod",
@@ -6985,16 +6705,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="basket",
             name="products",
-            field=models.ManyToManyField(
-                verbose_name="products", to="shuup.Product", blank=True
-            ),
+            field=models.ManyToManyField(verbose_name="products", to="shuup.Product", blank=True),
         ),
         migrations.AddField(
             model_name="basket",
             name="shop",
-            field=models.ForeignKey(
-                verbose_name="shop", to="shuup.Shop", on_delete=models.CASCADE
-            ),
+            field=models.ForeignKey(verbose_name="shop", to="shuup.Shop", on_delete=models.CASCADE),
         ),
         migrations.CreateModel(
             name="CustomCarrier",
@@ -7323,7 +7039,5 @@ class Migration(migrations.Migration):
             name="fixedcostbehaviorcomponenttranslation",
             unique_together=set([("language_code", "master")]),
         ),
-        migrations.RunPython(
-            ensure_default_currencies_exists, migrations.RunPython.noop
-        ),
+        migrations.RunPython(ensure_default_currencies_exists, migrations.RunPython.noop),
     ]

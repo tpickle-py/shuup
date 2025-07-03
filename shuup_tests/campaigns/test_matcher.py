@@ -103,9 +103,5 @@ def test_provides():
     with override_provides("campaign_catalog_filter", [__name__ + ":UltraFilter"]):
         uf = UltraFilter.objects.create()
         uf.products.add(product)
-        assert get_matching_for_product(
-            shop_product, provide_category="campaign_catalog_filter"
-        )
-        assert not get_matching_for_product(
-            shop_product, provide_category="test_test_test"
-        )
+        assert get_matching_for_product(shop_product, provide_category="campaign_catalog_filter")
+        assert not get_matching_for_product(shop_product, provide_category="test_test_test")

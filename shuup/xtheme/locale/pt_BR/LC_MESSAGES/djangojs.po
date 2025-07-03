@@ -1,7 +1,7 @@
 # English translations for PROJECT.
 # Copyright (C) 2015 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# 
+#
 # Translators:
 # Christian Hess <christianhess.rlz@gmail.com>, 2020
 # 2e5f34f1c58eda4787a14c9dc139ca5f, 2016

@@ -14,9 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="orderline",
             name="labels",
-            field=models.ManyToManyField(
-                blank=True, to="shuup.Label", verbose_name="labels"
-            ),
+            field=models.ManyToManyField(blank=True, to="shuup.Label", verbose_name="labels"),
         ),
         migrations.AlterField(
             model_name="shopproducttranslation",

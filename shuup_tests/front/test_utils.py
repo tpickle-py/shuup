@@ -44,12 +44,8 @@ def test_get_orderable_variation_children(rf):
 
     variable_name = "Color"
     parent = create_product("test-sku-1", shop=shop)
-    variation_variable = ProductVariationVariable.objects.create(
-        product=parent, identifier="color", name=variable_name
-    )
-    red_value = ProductVariationVariableValue.objects.create(
-        variable=variation_variable, identifier="red", value="Red"
-    )
+    variation_variable = ProductVariationVariable.objects.create(product=parent, identifier="color", name=variable_name)
+    red_value = ProductVariationVariableValue.objects.create(variable=variation_variable, identifier="red", value="Red")
     blue_value = ProductVariationVariableValue.objects.create(
         variable=variation_variable, identifier="blue", value="Blue"
     )
@@ -73,9 +69,7 @@ def test_get_orderable_variation_children(rf):
 
     cache.clear()
     for time in range(2):
-        orderable_children, is_orderable = get_orderable_variation_children(
-            parent, request, None
-        )
+        orderable_children, is_orderable = get_orderable_variation_children(parent, request, None)
         assert len(orderable_children)
         for var_variable, var_values in dict(orderable_children).items():
             assert var_variable == variation_variable

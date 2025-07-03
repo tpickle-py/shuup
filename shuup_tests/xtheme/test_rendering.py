@@ -31,9 +31,7 @@ def test_rendering(edit, injectable, theme_class, global_type):
                 template = jeng.get_template("complex.jinja")
             view = FauxView()
             view.xtheme_injection = bool(injectable)
-            output = template.render(
-                context={"view": view, "request": request}, request=request
-            )
+            output = template.render(context={"view": view, "request": request}, request=request)
 
             # From now on we render placholders in views that
             # actually can be edited.

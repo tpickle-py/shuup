@@ -12,8 +12,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="snippet",
             name="name",
-            field=models.CharField(
-                default="Untitled", max_length=50, verbose_name="snippet name"
-            ),
+            field=models.CharField(default="Untitled", max_length=50, verbose_name="snippet name"),
         ),
     ]

@@ -49,10 +49,7 @@ def test_serialize_data():
 
     product = factories.create_product("p1", shop, factories.get_default_supplier())
     for basket_customer in [customer, company]:
-        [
-            factories.create_random_order(basket_customer, [product])
-            for order in range(3)
-        ]
+        [factories.create_random_order(basket_customer, [product]) for order in range(3)]
 
     client = SmartClient()
     client.login(username=user.username, password="1234")
@@ -71,9 +68,7 @@ def test_serialize_data():
     response = client.post(reverse("shuup:gdpr_anonymize_account"))
     assert response.status_code == 302
     assert response.url.endswith(reverse("shuup:index"))
-    task_type = TaskType.objects.get(
-        identifier=GDPR_ANONYMIZE_TASK_TYPE_IDENTIFIER, shop=shop
-    )
+    task_type = TaskType.objects.get(identifier=GDPR_ANONYMIZE_TASK_TYPE_IDENTIFIER, shop=shop)
     assert Task.objects.get(type=task_type, shop=shop)
 
     user.refresh_from_db()
@@ -140,9 +135,7 @@ def test_policy_consent_view(rf, language):
     response = view(request, page_id=incorrect_page.id)
     assert response.status_code == 404
 
-    assert is_documents_consent_in_sync(
-        shop, user
-    )  # returns true because no settings set
+    assert is_documents_consent_in_sync(shop, user)  # returns true because no settings set
     request = apply_request_middleware(rf.post("/"), shop=shop, user=user)
     response = view(request, page_id=page.id)
     assert response.status_code == 404  # gdpr settings not enabled

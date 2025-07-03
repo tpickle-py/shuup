@@ -4,10 +4,11 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.core.exceptions import PermissionDenied
 from django.test import override_settings
 from django.utils.translation import activate
+
+import pytest
 
 from shuup.admin.shop_provider import AdminShopProvider, get_shop, set_shop, unset_shop
 from shuup.core.models import Shop, ShopStatus
@@ -26,9 +27,7 @@ def test_get_shop(rf, get_shop_fn):
         normal_user = factories.create_random_user()
         staff_user = factories.create_random_user(is_staff=True)
 
-        request = apply_request_middleware(
-            rf.post("/"), user=normal_user, skip_session=True
-        )
+        request = apply_request_middleware(rf.post("/"), user=normal_user, skip_session=True)
         # user not staff
         assert get_shop_fn(request) is None
 
@@ -42,9 +41,7 @@ def test_get_shop(rf, get_shop_fn):
 
         # adds the user to a shop
         shop1.staff_members.add(staff_user)
-        request = apply_request_middleware(
-            rf.post("/"), user=staff_user, skip_session=True
-        )
+        request = apply_request_middleware(rf.post("/"), user=staff_user, skip_session=True)
         assert get_shop_fn(request) == shop1
 
         # adds the user to another shop
@@ -76,9 +73,7 @@ def test_set_shop(rf, set_shop_fn, get_shop_fn):
         normal_user = factories.create_random_user()
         staff_user = factories.create_random_user(is_staff=True)
 
-        request = apply_request_middleware(
-            rf.post("/"), user=normal_user, skip_session=True
-        )
+        request = apply_request_middleware(rf.post("/"), user=normal_user, skip_session=True)
         # user not staff
         with pytest.raises(PermissionDenied) as exc:
             set_shop_fn(request, shop1)
@@ -97,9 +92,7 @@ def test_set_shop(rf, set_shop_fn, get_shop_fn):
 
         # user is member of the shop staff
         shop1.staff_members.add(staff_user)
-        request = apply_request_middleware(
-            rf.post("/"), user=staff_user, skip_session=True
-        )
+        request = apply_request_middleware(rf.post("/"), user=staff_user, skip_session=True)
         set_shop_fn(request, shop1)
         assert get_shop_fn(request) == shop1
 

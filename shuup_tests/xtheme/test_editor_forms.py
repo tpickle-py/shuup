@@ -54,9 +54,7 @@ def test_formless_plugin_in_lcfg(rf):
             assert lcfg.is_valid()
             lcfg.save()
             assert cell.extra_classes == "newClass"
-            assert (
-                cell.sizes["md"] == two_thirds
-            )  # Something got saved even if the plugin doesn't need config
+            assert cell.sizes["md"] == two_thirds  # Something got saved even if the plugin doesn't need config
 
 
 @pytest.mark.django_db

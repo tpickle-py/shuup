@@ -6,6 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 from django import forms
 from django.db import models
+
 from enumfields import Enum, EnumIntegerField
 
 

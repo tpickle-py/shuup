@@ -4,8 +4,9 @@ from __future__ import unicode_literals
 
 import django.db.models.deletion
 import django.utils.timezone
-import parler.fields
 from django.db import migrations, models
+
+import parler.fields
 
 
 class Migration(migrations.Migration):

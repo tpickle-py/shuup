@@ -46,9 +46,7 @@ def test_page_layout():
 
     placeholder_name = "cms_page"
     context = {"page": page1}
-    layout = view_config.get_placeholder_layout(
-        PageLayout, placeholder_name, context=context
-    )
+    layout = view_config.get_placeholder_layout(PageLayout, placeholder_name, context=context)
     assert isinstance(layout, PageLayout)
     assert layout.get_help_text({}) == ""  # Invalid context for help text
     assert page1.title in layout.get_help_text(context)
@@ -62,9 +60,7 @@ def test_page_layout():
     layout.begin_column({"md": 8})
     plugin_text = printable_gibberish()
     layout.add_plugin("text", {"text": plugin_text})
-    view_config.save_placeholder_layout(
-        get_layout_data_key(placeholder_name, layout, context), layout
-    )
+    view_config.save_placeholder_layout(get_layout_data_key(placeholder_name, layout, context), layout)
     view_config.publish()
 
     c = SmartClient()

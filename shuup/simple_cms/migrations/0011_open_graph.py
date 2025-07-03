@@ -3,11 +3,12 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
+from django.conf import settings
+from django.db import migrations, models
+
 import enumfields.fields
 import filer.fields.image
 import parler.models
-from django.conf import settings
-from django.db import migrations, models
 
 import shuup.simple_cms.models
 
@@ -72,9 +73,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        db_index=True, max_length=15, verbose_name="Language"
-                    ),
+                    models.CharField(db_index=True, max_length=15, verbose_name="Language"),
                 ),
                 (
                     "title",

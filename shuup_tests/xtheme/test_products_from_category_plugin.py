@@ -35,9 +35,7 @@ def test_products_from_category_plugin(reindex_catalog):
 
     reindex_catalog()
     context = get_jinja_context()
-    rendered = ProductsFromCategoryPlugin(
-        {"title": "Products", "count": 4, "category": cat.id}
-    ).render(context)
+    rendered = ProductsFromCategoryPlugin({"title": "Products", "count": 4, "category": cat.id}).render(context)
     soup = BeautifulSoup(rendered, "lxml")
     assert "Products" in soup.find("h2").contents[0]
     assert len(soup.findAll("div", {"class": "product-card"})) == 4
@@ -46,7 +44,5 @@ def test_products_from_category_plugin(reindex_catalog):
 def _create_orderable_product(name, sku, price):
     supplier = get_default_supplier()
     shop = get_default_shop()
-    product = create_product(
-        sku=sku, shop=shop, supplier=supplier, default_price=price, name=name
-    )
+    product = create_product(sku=sku, shop=shop, supplier=supplier, default_price=price, name=name)
     return product

@@ -6,6 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import decimal
+
 import pytest
 
 from shuup.core.models import OrderLineType
@@ -53,6 +54,4 @@ def test_order_source_total_gross_weight(rf, admin_user):
         )
 
     assert len(source.get_lines()) == len(products_data)
-    assert source.total_gross_weight == sum(
-        [data.get("gross_weight") for data in products_data]
-    )
+    assert source.total_gross_weight == sum([data.get("gross_weight") for data in products_data])

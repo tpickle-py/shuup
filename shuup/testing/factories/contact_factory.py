@@ -10,13 +10,7 @@ from django.utils.text import slugify
 from django_countries.data import COUNTRIES
 
 from shuup.admin.utils.permissions import set_permissions_for_group
-from shuup.core.models import (
-    CompanyContact,
-    Contact,
-    ContactGroup,
-    MutableAddress,
-    PersonContact,
-)
+from shuup.core.models import CompanyContact, Contact, ContactGroup, MutableAddress, PersonContact
 
 from .shared import DEFAULT_ADDRESS_DATA, DEFAULT_NAME, get_default_shop, get_faker
 

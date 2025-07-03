@@ -25,27 +25,19 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "enabled",
-                    models.BooleanField(
-                        verbose_name="enabled", db_index=True, default=True
-                    ),
+                    models.BooleanField(verbose_name="enabled", db_index=True, default=True),
                 ),
                 (
                     "country_codes_pattern",
-                    models.CharField(
-                        verbose_name="country codes pattern", max_length=300, blank=True
-                    ),
+                    models.CharField(verbose_name="country codes pattern", max_length=300, blank=True),
                 ),
                 (
                     "region_codes_pattern",
-                    models.CharField(
-                        verbose_name="region codes pattern", max_length=500, blank=True
-                    ),
+                    models.CharField(verbose_name="region codes pattern", max_length=500, blank=True),
                 ),
                 (
                     "postal_codes_pattern",
-                    models.CharField(
-                        verbose_name="postal codes pattern", max_length=500, blank=True
-                    ),
+                    models.CharField(verbose_name="postal codes pattern", max_length=500, blank=True),
                 ),
                 (
                     "_postal_codes_min",

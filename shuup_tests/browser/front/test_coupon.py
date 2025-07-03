@@ -32,9 +32,7 @@ from shuup.testing.factories import (
 )
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 CATEGORY_DATA = [
@@ -57,9 +55,7 @@ def test_coupon(browser, live_server, reindex_catalog):
     get_default_payment_method()
     get_default_shipping_method()
 
-    first_category = Category.objects.create(
-        identifier="cat-1", status=CategoryStatus.VISIBLE, name="First Category"
-    )
+    first_category = Category.objects.create(identifier="cat-1", status=CategoryStatus.VISIBLE, name="First Category")
     first_category.shops.add(shop)
 
     _populate_products_form_data(CATEGORY_PRODUCT_DATA, shop, first_category)
@@ -69,9 +65,7 @@ def test_coupon(browser, live_server, reindex_catalog):
     # initialize test and go to front page
     browser = initialize_front_browser_test(browser, live_server)
 
-    _add_product_to_basket_from_category(
-        live_server, browser, first_category, shop, reindex_catalog
-    )
+    _add_product_to_basket_from_category(live_server, browser, first_category, shop, reindex_catalog)
     _activate_basket_campaign_through_coupon(browser, first_category, shop)
 
 
@@ -88,18 +82,12 @@ def _populate_products_form_data(data, shop, category=None):
 def _create_orderable_product(name, sku, price):
     supplier = get_default_supplier()
     shop = get_default_shop()
-    product = create_product(
-        sku=sku, shop=shop, supplier=supplier, default_price=price, name=name
-    )
+    product = create_product(sku=sku, shop=shop, supplier=supplier, default_price=price, name=name)
     return product
 
 
-def _add_product_to_basket_from_category(
-    live_server, browser, first_category, shop, reindex_catalog
-):
-    url = reverse(
-        "shuup:category", kwargs={"pk": first_category.pk, "slug": first_category.slug}
-    )
+def _add_product_to_basket_from_category(live_server, browser, first_category, shop, reindex_catalog):
+    url = reverse("shuup:category", kwargs={"pk": first_category.pk, "slug": first_category.slug})
     browser.visit("%s%s" % (live_server, url))
     wait_until_condition(browser, lambda x: x.is_text_present(first_category.name))
 
@@ -122,21 +110,17 @@ def _add_product_to_basket_from_category(
     browser.reload()
     wait_until_condition(
         browser,
-        lambda x: str(new_price - discount_amount)
-        in x.find_by_css(selector).first.text,
+        lambda x: str(new_price - discount_amount) in x.find_by_css(selector).first.text,
     )
 
     # Go to product detail and update the price one more time
     click_element(browser, selector)
 
-    product_detail_price_selector = (
-        "#product-price-div-%s span.product-price strong" % product.id
-    )
+    product_detail_price_selector = "#product-price-div-%s span.product-price strong" % product.id
     wait_until_appeared(browser, product_detail_price_selector)
     wait_until_condition(
         browser,
-        lambda x: str(new_price - discount_amount)
-        in x.find_by_css(product_detail_price_selector).first.text,
+        lambda x: str(new_price - discount_amount) in x.find_by_css(product_detail_price_selector).first.text,
     )
 
     last_price = 120.53
@@ -152,32 +136,21 @@ def _add_product_to_basket_from_category(
     browser.reload()
     wait_until_condition(
         browser,
-        lambda x: str(last_price - new_discount_amount)
-        in x.find_by_css(product_detail_price_selector).first.text,
+        lambda x: str(last_price - new_discount_amount) in x.find_by_css(product_detail_price_selector).first.text,
     )
 
     # Add product to basket and navigate to basket view
-    click_element(
-        browser, "#add-to-cart-button-%s" % product.pk
-    )  # add product to basket
+    click_element(browser, "#add-to-cart-button-%s" % product.pk)  # add product to basket
     wait_until_appeared(browser, ".cover-wrap")
     wait_until_disappeared(browser, ".cover-wrap")
-    click_element(
-        browser, "#navigation-basket-partial"
-    )  # open upper basket navigation menu
+    click_element(browser, "#navigation-basket-partial")  # open upper basket navigation menu
     click_element(browser, "a[href='/basket/']")  # click the link to basket in dropdown
-    wait_until_condition(
-        browser, lambda x: x.is_text_present("Shopping cart")
-    )  # we are in basket page
-    wait_until_condition(
-        browser, lambda x: x.is_text_present(product.name)
-    )  # product is in basket
+    wait_until_condition(browser, lambda x: x.is_text_present("Shopping cart"))  # we are in basket page
+    wait_until_condition(browser, lambda x: x.is_text_present(product.name))  # product is in basket
 
 
 def _create_category_product_discount(category, shop, discount_amount):
-    Discount.objects.create(
-        category=category, discount_amount_value=discount_amount, shop=shop
-    )
+    Discount.objects.create(category=category, discount_amount_value=discount_amount, shop=shop)
 
 
 def _activate_basket_campaign_through_coupon(browser, category, shop):
@@ -210,14 +183,10 @@ def _create_coupon_campaign(category, shop):
 
     coupon = Coupon.objects.create(code="couponcode", active=True)
 
-    campaign = BasketCampaign.objects.create(
-        shop=shop, public_name="test", name="test", active=True, coupon=coupon
-    )
+    campaign = BasketCampaign.objects.create(shop=shop, public_name="test", name="test", active=True, coupon=coupon)
     campaign.conditions.add(basket_condition)
     campaign.save()
 
-    BasketDiscountPercentage.objects.create(
-        campaign=campaign, discount_percentage="0.20"
-    )
+    BasketDiscountPercentage.objects.create(campaign=campaign, discount_percentage="0.20")
 
     return coupon.code

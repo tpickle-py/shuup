@@ -111,7 +111,7 @@ class CheckoutPhaseViewMixin:
 
 
 def _get_dummy_checkout_process(phase):
-    phase_specs = ["{0.__module__}:{0.__name__}".format(type(phase))]
+    phase_specs = [f"{type(phase).__module__}:{type(phase).__name__}"]
     phase_kwargs = {key: getattr(phase, key) for key in ["request", "args", "kwargs"] if hasattr(phase, key)}
     checkout_process = CheckoutProcess(phase_specs, phase_kwargs)
     checkout_process._phases = [phase]

@@ -78,13 +78,7 @@ from .shop_factory import ShopFactory
 from .shop_product_factory import ShopProductFactory
 
 # Import from tax factory
-from .tax_factory import (
-    create_default_tax_rule,
-    get_default_tax,
-    get_default_tax_class,
-    get_tax,
-    get_test_tax,
-)
+from .tax_factory import create_default_tax_rule, get_default_tax, get_default_tax_class, get_tax, get_test_tax
 from .user_factory import UserFactory
 
 # Add more as you break them out

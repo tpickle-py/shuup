@@ -36,9 +36,7 @@ def _get_default_discount_data(overrides={}):
         "name": "My Discount",
         "active": "on",
         "start_datetime": timezone.now().strftime("%Y-%m-%d %H:%M"),
-        "end_datetime": (timezone.now() + timedelta(days=10)).strftime(
-            "%Y-%m-%d %H:%M"
-        ),
+        "end_datetime": (timezone.now() + timedelta(days=10)).strftime("%Y-%m-%d %H:%M"),
         "product": "",
         "category": "",
         "contact": "",
@@ -57,37 +55,25 @@ def test_admin_catalog_discount_product_filter(rf, admin_user):
     shop, supplier, contact, group, category = _init_test()
     default_price = Decimal("15.0")
     discount_percentage = Decimal("10")
-    product = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=default_price
-    )
-    product2 = factories.create_product(
-        "p2", shop=shop, supplier=supplier, default_price=default_price
-    )
+    product = factories.create_product("p1", shop=shop, supplier=supplier, default_price=default_price)
+    product2 = factories.create_product("p2", shop=shop, supplier=supplier, default_price=default_price)
 
     ProductCatalog.index_product(product)
     ProductCatalog.index_product(product2)
     view = DiscountEditView.as_view()
 
     # create a 10% discount for the product
-    payload = _get_default_discount_data(
-        {"product": product.pk, "discount_percentage": str(discount_percentage)}
-    )
-    request = apply_request_middleware(
-        rf.post("/", data=payload), shop=shop, user=admin_user
-    )
+    payload = _get_default_discount_data({"product": product.pk, "discount_percentage": str(discount_percentage)})
+    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = view(request, pk=None)
     assert response.status_code == 302
 
     anon_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
-    customer_catalog = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=False, contact=contact)
-    )
+    customer_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False, contact=contact))
 
     # discount is indexed
-    discounted_price = (
-        default_price - (default_price * discount_percentage * Decimal(0.01))
-    ).quantize(Decimal("0.01"))
+    discounted_price = (default_price - (default_price * discount_percentage * Decimal(0.01))).quantize(Decimal("0.01"))
     _assert_products_queryset(
         anon_catalog,
         [
@@ -105,12 +91,8 @@ def test_admin_catalog_discount_product_filter(rf, admin_user):
 
     # changed the discount product
     discount = Discount.objects.last()
-    payload = _get_default_discount_data(
-        {"product": product2.pk, "discount_percentage": str(discount_percentage)}
-    )
-    request = apply_request_middleware(
-        rf.post("/", data=payload), shop=shop, user=admin_user
-    )
+    payload = _get_default_discount_data({"product": product2.pk, "discount_percentage": str(discount_percentage)})
+    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = view(request, pk=discount.pk)
     assert response.status_code == 302
@@ -135,38 +117,26 @@ def test_admin_catalog_discount_category_filter(rf, admin_user):
     shop, supplier, contact, group, category = _init_test()
     default_price = Decimal("15.0")
     discount_amount = Decimal("5")
-    product = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=default_price
-    )
+    product = factories.create_product("p1", shop=shop, supplier=supplier, default_price=default_price)
     product.get_shop_instance(shop).categories.add(category)
 
     ProductCatalog.index_product(product)
     view = DiscountEditView.as_view()
 
     # create a $5 discount for the category
-    payload = _get_default_discount_data(
-        {"category": category.pk, "discount_amount_value": str(discount_amount)}
-    )
-    request = apply_request_middleware(
-        rf.post("/", data=payload), shop=shop, user=admin_user
-    )
+    payload = _get_default_discount_data({"category": category.pk, "discount_amount_value": str(discount_amount)})
+    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = view(request, pk=None)
     assert response.status_code == 302
 
     anon_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
-    customer_catalog = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=False, contact=contact)
-    )
+    customer_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False, contact=contact))
 
     # discount is indexed
     discounted_price = (default_price - discount_amount).quantize(Decimal("0.01"))
-    _assert_products_queryset(
-        anon_catalog, [(product.pk, default_price, discounted_price)]
-    )
-    _assert_products_queryset(
-        customer_catalog, [(product.pk, default_price, discounted_price)]
-    )
+    _assert_products_queryset(anon_catalog, [(product.pk, default_price, discounted_price)])
+    _assert_products_queryset(customer_catalog, [(product.pk, default_price, discounted_price)])
 
     # make the exclude_selected_category flag be True
     discount = Discount.objects.last()
@@ -177,9 +147,7 @@ def test_admin_catalog_discount_category_filter(rf, admin_user):
             "discount_amount_value": str(discount_amount),
         }
     )
-    request = apply_request_middleware(
-        rf.post("/", data=payload), shop=shop, user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = view(request, pk=discount.pk)
     assert response.status_code == 302
@@ -193,9 +161,7 @@ def test_admin_catalog_discount_contact_group_filter(rf, admin_user):
     shop, supplier, contact, group, category = _init_test()
     default_price = Decimal("15.0")
     discounted_price_value = Decimal("12")
-    product = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=default_price
-    )
+    product = factories.create_product("p1", shop=shop, supplier=supplier, default_price=default_price)
     product.get_shop_instance(shop).categories.add(category)
 
     ProductCatalog.index_product(product)
@@ -208,50 +174,34 @@ def test_admin_catalog_discount_contact_group_filter(rf, admin_user):
             "discounted_price_value": str(discounted_price_value),
         }
     )
-    request = apply_request_middleware(
-        rf.post("/", data=payload), shop=shop, user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = view(request, pk=None)
     assert response.status_code == 302
 
     anon_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
-    customer_catalog = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=False, contact=contact)
-    )
+    customer_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False, contact=contact))
 
     _assert_products_queryset(anon_catalog, [(product.pk, default_price, None)])
-    _assert_products_queryset(
-        customer_catalog, [(product.pk, default_price, discounted_price_value)]
-    )
+    _assert_products_queryset(customer_catalog, [(product.pk, default_price, discounted_price_value)])
 
     # remove the group from the discount
     discount = Discount.objects.last()
-    payload = _get_default_discount_data(
-        {"discounted_price_value": str(discounted_price_value)}
-    )
-    request = apply_request_middleware(
-        rf.post("/", data=payload), shop=shop, user=admin_user
-    )
+    payload = _get_default_discount_data({"discounted_price_value": str(discounted_price_value)})
+    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = view(request, pk=discount.pk)
     assert response.status_code == 302
 
-    _assert_products_queryset(
-        anon_catalog, [(product.pk, default_price, discounted_price_value)]
-    )
-    _assert_products_queryset(
-        customer_catalog, [(product.pk, default_price, discounted_price_value)]
-    )
+    _assert_products_queryset(anon_catalog, [(product.pk, default_price, discounted_price_value)])
+    _assert_products_queryset(customer_catalog, [(product.pk, default_price, discounted_price_value)])
 
 
 def test_admin_catalog_discount_happy_hour_filter(rf, admin_user):
     shop, supplier, contact, group, category = _init_test()
     default_price = Decimal("15.0")
     discounted_price_value = Decimal("12")
-    product = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=default_price
-    )
+    product = factories.create_product("p1", shop=shop, supplier=supplier, default_price=default_price)
     product.get_shop_instance(shop).categories.add(category)
 
     ProductCatalog.index_product(product)
@@ -265,9 +215,7 @@ def test_admin_catalog_discount_happy_hour_filter(rf, admin_user):
         "to_hour": "11:00",
         "weekdays": "0",
     }
-    request = apply_request_middleware(
-        rf.post("/", data=payload), shop=shop, user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = happy_hour_view(request, pk=None)
     assert response.status_code == 302
@@ -283,9 +231,7 @@ def test_admin_catalog_discount_happy_hour_filter(rf, admin_user):
             "discounted_price_value": str(discounted_price_value),
         }
     )
-    request = apply_request_middleware(
-        rf.post("/", data=payload), shop=shop, user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = discount_view(request, pk=None)
     assert response.status_code == 302
@@ -309,30 +255,20 @@ def test_admin_catalog_discount_happy_hour_filter(rf, admin_user):
         "weekdays": "1",
         "discounts": discount.pk,
     }
-    request = apply_request_middleware(
-        rf.post("/", data=payload), shop=shop, user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data=payload), shop=shop, user=admin_user)
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         response = happy_hour_view(request, pk=happy_hour.pk)
     assert response.status_code == 302
 
     # Monday, 10am
-    with patch.object(
-        timezone, "now", return_value=datetime(2021, 1, 4, 10, 0, tzinfo=pytz.utc)
-    ):
+    with patch.object(timezone, "now", return_value=datetime(2021, 1, 4, 10, 0, tzinfo=pytz.utc)):
         _assert_products_queryset(catalog, [(product.pk, default_price, None)])
     # Monday, 5pm
-    with patch.object(
-        timezone, "now", return_value=datetime(2021, 1, 4, 17, 0, tzinfo=pytz.utc)
-    ):
+    with patch.object(timezone, "now", return_value=datetime(2021, 1, 4, 17, 0, tzinfo=pytz.utc)):
         _assert_products_queryset(catalog, [(product.pk, default_price, None)])
     # Tuesday, 5pm
-    with patch.object(
-        timezone, "now", return_value=datetime(2021, 1, 5, 17, 0, tzinfo=pytz.utc)
-    ):
-        _assert_products_queryset(
-            catalog, [(product.pk, default_price, discounted_price_value)]
-        )
+    with patch.object(timezone, "now", return_value=datetime(2021, 1, 5, 17, 0, tzinfo=pytz.utc)):
+        _assert_products_queryset(catalog, [(product.pk, default_price, discounted_price_value)])
 
 
 def _assert_products_queryset(catalog, expected_prices):

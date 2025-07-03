@@ -23,9 +23,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="orderstatus",
             name="allowed_next_statuses",
-            field=models.ManyToManyField(
-                blank=True, to="shuup.OrderStatus", verbose_name="allowed next statuses"
-            ),
+            field=models.ManyToManyField(blank=True, to="shuup.OrderStatus", verbose_name="allowed next statuses"),
         ),
         migrations.AddField(
             model_name="orderstatus",

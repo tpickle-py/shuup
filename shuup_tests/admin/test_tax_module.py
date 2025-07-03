@@ -4,8 +4,9 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.utils.encoding import force_text
+
+import pytest
 
 from shuup.admin.module_registry import replace_modules
 from shuup.admin.modules.taxes import TaxModule

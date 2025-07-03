@@ -34,11 +34,5 @@ def test_basket_line_descriptor(rf):
     ):
         soup = client.soup(reverse("shuup:basket"))
         basket_line_property = soup.find("p", {"class": "basket-line-property"})
-        assert (
-            basket_line_property.find("strong", {"class": "property-name"}).text.strip()
-            == "Type:"
-        )
-        assert (
-            basket_line_property.find("span", {"class": "property-value"}).text.strip()
-            == "product"
-        )
+        assert basket_line_property.find("strong", {"class": "property-name"}).text.strip() == "Type:"
+        assert basket_line_property.find("span", {"class": "property-value"}).text.strip() == "product"

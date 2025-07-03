@@ -33,13 +33,8 @@ def test_order_price_display():
     for line in order.lines.all():
         taxful_total += decimal.Decimal(money(line.taxful_price).strip("\u20ac"))
         taxless_total += decimal.Decimal(money(line.taxless_price).strip("\u20ac"))
-    assert (
-        decimal.Decimal(money(order.taxful_total_price).strip("\u20ac")) == taxful_total
-    )
-    assert (
-        decimal.Decimal(money(order.taxless_total_price).strip("\u20ac"))
-        == taxless_total
-    )
+    assert decimal.Decimal(money(order.taxful_total_price).strip("\u20ac")) == taxful_total
+    assert decimal.Decimal(money(order.taxless_total_price).strip("\u20ac")) == taxless_total
 
 
 def _get_order(shop, supplier):
@@ -49,9 +44,7 @@ def _get_order(shop, supplier):
     for product_data in _get_product_data():
         quantity = product_data.pop("quantity")
         tax_rate = product_data.pop("tax_rate")
-        product = create_product(
-            sku=product_data.pop("sku"), shop=shop, supplier=supplier, **product_data
-        )
+        product = create_product(sku=product_data.pop("sku"), shop=shop, supplier=supplier, **product_data)
         add_product_to_order(
             order,
             supplier,

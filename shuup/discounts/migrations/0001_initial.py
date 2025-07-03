@@ -43,9 +43,7 @@ class Migration(migrations.Migration):
                 ("end_datetime", models.DateTimeField(verbose_name="end")),
                 (
                     "shops",
-                    models.ManyToManyField(
-                        blank=True, to="shuup.Shop", verbose_name="shops"
-                    ),
+                    models.ManyToManyField(blank=True, to="shuup.Shop", verbose_name="shops"),
                 ),
             ],
             options={
@@ -118,9 +116,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "shops",
-                    models.ManyToManyField(
-                        blank=True, to="shuup.Shop", verbose_name="shops"
-                    ),
+                    models.ManyToManyField(blank=True, to="shuup.Shop", verbose_name="shops"),
                 ),
             ],
         ),
@@ -371,9 +367,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "shops",
-                    models.ManyToManyField(
-                        blank=True, db_index=True, to="shuup.Shop", verbose_name="shops"
-                    ),
+                    models.ManyToManyField(blank=True, db_index=True, to="shuup.Shop", verbose_name="shops"),
                 ),
             ],
             options={
@@ -465,8 +459,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="discount",
             name="shops",
-            field=models.ManyToManyField(
-                blank=True, to="shuup.Shop", verbose_name="shops"
-            ),
+            field=models.ManyToManyField(blank=True, to="shuup.Shop", verbose_name="shops"),
         ),
     ]

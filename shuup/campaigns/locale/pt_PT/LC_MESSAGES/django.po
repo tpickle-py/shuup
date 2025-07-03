@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # João Gaspar Monteiro <joao.monteiro@qintera.pt>, 2021
 # Ricardo Ibrahim <ricardo.ibrahim@qintera.pt>, 2021
 # Christian Hess, 2021
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""

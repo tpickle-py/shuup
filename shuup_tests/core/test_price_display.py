@@ -8,14 +8,16 @@
 Tests for utils.price_display and the price filters.
 """
 
-import django.template
-import django_jinja.backend
-import pytest
 from decimal import Decimal
+from unittest.mock import patch
+
+import django.template
 from django.conf import settings
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
-from unittest.mock import patch
+
+import django_jinja.backend
+import pytest
 
 from shuup.apps.provides import override_provides
 from shuup.core.models import (
@@ -78,9 +80,7 @@ class DummyPricingModule(PricingModule):
 
         # index the price of all children shop products
         if is_variation_parent:
-            children_shop_product = ShopProduct.objects.select_related(
-                "product", "shop"
-            ).filter(
+            children_shop_product = ShopProduct.objects.select_related("product", "shop").filter(
                 shop=shop_product.shop,
                 product__variation_parent_id=shop_product.product_id,
             )
@@ -93,9 +93,7 @@ class DummyPricingModule(PricingModule):
                     shop_id=shop_product.shop_id,
                     supplier_id=supplier_id,
                     catalog_rule=None,
-                    defaults=dict(
-                        price_value=shop_product.default_price_value or Decimal()
-                    ),
+                    defaults=dict(price_value=shop_product.default_price_value or Decimal()),
                 )
 
 
@@ -243,18 +241,13 @@ def test_filter_parameter_contact_groups():
     anonymous_price = 14.6
 
     def get_price_info_mock(context, product, quantity=1):
-        if (
-            context.customer.get_default_group()
-            == AnonymousContact().get_default_group()
-        ):
+        if context.customer.get_default_group() == AnonymousContact().get_default_group():
             price = context.shop.create_price(anonymous_price)
         else:
             price = context.shop.create_price(customer_price)
         return PriceInfo(quantity * price, quantity * price, quantity)
 
-    with patch.object(
-        DummyPricingModule, "get_price_info", side_effect=get_price_info_mock
-    ):
+    with patch.object(DummyPricingModule, "get_price_info", side_effect=get_price_info_mock):
         (engine, context) = _get_template_engine_and_context(product_sku="123")
         # test with anonymous
         context["request"].customer = AnonymousContact()

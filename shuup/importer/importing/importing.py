@@ -547,16 +547,18 @@ class DataImporter:
         return itertools.chain(
             zip(model._meta.local_fields, itertools.repeat(0)),
             zip(model._meta.local_many_to_many, itertools.repeat(1)),
-            zip(
-                (
-                    f
-                    for f in model._parler_meta.root_model._meta.get_fields()
-                    if f.name not in ("id", "master", "language_code")
-                ),
-                itertools.repeat(2),
-            )
-            if hasattr(model, "_parler_meta")
-            else (),
+            (
+                zip(
+                    (
+                        f
+                        for f in model._parler_meta.root_model._meta.get_fields()
+                        if f.name not in ("id", "master", "language_code")
+                    ),
+                    itertools.repeat(2),
+                )
+                if hasattr(model, "_parler_meta")
+                else ()
+            ),
         )
 
     def get_related_models(self):

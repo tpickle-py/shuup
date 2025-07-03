@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import re
+
 import django.core.validators
 import django.db.models.deletion
+from django.conf import settings
+from django.db import migrations, models
+
 import enumfields.fields
 import jsonfield.fields
 import parler.models
-import re
-from django.conf import settings
-from django.db import migrations, models
 
 import shuup.campaigns.models.basket_conditions
 import shuup.core.fields
@@ -141,9 +143,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(max_length=256, verbose_name="message")),
                 (
                     "identifier",
-                    models.CharField(
-                        blank=True, max_length=64, verbose_name="identifier"
-                    ),
+                    models.CharField(blank=True, max_length=64, verbose_name="identifier"),
                 ),
                 (
                     "kind",
@@ -155,9 +155,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        blank=True, null=True, verbose_name="extra data"
-                    ),
+                    jsonfield.fields.JSONField(blank=True, null=True, verbose_name="extra data"),
                 ),
                 (
                     "target",
@@ -196,9 +194,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        max_length=15, db_index=True, verbose_name="Language"
-                    ),
+                    models.CharField(max_length=15, db_index=True, verbose_name="Language"),
                 ),
                 (
                     "public_name",
@@ -374,9 +370,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(max_length=256, verbose_name="message")),
                 (
                     "identifier",
-                    models.CharField(
-                        blank=True, max_length=64, verbose_name="identifier"
-                    ),
+                    models.CharField(blank=True, max_length=64, verbose_name="identifier"),
                 ),
                 (
                     "kind",
@@ -388,9 +382,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        blank=True, null=True, verbose_name="extra data"
-                    ),
+                    jsonfield.fields.JSONField(blank=True, null=True, verbose_name="extra data"),
                 ),
                 (
                     "target",
@@ -429,9 +421,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "language_code",
-                    models.CharField(
-                        max_length=15, db_index=True, verbose_name="Language"
-                    ),
+                    models.CharField(max_length=15, db_index=True, verbose_name="Language"),
                 ),
                 (
                     "public_name",
@@ -648,9 +638,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(max_length=256, verbose_name="message")),
                 (
                     "identifier",
-                    models.CharField(
-                        blank=True, max_length=64, verbose_name="identifier"
-                    ),
+                    models.CharField(blank=True, max_length=64, verbose_name="identifier"),
                 ),
                 (
                     "kind",
@@ -662,9 +650,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        blank=True, null=True, verbose_name="extra data"
-                    ),
+                    jsonfield.fields.JSONField(blank=True, null=True, verbose_name="extra data"),
                 ),
                 (
                     "target",
@@ -768,9 +754,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(max_length=256, verbose_name="message")),
                 (
                     "identifier",
-                    models.CharField(
-                        blank=True, max_length=64, verbose_name="identifier"
-                    ),
+                    models.CharField(blank=True, max_length=64, verbose_name="identifier"),
                 ),
                 (
                     "kind",
@@ -782,9 +766,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        blank=True, null=True, verbose_name="extra data"
-                    ),
+                    jsonfield.fields.JSONField(blank=True, null=True, verbose_name="extra data"),
                 ),
                 (
                     "target",
@@ -1027,9 +1009,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "categories",
-                    models.ManyToManyField(
-                        to="shuup.Category", verbose_name="categories"
-                    ),
+                    models.ManyToManyField(to="shuup.Category", verbose_name="categories"),
                 ),
             ],
             options={
@@ -1151,9 +1131,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "contact_groups",
-                    models.ManyToManyField(
-                        to="shuup.ContactGroup", verbose_name="contact groups"
-                    ),
+                    models.ManyToManyField(to="shuup.ContactGroup", verbose_name="contact groups"),
                 ),
             ],
             options={
@@ -1177,9 +1155,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "contact_groups",
-                    models.ManyToManyField(
-                        to="shuup.ContactGroup", verbose_name="contact groups"
-                    ),
+                    models.ManyToManyField(to="shuup.ContactGroup", verbose_name="contact groups"),
                 ),
             ],
             options={
@@ -1526,9 +1502,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "products",
-                    models.ManyToManyField(
-                        blank=True, to="shuup.Product", verbose_name="products"
-                    ),
+                    models.ManyToManyField(blank=True, to="shuup.Product", verbose_name="products"),
                 ),
             ],
             options={
@@ -1552,9 +1526,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "product_types",
-                    models.ManyToManyField(
-                        to="shuup.ProductType", verbose_name="product Types"
-                    ),
+                    models.ManyToManyField(to="shuup.ProductType", verbose_name="product Types"),
                 ),
             ],
             options={
@@ -1626,9 +1598,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="catalogcampaign",
             name="conditions",
-            field=models.ManyToManyField(
-                blank=True, to="campaigns.ContextCondition", related_name="campaign"
-            ),
+            field=models.ManyToManyField(blank=True, to="campaigns.ContextCondition", related_name="campaign"),
         ),
         migrations.AddField(
             model_name="catalogcampaign",
@@ -1645,9 +1615,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="catalogcampaign",
             name="filters",
-            field=models.ManyToManyField(
-                blank=True, to="campaigns.CatalogFilter", related_name="campaign"
-            ),
+            field=models.ManyToManyField(blank=True, to="campaigns.CatalogFilter", related_name="campaign"),
         ),
         migrations.AddField(
             model_name="catalogcampaign",
@@ -1727,9 +1695,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="basketcampaign",
             name="conditions",
-            field=models.ManyToManyField(
-                blank=True, to="campaigns.BasketCondition", related_name="campaign"
-            ),
+            field=models.ManyToManyField(blank=True, to="campaigns.BasketCondition", related_name="campaign"),
         ),
         migrations.AddField(
             model_name="basketcampaign",

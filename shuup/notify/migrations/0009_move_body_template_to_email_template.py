@@ -19,16 +19,12 @@ def move_body_to_template(apps, schema_editor):
         for serialized_step in steps_data:
             for action_data in serialized_step.get("actions", []):
                 if action_data.get("identifier") == "send_email":
-                    for lang, template_data in action_data.get(
-                        "template_data", {}
-                    ).items():
+                    for lang, template_data in action_data.get("template_data", {}).items():
                         if not template_data.get("body_template"):
                             continue
 
                         email_template = EmailTemplate.objects.create(
-                            name="Unnamed Template {} ({})".format(
-                                EmailTemplate.objects.count() + 1, lang.upper()
-                            ),
+                            name="Unnamed Template {} ({})".format(EmailTemplate.objects.count() + 1, lang.upper()),
                             template=template_data["body_template"],
                         )
 

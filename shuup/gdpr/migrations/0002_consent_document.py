@@ -10,9 +10,7 @@ def forwards_func(apps, schema_editor):
     """
     Convert pages to GDPR user consent documents
     """
-    user_consent_document_model = apps.get_model(
-        "shuup_gdpr", "GDPRUserConsentDocument"
-    )
+    user_consent_document_model = apps.get_model("shuup_gdpr", "GDPRUserConsentDocument")
     gdpr_user_consent_model = apps.get_model("shuup_gdpr", "GDPRUserConsent")
     reversion_version_model = apps.get_model("reversion", "Version")
 
@@ -21,9 +19,7 @@ def forwards_func(apps, schema_editor):
         for page_id in consent.documents.values_list("id", flat=True):
             version = reversion_version_model.objects.filter(object_id=page_id).first()
             if version:
-                doc = user_consent_document_model.objects.create(
-                    page_id=page_id, version=version
-                )
+                doc = user_consent_document_model.objects.create(page_id=page_id, version=version)
                 consents.add(doc.id)
 
         consent.consents = consents

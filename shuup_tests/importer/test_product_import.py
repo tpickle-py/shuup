@@ -41,9 +41,7 @@ def _create_random_media_file(shop, file_path):
     pil_image = generate_image(2, 2)
     sio = BytesIO()
     pil_image.save(sio, "JPEG", quality=45)
-    filer_file = filer_image_from_data(
-        request=None, path=path, file_name=name, file_data=sio.getvalue()
-    )
+    filer_file = filer_image_from_data(request=None, path=path, file_name=name, file_data=sio.getvalue())
     media_file = MediaFile.objects.create(file=filer_file)
     media_file.shops.add(shop)
     return media_file
@@ -142,9 +140,7 @@ def test_sample_import_shop_relation(rf):
     get_default_product_type()
     get_default_sales_unit()
 
-    path = os.path.join(
-        os.path.dirname(__file__), "data", "product", "complex_import.xlsx"
-    )
+    path = os.path.join(os.path.dirname(__file__), "data", "product", "complex_import.xlsx")
     transformed_data = transform_file("xlsx", path)
     importer = ProductImporter(
         transformed_data,
@@ -213,9 +209,7 @@ def test_sample_import_all_match_all_shops(filename, rf):
             assert shop_product.pk
             assert shop_product.default_price_value == 150
             assert shop_product.default_price == shop.create_price(150)
-            assert (
-                product.type == product_type
-            )  # product type comes from importer defaults
+            assert product.type == product_type  # product type comes from importer defaults
             assert product.sales_unit == sales_unit
 
             assert shop_product.primary_category.pk == 1
@@ -232,9 +226,7 @@ def test_sample_import_images_errors(rf):
     get_default_product_type()
     get_default_sales_unit()
 
-    path = os.path.join(
-        os.path.dirname(__file__), "data", "product", "sample_import_images_error.csv"
-    )
+    path = os.path.join(os.path.dirname(__file__), "data", "product", "sample_import_images_error.csv")
     transformed_data = transform_file("csv", path)
     importer = ProductImporter(
         transformed_data,
@@ -258,9 +250,7 @@ def test_sample_ignore_column(rf):
     get_default_product_type()
     get_default_sales_unit()
 
-    path = os.path.join(
-        os.path.dirname(__file__), "data", "product", "sample_import_ignore.csv"
-    )
+    path = os.path.join(os.path.dirname(__file__), "data", "product", "sample_import_ignore.csv")
     transformed_data = transform_file("csv", path)
     importer = ProductImporter(
         transformed_data,
@@ -340,9 +330,7 @@ def test_sample_import_no_match(rf, stock_managed):
         assert sa.delta == 20
 
 
-def import_categoryfile(
-    rf, filename, expected_category_count, map_from=None, map_to=None
-):
+def import_categoryfile(rf, filename, expected_category_count, map_from=None, map_to=None):
     activate("en")
     shop = get_default_shop()
     get_default_tax_class()
@@ -371,9 +359,7 @@ def import_categoryfile(
 
 @pytest.mark.django_db
 def test_proper_category_name(rf):
-    import_categoryfile(
-        rf, filename="proper_category_name.xlsx", expected_category_count=1
-    )
+    import_categoryfile(rf, filename="proper_category_name.xlsx", expected_category_count=1)
 
 
 @pytest.mark.django_db
@@ -389,9 +375,7 @@ def test_strange_category_name(rf):
 
 @pytest.mark.django_db
 def test_proper_category_names(rf):
-    import_categoryfile(
-        rf, filename="proper_categories.xlsx", expected_category_count=2
-    )
+    import_categoryfile(rf, filename="proper_categories.xlsx", expected_category_count=2)
 
 
 @pytest.mark.django_db
@@ -523,9 +507,7 @@ def test_complex_import(rf):
 
             for cat in shop_product.categories.all():
                 assert cat.name in all_cats
-            assert shop_product.categories.count() == len(
-                all_cats
-            )  # also add primary category
+            assert shop_product.categories.count() == len(all_cats)  # also add primary category
 
         if data.get("category"):
             assert shop_product.primary_category.name == data["category"]

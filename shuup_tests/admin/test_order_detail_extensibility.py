@@ -31,9 +31,7 @@ def test_order_detail_has_default_toolbar_action_items(rf, admin_user, has_price
     order = _get_order(shop, supplier, has_price)
     request = apply_request_middleware(rf.get("/"), user=admin_user)
     view_func = OrderDetailView.as_view()
-    create_payment_url = reverse(
-        "shuup_admin:order.create-payment", kwargs={"pk": order.pk}
-    )
+    create_payment_url = reverse("shuup_admin:order.create-payment", kwargs={"pk": order.pk})
     set_paid_url = reverse("shuup_admin:order.set-paid", kwargs={"pk": order.pk})
     with override_provides(
         "admin_order_toolbar_action_item",
@@ -76,9 +74,7 @@ def _get_order(shop, supplier, has_price):
     for product_data in _get_product_data(has_price):
         quantity = product_data.pop("quantity")
         tax_rate = product_data.pop("tax_rate")
-        product = create_product(
-            sku=product_data.pop("sku"), shop=shop, supplier=supplier, **product_data
-        )
+        product = create_product(sku=product_data.pop("sku"), shop=shop, supplier=supplier, **product_data)
         add_product_to_order(
             order,
             supplier,

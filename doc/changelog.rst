@@ -85,7 +85,7 @@ Admin
 - Include breadcrumbs to is active menu check
 - Modernize dashboard blocks
 - Temp disable home view progress balls as broken
-- Fix the initial categories for product edit view 
+- Fix the initial categories for product edit view
 - Add settings to make select2 fields to load data asynchronously
 - Add signal that is triggered when form is valid in views
 - Make front url for nav customizable per project
@@ -97,13 +97,13 @@ Core
 ~~~~
 
 - Move force anons and person contacts to front
-- Add orderline behaviour attribute 
+- Add orderline behaviour attribute
 - Add related name for shop staff members
 
 General
 ~~~~~~~
 
-- Move admin and front login forms to settings spec 
+- Move admin and front login forms to settings spec
 - Add shop validation for order printouts
 
 
@@ -115,7 +115,7 @@ Released on 2019-10-18 12:57pm +0300.
 Admin
 ~~~~~
 
-- Init shop product suppliers with only supplier 
+- Init shop product suppliers with only supplier
 - Add option to extend shop edit actions
 - Fix bug with supplier create
 - Fix the product images management form part
@@ -166,7 +166,7 @@ Core
 ~~~~
 
 - Add order line creation and modification dates
-- Allow refunding other than product lines 
+- Allow refunding other than product lines
 - Add the parent line supplier in the refund supplier line
 - Add SHUUP_ prefix to settings
 - Add SHUUP_ prefix to ALLOW_ARBITRARY_REFUNDS-setting
@@ -188,7 +188,7 @@ Notify
 - Fix the email template variable name
 - Add option to wrap HTML body
 - Define script log entry
-- Make it possible to change the event runner 
+- Make it possible to change the event runner
 - Make it possible to use from_email when sending emails
 
 Utils
@@ -199,7 +199,7 @@ Utils
 XTheme
 ~~~~~~
 
-- Add option to skip resource injection 
+- Add option to skip resource injection
 
 
 Shuup 1.9.9
@@ -214,7 +214,7 @@ Admin
 - Add option to soft delete CMS pages
 - Add option to soft delete suppliers
 - Add option to pass extra dropzone configurations to widget
-- Fix field help text 
+- Fix field help text
 
 Core
 ~~~~
@@ -264,7 +264,7 @@ Released on 2019-06-19 11:15am -0800.
 Admin
 ~~~~~
 
-- Expose dropzone activation to the world 
+- Expose dropzone activation to the world
 - Fix boolean test when a false constant is needed
 - Fix state issue with order editing
 - Customize admin menu with nested levels
@@ -341,7 +341,7 @@ Front
 - Fix pagination by adding default page number and clearing the loading state
 - Remove extra div tag
 - Fix rendering problem with purchased files
-- Add custom field ids format to prevent duplicates 
+- Add custom field ids format to prevent duplicates
 
 GDPR
 ~~~~
@@ -400,14 +400,14 @@ Released on 2019-04-22 10:45am -0800.
 Admin
 ~~~~~
 
-- Fix issue with picotable column values 
+- Fix issue with picotable column values
 - Add option to control time step for datetime pickers
 
 Campaigns
 ~~~~~~~~~
 
-- Fix bug in Campaign free product effect 
-- Add campaign supplier to discount lines. When lines causes new lines to 
+- Fix bug in Campaign free product effect
+- Add campaign supplier to discount lines. When lines causes new lines to
   basket it is important that those discount lines are linked to correct
   supplier based on campaign.
 
@@ -439,7 +439,7 @@ Front
 Simple CMS
 ~~~~~~~~~~
 
-- Allow page owner see invisible CMS page 
+- Allow page owner see invisible CMS page
 - Add supplier for CMS page
 
 

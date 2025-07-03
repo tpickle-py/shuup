@@ -40,15 +40,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "country_codes_pattern",
-                    models.CharField(
-                        verbose_name="country codes pattern", blank=True, max_length=300
-                    ),
+                    models.CharField(verbose_name="country codes pattern", blank=True, max_length=300),
                 ),
                 (
                     "region_codes_pattern",
-                    models.CharField(
-                        verbose_name="region codes pattern", blank=True, max_length=500
-                    ),
+                    models.CharField(verbose_name="region codes pattern", blank=True, max_length=500),
                 ),
                 (
                     "postal_codes_pattern",
@@ -92,10 +88,7 @@ class Migration(migrations.Migration):
                     "customer_tax_groups",
                     models.ManyToManyField(
                         to="shuup.CustomerTaxGroup",
-                        help_text=(
-                            "The customer tax groups for which this tax rule "
-                            "is limited."
-                        ),
+                        help_text=("The customer tax groups for which this tax rule " "is limited."),
                         verbose_name="customer tax groups",
                         blank=True,
                     ),

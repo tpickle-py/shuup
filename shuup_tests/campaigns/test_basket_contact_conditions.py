@@ -4,13 +4,11 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.utils.translation import activate
 
-from shuup.campaigns.models.basket_conditions import (
-    ContactBasketCondition,
-    ContactGroupBasketCondition,
-)
+import pytest
+
+from shuup.campaigns.models.basket_conditions import ContactBasketCondition, ContactGroupBasketCondition
 from shuup.campaigns.models.basket_effects import BasketDiscountAmount
 from shuup.campaigns.models.campaigns import BasketCampaign
 from shuup.core.models import AnonymousContact, Shop
@@ -36,9 +34,7 @@ def get_request_for_contact_tests(rf):
     return request
 
 
-def create_basket_and_campaign(
-    request, conditions, product_price_value, campaign_discount_value
-):
+def create_basket_and_campaign(request, conditions, product_price_value, campaign_discount_value):
     product = create_product(
         "Some crazy product",
         request.shop,
@@ -48,9 +44,7 @@ def create_basket_and_campaign(
     basket = get_basket(request)
     basket.customer = request.customer
     supplier = get_default_supplier()
-    basket.add_product(
-        supplier=supplier, shop=request.shop, product=product, quantity=1
-    )
+    basket.add_product(supplier=supplier, shop=request.shop, product=product, quantity=1)
     basket.shipping_method = get_shipping_method(shop=request.shop)
 
     original_line_count = len(basket.get_final_lines())
@@ -58,12 +52,8 @@ def create_basket_and_campaign(
     assert basket.product_count == 1
     original_price = basket.total_price
 
-    campaign = BasketCampaign.objects.create(
-        shop=request.shop, name="test", public_name="test", active=True
-    )
-    BasketDiscountAmount.objects.create(
-        campaign=campaign, discount_amount=campaign_discount_value
-    )
+    campaign = BasketCampaign.objects.create(shop=request.shop, name="test", public_name="test", active=True)
+    BasketDiscountAmount.objects.create(campaign=campaign, discount_amount=campaign_discount_value)
 
     for condition in conditions:
         campaign.conditions.add(condition)
@@ -72,9 +62,7 @@ def create_basket_and_campaign(
     return basket, original_line_count, original_price
 
 
-def assert_discounted_basket(
-    basket, original_line_count, original_price, campaign_discount_value
-):
+def assert_discounted_basket(basket, original_line_count, original_price, campaign_discount_value):
     basket.uncache()
     price = basket.shop.create_price
     assert len(basket.get_final_lines()) == original_line_count + 1
@@ -103,9 +91,7 @@ def test_basket_contact_group_condition(rf):
     )
 
     assert basket.customer == customer
-    assert_discounted_basket(
-        basket, original_line_count, original_price, campaign_discount_value
-    )
+    assert_discounted_basket(basket, original_line_count, original_price, campaign_discount_value)
 
     customer.groups.remove(default_group)
     assert_non_discounted_basket(basket, original_line_count, original_price)
@@ -124,9 +110,7 @@ def test_group_basket_condition_with_anonymous_contact(rf):
     )
 
     assert isinstance(basket.customer, AnonymousContact)
-    assert_discounted_basket(
-        basket, original_line_count, original_price, campaign_discount_value
-    )
+    assert_discounted_basket(basket, original_line_count, original_price, campaign_discount_value)
 
 
 @pytest.mark.django_db
@@ -153,9 +137,7 @@ def test_basket_contact_condition(rf):
 
     # random_person should get this campaign
     assert basket.customer == random_person
-    assert_discounted_basket(
-        basket, original_line_count, original_price, campaign_discount_value
-    )
+    assert_discounted_basket(basket, original_line_count, original_price, campaign_discount_value)
 
     another_random_person = create_random_person()
     basket.customer = another_random_person
@@ -165,9 +147,7 @@ def test_basket_contact_condition(rf):
     # Add another random person for the rule and see if he get's the discount
     condition.contacts.add(another_random_person)
     condition.save()
-    assert_discounted_basket(
-        basket, original_line_count, original_price, campaign_discount_value
-    )
+    assert_discounted_basket(basket, original_line_count, original_price, campaign_discount_value)
     assert basket.customer == another_random_person
 
     # Remove random person from rule and see the discount disappear

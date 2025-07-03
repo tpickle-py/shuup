@@ -25,9 +25,7 @@ def test_discounted_price(rf):
     assert request.shop == shop
 
     original_price = 10
-    product = factories.create_product(
-        "test1", shop=shop, supplier=supplier, default_price=original_price
-    )
+    product = factories.create_product("test1", shop=shop, supplier=supplier, default_price=original_price)
     shop_product = product.get_shop_instance(shop)
 
     # Set discount with discount amount for $2

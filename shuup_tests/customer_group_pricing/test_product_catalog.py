@@ -22,26 +22,16 @@ def test_product_catalog_discounted_price():
     contact = factories.create_random_person()
     group = PersonContact.get_default_group()
     contact.groups.add(group)
-    product1 = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=Decimal("50")
-    )
-    product2 = factories.create_product(
-        "p2", shop=shop, supplier=supplier, default_price=Decimal("30")
-    )
+    product1 = factories.create_product("p1", shop=shop, supplier=supplier, default_price=Decimal("50"))
+    product2 = factories.create_product("p2", shop=shop, supplier=supplier, default_price=Decimal("30"))
 
     # set price for product2
-    CgpPrice.objects.create(
-        shop=shop, product=product2, group=group, price_value=Decimal(25)
-    )
+    CgpPrice.objects.create(shop=shop, product=product2, group=group, price_value=Decimal(25))
     # create a discount for product2
-    CgpDiscount.objects.create(
-        shop=shop, product=product2, group=group, discount_amount_value=Decimal(7)
-    )
+    CgpDiscount.objects.create(shop=shop, product=product2, group=group, discount_amount_value=Decimal(7))
 
     anon_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False))
-    customer_catalog = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=False, contact=contact)
-    )
+    customer_catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False, contact=contact))
     ProductCatalog.index_product(product1)
     ProductCatalog.index_product(product2)
 
@@ -88,35 +78,21 @@ def test_product_catalog_cgp_with_variations():
     contact = factories.create_random_person()
     group = PersonContact.get_default_group()
     contact.groups.add(group)
-    parent = factories.create_product(
-        "p1", shop=shop, supplier=supplier, default_price=Decimal("10")
-    )
-    child1 = factories.create_product(
-        "p2", shop=shop, supplier=supplier, default_price=Decimal("20")
-    )
-    child2 = factories.create_product(
-        "p3", shop=shop, supplier=supplier, default_price=Decimal("40")
-    )
-    child3 = factories.create_product(
-        "p4", shop=shop, supplier=supplier, default_price=Decimal("50")
-    )
+    parent = factories.create_product("p1", shop=shop, supplier=supplier, default_price=Decimal("10"))
+    child1 = factories.create_product("p2", shop=shop, supplier=supplier, default_price=Decimal("20"))
+    child2 = factories.create_product("p3", shop=shop, supplier=supplier, default_price=Decimal("40"))
+    child3 = factories.create_product("p4", shop=shop, supplier=supplier, default_price=Decimal("50"))
 
     child1.link_to_parent(parent)
     child2.link_to_parent(parent)
     child3.link_to_parent(parent)
 
     # set a price for child2
-    CgpPrice.objects.create(
-        shop=shop, product=child2, group=group, price_value=Decimal("5")
-    )
+    CgpPrice.objects.create(shop=shop, product=child2, group=group, price_value=Decimal("5"))
     # create a discount for child3
-    CgpDiscount.objects.create(
-        shop=shop, product=child3, group=group, discount_amount_value=Decimal("35")
-    )
+    CgpDiscount.objects.create(shop=shop, product=child3, group=group, discount_amount_value=Decimal("35"))
 
-    catalog = ProductCatalog(
-        context=ProductCatalogContext(purchasable_only=False, contact=contact)
-    )
+    catalog = ProductCatalog(context=ProductCatalogContext(purchasable_only=False, contact=contact))
     ProductCatalog.index_product(parent)
 
     _assert_products_queryset(
@@ -166,9 +142,7 @@ def _assert_products_queryset(catalog, expected_prices):
 
 def _assert_shop_products_queryset(catalog, expected_prices):
     shop_products_qs = catalog.get_shop_products_queryset().order_by("catalog_price")
-    values = shop_products_qs.values_list(
-        "pk", "catalog_price", "catalog_discounted_price"
-    )
+    values = shop_products_qs.values_list("pk", "catalog_price", "catalog_discounted_price")
     assert shop_products_qs.count() == len(expected_prices)
     for index, value in enumerate(values):
         assert value == expected_prices[index]

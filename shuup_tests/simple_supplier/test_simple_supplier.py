@@ -80,59 +80,31 @@ def test_supplier_with_stock_counts(rf, stock_managed):
         # Adjust
         supplier.adjust_stock(product.pk, quantity)
         # Check that count is adjusted
-        assert (
-            supplier.get_stock_statuses([product.id])[product.id].logical_count
-            == quantity
-        )
+        assert supplier.get_stock_statuses([product.id])[product.id].logical_count == quantity
         # Since product is stocked with quantity we get no orderability error with quantity
-        assert not list(
-            supplier.get_orderability_errors(
-                product.get_shop_instance(shop), quantity, customer=None
-            )
-        )
+        assert not list(supplier.get_orderability_errors(product.get_shop_instance(shop), quantity, customer=None))
         # Since product is stocked with quantity we get orderability error with quantity + 1
-        assert list(
-            supplier.get_orderability_errors(
-                product.get_shop_instance(shop), quantity + 1, customer=None
-            )
-        )
+        assert list(supplier.get_orderability_errors(product.get_shop_instance(shop), quantity + 1, customer=None))
     else:
         # Check that count is not adjusted
         assert supplier.get_stock_statuses([product.id])[product.id].logical_count == 0
         # No orderability errors since product is not stocked
-        assert not list(
-            supplier.get_orderability_errors(
-                product.get_shop_instance(shop), quantity, customer=None
-            )
-        )
+        assert not list(supplier.get_orderability_errors(product.get_shop_instance(shop), quantity, customer=None))
         # Turn it to stocked
         supplier.stock_managed = True
         supplier.save()
         supplier.adjust_stock(product.pk, quantity)
         # Check that count is adjusted
-        assert (
-            supplier.get_stock_statuses([product.id])[product.id].logical_count
-            == quantity
-        )
+        assert supplier.get_stock_statuses([product.id])[product.id].logical_count == quantity
         # No orderability errors since product is stocked with quantity
-        assert not list(
-            supplier.get_orderability_errors(
-                product.get_shop_instance(shop), quantity, customer=None
-            )
-        )
+        assert not list(supplier.get_orderability_errors(product.get_shop_instance(shop), quantity, customer=None))
         # Since product is stocked with quantity we get orderability errors with quantity + 1
-        assert list(
-            supplier.get_orderability_errors(
-                product.get_shop_instance(shop), quantity + 1, customer=None
-            )
-        )
+        assert list(supplier.get_orderability_errors(product.get_shop_instance(shop), quantity + 1, customer=None))
 
 
 @pytest.mark.django_db
 def test_supplier_with_stock_counts_2(rf, admin_user, settings):
-    with override_settings(
-        SHUUP_HOME_CURRENCY="USD", SHUUP_ENABLE_MULTIPLE_SHOPS=False
-    ):
+    with override_settings(SHUUP_HOME_CURRENCY="USD", SHUUP_ENABLE_MULTIPLE_SHOPS=False):
         supplier = get_simple_supplier()
         shop = get_default_shop()
         assert shop.prices_include_tax
@@ -322,16 +294,12 @@ def test_process_stock_managed(rf, admin_user):
     supplier = get_simple_supplier(stock_managed=False)
     shop = get_default_shop()
     product = create_product("simple-test-product", shop)
-    request = apply_request_middleware(
-        rf.get("/", data={"stock_managed": True}), user=admin_user
-    )
+    request = apply_request_middleware(rf.get("/", data={"stock_managed": True}), user=admin_user)
 
     response = process_stock_managed(request, supplier.id, product.id)
     assert response.status_code == 405
 
-    request = apply_request_middleware(
-        rf.post("/", data={"stock_managed": True}), user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data={"stock_managed": True}), user=admin_user)
     response = process_stock_managed(request, supplier.id, product.id)
     assert response.status_code == 200
 
@@ -341,18 +309,14 @@ def test_process_stock_managed(rf, admin_user):
     # Check stock count managed by default
     assert sc.stock_managed is True
     # Now test with stock managed turned off
-    request = apply_request_middleware(
-        rf.post("/", data={"stock_managed": False}), user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data={"stock_managed": False}), user=admin_user)
     response = process_stock_managed(request, supplier.id, product.id)
     assert response.status_code == 200
     # Check stock management is disabled for product
     sc = StockCount.objects.filter(supplier=supplier, product=product).first()
     assert sc.stock_managed is False
     # Now test with stock managed turned on
-    request = apply_request_middleware(
-        rf.post("/", data={"stock_managed": True}), user=admin_user
-    )
+    request = apply_request_middleware(rf.post("/", data={"stock_managed": True}), user=admin_user)
     response = process_stock_managed(request, supplier.id, product.id)
     assert response.status_code == 200
     # Check stock management is enabled for product
@@ -361,18 +325,14 @@ def test_process_stock_managed(rf, admin_user):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "shipping_mode", [ShippingMode.NOT_SHIPPED, ShippingMode.SHIPPED]
-)
+@pytest.mark.parametrize("shipping_mode", [ShippingMode.NOT_SHIPPED, ShippingMode.SHIPPED])
 def test_supplier_non_shipped_products(rf, shipping_mode):
     """
     Test non shipped products - physical count should have the same as logical count
     """
     supplier = get_simple_supplier(stock_managed=True)
     shop = get_default_shop()
-    product = create_product(
-        "shipped-product", shop, supplier, shipping_mode=shipping_mode
-    )
+    product = create_product("shipped-product", shop, supplier, shipping_mode=shipping_mode)
     quantity = random.randint(100, 600)
 
     # Adjust
@@ -428,9 +388,7 @@ def test_product_catalog_indexing(rf, admin_user, settings):
     # add 10 items to the stock
     stock_qty = 10
     request = apply_request_middleware(
-        rf.post(
-            "/", data={"purchase_price": decimal.Decimal(32.00), "delta": stock_qty}
-        ),
+        rf.post("/", data={"purchase_price": decimal.Decimal(32.00), "delta": stock_qty}),
         user=admin_user,
     )
     response = process_stock_adjustment(request, supplier.id, product.id)

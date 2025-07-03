@@ -55,15 +55,11 @@ class MockResponse(Response):
 
 def _backdate_installation_key(days=24):
     get_installation_key()
-    PersistentCacheEntry.objects.filter(**INSTALLATION_KEY_KWARGS).update(
-        time=now() - datetime.timedelta(days=days)
-    )
+    PersistentCacheEntry.objects.filter(**INSTALLATION_KEY_KWARGS).update(time=now() - datetime.timedelta(days=days))
 
 
 def _backdate_telemetry_submission(days=24):
-    PersistentCacheEntry.objects.filter(**LAST_DATA_KWARGS).update(
-        time=now() - datetime.timedelta(days=days)
-    )
+    PersistentCacheEntry.objects.filter(**LAST_DATA_KWARGS).update(time=now() - datetime.timedelta(days=days))
 
 
 def _clear_telemetry_submission():
@@ -97,9 +93,7 @@ def test_get_telemetry_data_after_login(rf, admin_user):
     last_login = data.get("last_login", None)
     assert last_login
 
-    last_login_datetime = datetime.datetime.strptime(
-        last_login, "%Y-%m-%dT%H:%M:%S.%fZ"
-    )
+    last_login_datetime = datetime.datetime.strptime(last_login, "%Y-%m-%dT%H:%M:%S.%fZ")
     today = datetime.datetime.now()
     assert last_login_datetime.year == today.year
     assert last_login_datetime.month == today.month
@@ -109,9 +103,7 @@ def test_get_telemetry_data_after_login(rf, admin_user):
 @pytest.mark.django_db
 def test_optin_optout(rf, admin_user):
     with override_settings(SHUUP_TELEMETRY_ENABLED=True, DEBUG=True):
-        with patch.object(
-            requests, "post", return_value=MockResponse("test")
-        ) as requestor:
+        with patch.object(requests, "post", return_value=MockResponse("test")) as requestor:
             _clear_telemetry_submission()
             assert not set_opt_out(False)  # Not opted out
             assert not is_opt_out()
@@ -122,13 +114,9 @@ def test_optin_optout(rf, admin_user):
 
             _backdate_installation_key()
             try_send_telemetry(max_age_hours=72)
-            try_send_telemetry(
-                max_age_hours=None
-            )  # Forcibly re-send for the hell of it
+            try_send_telemetry(max_age_hours=None)  # Forcibly re-send for the hell of it
             with pytest.raises(TelemetryNotSent) as ei:
-                try_send_telemetry(
-                    raise_on_error=True
-                )  # Don't ignore last-send; shouldn't send anyway
+                try_send_telemetry(raise_on_error=True)  # Don't ignore last-send; shouldn't send anyway
             assert ei.value.code == "age"
 
             assert len(requestor.mock_calls) == 2
@@ -147,9 +135,7 @@ def test_disable(rf, admin_user):
         _backdate_installation_key()
         set_opt_out(False)
         with pytest.raises(TelemetryNotSent) as ei:
-            try_send_telemetry(
-                raise_on_error=True, max_age_hours=None
-            )  # Should re-send (if we weren't disabled)
+            try_send_telemetry(raise_on_error=True, max_age_hours=None)  # Should re-send (if we weren't disabled)
         assert ei.value.code == "disabled"
 
 
@@ -169,15 +155,9 @@ def test_graceful_error(admin_user):
 def test_disabling_telemetry_hides_menu_item(rf):
     request = rf.get("/")
     with override_settings(SHUUP_TELEMETRY_ENABLED=True):
-        assert any(
-            me.original_url == "shuup_admin:telemetry"
-            for me in SystemModule().get_menu_entries(request)
-        )
+        assert any(me.original_url == "shuup_admin:telemetry" for me in SystemModule().get_menu_entries(request))
     with override_settings(SHUUP_TELEMETRY_ENABLED=False):
-        assert not any(
-            me.original_url == "shuup_admin:telemetry"
-            for me in SystemModule().get_menu_entries(request)
-        )
+        assert not any(me.original_url == "shuup_admin:telemetry" for me in SystemModule().get_menu_entries(request))
 
 
 @pytest.mark.django_db
@@ -258,14 +238,10 @@ def test_telemetry_daily_data_components(data_key, data_value, create_object):
 @pytest.mark.django_db
 def test_telemetry_multiple_days(rf, admin_user):
     with override_settings(SHUUP_TELEMETRY_ENABLED=True, DEBUG=True):
-        with patch.object(
-            requests, "post", return_value=MockResponse("test")
-        ) as requestor:
+        with patch.object(requests, "post", return_value=MockResponse("test")) as requestor:
             try_send_telemetry()
             day = now()
             _backdate_telemetry_submission(days=0)
             assert not get_daily_data(day)
             _backdate_telemetry_submission(days=20)
-            assert (
-                len(get_daily_data(now())) == 19
-            )  # Since current day is not added to telemetry
+            assert len(get_daily_data(now())) == 19  # Since current day is not added to telemetry

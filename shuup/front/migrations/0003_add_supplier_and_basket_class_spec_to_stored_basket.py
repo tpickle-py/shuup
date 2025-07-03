@@ -23,9 +23,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="storedbasket",
             name="class_spec",
-            field=models.CharField(
-                blank=True, max_length=256, verbose_name="class spec"
-            ),
+            field=models.CharField(blank=True, max_length=256, verbose_name="class spec"),
         ),
         migrations.AddField(
             model_name="storedbasket",

@@ -5,6 +5,7 @@
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
 import os
+
 from django.conf.urls import url
 from django.core.handlers.base import BaseHandler
 from django.http import HttpResponse
@@ -50,19 +51,13 @@ def test_front_error_handlers(rf):
     """
     with override_settings(
         DEBUG=False,
-        SHUUP_ERROR_PAGE_HANDLERS_SPEC=[
-            "shuup.front.error_handlers.FrontPageErrorHandler"
-        ],
+        SHUUP_ERROR_PAGE_HANDLERS_SPEC=["shuup.front.error_handlers.FrontPageErrorHandler"],
         MIDDLEWARE_CLASSES=[],  # For Django < 2
         MIDDLEWARE=[],
         TEMPLATES=[  # Overriden to be sure about the contents of our 500.jinja
             {
                 "BACKEND": "django_jinja.backend.Jinja2",
-                "DIRS": [
-                    os.path.realpath(
-                        os.path.join(os.path.dirname(__file__), "templates")
-                    )
-                ],
+                "DIRS": [os.path.realpath(os.path.join(os.path.dirname(__file__), "templates"))],
                 "OPTIONS": {
                     "match_extension": ".jinja",
                     "newstyle_gettext": True,
@@ -102,12 +97,8 @@ def test_front_error_handlers(rf):
             install_error_handlers()
             assert urlconf.handler404 != four_oh_four
             assert urlconf.handler500 != handler500
-            assert "miss something? 404" in force_text(
-                urlconf.handler404(rf.get("/notfound/")).content
-            )
-            assert "intergalactic testing 500" in force_text(
-                urlconf.handler500(rf.get("/aaargh/")).content
-            )
+            assert "miss something? 404" in force_text(urlconf.handler404(rf.get("/notfound/")).content)
+            assert "intergalactic testing 500" in force_text(urlconf.handler500(rf.get("/aaargh/")).content)
 
             # Front must handle all possible apps
             error_handler = FrontPageErrorHandler()
@@ -155,19 +146,13 @@ def test_admin_error_handlers(rf):
     """
     with override_settings(
         DEBUG=False,
-        SHUUP_ERROR_PAGE_HANDLERS_SPEC=[
-            "shuup.admin.error_handlers.AdminPageErrorHandler"
-        ],
+        SHUUP_ERROR_PAGE_HANDLERS_SPEC=["shuup.admin.error_handlers.AdminPageErrorHandler"],
         MIDDLEWARE_CLASSES=[],  # For Django 2
         MIDDLEWARE=[],
         TEMPLATES=[  # Overriden to be sure about the contents of our 500.jinja
             {
                 "BACKEND": "django_jinja.backend.Jinja2",
-                "DIRS": [
-                    os.path.realpath(
-                        os.path.join(os.path.dirname(__file__), "templates")
-                    )
-                ],
+                "DIRS": [os.path.realpath(os.path.join(os.path.dirname(__file__), "templates"))],
                 "OPTIONS": {
                     "match_extension": ".jinja",
                     "newstyle_gettext": True,
@@ -210,12 +195,8 @@ def test_admin_error_handlers(rf):
             # but the functions of the handlers are pointing to our factory view
             assert urlconf.handler404 != four_oh_four
             assert urlconf.handler500 != handler500
-            assert "flesh wound" in force_text(
-                urlconf.handler404(rf.get("/notfound/")).content
-            )
-            assert "The best error" in force_text(
-                urlconf.handler500(rf.get("/aaargh/")).content
-            )
+            assert "flesh wound" in force_text(urlconf.handler404(rf.get("/notfound/")).content)
+            assert "The best error" in force_text(urlconf.handler500(rf.get("/aaargh/")).content)
 
             # Admin must handle only admin app errors
             error_handler = AdminPageErrorHandler()

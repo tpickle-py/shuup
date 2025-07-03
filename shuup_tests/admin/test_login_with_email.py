@@ -71,9 +71,7 @@ def test_login_with_email_1(client, regular_user, rf):
 @pytest.mark.usefixtures("regular_user")
 def test_login_with_email_2(client, regular_user, rf):
     # Create user with same email as regular user to fail login
-    get_user_model().objects.create_user(
-        username="el_person", password="123123", email=regular_user.email
-    )
+    get_user_model().objects.create_user(username="el_person", password="123123", email=regular_user.email)
 
     get_default_shop()
     prepare_user(regular_user)

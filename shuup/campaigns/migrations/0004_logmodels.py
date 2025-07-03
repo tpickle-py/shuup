@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import enumfields.fields
-import jsonfield.fields
 from django.conf import settings
 from django.db import migrations, models
+
+import enumfields.fields
+import jsonfield.fields
 
 import shuup.utils.analog
 
@@ -36,9 +37,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", blank=True, max_length=64
-                    ),
+                    models.CharField(verbose_name="identifier", blank=True, max_length=64),
                 ),
                 (
                     "kind",
@@ -50,9 +49,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -96,9 +93,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", blank=True, max_length=64
-                    ),
+                    models.CharField(verbose_name="identifier", blank=True, max_length=64),
                 ),
                 (
                     "kind",
@@ -110,9 +105,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -156,9 +149,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", blank=True, max_length=64
-                    ),
+                    models.CharField(verbose_name="identifier", blank=True, max_length=64),
                 ),
                 (
                     "kind",
@@ -170,9 +161,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",
@@ -216,9 +205,7 @@ class Migration(migrations.Migration):
                 ("message", models.CharField(verbose_name="message", max_length=256)),
                 (
                     "identifier",
-                    models.CharField(
-                        verbose_name="identifier", blank=True, max_length=64
-                    ),
+                    models.CharField(verbose_name="identifier", blank=True, max_length=64),
                 ),
                 (
                     "kind",
@@ -230,9 +217,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "extra",
-                    jsonfield.fields.JSONField(
-                        verbose_name="extra data", null=True, blank=True
-                    ),
+                    jsonfield.fields.JSONField(verbose_name="extra data", null=True, blank=True),
                 ),
                 (
                     "target",

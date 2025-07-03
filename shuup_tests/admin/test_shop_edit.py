@@ -4,10 +4,11 @@
 #
 # This source code is licensed under the OSL-3.0 license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from django.conf import settings
 from django.test.utils import override_settings
 from django.utils.translation import activate
+
+import pytest
 
 from shuup import configuration
 from shuup.admin.modules.settings import consts
@@ -50,9 +51,7 @@ def test_protected_fields():
     shop_form.save()
 
     # Now let's make it protected!
-    create_product(
-        printable_gibberish(), shop=shop, supplier=get_default_supplier(shop)
-    )
+    create_product(printable_gibberish(), shop=shop, supplier=get_default_supplier(shop))
     order = create_random_order(customer=create_random_person(), shop=shop)
     assert order.shop == shop
 
@@ -107,12 +106,8 @@ def test_order_configuration(rf, admin_user):
     response, soup = client.response_and_soup(url)
     assert response.status_code == 200
 
-    length_form_field = (
-        "order_configuration-%s" % consts.ORDER_REFERENCE_NUMBER_LENGTH_FIELD
-    )
-    prefix_form_field = (
-        "order_configuration-%s" % consts.ORDER_REFERENCE_NUMBER_PREFIX_FIELD
-    )
+    length_form_field = "order_configuration-%s" % consts.ORDER_REFERENCE_NUMBER_LENGTH_FIELD
+    prefix_form_field = "order_configuration-%s" % consts.ORDER_REFERENCE_NUMBER_PREFIX_FIELD
 
     length_field = soup.find("input", attrs={"id": "id_%s" % length_form_field})
     prefix_field = soup.find("input", attrs={"id": "id_%s" % prefix_form_field})
@@ -120,9 +115,7 @@ def test_order_configuration(rf, admin_user):
     assert length_field
     assert prefix_field
 
-    assert length_field["value"] == str(
-        settings.SHUUP_REFERENCE_NUMBER_LENGTH
-    )  # default value because nothing set yet
+    assert length_field["value"] == str(settings.SHUUP_REFERENCE_NUMBER_LENGTH)  # default value because nothing set yet
     assert "value" not in prefix_field  # field empty
 
     data = get_base_form_data(shop)

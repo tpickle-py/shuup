@@ -186,18 +186,18 @@ fieldset[disabled] .btn {
         color: $white;
         box-shadow: none;
     }
-    
+
     &:active {
         border-top-color: var(--primary-dark);
         border-left-color: var(--primary-dark);
         border-right-color: var(--primary-dark);
     }
-    
+
     &.disabled, &[disabled] {
         border-color: var(--primary);
         background-color: var(--primary);
     }
-    
+
     &.btn-inverse {
         border-color: var(--primary);
         background: transparent;
@@ -212,27 +212,27 @@ fieldset[disabled] .btn {
             border-right-color: var(--primary-dark);
         }
     }
-    
+
     .btn + .dropdown-toggle {
         border-left-color: var(--primary-dark);
-    
+
         &:active {
             border-top-color: var(--primary-dark);
             border-left-color: var(--primary-dark);
             border-right-color: var(--primary-dark);
         }
     }
-    
+
     .open > .dropdown-toggle {
         background: var(--primary-dark);
         border-color: var(--primary-dark);
     }
-    
+
     .open > .btn + .dropdown-toggle {
         background: var(--primary-dark);
         border-color: transparent;
         border-left-color: var(--primary-dark);
-    }  
+    }
 
 
     &.btn-dropdown-toggle {
@@ -275,7 +275,7 @@ fieldset[disabled] .btn {
       background-color: var(--primary-dark);
       border-color:  var(--primary-dark);
       box-shadow: 0 0 0 $btn-focus-width  var(--primary-light);
-  
+
       &:focus {
           box-shadow: 0 0 0 $btn-focus-width  var(--primary-light);
       }
@@ -305,18 +305,18 @@ fieldset[disabled] .btn {
         color: #fff;
         box-shadow: none;
     }
-    
+
     &:active {
         border-top-color: var(--success-darker);
         border-left-color: var(--success-darker);
         border-right-color: var(--success-darker);
     }
-    
+
     &.disabled, &[disabled] {
         border-color: var(--success);
         background-color: var(--success);
     }
-    
+
     &.btn-inverse {
         border-color: var(--success);
         background: transparent;
@@ -331,27 +331,27 @@ fieldset[disabled] .btn {
             border-right-color: var(--success-darker);
         }
     }
-    
+
     .btn + .dropdown-toggle {
         border-left-color: var(--success-darker);
-    
+
         &:active {
             border-top-color: var(--success-dark);
             border-left-color: var(--success-dark);
             border-right-color: var(--success-dark);
         }
     }
-    
+
     .open > .dropdown-toggle {
         background: var(--success-darker);
         border-color: var(--success-darker);
     }
-    
+
     .open > .btn + .dropdown-toggle {
         background: var(--success-darker);
         border-color: transparent;
         border-left-color: var(--success-darker);
-    }  
+    }
 
     &:hover {
         background-color: var(--success-lighter);
@@ -419,18 +419,18 @@ fieldset[disabled] .btn {
         color: #fff;
         box-shadow: none;
     }
-    
+
     &:active {
         border-top-color: var(--danger-darker);
         border-left-color: var(--danger-darker);
         border-right-color: var(--danger-darker);
     }
-    
+
     &.disabled, &[disabled] {
         border-color: var(--danger);
         background-color: var(--danger);
     }
-    
+
     &.btn-inverse {
         border-color: var(--danger);
         background: transparent;
@@ -445,27 +445,27 @@ fieldset[disabled] .btn {
             border-right-color: var(--danger-darker);
         }
     }
-    
+
     .btn + .dropdown-toggle {
         border-left-color: var(--danger-darker);
-    
+
         &:active {
             border-top-color: var(--danger-dark);
             border-left-color: var(--danger-dark);
             border-right-color: var(--danger-dark);
         }
     }
-    
+
     .open > .dropdown-toggle {
         background: var(--danger-darker);
         border-color: var(--danger-darker);
     }
-    
+
     .open > .btn + .dropdown-toggle {
         background: var(--danger-darker);
         border-color: transparent;
         border-left-color: var(--danger-darker);
-    }    
+    }
 }
 
 .btn-gray {

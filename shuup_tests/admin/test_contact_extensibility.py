@@ -25,9 +25,7 @@ def test_contact_edit_has_custom_toolbar_button(rf, admin_user):
     view_func = ContactEditView.as_view()
     response = view_func(request, pk=contact.pk)
     content = force_text(response.render().content)
-    assert "#mocktoolbarbutton" in content, (
-        "custom toolbar button not found on edit page"
-    )
+    assert "#mocktoolbarbutton" in content, "custom toolbar button not found on edit page"
 
 
 @pytest.mark.django_db
@@ -39,9 +37,7 @@ def test_contact_detail_has_custom_toolbar_button(rf, admin_user):
     view_func = ContactDetailView.as_view()
     response = view_func(request, pk=contact.pk)
     content = force_text(response.render().content)
-    assert "#mocktoolbarbutton" in content, (
-        "custom toolbar button not found on detail page"
-    )
+    assert "#mocktoolbarbutton" in content, "custom toolbar button not found on detail page"
 
 
 @pytest.mark.django_db
@@ -54,15 +50,9 @@ def test_contact_detail_has_custom_section(rf, admin_user):
     response = view_func(request, pk=contact.pk)
     content = force_text(response.render().content)
 
-    assert "mock section title" in content, (
-        "custom section title not found on detail page"
-    )
-    assert "mock section content" in content, (
-        "custom section content not found on detail page"
-    )
-    assert "mock section context data" in content, (
-        "custom section context data not found on detail page"
-    )
+    assert "mock section title" in content, "custom section title not found on detail page"
+    assert "mock section content" in content, "custom section content not found on detail page"
+    assert "mock section context data" in content, "custom section context data not found on detail page"
 
 
 @pytest.mark.django_db

@@ -46,12 +46,7 @@ def test_anonymize_contact():
     front_baskets = []
 
     for basket_customer in [customer, company]:
-        orders.extend(
-            [
-                factories.create_random_order(basket_customer, [product])
-                for order in range(3)
-            ]
-        )
+        orders.extend([factories.create_random_order(basket_customer, [product]) for order in range(3)])
 
         front_baskets.append(
             StoredBasket.objects.create(
@@ -85,14 +80,8 @@ def test_anonymize_contact():
     assert anonymized_person.last_name != customer.last_name
     assert anonymized_person.email != customer.email
     assert anonymized_person.phone != customer.phone
-    assert (
-        anonymized_person.default_billing_address.street
-        != customer.default_billing_address.street
-    )
-    assert (
-        anonymized_person.default_billing_address.city
-        != customer.default_billing_address.city
-    )
+    assert anonymized_person.default_billing_address.street != customer.default_billing_address.street
+    assert anonymized_person.default_billing_address.city != customer.default_billing_address.city
 
     anonymized_company = CompanyContact.objects.get(id=company.id)
     anonymizer._anonymize_company(anonymized_company)
@@ -100,14 +89,8 @@ def test_anonymize_contact():
     assert anonymized_company.tax_number != company.tax_number
     assert anonymized_company.email != company.email
     assert anonymized_company.phone != company.phone
-    assert (
-        anonymized_company.default_billing_address.street
-        != company.default_billing_address.street
-    )
-    assert (
-        anonymized_company.default_billing_address.city
-        != company.default_billing_address.city
-    )
+    assert anonymized_company.default_billing_address.street != company.default_billing_address.street
+    assert anonymized_company.default_billing_address.city != company.default_billing_address.city
 
     for created_order in orders:
         order = Order.objects.get(id=created_order.id)
@@ -160,9 +143,7 @@ def test_anonymize():
     core_baskets = []
     front_baskets = []
 
-    orders.extend(
-        [factories.create_random_order(customer, [product]) for order in range(3)]
-    )
+    orders.extend([factories.create_random_order(customer, [product]) for order in range(3)])
 
     front_baskets.append(
         StoredBasket.objects.create(
@@ -198,14 +179,8 @@ def test_anonymize():
     assert anonymized_person.last_name != customer.last_name
     assert anonymized_person.email != customer.email
     assert anonymized_person.phone != customer.phone
-    assert (
-        anonymized_person.default_billing_address.street
-        != customer.default_billing_address.street
-    )
-    assert (
-        anonymized_person.default_billing_address.city
-        != customer.default_billing_address.city
-    )
+    assert anonymized_person.default_billing_address.street != customer.default_billing_address.street
+    assert anonymized_person.default_billing_address.city != customer.default_billing_address.city
 
     for created_order in orders:
         order = Order.objects.get(id=created_order.id)

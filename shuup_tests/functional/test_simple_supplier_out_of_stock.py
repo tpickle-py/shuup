@@ -15,9 +15,7 @@ from shuup.testing.receivers import shop_product_orderability_check
 from shuup_tests.simple_supplier.utils import get_simple_supplier
 
 
-@pytest.mark.parametrize(
-    "anonymous,hide_unorderable_product", [(True, True), (False, False)]
-)
+@pytest.mark.parametrize("anonymous,hide_unorderable_product", [(True, True), (False, False)])
 @pytest.mark.django_db
 def test_simple_supplier_out_of_stock(rf, anonymous, hide_unorderable_product):
     if hide_unorderable_product:

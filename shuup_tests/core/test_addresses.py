@@ -28,9 +28,7 @@ def test_basic_address():
     address.full_clean()
     string_repr = str(address)
     for field, value in get_data_dict(address).items():
-        if (
-            field == "country"
-        ):  # We can't test this right now, it's formatted in the repr
+        if field == "country":  # We can't test this right now, it's formatted in the repr
             continue
         if not value:
             continue
@@ -39,9 +37,7 @@ def test_basic_address():
             string_repr,
         )
 
-    assert address.is_european_union, (
-        "Dog Fort, UK is not in the EU, France actually is"
-    )
+    assert address.is_european_union, "Dog Fort, UK is not in the EU, France actually is"
     assert list(address.split_name) == ["Dog", "Hello"], "Names split correctly"
     assert address.first_name == "Dog", "Names split correctly"
     assert address.last_name == "Hello", "Names split correctly"
@@ -83,39 +79,27 @@ def test_address_ownership(admin_user):
     address.save()
     saved = SavedAddress(address=address)
     saved.owner = get_person_contact(admin_user)
-    assert saved.get_title(), (
-        "get_title does what it should even if there is no explicit title"
-    )
+    assert saved.get_title(), "get_title does what it should even if there is no explicit title"
     saved.title = "My favorite address"
-    assert saved.get_title() == saved.title, (
-        "get_title does what it should when there is an explicit title"
-    )
-    assert six.text_type(saved) == saved.get_title(), (
-        "str() is an alias for .get_title()"
-    )
+    assert saved.get_title() == saved.title, "get_title does what it should when there is an explicit title"
+    assert six.text_type(saved) == saved.get_title(), "str() is an alias for .get_title()"
     saved.full_clean()
     saved.save()
     assert (
-        SavedAddress.objects.for_owner(get_person_contact(admin_user))
-        .filter(address=address)
-        .exists()
+        SavedAddress.objects.for_owner(get_person_contact(admin_user)).filter(address=address).exists()
     ), "contacts can save addresses"
-    assert SavedAddress.objects.for_owner(None).count() == 0, (
-        "Ownerless saved addresses aren't a real thing"
-    )
+    assert SavedAddress.objects.for_owner(None).count() == 0, "Ownerless saved addresses aren't a real thing"
 
 
 def test_home_country_in_address():
     with override("fi"):
         finnish_address = MutableAddress(country="FI")
         with override_settings(SHUUP_ADDRESS_HOME_COUNTRY="US"):
-            assert "Suomi" in str(finnish_address), (
-                "When home is not Finland, Finland appears in address string"
-            )
+            assert "Suomi" in str(finnish_address), "When home is not Finland, Finland appears in address string"
         with override_settings(SHUUP_ADDRESS_HOME_COUNTRY="FI"):
-            assert "Suomi" not in str(finnish_address), (
-                "When home is Finland, Finland does not appear in address string"
-            )
+            assert "Suomi" not in str(
+                finnish_address
+            ), "When home is Finland, Finland does not appear in address string"
 
 
 @pytest.mark.django_db

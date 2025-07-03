@@ -32,9 +32,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "price_value",
-                    shuup.core.fields.MoneyValueField(
-                        max_digits=36, decimal_places=9, verbose_name="price"
-                    ),
+                    shuup.core.fields.MoneyValueField(max_digits=36, decimal_places=9, verbose_name="price"),
                 ),
                 (
                     "group",
@@ -55,9 +53,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "shop",
-                    models.ForeignKey(
-                        on_delete=models.CASCADE, to="shuup.Shop", verbose_name="shop"
-                    ),
+                    models.ForeignKey(on_delete=models.CASCADE, to="shuup.Shop", verbose_name="shop"),
                 ),
             ],
             options={
@@ -84,9 +80,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "discount_amount_value",
-                    shuup.core.fields.MoneyValueField(
-                        max_digits=36, decimal_places=9, verbose_name="discount amount"
-                    ),
+                    shuup.core.fields.MoneyValueField(max_digits=36, decimal_places=9, verbose_name="discount amount"),
                 ),
                 (
                     "group",
@@ -107,9 +101,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "shop",
-                    models.ForeignKey(
-                        on_delete=models.CASCADE, to="shuup.Shop", verbose_name="shop"
-                    ),
+                    models.ForeignKey(on_delete=models.CASCADE, to="shuup.Shop", verbose_name="shop"),
                 ),
             ],
             options={

@@ -14,8 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="manufacturer",
             name="shops",
-            field=models.ManyToManyField(
-                blank=True, to="shuup.Shop", verbose_name="shops"
-            ),
+            field=models.ManyToManyField(blank=True, to="shuup.Shop", verbose_name="shops"),
         ),
     ]

@@ -1,5 +1,3 @@
-
-
 import inspect
 
 from django.apps import apps
@@ -53,14 +51,8 @@ def _process_model_field(field, lines, latelines, is_translation=False):
 
 
 def _process_field_help_text_and_verbose_name(field, lines, is_translation=0):
-    help_text = (
-        strip_tags(force_text(field.help_text)) if hasattr(field, "help_text") else None
-    )
-    verbose_name = (
-        force_text(field.verbose_name).capitalize()
-        if hasattr(field, "verbose_name")
-        else None
-    )
+    help_text = strip_tags(force_text(field.help_text)) if hasattr(field, "help_text") else None
+    verbose_name = force_text(field.verbose_name).capitalize() if hasattr(field, "verbose_name") else None
     prefix = "(Translatable) " if is_translation else ""
     if help_text:
         lines.append(":param %s: %s" % (field.attname, prefix + help_text))
@@ -73,26 +65,19 @@ def _process_field_type(field, lines, latelines):
         to = _resolve_field_destination(field, field.remote_field.model)
 
         lines.append(
-            ":type %s: %s to :class:`%s.%s`"
-            % (field.attname, type(field).__name__, to.__module__, to.__name__)
+            ":type %s: %s to :class:`%s.%s`" % (field.attname, type(field).__name__, to.__module__, to.__name__)
         )
     elif isinstance(field, models.ManyToManyField):
         to = _resolve_field_destination(field, field.remote_field.model)
 
         lines.append(
-            ":type %s: %s to :class:`%s.%s`"
-            % (field.attname, type(field).__name__, to.__module__, to.__name__)
+            ":type %s: %s to :class:`%s.%s`" % (field.attname, type(field).__name__, to.__module__, to.__name__)
         )
     elif isinstance(field, models.ManyToOneRel):
         to = _resolve_field_destination(field, field.related_model)
-        latelines.append(
-            ".. attribute:: %s" % (field.related_name or field.name + "_set")
-        )
+        latelines.append(".. attribute:: %s" % (field.related_name or field.name + "_set"))
         latelines.append("")
-        latelines.append(
-            "   %s to :class:`%s.%s`"
-            % (type(field).__name__, to.__module__, to.__name__)
-        )
+        latelines.append("   %s to :class:`%s.%s`" % (type(field).__name__, to.__module__, to.__name__))
         latelines.append("")
     else:
         lines.append(":type %s: %s" % (field.attname, type(field).__name__))

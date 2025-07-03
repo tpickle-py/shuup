@@ -20,15 +20,11 @@ from shuup.testing.browser_utils import (
 )
 from shuup.utils.django_compat import reverse
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(
-    os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI."
-)
+@pytest.mark.skipif(os.environ.get("SHUUP_TESTS_CI", "0") == "1", reason="Disable when run in CI.")
 def test_summernote_editor_picture(browser, admin_user, live_server, settings):
     activate("en")
     factories.get_default_shop()
@@ -43,13 +39,9 @@ def test_summernote_editor_picture(browser, admin_user, live_server, settings):
 
     url = reverse("shuup_admin:shop_product.new")
     browser.visit("%s%s" % (live_server, url))
-    wait_until_condition(
-        browser, condition=lambda x: x.is_text_present("New shop product")
-    )
+    wait_until_condition(browser, condition=lambda x: x.is_text_present("New shop product"))
 
-    img_icon_selector = (
-        "#id_base-description__en-editor-wrap i[class='note-icon-picture']"
-    )
+    img_icon_selector = "#id_base-description__en-editor-wrap i[class='note-icon-picture']"
     move_to_element(browser, img_icon_selector)
     click_element(browser, img_icon_selector)
     wait_until_condition(browser, lambda b: len(b.windows) == 2)
@@ -68,8 +60,7 @@ def test_summernote_editor_picture(browser, admin_user, live_server, settings):
     # make sure the image was added to the editor
     wait_until_appeared(
         browser,
-        "#id_base-description__en-editor-wrap .note-editable img[src='%s']"
-        % filer_image.url,
+        "#id_base-description__en-editor-wrap .note-editable img[src='%s']" % filer_image.url,
         timeout=20,
     )
     browser.driver.set_window_size(original_size["width"], original_size["height"])

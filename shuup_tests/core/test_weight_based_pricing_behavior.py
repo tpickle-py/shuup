@@ -39,26 +39,14 @@ def test_with_one_matching_range(admin_user, get_service, service_attr):
     ]
     service = get_service()
     _assign_component_for_service(service, ranges_data)
-    source = _get_source_for_weight(
-        admin_user, service, service_attr, decimal.Decimal("0"), "low"
-    )
-    _test_service_ranges_against_source(
-        source, service, decimal.Decimal("0.0001"), "Low range"
-    )
+    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("0"), "low")
+    _test_service_ranges_against_source(source, service, decimal.Decimal("0.0001"), "Low range")
 
-    source = _get_source_for_weight(
-        admin_user, service, service_attr, decimal.Decimal("32.45678"), "mid"
-    )
-    _test_service_ranges_against_source(
-        source, service, decimal.Decimal("10.000000"), "Mid range"
-    )
+    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("32.45678"), "mid")
+    _test_service_ranges_against_source(source, service, decimal.Decimal("10.000000"), "Mid range")
 
-    source = _get_source_for_weight(
-        admin_user, service, service_attr, decimal.Decimal("32.456780001"), "high"
-    )
-    _test_service_ranges_against_source(
-        source, service, decimal.Decimal("23.567"), "High range"
-    )
+    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("32.456780001"), "high")
+    _test_service_ranges_against_source(source, service, decimal.Decimal("23.567"), "High range")
 
 
 @pytest.mark.django_db
@@ -80,28 +68,16 @@ def test_with_multiple_matching_ranges(admin_user, get_service, service_attr):
     _assign_component_for_service(service, ranges_data)
 
     # Low, mid and expensive ranges match but the lowest price is selected
-    source = _get_source_for_weight(
-        admin_user, service, service_attr, decimal.Decimal("10.01"), "low"
-    )
-    _test_service_ranges_against_source(
-        source, service, decimal.Decimal("0.0001"), "Low range"
-    )
+    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("10.01"), "low")
+    _test_service_ranges_against_source(source, service, decimal.Decimal("0.0001"), "Low range")
 
     # Mid, high and expensive ranges matches but the mid range is selected
-    source = _get_source_for_weight(
-        admin_user, service, service_attr, decimal.Decimal("40"), "mid"
-    )
-    _test_service_ranges_against_source(
-        source, service, decimal.Decimal("10.000000"), "Mid range"
-    )
+    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("40"), "mid")
+    _test_service_ranges_against_source(source, service, decimal.Decimal("10.000000"), "Mid range")
 
     # High and expensive ranges match but the mid range is selected
-    source = _get_source_for_weight(
-        admin_user, service, service_attr, decimal.Decimal("100"), "high"
-    )
-    _test_service_ranges_against_source(
-        source, service, decimal.Decimal("23.567"), "High range"
-    )
+    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("100"), "high")
+    _test_service_ranges_against_source(source, service, decimal.Decimal("23.567"), "High range")
 
 
 def _assign_component_for_service(service, ranges_data):
@@ -118,9 +94,7 @@ def _assign_component_for_service(service, ranges_data):
     service.behavior_components.add(component)
 
 
-def _test_service_ranges_against_source(
-    source, service, target_price, target_description
-):
+def _test_service_ranges_against_source(source, service, target_price, target_description):
     assert service.behavior_components.count() == 1
     costs = list(service.get_costs(source))
     unavailability_reasons = list(service.get_unavailability_reasons(source))
@@ -131,9 +105,7 @@ def _test_service_ranges_against_source(
         assert costs[0].description == target_description
 
 
-def _get_source_for_weight(
-    user, service, service_attr, total_gross_weight, sku, supplier=None
-):
+def _get_source_for_weight(user, service, service_attr, total_gross_weight, sku, supplier=None):
     source = seed_source(user)
     supplier = supplier or get_default_supplier()
     product = create_product(
@@ -220,20 +192,12 @@ def test_out_of_range(admin_user, get_service, service_attr):
     _assign_component_for_service(service, ranges_data)
 
     # Low, mid and expensive ranges match but the lowest price is selected
-    source = _get_source_for_weight(
-        admin_user, service, service_attr, decimal.Decimal("10.01"), "low"
-    )
-    _test_service_ranges_against_source(
-        source, service, decimal.Decimal("0.0001"), "Low range"
-    )
+    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("10.01"), "low")
+    _test_service_ranges_against_source(source, service, decimal.Decimal("0.0001"), "Low range")
 
     # Mid, high and expensive ranges matches but the mid range is selected
-    source = _get_source_for_weight(
-        admin_user, service, service_attr, decimal.Decimal("40"), "mid"
-    )
-    _test_service_ranges_against_source(
-        source, service, decimal.Decimal("10.000000"), "Mid range"
-    )
+    source = _get_source_for_weight(admin_user, service, service_attr, decimal.Decimal("40"), "mid")
+    _test_service_ranges_against_source(source, service, decimal.Decimal("10.000000"), "Mid range")
 
 
 @pytest.mark.django_db

@@ -29,21 +29,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created_on",
-                    models.DateTimeField(
-                        auto_now_add=True, verbose_name="created on", db_index=True
-                    ),
+                    models.DateTimeField(auto_now_add=True, verbose_name="created on", db_index=True),
                 ),
                 (
                     "delta",
-                    shuup.core.fields.QuantityField(
-                        default=0, decimal_places=9, verbose_name="delta", max_digits=36
-                    ),
+                    shuup.core.fields.QuantityField(default=0, decimal_places=9, verbose_name="delta", max_digits=36),
                 ),
                 (
                     "purchase_price_value",
-                    shuup.core.fields.MoneyValueField(
-                        default=0, decimal_places=9, max_digits=36
-                    ),
+                    shuup.core.fields.MoneyValueField(default=0, decimal_places=9, max_digits=36),
                 ),
                 (
                     "created_by",
@@ -108,9 +102,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "stock_value_value",
-                    shuup.core.fields.MoneyValueField(
-                        default=0, decimal_places=9, max_digits=36
-                    ),
+                    shuup.core.fields.MoneyValueField(default=0, decimal_places=9, max_digits=36),
                 ),
                 (
                     "product",

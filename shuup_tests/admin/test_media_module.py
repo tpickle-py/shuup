@@ -68,9 +68,7 @@ def test_media_view_images_without_root_access(rf):
     File.objects.create(name="normalfile", folder=folder)
     img = Image.objects.create(name="imagefile", folder=folder, is_public=True)
 
-    request = apply_request_middleware(
-        rf.get("/", {"filter": "images", "action": "folder"}), user=staff_user
-    )
+    request = apply_request_middleware(rf.get("/", {"filter": "images", "action": "folder"}), user=staff_user)
     request.user = staff_user
     view_func = MediaBrowserView.as_view()
     response = view_func(request)
@@ -93,12 +91,8 @@ def mbv_command(user, payload, method="post"):
 
 def mbv_upload(user, **extra_data):
     content = ("42" * 42).encode("UTF-8")
-    imuf = InMemoryUploadedFile(
-        BytesIO(content), "file", "424242.pdf", "application/pdf", len(content), "UTF-8"
-    )
-    request = RequestFactory().post(
-        "/", dict({"action": "upload", "file": imuf}, **extra_data)
-    )
+    imuf = InMemoryUploadedFile(BytesIO(content), "file", "424242.pdf", "application/pdf", len(content), "UTF-8")
+    request = RequestFactory().post("/", dict({"action": "upload", "file": imuf}, **extra_data))
     request.user = user
     view = MediaBrowserView.as_view()
     response = view(request)
@@ -122,13 +116,9 @@ def get_id_tree(folders_response):
 def test_new_folder(admin_user):
     shop = get_default_shop()
     folder1 = get_or_create_folder(shop, printable_gibberish())
-    child_folder_data = mbv_command(
-        admin_user, {"action": "new_folder", "name": "y", "parent": folder1.id}
-    )["folder"]
+    child_folder_data = mbv_command(admin_user, {"action": "new_folder", "name": "y", "parent": folder1.id})["folder"]
     assert Folder.objects.get(pk=child_folder_data["id"]).parent == folder1
-    root_folder_data = mbv_command(admin_user, {"action": "new_folder", "name": "y"})[
-        "folder"
-    ]
+    root_folder_data = mbv_command(admin_user, {"action": "new_folder", "name": "y"})["folder"]
     assert not Folder.objects.get(pk=root_folder_data["id"]).parent_id
 
 
@@ -153,9 +143,7 @@ def test_get_folder(admin_user):
 def test_rename_folder(admin_user):
     shop = get_default_shop()
     folder = get_or_create_folder(shop, printable_gibberish())
-    mbv_command(
-        admin_user, {"action": "rename_folder", "id": folder.pk, "name": "Space"}
-    )
+    mbv_command(admin_user, {"action": "rename_folder", "id": folder.pk, "name": "Space"})
     assert Folder.objects.get(pk=folder.pk).name == "Space"
 
 
@@ -172,9 +160,7 @@ def test_rename_file(admin_user):
     file = File.objects.create(original_filename="test.jpg")
     assert force_text(file) == "test.jpg"
     assert file.pk
-    mbv_command(
-        admin_user, {"action": "rename_file", "id": file.pk, "name": "test.tiff"}
-    )
+    mbv_command(admin_user, {"action": "rename_file", "id": file.pk, "name": "test.tiff"})
     file = File.objects.get(pk=file.pk)
     assert force_text(file) == "test.tiff"
 
@@ -193,9 +179,7 @@ def test_move_file(admin_user):
     folder1 = get_or_create_folder(shop, printable_gibberish())
     folder2 = get_or_create_folder(shop, printable_gibberish())
     file = File.objects.create(folder=folder1)
-    mbv_command(
-        admin_user, {"action": "move_file", "file_id": file.pk, "folder_id": folder2.pk}
-    )
+    mbv_command(admin_user, {"action": "move_file", "file_id": file.pk, "folder_id": folder2.pk})
     assert File.objects.get(pk=file.pk).folder == folder2
     mbv_command(admin_user, {"action": "move_file", "file_id": file.pk, "folder_id": 0})
     assert File.objects.get(pk=file.pk).folder is None
@@ -220,9 +204,7 @@ def test_upload(rf, admin_user):
 def test_upload_invalid_filetype(rf, admin_user):
     assert File.objects.count() == 0
     content = ("42" * 42).encode("UTF-8")
-    imuf = InMemoryUploadedFile(
-        BytesIO(content), "file", "424242.exe", "text/plain", len(content), "UTF-8"
-    )
+    imuf = InMemoryUploadedFile(BytesIO(content), "file", "424242.exe", "text/plain", len(content), "UTF-8")
     request = RequestFactory().post("/", dict({"action": "upload", "file": imuf}))
     request.user = admin_user
     view = MediaBrowserView.as_view()
@@ -389,9 +371,7 @@ def test_delete_protected_folder(rf, admin_user):
 def test_upload_invalid_image(rf, admin_user):
     assert File.objects.count() == 0
     content = ("32" * 32).encode("UTF-8")
-    imuf = InMemoryUploadedFile(
-        BytesIO(content), "file", "424242.png", "image/png", len(content), "UTF-8"
-    )
+    imuf = InMemoryUploadedFile(BytesIO(content), "file", "424242.png", "image/png", len(content), "UTF-8")
     request = RequestFactory().post("/", dict({"action": "upload", "file": imuf}))
     request.user = admin_user
     view = MediaBrowserView.as_view()

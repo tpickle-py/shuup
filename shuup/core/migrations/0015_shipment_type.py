@@ -3,8 +3,9 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import enumfields.fields
 from django.db import migrations, models
+
+import enumfields.fields
 
 import shuup.core.models
 

@@ -29,9 +29,7 @@ def setup_function(fn):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "host", ["shop-1.somedomain.com", "shop-test-2.otherdomain.com.br"]
-)
+@pytest.mark.parametrize("host", ["shop-1.somedomain.com", "shop-test-2.otherdomain.com.br"])
 def test_multishops_middleware(rf, host):
     with override_provides(
         "xtheme",
@@ -40,12 +38,8 @@ def test_multishops_middleware(rf, host):
         shop1 = Shop.objects.create(identifier="shop1", domain="shop-1")
         shop2 = Shop.objects.create(identifier="shop2", domain="shop-test-2")
 
-        theme_settings_shop1 = ThemeSettings.objects.create(
-            theme_identifier=FauxTheme.identifier, shop=shop1
-        )
-        theme_settings_shop2 = ThemeSettings.objects.create(
-            theme_identifier=FauxTheme2.identifier, shop=shop2
-        )
+        theme_settings_shop1 = ThemeSettings.objects.create(theme_identifier=FauxTheme.identifier, shop=shop1)
+        theme_settings_shop2 = ThemeSettings.objects.create(theme_identifier=FauxTheme2.identifier, shop=shop2)
 
         request = rf.get("/")
         request.META["HTTP_HOST"] = host
@@ -56,17 +50,11 @@ def test_multishops_middleware(rf, host):
         if host == "shop-1.somedomain.com":
             assert request.shop.id == shop1.id
             assert get_middleware_current_theme().identifier == FauxTheme.identifier
-            assert (
-                get_middleware_current_theme().settings_obj.id
-                == theme_settings_shop1.id
-            )
+            assert get_middleware_current_theme().settings_obj.id == theme_settings_shop1.id
         else:
             assert request.shop.id == shop2.id
             assert get_middleware_current_theme().identifier == FauxTheme2.identifier
-            assert (
-                get_middleware_current_theme().settings_obj.id
-                == theme_settings_shop2.id
-            )
+            assert get_middleware_current_theme().settings_obj.id == theme_settings_shop2.id
 
 
 @pytest.mark.django_db
@@ -114,9 +102,7 @@ def test_set_get_middleware_theme(rf):
     assert get_middleware_current_theme() is None
 
     # manually set the theme
-    theme_settings_shop2 = ThemeSettings.objects.create(
-        theme_identifier=FauxTheme2.identifier, shop=shop2
-    )
+    theme_settings_shop2 = ThemeSettings.objects.create(theme_identifier=FauxTheme2.identifier, shop=shop2)
     set_middleware_current_theme(FauxTheme2(theme_settings_shop2))
     assert get_middleware_current_theme().identifier == FauxTheme2.identifier
     assert get_middleware_current_theme().settings_obj.shop.id == shop2.id

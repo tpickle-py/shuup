@@ -18,9 +18,7 @@ from shuup.testing.browser_utils import (
     wait_until_condition,
 )
 
-pytestmark = pytest.mark.skipif(
-    os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run."
-)
+pytestmark = pytest.mark.skipif(os.environ.get("SHUUP_BROWSER_TESTS", "0") != "1", reason="No browser tests run.")
 
 
 @pytest.mark.django_db
@@ -41,24 +39,16 @@ def test_dev_onboarding(browser, admin_user, live_server, settings):
     click_element(browser, "#select2-id_address-country-container")
     wait_until_appeared(browser, "input.select2-search__field")
     browser.find_by_css("input.select2-search__field").first.value = "Finland"
-    wait_until_appeared(
-        browser, ".select2-results__option:not([aria-live='assertive'])"
-    )
-    browser.execute_script(
-        '$($(".select2-results__option")[0]).trigger({type: "mouseup"})'
-    )
+    wait_until_appeared(browser, ".select2-results__option:not([aria-live='assertive'])")
+    browser.execute_script('$($(".select2-results__option")[0]).trigger({type: "mouseup"})')
     click_element(browser, "button[name='next']")
 
-    wait_until_condition(
-        browser, lambda x: x.is_text_present("To start accepting payments right away")
-    )
+    wait_until_condition(browser, lambda x: x.is_text_present("To start accepting payments right away"))
     click_element(browser, "div[data-name='manual_payment'] button[name='activate']")
     browser.fill("manual_payment-service_name", "Laskulle")
     click_element(browser, "button[name='next']")
 
-    wait_until_condition(
-        browser, lambda x: x.is_text_present("To start shipping products right away")
-    )
+    wait_until_condition(browser, lambda x: x.is_text_present("To start shipping products right away"))
     click_element(browser, "div[data-name='manual_shipping'] button[name='activate']")
     browser.fill("manual_shipping-service_name", "Kotiinkuljetus")
     click_element(browser, "button[name='next']")
@@ -70,20 +60,12 @@ def test_dev_onboarding(browser, admin_user, live_server, settings):
     )
     click_element(browser, "button[name='next']")
 
-    wait_until_condition(
-        browser, lambda x: x.is_text_present("initial content and configure")
-    )
+    wait_until_condition(browser, lambda x: x.is_text_present("initial content and configure"))
     click_element(browser, "button[name='next']")
 
-    wait_until_condition(
-        browser, lambda x: x.is_text_present("install some sample data")
-    )
-    browser.execute_script(
-        'document.getElementsByName("sample-categories")[0].checked=true'
-    )
-    browser.execute_script(
-        'document.getElementsByName("sample-products")[0].checked=true'
-    )
+    wait_until_condition(browser, lambda x: x.is_text_present("install some sample data"))
+    browser.execute_script('document.getElementsByName("sample-categories")[0].checked=true')
+    browser.execute_script('document.getElementsByName("sample-products")[0].checked=true')
     click_element(browser, "button[name='next']")
 
     wait_until_condition(browser, lambda x: x.is_text_present("Welcome to Shuup!"))

@@ -15,8 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="freeproductline",
             name="quantity",
-            field=shuup.core.fields.QuantityField(
-                decimal_places=9, default=1, verbose_name="quantity", max_digits=36
-            ),
+            field=shuup.core.fields.QuantityField(decimal_places=9, default=1, verbose_name="quantity", max_digits=36),
         ),
     ]
