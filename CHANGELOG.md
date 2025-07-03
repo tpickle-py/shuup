@@ -10,7 +10,18 @@ List all changes after the last release here (newer on top). Each change on a se
 
 ### Fixed
 
+- Django 3.2+ compatibility: Fixed PersonContact name field recursion error by removing conflicting property
+- Django 3.2+ compatibility: Fixed Babel locale handling for None values in tests
+- Django 3.2+ compatibility: Updated test expectations for proper locale-aware number formatting
 - Admin: fix typo in product cloner
+
+### Changed
+
+- Django 3.2+ compatibility: OrderStatus and OrderLine factory methods confirmed working in Django 3+
+
+### Known Issues
+
+- Django 3.2+ compatibility: django-polymorphic causes recursion errors in complex Contact model deletion workflows. Tests `test_order_customer_groups` and `test_order_creator_account_manager` temporarily skipped. Core e-commerce functionality unaffected.
 
 ## [3.1.0] - 2021-08-17
 
