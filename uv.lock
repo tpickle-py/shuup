@@ -2062,6 +2062,7 @@ dev = [
     { name = "sphinx-rtd-theme" },
     { name = "splinter" },
     { name = "twine" },
+    { name = "types-docutils" },
     { name = "weasyprint" },
 ]
 docs = [
@@ -2147,6 +2148,7 @@ dev = [
     { name = "sphinx-rtd-theme", specifier = ">=2.0.0" },
     { name = "splinter", specifier = ">=0.21.0" },
     { name = "twine", specifier = ">=4.0.0" },
+    { name = "types-docutils", specifier = ">=0.21.0.20250604" },
     { name = "weasyprint", specifier = ">=61.0" },
 ]
 docs = [
@@ -2562,6 +2564,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c8/a2/6df94fc5c8e2170d21d7134a565c3a8fb84f9797c1dd65a5976aaf714418/twine-6.1.0.tar.gz", hash = "sha256:be324f6272eff91d07ee93f251edf232fc647935dd585ac003539b42404a8dbd", size = 168404, upload-time = "2025-01-21T18:45:26.758Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7c/b6/74e927715a285743351233f33ea3c684528a0d374d2e43ff9ce9585b73fe/twine-6.1.0-py3-none-any.whl", hash = "sha256:a47f973caf122930bf0fbbf17f80b83bc1602c9ce393c7845f289a3001dc5384", size = 40791, upload-time = "2025-01-21T18:45:24.584Z" },
+]
+
+[[package]]
+name = "types-docutils"
+version = "0.21.0.20250604"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ef/d0/d28035370d669f14d4e23bd63d093207331f361afa24d2686d2c3fe6be8d/types_docutils-0.21.0.20250604.tar.gz", hash = "sha256:5a9cc7f5a4c5ef694aa0abc61111e0b1376a53dee90d65757f77f31acfcca8f2", size = 40953, upload-time = "2025-06-04T03:10:27.439Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/89/91/887e9591c1ee50dfbf7c2fa2f3f51bc6db683013b6d2b0cd3983adf3d502/types_docutils-0.21.0.20250604-py3-none-any.whl", hash = "sha256:bfa8628176c06a80cdd1d6f3fb32e972e042db53538596488dfe0e9c5962b222", size = 65915, upload-time = "2025-06-04T03:10:26.067Z" },
 ]
 
 [[package]]
