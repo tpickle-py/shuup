@@ -10,6 +10,6 @@ class AdminProductValidator:
     ordering = 0
 
     def get_validation_issues(
-        shop_product: ShopProduct, shop: Shop, user, supplier: Supplier = None
+        self, shop_product: ShopProduct, shop: Shop, user, supplier: Supplier = None
     ) -> Iterable[ProductValidationIssue]:
-        yield None
+        return []  # Empty iterable instead of yielding None

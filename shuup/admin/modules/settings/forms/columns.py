@@ -1,10 +1,12 @@
+from typing import Any, List, Optional
+
 from django import forms
 
 
 class ColumnSettingsForm(forms.Form):
-    settings = None
-    non_selected = []
-    selected = []
+    settings: Optional[Any] = None
+    non_selected: List[str] = []
+    selected: List[str] = []
 
     def __init__(self, settings, *args, **kwargs):
         super().__init__(*args, **kwargs)

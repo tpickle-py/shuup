@@ -18,7 +18,7 @@ class TemplatedFormDef(FormDef):
 
 
 class FormPart:
-    priority = 0
+    priority: int = 0
 
     def __init__(self, request, object=None):
         self.request = request

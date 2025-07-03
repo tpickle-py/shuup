@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Any, Iterable, Optional, Tuple, Type
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 
 from django.apps import apps
 from django.contrib.auth import get_user_model
@@ -285,5 +285,5 @@ class BaseAdminObjectSelector:
     def has_permission(self) -> bool:
         return has_permission(self.user, get_object_selector_permission_name(self.model))
 
-    def get_objects(self, search_term, *args, **kwargs) -> Iterable[Tuple[int, str]]:
+    def get_objects(self, search_term, *args, **kwargs) -> Union[Iterable[Tuple[int, str]], List[Dict[str, Any]]]:
         raise NotImplementedError()
