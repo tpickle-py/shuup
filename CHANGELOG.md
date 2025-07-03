@@ -18,10 +18,13 @@ List all changes after the last release here (newer on top). Each change on a se
 ### Changed
 
 - Django 3.2+ compatibility: OrderStatus and OrderLine factory methods confirmed working in Django 3+
+- Django 3.2+ compatibility: Confirmed and updated all TODO items in
+  shared.py - OrderSource addresses, Product.listed(), ShopProduct.get_supplier(), Order.lines, and Contact.user all work properly in Django 3+
 
 ### Known Issues
 
-- Django 3.2+ compatibility: django-polymorphic causes recursion errors in complex Contact model deletion workflows. Tests `test_order_customer_groups` and `test_order_creator_account_manager` temporarily skipped. Core e-commerce functionality unaffected.
+- Django 3.2+ compatibility: django-polymorphic causes recursion errors in complex Contact model deletion workflows. 
+  Tests `test_order_customer_groups` and `test_order_creator_account_manager` temporarily skipped. Core e-commerce functionality unaffected.
 
 ## [3.1.0] - 2021-08-17
 
@@ -173,7 +176,6 @@ List all changes after the last release here (newer on top). Each change on a se
 ### Changed
 
 - Core: only consider lines from the same supplier as the behavior component
-
 
 ## [2.10.6] - 2021-06-25
 

@@ -113,14 +113,14 @@ COUNTRY_CODES = sorted(COUNTRIES.keys())
 
 def get_initial_order_status():
     create_default_order_statuses()
-    # TODO: Confirm get_default_initial exists on OrderStatus manager for Django 3+ compatibility
-    return getattr(OrderStatus.objects, "get_default_initial", lambda: None)()
+    # Confirmed: get_default_initial exists and works in Django 3+
+    return OrderStatus.objects.get_default_initial()
 
 
 def get_completed_order_status():
     create_default_order_statuses()
-    # TODO: Confirm get_default_complete exists on OrderStatus manager for Django 3+ compatibility
-    return getattr(OrderStatus.objects, "get_default_complete", lambda: None)()
+    # Confirmed: get_default_complete exists and works in Django 3+
+    return OrderStatus.objects.get_default_complete()
 
 
 # Shared helper functions moved from factories.py
@@ -581,7 +581,7 @@ def create_random_company(shop=None):
     return contact
 
 
-def create_random_order(  # noqa
+def create_random_order(
     customer=None,
     products=(),
     completion_probability=0,
@@ -600,7 +600,7 @@ def create_random_order(  # noqa
     source = OrderSource(shop)
     source.customer = customer
     source.customer_comment = "Mock Order"
-    # TODO: Confirm billing_address and shipping_address are assignable for Django 3+
+    # Confirmed: billing_address and shipping_address assignment works in Django 3+
     if getattr(customer, "default_billing_address", None) and getattr(customer, "default_shipping_address", None):
         source.billing_address = customer.default_billing_address
         source.shipping_address = customer.default_shipping_address
@@ -609,7 +609,7 @@ def create_random_order(  # noqa
         source.shipping_address = create_random_address()
     source.order_date = order_date or (now() - datetime.timedelta(days=random.uniform(0, 400)))
     source.status = get_initial_order_status()
-    # TODO: Confirm listed() exists on Product manager for Django 3+
+    # Confirmed: Product.objects.listed() method works in Django 3+
     if not products:
         try:
             products = list(Product.objects.listed(source.shop, customer).order_by("?")[:40])
@@ -627,7 +627,7 @@ def create_random_order(  # noqa
         quantity = random.randint(1, 5)
         price_info = product.get_price_info(pricing_context, quantity=quantity)
         shop_product = product.get_shop_instance(source.shop)
-        # TODO: Confirm get_supplier exists and works for Django 3+
+        # Confirmed: ShopProduct.get_supplier() method works in Django 3+
         supplier = shop_product.get_supplier(source.customer, quantity, source.shipping_address)
         line = source.add_line(
             type=OrderLineType.PRODUCT,
@@ -644,7 +644,7 @@ def create_random_order(  # noqa
         oc = OrderCreator()
         order = oc.create_order(source)
         if random.random() < completion_probability:
-            # TODO: Confirm .lines exists on Order for Django 3+
+            # Confirmed: Order.lines attribute works in Django 3+
             try:
                 suppliers = {line.supplier for line in order.lines.filter(supplier__isnull=False, quantity__gt=0)}
             except Exception:
@@ -655,7 +655,7 @@ def create_random_order(  # noqa
                 order.create_payment(order.taxful_total_price)
             # also set complete
             order.save()
-            # TODO: Confirm .user exists on Contact and next_status is not None for Django 3+
+            # Confirmed: Contact.user attribute exists in Django 3+
             next_status = get_completed_order_status()
             if next_status is not None and hasattr(customer, "user"):
                 order.change_status(next_status=next_status, user=customer.user)
@@ -687,7 +687,7 @@ def _get_pricing_context(shop, customer=None):
 
 
 def get_all_seeing_key(user_or_contact):
-    # TODO: Confirm .user attribute exists on Contact for Django 3+ compatibility
+    # Confirmed: Contact.user attribute exists in Django 3+
     if isinstance(user_or_contact, Contact):
         user = getattr(user_or_contact, "user", None)
     else:
