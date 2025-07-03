@@ -1,6 +1,6 @@
 import six
 from django.db.models import ForeignKey
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from parler.models import TranslatedFieldsModel
 
 # Compatibility for Django versions - FieldDoesNotExist moved in Django 4.0

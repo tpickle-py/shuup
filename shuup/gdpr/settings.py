@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 # The cookie name that will save the consent in the user browser.
 SHUUP_GDPR_CONSENT_COOKIE_NAME = "shuup_gdpr_consent"

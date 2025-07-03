@@ -3,7 +3,7 @@ import csv
 from django.db.models import Q
 from django.http import HttpResponse
 from django.utils.html import strip_tags
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.modules.settings.view_settings import ViewSettings
 from shuup.admin.utils.picotable import PicotableFileMassAction

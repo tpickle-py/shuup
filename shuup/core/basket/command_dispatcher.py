@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
 from django.utils.html import escape
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.apps.provides import get_provide_objects
 from shuup.core.basket import commands

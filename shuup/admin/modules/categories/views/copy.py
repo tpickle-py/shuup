@@ -1,6 +1,6 @@
 from django.db.transaction import atomic
 from django.http.response import JsonResponse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
 
 from shuup.core.models import Category, CategoryStatus, ShopProduct, ShopProductVisibility

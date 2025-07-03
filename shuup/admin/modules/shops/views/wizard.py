@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.modules.shops.forms import ShopAddressWizardForm, ShopWizardForm
 from shuup.admin.views.wizard import TemplatedWizardFormDef, WizardFormDef, WizardPane

@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 ABOUT_US_KEY = "about_us"
 PRIVACY_POLICY_KEY = "privacy_policy"

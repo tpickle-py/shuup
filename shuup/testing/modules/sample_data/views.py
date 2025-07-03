@@ -4,7 +4,7 @@ from django.core.management import call_command
 from django.db.transaction import atomic
 from django.http import HttpResponseRedirect
 from django.utils import translation
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
 from shuup import configuration

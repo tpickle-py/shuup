@@ -1,5 +1,5 @@
 from django.forms import Select, SelectMultiple
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.utils.django_compat import NoReverseMatch, force_text
 

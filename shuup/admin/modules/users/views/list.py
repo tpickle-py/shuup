@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.utils.picotable import ChoicesFilter, Column, Select2Filter, TextFilter, true_or_false_filter
 from shuup.admin.utils.views import PicotableListView

@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.notify.base import Event, Variable
 from shuup.notify.typology import Email, Model, Text

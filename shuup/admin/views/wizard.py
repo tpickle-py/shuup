@@ -3,6 +3,7 @@ from django.db.transaction import atomic
 from django.http.response import HttpResponseRedirect, JsonResponse
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
 from shuup import configuration
@@ -40,10 +41,10 @@ class _WizardFormGroup(FormGroup):
 
 
 class WizardPane(FormPart):
-    identifier = None
-    title = None
-    text = None
-    icon = None
+    identifier = ""
+    title = _("")
+    text = _("")
+    icon = ""
     can_skip = False
     editable = True
 

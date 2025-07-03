@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.core.models import Shop, ShopStatus
 from shuup.core.utils.shops import get_shop_from_host

@@ -1,6 +1,6 @@
 import six
 from django import forms
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 
 from shuup.reports.report import get_report_classes

@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 from django.utils.text import format_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from enumfields import Enum, EnumIntegerField
 from parler.managers import TranslatableQuerySet
 from parler.models import TranslatableModel, TranslatedFields

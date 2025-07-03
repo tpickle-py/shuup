@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.campaigns.models.campaigns import BasketCampaign, CatalogCampaign, CouponUsage
 from shuup.core.models import OrderLineType, ShopProduct

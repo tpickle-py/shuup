@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.base import Section
 from shuup.core.models import PersonContact

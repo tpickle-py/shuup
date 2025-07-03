@@ -15,6 +15,7 @@ from .contact_factory import (
 # Import from order factory
 from .order_factory import (
     add_product_to_order,
+    create_default_order_statuses,
     create_empty_order,
     create_order_with_product,
     create_random_order,

@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.forms.fields import PercentageField
 from shuup.campaigns.utils.campaigns import get_total_price_of_products

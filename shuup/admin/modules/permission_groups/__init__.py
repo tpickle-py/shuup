@@ -1,7 +1,7 @@
 from typing import Iterable
 
 from django.contrib.auth.models import Group as PermissionGroup
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.base import AdminModule, MenuEntry
 from shuup.admin.menu import STOREFRONT_MENU_CATEGORY

@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any, Optional, Tuple
 from uuid import uuid4
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.core.models import BackgroundTask, BackgroundTaskExecution, BackgroundTaskExecutionStatus
 from shuup.utils.importing import cached_load, load

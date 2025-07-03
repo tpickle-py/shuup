@@ -5,7 +5,7 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.text import format_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.core.fields import FormattedDecimalFormField
 from shuup.core.models import SalesUnit, Shop

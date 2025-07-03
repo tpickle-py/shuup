@@ -53,5 +53,16 @@ repos:
     rev: v1.8.0
     hooks:
       - id: mypy
-        additional_dependencies: [types-requests, types-PyYAML]
-        args: [--ignore-missing-imports]
+        additional_dependencies: [
+          types-requests, 
+          types-PyYAML, 
+          types-pytz,
+          types-six,
+          types-python-dateutil,
+          types-Pillow,
+          types-docutils,
+          django-stubs,
+          djangorestframework-stubs
+        ]
+        args: [--config-file=pyproject.toml]
+        exclude: ^(shuup_tests/|migrations/|shuup_workbench/|setup\.py|generate_apidoc\.py)

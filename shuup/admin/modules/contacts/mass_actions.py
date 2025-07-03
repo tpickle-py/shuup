@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.modules.contacts.views.list import ContactListView
 from shuup.admin.utils.mass_action import BaseExportCSVMassAction

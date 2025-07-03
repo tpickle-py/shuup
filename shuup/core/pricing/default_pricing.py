@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.core.models import ShopProduct
 from shuup.core.pricing import PriceInfo, PricingModule

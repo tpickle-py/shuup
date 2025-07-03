@@ -3,7 +3,7 @@ from typing import Iterable
 import six
 from django.conf import settings
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.base import AdminModule, MenuEntry, SearchResult
 from shuup.admin.menu import CONTACTS_MENU_CATEGORY

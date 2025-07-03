@@ -1,5 +1,5 @@
 from django.db.models import Count
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.utils.picotable import ChoicesFilter, Column, TextFilter
 from shuup.admin.utils.views import PicotableListView

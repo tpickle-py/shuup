@@ -1,5 +1,5 @@
 from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.core.models import PaymentStatus, ShipmentStatus, ShippingStatus
 from shuup.core.order_creator.signals import order_creator_finished

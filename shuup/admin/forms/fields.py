@@ -4,7 +4,7 @@ from numbers import Number
 from django.core.exceptions import ValidationError
 from django.forms import DecimalField, Field, MultipleChoiceField, Select, SelectMultiple
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class PercentageField(DecimalField):

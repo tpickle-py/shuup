@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.forms.fields import ObjectSelect2MultipleField
 from shuup.core.models import Carrier, Contact, OrderLineType, OrderStatus, ShippingMethod, Supplier, Tax, TaxClass

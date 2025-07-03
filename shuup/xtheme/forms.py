@@ -4,7 +4,7 @@ from copy import deepcopy
 from django import forms
 from django.forms.widgets import TextInput
 from django.urls.base import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.forms.fields import ObjectSelect2ModelField
 from shuup.admin.forms.quick_select import QuickAddRelatedObjectSelect

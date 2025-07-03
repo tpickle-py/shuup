@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
 import six
 from django.utils.encoding import force_bytes, force_text
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import override
 
 from shuup.utils.django_compat import reverse
@@ -16,7 +17,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class AdminModule:
-    name = "_Base_"
+    name = _("_Base_")
 
     # A menu entry to represent this module in breadcrumbs
     breadcrumbs_menu_entry = None

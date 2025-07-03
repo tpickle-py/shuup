@@ -1,5 +1,5 @@
 from django.db.models import Count, Q
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.modules.contacts.utils import request_limited
 from shuup.admin.shop_provider import get_shop

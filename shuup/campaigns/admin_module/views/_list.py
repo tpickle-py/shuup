@@ -1,6 +1,6 @@
 from babel.dates import format_datetime
 from django.utils.timezone import localtime
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.shop_provider import get_shop
 from shuup.admin.supplier_provider import get_supplier

@@ -1,6 +1,6 @@
 import six
 from django.utils.translation import get_language
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 # Compatibility for Django versions - OrderedDict moved to collections in Python 3.7+
 try:

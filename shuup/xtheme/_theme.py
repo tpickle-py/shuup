@@ -4,7 +4,7 @@ import warnings
 from contextlib import contextmanager
 
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.apps.provides import get_identifier_to_object_map, get_provide_objects
 from shuup.core import cache
@@ -40,10 +40,10 @@ class Theme:
     identifier = None
 
     # The printable name for this theme.
-    name = ""
+    name = _("")
 
     # The author for this theme, for posterity.
-    author = ""
+    author = _("")
 
     # Directory prefix for this theme's template files.
     # If `None`, the `identifier` is used instead

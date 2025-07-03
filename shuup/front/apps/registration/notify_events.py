@@ -1,5 +1,5 @@
 from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from registration.signals import user_activated, user_registered
 
 from shuup.core.models import PersonContact, get_person_contact

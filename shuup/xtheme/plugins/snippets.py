@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.xtheme import Plugin, resources
 from shuup.xtheme.resources import JinjaMarkupResource, add_resource

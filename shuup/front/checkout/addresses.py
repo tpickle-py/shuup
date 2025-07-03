@@ -1,7 +1,7 @@
 from django import forms
 from django.db.models.fields import BLANK_CHOICE_DASH
 from django.forms.models import model_to_dict
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import FormView
 
 from shuup.core.models import AnonymousContact, CompanyContact, SavedAddress, SavedAddressRole, SavedAddressStatus

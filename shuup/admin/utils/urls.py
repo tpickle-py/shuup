@@ -10,7 +10,7 @@ from django.http.response import HttpResponseForbidden
 from django.utils.encoding import force_str, force_text
 from django.utils.html import escape
 from django.utils.http import urlencode
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.module_registry import get_modules
 from shuup.admin.shop_provider import get_shop

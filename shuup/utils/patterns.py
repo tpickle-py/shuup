@@ -1,6 +1,6 @@
 import fnmatch
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 # Compatibility for Django versions - lru_cache moved to functools in Python 3.2+
 try:

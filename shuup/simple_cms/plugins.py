@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import get_language
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.simple_cms.models import Page
 from shuup.simple_cms.utils import order_query_by_values

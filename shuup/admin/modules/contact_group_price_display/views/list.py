@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from shuup.admin.modules.contact_group_price_display.views.forms import PriceDisplayChoices, get_price_display_mode
 from shuup.admin.shop_provider import get_shop
