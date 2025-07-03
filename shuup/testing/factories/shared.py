@@ -237,7 +237,7 @@ def complete_product(product):
 
 def create_product(sku, shop=None, supplier=None, default_price=None, **attrs):
     from .tax_factory import get_default_tax_class
-    
+
     if shop is None:
         shop = ShopFactory()
     if default_price is not None:
