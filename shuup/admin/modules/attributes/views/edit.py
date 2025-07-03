@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.db.transaction import atomic
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
 
@@ -35,7 +35,7 @@ class AttributeDeleteView(DetailView):
 
     def post(self, request, *args, **kwargs):
         attribute = self.get_object()
-        attribute_name = force_text(attribute)
+        attribute_name = force_str(attribute)
         attribute.delete()
         messages.success(request, _("%s has been deleted.") % attribute_name)
         return HttpResponseRedirect(reverse_lazy("shuup_admin:attribute.list"))

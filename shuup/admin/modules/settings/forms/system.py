@@ -1,3 +1,5 @@
+from typing import Any
+
 import six
 from django import forms
 from django.utils.translation import gettext_lazy as _
@@ -11,7 +13,7 @@ from shuup.core.models import ConfigurationItem
 
 class BaseSettingsFormPart(FormPart):
     name = "base_settings"
-    form = None  # override in subclass
+    form: Any = None  # override in subclass
 
     def get_form_defs(self):
         yield TemplatedFormDef(

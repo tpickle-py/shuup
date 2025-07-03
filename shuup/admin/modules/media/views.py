@@ -9,9 +9,9 @@ from django.db.transaction import atomic
 from django.http import HttpResponseRedirect
 from django.http.response import JsonResponse
 from django.urls import reverse
-from django.utils.encoding import force_text
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.encoding import force_str
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from django.views.generic import TemplateView
 from filer.models import File, Folder
 from filer.models.imagemodels import Image
@@ -103,7 +103,7 @@ class MediaBrowserView(TemplateView):
     """
 
     template_name = "shuup/admin/media/browser.jinja"
-    title = ugettext_lazy("Browse Media")
+    title = gettext_lazy("Browse Media")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -143,9 +143,9 @@ class MediaBrowserView(TemplateView):
             try:
                 return handler(data)
             except ObjectDoesNotExist as odne:
-                return JsonResponse({"error": force_text(odne)}, status=400)
+                return JsonResponse({"error": force_str(odne)}, status=400)
             except Problem as prob:
-                return JsonResponse({"error": force_text(prob)})
+                return JsonResponse({"error": force_str(prob)})
         else:
             return JsonResponse({"error": f"Error! Unknown action `{action}`."})
 
@@ -429,7 +429,7 @@ def _process_form(request, folder):
 
         ensure_media_file(get_shop(request), filer_file)
     except Exception as exc:
-        return JsonResponse({"error": force_text(exc)}, status=500)
+        return JsonResponse({"error": force_str(exc)}, status=500)
 
     return JsonResponse(
         {
@@ -452,7 +452,7 @@ def media_upload(request, *args, **kwargs):
         else:
             folder = None  # Root folder upload. How bold!
     except Exception as exc:
-        return JsonResponse({"error": f"Error! Invalid folder `{force_text(exc)}`."}, status=400)
+        return JsonResponse({"error": f"Error! Invalid folder `{force_str(exc)}`."}, status=400)
 
     if subfolder_of_users_root(request.user, folder) or has_permission(request.user, "media.upload-to-folder"):
         return _process_form(request, folder)

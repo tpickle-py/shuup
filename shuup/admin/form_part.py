@@ -35,7 +35,7 @@ class FormPartsViewMixin:
     fields: Union[Tuple, List] = ()  # Dealt with by the FormGroup
     request: Optional[Any] = None
     form_part_class_provide_key: Optional[str] = None
-    base_form_part_classes: Union[Tuple, List] = ()
+    base_form_part_classes: Union[Any, Any] = ()
 
     def get_form_class(self):
         return None  # Dealt with by `get_form`; this will just squelch Django warnings
@@ -67,8 +67,8 @@ class FormPartsViewMixin:
 
 
 class SaveFormPartsMixin:
-    request = None  # Placate "missing field" errors
-    object = None  # --"--
+    request: Any = None  # Placate "missing field" errors
+    object: Any = None  # --"--
 
     @atomic()
     def save_form_parts(self, form):

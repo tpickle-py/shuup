@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.db.transaction import atomic
 
 from shuup.admin.form_part import FormPartsViewMixin, SaveFormPartsMixin
@@ -11,10 +13,10 @@ from shuup.core.models import PaymentMethod, ShippingMethod
 
 
 class ServiceEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView):
-    model = None  # Override in subclass
+    model: Any = None  # Override in subclass
     template_name = "shuup/admin/services/edit.jinja"
     context_object_name = "service"
-    base_form_part_classes = []  # Override in subclass
+    base_form_part_classes: Any = []  # Override in subclass
     form_provide_key = "service_behavior_component_form"
     form_part_provide_key = "service_behavior_component_form_part"
 

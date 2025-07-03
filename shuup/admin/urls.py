@@ -1,7 +1,7 @@
 import warnings
 
-from django.conf.urls import url
 from django.contrib.auth import logout as do_logout
+from django.urls import re_path
 from django.views.decorators.csrf import csrf_exempt
 from django.views.i18n import set_language
 
@@ -110,7 +110,7 @@ def get_urls():
             warnings.warn(f"Warning! Admin URL {u!r} is not an `AdminRegexURLPattern`.", stacklevel=2)
 
     # Add Django javascript catalog url
-    urls.append(url(r"^i18n.js$", javascript_catalog_all, name="js-catalog"))
+    urls.append(re_path(r"^i18n.js$", javascript_catalog_all, name="js-catalog"))
 
     return tuple(urls)
 

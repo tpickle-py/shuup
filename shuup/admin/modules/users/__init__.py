@@ -1,4 +1,4 @@
-from typing import Dict, Iterable
+from typing import Any, Dict, Iterable
 
 import six
 from django.contrib.auth import get_user_model
@@ -68,7 +68,7 @@ class UserModule(AdminModule):
             ),
         ]
 
-    def get_permissions_help_texts(self) -> Dict[str, str]:
+    def get_permissions_help_texts(self) -> Dict[str, str | Any]:
         return {
             "user.change-password": _("Allow the user to change the passwords of other users."),
             "user.reset-password": _("Allow the user send the reset password email."),
