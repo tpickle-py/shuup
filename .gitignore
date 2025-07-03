@@ -44,3 +44,4 @@ node_modules
 .sqlite
 .python-version
 .unit_tests
+.projects/**
