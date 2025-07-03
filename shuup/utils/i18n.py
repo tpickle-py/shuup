@@ -55,12 +55,16 @@ def get_current_babel_locale(fallback="en-US-POSIX"):
     :return: Babel Locale
     :rtype: babel.Locale
     """
-    locale = get_babel_locale(locale_string=translation.get_language())
+    locale_string = translation.get_language()
+    if not locale_string:  # Handle None case from translation.override(None)
+        locale_string = fallback
+    
+    locale = get_babel_locale(locale_string=locale_string)
     if not locale:
         if fallback:
             locale = get_babel_locale(fallback)
         if not locale:
-            raise ValueError(f"Error! Failed to get the current babel locale (lang={translation.get_language()}).")
+            raise ValueError(f"Error! Failed to get the current babel locale (lang={locale_string}).")
     return locale
 
 

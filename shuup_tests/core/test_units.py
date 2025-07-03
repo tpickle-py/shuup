@@ -201,17 +201,17 @@ def test_unit_interface_render_quantity_translations():
     with translation.override("en"):
         assert gram.render_quantity(qty) == "4,321,123.4567g"
     with translation.override("fi"):
-        assert gram.render_quantity(qty) == nbsp("4 321 123,4567g")
+        assert gram.render_quantity(qty) == nbsp("4 321 123,4567 g")
     with translation.override("pt-br"):
         assert gram.render_quantity(qty) == "4.321.123,4567g"
     with translation.override("hi"):
         assert gram.render_quantity(qty) == "43,21,123.4567g"
     with translation.override("hy"):
-        assert gram.render_quantity(qty) == "4321123,4567g"
+        assert gram.render_quantity(qty) == nbsp("4 321 123,4567g")
 
 
 trans_key = (
-    "Display value with unit symbol (with or without space)"
+    "Display the value with the unit symbol (with or without space) "
     "\x04"
     "{value}{symbol}"
 )  # Gettext context separator
