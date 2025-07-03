@@ -1,3 +1,5 @@
+from typing import Any, List, Optional, Tuple, Type
+
 from django.db.transaction import atomic
 from django.utils.translation import gettext_lazy as _
 
@@ -23,14 +25,14 @@ from shuup.campaigns.admin_module.utils import get_formparts_for_provide_key
 from shuup.campaigns.models.campaigns import BasketCampaign, CatalogCampaign, Coupon
 
 
-class CampaignEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView):
+class CampaignEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateView):  # type: ignore[misc]
     template_name = "shuup/campaigns/admin/edit_campaigns.jinja"
     context_object_name = "campaign"
-    form_part_class_provide_key = "campaign"
+    form_part_class_provide_key: Optional[str] = "campaign"  # type: ignore[assignment]
     add_form_errors_as_messages = False
-    rules_form_part_class = None  # Override in subclass
-    effects = []  # Override in subclass
-    condition_key = ""  # Override in subclass
+    rules_form_part_class: Optional[Type[Any]] = None  # Override in subclass
+    effects: List[Tuple[str, Type[Any]]] = []  # Override in subclass
+    condition_key: str = ""  # Override in subclass
 
     @atomic
     def form_valid(self, form):
@@ -70,13 +72,13 @@ class CampaignEditView(SaveFormPartsMixin, FormPartsViewMixin, CreateOrUpdateVie
         return super().get_queryset().filter(shop=get_shop(self.request))
 
 
-class CatalogCampaignEditView(BreadcrumbedView, CampaignEditView):
+class CatalogCampaignEditView(BreadcrumbedView, CampaignEditView):  # type: ignore[misc]
     model = CatalogCampaign
     condition_key = "campaign_context_condition"
     filter_key = "campaign_catalog_filter"
     effects = [("campaign_product_discount_effect_form", CatalogEffectsFormPart)]
-    base_form_part_classes = [CatalogBaseFormPart]
-    rules_form_part_class = CatalogConditionsFormPart
+    base_form_part_classes: List[Type[Any]] = [CatalogBaseFormPart]  # type: ignore[assignment]
+    rules_form_part_class: Type[Any] = CatalogConditionsFormPart
 
     parent_name = _("Catalog Campaign")
     parent_url = "shuup_admin:catalog_campaign.list"
@@ -95,15 +97,15 @@ class CatalogCampaignEditView(BreadcrumbedView, CampaignEditView):
         return CatalogFiltersFormPart(self.request, form, f"filters_{form._meta.model.__name__.lower()}", object)
 
 
-class BasketCampaignEditView(BreadcrumbedView, CampaignEditView):
+class BasketCampaignEditView(BreadcrumbedView, CampaignEditView):  # type: ignore[misc]
     model = BasketCampaign
     condition_key = "campaign_basket_condition"
     effects = [
         ("campaign_basket_discount_effect_form", BasketDiscountEffectsFormPart),
         ("campaign_basket_line_effect_form", BasketLineEffectsFormPart),
     ]
-    base_form_part_classes = [BasketBaseFormPart]
-    rules_form_part_class = BasketConditionsFormPart
+    base_form_part_classes: List[Type[Any]] = [BasketBaseFormPart]  # type: ignore[assignment]
+    rules_form_part_class: Type[Any] = BasketConditionsFormPart
 
     parent_name = _("Basket Campaign")
     parent_url = "shuup_admin:basket_campaign.list"
