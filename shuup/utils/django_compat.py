@@ -40,9 +40,13 @@ except ImportError:
 
 
 try:
-    from django.utils.encoding import force_bytes, force_text
+    from django.utils.encoding import force_bytes
+    from django.utils.encoding import force_str as force_text
 except ImportError:
-    from django.utils.text import force_bytes, force_text  # noqa (F401)
+    try:
+        from django.utils.encoding import force_bytes, force_text
+    except ImportError:
+        from django.utils.text import force_bytes, force_text  # noqa (F401)
 
 
 try:

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from babel.numbers import format_currency, format_number
 from django.template import loader
 
@@ -7,7 +9,7 @@ from shuup.utils.numbers import parse_decimal_string
 
 
 class DashboardBlock:
-    type = None
+    type: Optional[str] = None
     sort_order = 0
     SIZES = ("small", "normal", "medium", "large", "full")
     default_size = "normal"
