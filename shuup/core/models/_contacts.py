@@ -570,13 +570,17 @@ class PersonContact(Contact):
         super().__init__(*args, **kwargs)
 
     @property
-    def name(self):
+    def full_name(self):
+        """Get the full name computed from first_name and last_name."""
         names = (self.first_name, self.last_name)
         return " ".join(x for x in names if x)
 
-    @name.setter
-    def name(self, value):
+    @full_name.setter
+    def full_name(self, value):
+        """Set first_name and last_name from full name."""
         (self.first_name, self.last_name) = _split_name(value)
+        # Also update the name field to keep it in sync
+        self.name = value
 
     def get_deferred_fields(self):
         # Workaround
@@ -588,6 +592,7 @@ class PersonContact(Contact):
         return {f for f in deferred_set if f != "name"}
 
     def save(self, *args, **kwargs):
+        # Handle user data copying
         if self.user_id and not self.pk:  # Copy things
             user = self.user
             if not self.name:
@@ -597,6 +602,12 @@ class PersonContact(Contact):
             if not self.first_name and not self.last_name:
                 self.first_name = getattr(user, "first_name", "")
                 self.last_name = getattr(user, "last_name", "")
+
+        # Sync name field with first_name and last_name
+        if self.first_name or self.last_name:
+            computed_name = " ".join(x for x in (self.first_name, self.last_name) if x)
+            if computed_name:
+                self.name = computed_name
 
         return super().save(*args, **kwargs)
 

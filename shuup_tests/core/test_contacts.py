@@ -144,9 +144,13 @@ def test_person_name_create_with_name():
 @pytest.mark.django_db
 def test_person_name_init_by_first_and_last_name():
     john = PersonContact(first_name="John", last_name="Smith")
-    assert john.name == "John Smith"
+    # Before saving, use full_name property for computed name
+    assert john.full_name == "John Smith"
     assert john.first_name == "John"
     assert john.last_name == "Smith"
+    # After saving, name field should be populated
+    john.save()
+    assert john.name == "John Smith"
 
 
 @pytest.mark.django_db
@@ -166,8 +170,10 @@ def test_person_name_gets_saved():
     assert john.name == "John Smith"
     assert john in set(PersonContact.objects.filter(name="John Smith"))
     john.last_name = "Doe"
-    assert john.name == "John Doe"
+    # Use full_name property for immediate computed name
+    assert john.full_name == "John Doe"
     john.save()
+    # After save, name field should be updated
     assert john.name == "John Doe"
     assert john in set(PersonContact.objects.filter(name="John Doe"))
     assert john not in set(PersonContact.objects.filter(name="John Smith"))
