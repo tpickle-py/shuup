@@ -1,5 +1,6 @@
 import abc
 import json
+from typing import List
 
 import six
 from babel.numbers import format_decimal, format_percent
@@ -25,7 +26,7 @@ class ChartDataType:
 
 
 class Chart(six.with_metaclass(abc.ABCMeta)):
-    supported_chart_types = []  # list[ChartType]
+    supported_chart_types: List[str] = []  # list[ChartType]
 
     def __init__(
         self,

@@ -1,5 +1,5 @@
 import hashlib
-from typing import TYPE_CHECKING, Any, Dict, Iterable, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Union
 
 import six
 from django.utils.encoding import force_bytes, force_str
@@ -9,11 +9,11 @@ from django.utils.translation import override
 from shuup.utils.django_compat import reverse
 
 if TYPE_CHECKING:  # pragma: no cover
-    from django.contrib.auth import get_user_model
+    from django.contrib.auth.models import AbstractUser
 
     from shuup.core.models import Shop, Supplier
 
-    User = get_user_model()
+    User = AbstractUser
 
 
 class AdminModule:
@@ -161,7 +161,7 @@ class BaseMenuEntry(Resolvable):
     icon = ""
     is_hidden = False
     ordering = -1
-    entries = []
+    entries: List[Any] = []
 
     @property
     def id(self):

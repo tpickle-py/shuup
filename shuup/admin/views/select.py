@@ -42,7 +42,7 @@ class MultiselectAjaxView(TemplateView):
     """
 
     model = None
-    search_fields = []
+    search_fields: List[str] = []
     result_limit = 20
 
     def init_search_fields(self, cls):

@@ -16,7 +16,7 @@ class ProductCloner:
     def clone_product(self, shop_product: ShopProduct):
         # clone product
         product = shop_product.product
-        new_product = copy_model_instance(product)
+        new_product: Product = copy_model_instance(product)  # type: ignore[assignment]
         new_product.sku = f"{product.sku}-{Product.objects.count()}"
         new_product.name = f"{product.name} - Copy"
         new_product.save()
