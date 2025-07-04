@@ -116,6 +116,35 @@ def format_money(amount, digits=None, widen=0, locale=None):
         loc = get_babel_locale(locale)
 
     if widen == 0 and digits is None:  # No special treatment required; format with the currency's digits.
+        # Custom currency symbol overrides for certain currency-locale combinations
+        currency_overrides = {
+            ("SEK", "en"): "kr",  # Swedish Krona in English should use "kr" not "SEK"
+        }
+
+        locale_key = str(loc).split("_")[0]  # Get base locale (en from en_US)
+        override_symbol = currency_overrides.get((amount.currency, locale_key))
+
+        if override_symbol:
+            # Use custom formatting with override symbol
+            formatted_number = format_decimal(amount.value, locale=loc, decimal_quantization=False)
+            pattern = loc.currency_formats["standard"].pattern
+
+            # Replace currency placeholder with custom symbol and number with formatted value
+            # Handle common pattern formats like '¤#,##0.00', '#,##0.00\xa0¤', etc.
+            if pattern.startswith("¤"):
+                return override_symbol + formatted_number
+            elif pattern.endswith("¤"):
+                return formatted_number + override_symbol
+            else:
+                # Fallback: replace currency symbol placeholder
+                import re
+
+                return re.sub(
+                    r"[¤#,0.]+",
+                    lambda m: override_symbol + formatted_number if "¤" in m.group() else m.group(),
+                    pattern,
+                )
+
         return format_currency(amount.value, amount.currency, locale=loc, currency_digits=True)
 
     pattern = loc.currency_formats["standard"].pattern

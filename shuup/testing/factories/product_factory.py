@@ -28,5 +28,19 @@ class ProductFactory(DjangoModelFactory):
 
     @factory.post_generation
     def post(self, create, extracted, **kwargs):
-        # ...existing code for image and ShopProduct creation...
-        pass
+        if create:
+            # Create ShopProduct association with default shop
+            from shuup.core.models import ShopProduct
+
+            from .shared import get_default_shop
+
+            shop = get_default_shop()
+            shop_product, created = ShopProduct.objects.get_or_create(
+                shop=shop,
+                product=self,
+                defaults={
+                    "purchasable": True,
+                    "visibility": 3,  # ALWAYS_VISIBLE
+                    "default_price_value": 50.0,
+                },
+            )

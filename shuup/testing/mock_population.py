@@ -47,6 +47,9 @@ class Populator:
             product = ProductFactory()
             self.generate_pricing(product)
 
+        # Ensure all products are associated with the default shop
+        self.ensure_shop_products()
+
     def generate_pricing(self, product):
         if "shuup.customer_group_pricing" in settings.INSTALLED_APPS:
             from shuup.customer_group_pricing.models import CgpPrice
@@ -56,6 +59,24 @@ class Populator:
                 price_value=random.randint(15, 340),
                 shop=get_default_shop(),
                 group=get_default_customer_group(),
+            )
+
+    def ensure_shop_products(self):
+        """Ensure all products are associated with the default shop."""
+        from shuup.core.models import ShopProduct
+
+        # Get all products without shop associations in the default shop
+        products_without_shop = Product.objects.exclude(shop_products__shop=self.shop)
+
+        for product in products_without_shop:
+            ShopProduct.objects.get_or_create(
+                shop=self.shop,
+                product=product,
+                defaults={
+                    "purchasable": True,
+                    "visibility": 3,  # ALWAYS_VISIBLE
+                    "default_price_value": 50.0,
+                },
             )
 
     def populate_if_required(self):
