@@ -14,6 +14,7 @@ from shuup.core.tasks import run_task
 
 @receiver(m2m_changed, sender=get_user_model().groups.through)
 def on_user_groups_change(instance, action, model, **kwargs):
+    # TODO : Create a test for this receiver to ensure it behaves as expected.
     from shuup.admin.utils.permissions import USER_PERMISSIONS_CACHE_NAMESPACE
 
     # a group has changed it's users relation through group.users.set()

@@ -1,52 +1,8 @@
-import abc
-
-import six
 from django.contrib import messages
 from django.db.transaction import atomic
 
 from shuup.apps.provides import get_provide_objects
 from shuup.utils.excs import Problem
-
-
-class FormModifier(six.with_metaclass(abc.ABCMeta)):
-    def get_extra_fields(self, object=None):
-        """
-        Extra fields for creation view.
-
-        :param object: Object linked to form.
-        :type object: django.db.models.Model
-        :return: List of extra fields that should be added to form.
-        Tuple should contain field name and Django form field.
-        :rtype: list[(str,django.forms.Field)]
-        """
-        pass
-
-    def clean_hook(self, form):
-        """
-        Extra clean for creation form.
-
-        This hook will be called in `~Django.forms.Form.clean` method of
-        the form, after calling parent clean.  Implementor of this hook
-        may call `~Django.forms.Form.add_error` to add errors to form or
-        modify the ``form.cleaned_data`` dictionary.
-
-        :param form: Form that is currently cleaned.
-        :type form: django.forms.Form
-        :rtype: None
-        """
-        pass
-
-    def form_valid_hook(self, form, object):
-        """
-        Extra form valid handler for creation view.
-
-        :param form: Form that is currently handled.
-        :type form: django.forms.Form
-        :param object: object linked to form.
-        :type object: django.db.models.Model
-        :rtype: None
-        """
-        pass
 
 
 class ModifiableFormMixin:

@@ -406,18 +406,6 @@ class DropdownHeader(BaseActionButton):
 # -----------
 
 
-class ButtonGroup(list):
-    def render(self, request):
-        yield '<div class="btn-group" role="group">'
-        for button in self:
-            if button:
-                if callable(button):  # Buttons may be functions/other callables too
-                    yield button(request)
-                else:
-                    yield from button.render(request)
-        yield "</div>"
-
-
 class Toolbar(list):
     """
     Toolbar for admin views

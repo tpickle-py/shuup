@@ -170,6 +170,7 @@ class BaseMenuEntry(Resolvable):
 
     @property
     def has_entries(self):
+        # This is used in shuup/admin/templates/shuup/admin/base/_main_menu.jinja
         return len(self.entries) > 0
 
     def to_dict(self):

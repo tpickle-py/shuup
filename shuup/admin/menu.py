@@ -104,8 +104,13 @@ class _MenuCategory(BaseMenuEntry):
         self.icon = icon
         self.children = []
         self.entries = []
+        # TODO: Add __repr__ or __str__ method for better debugging output
+        """Create a test for this class to ensure it behaves as expected.
+        """
 
     def contains_badges(self, request):
+        """Used in shuup/admin/templates/shuup/admin/base/_main_menu.jinja"""
+
         return any(bool(entry.get_badge(request)) for entry in self.entries)
 
 

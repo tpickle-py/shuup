@@ -5,22 +5,9 @@ from django.views.generic import DetailView
 
 from shuup.admin.forms import ShuupAdminForm
 from shuup.admin.toolbar import get_default_edit_toolbar
-from shuup.admin.utils.picotable import Column
-from shuup.admin.utils.views import CreateOrUpdateView, PicotableListView
+from shuup.admin.utils.views import CreateOrUpdateView
 from shuup.core.models import Label
 from shuup.utils.django_compat import force_text, reverse_lazy
-
-
-class LabelListView(PicotableListView):
-    model = Label
-    url_identifier = "label"
-
-    default_columns = [
-        Column("identifier", _("Identifier")),
-        Column("name", _("Name")),
-        Column("created_on", _("Created on")),
-        Column("modified_on", _("Modified on")),
-    ]
 
 
 class LabelForm(ShuupAdminForm):
@@ -30,6 +17,8 @@ class LabelForm(ShuupAdminForm):
 
 
 class LabelEditView(CreateOrUpdateView):
+    # TODO: Add url for label list view or use a different view for listing labels.
+    # test_labels_edit_and_delete
     model = Label
     form_class = LabelForm
     template_name = "shuup/admin/labels/edit.jinja"
