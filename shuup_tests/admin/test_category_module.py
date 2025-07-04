@@ -30,6 +30,7 @@ def test_category_module_search(rf, admin_user):
     cm = CategoryModule()
     category = CategoryFactory()
     shop = get_default_shop()
+    category.shops.add(shop)
     request = apply_request_middleware(rf.get("/"), user=admin_user, shop=shop)
     assert not empty_iterable(cm.get_search_results(request, query=category.identifier))
     assert empty_iterable(cm.get_search_results(request, query="k"))

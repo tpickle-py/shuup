@@ -338,28 +338,36 @@ class OrderStatusManager:
         Populates allowed_next_statuses with default values.
         """
         # Ensure default status transitions are always set up
-        order_status_qs = OrderStatus.objects.all()
-        for order_status in order_status_qs:
-            # Check if this status already has allowed transitions
-            if order_status.allowed_next_statuses.exists():
-                continue
+        # Set up INITIAL status transitions
+        try:
+            initial_status = OrderStatus.objects.filter(identifier=DefaultOrderStatus.INITIAL).first()
+            if initial_status:
+                allowed_statuses = OrderStatus.objects.filter(
+                    identifier__in=[
+                        DefaultOrderStatus.PROCESSING,
+                        DefaultOrderStatus.COMPLETE,
+                        DefaultOrderStatus.CANCELED,
+                    ]
+                )
+                # Clear existing and add new transitions
+                initial_status.allowed_next_statuses.clear()
+                initial_status.allowed_next_statuses.add(*allowed_statuses)
 
-            allowed_status_list = []
-            if order_status.identifier == DefaultOrderStatus.INITIAL:
-                allowed_status_list = [
-                    DefaultOrderStatus.PROCESSING,
-                    DefaultOrderStatus.COMPLETE,
-                    DefaultOrderStatus.CANCELED,
-                ]
-            elif order_status.identifier == DefaultOrderStatus.PROCESSING:
-                allowed_status_list = [
-                    DefaultOrderStatus.COMPLETE,
-                    DefaultOrderStatus.CANCELED,
-                ]
-
-            if allowed_status_list:
-                allowed_queryset = OrderStatus.objects.filter(identifier__in=allowed_status_list)
-                order_status.allowed_next_statuses.add(*allowed_queryset)
+            # Set up PROCESSING status transitions
+            processing_status = OrderStatus.objects.filter(identifier=DefaultOrderStatus.PROCESSING).first()
+            if processing_status:
+                allowed_statuses = OrderStatus.objects.filter(
+                    identifier__in=[
+                        DefaultOrderStatus.COMPLETE,
+                        DefaultOrderStatus.CANCELED,
+                    ]
+                )
+                # Clear existing and add new transitions
+                processing_status.allowed_next_statuses.clear()
+                processing_status.allowed_next_statuses.add(*allowed_statuses)
+        except Exception:
+            # Fallback in case of any database issues
+            pass
 
 
 class OrderQuerySet(models.QuerySet):
