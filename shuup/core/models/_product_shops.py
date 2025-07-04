@@ -37,6 +37,8 @@ class ShopProductVisibility(Enum):
 
 
 class ShopProduct(MoneyPropped, TranslatableModel):
+    from shuup.core import validators
+
     shop = models.ForeignKey(
         "Shop",
         related_name="shop_products",
@@ -103,6 +105,10 @@ class ShopProduct(MoneyPropped, TranslatableModel):
             "The number of units that can be purchased after the product is already sold out (out of stock). "
             "Set to blank for product to be purchasable without limits."
         ),
+        validators=[
+            validators.validate_nonzero_quantity,
+            validators.validate_minimum_less_than_maximum,
+        ],
     )
     purchase_multiple = QuantityField(
         default=0,
@@ -120,6 +126,11 @@ class ShopProduct(MoneyPropped, TranslatableModel):
             "Set a minimum number of products needed to be ordered for the purchase. "
             "This is useful for setting bulk orders and B2B purchases."
         ),
+        # TODO : Test validations
+        validators=[
+            validators.validate_nonzero_quantity,
+            validators.validate_purchase_multiple,
+        ],
     )
     limit_shipping_methods = models.BooleanField(
         default=False,

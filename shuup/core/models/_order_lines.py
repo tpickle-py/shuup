@@ -116,8 +116,21 @@ class AbstractOrderLine(MoneyPropped, models.Model, Priceful):
         verbose_name_plural = _("order lines")
         abstract = True
 
+    def get_type_display(self):
+        """
+        Return the display label for the order line type.
+        """
+        label = OrderLineType.Labels.__dict__.get(self.type.name, str(self.type))
+
+        if label:
+            label = label.titleCase()
+        return label
+
     def __str__(self):
-        return f"{self.quantity}x {self.text} ({self.get_type_display()})"  # type: ignore
+        sku_part = f"[SKU: {self.sku}]" if self.sku else ""
+        product_name = self.product.name if self.product and hasattr(self.product, "name") else ""
+        text_part = self.text or product_name or "Order Line"
+        return f"{self.quantity}x {text_part} {sku_part} ({self.get_type_display()})"
 
     @property
     def tax_amount(self):
@@ -216,7 +229,7 @@ class OrderLineTax(MoneyPropped, ShuupModel, LineTax):
         ordering = ["ordering"]
 
     def __str__(self):
-        return f"{self.name}: {self.amount} on {self.base_amount}"
+        return f"{self.name}: {str(self.amount)} on {str(self.base_amount)}"
 
 
 OrderLineLogEntry = define_log_model(OrderLine)

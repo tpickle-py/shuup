@@ -7,7 +7,7 @@ def populate_person_contact_names(apps, schema_editor):
     Populate the name field for PersonContact records based on first_name and last_name.
     This fixes the Django 3+ compatibility issue where name property conflicted with name field.
     """
-    PersonContact = apps.get_model("core", "PersonContact")
+    PersonContact = apps.get_model("shuup", "PersonContact")
 
     updated_count = 0
     for contact in PersonContact.objects.all():
@@ -35,7 +35,7 @@ def reverse_populate_person_contact_names(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("core", "0101_piecessalesunit_salesunitasdisplayunit"),
+        ("shuup", "0101_piecessalesunit_salesunitasdisplayunit"),
     ]
 
     operations = [

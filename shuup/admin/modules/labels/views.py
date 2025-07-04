@@ -5,7 +5,8 @@ from django.views.generic import DetailView
 
 from shuup.admin.forms import ShuupAdminForm
 from shuup.admin.toolbar import get_default_edit_toolbar
-from shuup.admin.utils.views import CreateOrUpdateView
+from shuup.admin.utils.picotable import Column
+from shuup.admin.utils.views import CreateOrUpdateView, PicotableListView
 from shuup.core.models import Label
 from shuup.utils.django_compat import force_text, reverse_lazy
 
@@ -14,6 +15,18 @@ class LabelForm(ShuupAdminForm):
     class Meta:
         model = Label
         exclude = ()
+
+
+class LabelListView(PicotableListView):
+    model = Label
+    url_identifier = "label"
+
+    default_columns = [
+        Column("identifier", _("Identifier")),
+        Column("name", _("Name")),
+        Column("created_on", _("Created on")),
+        Column("modified_on", _("Modified on")),
+    ]
 
 
 class LabelEditView(CreateOrUpdateView):

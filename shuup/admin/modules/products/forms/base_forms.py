@@ -8,7 +8,6 @@ from django.core.exceptions import ValidationError
 from django.forms import BaseModelFormSet
 from django.forms.formsets import DEFAULT_MAX_NUM, DEFAULT_MIN_NUM
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ugettext
 from filer.models import Image
 
 from shuup.admin.forms.fields import ObjectSelect2ModelField, ObjectSelect2ModelMultipleField
@@ -109,7 +108,7 @@ class ProductBaseForm(MultiLanguageModelForm):
             widget=QuickAddManufacturerSelect(
                 initial=(self.instance.manufacturer if self.instance.pk else None),
                 editable_model="shuup.Manufacturer",
-                attrs={"data-placeholder": ugettext("Select a manufacturer")},
+                attrs={"data-placeholder": _("Select a manufacturer")},
             ),
         )
         if self.instance.pk:
@@ -124,22 +123,7 @@ class ProductBaseForm(MultiLanguageModelForm):
             widget=QuickAddProductTypeSelect(editable_model="shuup.ProductType", initial=initial_type),
         )
 
-    def clean_sku(self):
-        sku = self.cleaned_data["sku"]
-        sku_unique_qs = Product.objects.filter(sku=sku)
-
-        if self.instance:
-            sku_unique_qs = sku_unique_qs.exclude(pk=self.instance.pk)
-
-        # Make sure sku is unique and raise proper validation error if not
-        if sku_unique_qs.exists():
-            raise ValidationError(
-                _("Given value is already in use, please use unique SKU and try again."),
-                code="sku_not_unique",
-            )
-        return sku
-
-    def save(self):
+    def save(self, **kwargs):
         instance = super().save()
         if self.cleaned_data.get("file") and instance.primary_image is None:
             image = ProductMedia.objects.create(
@@ -217,8 +201,8 @@ class ShopProductForm(MultiLanguageModelForm):
             shop = self.request.shop
             payment_methods_qs = payment_methods_qs.filter(shop=shop)
             shipping_methods_qs = ShippingMethod.objects.filter(shop=shop)
-        self.fields["payment_methods"].queryset = payment_methods_qs
-        self.fields["shipping_methods"].queryset = shipping_methods_qs
+        self.fields["payment_methods"].queryset = payment_methods_qs  # type: ignore
+        self.fields["shipping_methods"].queryset = shipping_methods_qs  # type: ignore
         self.fields["default_price_value"].required = True
 
         initial_categories = []
@@ -249,7 +233,7 @@ class ShopProductForm(MultiLanguageModelForm):
                 widget=QuickAddCategorySelect(
                     editable_model="shuup.Category",
                     initial=(self.instance.primary_category if self.instance.pk else None),
-                    attrs={"data-placeholder": ugettext("Select a category")},
+                    attrs={"data-placeholder": _("Select a category")},
                 ),
                 label=self.fields["primary_category"].label,
                 required=False,
@@ -264,33 +248,20 @@ class ShopProductForm(MultiLanguageModelForm):
         else:
             categories_choices = [
                 (cat.pk, cat.get_hierarchy())
-                for cat in Category.objects.all_except_deleted(shop=get_shop(self.request))
+                for cat in Category.objects.filter(shop=get_shop(self.request)).exclude(deleted=True)
             ]
             self.fields["primary_category"].widget = QuickAddCategorySelect(
                 initial=(
                     self.instance.primary_category if self.instance.pk and self.instance.primary_category else None
                 ),
                 editable_model="shuup.Category",
-                attrs={"data-placeholder": ugettext("Select a category")},
+                attrs={"data-placeholder": _("Select a category")},
                 choices=categories_choices,
                 model=NoModel(),
             )
             self.fields["categories"].widget = QuickAddCategoryMultiSelect(
                 initial=initial_categories, choices=categories_choices, model=NoModel()
             )
-
-    # TODO: Move this to model
-    def clean_minimum_purchase_quantity(self):
-        minimum_purchase_quantity = self.cleaned_data.get("minimum_purchase_quantity")
-        if minimum_purchase_quantity <= 0:
-            raise ValidationError(_("Minimum Purchase Quantity must be greater than 0."))
-        return minimum_purchase_quantity
-
-    def clean_backorder_maximum(self):
-        backorder_maximum = self.cleaned_data.get("backorder_maximum")
-        if backorder_maximum is not None and backorder_maximum < 0:
-            raise ValidationError(_("Backorder maximum must be greater than or equal to 0."))
-        return backorder_maximum
 
     def clean(self):
         form_pre_clean.send(ShopProduct, instance=self.instance, cleaned_data=self.cleaned_data)
@@ -421,9 +392,7 @@ class BaseProductMediaForm(MultiLanguageModelForm):
         if self.allowed_media_kinds:
             # multiple media kinds allowed, filter the choices list to reflect the `self.allowed_media_kinds`
             allowed_kinds_values = {v.value for v in self.allowed_media_kinds}
-            self.fields["kind"].choices = [
-                (value, choice) for value, choice in self.fields["kind"].choices if value in allowed_kinds_values
-            ]
+            self.filter_allowed_kinds(allowed_kinds_values)
 
             if len(self.allowed_media_kinds) == 1:
                 # only one media kind given, no point showing the dropdown
@@ -432,6 +401,15 @@ class BaseProductMediaForm(MultiLanguageModelForm):
             self.fields["kind"].initial = self.allowed_media_kinds[0]
 
         self.file_url = self.instance.url
+
+    def filter_allowed_kinds(self, allowed_kinds_values):
+        if "kind" not in self.fields:
+            return []
+        if not self.fields["kind"].choices:
+            return []
+        self.fields["kind"].choices = [
+            (value, choice) for value, choice in self.fields["kind"].choices if value in allowed_kinds_values
+        ]
 
     def get_thumbnail(self, request):
         """
@@ -442,7 +420,7 @@ class BaseProductMediaForm(MultiLanguageModelForm):
         """
         try:
             thumbnail = self.instance.get_thumbnail()
-        except Exception as error:
+        except (OSError, ValueError) as error:
             msg = _("Thumbnail generation of %(media)s failed: %(error)s.") % {
                 "media": self.instance,
                 "error": error,
@@ -469,7 +447,7 @@ class BaseProductMediaFormSet(BaseModelFormSet):
     extra = 0
 
     allowed_media_kinds = []
-    # form_class = BaseProductMediaForm
+    form_class = BaseProductMediaForm
 
     def __init__(self, *args, **kwargs):
         self.product = kwargs.pop("product")

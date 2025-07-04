@@ -794,7 +794,8 @@ class Order(MoneyPropped, models.Model):
         total_paid_amount = self.get_total_paid_amount()
         if total_paid_amount >= self.taxful_total_price.amount and self.taxful_total_price:
             raise NoPaymentToCreateException(
-                f"Error! Order {self.pk} has already been fully paid ({total_paid_amount} >= {self.taxful_total_price})."
+                f"Error! Order {self.pk} has already been fully paid ({total_paid_amount}"
+                + f" >= {self.taxful_total_price})."
             )
 
         if not payment_identifier:

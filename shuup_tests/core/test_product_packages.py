@@ -122,11 +122,7 @@ def test_order_package_children_taxes():
     order = OrderCreator().create_order(source)
 
     lines_and_taxes = []
-    for line in order.lines.all():
-        lines_and_taxes.append(prettify_order_line(line))
-        for line_tax in line.taxes.all():
-            lines_and_taxes.append("  %s" % (line_tax,))
-    assert lines_and_taxes == [
+    testing_lines = [
         "#0 10 x PackageParent",
         "  Da Tax: 20.000000000 EUR on 80.000000000 EUR",
         "#1   10 x PackageChild-0, child of #0",
@@ -134,6 +130,12 @@ def test_order_package_children_taxes():
         "#3   30 x PackageChild-2, child of #0",
         "#4   40 x PackageChild-3, child of #0",
     ]
+    for line in order.lines.all():
+        lines_and_taxes.append(prettify_order_line(line))
+        for line_tax in line.taxes.all():
+            lines_and_taxes.append(f"  {line_tax}")
+
+    assert lines_and_taxes == testing_lines
 
 
 @pytest.mark.django_db
@@ -200,15 +202,14 @@ def prettify_order_line(line):
     :rtype: str
     """
     parent = line.parent_line
-    parent_info = ", child of #{}".format(parent.ordering) if parent else ""
-    return "#{num}{indent} {qty:d} x {sku}{parent_info}".format(
-        num=line.ordering,
-        indent=("  " * get_line_level(line)),
-        qty=int(line.quantity),
-        sku=line.sku,
-        parent_info=parent_info,
-        text=line.text,
-    )
+    num = line.ordering
+    indent = "  " * get_line_level(line)
+    qty = int(line.quantity)
+    sku = line.sku
+    text = line.text
+
+    parent_info = f", child of #{parent.ordering}" if parent else ""
+    return f"#{num}{indent} {qty} x {sku}{parent_info}"
 
 
 def get_line_level(line):
