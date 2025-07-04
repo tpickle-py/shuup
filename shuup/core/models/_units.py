@@ -227,12 +227,14 @@ class DisplayUnit(TranslatableShuupModel):
         verbose_name_plural = _("display units")
 
 
-class SalesUnitAsDisplayUnit(DisplayUnit):
-    class Meta:
-        abstract = True
+class SalesUnitAsDisplayUnit:
+    """
+    A DisplayUnit-compatible class that represents a SalesUnit as its own display unit.
+
+    This is not a Django model, but a Python class that implements the DisplayUnit interface.
+    """
 
     def __init__(self, sales_unit):
-        super().__init__()
         self.internal_unit = sales_unit
         self.ratio = Decimal(1)
         self.decimals = sales_unit.decimals
@@ -259,7 +261,7 @@ class PiecesSalesUnit(SalesUnit):
     """
 
     class Meta:
-        abstract = True
+        proxy = True
 
     def __init__(self):
         super().__init__(identifier="_internal_pieces_unit", decimals=0)
@@ -294,9 +296,8 @@ class UnitInterface:
         :type internal_unit: SalesUnit
         :type display_unit: DisplayUnit
         """
-        assert (
-            internal_unit is None or display_unit is None or (display_unit.internal_unit == internal_unit)
-        ), f"Incompatible units: {internal_unit!r}, {display_unit!r}"
+        msg = f"Incompatible units: {internal_unit!r}, {display_unit!r}"
+        assert internal_unit is None or display_unit is None or (display_unit.internal_unit == internal_unit), msg
         if display_unit:
             self.internal_unit = display_unit.internal_unit
             self.display_unit = display_unit

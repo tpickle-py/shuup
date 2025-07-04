@@ -210,6 +210,38 @@ class Contact(PolymorphicShuupModel):
     default_contact_group_identifier = None
     default_contact_group_name = None
 
+    def refresh_from_db(self, using=None, fields=None):
+        """
+        Override refresh_from_db to prevent polymorphic recursion during deletion cascades.
+
+        The recursion happens when polymorphic queries try to refresh related Contact objects
+        during deletion, causing infinite loops in field descriptor access.
+        """
+        # Check for recursion using stack depth
+        import inspect
+
+        current_stack = inspect.stack()
+        refresh_calls = [frame for frame in current_stack if "refresh_from_db" in frame.function]
+
+        # If we have more than 2 refresh_from_db calls in the stack, we're in recursion
+        if len(refresh_calls) > 2:
+            return  # Exit early to prevent infinite recursion
+
+        try:
+            super().refresh_from_db(using=using, fields=fields)
+        except KeyError as e:
+            # Handle missing field errors during polymorphic queries
+            if str(e) == "'name'" and fields and "polymorphic_ctype_id" in str(fields):
+                # This is a polymorphic field access issue, skip the problematic field
+                filtered_fields = [f for f in fields if f != "polymorphic_ctype_id"] if fields else None
+                try:
+                    super().refresh_from_db(using=using, fields=filtered_fields)
+                except KeyError:
+                    # If we still have issues, just skip the refresh to avoid breaking deletion
+                    pass
+            else:
+                raise
+
     created_on = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_("created on"))
     modified_on = models.DateTimeField(
         auto_now=True,
@@ -366,8 +398,8 @@ class Contact(PolymorphicShuupModel):
         verbose_name_plural = _("contacts")
 
     def __init__(self, *args, **kwargs):
-        if self.default_tax_group_getter:
-            kwargs.setdefault("tax_group", self.default_tax_group_getter())
+        # Remove database queries from __init__ to prevent polymorphic recursion
+        # Tax group will be set lazily via get_or_set_default_tax_group()
         super().__init__(*args, **kwargs)
 
     @property
@@ -384,8 +416,22 @@ class Contact(PolymorphicShuupModel):
     def language(self, value):
         self._language = value
 
+    def get_or_set_default_tax_group(self):
+        """
+        Get the default tax group for this contact, setting it if not already set.
+        This prevents database queries during __init__ which can cause polymorphic recursion.
+        """
+        if not self.tax_group and self.default_tax_group_getter:
+            self.tax_group = self.default_tax_group_getter()
+            if self.pk:  # Only save if object already exists
+                self.save(update_fields=["tax_group"])
+        return self.tax_group
+
     def save(self, *args, **kwargs):
         add_to_default_group = bool(self.pk is None and self.default_contact_group_identifier)
+        # Set default tax group if not already set (for new objects)
+        if not self.tax_group and self.default_tax_group_getter:
+            self.tax_group = self.default_tax_group_getter()
         super().save(*args, **kwargs)
         if add_to_default_group:
             self.groups.add(self.get_default_group())

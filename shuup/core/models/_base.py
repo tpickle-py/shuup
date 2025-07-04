@@ -12,6 +12,36 @@ from shuup.utils import text
 from shuup.utils.django_compat import force_text
 
 
+class RecursionSafeForeignKey(models.ForeignKey):
+    """
+    Custom ForeignKey that prevents infinite recursion in field comparisons.
+
+    The recursion issue occurs when Django's polymorphic queries trigger field comparisons
+    that create infinite loops during deletion cascades and complex queries.
+    """
+
+    def __eq__(self, other):
+        # Simple comparison based on field attributes to prevent recursion
+        if not isinstance(other, models.ForeignKey):
+            return False
+        return (
+            self.name == getattr(other, "name", None)
+            and self.related_model == getattr(other, "related_model", None)
+            and type(self) == type(other)
+        )
+
+    def __hash__(self):
+        # Ensure consistent hashing for field comparisons
+        try:
+            return hash((type(self), self.name, str(self.related_model)))
+        except (TypeError, AttributeError):
+            # Fallback if any attribute causes issues
+            return hash((type(self), id(self)))
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}: {self.name}>"
+
+
 class ShuupModel(models.Model):
     """
     Shuup Model.
@@ -53,6 +83,19 @@ class TranslatableShuupModel(ShuupModel, parler.models.TranslatableModel):
 
 
 class PolymorphicShuupModel(PolymorphicModel, ShuupModel):
+    """
+    Shuup polymorphic model with recursion-safe polymorphic type field.
+    """
+
+    # Override the polymorphic_ctype field with our recursion-safe version
+    polymorphic_ctype = RecursionSafeForeignKey(
+        "contenttypes.ContentType",
+        null=True,
+        editable=False,
+        on_delete=models.CASCADE,
+        related_name="polymorphic_%(app_label)s.%(class)s_set+",
+    )
+
     class Meta:
         abstract = True
 
