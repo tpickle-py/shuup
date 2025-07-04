@@ -172,7 +172,9 @@ def test_campaign_end_date(rf, admin_user):
                     request = apply_request_middleware(rf.post("/", data=data), user=admin_user)
                     response = view(request, pk=object.pk)
                     assert response.status_code in [200, 302]
-                    content = response.render().content.decode("utf-8")
+                    if hasattr(response, "render"):
+                        response.render()
+                    content = response.content.decode("utf-8")
                     assert "Campaign end date can&#39;t be before a start date." in content
         assert CatalogCampaign.objects.count() == methods_before
         assert CatalogCampaign.objects.get(pk=object.pk).name == old_name
