@@ -1,3 +1,4 @@
+import decimal
 import json
 
 from babel.numbers import format_currency, format_decimal
@@ -25,8 +26,10 @@ from shuup.core.models import (
     OrderLineType,
     PaymentMethod,
     PersonContact,
+    Product,
     ShippingMethod,
     Shop,
+    ShopProduct,
     ShopStatus,
 )
 from shuup.core.pricing import get_pricing_module
@@ -305,6 +308,71 @@ class OrderEditView(CreateOrUpdateView):
     def handle_customer_data(self, request):
         customer_id = request.GET["id"]
         return self.get_customer_data(customer_id)
+
+    def handle_product_data(self, request):
+        product_id = request.GET["id"]
+        shop_id = request.GET["shop_id"]
+        customer_id = request.GET.get("customer_id")
+        supplier_id = request.GET.get("supplier_id")
+        quantity = decimal.Decimal(request.GET.get("quantity", 1))
+        product = Product.objects.filter(pk=product_id).first()
+        if not product:
+            return {"errorText": _("Product `%s` does not exist.") % product_id}
+        shop = Shop.objects.get(pk=shop_id)
+        try:
+            shop_product = product.get_shop_instance(shop)
+        except ShopProduct.DoesNotExist:
+            return {
+                "errorText": _("Product `%(product)s` is not available in the `%(shop)s` shop.")
+                % {"product": product.name, "shop": shop.name}
+            }
+
+        min_quantity = shop_product.minimum_purchase_quantity
+        # Make quantity to be at least minimum quantity
+        quantity = min_quantity if quantity < min_quantity else quantity
+        customer = Contact.objects.filter(pk=customer_id).first() if customer_id else None
+
+        supplier = None
+        if supplier_id:
+            supplier = shop_product.suppliers.enabled(shop=shop_product.shop).filter(id=supplier_id).first()
+
+        if not supplier:
+            supplier = shop_product.get_supplier(customer, quantity)
+
+        price_info = get_price_info(shop, customer, product, supplier, quantity)
+        stock_status = supplier.get_stock_status(product.pk) if supplier else None
+        return {
+            "id": product.id,
+            "sku": product.sku,
+            "name": product.name,
+            "quantity": quantity,
+            "logicalCount": stock_status.logical_count if stock_status else 0,
+            "physicalCount": stock_status.physical_count if stock_status else 0,
+            "salesDecimals": product.sales_unit.decimals if product.sales_unit else 0,
+            "salesUnit": product.sales_unit.symbol if product.sales_unit else "",
+            "purchaseMultiple": shop_product.purchase_multiple,
+            "taxClass": {
+                "id": product.tax_class.id,
+                "name": force_text(product.tax_class),
+            },
+            "baseUnitPrice": {
+                "value": price_info.base_unit_price.value,
+                "includesTax": price_info.base_unit_price.includes_tax,
+            },
+            "unitPrice": {
+                "value": price_info.discounted_unit_price.value,
+                "includesTax": price_info.base_unit_price.includes_tax,
+            },
+            "product": {
+                "text": product.name,
+                "id": product.id,
+                "url": get_model_url(product, shop=request.shop),
+            },
+            "supplier": {
+                "name": supplier.name if supplier else "",
+                "id": supplier.id if supplier else None,
+            },
+        }
 
     def get_request_body(self, request):
         body = request.body.decode("utf-8")

@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 def validate_nonzero_quantity(value):
-    if value == 0:
+    if value is not None and value == 0:
         raise ValidationError(_("Quantity must not be zero."))
 
 
