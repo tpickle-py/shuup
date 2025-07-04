@@ -88,14 +88,23 @@ def random_order():
 )
 @pytest.mark.django_db
 def test_detail_view(rf, admin_user, model_and_class):
-    get_default_shop()  # obvious prerequisite
+    shop = get_default_shop()  # obvious prerequisite
     model_func, class_spec = model_and_class
     model = model_func()
     view = load(class_spec).as_view()
     request = apply_request_middleware(rf.get("/"), user=admin_user)
 
+    # Set the shop for admin views that need it
+    from shuup.admin.shop_provider import set_shop
+
+    set_shop(request, shop)
+
     if model_func == get_default_product:
-        pk = model.shop_products.first().pk
+        # Use the dedicated function to get a properly configured shop product
+        from shuup.testing.factories.shared import get_default_shop_product
+
+        shop_product = get_default_shop_product()
+        pk = shop_product.pk
     else:
         pk = model.pk
 
@@ -106,6 +115,7 @@ def test_detail_view(rf, admin_user, model_and_class):
 
     # request with iframe mode
     request = apply_request_middleware(rf.get("/", {"mode": "iframe"}), user=admin_user)
+    set_shop(request, shop)
     response = view(request, pk=pk)
     if hasattr(response, "render"):
         response.render()
@@ -201,6 +211,9 @@ def test_product_edit_view(rf, admin_user, settings):
 
     view = ProductEditView.as_view()
     request = apply_request_middleware(rf.get("/"), user=admin_user)
+    from shuup.admin.shop_provider import set_shop
+
+    set_shop(request, shop)
     response = view(request, pk=shop_product.pk)
     response.render()
 
@@ -225,6 +238,7 @@ def test_product_edit_view(rf, admin_user, settings):
     post_data = {"shop1-primary_category": [], "shop1-categories": []}
     post.update(post_data)
     request = apply_request_middleware(rf.post("/", post), user=admin_user)
+    set_shop(request, shop)
     response = view(request, pk=shop_product.pk)
 
     shop_product.refresh_from_db()
@@ -235,6 +249,7 @@ def test_product_edit_view(rf, admin_user, settings):
         "shop1-default_price_value": 12,
         "shop1-primary_category": cat.pk,
         "shop1-categories": [],
+        "shop1-backorder_maximum": 1,  # Fix validation error
     }
     post.update(post_data)
     usable_post = {}
@@ -247,6 +262,7 @@ def test_product_edit_view(rf, admin_user, settings):
 
     with patch("django.db.transaction.on_commit", new=atomic_commit_mock):
         request = apply_request_middleware(rf.post("/", usable_post), user=admin_user)
+        set_shop(request, shop)
         response = view(request, pk=shop_product.pk)
 
     shop_product = ShopProduct.objects.first()
