@@ -260,32 +260,32 @@ class OrderStatusManager:
     def __init__(self):
         self.default_statuses = [
             {
-                "name": DefaultOrderStatus.INITIAL.label,
-                "public_name": DefaultOrderStatus.INITIAL.label,
+                "name": _("Received"),
+                "public_name": _("Received"),
                 "role": OrderStatusRole.INITIAL,
                 "identifier": DefaultOrderStatus.INITIAL.value,
                 "default": True,
                 "is_active": True,
             },
             {
-                "name": DefaultOrderStatus.PROCESSING.label,
-                "public_name": DefaultOrderStatus.PROCESSING.label,
+                "name": _("In Progress"),
+                "public_name": _("In Progress"),
                 "role": OrderStatusRole.PROCESSING,
                 "identifier": DefaultOrderStatus.PROCESSING.value,
                 "default": True,
                 "is_active": True,
             },
             {
-                "name": DefaultOrderStatus.COMPLETE.label,
-                "public_name": DefaultOrderStatus.COMPLETE.label,
+                "name": _("Complete"),
+                "public_name": _("Complete"),
                 "role": OrderStatusRole.COMPLETE,
                 "identifier": DefaultOrderStatus.COMPLETE.value,
                 "default": True,
                 "is_active": True,
             },
             {
-                "name": DefaultOrderStatus.CANCELED.label,
-                "public_name": DefaultOrderStatus.CANCELED.label,
+                "name": _("Canceled"),
+                "public_name": _("Canceled"),
                 "role": OrderStatusRole.CANCELED,
                 "identifier": DefaultOrderStatus.CANCELED.value,
                 "default": True,
@@ -340,13 +340,13 @@ class OrderStatusManager:
         # Ensure default status transitions are always set up
         # Set up INITIAL status transitions
         try:
-            initial_status = OrderStatus.objects.filter(identifier=DefaultOrderStatus.INITIAL).first()
+            initial_status = OrderStatus.objects.filter(identifier=DefaultOrderStatus.INITIAL.value).first()
             if initial_status:
                 allowed_statuses = OrderStatus.objects.filter(
                     identifier__in=[
-                        DefaultOrderStatus.PROCESSING,
-                        DefaultOrderStatus.COMPLETE,
-                        DefaultOrderStatus.CANCELED,
+                        DefaultOrderStatus.PROCESSING.value,
+                        DefaultOrderStatus.COMPLETE.value,
+                        DefaultOrderStatus.CANCELED.value,
                     ]
                 )
                 # Clear existing and add new transitions
@@ -354,12 +354,12 @@ class OrderStatusManager:
                 initial_status.allowed_next_statuses.add(*allowed_statuses)
 
             # Set up PROCESSING status transitions
-            processing_status = OrderStatus.objects.filter(identifier=DefaultOrderStatus.PROCESSING).first()
+            processing_status = OrderStatus.objects.filter(identifier=DefaultOrderStatus.PROCESSING.value).first()
             if processing_status:
                 allowed_statuses = OrderStatus.objects.filter(
                     identifier__in=[
-                        DefaultOrderStatus.COMPLETE,
-                        DefaultOrderStatus.CANCELED,
+                        DefaultOrderStatus.COMPLETE.value,
+                        DefaultOrderStatus.CANCELED.value,
                     ]
                 )
                 # Clear existing and add new transitions
