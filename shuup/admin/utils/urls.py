@@ -1,13 +1,15 @@
 import inspect
 import json
 import warnings
+from urllib.parse import parse_qsl
 
 import six
 from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import ImproperlyConfigured
 from django.http.response import HttpResponseForbidden
-from django.utils.encoding import force_str, force_text
+from django.urls import re_path
+from django.utils.encoding import force_str
 from django.utils.html import escape
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
@@ -18,11 +20,6 @@ from shuup.admin.utils.permissions import get_missing_permissions
 from shuup.utils import importing
 from shuup.utils.django_compat import NoReverseMatch, URLPattern, get_callable, is_authenticated, reverse
 from shuup.utils.excs import Problem
-
-try:
-    from urllib.parse import parse_qsl
-except ImportError:  # pragma: no cover
-    from urlparse import parse_qsl  # Python 2.7
 
 
 class AdminRegexURLPattern(URLPattern):
@@ -41,8 +38,6 @@ class AdminRegexURLPattern(URLPattern):
         if callable(callback):
             callback = self.wrap_with_permissions(callback)
 
-        from django.urls import re_path
-
         repath = re_path(regex, callback, default_args, name)
         pattern = repath.pattern
         super().__init__(pattern, callback, default_args, name)
@@ -57,8 +52,8 @@ class AdminRegexURLPattern(URLPattern):
         :param reason: str
         """
         if request.is_ajax():
-            return HttpResponseForbidden(json.dumps({"error": force_text(reason)}))
-        error_params = urlencode({"error": force_text(reason)})
+            return HttpResponseForbidden(json.dumps({"error": force_str(reason)}))
+        error_params = urlencode({"error": force_str(reason)})
         login_url = force_str(reverse("shuup_admin:login") + "?" + error_params)
         resp = redirect_to_login(next=request.path, login_url=login_url)
         if is_authenticated(request.user):
@@ -196,7 +191,7 @@ class NoModelUrl(ValueError):
 
 
 def get_model_url(
-    object,
+    model_instance,
     kind="detail",
     user=None,
     required_permissions=None,
@@ -231,7 +226,7 @@ def get_model_url(
     :rtype: str
     """
     for module in get_modules():
-        url = module.get_model_url(object, kind, shop)
+        url = module.get_model_url(model_instance, kind, shop)
 
         if not url:
             continue
@@ -264,19 +259,18 @@ def get_model_url(
             if raise_permission_denied:
                 from django.core.exceptions import PermissionDenied
 
-                reason = _("Can't view this page. You do not have the required permission(s): `{permissions}`.").format(
-                    permissions=", ".join(missing_permissions)
-                )
+                perms = ", ".join(missing_permissions)
+                reason = _(f"Can't view this page. You do not have the required permission(s): `{perms}`.")
                 raise PermissionDenied(reason)
 
         except Resolver404:
             # what are you doing developer?
             return url
 
-    raise NoModelUrl(f"Error! Can't get object URL of kind {kind}: {force_text(object)!r}.")
+    raise NoModelUrl(f"Error! Can't get object URL of kind {kind}: {force_str(model_instance)!r}.")
 
 
-def derive_model_url(model_class, urlname_prefix, object, kind):
+def derive_model_url(model_class, urlname_prefix, model_instance, kind):
     """
     Try to guess a model URL for the given `object` and `kind`.
 
@@ -293,7 +287,10 @@ def derive_model_url(model_class, urlname_prefix, object, kind):
     :return: Resolved URL or None.
     :rtype: str|None
     """
-    if not (isinstance(object, model_class) or (inspect.isclass(object) and issubclass(object, model_class))):
+    if not (
+        isinstance(model_instance, model_class)
+        or (inspect.isclass(model_instance) and issubclass(model_instance, model_class))
+    ):
         return
 
     kind_to_urlnames = {
@@ -301,8 +298,8 @@ def derive_model_url(model_class, urlname_prefix, object, kind):
     }
 
     kwarg_sets = [{}]
-    if getattr(object, "pk", None):
-        kwarg_sets.append({"pk": object.pk})
+    if getattr(model_instance, "pk", None):
+        kwarg_sets.append({"pk": model_instance.pk})
 
     for urlname in kind_to_urlnames.get(kind, [f"{urlname_prefix}.{kind}"]):
         for kwargs in kwarg_sets:
@@ -325,7 +322,7 @@ def manipulate_query_string(url, **qs):
         return url
 
 
-def get_model_front_url(request, object):
+def get_model_front_url(request, model_instance):
     """
     Get a frontend URL for an object.
 
@@ -337,14 +334,14 @@ def get_model_front_url(request, object):
     :rtype: str|None
     """
     # TODO: This method could use an extension point for alternative frontends.
-    if not object.pk:
+    if not model_instance.pk:
         return None
     if "shuup.front" in settings.INSTALLED_APPS:
         # Best effort to use the default frontend for front URLs.
         try:
             from shuup.front.template_helpers.urls import model_url
 
-            return model_url({"request": request}, object)
+            return model_url({"request": request}, model_instance)
         except (ValueError, NoReverseMatch):
             pass
     return None
