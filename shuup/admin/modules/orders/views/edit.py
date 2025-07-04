@@ -333,8 +333,11 @@ class OrderEditView(CreateOrUpdateView):
             "shippingAddress": source.shipping_address.as_string_list() if source.shipping_address else None,
         }
 
-    @transaction.atomic
     def handle_finalize(self, request):
+        return _handle_or_return_error(self._finalize_order, request, "Error! Could not create order.")
+
+    @transaction.atomic
+    def _finalize_order(self, request):
         state = json.loads(self.get_request_body(request))["state"]
         self.object = self.get_object()
         if self.object.pk:  # Edit

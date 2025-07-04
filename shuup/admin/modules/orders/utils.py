@@ -10,7 +10,7 @@ class OrderInformation:
         self._order = order
         self._provides_info = []
         self.title = "Order Information"
-        self.information = ""
+        self._information = ""
 
     def add_info(self, info_dict):
         """Add information to the order display."""
@@ -28,3 +28,13 @@ class OrderInformation:
     def order(self):
         """Order ordering for sorting."""
         return 0
+
+    @property
+    def information(self):
+        """Information content."""
+        return self._information
+
+    @information.setter
+    def information(self, value):
+        """Set information content."""
+        self._information = value

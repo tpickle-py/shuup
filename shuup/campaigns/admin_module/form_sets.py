@@ -70,6 +70,16 @@ class EffectsFormset(BaseFormset):
         kwargs.setdefault("initial", {"campaign": self.owner})
         return super().form(**kwargs)
 
+    @property
+    def empty_form(self):
+        form = self._construct_form(None)
+        form.empty_permitted = True
+        return form
+
+    @property
+    def can_delete_extra(self):
+        return self.can_delete
+
 
 class BasketDiscountEffectsFormSet(EffectsFormset):
     model = BasketDiscountEffect  # type: ignore[assignment]
