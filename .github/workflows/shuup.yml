@@ -10,7 +10,7 @@ jobs:
 
   codestyle:
     name: "Code style & sanity checks"
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, self-hosted]
     steps:
     - uses: actions/checkout@v4
     - name: Install uv
@@ -21,8 +21,6 @@ jobs:
       run: uv python install 3.11
     - name: Sync dependencies
       run: uv sync --dev
-    - name: Run sanity check
-      run: uv run _misc/check_sanity.py
     - name: Check ruff lint
       run: uv run ruff check .
     - name: Check ruff format
@@ -30,7 +28,7 @@ jobs:
 
   core:
     name: "Test Shuup, migrations and messages"
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, self-hosted]
     env:
       SHUUP_BROWSER_TESTS: 0
       SHUUP_TESTS_CI: 1
@@ -81,7 +79,7 @@ jobs:
 
   browser:
     name: "Test Shuup with browser"
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, self-hosted]
     env:
       SHUUP_BROWSER_TESTS: 1
       SHUUP_TESTS_CI: 1

@@ -27,7 +27,7 @@ class RecursionSafeForeignKey(models.ForeignKey):
         return (
             self.name == getattr(other, "name", None)
             and self.related_model == getattr(other, "related_model", None)
-            and type(self) == type(other)
+            and type(self) is type(other)
         )
 
     def __hash__(self):
@@ -143,16 +143,14 @@ class ChangeProtected:
         super().clean(*args, **kwargs)
         if self.pk:
             changed_protected_fields = self._get_changed_protected_fields()
+            fields = ", ".join(sorted(changed_protected_fields))
             if changed_protected_fields and self._are_changes_protected():
-                message = "{change_protect_message}: {fields}".format(
-                    change_protect_message=self.change_protect_message,
-                    fields=", ".join(sorted(changed_protected_fields)),
-                )
+                message = f"{self.change_protect_message}: {fields}"
                 raise ValidationError(message)
 
     def save(self, *args, **kwargs):
         self.clean()
-        super().save(*args, **kwargs)
+        super().save(*args, **kwargs)  # type: ignore
 
     def _are_changes_protected(self):
         """
@@ -166,11 +164,16 @@ class ChangeProtected:
         return True
 
     def _get_changed_protected_fields(self):
+        protected_fields = self.fetch_protected_field_names()
+        in_db = type(self).objects.get(pk=self.pk)
+        return [field for field in protected_fields if getattr(self, field) != getattr(in_db, field)]
+
+    def fetch_protected_field_names(self):
         if self.protected_fields is not None:
             protected_fields = self.protected_fields
         else:
             protected_fields = [
                 x.name for x in self._meta.get_fields() if not x.is_relation and x.name not in self.unprotected_fields
             ]
-        in_db = type(self).objects.get(pk=self.pk)
-        return [field for field in protected_fields if getattr(self, field) != getattr(in_db, field)]
+
+        return protected_fields
