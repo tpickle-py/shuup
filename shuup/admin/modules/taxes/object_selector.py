@@ -43,9 +43,6 @@ class TaxClassAdminObjectSelector(BaseAdminObjectSelector):
         """
         Returns an iterable of tuples of (id, text)
         """
-        qs = TaxClass.objects.translated(name__icontains=search_term).values_list(
-            "id", "translations__name"
-        )[  # type: ignore[attr-defined]
-            : self.search_limit
-        ]
+        translated_qs = TaxClass.objects.translated(name__icontains=search_term)  # type: ignore[attr-defined]
+        qs = translated_qs.values_list("id", "translations__name")[: self.search_limit]
         return [{"id": id, "name": name} for id, name in list(qs)]
