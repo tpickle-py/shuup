@@ -19,6 +19,21 @@ class BehaviorFormSet(BaseModelFormSet):
     can_order = False
     extra = 0
 
+    @property
+    def can_delete_extra(self):
+        return self.can_delete
+
+    @property
+    def empty_form(self):
+        form = self.form(
+            auto_id=self.auto_id,
+            prefix=self.add_prefix("__prefix__"),
+            empty_permitted=True,
+            use_required_attribute=False,
+        )
+        self.add_fields(form, None)
+        return form
+
     def __init__(self, *args, **kwargs):
         self.form_class = kwargs.pop("form")
         self.owner = kwargs.pop("owner")

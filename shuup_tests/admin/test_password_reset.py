@@ -94,7 +94,9 @@ def test_reset_admin_user_password_errors(client):
         data={"new_password1": new_password, "new_password2": new_password},
     )
     assert response.status_code == 400
-    assert "This recovery link is invalid" in response.render().content.decode("utf-8")
+    if hasattr(response, "render"):
+        response.render()
+    assert "This recovery link is invalid" in response.content.decode("utf-8")
 
     # invalid uid
     response = client.post(
@@ -102,7 +104,9 @@ def test_reset_admin_user_password_errors(client):
         data={"new_password1": new_password, "new_password2": new_password},
     )
     assert response.status_code == 400
-    assert "This recovery link is invalid" in response.render().content.decode("utf-8")
+    if hasattr(response, "render"):
+        response.render()
+    assert "This recovery link is invalid" in response.content.decode("utf-8")
 
     # invalid passwords
     response = client.post(

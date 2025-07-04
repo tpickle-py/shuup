@@ -108,10 +108,14 @@ def _get_product_data(has_price):
 
 class PaymentMethodName(OrderInformation):
     title = "Extra information row"
+    order = 0
 
     @property
     def information(self):
         return "This is row data"
+
+    def provides_info(self):
+        return True
 
 
 @pytest.mark.django_db
