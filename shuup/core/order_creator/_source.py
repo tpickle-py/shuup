@@ -278,15 +278,29 @@ class OrderSource:
         elif self.customer:
             lang = self.customer.language
 
-        if not is_existing_language(lang):
-            lang = settings.LANGUAGE_CODE  # sane fallback
+        # Check if language is supported by the application first
+        if hasattr(settings, "LANGUAGES"):
+            available_languages = [lang_code for lang_code, _lang_name in settings.LANGUAGES]
+            if lang not in available_languages:
+                # If not in application's supported languages, fallback to default
+                lang = settings.LANGUAGE_CODE
+        elif not is_existing_language(lang):
+            # Fallback to Babel check only if no LANGUAGES setting
+            lang = settings.LANGUAGE_CODE
 
         return lang
 
     @language.setter
     def language(self, value):
-        if not is_existing_language(value):
-            value = settings.LANGUAGE_CODE  # sane fallback
+        # Check if language is supported by the application first
+        if hasattr(settings, "LANGUAGES"):
+            available_languages = [lang_code for lang_code, _lang_name in settings.LANGUAGES]
+            if value not in available_languages:
+                # If not in application's supported languages, fallback to default
+                value = settings.LANGUAGE_CODE
+        elif not is_existing_language(value):
+            # Fallback to Babel check only if no LANGUAGES setting
+            value = settings.LANGUAGE_CODE
         self._language = value
 
     @status.setter

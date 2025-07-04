@@ -152,6 +152,8 @@ LANGUAGES = [
     ("pt-br", "Portuguese (Brazil)"),
     ("it", "Italian"),
     ("es", "Spanish"),
+    ("is", "Icelandic"),
+    ("sv", "Swedish"),
 ]
 
 PARLER_DEFAULT_LANGUAGE_CODE = "en"
