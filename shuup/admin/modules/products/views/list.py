@@ -7,7 +7,7 @@ from shuup.admin.shop_provider import get_shop
 from shuup.admin.supplier_provider import get_supplier
 from shuup.admin.utils.picotable import ChoicesFilter, Column, Picotable, RangeFilter, TextFilter
 from shuup.admin.utils.views import PicotableListView
-from shuup.core.models import ProductMode, Shop, ShopProduct
+from shuup.core.models import ProductMode, ShopProduct
 from shuup.core.specs.product_kind import DefaultProductKindSpec, get_product_kind_specs
 from shuup.utils.iterables import first
 
@@ -139,20 +139,12 @@ class ProductListView(PicotableListView):
     def format_suppliers(self, instance):
         return ", ".join(list(instance.suppliers.values_list("name", flat=True)))
 
-    def get_columns(self):
-        for column in self.columns:
-            if column.id == "shop":
-                shops = Shop.objects.get_for_user(self.request.user).prefetch_related("translations")
-                column.filter_config = ChoicesFilter(choices=shops)
-                break
-        return self.columns
-
     def get_primary_image(self, instance):
         if instance.product.primary_image:
             thumbnail = instance.product.primary_image.get_thumbnail()
             if thumbnail:
                 return f"<img src='{thumbnail.url}'>"
-        return "<img src='{}'>".format(static("shuup_admin/img/no_image_thumbnail.png"))
+        return f"<img src='{static('shuup_admin/img/no_image_thumbnail.png')}'>"
 
     def get_listing_product_kinds_values(self):
         return [

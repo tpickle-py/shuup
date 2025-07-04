@@ -1,6 +1,9 @@
+from typing import Any
+
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from shuup.admin.utils.permissions import has_permission
 from shuup.admin.views.wizard import TemplatedWizardFormDef, WizardPane
 from shuup.apps.provides import get_provide_objects
 from shuup.core.models import PaymentMethod, ShippingMethod
@@ -14,6 +17,7 @@ class ServiceProviderTypeForm(forms.Form):
         super().__init__(*args, **kwargs)
 
     def clean_providers(self):
+        # TODO: Handle on frontend or use forms.MultipleChoiceField
         data = self.cleaned_data.get("providers", None)
         if not data:
             self.add_error(None, _(f"Please activate at least one {self.provider_label}."))
@@ -21,7 +25,17 @@ class ServiceProviderTypeForm(forms.Form):
 
 
 class ServiceWizardFormPartMixin:
+    service_model: Any = None  # type: ignore[assignment]
+    object: Any = None  # type: ignore[assignment]
+    form_def_provide_key: str = ""  # type: ignore[assignment]
+    base_name: str = ""  # type: ignore[assignment]
+    request: Any = None  # type: ignore[assignment]
+    provider_label: Any = ""  # type: ignore[assignment]
+
     def visible(self):
+        service_model = getattr(self, "service_model", None)
+        if not service_model:
+            return False
         return not self.service_model.objects.for_shop(shop=self.object).exists()
 
     def _get_service_provider_form_defs(self):
@@ -69,8 +83,6 @@ class CarrierWizardPane(ServiceWizardFormPartMixin, WizardPane):
     form_def_provide_key = "carrier_wizard_form_def"
 
     def valid(self):
-        from shuup.admin.utils.permissions import has_permission
-
         return has_permission(self.request.user, "shipping_method.edit")
 
 
@@ -85,6 +97,4 @@ class PaymentWizardPane(ServiceWizardFormPartMixin, WizardPane):
     form_def_provide_key = "payment_processor_wizard_form_def"
 
     def valid(self):
-        from shuup.admin.utils.permissions import has_permission
-
         return has_permission(self.request.user, "payment_method.edit")

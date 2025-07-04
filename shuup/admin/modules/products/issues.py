@@ -39,6 +39,8 @@ class ProductValidationIssue:
             return 2
         return 1
 
+    # shuup/admin/templates/shuup/admin/products/edit.jinja
+    # TODO should be handled by the frontend
     def get_alert_type(self):
         if self.issue_type == "error":
             return "danger"
