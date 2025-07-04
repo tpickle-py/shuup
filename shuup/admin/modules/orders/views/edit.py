@@ -1,11 +1,12 @@
 import json
 
-from babel.numbers import format_decimal
+from babel.numbers import format_currency, format_decimal
 from django.conf import settings
 from django.contrib import messages
 from django.core import serializers
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.db.models import Sum
 from django.http.response import Http404, HttpResponse, JsonResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
@@ -23,6 +24,7 @@ from shuup.core.models import (
     Order,
     OrderLineType,
     PaymentMethod,
+    PersonContact,
     ShippingMethod,
     Shop,
     ShopStatus,
@@ -30,7 +32,7 @@ from shuup.core.models import (
 from shuup.core.pricing import get_pricing_module
 from shuup.utils.django_compat import force_text, reverse
 from shuup.utils.http import get_client_ip
-from shuup.utils.i18n import format_money, format_percent, get_current_babel_locale
+from shuup.utils.i18n import format_money, format_percent, get_current_babel_locale, get_locally_formatted_datetime
 
 
 def create_order_from_state(state, **kwargs):
@@ -253,6 +255,57 @@ class OrderEditView(CreateOrUpdateView):
             retval = JsonResponse(retval)
         return retval
 
+    def handle_customer_details(self, request):
+        customer_id = request.GET["id"]
+        customer = Contact.objects.get(pk=customer_id)
+        companies = []
+        if isinstance(customer, PersonContact):
+            companies = sorted(customer.company_memberships.all(), key=(lambda x: force_text(x)))
+        recent_orders = customer.customer_orders.valid().order_by("-id")[:10]
+
+        order_summary = []
+        for dt in customer.customer_orders.valid().datetimes("order_date", "year"):
+            summary = customer.customer_orders.filter(order_date__year=dt.year).aggregate(
+                total=Sum("taxful_total_price_value")
+            )
+            order_summary.append(
+                {
+                    "year": dt.year,
+                    "total": format_currency(
+                        summary["total"],
+                        currency=recent_orders[0].currency,
+                        locale=get_current_babel_locale(),
+                    ),
+                }
+            )
+
+        return {
+            "customer_info": {
+                "name": customer.full_name,
+                "phone_no": customer.phone,
+                "email": customer.email,
+                "tax_number": getattr(customer, "tax_number", ""),
+                "companies": [force_text(company) for company in companies] if len(companies) else None,
+                "groups": [force_text(group) for group in customer.groups.all()],
+                "merchant_notes": customer.merchant_notes,
+            },
+            "order_summary": order_summary,
+            "recent_orders": [
+                {
+                    "order_date": get_locally_formatted_datetime(order.order_date),
+                    "total": format_money(order.taxful_total_price),
+                    "status": order.get_status_display(),
+                    "payment_status": force_text(order.payment_status.label),
+                    "shipment_status": force_text(order.shipping_status.label),
+                }
+                for order in recent_orders
+            ],
+        }
+
+    def handle_customer_data(self, request):
+        customer_id = request.GET["id"]
+        return self.get_customer_data(customer_id)
+
     def get_request_body(self, request):
         body = request.body.decode("utf-8")
         if not body:
@@ -260,7 +313,7 @@ class OrderEditView(CreateOrUpdateView):
         return body
 
     @transaction.atomic
-    def _handle_source_data(self, request):
+    def handle_source_data(self, request):
         self.object = self.get_object()
         state = json.loads(self.get_request_body(request))["state"]
         source = create_source_from_state(
@@ -281,7 +334,7 @@ class OrderEditView(CreateOrUpdateView):
         }
 
     @transaction.atomic
-    def _handle_finalize(self, request):
+    def handle_finalize(self, request):
         state = json.loads(self.get_request_body(request))["state"]
         self.object = self.get_object()
         if self.object.pk:  # Edit
