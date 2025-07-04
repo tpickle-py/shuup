@@ -97,7 +97,7 @@ class ShopProduct(MoneyPropped, TranslatableModel):
         ),
     )
     backorder_maximum = QuantityField(
-        default=0,
+        default=None,
         blank=True,
         null=True,
         verbose_name=_("backorder maximum"),
