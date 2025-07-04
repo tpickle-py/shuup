@@ -45,3 +45,19 @@ class ModifiableViewMixin:
             return self.form_invalid(form)
         else:
             return response
+
+
+class FormModifier:
+    """Base class for form modifiers."""
+
+    def get_extra_fields(self, object=None):
+        """Get extra fields to add to the form."""
+        return []
+
+    def clean_hook(self, form):
+        """Hook for additional form cleaning."""
+        pass
+
+    def form_valid_hook(self, form, object):
+        """Hook called when form is valid."""
+        pass

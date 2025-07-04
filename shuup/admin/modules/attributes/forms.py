@@ -53,6 +53,11 @@ class AttributeChoiceOptionFormSet(BaseModelFormSet):
     can_order = False
     extra = 0
 
+    @property
+    def can_delete_extra(self):
+        """Compatibility property for Django formsets."""
+        return getattr(self, "can_delete", False)
+
     def __init__(self, **kwargs):
         self.attribute = kwargs.pop("attribute")
         self.languages = kwargs.pop("languages")

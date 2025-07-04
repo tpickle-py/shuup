@@ -221,7 +221,10 @@ def _mbv_command(shop, user, payload, method="post"):
         request.GET = payload
 
     mbv = MediaBrowserView.as_view()
-    return json.loads(mbv(request).content.decode("UTF-8"))
+    response = mbv(request)
+    if hasattr(response, "render"):
+        response.render()
+    return json.loads(response.content.decode("UTF-8"))
 
 
 def _mbv_upload(shop, user, **extra_data):
@@ -234,6 +237,8 @@ def _mbv_upload(shop, user, **extra_data):
 
     view = MediaBrowserView.as_view()
     response = view(request)
+    if hasattr(response, "render"):
+        response.render()
     return json.loads(response.content.decode("UTF-8"))
 
 
@@ -248,5 +253,7 @@ def _check_that_staff_can_see_folder(rf, shop, user, folder, expected_files_coun
     view_func = MediaBrowserView.as_view()
     response = view_func(request)
     assert isinstance(response, JsonResponse)
+    if hasattr(response, "render"):
+        response.render()
     content = json.loads(response.content.decode("utf-8"))
     assert len(content["folder"]["files"]) == expected_files_count

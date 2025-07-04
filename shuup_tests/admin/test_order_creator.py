@@ -170,7 +170,7 @@ def get_order_from_state(state, admin_user):
     request = get_frontend_request_for_command(state, "finalize", admin_user)
     response = OrderEditView.as_view()(request)
     assert_contains(response, "orderIdentifier")  # this checks for status codes as a side effect
-    data = json.loads(response.content.decode("utf8"))
+    data = json.loads(response.render().content.decode("utf8"))
     return Order.objects.get(identifier=data["orderIdentifier"])
 
 
@@ -321,7 +321,7 @@ def test_order_creator_source_data(rf, admin_user):
     contact = create_random_person(locale="en_US", minimum_name_comp_len=5)
     request = get_frontend_request_for_command(get_frontend_order_state(contact), "source_data", admin_user)
     response = OrderEditView.as_view()(request)
-    data = json.loads(response.content.decode("utf8"))
+    data = json.loads(response.render().content.decode("utf8"))
     assert len(data.get("orderLines")) == 5
 
 
@@ -398,7 +398,7 @@ def test_editing_existing_order(rf, admin_user):
     request = get_frontend_request_for_command(state, "finalize", modifier)
     response = OrderEditView.as_view()(request, pk=order.pk)
     assert_contains(response, "orderIdentifier")  # this checks for status codes as a side effect
-    data = json.loads(response.content.decode("utf8"))
+    data = json.loads(response.render().content.decode("utf8"))
     edited_order = Order.objects.get(pk=order.pk)  # Re fetch the initial order
 
     # Check that identifiers has not changed
@@ -454,7 +454,7 @@ def test_order_creator_customer_details(rf, admin_user):
     order = create_random_order(contact, products=[product])
     request = apply_request_middleware(rf.get("/", {"command": "customer_details", "id": contact.id}), user=admin_user)
     response = OrderEditView.as_view()(request)
-    data = json.loads(response.content.decode("utf8"))
+    data = json.loads(response.render().content.decode("utf8"))
 
     assert "customer_info" in data
     assert "order_summary" in data

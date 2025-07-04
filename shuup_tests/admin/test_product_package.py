@@ -102,7 +102,7 @@ def test_package_edit_view(admin_user, rf, supplier_enabled):
 
     assert response.status_code == 200
     response.render()
-    content = response.content.decode("utf-8")
+    content = response.render().content.decode("utf-8")
 
     for product_id in product_ids:
         is_inside = ("Logical count: %s" % product_id) in content

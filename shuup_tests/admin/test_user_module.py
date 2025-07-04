@@ -60,7 +60,7 @@ def test_user_detail_works_at_all(rf, admin_user):
     response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk)
     assert response.status_code == 200
     response.render()
-    assert force_text(user) in force_text(response.content)
+    assert force_text(user) in force_text(response.render().content)
     response = view_func(
         apply_request_middleware(rf.post("/", {"set_is_active": "0"}), user=admin_user),
         pk=user.pk,
@@ -99,17 +99,17 @@ def test_user_detail_and_login_as_url(rf, admin_user):
     response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk)
     assert response.status_code == 200
     response.render()
-    assert force_text(user) in force_text(response.content)
+    assert force_text(user) in force_text(response.render().content)
     login_as_url = reverse("shuup_admin:user.login-as", kwargs={"pk": user.pk})
-    assert force_text(login_as_url) in force_text(response.content)
+    assert force_text(login_as_url) in force_text(response.render().content)
 
     with override_settings(SHUUP_ADMIN_LOGIN_AS_REDIRECT_VIEW="giberish"):
         response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk)
         assert response.status_code == 200
         response.render()
-        assert force_text(user) in force_text(response.content)
+        assert force_text(user) in force_text(response.render().content)
         login_as_url = reverse("shuup_admin:user.login-as", kwargs={"pk": user.pk})
-        assert force_text(login_as_url) not in force_text(response.content)
+        assert force_text(login_as_url) not in force_text(response.render().content)
 
 
 @pytest.mark.django_db
@@ -126,17 +126,17 @@ def test_user_detail_as_staff_and_login_as_url(rf, admin_user):
     response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk)
     assert response.status_code == 200
     response.render()
-    assert force_text(user) in force_text(response.content)
+    assert force_text(user) in force_text(response.render().content)
     login_as_staff_url = reverse("shuup_admin:user.login-as-staff", kwargs={"pk": user.pk})
-    assert force_text(login_as_staff_url) in force_text(response.content)
+    assert force_text(login_as_staff_url) in force_text(response.render().content)
 
     with override_settings(SHUUP_ADMIN_LOGIN_AS_STAFF_REDIRECT_VIEW="giberish"):
         response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.pk)
         assert response.status_code == 200
         response.render()
-        assert force_text(user) in force_text(response.content)
+        assert force_text(user) in force_text(response.render().content)
         login_as_staff_url = reverse("shuup_admin:user.login-as-staff", kwargs={"pk": user.pk})
-        assert force_text(login_as_staff_url) not in force_text(response.content)
+        assert force_text(login_as_staff_url) not in force_text(response.render().content)
 
 
 @pytest.mark.django_db
@@ -157,13 +157,13 @@ def test_user_list(rf, admin_user):
     # check with superuser
     response = view_func(apply_request_middleware(request, user=admin_user))
     assert response.status_code == 200
-    data = json.loads(response.content.decode("utf-8"))
+    data = json.loads(response.render().content.decode("utf-8"))
     assert len(data["items"]) == 2
 
     # check with staff user
     response = view_func(apply_request_middleware(request, user=user))
     assert response.status_code == 200
-    data = json.loads(response.content.decode("utf-8"))
+    data = json.loads(response.render().content.decode("utf-8"))
     assert len(data["items"]) == 1
 
 
@@ -228,8 +228,8 @@ def test_user_create(rf, admin_user):
     response = view_func(apply_request_middleware(rf.get("/"), user=user, skip_session=True))
     assert response.status_code == 200
     response.render()
-    assert "Staff status" not in force_text(response.content)
-    assert "Superuser status" not in force_text(response.content)
+    assert "Staff status" not in force_text(response.render().content)
+    assert "Superuser status" not in force_text(response.render().content)
 
     # remove user staff permission
     view_func = UserChangePermissionsView.as_view()
@@ -316,7 +316,7 @@ def test_user_permission_view_as_staff_user(rf, admin_user):
     response = view_func(apply_request_middleware(rf.get("/"), user=staff), pk=user.id)
     assert response.status_code == 200
     response.render()
-    assert "Superuser (Full rights) status" not in force_text(response.content)
+    assert "Superuser (Full rights) status" not in force_text(response.render().content)
 
     # Superuser can see the superuser status
     assert admin_user.is_superuser
@@ -324,7 +324,7 @@ def test_user_permission_view_as_staff_user(rf, admin_user):
     response = view_func(apply_request_middleware(rf.get("/"), user=admin_user), pk=user.id)
     assert response.status_code == 200
     response.render()
-    assert "Superuser (Full rights) status" in force_text(response.content)
+    assert "Superuser (Full rights) status" in force_text(response.render().content)
 
 
 @pytest.mark.django_db

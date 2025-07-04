@@ -46,6 +46,8 @@ def test_media_view_images(rf, admin_user, is_public, expected_file_count):
     view_func = MediaBrowserView.as_view()
     response = view_func(request)
     assert isinstance(response, JsonResponse)
+    if hasattr(response, "render"):
+        response.render()
     content = json.loads(response.content.decode("utf-8"))
     assert len(content["folder"]["files"]) == expected_file_count
     if expected_file_count:
@@ -73,6 +75,8 @@ def test_media_view_images_without_root_access(rf):
     view_func = MediaBrowserView.as_view()
     response = view_func(request)
     assert isinstance(response, JsonResponse)
+    if hasattr(response, "render"):
+        response.render()
     content = json.loads(response.content.decode("utf-8"))
     assert len(content["folder"]["folders"]) == 0
     assert len(content["folder"]["files"]) == 0
@@ -86,7 +90,10 @@ def mbv_command(user, payload, method="post"):
     else:
         request.GET = payload
     mbv = MediaBrowserView.as_view()
-    return json.loads(mbv(request).content.decode("UTF-8"))
+    response = mbv(request)
+    if hasattr(response, "render"):
+        response.render()
+    return json.loads(response.content.decode("UTF-8"))
 
 
 def mbv_upload(user, **extra_data):
@@ -96,6 +103,8 @@ def mbv_upload(user, **extra_data):
     request.user = user
     view = MediaBrowserView.as_view()
     response = view(request)
+    if hasattr(response, "render"):
+        response.render()
     return json.loads(response.content.decode("UTF-8"))
 
 
@@ -209,6 +218,8 @@ def test_upload_invalid_filetype(rf, admin_user):
     request.user = admin_user
     view = MediaBrowserView.as_view()
     response = view(request)
+    if hasattr(response, "render"):
+        response.render()
     error_message = json.loads(response.content.decode("UTF-8"))
     assert "extension 'exe' is not allowed" in error_message["error"]["file"][0]
     assert File.objects.count() == 0
@@ -376,6 +387,8 @@ def test_upload_invalid_image(rf, admin_user):
     request.user = admin_user
     view = MediaBrowserView.as_view()
     response = view(request)
+    if hasattr(response, "render"):
+        response.render()
     error_message = json.loads(response.content.decode("UTF-8"))
     assert "not an image or a corrupted image." in error_message["error"]["file"][0]
     assert File.objects.count() == 0
@@ -414,6 +427,8 @@ def test_large_image(client, rf, admin_user):
                 format="multipart",
             )
             assert response.status_code == 400
+            if hasattr(response, "render"):
+                response.render()
             data = json.loads(response.content.decode("utf-8"))
             assert "Maximum file size reached" in data["error"]["file"][0]
 

@@ -94,11 +94,15 @@ def test_edit_object_view_errors(rf, admin_user):
     # missing params
     response = view(apply_request_middleware(rf.get(reverse("shuup_admin:edit")), user=admin_user, shop=shop))
     assert response.status_code == 400
+    if hasattr(response, "render"):
+        response.render()
     assert "Invalid object" in response.content.decode("utf-8")
 
     # invalid model
     response = _get_edit_object_view(rf, view, ".", None, admin_user, shop)
     assert response.status_code == 400
+    if hasattr(response, "render"):
+        response.render()
     assert "Invalid object" in response.content.decode("utf-8")
 
     # invalid object ID

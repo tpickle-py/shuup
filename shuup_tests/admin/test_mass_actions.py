@@ -94,6 +94,8 @@ def test_mass_actions_product_ids_mixup(rf, admin_user):
     request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user)
     response = view(request)
     assert 200 <= response.status_code < 300
+    if hasattr(response, "render"):
+        response.render()
     data = json.loads(response.content.decode("utf-8"))
 
     shop_product1_id = [item["_id"] for item in data["items"] if item["product_sku"] == "sku1"][0]

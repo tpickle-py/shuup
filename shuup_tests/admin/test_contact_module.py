@@ -130,6 +130,8 @@ def test_contact_list_multiple_shop(rf, admin_user):
     request = apply_request_middleware(rf.get("/", data=payload), user=staff)
     response = view_func(request)
     assert response.status_code == 200
+    if hasattr(response, "render"):
+        response.render()
     data = json.loads(response.content.decode("utf-8"))
     contacts = [contact["_id"] for contact in data["items"]]
     assert contact1.pk in contacts
@@ -142,6 +144,8 @@ def test_contact_list_multiple_shop(rf, admin_user):
     request = apply_request_middleware(rf.get("/", data=payload), user=staff)
     response = view_func(request)
     assert response.status_code == 200
+    if hasattr(response, "render"):
+        response.render()
     data = json.loads(response.content.decode("utf-8"))
     contacts = [contact["_id"] for contact in data["items"]]
     assert contact1.pk in contacts
@@ -154,6 +158,8 @@ def test_contact_list_multiple_shop(rf, admin_user):
     request = apply_request_middleware(rf.get("/", data=payload), user=staff)
     response = view_func(request)
     assert response.status_code == 200
+    if hasattr(response, "render"):
+        response.render()
     data = json.loads(response.content.decode("utf-8"))
     contacts = [contact["_id"] for contact in data["items"]]
     assert contact1.pk not in contacts
@@ -166,6 +172,8 @@ def test_contact_list_multiple_shop(rf, admin_user):
     request = apply_request_middleware(rf.get("/", data=payload), user=admin_user)
     response = view_func(request)
     assert response.status_code == 200
+    if hasattr(response, "render"):
+        response.render()
     data = json.loads(response.content.decode("utf-8"))
     contacts = [contact["_id"] for contact in data["items"]]
     assert contact1.pk in contacts

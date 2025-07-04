@@ -28,12 +28,12 @@ def test_custom_view_toolbar_buttons(rf, admin_user):
     ):
         list_response = list_view_func(request)
         list_response.render()
-        list_content = list_response.content.decode("utf-8")
+        list_content = list_response.render().content.decode("utf-8")
         assert "btn-contact-group-hello" in list_content
 
         edit_response = edit_view_func(request)
         edit_response.render()
-        edit_response = edit_response.content.decode("utf-8")
+        edit_response = edit_response.render().content.decode("utf-8")
         assert "btn-contact-group-hello" not in edit_response
 
     # use global provider - all views should have that button
@@ -43,10 +43,10 @@ def test_custom_view_toolbar_buttons(rf, admin_user):
     ):
         list_response = list_view_func(request)
         list_response.render()
-        list_content = list_response.content.decode("utf-8")
+        list_content = list_response.render().content.decode("utf-8")
         assert "btn-contact-group-hello" in list_content
 
         edit_response = edit_view_func(request)
         edit_response.render()
-        edit_response = edit_response.content.decode("utf-8")
+        edit_response = edit_response.render().content.decode("utf-8")
         assert "btn-contact-group-hello" in edit_response
