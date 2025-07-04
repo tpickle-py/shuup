@@ -150,11 +150,11 @@ class ContactGroup(TranslatableShuupModel):
 
     def __str__(self):
         if hasattr(self, "name") and self.name:
-            return f'contact group "{self.name}"'
+            return str(self.name)  # Convert lazy translations to string
         elif self.identifier:
             return f'contact group "{self.identifier}"'
         else:
-            return f'contact group "{self.pk}"'
+            return "contact group"
 
     def set_price_display_options(self, **kwargs):
         shop = kwargs.get("shop", self.shop)

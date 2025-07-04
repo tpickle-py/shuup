@@ -12,7 +12,14 @@ from django_countries.data import COUNTRIES
 from shuup.admin.utils.permissions import set_permissions_for_group
 from shuup.core.models import CompanyContact, Contact, ContactGroup, MutableAddress, PersonContact
 
-from .shared import DEFAULT_ADDRESS_DATA, DEFAULT_NAME, get_default_shop, get_faker
+from .shared import (
+    DEFAULT_ADDRESS_DATA,
+    DEFAULT_IDENTIFIER,
+    DEFAULT_NAME,
+    default_by_identifier,
+    get_default_shop,
+    get_faker,
+)
 
 COUNTRY_CODES = sorted(COUNTRIES.keys())
 
@@ -147,8 +154,6 @@ def get_default_staff_user(shop=None):
 
 
 def get_default_customer_group(shop=None):
-    from .shared import DEFAULT_IDENTIFIER, default_by_identifier
-
     group = default_by_identifier(ContactGroup)
     if not shop:
         shop = get_default_shop()

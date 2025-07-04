@@ -118,6 +118,16 @@ class CatalogFiltersFormSet(BaseFormset):
     def get_queryset(self):
         return self.owner.filters.instance_of(self._get_actual_model())
 
+    @property
+    def empty_form(self):
+        form = self._construct_form(None)
+        form.empty_permitted = True
+        return form
+
+    @property
+    def can_delete_extra(self):
+        return False
+
 
 class CatalogEffectsFormSet(EffectsFormset):
     model = ProductDiscountEffect  # type: ignore[assignment]
