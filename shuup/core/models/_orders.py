@@ -260,34 +260,34 @@ class OrderStatusManager:
     def __init__(self):
         self.default_statuses = [
             {
-                "name": DefaultOrderStatus.INITIAL,
-                "public_name": DefaultOrderStatus.INITIAL,
+                "name": DefaultOrderStatus.INITIAL.label,
+                "public_name": DefaultOrderStatus.INITIAL.label,
                 "role": OrderStatusRole.INITIAL,
-                "identifier": DefaultOrderStatus.INITIAL,
+                "identifier": DefaultOrderStatus.INITIAL.value,
                 "default": True,
                 "is_active": True,
             },
             {
-                "name": DefaultOrderStatus.PROCESSING,
-                "public_name": DefaultOrderStatus.PROCESSING,
+                "name": DefaultOrderStatus.PROCESSING.label,
+                "public_name": DefaultOrderStatus.PROCESSING.label,
                 "role": OrderStatusRole.PROCESSING,
-                "identifier": DefaultOrderStatus.PROCESSING,
+                "identifier": DefaultOrderStatus.PROCESSING.value,
                 "default": True,
                 "is_active": True,
             },
             {
-                "name": DefaultOrderStatus.COMPLETE,
-                "public_name": DefaultOrderStatus.COMPLETE,
+                "name": DefaultOrderStatus.COMPLETE.label,
+                "public_name": DefaultOrderStatus.COMPLETE.label,
                 "role": OrderStatusRole.COMPLETE,
-                "identifier": DefaultOrderStatus.COMPLETE,
+                "identifier": DefaultOrderStatus.COMPLETE.value,
                 "default": True,
                 "is_active": True,
             },
             {
-                "name": DefaultOrderStatus.CANCELED,
-                "public_name": DefaultOrderStatus.CANCELED,
+                "name": DefaultOrderStatus.CANCELED.label,
+                "public_name": DefaultOrderStatus.CANCELED.label,
                 "role": OrderStatusRole.CANCELED,
-                "identifier": DefaultOrderStatus.CANCELED,
+                "identifier": DefaultOrderStatus.CANCELED.value,
                 "default": True,
                 "is_active": True,
             },
@@ -306,11 +306,11 @@ class OrderStatusManager:
         """
         # These values are based on the old Shuup data
         update_map = {
-            "none": DefaultOrderStatus.NONE,
-            "recv": DefaultOrderStatus.INITIAL,
-            "prog": DefaultOrderStatus.PROCESSING,
-            "comp": DefaultOrderStatus.COMPLETE,
-            "canc": DefaultOrderStatus.CANCELED,
+            "none": DefaultOrderStatus.NONE.value,
+            "recv": DefaultOrderStatus.INITIAL.value,
+            "prog": DefaultOrderStatus.PROCESSING.value,
+            "comp": DefaultOrderStatus.COMPLETE.value,
+            "canc": DefaultOrderStatus.CANCELED.value,
         }
 
         for status in OrderStatus.objects.all():
