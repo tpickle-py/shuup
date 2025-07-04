@@ -47,6 +47,16 @@ class BaseFormset(BaseModelFormSet):
             kwargs.setdefault("default_language", settings.PARLER_DEFAULT_LANGUAGE_CODE)
         return self.form_class(**kwargs)
 
+    @property
+    def empty_form(self):
+        form = self._construct_form(None)
+        form.empty_permitted = True
+        return form
+
+    @property
+    def can_delete_extra(self):
+        return self.can_delete
+
 
 class BasketConditionsFormSet(BaseFormset):
     model = BasketCondition  # type: ignore[assignment]
