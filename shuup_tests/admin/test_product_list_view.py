@@ -31,7 +31,9 @@ def test_list_view(rf, admin_user):
     response = view(request)
     assert 200 <= response.status_code < 300
 
-    data = json.loads(response.render().content.decode("utf-8"))
+    if hasattr(response, "render"):
+        response.render()
+    data = json.loads(response.content.decode("utf-8"))
     product_data = [item for item in data["items"] if item["_id"] == shop_product.pk][0]
     assert product_data["primary_category"] == factories.get_default_category().name
     assert product_data["categories"] == factories.get_default_category().name
@@ -68,7 +70,9 @@ def test_list_view_with_multiple_suppliers(rf, admin_user):
         response = view(request)
         assert 200 <= response.status_code < 300
 
-        data = json.loads(response.render().content.decode("utf-8"))
+        if hasattr(response, "render"):
+            response.render()
+        data = json.loads(response.content.decode("utf-8"))
         assert len(data["items"]) == 2
         product_data = [item for item in data["items"] if item["_id"] == shop_product.pk][0]
         assert product_data["primary_category"] == factories.get_default_category().name

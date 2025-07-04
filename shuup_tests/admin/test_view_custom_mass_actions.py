@@ -23,7 +23,9 @@ def test_view_custom_mass_actions(rf, admin_user):
 
     # no mass actions
     response = list_view_func(request)
-    data = json.loads(response.render().content.decode("utf-8"))
+    if hasattr(response, "render"):
+        response.render()
+    data = json.loads(response.content.decode("utf-8"))
     assert not data["massActions"]
 
     # test with specific key

@@ -157,13 +157,17 @@ def test_user_list(rf, admin_user):
     # check with superuser
     response = view_func(apply_request_middleware(request, user=admin_user))
     assert response.status_code == 200
-    data = json.loads(response.render().content.decode("utf-8"))
+    if hasattr(response, "render"):
+        response.render()
+    data = json.loads(response.content.decode("utf-8"))
     assert len(data["items"]) == 2
 
     # check with staff user
     response = view_func(apply_request_middleware(request, user=user))
     assert response.status_code == 200
-    data = json.loads(response.render().content.decode("utf-8"))
+    if hasattr(response, "render"):
+        response.render()
+    data = json.loads(response.content.decode("utf-8"))
     assert len(data["items"]) == 1
 
 

@@ -53,7 +53,9 @@ def _get_search_results(
     request = apply_request_middleware(rf.get("sa/search", data), user=user)
     response = view(request)
     assert response.status_code == 200
-    return json.loads(response.render().content.decode("utf-8")).get("results")
+    if hasattr(response, "render"):
+        response.render()
+    return json.loads(response.content.decode("utf-8")).get("results")
 
 
 @pytest.mark.django_db

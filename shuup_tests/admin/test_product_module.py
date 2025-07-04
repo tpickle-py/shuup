@@ -241,7 +241,9 @@ def test_product_edit_view_multipleshops(rf):
 
         response = view_func(request)
         assert response.status_code == 200
-        data = json.loads(response.render().content.decode("utf-8"))
+        if hasattr(response, "render"):
+            response.render()
+        data = json.loads(response.content.decode("utf-8"))
         assert len(data["items"]) == 1  # There is one shop product create in "get new shop"
 
 

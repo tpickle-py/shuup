@@ -41,7 +41,9 @@ def test_suppliers_list(rf, admin_user):
     for user in [admin_user, staff_user]:
         request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=user)
         response = list_view(request)
-        data = json.loads(response.render().content.decode("utf-8"))
+        if hasattr(response, "render"):
+            response.render()
+        data = json.loads(response.content.decode("utf-8"))
         ids = [sup["_id"] for sup in data["items"]]
         assert supplier1.id in ids
         assert supplier2.id in ids
@@ -81,10 +83,10 @@ def test_suppliers_edit(rf, admin_user, manage_stock, stock_module):
             if manage_stock and not stock_module:
                 request = apply_request_middleware(rf.post("/", payload), user=user)
                 response = edit_view(request)
-                response.render()
+                if hasattr(response, "render"):
+                    response.render()
                 assert bool(
-                    "It is not possible to manage inventory when no module is selected."
-                    in response.render().content.decode()
+                    "It is not possible to manage inventory when no module is selected." in response.content.decode()
                 )
                 assert response.status_code == 200
             else:
@@ -145,12 +147,16 @@ def test_suppliers_ensure_deleted_inlist(rf, admin_user):
     request = apply_request_middleware(rf.get("/", {"jq": json.dumps({"perPage": 100, "page": 1})}), user=admin_user)
 
     response = list_view(request)
-    data = json.loads(response.render().content.decode("utf-8"))
+    if hasattr(response, "render"):
+        response.render()
+    data = json.loads(response.content.decode("utf-8"))
     assert data["pagination"]["nItems"] == 1
 
     supplier.soft_delete()
     response = list_view(request)
-    data = json.loads(response.render().content.decode("utf-8"))
+    if hasattr(response, "render"):
+        response.render()
+    data = json.loads(response.content.decode("utf-8"))
     assert data["pagination"]["nItems"] == 0
 
 
