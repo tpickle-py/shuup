@@ -337,27 +337,29 @@ class OrderStatusManager:
         """
         Populates allowed_next_statuses with default values.
         """
-        # run only if there are no allowed_next_statues defined.
-        os_qs = OrderStatus.objects.filter(~Q(allowed_next_statuses=None))
-        if not os_qs:
-            order_status_qs = OrderStatus.objects.all()
-            for order_status in order_status_qs:
-                allowed_status_list = []
-                if order_status.identifier == DefaultOrderStatus.INITIAL:
-                    allowed_status_list = [
-                        DefaultOrderStatus.PROCESSING,
-                        DefaultOrderStatus.COMPLETE,
-                        DefaultOrderStatus.CANCELED,
-                    ]
-                elif order_status.identifier == DefaultOrderStatus.PROCESSING:
-                    allowed_status_list = [
-                        DefaultOrderStatus.COMPLETE,
-                        DefaultOrderStatus.CANCELED,
-                    ]
+        # Ensure default status transitions are always set up
+        order_status_qs = OrderStatus.objects.all()
+        for order_status in order_status_qs:
+            # Check if this status already has allowed transitions
+            if order_status.allowed_next_statuses.exists():
+                continue
 
-                if allowed_status_list:
-                    allowed_queryset = OrderStatus.objects.filter(identifier__in=allowed_status_list)
-                    order_status.allowed_next_statuses.add(*allowed_queryset)
+            allowed_status_list = []
+            if order_status.identifier == DefaultOrderStatus.INITIAL:
+                allowed_status_list = [
+                    DefaultOrderStatus.PROCESSING,
+                    DefaultOrderStatus.COMPLETE,
+                    DefaultOrderStatus.CANCELED,
+                ]
+            elif order_status.identifier == DefaultOrderStatus.PROCESSING:
+                allowed_status_list = [
+                    DefaultOrderStatus.COMPLETE,
+                    DefaultOrderStatus.CANCELED,
+                ]
+
+            if allowed_status_list:
+                allowed_queryset = OrderStatus.objects.filter(identifier__in=allowed_status_list)
+                order_status.allowed_next_statuses.add(*allowed_queryset)
 
 
 class OrderQuerySet(models.QuerySet):

@@ -34,7 +34,9 @@ def test_view_custom_mass_actions(rf, admin_user):
         ["shuup.testing.modules.mocker.mass_actions:DummyMassActionProvider"],
     ):
         response = list_view_func(request)
-        data = json.loads(response.render().content.decode("utf-8"))
+        if hasattr(response, "render"):
+            response.render()
+        data = json.loads(response.content.decode("utf-8"))
         identifiers = [action["key"] for action in data["massActions"]]
         assert "dummy_mass_action_1" in identifiers
         assert "dummy_mass_action_2" in identifiers
@@ -46,7 +48,9 @@ def test_view_custom_mass_actions(rf, admin_user):
         ["shuup.testing.modules.mocker.mass_actions:DummyMassActionProvider"],
     ):
         response = list_view_func(request)
-        data = json.loads(response.render().content.decode("utf-8"))
+        if hasattr(response, "render"):
+            response.render()
+        data = json.loads(response.content.decode("utf-8"))
         identifiers = [action["key"] for action in data["massActions"]]
         assert "dummy_mass_action_1" in identifiers
         assert "dummy_mass_action_2" in identifiers

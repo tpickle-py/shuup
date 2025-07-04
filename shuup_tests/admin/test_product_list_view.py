@@ -92,5 +92,7 @@ def test_list_view_with_multiple_suppliers(rf, admin_user):
         response = view(request)
         assert 200 <= response.status_code < 300
 
-        data = json.loads(response.render().content.decode("utf-8"))
+        if hasattr(response, "render"):
+            response.render()
+        data = json.loads(response.content.decode("utf-8"))
         assert len(data["items"]) == 1

@@ -114,7 +114,9 @@ def test_reset_admin_user_password_errors(client):
         data={"new_password1": new_password, "new_password2": "wrong"},
     )
     assert response.status_code == 200  # Django forms likes to return invalid forms as 200. So be it.
-    assert escape("The two password fields didn't match.") in response.render().content.decode("utf-8")
+    if hasattr(response, "render"):
+        response.render()
+    assert escape("The two password fields didn't match.") in response.content.decode("utf-8")
 
     # all good
     response = client.post(
