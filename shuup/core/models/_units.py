@@ -229,7 +229,7 @@ class DisplayUnit(TranslatableShuupModel):
 
 class SalesUnitAsDisplayUnit(DisplayUnit):
     class Meta:
-        managed = False
+        abstract = True
 
     def __init__(self, sales_unit):
         super().__init__()
@@ -259,7 +259,7 @@ class PiecesSalesUnit(SalesUnit):
     """
 
     class Meta:
-        managed = False
+        abstract = True
 
     def __init__(self):
         super().__init__(identifier="_internal_pieces_unit", decimals=0)
@@ -294,9 +294,9 @@ class UnitInterface:
         :type internal_unit: SalesUnit
         :type display_unit: DisplayUnit
         """
-        assert internal_unit is None or display_unit is None or (display_unit.internal_unit == internal_unit), (
-            f"Incompatible units: {internal_unit!r}, {display_unit!r}"
-        )
+        assert (
+            internal_unit is None or display_unit is None or (display_unit.internal_unit == internal_unit)
+        ), f"Incompatible units: {internal_unit!r}, {display_unit!r}"
         if display_unit:
             self.internal_unit = display_unit.internal_unit
             self.display_unit = display_unit
