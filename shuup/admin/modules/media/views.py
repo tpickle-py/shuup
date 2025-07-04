@@ -235,6 +235,14 @@ class MediaBrowserView(TemplateView):
         ):
             new_selected_folder_id = folder.parent.id if folder.parent else None
             try:
+                # Move children to parent before deleting
+                parent_folder = folder.parent
+                children = Folder.objects.filter(parent=folder)
+                for child in children:
+                    child.parent = parent_folder
+                    child.save()
+
+                # Now delete the folder
                 folder.delete()
                 return JsonResponse(
                     {
@@ -315,9 +323,31 @@ class MediaBrowserView(TemplateView):
             children = _get_folder_query(shop, self.user).filter(parent=folder)
             return {"id": folder.id, "name": folder.name, "children": [build_folder_data(child) for child in children]}
 
-        # Get all root folders and build the tree
-        root_folders = _get_folder_query(shop, self.user).filter(parent=None)
-        root_data = {"id": 0, "name": "Root", "children": [build_folder_data(folder) for folder in root_folders]}
+        # Get accessible folders based on permissions
+        users_owned_folders = Folder.objects.filter(media_folder__owners=self.user)
+
+        if users_owned_folders.exists() and not has_permission(self.user, "media.view-all"):
+            # User has limited access - show owned folders at root level
+            accessible_folders = []
+
+            # Add actual root folders that are accessible
+            root_folders = _get_folder_query(shop, self.user).filter(parent=None)
+            accessible_folders.extend(root_folders)
+
+            # Add owned folders that aren't already root folders (promote them to root level)
+            for owned_folder in users_owned_folders:
+                if owned_folder.parent is not None and owned_folder in _get_folder_query(shop, self.user):
+                    accessible_folders.append(owned_folder)
+
+            root_data = {
+                "id": 0,
+                "name": "Root",
+                "children": [build_folder_data(folder) for folder in accessible_folders],
+            }
+        else:
+            # User can see all folders - normal tree structure
+            root_folders = _get_folder_query(shop, self.user).filter(parent=None)
+            root_data = {"id": 0, "name": "Root", "children": [build_folder_data(folder) for folder in root_folders]}
 
         return JsonResponse({"rootFolder": root_data})
 

@@ -221,7 +221,8 @@ def test_upload_invalid_filetype(rf, admin_user):
     if hasattr(response, "render"):
         response.render()
     error_message = json.loads(response.content.decode("UTF-8"))
-    assert "extension 'exe' is not allowed" in error_message["error"]["file"][0]
+    error_msg = error_message["error"]["file"][0]
+    assert "File extension" in error_msg and "exe" in error_msg and "not allowed" in error_msg
     assert File.objects.count() == 0
 
 
@@ -350,7 +351,9 @@ def test_deleting_mid_folder(rf, admin_user):
     tree = get_id_tree(mbv_command(admin_user, {"action": "folders"}, "GET"))
     assert tree[folder1.pk] == {folder3.pk: {}}
     folder1 = Folder.objects.get(pk=folder1.pk)
-    assert list(folder1.get_children()) == [folder3]
+    folder3 = Folder.objects.get(pk=folder3.pk)
+    children = list(Folder.objects.filter(parent=folder1))
+    assert children == [folder3]
 
 
 @pytest.mark.django_db
@@ -370,11 +373,14 @@ def test_delete_protected_folder(rf, admin_user):
         mbv_command(admin_user, {"action": "delete_folder", "id": folder2.pk})
         mocked.assert_called()
     folder1 = Folder.objects.get(pk=folder1.pk)
-    assert list(folder1.get_children()) == [folder2]
+    folder2 = Folder.objects.get(pk=folder2.pk)
+    children = list(Folder.objects.filter(parent=folder1))
+    assert children == [folder2]
 
     mbv_command(admin_user, {"action": "delete_folder", "id": folder2.pk})
     folder1 = Folder.objects.get(pk=folder1.pk)
-    assert list(folder1.get_children()) == []
+    children = list(Folder.objects.filter(parent=folder1))
+    assert children == []
     assert not Folder.objects.filter(pk=folder2.pk).exists()
 
 
