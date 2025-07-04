@@ -95,6 +95,16 @@ class GDPRCookieCategoryFormSet(BaseModelFormSet):
         kwargs.setdefault("languages", self.languages)
         return self.form_class(**kwargs)
 
+    @property
+    def can_delete_extra(self):
+        return self.can_delete
+
+    @property
+    def empty_form(self):
+        form = self._construct_form(None)
+        form.empty_permitted = True
+        return form
+
     def save(self, commit=True):
         forms = self.forms or []
         for form in forms:
