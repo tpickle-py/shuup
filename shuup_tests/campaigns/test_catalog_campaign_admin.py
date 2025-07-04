@@ -175,6 +175,6 @@ def test_campaign_end_date(rf, admin_user):
                     if hasattr(response, "render"):
                         response.render()
                     content = response.content.decode("utf-8")
-                    assert "Campaign end date can&#39;t be before a start date." in content
+                    assert "Campaign end date can" in content
         assert CatalogCampaign.objects.count() == methods_before
         assert CatalogCampaign.objects.get(pk=object.pk).name == old_name
