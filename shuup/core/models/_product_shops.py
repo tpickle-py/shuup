@@ -107,7 +107,6 @@ class ShopProduct(MoneyPropped, TranslatableModel):
         ),
         validators=[
             validators.validate_nonzero_quantity,
-            validators.validate_minimum_less_than_maximum,
         ],
     )
     purchase_multiple = QuantityField(
