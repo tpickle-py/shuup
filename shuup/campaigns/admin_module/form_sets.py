@@ -49,7 +49,7 @@ class BaseFormset(BaseModelFormSet):
 
     @property
     def empty_form(self):
-        form = self._construct_form(None)
+        form = self._construct_form(self.total_form_count())
         form.empty_permitted = True
         return form
 
@@ -66,7 +66,7 @@ class BasketConditionsFormSet(BaseFormset):
 
     @property
     def empty_form(self):
-        form = self._construct_form(None)
+        form = self._construct_form(self.total_form_count())
         form.empty_permitted = True
         return form
 
@@ -82,7 +82,7 @@ class EffectsFormset(BaseFormset):
 
     @property
     def empty_form(self):
-        form = self._construct_form(None)
+        form = self._construct_form(self.total_form_count())
         form.empty_permitted = True
         return form
 
@@ -113,7 +113,7 @@ class CatalogConditionsFormSet(BaseFormset):
 
     @property
     def empty_form(self):
-        form = self._construct_form(None)
+        form = self._construct_form(self.total_form_count())
         form.empty_permitted = True
         return form
 
@@ -130,7 +130,7 @@ class CatalogFiltersFormSet(BaseFormset):
 
     @property
     def empty_form(self):
-        form = self._construct_form(None)
+        form = self._construct_form(self.total_form_count())
         form.empty_permitted = True
         return form
 
