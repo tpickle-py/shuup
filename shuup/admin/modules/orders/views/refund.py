@@ -49,14 +49,17 @@ class RefundForm(forms.Form):
     )
 
     def clean_line_number(self):
+        # TODO Test clean functions or use a custom validator
         line_number = self.cleaned_data["line_number"]
         return line_number if line_number != "" else None
 
     def clean_quantity(self):
+        # TODO Test clean functions or use a custom validator
         quantity = self.cleaned_data["quantity"]
         return quantity if quantity != 0 else None
 
     def clean_amount(self):
+        # TODO Test clean functions or use a custom validator
         amount = self.cleaned_data["amount"]
         return amount if amount != 0 else None
 

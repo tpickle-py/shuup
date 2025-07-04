@@ -1,13 +1,11 @@
-import decimal
 import json
 
-from babel.numbers import format_currency, format_decimal
+from babel.numbers import format_decimal
 from django.conf import settings
 from django.contrib import messages
 from django.core import serializers
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.db.models import Sum
 from django.http.response import Http404, HttpResponse, JsonResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
@@ -25,17 +23,14 @@ from shuup.core.models import (
     Order,
     OrderLineType,
     PaymentMethod,
-    PersonContact,
-    Product,
     ShippingMethod,
     Shop,
-    ShopProduct,
     ShopStatus,
 )
 from shuup.core.pricing import get_pricing_module
 from shuup.utils.django_compat import force_text, reverse
 from shuup.utils.http import get_client_ip
-from shuup.utils.i18n import format_money, format_percent, get_current_babel_locale, get_locally_formatted_datetime
+from shuup.utils.i18n import format_money, format_percent, get_current_babel_locale
 
 
 def create_order_from_state(state, **kwargs):
@@ -258,141 +253,6 @@ class OrderEditView(CreateOrUpdateView):
             retval = JsonResponse(retval)
         return retval
 
-    def handle_product_data(self, request):
-        product_id = request.GET["id"]
-        shop_id = request.GET["shop_id"]
-        customer_id = request.GET.get("customer_id")
-        supplier_id = request.GET.get("supplier_id")
-        quantity = decimal.Decimal(request.GET.get("quantity", 1))
-        product = Product.objects.filter(pk=product_id).first()
-        if not product:
-            return {"errorText": _("Product `%s` does not exist.") % product_id}
-        shop = Shop.objects.get(pk=shop_id)
-        try:
-            shop_product = product.get_shop_instance(shop)
-        except ShopProduct.DoesNotExist:
-            return {
-                "errorText": _("Product `%(product)s` is not available in the `%(shop)s` shop.")
-                % {"product": product.name, "shop": shop.name}
-            }
-
-        min_quantity = shop_product.minimum_purchase_quantity
-        # Make quantity to be at least minimum quantity
-        quantity = min_quantity if quantity < min_quantity else quantity
-        customer = Contact.objects.filter(pk=customer_id).first() if customer_id else None
-
-        supplier = None
-        if supplier_id:
-            supplier = shop_product.suppliers.enabled(shop=shop_product.shop).filter(id=supplier_id).first()
-
-        if not supplier:
-            supplier = shop_product.get_supplier(customer, quantity)
-
-        price_info = get_price_info(shop, customer, product, supplier, quantity)
-        stock_status = supplier.get_stock_status(product.pk) if supplier else None
-        return {
-            "id": product.id,
-            "sku": product.sku,
-            "name": product.name,
-            "quantity": quantity,
-            "logicalCount": stock_status.logical_count if stock_status else 0,
-            "physicalCount": stock_status.physical_count if stock_status else 0,
-            "salesDecimals": product.sales_unit.decimals if product.sales_unit else 0,
-            "salesUnit": product.sales_unit.symbol if product.sales_unit else "",
-            "purchaseMultiple": shop_product.purchase_multiple,
-            "taxClass": {
-                "id": product.tax_class.id,
-                "name": force_text(product.tax_class),
-            },
-            "baseUnitPrice": {
-                "value": price_info.base_unit_price.value,
-                "includesTax": price_info.base_unit_price.includes_tax,
-            },
-            "unitPrice": {
-                "value": price_info.discounted_unit_price.value,
-                "includesTax": price_info.base_unit_price.includes_tax,
-            },
-            "product": {
-                "text": product.name,
-                "id": product.id,
-                "url": get_model_url(product, shop=request.shop),
-            },
-            "supplier": {
-                "name": supplier.name if supplier else "",
-                "id": supplier.id if supplier else None,
-            },
-        }
-
-    def handle_customer_data(self, request):
-        customer_id = request.GET["id"]
-        return self.get_customer_data(customer_id)
-
-    def handle_customer_exists(self, request):
-        field = request.GET["field"]
-        value = request.GET["value"]
-
-        if field in [f.name for f in Contact._meta.get_fields()]:
-            contact_model = Contact
-        elif field in [f.name for f in CompanyContact._meta.get_fields()]:
-            contact_model = CompanyContact
-        elif field in [f.name for f in PersonContact._meta.get_fields()]:
-            contact_model = PersonContact
-        else:
-            return {"error": "Error! Invalid field name."}
-
-        customer = contact_model.objects.filter(**{field: value}).first()
-        if customer:
-            return {"id": customer.pk, "name": force_text(customer)}
-        else:
-            return {}
-
-    def handle_customer_details(self, request):
-        customer_id = request.GET["id"]
-        customer = Contact.objects.get(pk=customer_id)
-        companies = []
-        if isinstance(customer, PersonContact):
-            companies = sorted(customer.company_memberships.all(), key=(lambda x: force_text(x)))
-        recent_orders = customer.customer_orders.valid().order_by("-id")[:10]
-
-        order_summary = []
-        for dt in customer.customer_orders.valid().datetimes("order_date", "year"):
-            summary = customer.customer_orders.filter(order_date__year=dt.year).aggregate(
-                total=Sum("taxful_total_price_value")
-            )
-            order_summary.append(
-                {
-                    "year": dt.year,
-                    "total": format_currency(
-                        summary["total"],
-                        currency=recent_orders[0].currency,
-                        locale=get_current_babel_locale(),
-                    ),
-                }
-            )
-
-        return {
-            "customer_info": {
-                "name": customer.full_name,
-                "phone_no": customer.phone,
-                "email": customer.email,
-                "tax_number": getattr(customer, "tax_number", ""),
-                "companies": [force_text(company) for company in companies] if len(companies) else None,
-                "groups": [force_text(group) for group in customer.groups.all()],
-                "merchant_notes": customer.merchant_notes,
-            },
-            "order_summary": order_summary,
-            "recent_orders": [
-                {
-                    "order_date": get_locally_formatted_datetime(order.order_date),
-                    "total": format_money(order.taxful_total_price),
-                    "status": order.get_status_display(),
-                    "payment_status": force_text(order.payment_status.label),
-                    "shipment_status": force_text(order.shipping_status.label),
-                }
-                for order in recent_orders
-            ],
-        }
-
     def get_request_body(self, request):
         body = request.body.decode("utf-8")
         if not body:
@@ -445,12 +305,6 @@ class OrderEditView(CreateOrUpdateView):
                 "url": reverse("shuup_admin:order.detail", kwargs={"pk": order.pk}),
             }
         )
-
-    def handle_source_data(self, request):
-        return _handle_or_return_error(self._handle_source_data, request, _("Could not proceed with the order: "))
-
-    def handle_finalize(self, request):
-        return _handle_or_return_error(self._handle_finalize, request, _("Could not finalize the order: "))
 
 
 class UpdateAdminCommentView(View):

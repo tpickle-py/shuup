@@ -27,10 +27,6 @@ class ProductTypeForm(MultiLanguageModelForm):
             choices = [(a.pk, a.name) for a in self.instance.attributes.all()]
             self.fields["attributes"].initial = [pk for pk, name in choices]
 
-    def clean_attributes(self):
-        attributes = [int(a_id) for a_id in self.cleaned_data.get("attributes", [])]
-        return Attribute.objects.filter(pk__in=attributes).all()
-
     def save(self, commit=True):
         obj = super().save(commit=commit)
         obj.attributes.clear()

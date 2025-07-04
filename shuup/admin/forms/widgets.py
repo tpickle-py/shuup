@@ -11,7 +11,7 @@ from filer.models import File
 from shuup.admin.forms.quick_select import QuickAddRelatedObjectMultiSelect, QuickAddRelatedObjectSelect
 from shuup.admin.utils.forms import flatatt_filter
 from shuup.admin.utils.urls import NoModelUrl, get_model_url
-from shuup.core.models import Contact, PersonContact, Product, ProductMode, ShopProduct
+from shuup.core.models import Contact, PersonContact, Product, ProductMode
 from shuup.utils.django_compat import force_text, reverse_lazy
 
 
@@ -211,14 +211,6 @@ class ProductChoiceWidget(BasePopupChoiceWidget):
         return Product.objects.get(pk=value)
 
 
-class ShopProductChoiceWidget(BasePopupChoiceWidget):
-    browse_kind = "shop_product"
-    browse_text = _("Select Product")
-
-    def get_object(self, value):
-        return ShopProduct.objects.get(pk=value)
-
-
 class ContactChoiceWidget(BasePopupChoiceWidget):
     browse_kind = "contact"
     browse_text = _("Select Contact")
@@ -237,14 +229,6 @@ class HexColorWidget(TextInput):
         field_attrs = attrs.copy()
         field_attrs["class"] = field_attrs.get("class", "") + " hex-color-picker"
         return super().render(name, value, field_attrs)
-
-
-class CodeEditorWidget(Textarea):
-    def render(self, name, value, attrs=None, renderer=None):
-        attrs_for_textarea = attrs.copy()
-        attrs_for_textarea["id"] += "-snippet"
-        attrs_for_textarea["class"] += " code-editor-textarea"
-        return super().render(name, value, attrs_for_textarea)
 
 
 class CodeEditorWithHTMLPreview(Textarea):

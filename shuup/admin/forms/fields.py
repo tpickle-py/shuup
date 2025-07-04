@@ -139,6 +139,7 @@ class Select2MultipleMainProductField(Select2MultipleField):
 
 class WeekdaysSelectMultiple(SelectMultiple):
     def format_value(self, value):
+        # TODO: Used with WeekdayField test, but not sure if this is correct.
         if value is None and self.allow_multiple_selected:
             return []
 

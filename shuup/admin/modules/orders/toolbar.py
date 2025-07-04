@@ -66,6 +66,7 @@ class OrderDetailToolbar(Toolbar):
                 )
             )
 
+    # TODO TEST or REMOVE
     def _build_set_complete_button(self):
         self.append(
             PostActionButton(
