@@ -1,0 +1,291 @@
+{% extends "shuup/admin/base.jinja" %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1><i class="fa fa-cog"></i> {{ title }}</h1>
+                    <p class="text-muted">{% trans "Configure password security policies and middleware settings" %}</p>
+                </div>
+                <div>
+                    <a href="{% url 'shuup_admin:security.dashboard' %}" class="btn btn-secondary">
+                        <i class="fa fa-arrow-left"></i> {% trans "Back to Dashboard" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuration Instructions (if any) -->
+    {% if request.session.security_config_instructions %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h6><i class="fa fa-info-circle"></i> {% trans "Configuration Instructions" %}</h6>
+                    <p>{% trans "Please apply the following configuration changes to complete your security setup:" %}</p>
+
+                    {% for instruction in request.session.security_config_instructions %}
+                        <div class="mb-3">
+                            <h6>{{ instruction.description }}</h6>
+                            <p class="mb-1"><strong>{% trans "Location:" %}</strong> {{ instruction.location }}</p>
+                            <div class="bg-dark text-light p-2 rounded">
+                                <code>{{ instruction.code }}</code>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Current Middleware Status -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fa fa-shield"></i> {% trans "Current Security Status" %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>{% trans "Weak Password Interception" %}</h6>
+                            {% if middleware_status.weak_password_middleware.enabled %}
+                                <span class="badge badge-success">
+                                    <i class="fa fa-check"></i> {% trans "Enabled" %}
+                                </span>
+                            {% else %}
+                                <span class="badge badge-danger">
+                                    <i class="fa fa-times"></i> {% trans "Disabled" %}
+                                </span>
+                            {% endif %}
+                            <p class="small text-muted mt-1">{{ middleware_status.weak_password_middleware.class }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>{% trans "Password Detection During Login" %}</h6>
+                            {% if middleware_status.password_detection_middleware.enabled %}
+                                <span class="badge badge-success">
+                                    <i class="fa fa-check"></i> {% trans "Enabled" %}
+                                </span>
+                            {% else %}
+                                <span class="badge badge-danger">
+                                    <i class="fa fa-times"></i> {% trans "Disabled" %}
+                                </span>
+                            {% endif %}
+                            <p class="small text-muted mt-1">{{ middleware_status.password_detection_middleware.class }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Form -->
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row">
+            <!-- Middleware Configuration -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fa fa-layer-group"></i> {% trans "Middleware Configuration" %}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="form-check">
+                                {{ form.enable_weak_password_middleware }}
+                                <label class="form-check-label" for="{{ form.enable_weak_password_middleware.id_for_label }}">
+                                    {{ form.enable_weak_password_middleware.label }}
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">{{ form.enable_weak_password_middleware.help_text }}</small>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                {{ form.enable_password_detection_middleware }}
+                                <label class="form-check-label" for="{{ form.enable_password_detection_middleware.id_for_label }}">
+                                    {{ form.enable_password_detection_middleware.label }}
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">{{ form.enable_password_detection_middleware.help_text }}</small>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <small>
+                                <i class="fa fa-warning"></i>
+                                {% trans "Note: Middleware changes require server restart and manual configuration in settings.py" %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Notification Settings -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fa fa-envelope"></i> {% trans "Email Notifications" %}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="form-check">
+                                {{ form.enable_automatic_notifications }}
+                                <label class="form-check-label" for="{{ form.enable_automatic_notifications.id_for_label }}">
+                                    {{ form.enable_automatic_notifications.label }}
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">{{ form.enable_automatic_notifications.help_text }}</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.notification_frequency.id_for_label }}">{{ form.notification_frequency.label }}</label>
+                            {{ form.notification_frequency|add_class:"form-control" }}
+                            <small class="form-text text-muted">{{ form.notification_frequency.help_text }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Policy Settings -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fa fa-key"></i> {% trans "Password Policy" %}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="{{ form.minimum_password_length.id_for_label }}">{{ form.minimum_password_length.label }}</label>
+                            {{ form.minimum_password_length|add_class:"form-control" }}
+                            <small class="form-text text-muted">{{ form.minimum_password_length.help_text }}</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{% trans "Character Requirements" %}</label>
+                            <div class="form-check">
+                                {{ form.require_uppercase }}
+                                <label class="form-check-label" for="{{ form.require_uppercase.id_for_label }}">
+                                    {{ form.require_uppercase.label }}
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                {{ form.require_lowercase }}
+                                <label class="form-check-label" for="{{ form.require_lowercase.id_for_label }}">
+                                    {{ form.require_lowercase.label }}
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                {{ form.require_numbers }}
+                                <label class="form-check-label" for="{{ form.require_numbers.id_for_label }}">
+                                    {{ form.require_numbers.label }}
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                {{ form.require_special_chars }}
+                                <label class="form-check-label" for="{{ form.require_special_chars.id_for_label }}">
+                                    {{ form.require_special_chars.label }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Security Settings -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fa fa-shield-alt"></i> {% trans "Additional Security" %}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="{{ form.session_timeout_minutes.id_for_label }}">{{ form.session_timeout_minutes.label }}</label>
+                            {{ form.session_timeout_minutes|add_class:"form-control" }}
+                            <small class="form-text text-muted">{{ form.session_timeout_minutes.help_text }}</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.max_login_attempts.id_for_label }}">{{ form.max_login_attempts.label }}</label>
+                            {{ form.max_login_attempts|add_class:"form-control" }}
+                            <small class="form-text text-muted">{{ form.max_login_attempts.help_text }}</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.lockout_duration_minutes.id_for_label }}">{{ form.lockout_duration_minutes.label }}</label>
+                            {{ form.lockout_duration_minutes|add_class:"form-control" }}
+                            <small class="form-text text-muted">{{ form.lockout_duration_minutes.help_text }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Settings -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-save"></i> {% trans "Save Security Settings" %}
+                        </button>
+                        <a href="{% url 'shuup_admin:security.dashboard' %}" class="btn btn-secondary btn-lg ml-3">
+                            <i class="fa fa-times"></i> {% trans "Cancel" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Implementation Notes -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h6 class="m-0">
+                        <i class="fa fa-info-circle"></i> {% trans "Implementation Notes" %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <h6>{% trans "Middleware Configuration" %}</h6>
+                    <p>{% trans "Changes to middleware settings require manual configuration in your settings.py file and a server restart." %}</p>
+
+                    <h6>{% trans "Password Policy" %}</h6>
+                    <p>{% trans "Password policy changes apply to new passwords and password changes. Existing passwords are not automatically validated." %}</p>
+
+                    <h6>{% trans "Email Configuration" %}</h6>
+                    <p>{% trans "Email notifications require proper SMTP configuration in your Django settings." %}</p>
+
+                    <h6>{% trans "Testing" %}</h6>
+                    <p>{% trans "Always test security changes in a development environment before applying to production." %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Clear configuration instructions from session after displaying
+{% if request.session.security_config_instructions %}
+    fetch('', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: 'clear_instructions=true'
+    });
+{% endif %}
+</script>
+{% endblock %}

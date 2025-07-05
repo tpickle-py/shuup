@@ -80,7 +80,7 @@ class Command(BaseCommand):
         # Report results
         self.stdout.write("\n📊 Analysis Results:")
         self.stdout.write(f"Users with potentially weak passwords: {len(weak_password_users)}")
-        self.stdout.write(f"Percentage of users at risk: {len(weak_password_users)/queryset.count()*100:.1f}%")
+        self.stdout.write(f"Percentage of users at risk: {len(weak_password_users) / queryset.count() * 100:.1f}%")
 
         if weak_password_users:
             self.stdout.write("\n⚠️  Users requiring attention:")

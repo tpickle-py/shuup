@@ -1,0 +1,374 @@
+{% extends "shuup/admin/base.jinja" %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fa fa-shield"></i> {{ title }}</h1>
+            <p class="text-muted">{% trans "Monitor and manage password security across your platform" %}</p>
+        </div>
+    </div>
+
+    <!-- Security Metrics Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-left-primary">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                {% trans "Total Users" %}
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ metrics.total_users }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-left-{{ metrics.risk_color }}">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-{{ metrics.risk_color }} text-uppercase mb-1">
+                                {% trans "Weak Passwords" %}
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ metrics.weak_password_count }}
+                                <small class="text-muted">({{ metrics.weak_password_percentage }}%)</small>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-left-info">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                {% trans "Risk Level" %}
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <span class="badge badge-{{ metrics.risk_color }}">{{ metrics.risk_label }}</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chart-pie fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-left-success">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                {% trans "Recent Logins" %}
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ metrics.recent_logins }}
+                                <small class="text-muted">/30d</small>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-sign-in-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Row -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fa fa-bolt"></i> {% trans "Quick Actions" %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <a href="{% url 'shuup_admin:security.weak_passwords' %}" class="btn btn-warning btn-block">
+                                <i class="fa fa-list"></i> {% trans "View Weak Passwords" %}
+                            </a>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <button class="btn btn-info btn-block" id="refresh-metrics">
+                                <i class="fa fa-refresh"></i> {% trans "Refresh Metrics" %}
+                            </button>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <button class="btn btn-success btn-block" id="quick-scan">
+                                <i class="fa fa-search"></i> {% trans "Quick Scan" %}
+                            </button>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <a href="{% url 'shuup_admin:security.settings' %}" class="btn btn-secondary btn-block">
+                                <i class="fa fa-cog"></i> {% trans "Settings" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fa fa-pie-chart"></i> {% trans "User Breakdown" %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="border-right">
+                                <div class="h5 mb-0 font-weight-bold text-primary">{{ metrics.staff_users }}</div>
+                                <small class="text-muted">{% trans "Staff Users" %}</small>
+                                {% if metrics.weak_staff_count > 0 %}
+                                    <div><small class="text-danger">({{ metrics.weak_staff_count }} {% trans "at risk" %})</small></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-right">
+                                <div class="h5 mb-0 font-weight-bold text-info">{{ metrics.regular_users }}</div>
+                                <small class="text-muted">{% trans "Customers" %}</small>
+                                {% if metrics.weak_regular_count > 0 %}
+                                    <div><small class="text-danger">({{ metrics.weak_regular_count }} {% trans "at risk" %})</small></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="h5 mb-0 font-weight-bold text-success">{{ metrics.users_without_recent_login }}</div>
+                            <small class="text-muted">{% trans "Inactive" %}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Risk Assessment and Recent Actions Row -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fa fa-shield"></i> {% trans "Security Assessment" %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% if metrics.weak_password_percentage >= 30 %}
+                        <div class="alert alert-danger" role="alert">
+                            <h6 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> {% trans "Critical Risk" %}</h6>
+                            <p>{% trans "High number of users with potentially weak passwords detected. Immediate action recommended." %}</p>
+                            <hr>
+                            <p class="mb-0">
+                                <a href="{% url 'shuup_admin:security.weak_passwords' %}" class="btn btn-danger btn-sm">
+                                    {% trans "View Affected Users" %}
+                                </a>
+                            </p>
+                        </div>
+                    {% elif metrics.weak_password_percentage >= 15 %}
+                        <div class="alert alert-warning" role="alert">
+                            <h6 class="alert-heading"><i class="fa fa-warning"></i> {% trans "High Risk" %}</h6>
+                            <p>{% trans "Moderate number of users with potentially weak passwords. Consider proactive measures." %}</p>
+                            <hr>
+                            <p class="mb-0">
+                                <a href="{% url 'shuup_admin:security.weak_passwords' %}" class="btn btn-warning btn-sm">
+                                    {% trans "Review Users" %}
+                                </a>
+                            </p>
+                        </div>
+                    {% elif metrics.weak_password_percentage >= 5 %}
+                        <div class="alert alert-info" role="alert">
+                            <h6 class="alert-heading"><i class="fa fa-info-circle"></i> {% trans "Medium Risk" %}</h6>
+                            <p>{% trans "Some users with potentially weak passwords detected. Monitor and take targeted action." %}</p>
+                            <hr>
+                            <p class="mb-0">
+                                <a href="{% url 'shuup_admin:security.weak_passwords' %}" class="btn btn-info btn-sm">
+                                    {% trans "View Details" %}
+                                </a>
+                            </p>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success" role="alert">
+                            <h6 class="alert-heading"><i class="fa fa-check-circle"></i> {% trans "Low Risk" %}</h6>
+                            <p>{% trans "Excellent! Very few users with weak passwords detected. Continue monitoring regularly." %}</p>
+                        </div>
+                    {% endif %}
+
+                    <h6 class="mt-3">{% trans "Common Risk Patterns Detected:" %}</h6>
+                    <div class="row">
+                        {% for pattern in weak_password_patterns %}
+                            <div class="col-3 mb-1">
+                                <span class="badge badge-light">{{ pattern }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fa fa-history"></i> {% trans "Recent Security Actions" %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% if recent_security_actions %}
+                        <div class="list-group list-group-flush">
+                            {% for action in recent_security_actions %}
+                                <div class="list-group-item p-2">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ action.action }}</h6>
+                                        <small>{{ action.timestamp|timesince }} {% trans "ago" %}</small>
+                                    </div>
+                                    <p class="mb-1">{{ action.details }}</p>
+                                    <small class="text-muted">{% trans "by" %} {{ action.user }}</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">{% trans "No recent security actions recorded." %}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Modal -->
+<div class="modal fade" id="results-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{% trans "Security Scan Results" %}</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="scan-results"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    {% trans "Close" %}
+                </button>
+                <a href="{% url 'shuup_admin:security.weak_passwords' %}" class="btn btn-primary">
+                    {% trans "View Detailed List" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = '{{ csrf_token }}';
+
+    // Refresh metrics
+    document.getElementById('refresh-metrics').addEventListener('click', function() {
+        this.disabled = true;
+        this.innerHTML = '<i class="fa fa-spinner fa-spin"></i> {% trans "Refreshing..." %}';
+
+        fetch('', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            },
+            body: 'action=refresh_metrics'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload(); // Simple page reload to show updated metrics
+            } else {
+                alert('{% trans "Error refreshing metrics" %}');
+            }
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.innerHTML = '<i class="fa fa-refresh"></i> {% trans "Refresh Metrics" %}';
+        });
+    });
+
+    // Quick scan
+    document.getElementById('quick-scan').addEventListener('click', function() {
+        this.disabled = true;
+        this.innerHTML = '<i class="fa fa-spinner fa-spin"></i> {% trans "Scanning..." %}';
+
+        fetch('', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            },
+            body: 'action=quick_scan'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                let html = `<div class="alert alert-info">
+                    <h6><i class="fa fa-search"></i> {% trans "Scan Complete" %}</h6>
+                    <p>{% trans "Found" %} <strong>${data.count}</strong> {% trans "users with potentially weak passwords." %}</p>
+                </div>`;
+
+                if (data.weak_users.length > 0) {
+                    html += '<h6>{% trans "Users at Risk:" %}</h6><div class="list-group">';
+                    data.weak_users.slice(0, 10).forEach(user => {
+                        const userType = user.is_staff ? 'Staff' : 'Customer';
+                        const badgeClass = user.is_staff ? 'warning' : 'secondary';
+                        html += `<div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>${user.username}</strong> (${user.email})
+                            </div>
+                            <span class="badge badge-${badgeClass}">${userType}</span>
+                        </div>`;
+                    });
+                    html += '</div>';
+
+                    if (data.weak_users.length > 10) {
+                        html += `<p class="mt-2 text-muted">{% trans "And" %} ${data.weak_users.length - 10} {% trans "more users..." %}</p>`;
+                    }
+                }
+
+                document.getElementById('scan-results').innerHTML = html;
+                $('#results-modal').modal('show');
+            } else {
+                alert('{% trans "Error performing scan" %}');
+            }
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.innerHTML = '<i class="fa fa-search"></i> {% trans "Quick Scan" %}';
+        });
+    });
+});
+</script>
+{% endblock %}

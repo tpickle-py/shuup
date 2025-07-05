@@ -1,0 +1,309 @@
+{% extends "shuup/admin/base.jinja" %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1><i class="fa fa-tasks text-warning"></i> {{ title }}</h1>
+                    <p class="text-muted">{% trans "Perform security actions on multiple users simultaneously" %}</p>
+                </div>
+                <div>
+                    <a href="{% url 'shuup_admin:security.weak_passwords' %}" class="btn btn-secondary">
+                        <i class="fa fa-arrow-left"></i> {% trans "Back to User List" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fa fa-cogs"></i> {% trans "Bulk Security Actions" %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="bulk-action-form">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="{{ form.action.id_for_label }}">{{ form.action.label }}</label>
+                            {{ form.action|add_class:"form-control" }}
+                            <small class="form-text text-muted">{{ form.action.help_text }}</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.user_ids.id_for_label }}">{% trans "Selected Users" %}</label>
+                            {{ form.user_ids }}
+                            <div class="form-text text-muted">
+                                <span id="user-count">0</span> {% trans "users selected" %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                {{ form.confirm_action }}
+                                <label class="form-check-label" for="{{ form.confirm_action.id_for_label }}">
+                                    {{ form.confirm_action.label }}
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">{{ form.confirm_action.help_text }}</small>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-warning btn-lg" id="execute-action" disabled>
+                                <i class="fa fa-play"></i> {% trans "Execute Bulk Action" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Safety Information -->
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="m-0">
+                        <i class="fa fa-exclamation-triangle"></i> {% trans "Important Safety Information" %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <h6>{% trans "Before You Proceed:" %}</h6>
+                    <ul class="mb-3">
+                        <li>{% trans "Actions affect multiple users simultaneously" %}</li>
+                        <li>{% trans "Email actions require proper SMTP configuration" %}</li>
+                        <li>{% trans "Account deactivation is permanent" %}</li>
+                        <li>{% trans "Test with a small group first" %}</li>
+                    </ul>
+
+                    <h6>{% trans "Email Requirements:" %}</h6>
+                    <ul class="mb-3">
+                        <li>{% trans "Valid email addresses for all users" %}</li>
+                        <li>{% trans "Functioning SMTP server" %}</li>
+                        <li>{% trans "Proper FROM email configuration" %}</li>
+                    </ul>
+
+                    <div class="alert alert-danger">
+                        <small>
+                            <strong>{% trans "Warning:" %}</strong>
+                            {% trans "Account deactivation cannot be undone through this interface." %}
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Descriptions -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-info">
+                        <i class="fa fa-info-circle"></i> {% trans "Action Descriptions" %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="text-warning">
+                            <i class="fa fa-envelope"></i> {% trans "Send Notifications" %}
+                        </h6>
+                        <small class="text-muted">
+                            {% trans "Sends weak password alert emails with security recommendations to selected users." %}
+                        </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="text-danger">
+                            <i class="fa fa-flag"></i> {% trans "Flag for Reset" %}
+                        </h6>
+                        <small class="text-muted">
+                            {% trans "Marks users for mandatory password reset. They will be redirected on next login." %}
+                        </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="text-info">
+                            <i class="fa fa-key"></i> {% trans "Send Reset Emails" %}
+                        </h6>
+                        <small class="text-muted">
+                            {% trans "Sends password reset emails with secure reset links to selected users." %}
+                        </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="text-danger">
+                            <i class="fa fa-user-times"></i> {% trans "Deactivate Accounts" %}
+                        </h6>
+                        <small class="text-muted">
+                            {% trans "Permanently disables user accounts. Use with extreme caution." %}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Selection Instructions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h6 class="m-0">
+                        <i class="fa fa-users"></i> {% trans "How to Select Users" %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6>{% trans "From User List" %}</h6>
+                            <ol>
+                                <li>{% trans "Go to the weak password user list" %}</li>
+                                <li>{% trans "Check boxes next to users" %}</li>
+                                <li>{% trans "Click 'Bulk Actions' button" %}</li>
+                                <li>{% trans "Select action and confirm" %}</li>
+                            </ol>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>{% trans "Manual Entry" %}</h6>
+                            <ol>
+                                <li>{% trans "Get user IDs from admin interface" %}</li>
+                                <li>{% trans "Enter comma-separated IDs below" %}</li>
+                                <li>{% trans "Select desired action" %}</li>
+                                <li>{% trans "Confirm and execute" %}</li>
+                            </ol>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>{% trans "Tips" %}</h6>
+                            <ul>
+                                <li>{% trans "Start with small test groups" %}</li>
+                                <li>{% trans "Verify email configuration first" %}</li>
+                                <li>{% trans "Check user list for accuracy" %}</li>
+                                <li>{% trans "Monitor action results" %}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmation-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{% trans "Confirm Bulk Action" %}</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="confirmation-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    {% trans "Cancel" %}
+                </button>
+                <button type="button" class="btn btn-danger" id="confirm-execute">
+                    {% trans "Confirm and Execute" %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('bulk-action-form');
+    const actionSelect = document.getElementById('{{ form.action.id_for_label }}');
+    const userIdsInput = document.getElementById('{{ form.user_ids.id_for_label }}');
+    const confirmCheckbox = document.getElementById('{{ form.confirm_action.id_for_label }}');
+    const executeButton = document.getElementById('execute-action');
+    const userCountSpan = document.getElementById('user-count');
+
+    function updateUserCount() {
+        const userIds = userIdsInput.value.trim();
+        const count = userIds ? userIds.split(',').filter(id => id.trim()).length : 0;
+        userCountSpan.textContent = count;
+        return count;
+    }
+
+    function updateExecuteButton() {
+        const hasAction = actionSelect.value !== '';
+        const hasUsers = updateUserCount() > 0;
+        const isConfirmed = confirmCheckbox.checked;
+
+        executeButton.disabled = !(hasAction && hasUsers && isConfirmed);
+    }
+
+    // Event listeners
+    actionSelect.addEventListener('change', updateExecuteButton);
+    userIdsInput.addEventListener('input', updateExecuteButton);
+    confirmCheckbox.addEventListener('change', updateExecuteButton);
+
+    // Form submission with confirmation
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const action = actionSelect.value;
+        const userCount = updateUserCount();
+
+        if (!action || userCount === 0) {
+            alert('{% trans "Please select an action and provide user IDs." %}');
+            return;
+        }
+
+        let message = '';
+        let isDestructive = false;
+
+        switch(action) {
+            case 'send_notifications':
+                message = `{% trans "Send weak password notifications to" %} ${userCount} {% trans "users?" %}`;
+                break;
+            case 'flag_for_reset':
+                message = `{% trans "Flag" %} ${userCount} {% trans "users for mandatory password reset?" %}`;
+                isDestructive = true;
+                break;
+            case 'send_reset_emails':
+                message = `{% trans "Send password reset emails to" %} ${userCount} {% trans "users?" %}`;
+                break;
+            case 'deactivate_accounts':
+                message = `<div class="alert alert-danger">
+                    <strong>{% trans "DANGER:" %}</strong> {% trans "This will permanently deactivate" %} ${userCount} {% trans "user accounts!" %}
+                    <br><br>{% trans "This action cannot be undone. Are you absolutely certain?" %}
+                </div>`;
+                isDestructive = true;
+                break;
+        }
+
+        document.getElementById('confirmation-content').innerHTML = message;
+
+        const confirmButton = document.getElementById('confirm-execute');
+        confirmButton.className = isDestructive ? 'btn btn-danger' : 'btn btn-warning';
+        confirmButton.onclick = () => {
+            $('#confirmation-modal').modal('hide');
+            form.submit();
+        };
+
+        $('#confirmation-modal').modal('show');
+    });
+
+    // Initialize
+    updateExecuteButton();
+
+    // Parse URL parameters for pre-filled user IDs
+    const urlParams = new URLSearchParams(window.location.search);
+    const preselectedUsers = urlParams.get('user_ids');
+    if (preselectedUsers) {
+        userIdsInput.value = preselectedUsers;
+        updateExecuteButton();
+    }
+});
+</script>
+{% endblock %}
