@@ -12,25 +12,30 @@ Shuup documentation build configuration file
 
 import os
 import sys
+from importlib import metadata
+from pathlib import Path
 
 import django
 
+from packaging.version import Version
+
 # -- Python path ----------------------------------------------------------
 
-DOC_PATH = os.path.abspath(os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(DOC_PATH, "_ext"))
-sys.path.insert(0, os.path.join(DOC_PATH, ".."))
+DOC_PATH = Path(__file__).parent.absolute()
+sys.path.insert(0, str(DOC_PATH / "_ext"))
+sys.path.insert(0, str(DOC_PATH.parent))
 
 
 # -- Initialize Django ----------------------------------------------------
 
 
 def initialize_django():
-    os.environ["DJANGO_SETTINGS_MODULE"] = "shuup_workbench.settings"
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shuup_workbench.settings.dev")
     from django.conf import settings
 
     # Set USE_I18N=False to avoid warnings from import-time ugettext calls
-    settings.USE_I18N = False
+    if hasattr(settings, "USE_I18N"):
+        settings.USE_I18N = False
 
     django.setup()
 
@@ -42,25 +47,47 @@ initialize_django()
 
 
 def patch_for_introspection():
-    import shuup_introspection_helper
+    """
+    Apply patches for better Sphinx introspection of Django model fields.
 
-    shuup_introspection_helper.enable_patches()
+    This patches django-countries CountryField and jsonfield to prevent
+    Sphinx warnings when generating documentation for models that use these fields.
+    """
+    try:
+        import shuup_introspection_helper
+
+        shuup_introspection_helper.enable_patches()
+    except ImportError:
+        # If the introspection helper isn't available, continue without it
+        # Modern Sphinx versions may not need these patches
+        pass
 
 
-patch_for_introspection()
+# Only apply patches if we're actually using the fields that need them
+try:
+    # Check if we have the problematic dependencies
+    import django_countries.fields
+    import jsonfield.subclassing
+
+    patch_for_introspection()
+except ImportError:
+    # If the dependencies aren't available, we don't need the patches
+    pass
 
 # -- General configuration ------------------------------------------------
 
 project = "Shuup"
-copyright = "2021, Shuup Commerce Inc."
+copyright = "2012-2025, Shuup Commerce Inc."
 
 extensions = [
     "djangodocs",
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.coverage",
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",  # For Google/NumPy style docstrings
     "django_sphinx",
 ]
 
@@ -69,20 +96,64 @@ source_suffix = ".rst"
 source_encoding = "utf-8"
 master_doc = "index"
 
+# -- Version handling ---------------------------------------------------------
+
+
+def get_version() -> str:
+    """Get version string using semantic versioning best practices."""
+    try:
+        # Try to get version from installed package (preferred method)
+        version = metadata.version("shuup")
+        return version if version else "0.0.0"
+    except metadata.PackageNotFoundError:
+        pass
+
+    # Fallback to reading from pyproject.toml if package not installed
+    try:
+        import tomllib  # Python 3.11+
+    except ImportError:
+        try:
+            import tomli as tomllib  # Fallback for older Python versions
+        except ImportError:
+            # Ultimate fallback - parse pyproject.toml manually
+            import re
+
+            pyproject_path = DOC_PATH.parent / "pyproject.toml"
+            try:
+                content = pyproject_path.read_text(encoding="utf-8")
+                match = re.search(r'version\s*=\s*"([^"]+)"', content)
+                return match.group(1) if match else "0.0.0"
+            except (FileNotFoundError, OSError):
+                return "0.0.0"
+    else:
+        pyproject_path = DOC_PATH.parent / "pyproject.toml"
+        try:
+            pyproject_data = tomllib.loads(pyproject_path.read_text(encoding="utf-8"))
+            return pyproject_data["project"]["version"]
+        except (FileNotFoundError, OSError, KeyError):
+            return "0.0.0"
+
+    return "0.0.0"  # Final fallback
+
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 
-with open(os.path.join(os.path.dirname(__file__), "..", "setup.py")) as sf:
-    for line in sf:
-        if line.startswith("VERSION = "):
-            version_string = line.split("VERSION = ", 1)[1].strip()[1:-1]
-            version_suffix = "+" if ".dev" in version_string else ""
+version_string = get_version()
+try:
+    parsed_version = Version(version_string)
+except Exception:
+    # Fallback to a basic version if parsing fails
+    parsed_version = Version("0.0.0")
 
-# The short X.Y version.
-version = ".".join(version_string.split(".")[0:2]) + version_suffix
-# The full version, including alpha/beta/rc tags.
-release = ".".join(version_string.split(".")[0:3]) + version_suffix
+# The short X.Y version for display
+version = f"{parsed_version.major}.{parsed_version.minor}"
+if parsed_version.is_prerelease or parsed_version.is_devrelease:
+    version += "+"
+
+# The full version, including alpha/beta/rc tags
+release = str(parsed_version)
 
 # The language for content autogenerated by Sphinx. Refer to documentation
 # for a list of supported languages.
@@ -102,13 +173,17 @@ default_role = "obj"
 autoclass_content = "both"
 
 autodoc_member_order = "bysource"
-autodoc_default_flags = [
-    "members",
-    "undoc-members",
-    # 'special-members',
-    # 'inherited-members',
-    "show-inheritance",
-]
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+    "show-inheritance": True,
+    "inherited-members": False,
+    "special-members": "__init__",
+}
+
+# Generate autosummary stubs
+autosummary_generate = True
+autosummary_imported_members = True
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -137,19 +212,26 @@ keep_warnings = True
 todo_include_todos = True
 
 intersphinx_mapping = {
-    "python": ("http://docs.python.org/3", None),
+    "python": ("https://docs.python.org/3", None),
     "django": (
-        "http://docs.djangoproject.com/en/1.8/",
-        "http://docs.djangoproject.com/en/1.8/_objects/",
+        "https://docs.djangoproject.com/en/4.2/",
+        "https://docs.djangoproject.com/en/4.2/_objects/",
     ),
-    "djpolymorph": ("http://django-polymorphic.readthedocs.org/en/latest/", None),
+    "djpolymorph": ("https://django-polymorphic.readthedocs.io/en/latest/", None),
 }
 
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = "sphinx_shoop_theme"
+try:
+    # Try to use the custom Shuup theme
+    html_theme = "sphinx_shoop_theme"
+    html_theme_path = ["_theme"]
+except Exception:
+    # Fallback to RTD theme if custom theme fails
+    html_theme = "sphinx_rtd_theme"
+    html_theme_path = []
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -157,7 +239,7 @@ html_theme = "sphinx_shoop_theme"
 # html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = ["_theme"]
+# html_theme_path = ["_theme"]  # Now set dynamically above
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
