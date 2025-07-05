@@ -201,6 +201,29 @@ LOGIN_URL = "/login/"
 
 SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
 
+# Password validation
+# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 8,
+        },
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+    {
+        "NAME": "shuup.core.validators.StrongPasswordValidator",
+    },
+]
+
 SHUUP_PRICING_MODULE = "customer_group_pricing"
 
 SHUUP_SETUP_WIZARD_PANE_SPEC = [

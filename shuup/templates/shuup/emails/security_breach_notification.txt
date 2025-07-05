@@ -1,0 +1,65 @@
+URGENT SECURITY NOTICE - Action Required
+
+Dear {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %},
+
+This is an urgent security notification from {{ site_name }}.
+
+SECURITY CONCERN IDENTIFIED:
+We have identified that your account password likely matches patterns commonly found in data breaches or security incidents. Based on our security analysis, your password may be vulnerable to security threats.
+
+{% if is_staff %}
+ADMINISTRATOR ALERT: As an administrative user, your account security is critical to protecting the entire system and user data. Please treat this notice with highest priority.
+{% endif %}
+
+IMMEDIATE ACTION REQUIRED:
+1. Change your password immediately at {{ site_url }}
+2. Review your account for any suspicious activity
+3. Enable any available additional security features
+4. Do not use this password on any other websites
+
+WHAT HAPPENED:
+- Our security analysis identified that your password likely matches patterns associated with security vulnerabilities
+- This is based on heuristic analysis - we do not have access to your actual password
+- This does not necessarily mean your account has been accessed
+- We are taking proactive steps to protect all user accounts
+- No personal data has been confirmed as breached at this time
+
+SECURITY RECOMMENDATIONS:
+• Create a completely new, unique password
+• Use a password manager to generate and store secure passwords
+• Enable two-factor authentication if available
+• Never reuse passwords across multiple sites
+• Monitor your account for suspicious activity
+
+NEW PASSWORD REQUIREMENTS:
+• At least 8 characters long
+• Contains uppercase and lowercase letters
+• Contains numbers and special characters
+• Not similar to your username, email, or personal information
+• Not a commonly used or previously breached password
+
+WHAT WE'RE DOING:
+- Implementing enhanced password security measures
+- Monitoring all accounts for suspicious activity
+- Requiring security updates for affected accounts
+- Improving our overall security infrastructure
+
+NEED HELP?
+If you have any questions or need assistance:
+- Contact our support team at {{ support_email }}
+- Visit our security help center
+- Call our security hotline (if available)
+
+DO NOT IGNORE THIS NOTICE:
+Your account security is important to us and the entire community. Please take action immediately to protect your account and personal information.
+
+Thank you for your immediate attention to this security matter.
+
+Sincerely,
+{{ site_name }} Security Team
+
+---
+This is an automated security alert. If you believe this notice is in error or have security concerns, please contact our support team immediately at {{ support_email }}.
+
+Report Security Issues: {{ support_email }}
+Security Policy: {{ site_url }}/security-policy

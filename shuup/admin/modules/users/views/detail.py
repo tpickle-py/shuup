@@ -4,6 +4,7 @@ from django import forms
 from django.conf import settings as django_settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, load_backend, login
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.db.transaction import atomic
@@ -140,6 +141,12 @@ class BaseUserForm(forms.ModelForm):
             and not self.cleaned_data.get("email")
         ):
             raise forms.ValidationError({"email": _("Please enter an email to send a confirmation to.")})
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        if password:
+            validate_password(password, self.instance)
+        return password
 
     def save(self, commit=True):
         user = super().save(commit=False)

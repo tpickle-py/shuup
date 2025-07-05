@@ -10,6 +10,6 @@ class UserFactory(DjangoModelFactory):
 
     username = factory.Sequence(lambda n: f"user{n}")  # type: ignore
     email = factory.Sequence(lambda n: f"user{n}@example.shuup.com")  # type: ignore
-    password = factory.PostGenerationMethodCall("set_password", "test")  # type: ignore
+    password = factory.PostGenerationMethodCall("set_password", "SecureTest123!")  # type: ignore
     first_name = fuzzy.FuzzyText(length=4, prefix="First Name ")
     last_name = fuzzy.FuzzyText(length=4, prefix="Last Name ")

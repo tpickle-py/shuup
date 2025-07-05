@@ -150,7 +150,7 @@ def initialize_admin_browser_test(
     live_server,
     settings,
     username="admin",
-    password="password",
+    password="AdminTest123!",
     onboarding=False,
     language="en",
     shop=None,

@@ -2,6 +2,7 @@ from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 from django.http.response import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, UpdateView
@@ -45,6 +46,9 @@ class PasswordChangeForm(forms.Form):
                     self.error_messages["password_mismatch"],
                     code="password_mismatch",
                 )
+        # Validate password strength
+        if password2:
+            validate_password(password2, self.target_user)
         return password2
 
     def clean_old_password(self):

@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.db.transaction import atomic
 from django.utils.translation import gettext_lazy as _
 from registration.forms import RegistrationForm
@@ -16,6 +18,21 @@ from shuup.utils.importing import cached_load
 class UserCreationForm(BaseUserCreationForm):
     class Meta(BaseUserCreationForm.Meta):
         model = get_user_model()
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            raise ValidationError(
+                self.error_messages["password_mismatch"],
+                code="password_mismatch",
+            )
+
+        if password2:
+            validate_password(password2, self.instance)
+
+        return password2
 
 
 class CompanyForm(TaxNumberCleanMixin, forms.ModelForm):
@@ -66,6 +83,12 @@ class PersonRegistrationForm(RegistrationForm):
             provider = provider_cls()
             for definition in provider.get_fields(request=self.request):
                 self.fields[definition.name] = definition.field
+
+    def clean_password1(self):
+        password1 = self.cleaned_data.get("password1")
+        if password1:
+            validate_password(password1, self.instance)
+        return password1
 
     def save(self, commit=True, *args, **kwargs):
         with atomic():

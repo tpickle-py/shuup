@@ -6,7 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 import pytest
 
-REGULAR_USER_PASSWORD = "password"
+REGULAR_USER_PASSWORD = "TestUser123!"
 REGULAR_USER_USERNAME = "regular-joe"
 REGULAR_USER_EMAIL = "regular@shuup.local"
 

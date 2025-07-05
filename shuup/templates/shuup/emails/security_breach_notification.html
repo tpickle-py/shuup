@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URGENT: Security Notice - Action Required</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { background: #dc3545; color: white; padding: 20px; margin: -30px -30px 30px -30px; border-radius: 8px 8px 0 0; text-align: center; }
+        .urgent-icon { font-size: 48px; margin-bottom: 10px; }
+        .urgent-alert { background: #f8d7da; border: 2px solid #dc3545; padding: 20px; border-radius: 5px; margin: 20px 0; text-align: center; }
+        .action-required { background: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .security-steps { background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .security-steps ol { margin: 10px 0; padding-left: 20px; }
+        .security-steps li { margin: 8px 0; font-weight: bold; }
+        .requirements { background: #e2e3e5; border: 1px solid #d6d8db; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .requirements ul { margin: 10px 0; padding-left: 20px; }
+        .requirements li { margin: 5px 0; }
+        .action-button { display: inline-block; background: #dc3545; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; font-size: 16px; }
+        .action-button:hover { background: #c82333; color: white; text-decoration: none; }
+        .staff-alert { background: #d1ecf1; border: 2px solid #bee5eb; padding: 20px; border-radius: 5px; margin: 20px 0; }
+        .contact-info { background: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; }
+        .do-not-ignore { background: #f8d7da; border: 2px solid #dc3545; padding: 15px; border-radius: 5px; margin: 20px 0; font-weight: bold; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="urgent-icon">🚨</div>
+            <h1>URGENT SECURITY NOTICE</h1>
+            <h2>Action Required</h2>
+        </div>
+
+        <p>Dear {% if user.first_name %}<strong>{{ user.first_name }}</strong>{% else %}<strong>{{ user.username }}</strong>{% endif %},</p>
+
+        <div class="urgent-alert">
+            <strong>🚨 SECURITY CONCERN IDENTIFIED</strong><br>
+            This is an urgent security notification from <strong>{{ site_name }}</strong>.
+        </div>
+
+        <p>We have identified that your account password <strong>likely matches patterns</strong> commonly found in data breaches or security incidents. Based on our security analysis, your password may be vulnerable to security threats.</p>
+
+        {% if is_staff %}
+        <div class="staff-alert">
+            <strong>👨‍💼 ADMINISTRATOR ALERT:</strong> As an administrative user, your account security is critical to protecting the entire system and user data. Please treat this notice with <strong>highest priority</strong>.
+        </div>
+        {% endif %}
+
+        <div class="action-required">
+            <h3>⚡ IMMEDIATE ACTION REQUIRED:</h3>
+            <div class="security-steps">
+                <ol>
+                    <li>Change your password immediately</li>
+                    <li>Review your account for any suspicious activity</li>
+                    <li>Enable any available additional security features</li>
+                    <li>Do not use this password on any other websites</li>
+                </ol>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="{{ site_url }}" class="action-button">
+                🔐 Change Password Now
+            </a>
+        </div>
+
+        <h3>🔍 What Happened:</h3>
+        <ul>
+            <li>Our security analysis identified that your password <strong>likely matches patterns</strong> associated with security vulnerabilities</li>
+            <li>This is based on heuristic analysis - we do not have access to your actual password</li>
+            <li>This does not necessarily mean your account has been accessed</li>
+            <li>We are taking proactive steps to protect all user accounts</li>
+            <li>No personal data has been confirmed as breached at this time</li>
+        </ul>
+
+        <h3>🛡️ Security Recommendations:</h3>
+        <ul>
+            <li><strong>Create a completely new, unique password</strong></li>
+            <li>Use a password manager to generate and store secure passwords</li>
+            <li>Enable two-factor authentication if available</li>
+            <li>Never reuse passwords across multiple sites</li>
+            <li>Monitor your account for suspicious activity</li>
+        </ul>
+
+        <div class="requirements">
+            <h3>🎯 New Password Requirements:</h3>
+            <ul>
+                <li>✅ At least 8 characters long</li>
+                <li>✅ Contains uppercase and lowercase letters</li>
+                <li>✅ Contains numbers and special characters</li>
+                <li>✅ Not similar to your username, email, or personal information</li>
+                <li>✅ Not a commonly used or previously breached password</li>
+            </ul>
+        </div>
+
+        <h3>🔧 What We're Doing:</h3>
+        <ul>
+            <li>Implementing enhanced password security measures</li>
+            <li>Monitoring all accounts for suspicious activity</li>
+            <li>Requiring security updates for affected accounts</li>
+            <li>Improving our overall security infrastructure</li>
+        </ul>
+
+        <div class="contact-info">
+            <h3>📞 Need Help?</h3>
+            <p>If you have any questions or need assistance:</p>
+            <ul>
+                <li>Contact our support team at <strong>{{ support_email }}</strong></li>
+                <li>Visit our security help center</li>
+                <li>Call our security hotline (if available)</li>
+            </ul>
+        </div>
+
+        <div class="do-not-ignore">
+            ⚠️ DO NOT IGNORE THIS NOTICE<br>
+            Your account security is important to us and the entire community.<br>
+            Please take action immediately to protect your account and personal information.
+        </div>
+
+        <p>Thank you for your immediate attention to this security matter.</p>
+
+        <p><strong>Sincerely,<br>{{ site_name }} Security Team</strong></p>
+
+        <div class="footer">
+            This is an automated security alert. If you believe this notice is in error or have security concerns, please contact our support team immediately at {{ support_email }}.<br><br>
+            <strong>Report Security Issues:</strong> {{ support_email }}<br>
+            <strong>Security Policy:</strong> {{ site_url }}/security-policy
+        </div>
+    </div>
+</body>
+</html>
