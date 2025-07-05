@@ -56,8 +56,8 @@ def test_registration(django_user_model, client, requiring_activation):
             data={
                 "username": username,
                 "email": email,
-                "password1": "password",
-                "password2": "password",
+                "password1": "StrongTestPass123!",  # Use strong password to pass complexity validation
+                "password2": "StrongTestPass123!",  # Use strong password to pass complexity validation
             },
         )
         user = django_user_model.objects.get(username=username)
@@ -88,8 +88,8 @@ def test_registration_2(django_user_model, client, requiring_activation):
             data={
                 "username": username,
                 "email": email,
-                "password1": "password",
-                "password2": "password",
+                "password1": "StrongTestPass123!",  # Use strong password to pass complexity validation
+                "password2": "StrongTestPass123!",  # Use strong password to pass complexity validation
                 "next": reverse("shuup:checkout"),
             },
         )
@@ -219,8 +219,8 @@ def test_user_will_be_redirected_to_user_account_page_after_activation(client, r
             data={
                 "username": username,
                 "email": email,
-                "password1": "password",
-                "password2": "password",
+                "password1": "StrongTestPass123!",  # Use strong password to pass complexity validation
+                "password2": "StrongTestPass123!",  # Use strong password to pass complexity validation
             },
             follow=True,
         )
@@ -367,8 +367,8 @@ def test_company_registration(
                 "contact_person-email": email,
                 "contact_person-phone": "123",
                 "user_account-username": username,
-                "user_account-password1": "password",
-                "user_account-password2": "password",
+                "user_account-password1": "StrongTestPass123!",  # Use strong password to pass complexity validation
+                "user_account-password2": "StrongTestPass123!",  # Use strong password to pass complexity validation
             },
         )
         user = django_user_model.objects.get(username=username)
@@ -643,8 +643,8 @@ def test_provider_provides_definitions(rf, admin_user):
                 "contact_person-last_name": "last",
                 "contact_person-first_name": "first",
                 "contact_person-email": "test@example.com",
-                "user_account-password1": "asdf123",
-                "user_account-password2": "asdf123",
+                "user_account-password1": "StrongTestPass123!",  # Use strong password to pass complexity validation
+                "user_account-password2": "StrongTestPass123!",  # Use strong password to pass complexity validation
                 "user_account-username": current_username,
             }
             form_group = CompanyRegistrationForm(request=request, data=payload)
@@ -728,8 +728,8 @@ def test_account_reactivation_mail(client):
         data={
             "username": username,
             "email": email,
-            "password1": "password",
-            "password2": "password",
+            "password1": "StrongTestPass123!",  # Use strong password to pass complexity validation
+            "password2": "StrongTestPass123!",  # Use strong password to pass complexity validation
         },
         follow=True,
     )

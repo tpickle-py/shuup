@@ -55,6 +55,7 @@ INSTALLED_APPS = add_enabled_addons(
         "shuup.campaigns",
         "shuup.simple_supplier",
         "shuup.order_printouts",
+        "shuup.testing",
         "shuup.utils",
         "shuup.xtheme",
         "shuup.reports",

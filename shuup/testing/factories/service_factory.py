@@ -17,7 +17,9 @@ def get_custom_payment_processor():
 
 
 def get_payment_processor_with_checkout_phase():
-    raise NotImplementedError("get_payment_processor_with_checkout_phase requires PaymentWithCheckoutPhase model.")
+    from shuup.testing.models import PaymentWithCheckoutPhase
+
+    return _get_service_provider(PaymentWithCheckoutPhase)
 
 
 def get_custom_carrier():
