@@ -33,7 +33,7 @@ def test_reset_admin_user_password(client):
     url = email_content[email_content.find("http") :]
     _, _, _, _, _, uid, token, _ = url.split("/")
 
-    new_password = "new_pass"
+    new_password = "NewComplexPass123!"  # Use strong password to pass complexity validation
     response = client.post(
         reverse("shuup_admin:recover_password", kwargs=dict(uidb64=uid, token=token)),
         data={"new_password1": new_password, "new_password2": new_password},
@@ -88,7 +88,7 @@ def test_reset_admin_user_password_errors(client):
     _, _, _, _, _, uid, token, _ = url.split("/")
 
     # invalid token
-    new_password = "new_pass"
+    new_password = "NewComplexPass123!"  # Use strong password to pass complexity validation
     response = client.post(
         reverse("shuup_admin:recover_password", kwargs=dict(uidb64=uid, token="invalid")),
         data={"new_password1": new_password, "new_password2": new_password},
