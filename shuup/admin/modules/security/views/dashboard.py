@@ -121,7 +121,7 @@ class SecurityDashboardView(TemplateView):
             recent_logins = active_users.filter(last_login__gte=thirty_days_ago).count()
 
             # Calculate risk assessment
-            risk_data = self._calculate_risk_level(weak_password_metrics["percentage"])
+            risk_data = self._calculate_risk_level(weak_password_metrics["weak_password_percentage"])
 
             return {
                 "total_users": total_users,
