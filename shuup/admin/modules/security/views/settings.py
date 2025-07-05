@@ -21,7 +21,7 @@ class SecuritySettingsView(FormView):
     Only accessible to staff users with appropriate permissions.
     """
 
-    template_name = "shuup/admin/security/settings.jinja"
+    template_name = "shuup/admin/security/settings.html"
     form_class = SecuritySettingsForm
 
     def dispatch(self, request, *args, **kwargs):
@@ -165,7 +165,7 @@ class QuickActionView(FormView):
     Quick action view for common security tasks.
     """
 
-    template_name = "shuup/admin/security/quick_action.jinja"
+    template_name = "shuup/admin/security/quick_action.html"
     form_class = QuickActionForm
 
     def dispatch(self, request, *args, **kwargs):

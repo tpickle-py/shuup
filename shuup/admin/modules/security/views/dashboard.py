@@ -24,7 +24,7 @@ class SecurityDashboardView(TemplateView):
     Only accessible to admin staff.
     """
 
-    template_name = "shuup/admin/security/dashboard.jinja"
+    template_name = "shuup/admin/security/dashboard.html"
     cache_timeout = 900  # 15 minutes
 
     def dispatch(self, request, *args, **kwargs):

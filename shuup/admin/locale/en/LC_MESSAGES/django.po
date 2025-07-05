@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 03:51+0000\n"
+"POT-Creation-Date: 2025-07-05 11:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en <LL@li.org>\n"
@@ -18,6 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "Generated-By: Babel 2.1.1\n"
+
+msgid "_Base_"
+msgstr ""
 
 msgid "Home"
 msgstr ""
@@ -553,17 +556,16 @@ msgstr ""
 msgid "Folder can't be renamed to {}."
 msgstr ""
 
-msgid ""
-"Can't rename this folder, either you don't have permssion to do it or it's a "
-"shared folder between more then one shop or it has a owner"
+msgid "Can't rename this folder - insufficient permissions or shared folder"
+msgstr ""
+
+msgid "Folder was deleted."
 msgstr ""
 
 msgid "This folder is protected and cannot be deleted."
 msgstr ""
 
-msgid ""
-"Can't delete this folder, either you don't have permssion to do it or it's a "
-"shared folder between more then one shop"
+msgid "Can't delete this folder - insufficient permissions or shared folder"
 msgstr ""
 
 msgid "File was renamed."
@@ -799,12 +801,6 @@ msgstr ""
 
 #, python-format
 msgid "Order `%(identifier)s` created."
-msgstr ""
-
-msgid "Could not proceed with the order: "
-msgstr ""
-
-msgid "Could not finalize the order: "
 msgstr ""
 
 msgid "Order"
@@ -1077,21 +1073,12 @@ msgstr ""
 msgid "Product type"
 msgstr ""
 
-msgid "Given value is already in use, please use unique SKU and try again."
-msgstr ""
-
 msgid ""
 "Number of units that can be purchased after the product is out of stock. Set "
 "to blank for product to be purchasable without limits."
 msgstr ""
 
 msgid "Select a category"
-msgstr ""
-
-msgid "Minimum Purchase Quantity must be greater than 0."
-msgstr ""
-
-msgid "Backorder maximum must be greater than or equal to 0."
 msgstr ""
 
 #, python-format
@@ -1132,6 +1119,21 @@ msgstr ""
 msgid "Edit products"
 msgstr ""
 
+msgid "Quantity must not be zero."
+msgstr ""
+
+msgid "Quantity must be a positive number."
+msgstr ""
+
+msgid "Purchase multiple must be zero or a positive number."
+msgstr ""
+
+msgid "Minimum value cannot be greater than maximum value."
+msgstr ""
+
+msgid "Date must be in the future."
+msgstr ""
+
 #, python-brace-format
 msgid "{copied_shop_product.product} was successfully copied"
 msgstr ""
@@ -1156,8 +1158,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#, python-format
-msgid "Edit Media: %s"
+msgid "Edit Media: {context.get('product') or self.get_object()}"
 msgstr ""
 
 msgid "Changes were saved."
@@ -1288,6 +1289,965 @@ msgstr ""
 msgid "Allowed decimals"
 msgstr ""
 
+msgid "Security"
+msgstr ""
+
+msgid "Security Dashboard"
+msgstr ""
+
+msgid "Password Security"
+msgstr ""
+
+msgid ""
+"Monitor and manage password security across your platform. Identify users "
+"with weak passwords and take proactive security measures."
+msgstr ""
+
+msgid "Send weak password notifications"
+msgstr ""
+
+msgid "Flag for mandatory password reset"
+msgstr ""
+
+msgid "Send password reset emails"
+msgstr ""
+
+msgid "Deactivate accounts (CAUTION)"
+msgstr ""
+
+msgid "Action"
+msgstr ""
+
+msgid "Select the action to perform on selected users."
+msgstr ""
+
+msgid "Comma-separated list of user IDs"
+msgstr ""
+
+msgid "I understand the consequences of this action"
+msgstr ""
+
+msgid "Please confirm you understand this action affects multiple users."
+msgstr ""
+
+msgid "No users selected."
+msgstr ""
+
+msgid "Invalid user ID format."
+msgstr ""
+
+msgid "No valid user IDs provided."
+msgstr ""
+
+msgid "Some users no longer exist or are inactive. Please refresh the list."
+msgstr ""
+
+msgid "Enable weak password interception"
+msgstr ""
+
+msgid "Intercept users with weak passwords and force password reset."
+msgstr ""
+
+msgid "Enable password detection during login"
+msgstr ""
+
+msgid "Detect weak passwords when users log in."
+msgstr ""
+
+msgid "Enable automatic notifications"
+msgstr ""
+
+msgid "Automatically send notifications to users with weak passwords."
+msgstr ""
+
+msgid "Daily"
+msgstr ""
+
+msgid "Weekly"
+msgstr ""
+
+msgid "Monthly"
+msgstr ""
+
+msgid "Notification frequency"
+msgstr ""
+
+msgid "How often to send notifications to users with weak passwords."
+msgstr ""
+
+msgid "Minimum password length"
+msgstr ""
+
+msgid "Minimum number of characters required for passwords."
+msgstr ""
+
+msgid "Require uppercase letters"
+msgstr ""
+
+msgid "Passwords must contain at least one uppercase letter."
+msgstr ""
+
+msgid "Require lowercase letters"
+msgstr ""
+
+msgid "Passwords must contain at least one lowercase letter."
+msgstr ""
+
+msgid "Require numbers"
+msgstr ""
+
+msgid "Passwords must contain at least one number."
+msgstr ""
+
+msgid "Require special characters"
+msgstr ""
+
+msgid "Passwords must contain at least one special character."
+msgstr ""
+
+msgid "Session timeout (minutes)"
+msgstr ""
+
+msgid "Automatically log out inactive users after this time."
+msgstr ""
+
+msgid "Maximum login attempts"
+msgstr ""
+
+msgid "Number of failed login attempts before temporary lockout."
+msgstr ""
+
+msgid "Lockout duration (minutes)"
+msgstr ""
+
+msgid "How long to lock accounts after failed login attempts."
+msgstr ""
+
+msgid "Scan for weak passwords"
+msgstr ""
+
+msgid "Send security reminders"
+msgstr ""
+
+msgid "Generate security report"
+msgstr ""
+
+msgid "Quick Action"
+msgstr ""
+
+msgid "All users"
+msgstr ""
+
+msgid "Staff users only"
+msgstr ""
+
+msgid "Customers only"
+msgstr ""
+
+msgid "Target users"
+msgstr ""
+
+msgid "Send weak password notification"
+msgstr ""
+
+msgid "Send password reset email"
+msgstr ""
+
+msgid "Clear password reset flag"
+msgstr ""
+
+msgid "Include security tips"
+msgstr ""
+
+msgid "Include password security recommendations in notifications."
+msgstr ""
+
+msgid "Custom message"
+msgstr ""
+
+msgid "Optional custom message to include in notifications."
+msgstr ""
+
+msgid "Perform security actions on multiple users simultaneously"
+msgstr ""
+
+msgid "Back to User List"
+msgstr ""
+
+msgid "Bulk Security Actions"
+msgstr ""
+
+msgid "Selected Users"
+msgstr ""
+
+msgid "users selected"
+msgstr ""
+
+msgid "Execute Bulk Action"
+msgstr ""
+
+msgid "Important Safety Information"
+msgstr ""
+
+msgid "Before You Proceed:"
+msgstr ""
+
+msgid "Actions affect multiple users simultaneously"
+msgstr ""
+
+msgid "Email actions require proper SMTP configuration"
+msgstr ""
+
+msgid "Account deactivation is permanent"
+msgstr ""
+
+msgid "Test with a small group first"
+msgstr ""
+
+msgid "Email Requirements:"
+msgstr ""
+
+msgid "Valid email addresses for all users"
+msgstr ""
+
+msgid "Functioning SMTP server"
+msgstr ""
+
+msgid "Proper FROM email configuration"
+msgstr ""
+
+msgid "Warning:"
+msgstr ""
+
+msgid "Account deactivation cannot be undone through this interface."
+msgstr ""
+
+msgid "Action Descriptions"
+msgstr ""
+
+msgid "Send Notifications"
+msgstr ""
+
+msgid ""
+"Sends weak password alert emails with security recommendations to selected "
+"users."
+msgstr ""
+
+msgid "Flag for Reset"
+msgstr ""
+
+msgid ""
+"Marks users for mandatory password reset. They will be redirected on next "
+"login."
+msgstr ""
+
+msgid "Send Reset Emails"
+msgstr ""
+
+msgid "Sends password reset emails with secure reset links to selected users."
+msgstr ""
+
+msgid "Deactivate Accounts"
+msgstr ""
+
+msgid "Permanently disables user accounts. Use with extreme caution."
+msgstr ""
+
+msgid "How to Select Users"
+msgstr ""
+
+msgid "From User List"
+msgstr ""
+
+msgid "Go to the weak password user list"
+msgstr ""
+
+msgid "Check boxes next to users"
+msgstr ""
+
+msgid "Click 'Bulk Actions' button"
+msgstr ""
+
+msgid "Select action and confirm"
+msgstr ""
+
+msgid "Manual Entry"
+msgstr ""
+
+msgid "Get user IDs from admin interface"
+msgstr ""
+
+msgid "Enter comma-separated IDs below"
+msgstr ""
+
+msgid "Select desired action"
+msgstr ""
+
+msgid "Confirm and execute"
+msgstr ""
+
+msgid "Tips"
+msgstr ""
+
+msgid "Start with small test groups"
+msgstr ""
+
+msgid "Verify email configuration first"
+msgstr ""
+
+msgid "Check user list for accuracy"
+msgstr ""
+
+msgid "Monitor action results"
+msgstr ""
+
+msgid "Confirm Bulk Action"
+msgstr ""
+
+msgid "Confirm and Execute"
+msgstr ""
+
+msgid "Please select an action and provide user IDs."
+msgstr ""
+
+msgid "Send weak password notifications to"
+msgstr ""
+
+msgid "users?"
+msgstr ""
+
+msgid "Flag"
+msgstr ""
+
+msgid "users for mandatory password reset?"
+msgstr ""
+
+msgid "Send password reset emails to"
+msgstr ""
+
+msgid "DANGER:"
+msgstr ""
+
+msgid "This will permanently deactivate"
+msgstr ""
+
+msgid "user accounts!"
+msgstr ""
+
+msgid "This action cannot be undone. Are you absolutely certain?"
+msgstr ""
+
+msgid "Monitor and manage password security across your platform"
+msgstr ""
+
+msgid "Total Users"
+msgstr ""
+
+msgid "Weak Passwords"
+msgstr ""
+
+msgid "Risk Level"
+msgstr ""
+
+msgid "Recent Logins"
+msgstr ""
+
+msgid "Quick Actions"
+msgstr ""
+
+msgid "View Weak Passwords"
+msgstr ""
+
+msgid "Refresh Metrics"
+msgstr ""
+
+msgid "Quick Scan"
+msgstr ""
+
+msgid "User Breakdown"
+msgstr ""
+
+msgid "Staff Users"
+msgstr ""
+
+msgid "at risk"
+msgstr ""
+
+msgid "Customers"
+msgstr ""
+
+msgid "Security Assessment"
+msgstr ""
+
+msgid "Critical Risk"
+msgstr ""
+
+msgid ""
+"High number of users with potentially weak passwords detected. Immediate "
+"action recommended."
+msgstr ""
+
+msgid "View Affected Users"
+msgstr ""
+
+msgid "High Risk"
+msgstr ""
+
+msgid ""
+"Moderate number of users with potentially weak passwords. Consider proactive "
+"measures."
+msgstr ""
+
+msgid "Review Users"
+msgstr ""
+
+msgid "Medium Risk"
+msgstr ""
+
+msgid ""
+"Some users with potentially weak passwords detected. Monitor and take "
+"targeted action."
+msgstr ""
+
+msgid "View Details"
+msgstr ""
+
+msgid "Low Risk"
+msgstr ""
+
+msgid ""
+"Excellent! Very few users with weak passwords detected. Continue monitoring "
+"regularly."
+msgstr ""
+
+msgid "Common Risk Patterns Detected:"
+msgstr ""
+
+msgid "Recent Security Actions"
+msgstr ""
+
+msgid "ago"
+msgstr ""
+
+msgid "by"
+msgstr ""
+
+msgid "No recent security actions recorded."
+msgstr ""
+
+msgid "Security Scan Results"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "View Detailed List"
+msgstr ""
+
+msgid "Refreshing..."
+msgstr ""
+
+msgid "Error refreshing metrics"
+msgstr ""
+
+msgid "Scanning..."
+msgstr ""
+
+msgid "Scan Complete"
+msgstr ""
+
+msgid "Found"
+msgstr ""
+
+msgid "users with potentially weak passwords."
+msgstr ""
+
+msgid "Users at Risk:"
+msgstr ""
+
+msgid "And"
+msgstr ""
+
+msgid "more users..."
+msgstr ""
+
+msgid "Error performing scan"
+msgstr ""
+
+msgid "Configure password security policies and middleware settings"
+msgstr ""
+
+msgid "Back to Dashboard"
+msgstr ""
+
+msgid "Configuration Instructions"
+msgstr ""
+
+msgid ""
+"Please apply the following configuration changes to complete your security "
+"setup:"
+msgstr ""
+
+msgid "Location:"
+msgstr ""
+
+msgid "Current Security Status"
+msgstr ""
+
+msgid "Weak Password Interception"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Password Detection During Login"
+msgstr ""
+
+msgid "Middleware Configuration"
+msgstr ""
+
+msgid ""
+"Note: Middleware changes require server restart and manual configuration in "
+"settings.py"
+msgstr ""
+
+msgid "Email Notifications"
+msgstr ""
+
+msgid "Password Policy"
+msgstr ""
+
+msgid "Character Requirements"
+msgstr ""
+
+msgid "Additional Security"
+msgstr ""
+
+msgid "Save Security Settings"
+msgstr ""
+
+msgid "Implementation Notes"
+msgstr ""
+
+msgid ""
+"Changes to middleware settings require manual configuration in your settings."
+"py file and a server restart."
+msgstr ""
+
+msgid ""
+"Password policy changes apply to new passwords and password changes. "
+"Existing passwords are not automatically validated."
+msgstr ""
+
+msgid "Email Configuration"
+msgstr ""
+
+msgid ""
+"Email notifications require proper SMTP configuration in your Django "
+"settings."
+msgstr ""
+
+msgid "Testing"
+msgstr ""
+
+msgid ""
+"Always test security changes in a development environment before applying to "
+"production."
+msgstr ""
+
+msgid "Detailed security assessment and risk mitigation options"
+msgstr ""
+
+msgid "Back to List"
+msgstr ""
+
+msgid "User Information"
+msgstr ""
+
+msgid "Username:"
+msgstr ""
+
+msgid "Email:"
+msgstr ""
+
+msgid "Name:"
+msgstr ""
+
+msgid "Account Type:"
+msgstr ""
+
+msgid "Status:"
+msgstr ""
+
+msgid "Joined:"
+msgstr ""
+
+msgid "Last Login:"
+msgstr ""
+
+msgid "Never"
+msgstr ""
+
+msgid "Security Risk Analysis"
+msgstr ""
+
+msgid "Pattern Matches Detected"
+msgstr ""
+
+msgid "This user's attributes match the following weak password patterns:"
+msgstr ""
+
+msgid "Heuristic Analysis"
+msgstr ""
+
+msgid ""
+"This user was flagged through general heuristic analysis. No specific "
+"pattern matches were found."
+msgstr ""
+
+msgid "Analysis Details"
+msgstr ""
+
+msgid "Email prefix:"
+msgstr ""
+
+msgid "First name:"
+msgstr ""
+
+msgid "Last name:"
+msgstr ""
+
+msgid ""
+"Analysis is based on comparing user attributes against known weak password "
+"patterns. This does not mean we know the actual password."
+msgstr ""
+
+msgid "Security Recommendations"
+msgstr ""
+
+msgid "Recommended Action:"
+msgstr ""
+
+msgid "Available Actions"
+msgstr ""
+
+msgid "Send weak password notification to this user?"
+msgstr ""
+
+msgid "Send Notification"
+msgstr ""
+
+msgid "Send weak password alert email with security recommendations"
+msgstr ""
+
+msgid "Send password reset email to this user?"
+msgstr ""
+
+msgid "Send Reset Email"
+msgstr ""
+
+msgid "Send password reset email with secure reset link"
+msgstr ""
+
+msgid ""
+"Flag this user for mandatory password reset? They will be redirected on next "
+"login."
+msgstr ""
+
+msgid "Force password reset on next login (clears sessions)"
+msgstr ""
+
+msgid "Action Information"
+msgstr ""
+
+msgid "Flagging for reset will clear all user sessions"
+msgstr ""
+
+msgid "Users can still log in until they reset their password"
+msgstr ""
+
+msgid "All actions are logged for audit purposes"
+msgstr ""
+
+msgid "Weak Password Management"
+msgstr ""
+
+msgid "Users with potentially weak passwords requiring attention"
+msgstr ""
+
+msgid "Bulk Actions"
+msgstr ""
+
+msgid ""
+"Select users below and choose an action to perform on multiple users at once."
+msgstr ""
+
+msgid "Select an action..."
+msgstr ""
+
+msgid "Execute Action"
+msgstr ""
+
+msgid "Selected:"
+msgstr ""
+
+msgid "users"
+msgstr ""
+
+msgid "Important"
+msgstr ""
+
+msgid "Always test with a small group first"
+msgstr ""
+
+msgid "Users with Weak Passwords"
+msgstr ""
+
+msgid "Select All"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Last Login"
+msgstr ""
+
+msgid "Risk Patterns"
+msgstr ""
+
+msgid "more"
+msgstr ""
+
+msgid "Heuristic match"
+msgstr ""
+
+msgid "No Weak Passwords Detected!"
+msgstr ""
+
+msgid ""
+"Excellent! No users with obviously weak passwords were found during the "
+"analysis."
+msgstr ""
+
+msgid ""
+"Note: This is based on heuristic analysis. Regular security audits are still "
+"recommended."
+msgstr ""
+
+msgid "Return to Dashboard"
+msgstr ""
+
+msgid "Confirm Action"
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+msgid "Please select users and an action."
+msgstr ""
+
+msgid "WARNING:"
+msgstr ""
+
+msgid "This action cannot be undone. Are you absolutely sure?"
+msgstr ""
+
+msgid "Individual notification functionality would be implemented here"
+msgstr ""
+
+msgid "Individual flag for reset functionality would be implemented here"
+msgstr ""
+
+msgid "You must be logged in to access the security dashboard."
+msgstr ""
+
+msgid "Access denied. Admin privileges required."
+msgstr ""
+
+#, python-brace-format
+msgid "{e} - Error loading security dashboard data. Please try again later."
+msgstr ""
+
+msgid "Error loading dashboard data. Please try again."
+msgstr ""
+
+#, python-brace-format
+msgid "{e} - Error calculating security metrics. Please try again later."
+msgstr ""
+
+msgid "Critical"
+msgstr ""
+
+msgid "High"
+msgstr ""
+
+msgid "Medium"
+msgstr ""
+
+msgid "Low"
+msgstr ""
+
+msgid "Unknown"
+msgstr ""
+
+msgid "Invalid action."
+msgstr ""
+
+msgid "Security metrics refreshed successfully."
+msgstr ""
+
+msgid "Security scan completed."
+msgstr ""
+
+#, python-brace-format
+msgid "{e} - Error during quick security scan. Please try again later."
+msgstr ""
+
+msgid "Error during security scan. Please try again."
+msgstr ""
+
+msgid "Access denied. Security management privileges required."
+msgstr ""
+
+msgid "Security Settings"
+msgstr ""
+
+msgid ""
+"Security settings updated successfully. Please review the configuration "
+"instructions below."
+msgstr ""
+
+msgid "Add weak password interception middleware"
+msgstr ""
+
+msgid "Add to MIDDLEWARE in settings.py"
+msgstr ""
+
+msgid "Add password detection middleware"
+msgstr ""
+
+msgid "Add weak password detection backend"
+msgstr ""
+
+msgid "Add to AUTHENTICATION_BACKENDS in settings.py"
+msgstr ""
+
+msgid "Unknown action selected."
+msgstr ""
+
+#, python-format
+msgid ""
+"Scan completed. Found %d users with potentially weak passwords out of %d "
+"total users."
+msgstr ""
+
+msgid "Security reminders sent successfully."
+msgstr ""
+
+msgid "Security report generated successfully."
+msgstr ""
+
+msgid "You must be logged in to access this page."
+msgstr ""
+
+msgid "Your account is inactive. Please contact support."
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "First Name"
+msgstr ""
+
+msgid "Last Name"
+msgstr ""
+
+#, python-format
+msgid "Security Risk Details: %s"
+msgstr ""
+
+msgid "Administrator Account"
+msgstr ""
+
+msgid ""
+"This is an administrative account. Password security is critical for system "
+"protection."
+msgstr ""
+
+msgid "Immediate password reset required"
+msgstr ""
+
+msgid "Never Logged In"
+msgstr ""
+
+msgid "User has never logged in. Consider account verification."
+msgstr ""
+
+msgid "Verify account status and send welcome email"
+msgstr ""
+
+msgid "Password Policy Enforcement"
+msgstr ""
+
+msgid "Ensure new password meets current security requirements."
+msgstr ""
+
+msgid "Force password reset with validation"
+msgstr ""
+
+#, python-format
+msgid "Notification sent successfully to %s."
+msgstr ""
+
+#, python-format
+msgid "Failed to send notification: %s"
+msgstr ""
+
+#, python-format
+msgid "User %s flagged for mandatory password reset."
+msgstr ""
+
+#, python-format
+msgid "Password reset email sent to %s."
+msgstr ""
+
+#, python-format
+msgid "Failed to send password reset email: %s"
+msgstr ""
+
+msgid "Invalid action selected."
+msgstr ""
+
+#, python-format
+msgid "Notifications sent to %d users."
+msgstr ""
+
+#, python-format
+msgid "Failed to send notifications to %d users."
+msgstr ""
+
+#, python-format
+msgid "Flagged %d users for mandatory password reset."
+msgstr ""
+
+#, python-format
+msgid "Password reset emails sent to %d users."
+msgstr ""
+
+#, python-format
+msgid "Failed to send reset emails to %d users."
+msgstr ""
+
+#, python-format
+msgid "Deactivated %d user accounts."
+msgstr ""
+
 msgid "Service Providers"
 msgstr ""
 
@@ -1404,9 +2364,6 @@ msgid "Select this to restrict this service for countries in EU"
 msgstr ""
 
 msgid "Service choice"
-msgstr ""
-
-msgid "Enabled"
 msgstr ""
 
 msgid "Shop"
@@ -1791,9 +2748,6 @@ msgstr ""
 msgid "You've been added as an admin user to `{shop_url}`."
 msgstr ""
 
-msgid "User"
-msgstr ""
-
 msgid "You can not deactivate a Superuser. Remove Superuser status first."
 msgstr ""
 
@@ -1815,15 +2769,6 @@ msgstr ""
 
 #, python-brace-format
 msgid "You're now logged in as `{username}`."
-msgstr ""
-
-msgid "Username"
-msgstr ""
-
-msgid "First Name"
-msgstr ""
-
-msgid "Last Name"
 msgstr ""
 
 msgid "The two password fields didn't match."
@@ -3042,6 +3987,9 @@ msgid ""
 "try again later."
 msgstr ""
 
+msgid "HTML Preview"
+msgstr ""
+
 msgid "Edit the selected object"
 msgstr ""
 
@@ -3487,9 +4435,6 @@ msgstr ""
 msgid "Store Overview"
 msgstr ""
 
-msgid "Customers"
-msgstr ""
-
 msgid "Today"
 msgstr ""
 
@@ -3678,9 +4623,6 @@ msgstr ""
 msgid "Send a password reset email to %(email)s?"
 msgstr ""
 
-msgid "Send Reset Email"
-msgstr ""
-
 msgid ""
 "Please fill out the following information to get your store up and running"
 msgstr ""
@@ -3751,8 +4693,7 @@ msgstr ""
 
 #, python-brace-format
 msgid ""
-"Can't view this page. You do not have the required permission(s): "
-"`{permissions}`."
+"Can't view this page. You do not have the required permission(s): `{perms}`."
 msgstr ""
 
 msgid "Unnamed"

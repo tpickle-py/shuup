@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 03:51+0000\n"
+"POT-Creation-Date: 2025-07-05 11:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en <LL@li.org>\n"
@@ -91,6 +91,11 @@ msgid "Error!"
 msgstr ""
 
 msgid "No such shop is configured."
+msgstr ""
+
+msgid ""
+"For your security, you must update your password. Your current password does "
+"not meet our security requirements."
 msgstr ""
 
 msgid "shipping address"
@@ -223,6 +228,9 @@ msgid "saved address"
 msgstr ""
 
 msgid "saved addresses"
+msgstr ""
+
+msgid "No address set"
 msgstr ""
 
 msgid "hidden"
@@ -2595,4 +2603,39 @@ msgid "Please provide either username or email."
 msgstr ""
 
 msgid "First Last"
+msgstr ""
+
+msgid "Quantity must not be zero."
+msgstr ""
+
+msgid "Purchase multiple must be zero or a positive number."
+msgstr ""
+
+msgid "Minimum value cannot be greater than maximum value."
+msgstr ""
+
+msgid "Date must be in the future."
+msgstr ""
+
+#, python-format
+msgid "Password must be at least %(min_length)d characters long."
+msgstr ""
+
+msgid "Password must contain at least one uppercase letter."
+msgstr ""
+
+msgid "Password must contain at least one lowercase letter."
+msgstr ""
+
+msgid "Password must contain at least one digit."
+msgstr ""
+
+msgid ""
+"Password must contain at least one special character (!@#$%^&*(),.?\":{}|<>)."
+msgstr ""
+
+#, python-format
+msgid ""
+"Your password must contain at least %(min_length)d characters, including "
+"uppercase and lowercase letters, digits, and special characters."
 msgstr ""

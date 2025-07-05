@@ -40,6 +40,20 @@ BABEL_OPTIONS = {
 
 COMMENT_TAG = "Translators:"
 
+# Store original Django templatize function
+_original_templatize = trans_real.templatize
+
+
+def smart_templatize(src, origin=None, **kwargs):
+    """
+    Smart template processor that uses Jinja2 for .jinja files and Django for .html files.
+    """
+    if origin and origin.endswith(".jinja"):
+        return jinja_messages_to_python(src, origin, **kwargs)
+    else:
+        # Use Django's original templatize for .html files
+        return _original_templatize(src, origin, **kwargs)
+
 
 class Command(makemessages.Command):
     def add_arguments(self, parser):
@@ -56,7 +70,7 @@ class Command(makemessages.Command):
         self.no_pot_date = options.get("no_pot_date")
 
         old_templatize = trans_real.templatize
-        trans_real.templatize = jinja_messages_to_python
+        trans_real.templatize = smart_templatize
         try:
             super().handle(*args, **options)
         finally:

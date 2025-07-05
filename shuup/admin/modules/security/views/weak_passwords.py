@@ -51,7 +51,7 @@ class WeakPasswordListView(PicotableListView):
 
         return super().dispatch(request, *args, **kwargs)
 
-    template_name = "shuup/admin/security/weak_password_list.jinja"
+    template_name = "shuup/admin/security/weak_password_list.html"
     user_model = get_user_model()
     default_columns = [
         Column(
@@ -186,7 +186,7 @@ class WeakPasswordDetailView(DetailView):
 
         return super().dispatch(request, *args, **kwargs)
 
-    template_name = "shuup/admin/security/weak_password_detail.jinja"
+    template_name = "shuup/admin/security/weak_password_detail.html"
     model = get_user_model()
     context_object_name = "user"
 
@@ -368,7 +368,7 @@ class BulkSecurityActionView(FormView):
 
         return super().dispatch(request, *args, **kwargs)
 
-    template_name = "shuup/admin/security/bulk_actions.jinja"
+    template_name = "shuup/admin/security/bulk_actions.html"
     form_class = BulkSecurityActionForm
 
     def get_context_data(self, **kwargs):

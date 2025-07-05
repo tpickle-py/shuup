@@ -27,7 +27,7 @@ class ForcedPasswordResetView(FormView):
     before they can continue using the system.
     """
 
-    template_name = "shuup/auth/forced_password_reset.jinja"
+    template_name = "shuup/auth/forced_password_reset.html"
     form_class = SetPasswordForm
     success_url = reverse_lazy("shuup:index")
 
@@ -100,7 +100,7 @@ class SecurePasswordChangeView(PasswordChangeView):
     weak password flags when users successfully update their passwords.
     """
 
-    template_name = "shuup/customer_information/change_password.jinja"
+    template_name = "shuup/customer_information/change_password.html"
     success_url = reverse_lazy("shuup:customer_edit")
 
     def form_valid(self, form):

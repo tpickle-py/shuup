@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 03:51+0000\n"
+"POT-Creation-Date: 2025-07-05 11:43+0000\n"
 "PO-Revision-Date: 2016-08-04 10:51-0700\n"
 "Last-Translator: \n"
 "Language-Team: en <LL@li.org>\n"
@@ -681,6 +681,99 @@ msgid ""
 "This script will send an email to customer or to any configured email right "
 "after an order is created. The order contents can be put on email body as "
 "well as other informations like shipping method and payment method."
+msgstr ""
+
+msgid "Security Notice"
+msgstr ""
+
+msgid "Your password needs to be updated for security reasons."
+msgstr ""
+
+msgid ""
+"Your current password does not meet our updated security requirements. To "
+"continue using the system, you must create a new, stronger password."
+msgstr ""
+
+msgid "Password Requirements:"
+msgstr ""
+
+msgid "At least 8 characters long"
+msgstr ""
+
+msgid "Contains uppercase letters (A-Z)"
+msgstr ""
+
+msgid "Contains lowercase letters (a-z)"
+msgstr ""
+
+msgid "Contains numbers (0-9)"
+msgstr ""
+
+#, python-format
+msgid "Contains special characters (!@#$%%^&*)"
+msgstr ""
+
+msgid "Not similar to your username or email"
+msgstr ""
+
+msgid "Not a commonly used password"
+msgstr ""
+
+msgid "Update Password"
+msgstr ""
+
+msgid "Important:"
+msgstr ""
+
+msgid ""
+"You cannot access other parts of the system until you update your password"
+msgstr ""
+
+msgid "Your session will be secured after the password update"
+msgstr ""
+
+msgid "Choose a password you haven't used before"
+msgstr ""
+
+msgid "Need help?"
+msgstr ""
+
+msgid ""
+"Contact your system administrator if you continue to have problems updating "
+"your password."
+msgstr ""
+
+msgid "At least 8 characters"
+msgstr ""
+
+msgid "Uppercase letter"
+msgstr ""
+
+msgid "Lowercase letter"
+msgstr ""
+
+msgid "Number"
+msgstr ""
+
+msgid "Special character"
+msgstr ""
+
+msgid "Weak"
+msgstr ""
+
+msgid "Strong"
+msgstr ""
+
+msgid "Medium"
+msgstr ""
+
+msgid "Strength"
+msgstr ""
+
+msgid "Missing"
+msgstr ""
+
+msgid "All requirements met!"
 msgstr ""
 
 msgid "Cart Inactivity Delay"
@@ -1359,4 +1452,32 @@ msgstr ""
 
 #, python-format
 msgid "Maximum file size reached (%(size)s MB)."
+msgstr ""
+
+msgid "Security: Password Update Required"
+msgstr ""
+
+msgid ""
+"Your password has been successfully updated. You can now continue using the "
+"system."
+msgstr ""
+
+msgid "Please correct the errors below and choose a strong password."
+msgstr ""
+
+msgid ""
+"Your password has been successfully changed and now meets our security "
+"requirements."
+msgstr ""
+
+msgid "Password update required for security"
+msgstr ""
+
+msgid "Password is secure"
+msgstr ""
+
+msgid "Password updated successfully."
+msgstr ""
+
+msgid "Emergency Password Reset"
 msgstr ""
