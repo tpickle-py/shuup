@@ -47,6 +47,7 @@ def test_admin_custom_customer_price_updates(rf, admin_user):
         f"shop{shop.pk}-minimum_purchase_quantity": "1",
         f"shop{shop.pk}-purchase_multiple": "1",
         f"shop{shop.pk}-suppliers": [supplier.pk],
+        f"shop{shop.pk}-backorder_maximum": "1",  # Required field
         f"customer_group_pricing-s_{shop.pk}_g_{group.pk}": group_price,  # set price for the group
     }
 
@@ -64,6 +65,8 @@ def test_admin_custom_customer_price_updates(rf, admin_user):
     _assert_products_queryset(anon_catalog, [(product.pk, Decimal(default_price), None)])
     _assert_products_queryset(customer_catalog, [(product.pk, Decimal(group_price), None)])
 
+    # For updating existing product, we need to include all required form fields
+    # The product edit form expects all base fields plus formset management forms
     payload.update(
         {
             # remove the customer group price
@@ -76,6 +79,11 @@ def test_admin_custom_customer_price_updates(rf, admin_user):
             "images-INITIAL_FORMS": 0,
             "images-MIN_NUM_FORMS": 0,
             "images-MAX_NUM_FORMS": 1000,
+            # Add attributes formset management (required for product updates)
+            "attributes-TOTAL_FORMS": 0,
+            "attributes-INITIAL_FORMS": 0,
+            "attributes-MIN_NUM_FORMS": 0,
+            "attributes-MAX_NUM_FORMS": 1000,
         }
     )
 
@@ -121,6 +129,7 @@ def test_admin_custom_customer_discount_updates(rf, admin_user):
         f"shop{shop.pk}-minimum_purchase_quantity": "1",
         f"shop{shop.pk}-purchase_multiple": "1",
         f"shop{shop.pk}-suppliers": [supplier.pk],
+        f"shop{shop.pk}-backorder_maximum": "1",  # Required field
         f"customer_group_discount-s_{shop.pk}_g_{group.pk}": discount_amount,  # set discount amount for the group
     }
 
@@ -150,6 +159,11 @@ def test_admin_custom_customer_discount_updates(rf, admin_user):
             "images-INITIAL_FORMS": 0,
             "images-MIN_NUM_FORMS": 0,
             "images-MAX_NUM_FORMS": 1000,
+            # Add attributes formset management (required for product updates)
+            "attributes-TOTAL_FORMS": 0,
+            "attributes-INITIAL_FORMS": 0,
+            "attributes-MIN_NUM_FORMS": 0,
+            "attributes-MAX_NUM_FORMS": 1000,
         }
     )
 
