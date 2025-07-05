@@ -41,7 +41,13 @@ class SimpleSupplierModule(BaseSupplierModule):
             yield ValidationError(stock_status.error, code="stock_error")
 
         if self.supplier.stock_managed and stock_status.stock_managed:
-            if backorder_maximum is not None and quantity > stock_status.logical_count + backorder_maximum:
+            # Check stock availability
+            available_quantity = stock_status.logical_count
+            if backorder_maximum is not None:
+                # Backorders allowed up to the maximum
+                available_quantity += backorder_maximum
+
+            if quantity > available_quantity:
                 yield ValidationError(
                     stock_status.message or _("Error! Insufficient quantity in stock."),
                     code="stock_insufficient",

@@ -21,6 +21,13 @@ def get_simple_supplier(stock_managed=True, shop=None):
             name="Simple Supplier",
             stock_managed=stock_managed,
         )
+    else:
+        # Ensure stock_managed setting is updated for existing supplier
+        # This prevents test isolation issues where previous tests affect current test behavior
+        if supplier.stock_managed != stock_managed:
+            supplier.stock_managed = stock_managed
+            supplier.save()
+
     supplier.supplier_modules.add(simple_supplier_module)
     if not shop:
         shop = get_default_shop()

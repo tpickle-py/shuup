@@ -101,16 +101,20 @@ class Populator:
 
     def ensure_product_stock(self):
         """Ensure all shop products have sufficient stock for testing."""
-        from shuup.core.models import Supplier
+        from shuup.testing.factories import get_default_supplier
 
         try:
-            supplier = Supplier.objects.first()
+            supplier = get_default_supplier()
             if not supplier:
                 return
 
             shop_products = ShopProduct.objects.filter(shop=self.shop)
             for shop_product in shop_products:
                 try:
+                    # Ensure the shop product is associated with the supplier
+                    if not shop_product.suppliers.filter(id=supplier.id).exists():
+                        shop_product.suppliers.add(supplier)
+
                     # Check current stock
                     stock_status = supplier.get_stock_status(shop_product.product.id)
                     if stock_status.logical_count <= 0:
