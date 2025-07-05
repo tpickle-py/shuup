@@ -48,6 +48,8 @@ jobs:
           uv sync --dev
           # Ensure documentation dependencies are available
           uv pip install sphinx-rtd-theme tomli packaging
+          # Try installing Django-specific Sphinx extensions (optional)
+          uv pip install sphinxext-django || true
 
       - name: Install package in development mode
         run: uv pip install -e .
@@ -55,6 +57,8 @@ jobs:
       - name: Build documentation
         run: |
           cd doc
+          # Suppress pkg_resources deprecation warnings
+          export PYTHONWARNINGS="ignore::UserWarning"
           uv run make html
 
       - name: Upload documentation artifacts

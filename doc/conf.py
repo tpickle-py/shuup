@@ -12,12 +12,16 @@ Shuup documentation build configuration file
 
 import os
 import sys
+import warnings
 from importlib import metadata
 from pathlib import Path
 
 import django
 
 from packaging.version import Version
+
+# Suppress pkg_resources deprecation warnings during documentation build
+warnings.filterwarnings("ignore", message="pkg_resources is deprecated", category=UserWarning)
 
 # -- Python path ----------------------------------------------------------
 
@@ -80,7 +84,7 @@ project = "Shuup"
 copyright = "2012-2025, Shuup Commerce Inc."
 
 extensions = [
-    "djangodocs",
+    # Core Sphinx extensions that work reliably with modern versions
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.coverage",
@@ -88,8 +92,10 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",  # For Google/NumPy style docstrings
-    "django_sphinx",
 ]
+
+# Note: djangodocs and django_sphinx have been removed due to
+# incompatibility with modern Sphinx versions (8.x+)
 
 # templates_path = ['_templates']
 source_suffix = ".rst"
