@@ -54,8 +54,8 @@ class WeakPasswordInterceptMiddleware(MiddlewareMixin):
         Returns:
             HttpResponseRedirect if user needs password reset, None otherwise
         """
-        # Skip if user is not authenticated
-        if not request.user.is_authenticated:
+        # Skip if user is not authenticated or doesn't exist
+        if not hasattr(request, "user") or not request.user or not request.user.is_authenticated:
             return None
 
         # Skip if we're already on an allowed URL

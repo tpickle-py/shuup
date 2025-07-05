@@ -193,63 +193,71 @@ class TestWeakPasswordMiddleware(TestCase):
         response = self.middleware.process_request(request)
         self.assertIsNone(response)  # Should not redirect
 
-    def test_middleware_allows_users_without_weak_passwords(self):
+    @patch.object(get_user_model(), "is_authenticated", new_callable=lambda: property(lambda self: True))
+    def test_middleware_allows_users_without_weak_passwords(self, mock_is_authenticated):
         """Test that users without weak passwords can proceed normally."""
         request = self.factory.get("/")
         request.user = self.user
-        request.user.is_authenticated = True
 
         response = self.middleware.process_request(request)
         self.assertIsNone(response)  # Should not redirect
 
     @patch("shuup.core.middlewares.weak_password_middleware.should_force_password_reset")
-    def test_middleware_redirects_weak_password_users(self, mock_should_force):
+    @patch.object(get_user_model(), "is_authenticated", new_callable=lambda: property(lambda self: True))
+    def test_middleware_redirects_weak_password_users(self, mock_is_authenticated, mock_should_force):
         """Test that users with weak passwords are redirected."""
         mock_should_force.return_value = True
 
         request = self.factory.get("/some-protected-page/")
         request.user = self.user
-        request.user.is_authenticated = True
 
         # Mock the resolver_match to simulate URL resolution
         request.resolver_match = MagicMock()
         request.resolver_match.url_name = "some_view"
         request.resolver_match.namespace = None
 
-        response = self.middleware.process_request(request)
+        with patch("shuup.core.middlewares.weak_password_middleware.messages"), patch(
+            "shuup.core.middlewares.weak_password_middleware.reverse", return_value="/mock-reset-url/"
+        ):
+            response = self.middleware.process_request(request)
 
         # Should redirect to password reset
         self.assertIsNotNone(response)
         self.assertEqual(response.status_code, 302)
 
-    def test_middleware_allows_password_reset_urls(self):
+    @patch.object(get_user_model(), "is_authenticated", new_callable=lambda: property(lambda self: True))
+    def test_middleware_allows_password_reset_urls(self, mock_is_authenticated):
         """Test that password reset URLs are allowed."""
         request = self.factory.get("/reset-password/")
         request.user = self.user
-        request.user.is_authenticated = True
 
         # Mock resolver match for allowed URL
         request.resolver_match = MagicMock()
-        request.resolver_match.url_name = "change-password"
+        request.resolver_match.url_name = "customer_information.change_password"
         request.resolver_match.namespace = "shuup"
 
         # Even if user has weak password, should allow access to reset page
-        with patch("shuup.core.middlewares.weak_password_middleware.should_force_password_reset", return_value=True):
+        with patch(
+            "shuup.core.middlewares.weak_password_middleware.should_force_password_reset", return_value=True
+        ), patch("shuup.core.middlewares.weak_password_middleware.messages"), patch(
+            "shuup.core.middlewares.weak_password_middleware.reverse", return_value="/mock-reset-url/"
+        ):
             response = self.middleware.process_request(request)
             self.assertIsNone(response)  # Should not redirect
 
-    def test_middleware_allows_static_files(self):
+    @patch.object(get_user_model(), "is_authenticated", new_callable=lambda: property(lambda self: True))
+    def test_middleware_allows_static_files(self, mock_is_authenticated):
         """Test that static files are always allowed."""
         request = self.factory.get("/static/css/style.css")
         request.user = self.user
-        request.user.is_authenticated = True
 
         with patch("shuup.core.middlewares.weak_password_middleware.should_force_password_reset", return_value=True):
             response = self.middleware.process_request(request)
             self.assertIsNone(response)  # Should allow static files
 
-    @patch("shuup.core.middlewares.weak_password_middleware.Session")
-    def test_session_clearing(self, mock_session):
+    @patch("django.contrib.sessions.models.Session")
+    @patch.object(get_user_model(), "is_authenticated", new_callable=lambda: property(lambda self: True))
+    def test_session_clearing(self, mock_is_authenticated, mock_session):
         """Test that user sessions are cleared for security."""
         # Mock sessions
         mock_session_obj = MagicMock()
@@ -259,12 +267,15 @@ class TestWeakPasswordMiddleware(TestCase):
         # Create request that should trigger session clearing
         request = self.factory.get("/some-page/")
         request.user = self.user
-        request.user.is_authenticated = True
         request.resolver_match = MagicMock()
         request.resolver_match.url_name = "some_view"
         request.resolver_match.namespace = None
 
-        with patch("shuup.core.middlewares.weak_password_middleware.should_force_password_reset", return_value=True):
+        with patch(
+            "shuup.core.middlewares.weak_password_middleware.should_force_password_reset", return_value=True
+        ), patch("shuup.core.middlewares.weak_password_middleware.messages"), patch(
+            "shuup.core.middlewares.weak_password_middleware.reverse", return_value="/mock-reset-url/"
+        ):
             response = self.middleware.process_request(request)
 
             # Should have attempted to delete the session
