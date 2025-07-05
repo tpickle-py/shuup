@@ -153,7 +153,7 @@ def _get_order(
 @pytest.mark.parametrize("prices_include_tax", (True, False))
 def test_create_full_refund(prices_include_tax):
     order = _get_order(prices_include_tax, True, True)
-    supplier = get_simple_supplier(order.shop)
+    supplier = get_simple_supplier(shop=order.shop)
     original_order_total = order.taxful_total_price
     num_order_lines = order.lines.count()
     order.create_full_refund(restock_products=True)

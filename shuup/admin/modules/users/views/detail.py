@@ -72,6 +72,12 @@ class BaseUserForm(forms.ModelForm):
         model = get_user_model()
         fields = ["username", "email", "first_name", "last_name", "is_staff", "is_superuser"]
 
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        if password:
+            validate_password(password, self.instance)
+        return password
+
     permission_info = forms.CharField(
         label=_("Main Permissions"),
         widget=forms.TextInput(attrs={"readonly": True, "disabled": True}),
@@ -146,12 +152,6 @@ class BaseUserForm(forms.ModelForm):
             and not self.cleaned_data.get("email")
         ):
             raise forms.ValidationError({"email": _("Please enter an email to send a confirmation to.")})
-
-    def clean_password(self):
-        password = self.cleaned_data.get("password")
-        if password:
-            validate_password(password, self.instance)
-        return password
 
     def save(self, commit=True):
         user = super().save(commit=False)

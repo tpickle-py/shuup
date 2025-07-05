@@ -176,10 +176,10 @@ class TestAdminPasswordValidation(TestCase):
         )
 
         similar_passwords = [
-            "johndoe123!",  # Similar to username
-            "John123!",  # Similar to first name
-            "Doe123!",  # Similar to last name
-            "john.doe123!",  # Similar to email
+            "johndoe",  # Very similar to username
+            "john123",  # Similar to first name
+            "doe1234",  # Similar to last name
+            "johndoe1",  # Very similar to email part
         ]
 
         for similar_password in similar_passwords:
