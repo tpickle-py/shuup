@@ -88,7 +88,9 @@ def test_new_shop(rf, admin_user):
         }
         response = client.post(reverse("shuup_admin:shop.new"), data=payload)
         assert response.status_code == 302
-        assert Shop.objects.count() >= 2  # At least 2 shops needed
+        # Due to test isolation issues (foreign key constraints prevent shop deletion),
+        # we ensure at least 2 shops exist rather than exactly 2
+        assert Shop.objects.count() >= 2, f"Expected at least 2 shops for this test, found {Shop.objects.count()}"
         shop = Shop.objects.last()
         assert shop.name == "New Shop"
         assert shop.domain == "shop2"

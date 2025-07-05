@@ -46,7 +46,9 @@ def test_discount_admin_edit_view(rf, staff_user, admin_user):
         # Note: Skip cleanup of extra shops due to potential foreign key constraints
         # The test works fine with additional shops present
 
-        assert Shop.objects.count() >= 2  # At least 2 shops needed
+        # Due to test isolation issues (foreign key constraints prevent shop deletion),
+        # we ensure at least 2 shops exist rather than exactly 2
+        assert Shop.objects.count() >= 2, f"Expected at least 2 shops for this test, found {Shop.objects.count()}"
 
         # Staff user gets shop automatically
         product = factories.create_product("test", shop=shop)
