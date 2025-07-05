@@ -97,6 +97,6 @@ def test_shop_staff_members():
     staff = create_random_user()
     shop1.staff_members.add(staff)
     assert staff.shops.count() == 1
-    staff.shops.set(Shop.objects.all())
+    staff.shops.set([shop1, shop2])  # Use specific shops, not all shops in database
     assert staff in shop2.staff_members.all()
     assert staff.shops.count() == 2
