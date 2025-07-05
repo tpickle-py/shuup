@@ -16,6 +16,9 @@ User = get_user_model()
     AUTH_PASSWORD_VALIDATORS=[
         {
             "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+            "OPTIONS": {
+                "max_similarity": 0.5,
+            },
         },
         {
             "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",

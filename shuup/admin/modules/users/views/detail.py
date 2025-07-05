@@ -67,6 +67,11 @@ class BaseUserForm(forms.ModelForm):
         widget=forms.PasswordInput,
         help_text=_("The user password."),
     )
+
+    class Meta:
+        model = get_user_model()
+        fields = ["username", "email", "first_name", "last_name", "is_staff", "is_superuser"]
+
     permission_info = forms.CharField(
         label=_("Main Permissions"),
         widget=forms.TextInput(attrs={"readonly": True, "disabled": True}),
