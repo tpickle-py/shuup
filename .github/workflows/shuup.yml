@@ -10,7 +10,7 @@ jobs:
 
   codestyle:
     name: "Code style & sanity checks"
-    runs-on: [ubuntu-latest, self-hosted]
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Install uv
@@ -28,7 +28,7 @@ jobs:
 
   core:
     name: "Test Shuup, migrations and messages"
-    runs-on: [ubuntu-latest, self-hosted]
+    runs-on: ubuntu-latest
     env:
       SHUUP_BROWSER_TESTS: 0
       SHUUP_TESTS_CI: 1
@@ -79,7 +79,7 @@ jobs:
 
   browser:
     name: "Test Shuup with browser"
-    runs-on: [ubuntu-latest, self-hosted]
+    runs-on: ubuntu-latest
     env:
       SHUUP_BROWSER_TESTS: 1
       SHUUP_TESTS_CI: 1

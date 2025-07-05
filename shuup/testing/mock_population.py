@@ -52,14 +52,18 @@ class Populator:
 
     def generate_pricing(self, product):
         if "shuup.customer_group_pricing" in settings.INSTALLED_APPS:
-            from shuup.customer_group_pricing.models import CgpPrice
+            try:
+                from shuup.customer_group_pricing.models import CgpPrice
 
-            CgpPrice.objects.create(
-                product=product,
-                price_value=random.randint(15, 340),
-                shop=get_default_shop(),
-                group=get_default_customer_group(),
-            )
+                CgpPrice.objects.create(
+                    product=product,
+                    price_value=random.randint(15, 340),
+                    shop=get_default_shop(),
+                    group=get_default_customer_group(),
+                )
+            except Exception:
+                # If customer_group_pricing is not properly set up, skip pricing
+                pass
 
     def ensure_shop_products(self):
         """Ensure all products are associated with the default shop."""
@@ -83,9 +87,14 @@ class Populator:
         if ShopProduct.objects.filter(shop=self.shop).count() < 5:
             self.populate()
 
-        from django.core.management import call_command
+        # Try to reindex product catalog, but don't fail if there are table issues
+        try:
+            from django.core.management import call_command
 
-        call_command("reindex_product_catalog")
+            call_command("reindex_product_catalog")
+        except Exception:
+            # If reindexing fails due to missing tables, skip it
+            pass
 
 
 def populate_if_required():

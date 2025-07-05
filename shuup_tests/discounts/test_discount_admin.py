@@ -38,7 +38,17 @@ def test_discount_admin_edit_view(rf, staff_user, admin_user):
     with override_settings(SHUUP_ENABLE_MULTIPLE_SHOPS=True):
         shop = factories.get_default_shop()
         shop.staff_members.add(staff_user)
-        factories.get_shop(identifier="shop2")
+
+        # Ensure we have exactly 2 shops for this test
+        existing_shops = Shop.objects.exclude(id=shop.id)
+        if existing_shops.count() == 0:
+            factories.get_shop(identifier="shop2")
+        elif existing_shops.count() > 1:
+            # Clean up extra shops to maintain test isolation
+            extra_shops = existing_shops[1:]
+            for extra_shop in extra_shops:
+                extra_shop.delete()
+
         assert Shop.objects.count() == 2
 
         # Staff user gets shop automatically

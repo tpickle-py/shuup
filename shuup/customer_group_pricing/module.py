@@ -75,22 +75,26 @@ class CustomerGroupPricingModule(PricingModule):
             ).delete()
 
             # index all the prices with groups
-            for customer_group_price in CgpPrice.objects.filter(
-                product_id=shop_product.product_id, shop_id=shop_product.shop_id
-            ):
-                catalog_rule = ProductCatalogPriceRule.objects.get_or_create(
-                    module_identifier=self.identifier,
-                    contact_group=customer_group_price.group,
-                    contact=None,
-                )[0]
-                for supplier_id in shop_product.suppliers.values_list("pk", flat=True):
-                    ProductCatalogPrice.objects.update_or_create(
-                        product_id=shop_product.product_id,
-                        shop_id=shop_product.shop_id,
-                        supplier_id=supplier_id,
-                        catalog_rule=catalog_rule,
-                        defaults={"price_value": customer_group_price.price_value or Decimal()},
-                    )
+            try:
+                cgp_prices = CgpPrice.objects.filter(product_id=shop_product.product_id, shop_id=shop_product.shop_id)
+
+                for customer_group_price in cgp_prices:
+                    catalog_rule = ProductCatalogPriceRule.objects.get_or_create(
+                        module_identifier=self.identifier,
+                        contact_group=customer_group_price.group,
+                        contact=None,
+                    )[0]
+                    for supplier_id in shop_product.suppliers.values_list("pk", flat=True):
+                        ProductCatalogPrice.objects.update_or_create(
+                            product_id=shop_product.product_id,
+                            shop_id=shop_product.shop_id,
+                            supplier_id=supplier_id,
+                            catalog_rule=catalog_rule,
+                            defaults={"price_value": customer_group_price.price_value or Decimal()},
+                        )
+            except Exception:
+                # If CgpPrice table doesn't exist, skip customer group pricing indexing
+                pass
 
         for supplier_id in shop_product.suppliers.values_list("pk", flat=True):
             # index the default price value

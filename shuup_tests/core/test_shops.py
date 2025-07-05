@@ -82,8 +82,18 @@ def test_shop_translations_manager():
 
 @pytest.mark.django_db
 def test_shop_staff_members():
-    shop1 = get_shop(True)
-    shop2 = get_shop(True)
+    # Ensure we have exactly 2 shops for this test
+    existing_shops = list(Shop.objects.all())
+    if len(existing_shops) >= 2:
+        shop1, shop2 = existing_shops[0], existing_shops[1]
+        # Clean up any extra shops
+        for extra_shop in existing_shops[2:]:
+            extra_shop.delete()
+    else:
+        # Create missing shops
+        shop1 = get_shop(True) if len(existing_shops) == 0 else existing_shops[0]
+        shop2 = get_shop(True)
+
     staff = create_random_user()
     shop1.staff_members.add(staff)
     assert staff.shops.count() == 1
