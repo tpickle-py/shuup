@@ -105,6 +105,15 @@ class CompanyRegistrationForm(FormGroup):
             if field in company_form.fields:
                 del billing_form.fields[field]
 
+    def full_clean(self):
+        super().full_clean()
+
+        # django-registration-redux expects flat cleaned_data['email'] but FormGroup provides nested structure
+        contact_person_data = self.cleaned_data.get("contact_person", {})
+        contact_email = contact_person_data.get("email")
+        if contact_email:
+            self.cleaned_data["email"] = contact_email
+
     def save(self, commit=True):
         with atomic():
             company = self.forms["company"].save(commit=False)

@@ -164,7 +164,7 @@ def test_money_formatter_digit_grouping():
     with translation.override("fi-FI"):
         assert money(usd(12345678)) == nbsp("12 345 678,00 $")
     with translation.override("ar-QA"):
-        assert money(usd(12345678)) == nbsp("US$ 12,345,678.00")
+        assert money(usd(12345678)) == "\u200f12,345,678.00\xa0US$"
 
 
 def test_money_formatter_with_specified_digits():
