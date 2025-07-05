@@ -33,7 +33,10 @@
 
   {% endif %}
 
-  <link rel="stylesheet" href="{{ pathto('_static/' + style, 1) }}" type="text/css" />
+  {# Include CSS files - handle both old and new Sphinx versions #}
+  {% if style %}
+    <link rel="stylesheet" href="{{ pathto('_static/' + style, 1) }}" type="text/css" />
+  {% endif %}
 
   {% for cssfile in css_files %}
     <link rel="stylesheet" href="{{ pathto(cssfile, 1) }}" type="text/css" />

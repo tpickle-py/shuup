@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
 
     shuup.discounts.admin
-    shuup.discounts.management
     shuup.discounts.models
 
 Submodules

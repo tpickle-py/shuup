@@ -10,3 +10,6 @@ class SupplierPrice(MoneyPropped, models.Model):
     product = models.ForeignKey(on_delete=models.CASCADE, to="shuup.Product")
     amount_value = MoneyValueField()
     amount = PriceProperty("amount_value", "shop.currency", "shop.prices_include_tax")
+
+    class Meta:
+        app_label = "shuup.testing"

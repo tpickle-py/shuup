@@ -6,6 +6,9 @@ from shuup.core.models import ServiceBehaviorComponent, ServiceCost
 class ExpensiveSwedenBehaviorComponent(ServiceBehaviorComponent):
     name = "Expenseefe-a Svedee Sheepping"
 
+    class Meta:
+        app_label = "shuup.testing"
+
     def get_costs(self, service, source):
         four = source.create_price("4.00")
         five = source.create_price("5.00")
