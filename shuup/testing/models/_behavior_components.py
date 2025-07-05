@@ -7,7 +7,7 @@ class ExpensiveSwedenBehaviorComponent(ServiceBehaviorComponent):
     name = "Expenseefe-a Svedee Sheepping"
 
     class Meta:
-        app_label = "shuup.testing"
+        app_label = "shuup_testing"
 
     def get_costs(self, service, source):
         four = source.create_price("4.00")

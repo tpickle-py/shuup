@@ -39,6 +39,9 @@ class PseudoPaymentProcessor(PaymentProcessor):
         verbose_name="Payment Page Text Color",
     )
 
+    class Meta:
+        app_label = "shuup_testing"
+
     def get_service_choices(self):
         return [
             ServiceChoice("normal", "Pseudo payment"),

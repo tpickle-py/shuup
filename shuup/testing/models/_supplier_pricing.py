@@ -12,4 +12,4 @@ class SupplierPrice(MoneyPropped, models.Model):
     amount = PriceProperty("amount_value", "shop.currency", "shop.prices_include_tax")
 
     class Meta:
-        app_label = "shuup.testing"
+        app_label = "shuup_testing"

@@ -19,3 +19,6 @@ class UltraFilter(CatalogFilter):
     derp = models.ForeignKey(on_delete=models.CASCADE, to=Category, null=True, related_name="ultrafilte55")
     contact = models.ForeignKey(on_delete=models.CASCADE, to=Contact, null=True)
     shop_product = models.ForeignKey(on_delete=models.CASCADE, to=ShopProduct, null=True)
+
+    class Meta:
+        app_label = "shuup_testing"

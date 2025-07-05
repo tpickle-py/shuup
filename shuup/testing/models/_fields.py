@@ -9,4 +9,4 @@ class FieldsModel(models.Model):
     separated_values_dash = SeparatedValuesField(blank=True, separator="-")
 
     class Meta:
-        app_label = "shuup.testing"
+        app_label = "shuup_testing"

@@ -2,10 +2,14 @@ from shuup.core.models import CustomCarrier, CustomPaymentProcessor, PaymentStat
 
 
 class CarrierWithCheckoutPhase(CustomCarrier):
-    pass
+    class Meta:
+        app_label = "shuup_testing"
 
 
 class PaymentWithCheckoutPhase(CustomPaymentProcessor):
+    class Meta:
+        app_label = "shuup_testing"
+
     def process_payment_return_request(self, service, order, request):
         if order.payment_status == PaymentStatus.NOT_PAID and order.payment_data.get("input_value"):
             order.payment_status = PaymentStatus.DEFERRED
