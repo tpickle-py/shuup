@@ -1,25 +1,27 @@
-import pytest
-from django.contrib.auth import get_user_model, authenticate, login
+from unittest.mock import MagicMock, patch
+
+from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.sessions.models import Session
-from django.test import TestCase, RequestFactory
+from django.test import RequestFactory, TestCase
 from django.test.client import Client
 from django.urls import reverse
-from unittest.mock import patch, MagicMock
 
-from shuup.core.auth.backends import WeakPasswordDetectionBackend, EmailModelBackend
-from shuup.core.middleware.weak_password_middleware import (
-    WeakPasswordInterceptMiddleware,
-    WeakPasswordDetectionMiddleware,
-)
+import pytest
+
+from shuup.core.auth.backends import EmailModelBackend, WeakPasswordDetectionBackend
 from shuup.core.utils.weak_password_detection import (
+    check_user_against_weak_patterns,
+    clear_user_password_reset_flag,
+    flag_user_for_password_reset,
+    get_weak_password_patterns,
     has_weak_password,
     is_user_flagged_for_password_reset,
-    flag_user_for_password_reset,
-    clear_user_password_reset_flag,
-    check_user_against_weak_patterns,
-    should_force_password_reset,
     mark_password_as_updated,
-    get_weak_password_patterns,
+    should_force_password_reset,
+)
+from shuup.core.middlewares.weak_password_middleware import (
+    WeakPasswordDetectionMiddleware,
+    WeakPasswordInterceptMiddleware,
 )
 from shuup.testing import factories
 
@@ -200,7 +202,7 @@ class TestWeakPasswordMiddleware(TestCase):
         response = self.middleware.process_request(request)
         self.assertIsNone(response)  # Should not redirect
 
-    @patch("shuup.core.middleware.weak_password_middleware.should_force_password_reset")
+    @patch("shuup.core.middlewares.weak_password_middleware.should_force_password_reset")
     def test_middleware_redirects_weak_password_users(self, mock_should_force):
         """Test that users with weak passwords are redirected."""
         mock_should_force.return_value = True
@@ -232,7 +234,7 @@ class TestWeakPasswordMiddleware(TestCase):
         request.resolver_match.namespace = "shuup"
 
         # Even if user has weak password, should allow access to reset page
-        with patch("shuup.core.middleware.weak_password_middleware.should_force_password_reset", return_value=True):
+        with patch("shuup.core.middlewares.weak_password_middleware.should_force_password_reset", return_value=True):
             response = self.middleware.process_request(request)
             self.assertIsNone(response)  # Should not redirect
 
@@ -242,11 +244,11 @@ class TestWeakPasswordMiddleware(TestCase):
         request.user = self.user
         request.user.is_authenticated = True
 
-        with patch("shuup.core.middleware.weak_password_middleware.should_force_password_reset", return_value=True):
+        with patch("shuup.core.middlewares.weak_password_middleware.should_force_password_reset", return_value=True):
             response = self.middleware.process_request(request)
             self.assertIsNone(response)  # Should allow static files
 
-    @patch("shuup.core.middleware.weak_password_middleware.Session")
+    @patch("shuup.core.middlewares.weak_password_middleware.Session")
     def test_session_clearing(self, mock_session):
         """Test that user sessions are cleared for security."""
         # Mock sessions
@@ -262,7 +264,7 @@ class TestWeakPasswordMiddleware(TestCase):
         request.resolver_match.url_name = "some_view"
         request.resolver_match.namespace = None
 
-        with patch("shuup.core.middleware.weak_password_middleware.should_force_password_reset", return_value=True):
+        with patch("shuup.core.middlewares.weak_password_middleware.should_force_password_reset", return_value=True):
             response = self.middleware.process_request(request)
 
             # Should have attempted to delete the session

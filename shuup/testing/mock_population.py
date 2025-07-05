@@ -87,6 +87,9 @@ class Populator:
         if ShopProduct.objects.filter(shop=self.shop).count() < 5:
             self.populate()
 
+        # Ensure products have stock for purchasability
+        self.ensure_product_stock()
+
         # Try to reindex product catalog, but don't fail if there are table issues
         try:
             from django.core.management import call_command
@@ -94,6 +97,30 @@ class Populator:
             call_command("reindex_product_catalog")
         except Exception:
             # If reindexing fails due to missing tables, skip it
+            pass
+
+    def ensure_product_stock(self):
+        """Ensure all shop products have sufficient stock for testing."""
+        from shuup.core.models import Supplier
+
+        try:
+            supplier = Supplier.objects.first()
+            if not supplier:
+                return
+
+            shop_products = ShopProduct.objects.filter(shop=self.shop)
+            for shop_product in shop_products:
+                try:
+                    # Check current stock
+                    stock_status = supplier.get_stock_status(shop_product.product.id)
+                    if stock_status.logical_count <= 0:
+                        # Add stock for testing (100 units)
+                        supplier.adjust_stock(shop_product.product.id, 100)
+                except Exception:
+                    # If stock management fails, skip this product
+                    continue
+        except Exception:
+            # If stock management is not available, skip entirely
             pass
 
 

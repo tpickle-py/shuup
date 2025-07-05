@@ -51,10 +51,17 @@ def test_product_catalog_simple_list():
 @pytest.mark.django_db
 def test_product_catalog_purchasable():
     # Clear catalog data from previous tests to ensure test isolation
-    from shuup.core.models import ProductCatalogPrice, ProductCatalogDiscountedPrice
+    from shuup.core.models import (
+        ProductCatalogPrice,
+        ProductCatalogDiscountedPrice,
+        ProductCatalogPriceRule,
+        ProductCatalogDiscountedPriceRule,
+    )
 
     ProductCatalogPrice.objects.all().delete()
     ProductCatalogDiscountedPrice.objects.all().delete()
+    ProductCatalogPriceRule.objects.all().delete()
+    ProductCatalogDiscountedPriceRule.objects.all().delete()
 
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()
@@ -118,10 +125,17 @@ def test_product_catalog_variations():
 @pytest.mark.django_db
 def test_product_catalog_availability():
     # Clear catalog data from previous tests to ensure test isolation
-    from shuup.core.models import ProductCatalogPrice, ProductCatalogDiscountedPrice
+    from shuup.core.models import (
+        ProductCatalogPrice,
+        ProductCatalogDiscountedPrice,
+        ProductCatalogPriceRule,
+        ProductCatalogDiscountedPriceRule,
+    )
 
     ProductCatalogPrice.objects.all().delete()
     ProductCatalogDiscountedPrice.objects.all().delete()
+    ProductCatalogPriceRule.objects.all().delete()
+    ProductCatalogDiscountedPriceRule.objects.all().delete()
 
     shop = factories.get_default_shop()
     supplier = factories.get_default_supplier()

@@ -395,16 +395,23 @@ def test_download_examples(rf, admin_user):
                     assert response.status_code == 404
                 else:
                     assert response.status_code == 200
-                    # Django compatibility: use .headers instead of ._headers for newer Django versions
-                    headers = getattr(response, "headers", getattr(response, "_headers", {}))
-                    assert headers["content-type"] == (
-                        "Content-Type",
-                        str(example_file.content_type),
-                    )
-                    assert headers["content-disposition"] == (
-                        "Content-Disposition",
-                        "attachment; filename=%s" % example_file.file_name,
-                    )
+                    # Django compatibility: handle both old and new header formats
+                    if hasattr(response, "headers"):
+                        # Newer Django: headers are strings
+                        headers = response.headers
+                        assert headers["content-type"] == str(example_file.content_type)
+                        assert headers["content-disposition"] == "attachment; filename=%s" % example_file.file_name
+                    else:
+                        # Older Django: _headers are tuples
+                        headers = response._headers
+                        assert headers["content-type"] == (
+                            "Content-Type",
+                            str(example_file.content_type),
+                        )
+                        assert headers["content-disposition"] == (
+                            "Content-Disposition",
+                            "attachment; filename=%s" % example_file.file_name,
+                        )
 
                     if example_file.template_name:
                         from django.template.loader import get_template

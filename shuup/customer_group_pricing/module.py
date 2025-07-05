@@ -5,11 +5,13 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from shuup.core.models import (
+    AnonymousContact,
     ProductCatalogDiscountedPrice,
     ProductCatalogDiscountedPriceRule,
     ProductCatalogPrice,
     ProductCatalogPriceRule,
     ShopProduct,
+    Supplier,
 )
 from shuup.core.pricing import DiscountModule, PriceInfo, PricingModule
 
@@ -19,6 +21,37 @@ from .models import CgpDiscount, CgpPrice
 class CustomerGroupPricingModule(PricingModule):
     identifier = "customer_group_pricing"
     name = _("Customer Group Pricing")
+
+    def _is_product_available(self, shop_product, supplier_id):
+        """
+        Check if a product is available for purchase considering stock and orderability.
+
+        This integrates the catalog system with actual stock management and purchasability logic.
+        """
+        try:
+            # Get the supplier instance
+            supplier = Supplier.objects.get(pk=supplier_id) if supplier_id else None
+            if not supplier:
+                return False
+
+            # Ensure backorder_maximum is set to 0 for proper stock checking
+            # If backorder_maximum is None, SimpleSupplier allows unlimited backorders
+            if shop_product.backorder_maximum is None:
+                shop_product.backorder_maximum = 0
+                shop_product.save(update_fields=["backorder_maximum"])
+
+            # Use anonymous contact for general availability check
+            customer = AnonymousContact()
+
+            # Check if the product is orderable with this supplier
+            # This includes stock checks, supplier availability, and all business rules
+            is_orderable = shop_product.is_orderable(supplier=supplier, customer=customer, quantity=1)
+
+            return is_orderable
+
+        except Exception:
+            # If any error occurs (supplier not found, etc.), default to not available
+            return False
 
     def get_price_info(self, context, product, quantity=1):
         shop = context.shop
@@ -85,25 +118,37 @@ class CustomerGroupPricingModule(PricingModule):
                         contact=None,
                     )[0]
                     for supplier_id in shop_product.suppliers.values_list("pk", flat=True):
+                        # Check if product is available with this supplier (includes stock and orderability)
+                        is_available = self._is_product_available(shop_product, supplier_id)
+
                         ProductCatalogPrice.objects.update_or_create(
                             product_id=shop_product.product_id,
                             shop_id=shop_product.shop_id,
                             supplier_id=supplier_id,
                             catalog_rule=catalog_rule,
-                            defaults={"price_value": customer_group_price.price_value or Decimal()},
+                            defaults={
+                                "price_value": customer_group_price.price_value or Decimal(),
+                                "is_available": is_available,
+                            },
                         )
             except Exception:
                 # If CgpPrice table doesn't exist, skip customer group pricing indexing
                 pass
 
         for supplier_id in shop_product.suppliers.values_list("pk", flat=True):
+            # Check if product is available with this supplier (includes stock and orderability)
+            is_available = self._is_product_available(shop_product, supplier_id)
+
             # index the default price value
             ProductCatalogPrice.objects.update_or_create(
                 product_id=shop_product.product_id,
                 shop_id=shop_product.shop_id,
                 supplier_id=supplier_id,
                 catalog_rule=None,
-                defaults={"price_value": shop_product.default_price_value or Decimal()},
+                defaults={
+                    "price_value": shop_product.default_price_value or Decimal(),
+                    "is_available": is_available,
+                },
             )
 
 

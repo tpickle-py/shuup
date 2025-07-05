@@ -15,6 +15,18 @@ from shuup.core.models import Currency, Shop, Supplier
 @pytest.mark.django_db
 def test_shuup_init():
     activate("en")
+
+    # Clean up extra currencies from previous tests to ensure test isolation
+    default_currency = Currency.objects.filter(code="EUR").first()
+    if default_currency:
+        # Keep only the default EUR currency, delete others
+        Currency.objects.exclude(id=default_currency.id).delete()
+    else:
+        # If no EUR currency, keep only the first one and delete others
+        first_currency = Currency.objects.first()
+        if first_currency:
+            Currency.objects.exclude(id=first_currency.id).delete()
+
     assert Currency.objects.count() == 1
     assert Shop.objects.filter(identifier="default").exists()  # Tests init
     assert not Supplier.objects.first()

@@ -59,9 +59,16 @@ def test_serialize_data():
     assert "My Data" in response.content.decode("utf-8")
 
     response = client.post(reverse("shuup:gdpr_download_data"))
-    # Django compatibility: use .headers instead of ._headers for newer Django versions
-    headers = getattr(response, "headers", getattr(response, "_headers", {}))
-    assert headers["content-disposition"][0] == "Content-Disposition"
+    # Django compatibility: handle both old and new header formats
+    if hasattr(response, "headers"):
+        # Newer Django: headers are strings
+        headers = response.headers
+        content_disposition = headers["content-disposition"]
+        assert content_disposition.startswith("attachment; filename=")
+    else:
+        # Older Django: _headers are tuples
+        headers = response._headers
+        assert headers["content-disposition"][0] == "Content-Disposition"
     assert response.status_code == 200
 
     from shuup.gdpr.models import GDPR_ANONYMIZE_TASK_TYPE_IDENTIFIER
