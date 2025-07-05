@@ -1,7 +1,7 @@
 .. image:: https://travis-ci.org/shuup/shuup.svg?branch=master
     :target: https://travis-ci.org/shuup/shuup
-.. image:: https://coveralls.io/repos/github/shuup/shuup/badge.svg?branch=master
-   :target: https://coveralls.io/github/shuup/shuup?branch=master
+.. image:: https://codecov.io/github/tpickle-py/shuup/graph/badge.svg?token=XGTBXFYJ83
+ :target: https://codecov.io/github/tpickle-py/shuup
 .. image:: https://img.shields.io/pypi/v/shuup.svg
    :alt: PyPI
    :target: https://github.com/shuup/shuup
@@ -15,7 +15,6 @@ Shuup
 Shuup is an Open Source E-Commerce Platform based on Django and Python.
 
 https://shuup.com/
-
 Copyright
 ---------
 
@@ -24,6 +23,8 @@ Copyright (c) 2012-2021 by Shuup Commerce Inc. <support@shuup.com>
 Shuup is International Registered Trademark & Property of Shuup Commerce Inc.,
 Business ID: BC1126729,
 Business Address: 1500 West Georgia Suite 1300, Vancouver, BC, V6G-2Z6, Canada.
+
+Current Build Docs can be found at https://sluup.travispickle.work.
 
 CLA
 ---
@@ -54,7 +55,7 @@ We have a Gitter chat room for Shuup.  Come chat with us!  |Join chat|
 Docker quick start
 ------------------
 
-Fastest way to get Shuup up and running is to use `Docker <https://www.docker.com>`_.
+# Heads up: A pushed container is on its way as soon as the first dev release passes tests.
 
 **Modern setup with uv (recommended):**
 
