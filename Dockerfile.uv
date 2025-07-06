@@ -22,10 +22,10 @@ WORKDIR /app
 
 # Copy dependency files first for better layer caching
 COPY pyproject.toml uv.lock ./
-COPY requirements-minimal.txt ./
+
 
 # Install dependencies using uv (much faster than pip)
-RUN uv sync --frozen
+RUN uv sync --dev
 
 # Copy the rest of the application
 COPY . .
@@ -37,13 +37,8 @@ RUN uv run shuup-build-resources
 RUN uv run shuup_workbench migrate --settings=shuup_workbench.settings.dev
 RUN uv run shuup_workbench shuup_init --settings=shuup_workbench.settings.dev
 
-RUN echo '\
-    from django.contrib.auth import get_user_model\n\
-    from django.db import IntegrityError\n\
-    try:\n\
-    get_user_model().objects.create_superuser("admin", "admin@admin.com", "admin")\n\
-    except IntegrityError:\n\
-    pass\n' | uv run shuup_workbench shell --settings=shuup_workbench.settings.dev
+# Create default superuser using script
+RUN uv run python scripts/create_superuser.py
 
 EXPOSE 8000
 

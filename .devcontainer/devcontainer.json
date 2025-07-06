@@ -11,11 +11,7 @@
                 // Python Development
                 "ms-python.python",
                 "ms-python.flake8",
-                "ms-python.black-formatter",
-                "ms-python.isort",
-                "ms-python.pylint",
                 "ms-python.mypy-type-checker",
-                "ms-toolsai.jupyter",
 
                 // Django Development
                 "batisteo.vscode-django",
