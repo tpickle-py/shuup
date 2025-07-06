@@ -13,38 +13,24 @@ if ! command -v uv &> /dev/null; then
 fi
 
 # Create virtual environment with UV
-echo "🐍 Creating Python virtual environment with UV..."
-uv venv .venv --python 3.9
+if [ ! -d ".venv" ]; then
+    echo "🐍 Creating Python virtual environment..."
+    uv venv .venv --python 3.9
+else
+    echo "🐍 Virtual environment already exists, skipping creation."
+fi
 
 # Activate virtual environment
 source .venv/bin/activate
 
-# Upgrade pip and install UV in venv
-echo "📦 Installing UV in virtual environment..."
-uv pip install uv
-
 # Install Python dependencies with UV
 echo "📦 Installing Python dependencies with UV..."
-uv pip sync requirements-dev.txt
+uv sync --dev
 
 # Install Shuup in development mode
 echo "🛠️  Installing Shuup in development mode..."
 uv pip install -e .
 
-# Install additional development tools
-echo "🔧 Installing additional development tools..."
-uv pip install \
-    black \
-    isort \
-    flake8 \
-    pylint \
-    mypy \
-    pytest \
-    pytest-cov \
-    pytest-django \
-    pylint-django \
-    django-debug-toolbar \
-    django-extensions
 
 # Install Node.js dependencies
 if [ -f "package.json" ]; then
@@ -55,6 +41,7 @@ fi
 # Set up pre-commit hooks (if available)
 if command -v pre-commit &> /dev/null; then
     echo "🔗 Setting up pre-commit hooks..."
+
     pre-commit install
 fi
 
@@ -90,30 +77,33 @@ mkdir -p media static
 
 # Run initial Django setup
 echo "🗄️  Setting up Django database..."
-python manage.py migrate --settings=shuup_workbench.settings.dev
+uv run shuup_workbench migrate --settings=shuup_workbench.settings.dev
 
 # Collect static files
 echo "📁 Collecting static files..."
-python manage.py collectstatic --noinput --settings=shuup_workbench.settings.dev
+uv run shuup_workbench collectstatic --noinput --settings=shuup_workbench.settings.dev
 
-# Create superuser (optional)
-echo "👤 Creating Django superuser (admin/admin)..."
-python manage.py shell --settings=shuup_workbench.settings.dev << EOF
-from django.contrib.auth import get_user_model
-User = get_user_model()
-if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'admin@example.com', 'admin')
-    print("Superuser 'admin' created with password 'admin'")
-else:
-    print("Superuser 'admin' already exists")
-EOF
 
 echo "✅ Shuup development environment setup complete!"
 echo ""
 echo "🎯 Quick start commands:"
-echo "  - Start development server: python manage.py runserver 0.0.0.0:8000"
+echo "  - Start development server: uv run shuup_workbench runserver 0.0.0.0:8000"
 echo "  - Run tests: pytest"
 echo "  - Access admin: http://localhost:8000/admin (admin/admin)"
-echo "  - Format code: black ."
-echo "  - Sort imports: isort ."
-echo "  - Lint code: flake8 ."
+echo ""
+echo "🛠️  Makefile shortcuts (run with 'make <target>'):"
+echo "  make install         - Install the package for development"
+echo "  make dev-install     - Install development dependencies"
+echo "  make requirements    - Regenerate all requirements files"
+echo "  make clean           - Clean build artifacts"
+echo "  make build           - Build the package (wheel and sdist)"
+echo "  make test            - Run tests"
+echo "  make lint            - Run linting (flake8, ruff, mypy)"
+echo "  make format          - Format code (black, isort)"
+echo "  make docs            - Build documentation"
+echo "  make docker          - Build Docker images"
+echo "  make pre-commit      - Install and run pre-commit hooks"
+echo "  make migrate         - Run Django migrations"
+echo "  make makemigrations  - Create new Django migrations"
+echo "  make runserver       - Start Django development server"
+echo "  make shell           - Open Django shell"

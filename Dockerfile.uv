@@ -12,6 +12,7 @@ RUN apt-get update \
     python3-dev \
     python3-pil \
     build-essential \
+    git \
     && rm -rf /var/lib/apt/lists/ /var/cache/apt/
 
 # Install Node.js for building static assets
@@ -21,7 +22,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 WORKDIR /app
 
 # Copy dependency files first for better layer caching
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock README.rst ./
 
 
 # Install dependencies using uv (much faster than pip)
@@ -38,7 +39,7 @@ RUN uv run shuup_workbench migrate --settings=shuup_workbench.settings.dev
 RUN uv run shuup_workbench shuup_init --settings=shuup_workbench.settings.dev
 
 # Create default superuser using script
-RUN uv run python scripts/create_superuser.py
+RUN uv run python shuup_setup_utils/create_superuser.py
 
 EXPOSE 8000
 

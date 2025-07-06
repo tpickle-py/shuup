@@ -1,27 +1,29 @@
-#!/usr/bin/env python
-"""
-Script to create a default superuser for development.
-This script is intended to be run during Docker container setup.
-"""
+import os
 
+import django
 from django.contrib.auth import get_user_model
+
 
 def create_superuser():
     """Create a default superuser if it doesn't already exist."""
-    User = get_user_model()
     username = "admin"
     email = "admin@admin.com"
     password = "adm!nTHISNEED1"
-    
+
     try:
-        if not User.objects.filter(username=username).exists():
-            User.objects.create_superuser(username, email, password)
+        # Set the settings module to test_settings or your preferred settings
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shuup_workbench.settings.dev")
+        django.setup()
+        user_model = get_user_model()
+        if not user_model.objects.filter(username=username).exists():
+            user_model.objects.create_superuser(username, email, password)
             print(f"Superuser '{username}' created successfully.")
         else:
             print(f"Superuser '{username}' already exists.")
     except Exception as e:
         print(f"Error creating superuser: {e}")
         pass
+
 
 if __name__ == "__main__":
     create_superuser()
