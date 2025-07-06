@@ -196,6 +196,11 @@ dev-dependencies = []  # Use dependency-groups instead
 # Pin to more recent versions in development
 pytest = { git = "https://github.com/pytest-dev/pytest.git", tag = "8.0.0" }
 
+[tool.uv.workspace]
+members = [
+    "template/shuup-template",
+]
+
 [tool.ruff]
 line-length = 120
 target-version = "py38"
@@ -359,7 +364,7 @@ exclude = [
     "venv",
     ".venv",
     ".git",
-    ".tox", 
+    ".tox",
     "dist",
     "doc",
     "build",
