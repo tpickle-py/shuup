@@ -45,3 +45,4 @@ node_modules
 .python-version
 .unit_tests
 .projects/**
+.env
