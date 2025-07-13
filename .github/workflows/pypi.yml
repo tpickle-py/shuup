@@ -44,7 +44,7 @@ jobs:
         run: uv run python setup.py build_resources
 
       - name: "Compile messages"
-        run: uv run python -m shuup_workbench compilemessages
+        run: cd shuup && uv run shuup_workbench compilemessages
 
       - name: "Build the package"
         run: |
