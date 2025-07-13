@@ -13,6 +13,7 @@ RUN apt-get update \
     python3-pil \
     build-essential \
     git \
+    gettext \
     && rm -rf /var/lib/apt/lists/ /var/cache/apt/
 
 # Install Node.js for building static assets
