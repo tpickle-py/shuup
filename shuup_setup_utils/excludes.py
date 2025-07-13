@@ -11,6 +11,7 @@ _EXCLUDE_PATTERNS = [
     "venv*",
     ".git",
     ".gitignore",
+    ".venv",
 ]
 
 

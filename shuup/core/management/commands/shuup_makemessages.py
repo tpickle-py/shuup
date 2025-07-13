@@ -7,7 +7,7 @@ defaults for Shuup projects (ignores and extensions).
 
 from . import makemessages
 
-IGNORES = ["node_modules", "bower_components", "static", "*tests"]
+IGNORES = ["node_modules", "bower_components", "static", "*tests", "_misc", "doc", "docs"]
 EXTENSIONS = ["py", "jinja"]
 
 

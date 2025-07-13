@@ -3,7 +3,7 @@
 # This Makefile provides convenient shortcuts for common development tasks
 # using the modern uv and hatchling workflow.
 
-.PHONY: help install dev-install clean requirements build test lint format docs docker
+.PHONY: help install dev-install clean requirements build test lint format docs docker compile messages
 
 # Default target
 help:
@@ -19,6 +19,8 @@ help:
 	@echo "  make docs            - Build documentation"
 	@echo "  make docker          - Build Docker images"
 	@echo "  make pre-commit      - Install and run pre-commit hooks"
+	@echo "  make compile        - Compile Django Messages"
+	@echo "  make messages        - Make Django Messages"
 
 # Installation targets
 install:
@@ -57,6 +59,15 @@ test:
 test-fast:
 	uv run pytest shuup_tests -x --tb=short
 
+messages:
+	@echo "Running shuup_makemessages..."
+	cd shuup && uv run shuup_workbench shuup_makemessages
+	@echo "✓ shuup_makemessages completed"
+
+compile:
+	@echo "Running compilemessages..."
+	uv run shuup_workbench compilemessages --ignore=**/site-packages/**
+	@echo "✓ shuup_makemessages completed"
 # Code quality targets
 lint:
 	@echo "Running linting tools..."
