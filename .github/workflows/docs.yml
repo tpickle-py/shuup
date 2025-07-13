@@ -2,9 +2,9 @@ name: Build and Deploy Documentation
 
 on:
   push:
-    branches: [ master, 2.x ]
+    branches: [ master, 3.x ]
   pull_request:
-    branches: [ master, 2.x ]
+    branches: [ master, 3.x ]
   workflow_dispatch:  # Allow manual triggering
 
 permissions:
